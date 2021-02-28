@@ -1,0 +1,440 @@
+ul {
+	list-style: none;
+}
+
+#sidebar {
+	border-right: 1px solid gray;
+	position: fixed;
+	height: 100%;
+	width: clamp(300px, 20%, 380px);
+	background-color: #595959;
+	overflow: hidden;
+}
+
+#main {
+	margin-left: clamp(300px, 20%, 380px);
+	background-color: #3a495f;
+}
+
+#character-section {
+	height: 380px;
+	vertical-align: top;
+	/*border-right: 1px solid gray;*/
+}
+
+#character-race, #character-level {
+	text-align: center;
+	line-height: 10px;
+}
+
+#character-stats li {
+	margin-right: 40px;
+}
+
+#character-stats li p {
+	margin-bottom: -8px;
+	padding-bottom: 5px;
+	line-height: 15px;
+}
+
+.character-stat, .character-stat-val {
+	width: 50%;
+	display: inline-block;
+}
+
+.character-stat {
+	float: left;
+}
+
+.character-stat-val {
+	float: right;
+	text-align: right;
+}
+
+#shadow-resist-info {
+	border: 4px solid black;
+	padding: 10px;
+	position: absolute;
+	background: #363636;
+	border-radius: .4em;
+	margin-top: 30px;
+}
+
+#shadow-resist-info:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 70%;
+	width: 0;
+	height: 0;
+	border: 15px solid transparent;
+	border-bottom-color: #000000;
+	border-top: 0;
+	margin-left: -21px;
+	margin-top: -21px;
+}
+
+#item-section {
+	width: 30%;
+	display: inline-block;
+	padding: 10px;
+	vertical-align: top;
+	/*border-bottom: 1px solid gray;
+	border-right: 1px solid gray;*/
+}
+
+.item-slot-selection {
+	width: 49%;
+	display: inline-block;
+}
+
+.item-slot-selection label {
+	width: 30%;
+	display: inline-block;
+}
+
+.item-slot-selection select {
+	width: 68%;
+	display: inline-block;
+}
+
+#enchants-div {
+	width: 100%;
+}
+
+#enchants-div label {
+	width: 13%;
+	display: inline-block;
+}
+
+#enchants-div select {
+	width: 19%;
+}
+
+#buffs-and-debuffs-section {
+	display: inline-block;
+	margin-left: 20px;
+	/*border-bottom: 1px solid gray;*/
+	width: max(332px, 22%);
+	vertical-align: top;
+}
+
+#buffs-and-debuffs-section h3 {
+	margin-left: 5px;
+	margin-bottom: -15px;
+}
+
+#buffs-and-debuffs-section ul {
+	margin-left: -34px;
+}
+
+#buffs-and-debuffs-section ul li {
+	/*width: 32%;*/
+	display: inline-block;
+}
+
+#buffs-and-debuffs-section img {
+	width: 40px;
+	height: 40px;
+}
+
+.aura {
+	user-select: none;
+	cursor: pointer;
+}
+
+#sim-settings {
+	margin-top: -30px;
+	/*border-right: 1px solid gray;*/
+}
+
+/*#sim-settings h3 {
+	margin-left: 44px;
+	line-height: 1px;
+}*/
+
+#sim-settings ul li {
+	width: 87%;
+	padding: 5px 0px;
+}
+
+.settings-left, .settings-right {
+	display: inline-block;
+}
+
+.settings-right {
+	float: right;
+	width: 30%;
+}
+
+#rotation-section {
+	min-width: 99px;
+	display: inline-block;
+	vertical-align: top;
+	/*border-right: 1px solid gray;*/
+	margin-left: 10px;
+}
+
+#rotation-section h3 {
+	margin-left: 5px;
+}
+
+#rotation-section ul div {
+	margin-left: -30px;
+}
+
+#rotation-list img {
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+}
+
+#rotation-list li[data-checked='false'] img, .talent-icon[data-points='0'], .aura[data-checked='false'] {
+	filter: grayscale(95%);
+}
+
+#rotation-list li {
+	display: inline-block;
+	cursor: pointer;
+	user-select: none;
+}
+
+#rotation-list h4 {
+	line-height: 1px;
+}
+
+#simulation-results-section {
+	width: max(354px, 70%);
+	display: inline-block;
+	vertical-align: top;
+}
+
+#dps-result-div {
+	display: inline-block;
+	visibility: hidden;
+	width: 100%;
+	line-height: 10px;
+	margin-top: 20px;
+}
+
+#simulation-results-section h3 {
+	margin-left: 20px;
+}
+
+#sim-result-dps-div {
+	padding: 10px;
+	margin-left: 10px;
+	display: inline-block;
+}
+
+#sim-result-dps-div p {
+	text-align: center;
+}
+
+#dps-breakdown-table {
+	padding: 10px;
+	width: 70%;
+	display: inline-block;
+	visibility: hidden;
+}
+
+#dps-breakdown-table th, #dps-breakdown-table td {
+	text-align: center;
+}
+
+#dps-breakdown-table td:nth-child(1) {
+	text-align: left;
+}
+
+#dps-breakdown-table tr {
+	line-height: 20px;
+}
+
+#avg-dps {
+	font-size: 40px;
+	font-weight: 700;
+}
+
+#talents-section {
+	width: 618px;
+	display: inline-block;
+	vertical-align: top;
+	float: right;
+	margin: 5px 2px 0px 0px;
+}
+
+.talent-tree-div {
+	display: inline-block;
+	width: 206px;
+}
+
+.talent-tree-table {
+	height: 100%;
+	width: 100%;
+	background-repeat: no-repeat;
+	background-position: center;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.talent-tree-name {
+	text-align: center;
+	line-height: 1px;
+}
+
+.talent-icon {
+	position: relative;
+	display: inline-block;
+	margin-left: 5px;
+	cursor: pointer;
+	user-select: none;
+}
+
+.talent-point-amount {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	background: #000;
+	border: 1px solid gray;
+	border-radius: 5px;
+	padding: 1px 3px;
+
+}
+
+.talent-icon img {
+	width: 40px;
+	height: 40px;
+}
+
+.btn {
+	border: 1px solid white;
+	font-weight: bold;
+	cursor: pointer;
+	border-radius: 4px;
+	width: 40%;
+	margin-left: 30%;
+	padding: 15px 0px 15px 0px;
+	/*padding: 15px 50px;*/
+	transition: all .2s ease-in;
+	user-select: none;
+}
+
+#sim-dps {
+	color: white;
+	text-decoration: none;
+}
+
+#sim-length-result {
+	margin-top: 15px;
+	font-weight: bold;
+}
+
+.btn:hover {
+	background-color: #fff;
+}
+
+#sidebar-simulation-selection {
+	margin-top: 50px;
+	text-align: center;
+}
+
+#item-slot-selection-list {
+	text-align: center;
+	margin-top: 50px;
+}
+
+#item-slot-selection-list li {
+	display: inline-block;
+	cursor: pointer;
+}
+
+#item-slot-selection-list li:not(:last-child) {
+	margin-right: 20px;
+}
+
+#item-selection-container {
+	padding: 20px 40px;
+}
+
+#item-selection-table, #enchant-selection-table {
+	width: 100%;
+	border-spacing: 0px;
+}
+
+/*#item-selection-table th:not(:first-child), #enchant-selection-table th:not(:first-child) {
+	text-align: center;
+}*/
+
+#enchant-selection-table {
+	margin-top: 60px;
+}
+
+#item-selection-table th:nth-child(1), #enchant-selection-table th:nth-child(1) {
+	text-align: left;
+}
+
+.item-row:hover, .enchant-row:hover {
+	cursor: pointer;
+}
+
+#item-selection-table td, #enchant-selection-table td {
+	padding: 5px;
+}
+
+.item-row a, .enchant-row a {
+	color: #fff;
+	text-decoration: none;
+}
+
+.item-row:hover, .enchant-row:hover {
+	background-color: rgba(104, 105, 163, 0.3);
+}
+
+table.dataTable tbody tr {
+	background-color: #272727 !important;
+}
+
+table.dataTable thead th, table.dataTable.no-footer {
+	border: none !important;
+}
+
+.item-row[data-selected='true'], .enchant-row[data-selected='true'] {
+	background-color: #6869a3 !important;
+}
+
+.item-row, .enchant-row {
+	text-align: center;
+}
+
+.item-row td, .enchant-row td {
+	border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.item-row:last-child td, .enchant-row:last-child td {
+	border-bottom: none;
+}
+
+.item-row td:nth-child(1), .enchant-row td:nth-child(1) {
+	text-align: left;
+}
+
+body {
+	margin: 0px !important;
+	padding: 0px !important;
+	color: white;
+	font-family: Open Sans,sans-serif;
+}
+
+@media (max-width: 933px) {
+	#sidebar {
+		
+	}
+}
+
+@media screen and (max-width: 1445px) {
+	#talents-section {
+		width: 100%;
+		display: block;
+		text-align: center;
+	}
+}

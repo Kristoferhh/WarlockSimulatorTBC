@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+	<title>Warlock DPS Simulator 2.4.3</title>
+	<link rel="stylesheet" type="text/css" href="src/css/style.css">
+	<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+	<script type="text/javascript" src="dist/js/libs/jquery-3.5.1.min.js"></script>
+	<script type="text/javascript" src="dist/js/libs/jquery.tablesorter.min.js"></script>
+	<script type="text/javascript" src="dist/js/libs/jquery.tablesorter.widgets.min.js"></script>
+	<script>const whTooltips = {/*droppedby: false, dropchance: false, */colorLinks: false, iconizeLinks: false, renameLinks: false};</script>
+	<script src="https://wow.zamimg.com/widgets/power.js"></script>
+	<script src="https://wow.zamimg.com/js/basic.js?35"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+	<!--<script type="text/javascript" src="/path/to/jquery.tablesorter.js"></script>-->
+</head>
+<body>
+<div id="sidebar">
+	<!-- CHARACTER PANEL -->
+	<section id="character-section">
+		<p id="character-race"><span id="race"></span> Warlock</p>
+		<p id="character-level">Level 70</p>
+
+		<ul id="character-stats">
+			<li>
+				<p class="character-stat">Stamina</p>
+				<p class="character-stat-val" id="character-stamina-val"></p>
+			</li>
+			<li>
+				<p class="character-stat">Intellect</p>
+				<p class="character-stat-val" id="character-intellect-val"></p>
+			</li>
+			<li>
+				<p class="character-stat">Spell Power</p>
+				<p class="character-stat-val" id="character-spell-power-val"></p>
+			</li>
+			<li>
+				<p class="character-stat">Shadow Power</p>
+				<p class="character-stat-val" id="character-shadow-power-val"></p>
+			</li>
+			<li>
+				<p class="character-stat">Fire Power</p>
+				<p class="character-stat-val" id="character-fire-power-val"></p>
+			</li>
+			<li>
+				<p class="character-stat">Crit</p>
+				<p class="character-stat-val" id="character-crit-val"></p>
+			</li>
+			<li>
+				<p class="character-stat">Hit</p>
+				<p class="character-stat-val" id="character-hit-val"></p>
+			</li>
+			<li>
+				<p class="character-stat">Dmg %</p>
+				<p class="character-stat-val" id="character-damage-modifier-val">100%</p>
+			</li>
+			<li>
+				<p class="character-stat">MP5</p>
+				<p class="character-stat-val" id="character-mp5-val"></p>
+			</li>
+			<li>
+				<p class="character-stat">Spell Penetration</p>
+				<p class="character-stat-val" id="character-spell-pen-val"></p>
+			</li>
+		</ul>
+	</section>
+
+	<!-- SETTINGS -->
+	<section id="sim-settings">
+		<ul>
+			<li><span class="settings-left">Race</span>
+				<select name="race" id="race-dropdown-list" class="settings-right">
+					<option>Gnome</option>
+					<option>Human</option>
+					<option>Orc</option>
+					<option>Undead</option>
+					<option>Blood Elf</option>
+				</select>
+			</li>
+			<li>
+				<span class="settings-left">Iterations</span>
+				<input value="" type="number" name="iterations" class="settings-right">
+			</li>
+			<li>
+				<span class="settings-left">Min Fight Length</span>
+				<input value="120" type="number" name="min-fight-length" class="settings-right">
+			</li>
+			<li>
+				<span class="settings-left">Max Fight Length</span>
+				<input value="600" type="number" name="max-fight-length" class="settings-right">
+			</li>
+			<li>
+				<span class="settings-left">Target Level</span>
+				<input value="73" type="number" name="target-level" class="settings-right">
+			</li>
+			<li>
+				<span class="settings-left">Target Shadow Resistance</span>
+				<input value="0" type="number" name="target-shadow-resistance" class="settings-right">
+			</li>
+			<!--<p id="shadow-resist-info">Note: The only bosses in Classic that have more than 0 shadow resistance are Lucifron (208 SR), Gehennas (112 SR), and Kel'Thuzad (124 SR)<br>Thanks to Tesram (Mograine-EU) for these values.</p>-->
+			<li>
+				<span class="settings-left">Target Fire Resistance</span>
+				<input value="0" type="number" name="target-fire-resistance" class="settings-right">
+			</li>
+			<!-- hide this if player isn't wearing a tailoring set -->
+			<li id="settings-tailoring">
+				<span class="settings-left">Tailoring</span>
+				<input type="checkbox" name="tailoring" class="settings-right">
+			</li>
+		</ul>
+	</section>
+
+	<div id="sidebar-simulation-selection">
+		<div class='btn'>
+			<a id="sim-dps" href='#'>Simulate</a>
+		</div>
+		<p id="sim-length-result"></p>
+	</div>
+</div>
+<div id="main">
+	<!-- BUFFS & DEBUFFS-->
+	<section id="buffs-and-debuffs-section">
+		<!-- WORLD BUFFS -->
+		<h3>World Buffs</h3>
+		<ul id="world-buff-list"></ul>
+
+		<!-- RAID BUFFS -->
+		<h3>Buffs</h3>
+		<ul id="raid-buff-list"></ul>
+
+		<!-- DEBUFFS -->
+		<h3>Debuffs</h3>
+		<ul id="debuff-list"></ul>
+
+		<!-- CONSUMABLES -->
+		<h3>Consumables</h3>
+		<ul id="consumable-list"></ul>
+	</section>
+
+	<!-- ROTATION -->
+	<section id="rotation-section">
+		<h3>Rotation</h3>
+
+		<ul id="rotation-list">
+			<div>
+				<h4>Dots</h4>
+				<li data-checked='false' id="dot-immolate">
+					<a href="https://classic.wowhead.com/spell=25309">
+						<img src="img/spell_fire_immolation.jpg" alt="Immolate">
+					</a>
+				</li>
+				<li data-checked='false' id="dot-corruption">
+					<a href="https://classic.wowhead.com/spell=25311">
+						<img src="img/spell_shadow_abominationexplosion.jpg" alt="Corruption">
+					</a>
+				</li>
+				<li data-checked='false' id="dot-siphon-life">
+					<a href="https://classic.wowhead.com/spell=18881">
+						<img src="img/spell_shadow_requiem.jpg" alt="Siphon Life">
+					</a>
+				</li>
+				<li data-checked='false' id="curse-curse-of-agony"  class="rotation-curse">
+					<a href="https://classic.wowhead.com/spell=11713">
+						<img src="img/spell_shadow_curseofsargeras.jpg" alt="Curse of Agony">
+					</a>
+				</li>
+			</div>
+
+			<div>
+				<h4>Filler</h4>
+				<li data-checked='false' id="filler-immolate" class="rotation-filler">
+					<a href="https://classic.wowhead.com/spell=11668">
+						<img src="img/spell_fire_immolation.jpg" alt="Immolate">
+					</a>
+				</li>
+				<li data-checked='false' id="filler-searing-pain" class="rotation-filler">
+					<a href="https://classic.wowhead.com/spell=17923">
+						<img src="img/spell_fire_soulburn.jpg" alt="Searing Pain">
+					</a>
+				</li>
+				<li data-checked='false' id="filler-shadow-bolt" class="rotation-filler">
+					<a href="https://classic.wowhead.com/spell=25307">
+						<img src="img/spell_shadow_shadowbolt.jpg" alt="Shadow Bolt">
+					</a>
+				</li>
+			</div>
+
+			<div>
+				<h4>Curse</h4>
+				<li data-checked='false' id="curse-curse-of-recklessness" class="rotation-curse">
+					<a href="https://classic.wowhead.com/spell=11717">
+						<img src="img/spell_shadow_unholystrength.jpg" alt="Curse of Recklessness">
+					</a>
+				</li>
+				<li data-checked='false' id="curse-curse-of-the-elements"  class="rotation-curse">
+					<a href="https://classic.wowhead.com/spell=11722">
+						<img src="img/spell_shadow_chilltouch.jpg" alt="Curse of Shadow">
+					</a>
+				</li>
+				<li data-checked='false' id="curse-curse-of-shadow"  class="rotation-curse">
+					<a href="https://classic.wowhead.com/spell=17937">
+						<img src="img/spell_shadow_curseofachimonde.jpg" alt="Curse of the Elements">
+					</a>
+				</li>
+			</div>
+
+			<div>
+				<h4>Finisher</h4>
+				<li data-checked='false' id="finisher-death-coil">
+					<a href="https://classic.wowhead.com/spell=17926">
+						<img src="img/spell_shadow_deathcoil.jpg" alt="Death Coil">
+					</a>
+				</li>
+				<li data-checked='false' id="finisher-shadowburn">
+					<a href="https://classic.wowhead.com/spell=18871">
+						<img src="img/spell_shadow_scourgebuild.jpg" alt="Shadowburn">
+					</a>
+				</li>
+				<li data-checked='false' id="finisher-sapper">
+					<a href="https://classic.wowhead.com/item=10646">
+						<img src="img/spell_fire_selfdestruct.jpg" alt="Goblin Sapper Charge">
+					</a>
+				</li>
+			</div>
+		</ul>
+	</section>
+
+	<!-- TALENTS -->
+	<section id="talents-section"><!--<a href="https://classic.wowhead.com/talent-calc/embed/warlock/1"></a>--></section>
+
+	<!-- SIM RESULTS -->
+	<section id="simulation-results-section">
+		<h3 style="display: none;">Simulation Results</h3>
+
+		<div id="dps-result-div">
+			<div id="sim-result-dps-div">
+				<p><span id="avg-dps"></span><span> DPS</span></p>
+				<p>Min: <span id="min-dps"></span> Max: <span id="max-dps"></span></p>
+			</div>
+			<!--<p>Shadow Bolts: <span id="shadow-bolt-casts"></span></p>
+			<p>Shadow Bolt Crit %: <span id="shadow-bolt-crit"></span></p>
+			<p>Shadow Bolt Miss %: <span id="shadow-bolt-miss"></span></p>-->
+			<table id="dps-breakdown-table" class="tablesorter">
+				<colgroup>
+					<col style="width: 30%;">
+					<col style="width: 13%;">
+					<col style="width: 13%;">
+					<col style="width: 15%;">
+					<col style="width: 13%;">
+					<col style="width: 13%;">
+				</colgroup>
+				<thead>
+					<th style="text-align: left;">Name</th>
+					<th>Dmg %</th>
+					<th>Casts</th>
+					<th>Avg Cast</th>
+					<th>Crit %</th>
+					<th>Miss %</th>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</section>
+
+	<!-- ITEMS -->
+	<div id="item-selection-container">
+		<ul id="item-slot-selection-list">
+			<li data-slot="mainhand">Main Hand</li>
+			<li data-slot="offhand">Off Hand</li>
+			<li data-slot="twohand">Two Hand</li>
+			<li data-slot='head'>Head</li>
+			<li data-slot="neck">Neck</li>
+			<li data-slot="shoulders">Shoulders</li>
+			<li data-slot="cloak">Cloak</li>
+			<li data-slot="chest">Chest</li>
+			<li data-slot="bracers">Bracers</li>
+			<li data-slot="gloves">Gloves</li>
+			<li data-slot="belt">Belt</li>
+			<li data-slot="legs">Legs</li>
+			<li data-slot="boots">Boots</li>
+			<li data-slot="ring" data-subslot='1'>Rings</li>
+			<!--<li data-slot="ring" data-subslot='2'>Ring 2</li>-->
+			<li data-slot="trinket" data-subslot='1'>Trinkets</li>
+			<!--<li data-slot="trinket" data-subslot='2'>Trinket 2</li>-->
+			<li data-slot="wand">Wand</li>
+		</ul>
+		<table id="item-selection-table" data-type="mainhand">
+			<colgroup id="item-selection-colgroup">
+				<col style="width: 20%">
+				<col style="width: 9%">
+				<col style="width: 4%">
+				<col style="width: 4%">
+				<col style="width: 5%">
+				<col style="width: 6.5%">
+				<col style="width: 4.5%">
+				<col style="width: 4%">
+				<col style="width: 4%">
+				<col style="width: 4%">
+				<col style="width: 4%">
+				<col style="width: 4%">
+			</colgroup>
+			<thead>
+				<tr id="item-selection-header">
+					<th id="header-name">Name</th>
+					<th id="header-source">Source</th>
+					<th id="header-stamina">Stamina</th>
+					<th id="header-intellect">Intellect</th>
+					<th id="header-spell-power">Spell Power</th>
+					<th id="header-shadow-power">Shadow Power</th>
+					<th id="header-fire-power">Fire Power</th>
+					<th id="header-crit">Crit</th>
+					<th id="header-hit">Hit</th>
+					<th id="header-mp5">MP5</th>
+					<th id="header-spell-pen">Spell Pen</th>
+					<th id="header-dps">DPS</th>
+				</tr>
+			</thead>
+			<tbody aria-live='polite'></tbody>
+		</table>
+		<table id="enchant-selection-table" data-type="mainhand">
+			<colgroup id="item-selection-colgroup">
+				<col style="width: 20%">
+				<col style="width: 7%">
+				<col style="width: 8%">
+				<col style="width: 6%">
+				<col style="width: 5%">
+				<col style="width: 5%">
+				<col style="width: 5%">
+				<col style="width: 6%">
+				<col style="width: 7%">
+				<col style="width: 5%">
+				<col style="width: 8%">
+				<col style="width: 9%">
+				<col style="width: 5%">
+			</colgroup>
+			<thead>
+				<tr id="item-selection-header">
+					<th id="header-enchant-name">Enchant</th>
+					<th id="header-enchant-spell-power">Spell Power</th>
+					<th id="header-enchant-shadow-power">Shadow Power</th>
+					<th id="header-enchant-fire-power">Fire Power</th>
+					<th id="header-enchant-stamina">Stamina</th>
+					<th id="header-enchant-intellect">Intellect</th>
+					<th id="header-enchant-mp5">MP5</th>
+					<th id="header-enchant-nature-resist">Nature Res</th>
+					<th id="header-enchant-shadow-resist">Shadow Res</th>
+					<th id="header-enchant-fire-resist">Fire Res</th>
+					<th id="header-enchant-threat-reduction">Threat Reduc.</th>
+					<th id="header-enchant-threat-increase">Threat Increase</th>
+					<th id="header-enchant-dps">DPS</th>
+				</tr>
+			</thead>
+			<tbody aria-live='polite'></tbody>
+		</table>
+	</div>
+</div>
+</body>
+</html>
