@@ -1,31 +1,36 @@
 // RAID BUFFS
-for(let buff of Object.keys(raidBuffs)) {
-	let b = raidBuffs[buff];
+for(let buff of Object.keys(auras.buffs)) {
+	let b = auras.buffs[buff];
 	let lowerBuffName = b.name.toLowerCase().split(' ').join('-');
-	let raidBuffUl = $("#raid-buff-list");
-	localStorage[buff] = localStorage[buff] || false; // some problem with this
+	let raidBuffUl = $("#buff-list");
+	localStorage[buff] = localStorage[buff] || false;
 
-	raidBuffUl.append($("<li data-checked='" + localStorage[buff] + "' name='" + buff + "' id='" + lowerBuffName + "' class='aura'><a href='https://classic.wowhead.com/spell=" + b.id + "'><img alt='" + b.name + "' src='img/" + b.iconName + ".jpg'></a></li>"));
+	raidBuffUl.append($("<li data-aura-type='buffs' data-checked='" + localStorage[buff] + "' name='" + buff + "' id='" + lowerBuffName + "' class='aura'><a href='https://classic.wowhead.com/spell=" + b.id + "'><img alt='" + b.name + "' src='img/" + b.iconName + ".jpg'></a></li>"));
+
+	// If the user already had the buff selected from a previous session then add the stats from it.
+	if (localStorage[buff] === 'true') {
+		modifyStatsFromAura(auras.buffs[buff], false);
+	}
 }
 
 // DEBUFFS
-for (let buff of Object.keys(debuffs)) {
-	let b = debuffs[buff];
+for (let buff of Object.keys(auras.debuffs)) {
+	let b = auras.debuffs[buff];
 	let lowerBuffName = b.name.toLowerCase().split(' ').join('-');
 	let debuffUl = $("#debuff-list");
 	localStorage[buff] = localStorage[buff] || false;
 
-	debuffUl.append($("<li data-checked='" + localStorage[buff] + "' name='" + buff + "' id='" + lowerBuffName + "' class='debuff aura'><a href='https://classic.wowhead.com/spell=" + b.id + "'><img alt='" + b.name + "' src='img/" + b.iconName + ".jpg'></a></li>"));
+	debuffUl.append($("<li data-aura-type='debuffs' data-checked='" + localStorage[buff] + "' name='" + buff + "' id='" + lowerBuffName + "' class='debuff aura'><a href='https://classic.wowhead.com/spell=" + b.id + "'><img alt='" + b.name + "' src='img/" + b.iconName + ".jpg'></a></li>"));
 }
 
 // CONSUMABLES
-for (let consumable of Object.keys(consumables)) {
-	let c = consumables[consumable];
+for (let consumable of Object.keys(auras.consumables)) {
+	let c = auras.consumables[consumable];
 	let lowerConsumableName = c.name.toLowerCase().split(' ').join('-');
 	let consumableUl = $("#consumable-list");
 	localStorage[consumable] = localStorage[consumable] || false;
 
-	consumableUl.append($("<li data-checked='" + localStorage[consumable] + "' name='" + consumable + "' id='" + lowerConsumableName + "' class='" + (c.stats ? "stats " : "") + (c.potion ? "potion " : "") + (c.battleElixir ? "battle-elixir " : "") + (c.guardianElixir ? "guardian-elixir " : "") + (c.weaponOil ? "weapon-oil " : "") + (c.foodBuff ? "food-buff " : "") + "consumable aura'><a href='https://classic.wowhead.com/item=" + c.id + "'><img alt='" + c.name + "' src='img/" + c.iconName + ".jpg'></a></li>"));
+	consumableUl.append($("<li data-aura-type='consumables' data-checked='" + localStorage[consumable] + "' name='" + consumable + "' id='" + lowerConsumableName + "' class='" + (c.stats ? "stats " : "") + (c.potion ? "potion " : "") + (c.battleElixir ? "battle-elixir " : "") + (c.guardianElixir ? "guardian-elixir " : "") + (c.weaponOil ? "weapon-oil " : "") + (c.foodBuff ? "food-buff " : "") + "consumable aura'><a href='https://classic.wowhead.com/item=" + c.id + "'><img alt='" + c.name + "' src='img/" + c.iconName + ".jpg'></a></li>"));
 }
 
 // When a buff/debuff/consumable is clicked
@@ -33,6 +38,10 @@ $(".aura").click(function() {
 	let checkedVal = $(this).attr('data-checked') == 'true';
 	$(this).attr('data-checked', !checkedVal);
 	localStorage[$(this).attr("name")] = !checkedVal;
+
+	let auraType = $(this).attr('data-aura-type');
+	let auraName = $(this).attr('data-name');
+	modifyStatsFromAura(auras[auraType][auraName], localStorage[auraName] === 'true');
 
 	return false;
 });
@@ -118,6 +127,30 @@ function modifyStatsFromItem(itemName, itemSlot, loadingEquippedItems = false) {
 			} else {
 				characterStats[stat] += itemObj[stat];
 				localStorage['equipped' + itemSlot] = itemName;
+			}
+		}
+	}
+
+	refreshCharacterStats();
+}
+
+function modifyStatsFromAura(auraObject, checked) {
+	for (let stat in auraObject) {
+		if (characterStats.hasOwnProperty(stat)) {
+			alert(stat);
+			// Check if the buff is a modifier to know whether to add/subtract or multiply/divide the stat
+			if (stat.toLowerCase().search("modifier") !== -1) {
+				if (checked) {
+					characterStats[stat] /= auraObject[stat];
+				} else {
+					characterStats[stat] *= auraObject[stat];
+				}
+			} else {
+				if (checked) {
+					characterStats[stat] -= auraObject[stat];
+				} else {
+					characterStats[stat] += auraObject[stat];
+				}
 			}
 		}
 	}
