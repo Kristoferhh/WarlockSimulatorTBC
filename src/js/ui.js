@@ -69,11 +69,19 @@ $("#item-slot-selection-list li").click(function() {
 
 // User clicks on an item in the item table
 $("#item-selection-table tbody").on('click', 'tr', function() {
+	let itemSlot = $(this).attr('data-slot');
+	let itemName = $(this).attr('data-name');
 	// Toggle the item's data-selected boolean.
 	let equipped = $(this).attr('data-selected') == 'true';
 	$(this).attr('data-selected', !equipped);
+	// Check if the user already has an item equipped in this slot and unequip it if so
+	if (localStorage['equipped' + itemSlot] !== null && localStorage['equipped' + itemSlot] !== itemName) {
+		// Set the old item's data-selected value to false and remove the item's stats from the player.
+		$('[data-name="' + localStorage['equipped' + itemSlot] +'"]').attr('data-selected', false);
+		modifyStatsFromItem(localStorage['equipped' + itemSlot], itemSlot);
+	}
 	// Add or remove the stats from the item depending on whether the player has the item equipped or not.
-	modifyStatsFromItem($(this).attr('data-name'),$(this).attr('data-slot'));
+	modifyStatsFromItem(itemName,$(this).attr('data-slot'));
 	// Return false so that the user doesn't get redirected to wowhead's website when he clicks the item.
 	return false;
 
