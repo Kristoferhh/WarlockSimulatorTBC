@@ -31,8 +31,8 @@ var characterStats = {
 
 // Refreshes the player's values in the sidebar when changing e.g. gear, consumables, or buffs.
 function refreshCharacterStats() {
-	$("#character-stamina-val").text(characterStats.stamina);
-	$("#character-intellect-val").text(characterStats.intellect);
+	$("#character-stamina-val").text(Math.round(characterStats.stamina * characterStats.staminaModifier));
+	$("#character-intellect-val").text(Math.round(characterStats.intellect * characterStats.intellectModifier));
 	$("#character-spell-power-val").text(characterStats.spellPower);
 	$("#character-shadow-power-val").text(characterStats.shadowPower + " (" + (characterStats.shadowPower + characterStats.spellPower) + ")");
 	$("#character-fire-power-val").text(characterStats.firePower + " (" + (characterStats.firePower + characterStats.spellPower) + ")");
