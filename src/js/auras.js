@@ -117,6 +117,7 @@ var auras = {
 			"firePower": 80,
 			"frostPower": 80,
 			"iconName": "inv_potion_115",
+			"id": 22866,
 			"battleElixir": true,
 			"guardianElixir": true
 		},
@@ -124,18 +125,21 @@ var auras = {
 			"name": "Elixir of Major Shadow Power",
 			"shadowPower": 55,
 			"iconName": "inv_potion_145",
+			"id": 22835,
 			"battleElixir": true
 		},
 		"elixirOfMajorFirepower": {
 			"name": "Elixir of Major Firepower",
 			"firePower": 55,
 			"iconName": "inv_potion_146",
+			"id": 22833,
 			"battleElixir": true
 		},
 		"greaterArcaneElixir": {
 			"name": "Greater Arcane Elixir",
 			"spellPower": 35,
 			"iconName": "inv_potion_25",
+			"id": 13454,
 			"battleElixir": true
 		},
 		"adeptsElixir": {
@@ -143,6 +147,7 @@ var auras = {
 			"spellPower": 24,
 			"critRating": 24,
 			"iconName": "inv_potion_96",
+			"id": 28103,
 			"battleElixir": true
 		},
 		"elixirOfDraenicWisdom": {
@@ -150,16 +155,19 @@ var auras = {
 			"intellect": 30,
 			"spirit": 30,
 			"iconName": "inv_potion_155",
+			"id": 32067,
 			"guardianElixir": true
 		},
 		"superManaPotion": {
 			"name": "Super Mana Potion",
 			"iconName": "inv_potion_137",
+			"id": 22832,
 			"potion": true,
 		},
 		"destructionPotion": {
 			"name": "Destruction Potion",
 			"iconName": "inv_potion_107",
+			"id": 22839,
 			"potion": true,
 		},
 		"blackenedBasilisk": {
@@ -167,6 +175,7 @@ var auras = {
 			"spellPower": 23,
 			"spirit": 20,
 			"iconName": "inv_misc_food_86_basilisk",
+			"id": 27657,
 			"foodBuff": true,
 		},
 		"brilliantWizardOil": {
@@ -181,6 +190,7 @@ var auras = {
 			"name": "Superior Wizard Oil",
 			"spellPower": 42,
 			"iconName": "inv_potion_141",
+			"id": 22522,
 			"weaponOil": true,
 		},
 		"blessedWizardOil": {
