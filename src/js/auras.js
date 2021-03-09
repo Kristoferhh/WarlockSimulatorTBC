@@ -120,6 +120,38 @@ var auras = {
 			"battleElixir": true,
 			"guardianElixir": true
 		},
+		"elixirOfMajorShadowPower": {
+			"name": "Elixir of Major Shadow Power",
+			"shadowPower": 55,
+			"iconName": "inv_potion_145",
+			"battleElixir": true
+		},
+		"elixirOfMajorFirepower": {
+			"name": "Elixir of Major Firepower",
+			"firePower": 55,
+			"iconName": "inv_potion_146",
+			"battleElixir": true
+		},
+		"greaterArcaneElixir": {
+			"name": "Greater Arcane Elixir",
+			"spellPower": 35,
+			"iconName": "inv_potion_25",
+			"battleElixir": true
+		},
+		"adeptsElixir": {
+			"name": "Adept's Elixir",
+			"spellPower": 24,
+			"critRating": 24,
+			"iconName": "inv_potion_96",
+			"battleElixir": true
+		},
+		"elixirOfDraenicWisdom": {
+			"name": "Elixir of Draenic Wisdom",
+			"intellect": 30,
+			"spirit": 30,
+			"iconName": "inv_potion_155",
+			"guardianElixir": true
+		},
 		"superManaPotion": {
 			"name": "Super Mana Potion",
 			"iconName": "inv_potion_137",
