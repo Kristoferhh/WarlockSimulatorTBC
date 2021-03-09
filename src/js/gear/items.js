@@ -393,8 +393,8 @@ var items = {
 		},
 		"iconOfTheSilverCrescent": {
 			"name": "Icon of the Silver Crescent",
-			"spellPower": 44,
-			"onUseSpellPower": 156,
+			"spellPower": 43,
+			"onUseSpellPower": 155,
 			"duration": 20,
 			"cooldown": 120,
 			"source": "41 Badge of Justice - G'eras",
