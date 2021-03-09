@@ -1,10 +1,11 @@
 // Convertion calculations
-var hitRatingPerPercent = 12.6;
-var critRatingPerPercent = 22.08; // maybe 22.1
-var hasteRatingPerPercent = 15.77; // maybe 15.7
-var manaPerInt = 15;
-var healthPerStamina = 10;
-var critPerInt = 1 / 81.95;
+const hitRatingPerPercent = 12.6;
+const critRatingPerPercent = 22.08; // maybe 22.1
+const hasteRatingPerPercent = 15.77; // maybe 15.7
+const manaPerInt = 15;
+const healthPerStamina = 10;
+const critPerInt = 1 / 81.95;
+const baseCritChancePercent = 1.701;
 
 var characterStats = {
 	// Normal stats
@@ -80,7 +81,7 @@ function refreshCharacterStats() {
 	$("#character-spell-power-val").text(characterStats.spellPower);
 	$("#character-shadow-power-val").text(characterStats.shadowPower + " (" + (characterStats.shadowPower + characterStats.spellPower) + ")");
 	$("#character-fire-power-val").text(characterStats.firePower + " (" + (characterStats.firePower + characterStats.spellPower) + ")");
-	$("#character-crit-val").text(Math.round(critRating) + " (" + (Math.round((critRating/critRatingPerPercent) * 100) / 100) + "%)");
+	$("#character-crit-val").text(Math.round(critRating) + " (" + (Math.round((critRating/critRatingPerPercent + baseCritChancePercent) * 100) / 100) + "%)");
 	$("#character-hit-val").text(Math.round(characterStats.hitRating) + " (" + (Math.round((characterStats.hitRating/hitRatingPerPercent) * 100) / 100) + "%)");
 	$("#character-shadow-damage-modifier-val").text(Math.round(characterStats.shadowModifier * 100) + "%");
 	$("#character-fire-damage-modifier-val").text(Math.round(characterStats.fireModifier * 100) + "%");
