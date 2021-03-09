@@ -71,12 +71,14 @@ var raceStats = {
 
 // Refreshes the player's values in the sidebar when changing e.g. gear, consumables, or buffs.
 function refreshCharacterStats() {
+	let critRating = characterStats.critRating + ((characterStats.intellect * characterStats.intellectModifier) * critPerInt);
+
 	$("#character-stamina-val").text(Math.round(characterStats.stamina * characterStats.staminaModifier));
 	$("#character-intellect-val").text(Math.round(characterStats.intellect * characterStats.intellectModifier));
 	$("#character-spell-power-val").text(characterStats.spellPower);
 	$("#character-shadow-power-val").text(characterStats.shadowPower + " (" + (characterStats.shadowPower + characterStats.spellPower) + ")");
 	$("#character-fire-power-val").text(characterStats.firePower + " (" + (characterStats.firePower + characterStats.spellPower) + ")");
-	$("#character-crit-val").text(Math.round(characterStats.critRating) + " (" + (Math.round((characterStats.critRating/critRatingPerPercent) * 100) / 100) + "%)");
+	$("#character-crit-val").text(Math.round(critRating) + " (" + (Math.round((critRating/critRatingPerPercent) * 100) / 100) + "%)");
 	$("#character-hit-val").text(Math.round(characterStats.hitRating) + " (" + (Math.round((characterStats.hitRating/hitRatingPerPercent) * 100) / 100) + "%)");
 	$("#character-shadow-damage-modifier-val").text(Math.round(characterStats.shadowModifier * 100) + "%");
 	$("#character-fire-damage-modifier-val").text(Math.round(characterStats.fireModifier * 100) + "%");
