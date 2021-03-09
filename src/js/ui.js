@@ -72,9 +72,19 @@ $(consumableTypesToTrack.join(',')).click(function(event) {
 
 	// Loop through the consumable classes we found in the previous loop and uncheck all childs of those classes aside from the consumable that just got clicked
 	$(consumableTypes.join(',')).each(function() {
-		if ($(this).attr('name') !== clickedConsumableName) {
-			$(this).attr('data-checked', false);
-			localStorage[$(this).attr('name')] = false;
+		let consumableName = $(this).attr('name');
+
+		if (consumableName !== clickedConsumableName) {
+			if ($(this).attr('data-checked') === 'true') {
+				$(this).attr('data-checked', false);
+				localStorage[consumableName] = false;
+
+				for (let stat in auras.consumables[consumableName]) {
+					if (characterStats.hasOwnProperty(stat)) {
+						characterStats[stat] -= auras.consumables[consumableName][stat];
+					}
+				}
+			}
 		}
 	});
 
