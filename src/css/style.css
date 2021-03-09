@@ -17,7 +17,7 @@ ul {
 }
 
 #character-section {
-	height: 380px;
+	height: 440px;
 	vertical-align: top;
 	/*border-right: 1px solid gray;*/
 }
@@ -144,7 +144,6 @@ ul {
 }
 
 #sim-settings {
-	margin-top: -30px;
 	/*border-right: 1px solid gray;*/
 }
 

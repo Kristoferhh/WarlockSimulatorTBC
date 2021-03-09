@@ -1,8 +1,8 @@
-// Conversion calculations
+// Convertion calculations
 var hitRatingPerPercent = 12.6;
 var critRatingPerPercent = 22.08; // maybe 22.1
 var hasteRatingPerPercent = 15.77; // maybe 15.7
-var manaPerInt = 15; // todo figure out the correct value
+var manaPerInt = 15;
 var healthPerStamina = 10;
 var critPerInt = 1 / 81.95;
 
@@ -73,6 +73,8 @@ var raceStats = {
 function refreshCharacterStats() {
 	let critRating = characterStats.critRating + ((characterStats.intellect * characterStats.intellectModifier) * critPerInt);
 
+	$("#character-health-val").text(characterStats.health + (characterStats.stamina * characterStats.staminaModifier) * healthPerStamina);
+	$("#character-mana-val").text(Math.round(characterStats.mana + (characterStats.intellect * characterStats.intellectModifier) * manaPerInt));
 	$("#character-stamina-val").text(Math.round(characterStats.stamina * characterStats.staminaModifier));
 	$("#character-intellect-val").text(Math.round(characterStats.intellect * characterStats.intellectModifier));
 	$("#character-spell-power-val").text(characterStats.spellPower);
