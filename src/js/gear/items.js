@@ -45,6 +45,20 @@ var items = {
 			"critRating": 24,
 			"source": "Shadowmoon Valley Quest",
 			"phase": 1
+		},
+		"hydromancersHeadwrap": {
+			"name": "Hydromancer's Headwrap",
+			"stamina": 21,
+			"intellect": 27,
+			"meta": 1,
+			"blue": 1,
+			"socketBonus": {
+				"spellPower": 5
+			},
+			"spellPower": 33,
+			"id": 28183,
+			"source": "Steamvaults Quest",
+			"phase": 1,
 		}
 	},
 	"neck": {
@@ -74,6 +88,15 @@ var items = {
 			"critRating": 10,
 			"source": "Blade's Edge Mountains Quest",
 			"phase": 1,
+		},
+		"torcOfTheSethekkProphet": {
+			"name": "Torc of the Sethekk Prophet",
+			"intellect": 18,
+			"spellPower": 19,
+			"critRating": 21,
+			"id": 29333,
+			"source": "Sethekk Halls Quest",
+			"phase": 1,
 		}
 	},
 	"shoulders": {
@@ -100,7 +123,7 @@ var items = {
 			"socketBonus": {
 				"hitRating": 3
 			},
-			"spellPower": 30,
+			"spellPower": 29,
 			"source": "Shadow Labyrinth",
 			"phase": 1,
 		},
@@ -138,6 +161,17 @@ var items = {
 			"spellPower": 36,
 			"source": "Tailoring",
 			"phase": 1,
+		},
+		"cloakOfWovenEnergy": {
+			"name": "Cloak of Woven Energy",
+			"stamina": 6,
+			"intellect": 13,
+			"spirit": 3,
+			"spellPower": 29,
+			"critRating": 6,
+			"id": 29813,
+			"source": "Netherstorm Quest",
+			"phase": 1,
 		}
 	},
 	"chest": {
@@ -174,6 +208,22 @@ var items = {
 			"hitRating": 23,
 			"source": "Auchenai Crypts Quest",
 			"phase": 1
+		},
+		"incantersRobe": {
+			"name": "Incanter's Robe",
+			"stamina": 24,
+			"intellect": 22,
+			"spirit": 22,
+			"yellow": 2,
+			"red": 1,
+			"socketBonus": {
+				"intellect": 4
+			},
+			"spellPower": 29,
+			"critRating": 8,
+			"id": 28229,
+			"source": "Botanica",
+			"phase": 1,
 		}
 	},
 	"bracer": {
@@ -205,7 +255,7 @@ var items = {
 			"socketBonus": {
 				"stamina": 3
 			},
-			"spellPower": 22,
+			"spellPower": 21,
 			"source": "Auchindon Quest",
 			"phase": 1
 		}
@@ -242,6 +292,16 @@ var items = {
 			"spellPen": 9,
 			"source": "Caverns of Time Quest",
 			"phase": 1
+		},
+		"gripsOfTheVoid": {
+			"name": "Grips of the Void",
+			"stamina": 18,
+			"intellect": 11,
+			"spellPower": 35,
+			"critRating": 10,
+			"id": 30930,
+			"source": "Shadowmoon Valley Quest",
+			"phase": 1,
 		}
 	},
 	"belt": {
@@ -279,6 +339,15 @@ var items = {
 			"spellPower": 31,
 			"critRating": 9,
 			"source": "Heroic Mana-Tombs",
+			"phase": 1,
+		},
+		"adalsGift": {
+			"name": "A'dal's Gift",
+			"intellect": 25,
+			"spellPower": 34,
+			"critRating": 21,
+			"id": 31461,
+			"source": "Tempest Keep Quest",
 			"phase": 1,
 		}
 	},
@@ -326,6 +395,17 @@ var items = {
 			"spellPower": 37,
 			"source": "Black Morass",
 			"phase": 1,
+		},
+		"deadlyBorerLeggings": {
+			"name": "Deadly Borer Leggings",
+			"stamina": 21,
+			"intellect": 23,
+			"spirit": 15,
+			"spellPower": 27,
+			"critRating": 22,
+			"id": 25711,
+			"source": "The Blood Furnace Quest",
+			"phase": 1,
 		}
 	},
 	"boots": {
@@ -363,6 +443,17 @@ var items = {
 			"hitRating": 14,
 			"source": "Heroic Mana-Tombs",
 			"phase": 1,
+		},
+		"etherealBootsOfTheSkystrider": {
+			"name": "Ethereal Boots of the Skyrider",
+			"stamina": 19,
+			"intellect": 19,
+			"spirit": 12,
+			"spellPower": 26,
+			"critRating": 17,
+			"id": 25957,
+			"source": "Mana-Tombs",
+			"phase": 1,
 		}
 	},
 	"ring": {
@@ -383,6 +474,25 @@ var items = {
 			"hitRating": 10,
 			"source": "Heroic Old Hillsbrad Foothills",
 			"phase": 1,
+		},
+		"bandOfTheGuardian": {
+			"name": "Band of the Guardian",
+			"intellect": 11,
+			"spellPower": 23,
+			"critRating": 17,
+			"spellPen": 15,
+			"id": 29320,
+			"source": "Caverns of Time Quest",
+			"phase": 1,
+		},
+		"sagesBand": {
+			"name": "Sage's Band",
+			"intellect": 15,
+			"spellPower": 18,
+			"critRating": 14,
+			"id": 25826,
+			"source": "Honor Hold/Thrallmar - Honored",
+			"phase": 1,
 		}
 	},
 	"trinket": {
@@ -398,6 +508,16 @@ var items = {
 			"duration": 20,
 			"cooldown": 120,
 			"source": "41 Badge of Justice - G'eras",
+			"phase": 1,
+		},
+		"vengeanceOfTheIllidari": {
+			"name": "Vengeance of the Illidari",
+			"critRating": 26,
+			"onUseSpellPower": 120,
+			"duration": 15,
+			"cooldown": 90,
+			"id": 28040,
+			"source": "Hellfire Peninsula Quest",
 			"phase": 1,
 		}
 	},
@@ -478,7 +598,7 @@ var items = {
 			"name": "Warpstaff of Arcanum",
 			"stamina": 37,
 			"intellect": 38,
-			"spellPower": 122,
+			"spellPower": 121,
 			"critRating": 26,
 			"hitRating": 16,
 			"source": "Botanica",
@@ -523,6 +643,17 @@ var items = {
 			"hitRating": 7,
 			"source": "Mana-Tombs",
 			"phase": 1
+		},
+		"nesingwarySafariStick": {
+			"name": "Nesingwary Safari Stick",
+			"damageLower": 142,
+			"damageUpper": 265,
+			"speed": 1.8,
+			"spellPower": 14,
+			"critRating": 12,
+			"id": 25640,
+			"source": "Nagrand Quest",
+			"phase": 1,
 		}
 	}
 }
