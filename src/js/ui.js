@@ -93,27 +93,45 @@ $(consumableTypesToTrack.join(',')).click(function(event) {
 
 // User clicks on an item slot in the selection above the item table
 $("#item-slot-selection-list li").click(function() {
-	loadItemsBySlot($(this).attr('data-slot'));
+	loadItemsBySlot($(this).attr('data-slot'), $(this).attr('data-subslot') || null);
 });
 
 // User clicks on an item in the item table
 $("#item-selection-table tbody").on('click', 'tr', function() {
 	let itemSlot = $(this).attr('data-slot');
 	let itemName = $(this).attr('data-name');
+	let subSlot = $(this).data('subSlot') || ""; // Workaround for having two selections for rings and trinkets but only one selection for the other slots.
 
 	// Toggle the item's data-selected boolean.
 	let equipped = $(this).attr('data-selected') == 'true';
 	$(this).attr('data-selected', !equipped);
 
 	// Check if the user already has an item equipped in this slot and unequip it if so
-	if (localStorage['equipped' + itemSlot] !== null && localStorage['equipped' + itemSlot] !== itemName) {
+	if (localStorage['equipped' + itemSlot + subSlot] !== null && localStorage['equipped' + itemSlot + subSlot] !== itemName) {
 		// Set the old item's data-selected value to false and remove the item's stats from the player.
-		$('[data-name="' + localStorage['equipped' + itemSlot] +'"]').attr('data-selected', false);
-		modifyStatsFromItem(localStorage['equipped' + itemSlot], itemSlot);
+		$('[data-name="' + localStorage['equipped' + itemSlot + subSlot] +'"]').attr('data-selected', false);
+		modifyStatsFromItem(localStorage['equipped' + itemSlot + subSlot], itemSlot, subSlot);
 	}
 
 	// Add or remove the stats from the item depending on whether the player has the item equipped or not.
-	modifyStatsFromItem(itemName,$(this).attr('data-slot'));
+	modifyStatsFromItem(itemName,itemSlot,subSlot);
+
+	// If the user is equipping a main hand or offhand then equip their twohander if they have one equipped and vice versa
+	if (itemSlot == "mainhand" || itemSlot == "offhand") {
+		if (localStorage['equippedtwohand']) {
+			modifyStatsFromItem(localStorage['equippedtwohand'], 'twohand');
+			localStorage.removeItem('equippedtwohand');
+		}
+	} else {
+		if (localStorage['equippedmainhand']) {
+			modifyStatsFromItem(localStorage['equippedmainhand'], 'mainhand');
+			localStorage.removeItem('equippedmainhand');
+		}
+		if (localStorage['equippedoffhand']) {
+			modifyStatsFromItem(localStorage['equippedoffhand'], 'offhand');
+			localStorage.removeItem('equippedoffhand');
+		}
+	}
 
 	// Return false so that the user doesn't get redirected to wowhead's website when he clicks the item.
 	return false;
@@ -154,7 +172,9 @@ $("#race-dropdown-list").change(function() {
 });
 
 // Loads items into the item table
-function loadItemsBySlot(itemSlot) {
+function loadItemsBySlot(itemSlot, subSlot = "") {
+	localStorage['selectedItemSlot'] = itemSlot;
+	localStorage['selectedItemSubSlot'] = (subSlot || "");
 	// Removes all current item rows
 	$(".item-row").remove(); 
 	let tableBody = $("#item-selection-table tbody");
@@ -162,16 +182,17 @@ function loadItemsBySlot(itemSlot) {
 	for (let item of Object.keys(items[itemSlot])) {
 		let i = items[itemSlot][item];
 
-		//todo change 'i.spellPower + i.onUseSpellPower' to instead be the average spell power gain from the on-use effect		
-		tableBody.append("<tr data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (localStorage['equipped' + itemSlot] == item || localStorage['equipped' + itemSlot + '1'] == item || localStorage['equipped' + itemSlot + '2'] == item || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (i.mp5 || '') + "</td><td>" + (i.spellPen || '') + "</td><td>" + (localStorage[item + "Dps"] || '') + "</td></tr>")
+		//todo change 'i.spellPower + i.onUseSpellPower' to instead be the average spell power gain from the on-use effect
+		tableBody.append("<tr data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (localStorage['equipped' + itemSlot + (subSlot || "")] == item || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (i.spellPen || '') + "</td><td>" + (localStorage[item + "Dps"] || '') + "</td></tr>")
+		$("[data-name='" + item +"']").data('subSlot', subSlot);
 	}
 }
 
 // Equips or unequips an item. If the player has the item equipped then unequip it, else equip it.
 // loadingUnequippedItems is set to true when the user is loading the website and it needs to add the stats from the user's equipped items from previous sessions.
-function modifyStatsFromItem(itemName, itemSlot, loadingEquippedItems = false) {
+function modifyStatsFromItem(itemName, itemSlot, subSlot = "", loadingEquippedItems = false) {
 	let itemObj = items[itemSlot][itemName];
-	let equipped = localStorage['equipped' + itemSlot] == itemName || false;
+	let equipped = localStorage['equipped' + itemSlot + subSlot] == itemName || false;
 
 	// Loop through the stats on the item and add them to/remove them from the character's stats.
 	for (let stat in itemObj) {
@@ -179,10 +200,10 @@ function modifyStatsFromItem(itemName, itemSlot, loadingEquippedItems = false) {
 		if (characterStats.hasOwnProperty(stat)) {
 			if (equipped && !loadingEquippedItems) {
 				characterStats[stat] -= itemObj[stat];
-				localStorage.removeItem('equipped' + itemSlot);
+				localStorage.removeItem('equipped' + itemSlot + subSlot); // remove from loop
 			} else {
 				characterStats[stat] += itemObj[stat];
-				localStorage['equipped' + itemSlot] = itemName;
+				localStorage['equipped' + itemSlot + subSlot] = itemName; // remove from loop
 			}
 		}
 	}
