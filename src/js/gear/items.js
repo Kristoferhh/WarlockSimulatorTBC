@@ -496,8 +496,47 @@ var items = {
 		}
 	},
 	"trinket": {
+		"shiftingNaaruSliver": {
+			"name": "Shifting Naaru Sliver",
+			"hasteRating": 54,
+			"onUseSpellPower": 320,
+			"duration": 15,
+			"cooldown": 90,
+			"id": 34429,
+			"source": "Sunwell Plateau",
+			"phase": 5 // confirm
+		},
+		"hexShrunkenHead": {
+			"name": "Hex Shrunken Head",
+			"spellPower": 53,
+			"onUseSpellPower": 211,
+			"duration": 20,
+			"cooldown": 120,
+			"id": 33829,
+			"source": "Zul'Aman",
+			"phase": 4, // confirm
+		},
+		"theSkullOfGuldan": {
+			"name": "The Skull of Gul'dan",
+			"hitRating": 25,
+			"spellPower": 55,
+			"onUseHasteRating": 175,
+			"duration": 20,
+			"cooldown": 120,
+			"id": 32483,
+			"source": "Black Temple",
+			"phase": 3, // confirm
+		},
+		"eyeOfMagtheridon": {
+			"name": "Eye of Magtheridon",
+			"spellPower": 54,
+			"id": 28789,
+			"source": "Magtheridon's Lair",
+			"phase": 1
+		},
 		"darkmoonCardCrusade": {
 			"name": "Darkmoon Card: Crusade",
+			"id": 31856,
 			"source": "Blessings Deck",
 			"phase": 2, // unsure?
 		},
@@ -507,8 +546,88 @@ var items = {
 			"onUseSpellPower": 155,
 			"duration": 20,
 			"cooldown": 120,
+			"id": 29370,
 			"source": "41 Badge of Justice - G'eras",
 			"phase": 1,
+		},
+		"quagmirransEye": {
+			"name": "Quagmirran's Eye",
+			"spellPower": 38,
+			"id": 27683,
+			"source": "Heroic Slave Pens",
+			"phase": 1
+		},
+		"scryersBloodgem": {
+			"name": "Scryer's Bloodgem",
+			"hitRating": 32,
+			"onUseSpellPower": 151,
+			"duration": 15,
+			"cooldown": 90,
+			"id": 29132,
+			"source": "The Scryers - Revered",
+			"phase": 1
+		},
+		"arcanistsStone": {
+			"name": "Arcanist's Stone",
+			"hitRating": 25,
+			"onUseSpellPower": 168,
+			"duration": 20,
+			"cooldown": 120,
+			"id": 28223,
+			"source": "Heroic Old Hillsbrad Foothills",
+			"phase": 1
+		},
+		"ancientCrystalTalisman": {
+			"name": "Ancient Crystal Talisman",
+			"spellPower": 27,
+			"onUseSpellPower": 105,
+			"duration": 20,
+			"cooldown": 120,
+			"id": 25620,
+			"source": "Zangarmarsh Quest",
+			"phase": 1
+		},
+		"oculusOfTheHiddenEye": {
+			"name": "Oculus of the Hidden Eye",
+			"spellPower": 34,
+			"id": 26055,
+			"source": "Auchenai Crypts",
+			"phase": 1
+		},
+		"markOfDefiance": {
+			"name": "Mark of Defiance",
+			"spellPower": 33,
+			"id": 27922,
+			"source": "30 Mark of Honor Hold / Thrallmar",
+			"phase": 1
+		},
+		"xirisGift": {
+			"name": "Xi'ri's Gift",
+			"critRating": 32,
+			"onUseSpellPower": 151,
+			"duration": 15,
+			"cooldown": 90,
+			"id": 29179,
+			"source": "The Sha'tar -  Revered",
+			"phase": 1
+		},
+		"shiffarsNexusHorn": {
+			"name": "Shiffar's Nexus-Horn",
+			"critRating": 30,
+			"id": 28418,
+			"source": "Arcatraz",
+			"phase": 1
+		},
+		"figurineLivingRubySerpent": {
+			"name": "Figurine - Living Ruby Serpent",
+			"stamina": 33,
+			"intellect": 22,
+			"onUseSpellPower": 151,
+			"duration": 20,
+			"cooldown": 300,
+			"id": 24126,
+			"source": "Jewelcrafting",
+			"phase": 1
 		},
 		"vengeanceOfTheIllidari": {
 			"name": "Vengeance of the Illidari",
