@@ -158,6 +158,13 @@ var auras = {
 			"id": 32067,
 			"guardianElixir": true
 		},
+		"elixirOfMajorMageblood": {
+			"name": "Elixir of Major Mageblood",
+			"mp5": 16,
+			"iconName": "inv_potion_151",
+			"id": 22840,
+			"guardianElixir": true
+		},
 		"superManaPotion": {
 			"name": "Super Mana Potion",
 			"iconName": "inv_potion_137",

@@ -268,7 +268,7 @@ ul {
 }
 
 .talent-tree-table {
-	height: 100%;
+	background-size: 100% 100%;
 	width: 100%;
 	background-repeat: no-repeat;
 	background-position: center;
