@@ -139,6 +139,27 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 	//todo implement code to automatically unequip 2h when equipping 1h/offhand and vice versa.
 });
 
+// User clicks on an enchant
+$("#enchant-selection-table tbody").on('click', 'tr', function(event) {
+	let itemSlot = $(this).attr('data-slot');
+	let enchantName = $(this).attr('data-name');
+
+	// Toggle the enchant's data-selected boolean.
+	let equipped = $(this).attr('data-selected') == 'true';
+	$(this).attr('data-selected', !equipped);
+
+	// Check if the user already has an enchant equipped in this slot and unequip it if so
+	if (localStorage['equipped' + itemSlot + "Enchant"] !== null && localStorage['equipped' + itemSlot + "Enchant"] !== enchantName) {
+		// Set the old enchant's data-selected value to false and remove the enchants's stats from the player.
+		$('[data-name="' + localStorage['equipped' + itemSlot + "Enchant"] +'"]').attr('data-selected', false);
+		modifyStatsFromEnchant(localStorage['equipped' + itemSlot + "Enchant"], itemSlot);
+	}
+
+	modifyStatsFromEnchant(enchantName,itemSlot);
+
+	return false;
+});
+
 // Add the talent trees
 for (let tree in talents) {
 	if (talents.hasOwnProperty(tree)) {
@@ -293,6 +314,31 @@ function loadItemsBySlot(itemSlot, subSlot = "") {
 		tableBody.append("<tr data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (localStorage['equipped' + itemSlot + (subSlot || "")] == item || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (Math.round(i.hasteRating + (i.onUseHasteRating * i.duration / i.cooldown)) || i.hasteRating || Math.round(i.onUseHasteRating * i.duration / i.cooldown) || '') + "</td><td>" + (localStorage[item + "Dps"] || '') + "</td></tr>")
 		$("[data-name='" + item +"']").data('subSlot', subSlot);
 	}
+
+	loadEnchantsBySlot(itemSlot);
+}
+
+function loadEnchantsBySlot(itemSlot) {
+	if (itemSlot == "mainhand" || itemSlot == "twohand") {
+		itemSlot = "weapon";
+	}
+
+	if (enchants[itemSlot]) {
+		$(".enchant-row").remove(); // Removes all item enchant rows
+		let tableBody = $("#enchant-selection-table tbody");
+
+		for (let enchant of Object.keys(enchants[itemSlot])) {
+			let e = enchants[itemSlot][enchant];
+
+			tableBody.append("<tr data-slot='" + itemSlot + "' data-name='" + enchant + "' data-selected='" + (localStorage['equipped' + itemSlot + "Enchant"] == enchant || 'false') + "' class='enchant-row' data-wowhead-id='" + e.id + "'><td><a href='https://tbc.wowhead.com/spell=" + e.id + "'>" + e.name + "</a></td><td>" + (e.spellPower || '') + "</td><td>" + (e.shadowPower || '') + "</td><td>" + (e.firePower || '') + "</td><td>" + (e.stamina || '') + "</td><td>" + (e.intellect || '') + "</td><td>" + (e.mp5 || '') + "</td><td>" + (((e.natureResistance || 0) + (e.allResistance || 0)) || '') + "</td><td>" + (((e.shadowResistance || 0) + (e.allResistance || 0)) || '') + "</td><td>" + (((e.fireResistance || 0) + (e.allResistance || 0)) || '') + "</td><td>" + ((e.threatReduction * 100) || '') + "</td><td>" + (e.threatIncrease * 100 || '') + "</td><td>" + (localStorage[enchant + "Dps"] || '') + "</td></tr>")
+		}
+
+		$("#enchant-selection-table").show();
+	} else {
+		$("#enchant-selection-table").hide();
+	}
+
+	refreshCharacterStats();
 }
 
 // Equips or unequips an item. If the player has the item equipped then unequip it, else equip it.
@@ -301,21 +347,55 @@ function modifyStatsFromItem(itemName, itemSlot, subSlot = "", loadingEquippedIt
 	let itemObj = items[itemSlot][itemName];
 	let equipped = localStorage['equipped' + itemSlot + subSlot] == itemName || false;
 
-	// Loop through the stats on the item and add them to/remove them from the character's stats.
-	for (let stat in itemObj) {
-		// Check if the item property is a character stat such as stamina/spell power.
-		if (characterStats.hasOwnProperty(stat)) {
-			if (equipped && !loadingEquippedItems) {
+	// If the user has the item equipped and is not loading the stats from equipped items when loading the website
+	if (equipped && !loadingEquippedItems) {
+		// Loop through the stats on the item and add them to/remove them from the character's stats.
+		for (let stat in itemObj) {
+			// Check if the item property is a character stat such as stamina/spell power.
+			if (characterStats.hasOwnProperty(stat)) {
 				characterStats[stat] -= itemObj[stat];
-				localStorage.removeItem('equipped' + itemSlot + subSlot); // remove from loop
-			} else {
-				characterStats[stat] += itemObj[stat];
-				localStorage['equipped' + itemSlot + subSlot] = itemName; // remove from loop
 			}
 		}
+
+		localStorage.removeItem('equipped' + itemSlot + subSlot);
+	} else {
+		for (let stat in itemObj) {
+			if (characterStats.hasOwnProperty(stat)) {
+				characterStats[stat] += itemObj[stat];
+			}
+		}
+
+		localStorage['equipped' + itemSlot + subSlot] = itemName;
 	}
 
 	refreshCharacterStats();
+}
+
+function modifyStatsFromEnchant(enchantName, itemSlot, loadingEquippedEnchants = false) {
+	let enchantObj = enchants[itemSlot][enchantName];
+	let equipped = localStorage['equipped' + itemSlot + 'Enchant'] == enchantName || false;
+
+	if (equipped && !loadingEquippedEnchants) {
+		for (let stat in enchantObj) {
+			if (characterStats.hasOwnProperty(stat)) {
+				characterStats[stat] -= enchantObj[stat];
+			}
+		}
+
+		localStorage.removeItem("equipped" + itemSlot + "Enchant");
+	} else {
+		for (let stat in enchantObj) {
+			if (characterStats.hasOwnProperty(stat)) {
+				characterStats[stat] += enchantObj[stat];
+			}
+		}
+
+		localStorage['equipped' + itemSlot + 'Enchant'] = enchantName;
+	}
+
+	if (!loadingEquippedEnchants) {
+		refreshCharacterStats();
+	}
 }
 
 function modifyStatsFromAura(auraObject, checked) {

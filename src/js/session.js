@@ -11,6 +11,13 @@ for (let itemSlot in items) {
 	}
 }
 
+// Same as above but for enchants
+for (let itemSlot in enchants) {
+	if (localStorage['equipped' + itemSlot + "Enchant"]) {
+		modifyStatsFromEnchant(localStorage['equipped' + itemSlot + "Enchant"], itemSlot, true);
+	}
+}
+
 // Add stats from the player's selected race
 let currentRace = $("#race-dropdown-list").val();
 if (currentRace == "gnome") {
