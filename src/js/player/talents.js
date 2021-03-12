@@ -1,4 +1,5 @@
-let talents = {
+var talentPointsRemaining = 61;
+var talents = {
 	"affliction": {
 		"suppression": {
 			"name": "Suppression",
@@ -79,7 +80,7 @@ let talents = {
 		},
 		"empoweredCorruption": {
 			"name": "Empowered Corruption",
-			"rankIDs": [17864,18393],
+			"rankIDs": [17864,18393,0],
 			"iconName": "spell_shadow_abominationexplosion",
 			"row": 4,
 			"column": 4
