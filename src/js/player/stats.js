@@ -19,6 +19,7 @@ var characterStats = {
 	"firePower": 0,
 	"critRating": 0,
 	"hitRating": 0,
+	"hasteRating": 0,
 	"critPercent": 0,
 	"mp5": 0,
 	"spellPen": 0,
@@ -73,17 +74,19 @@ var raceStats = {
 // Refreshes the player's values in the sidebar when changing e.g. gear, consumables, or buffs.
 function refreshCharacterStats() {
 	let critRating = characterStats.critRating + ((characterStats.intellect * characterStats.intellectModifier) * critPerInt);
+	let staminaModifier = characterStats.staminaModifier * (1 + (0.03 * $("#demonicEmbrace").attr('data-points')));
 
-	$("#character-health-val").text(characterStats.health + (characterStats.stamina * characterStats.staminaModifier) * healthPerStamina);
-	$("#character-mana-val").text(Math.round(characterStats.mana + (characterStats.intellect * characterStats.intellectModifier) * manaPerInt));
-	$("#character-stamina-val").text(Math.round(characterStats.stamina * characterStats.staminaModifier));
+	$("#character-health-val").text(Math.round((characterStats.health + (characterStats.stamina * staminaModifier) * healthPerStamina) * (1 + (0.01 * $("#felStamina").attr('data-points')))));
+	$("#character-mana-val").text(Math.round((characterStats.mana + (characterStats.intellect * characterStats.intellectModifier) * manaPerInt) * (1 + (0.01 * $("#felIntellect").attr('data-points')))));
+	$("#character-stamina-val").text(Math.round(characterStats.stamina * staminaModifier));
 	$("#character-intellect-val").text(Math.round(characterStats.intellect * characterStats.intellectModifier));
 	$("#character-spell-power-val").text(characterStats.spellPower);
 	$("#character-shadow-power-val").text(characterStats.shadowPower + " (" + (characterStats.shadowPower + characterStats.spellPower) + ")");
 	$("#character-fire-power-val").text(characterStats.firePower + " (" + (characterStats.firePower + characterStats.spellPower) + ")");
-	$("#character-crit-val").text(Math.round(critRating) + " (" + (Math.round((critRating/critRatingPerPercent + baseCritChancePercent) * 100) / 100) + "%)");
+	$("#character-crit-val").text(Math.round(critRating) + " (" + ((Math.round((critRating/critRatingPerPercent + baseCritChancePercent) * 100) / 100) + (1 * $("#devastation").attr('data-points')) + (1 * $("#backlash").attr('data-points'))) + "%)");
 	$("#character-hit-val").text(Math.round(characterStats.hitRating) + " (" + (Math.round((characterStats.hitRating/hitRatingPerPercent) * 100) / 100) + "%)");
-	$("#character-shadow-damage-modifier-val").text(Math.round(characterStats.shadowModifier * 100) + "%");
+	$("#character-haste-val").text(Math.round(characterStats.hasteRating) + " (" + (Math.round((characterStats.hasteRating/hasteRatingPerPercent) * 100) / 100) + "%)");
+	$("#character-shadow-damage-modifier-val").text(Math.round((characterStats.shadowModifier * (1 + (0.02 * $("#shadowMastery").attr('data-points')))) * 100) + "%");
 	$("#character-fire-damage-modifier-val").text(Math.round(characterStats.fireModifier * 100) + "%");
 	$("#character-mp5-val").text(characterStats.mp5);
 	$("#character-spell-pen-val").text(characterStats.spellPen);
