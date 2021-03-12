@@ -139,6 +139,113 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 	//todo implement code to automatically unequip 2h when equipping 1h/offhand and vice versa.
 });
 
+// Add the talent trees
+for (let tree in talents) {
+	if (talents.hasOwnProperty(tree)) {
+		$("#talents-section").append($("<div class='talent-tree-div'><table background='img/talent_tree_background_" + tree + ".jpg' id='talent-table-" + tree + "' class='talent-tree-table'></table><h3 class='talent-tree-name'>" + tree.charAt(0).toUpperCase() + tree.slice(1) + "</h3></div>"));
+		$("#talent-table-" + tree).append($("<tbody></tbody>"));
+		$("#talent-table-" + tree + " tbody").append($("<tr class='" + tree + "-tree-row'></tr>"));
+		let lastRow = $("#talent-table-" + tree + " tbody tr:last");
+		let currentCol = 1;
+
+		for (let talent in talents[tree]) {
+			let t = talents[tree][talent];
+			let lowerTalentName = t.name.toLowerCase().split(' ').join('-');
+			localStorage[lowerTalentName] = localStorage[lowerTalentName] || 0;
+
+			// Check if the current talent should be in the next row below and create a new row if true
+			if (t.row > $("." + tree + "-tree-row").length) {
+				$("#talent-table-" + tree + " tbody").append($("<tr class='" + tree + "-tree-row'></tr>"));
+				lastRow = $("#talent-table-" + tree + " tbody tr:last");
+				currentCol = 1;
+			}
+
+			// Create empty cells between talents if skipping a number (e.g. going from column 1 straight to column 4)
+			while (currentCol < t.column) {
+				lastRow.append($("<td></td>"));
+				currentCol++;
+			}
+
+			lastRow.append($("<td><div data-points='" + localStorage[lowerTalentName] + "' class='talent-icon' data-tree='" + tree + "' id='" + talent + "'><a href='https://classic.wowhead.com/spell=" + t.rankIDs[Math.max(0,localStorage[lowerTalentName]-1)] + "'><img src='img/" + t.iconName + ".jpg' alt='" + t.name + "'><span id='" + lowerTalentName + "-point-amount' class='talent-point-amount'>" + localStorage[lowerTalentName] + "</span></a></div></td>"));
+			
+			// Check if the text displaying the talent point amount should be hidden or colored (for maxed out talents)
+			let pointAmount = $("#" + lowerTalentName + "-point-amount")
+			if (pointAmount.text() <= 0) {
+				pointAmount.hide();
+			} else if (pointAmount.text() == t.rankIDs.length) {
+				pointAmount.css("color","#ffcd45");
+			} else {
+				pointAmount.css("color","#7FFF00")
+			}
+			currentCol++;
+		}
+	}
+}
+
+// Disable the context menu from appearing when the user right clicks a talent
+$(".talent-icon").bind("contextmenu", function(event) {
+	return false;
+});
+
+// Prevents the user from being redirected to the talent's wowhead page when clicking it.
+$(".talent-icon").click(function() {
+	return false;
+});
+
+// Fires when the user left or right clicks a talent
+$(".talent-icon").mousedown(function(event) {
+	// Check if the click was a left or right click
+	if ((event.which === 1 && talentPointsRemaining > 0) || event.which === 3) {
+		let icon = $(this);
+		let talent = talents[icon.attr('data-tree')][icon.attr('id')]; // get the talent's object
+		let lowerTalentName = talent.name.toLowerCase().split(' ').join('-');
+
+		// left click
+		if (event.which === 1) {
+			// compare the amount of points in the talent vs the amount of ranks before incrementing
+			if (Number(icon.attr('data-points')) < talent.rankIDs.length) {
+				icon.attr('data-points', Number(icon.attr('data-points')) + 1);
+				localStorage[lowerTalentName] = Number(localStorage[lowerTalentName]) + 1;
+
+				// todo: move these JS css changes to the css file
+				if (Number(icon.attr('data-points')) == talent.rankIDs.length) {
+					icon.children('a').children('span').css('color', "#ffcd45");	
+				} else {
+					icon.children('a').children('span').css('color', "#7FFF00");
+				}
+			}
+		// right click
+		} else if (event.which === 3) {
+			// only decrement if the point amount is above 0
+			if (icon.attr('data-points') > 0) {
+				icon.attr('data-points', Number(icon.attr('data-points'))-1);
+				localStorage[lowerTalentName] = Number(localStorage[lowerTalentName]) - 1;
+				icon.children('a').children('span').css('color', "#7FFF00");
+			}
+		}
+
+		// if these talents are changed then the character stats in the sidebar need to be updated
+		if (talent.name == "Demonic Embrace" || talent.name == "Devastation" || talent.name == "Backlash" || talent.name == "Fel Stamina" || talent.name == "Fel Intellect" || talent.name == "Master Demonologist" || talent.name == "Soul Link" || talent.name == "Demonic Tactics" || talent.name == "Shadow Mastery") {
+			refreshCharacterStats();
+		}
+
+		// update the point amount on the talent icon
+		icon.children('a').children('.talent-point-amount').text(icon.attr('data-points'));
+
+		// if the point amount is 0 then we hide the amount, otherwise we show it
+		if (icon.children('a').children('.talent-point-amount').text() > 0) {
+			icon.children('a').children('.talent-point-amount').show();
+		} else {
+			icon.children('a').children('.talent-point-amount').hide();
+		}
+
+		icon.children('a').attr('href', 'https://classic.wowhead.com/spell=' + talent.rankIDs[Math.max(0,localStorage[lowerTalentName]-1)]);
+		//$WowheadPower.refreshLinks();
+	}
+
+	return false;
+});
+
 // User changes races in the simulation settings
 $("#race-dropdown-list").change(function() {
 	let oldRace = $(this).data("currentRace");
