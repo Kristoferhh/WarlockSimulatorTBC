@@ -17,6 +17,39 @@ var items = {
 			"source": "Tailoring",
 			"phase": 1
 		},
+		"gladiatorsFelweaveCowl": {
+			"name": "Gladiator's Felweave Cowl",
+			"stamina": 54,
+			"intellect": 15,
+			"meta": 1,
+			"red": 1,
+			"socketBonus": {
+				"resilienceRating": 4
+			},
+			"spellPower": 37,
+			"critRating": 18,
+			"resilienceRating": 30,
+			"setId": 615,
+			"id": 30187,
+			"source": "PVP",
+			"phase": 1
+		},
+		"gladiatorsDreadweaveHood": {
+			"name": "Gladiator's Dreadweave Hood",
+			"stamina": 60,
+			"intellect": 20,
+			"meta": 1,
+			"red": 1,
+			"socketBonus": {
+				"resilienceRating": 4
+			},
+			"spellPower": 32,
+			"resilienceRating": 30,
+			"setId": 568,
+			"id": 24553,
+			"source": "PVP",
+			"phase": 1
+		},
 		"hoodOfOblivion": {
 			"name": "Hood of Oblivion",
 			"stamina": 27,
@@ -62,6 +95,35 @@ var items = {
 		}
 	},
 	"neck": {
+		"veteransPendantOfConquest": {
+			"name": "Veteran's Pendant of Conquest",
+			"stamina": 27,
+			"intellect": 12,
+			"yellow": 1,
+			"socketBonus": {
+				"stamina": 3
+			},
+			"spellPower": 21,
+			"critRating": 18,
+			"resilienceRating": 18,
+			"id": 33067,
+			"source": "PVP",
+			"phase": 1
+		},
+		"veteransPendantOfDominance": {
+			"name": "Veteran's Pendant of Dominance",
+			"stamina": 31,
+			"intellect": 16,
+			"yellow": 1,
+			"socketBonus": {
+				"stamina": 3
+			},
+			"spellPower": 26,
+			"resilienceRating": 18,
+			"id": 33065,
+			"source": "PVP",
+			"phase": 1
+		},
 		"hydraFangNecklace": {
 			"name": "Hydra-fang Necklace",
 			"stamina": 17,
@@ -97,6 +159,26 @@ var items = {
 			"id": 29333,
 			"source": "Sethekk Halls Quest",
 			"phase": 1,
+		},
+		"amuletOfVeknilash": {
+			"name": "Amulet of Vek'nilash",
+			"stamina": 9,
+			"intellect": 5,
+			"spellPower": 27,
+			"critRating": 14,
+			"id": 21608,
+			"source": "AQ40",
+			"phase": 0
+		},
+		"gemOfTrappedInnocents": {
+			"name": "Gem of Trapper Innocents",
+			"stamina": 9,
+			"intellect": 7,
+			"spellPower": 15,
+			"critRating": 28,
+			"id": 23057,
+			"source": "Naxxramas",
+			"phase": 0
 		}
 	},
 	"shoulders": {
@@ -112,6 +194,40 @@ var items = {
 			"shadowPower": 51,
 			"setId": 1, // fix
 			"source": "Tailoring",
+			"phase": 1
+		},
+		"gladiatorsFelweaveAmice": {
+			"name": "Gladiator's Felweave Amice",
+			"stamina": 42,
+			"intellect": 14,
+			"blue": 1,
+			"yellow": 1,
+			"socketBonus": {
+				"resilienceRating": 3
+			},
+			"spellPower": 32,
+			"critRating": 12,
+			"resilienceRating": 21,
+			"setId": 615,
+			"id": 30186,
+			"source": "PVP",
+			"phase": 1
+		},
+		"gladiatorsDreadweaveMantle": {
+			"name": "Gladiator's Dreadweave Mantle",
+			"stamina": 42,
+			"intellect": 14,
+			"blue": 1,
+			"yellow": 1,
+			"socketBonus": {
+				"resilienceRating": 3
+			},
+			"spellPower": 32,
+			"resilienceRating": 21,
+			"hitRating": 12,
+			"setId": 568,
+			"id": 24554,
+			"source": "PVP",
 			"phase": 1
 		},
 		"spauldersOfOblivion": {
@@ -135,6 +251,16 @@ var items = {
 			"hitRating": 12,
 			"source": "Black Morass",
 			"phase": 1,
+		},
+		"mindragePauldrons": {
+			"name": "Mindrage Pauldrons",
+			"stamina": 22,
+			"intellect": 15,
+			"spellPower": 34,
+			"spellPen": 10,
+			"id": 27816,
+			"source": "Heroic Mana-Tombs",
+			"phase": 1
 		}
 	},
 	"back": {
@@ -172,6 +298,17 @@ var items = {
 			"id": 29813,
 			"source": "Netherstorm Quest",
 			"phase": 1,
+		},
+		"cloakOfTheNecropolis": {
+			"name": "Cloak of the Necropolis",
+			"stamina": 12,
+			"intellect": 11,
+			"spellPower": 26,
+			"critRating": 14,
+			"hitRating": 8,
+			"id": 23050,
+			"source": "Naxxramas",
+			"phase": 1
 		}
 	},
 	"chest": {
@@ -186,6 +323,39 @@ var items = {
 			},
 			"shadowPower": 73,
 			"source": "Tailoring",
+			"phase": 1
+		},
+		"gladiatorsFelweaveRaiment": {
+			"name": "Gladiator's Felweave Raiment",
+			"stamina": 51,
+			"intellect": 16,
+			"red": 1,
+			"yellow": 2,
+			"socketBonus": {
+				"critRating": 4
+			},
+			"spellPower": 32,
+			"resilienceRating": 24,
+			"critRating": 27,
+			"setId": 615,
+			"id": 30200,
+			"source": "PVP",
+			"phase": 1
+		},
+		"gladiatorsDreadweaveRobe": {
+			"name": "Gladiator's Dreadweave Robe",
+			"stamina": 57,
+			"intellect": 19,
+			"red": 1,
+			"yellow": 2,
+			"socketBonus": {
+				"resilienceRating": 4
+			},
+			"spellPower": 36,
+			"resilienceRating": 24,
+			"setId": 568,
+			"id": 24552,
+			"source": "PVP",
 			"phase": 1
 		},
 		"robeOfTheCrimsonOrder": {
@@ -236,6 +406,64 @@ var items = {
 			"source": "Heroic Hellfire Ramparts",
 			"phase": 1,
 		},
+		"veteransSilkCuffs": {
+			"name": "Veteran's Silk Cuffs",
+			"stamina": 25,
+			"intellect": 18,
+			"yellow": 1,
+			"socketBonus": {
+				"spellPower": 2
+			},
+			"spellPower": 22,
+			"critRating": 14,
+			"resilienceRating": 13,
+			"id": 32820,
+			"source": "PVP",
+			"phase": 1
+		},
+		"veteransDreadweaveCuffs": {
+			"name": "Veteran's Dreadweave Cuffs",
+			"stamina": 31,
+			"intellect": 16,
+			"yellow": 1,
+			"socketBonus": {
+				"spellPower": 2
+			},
+			"spellPower": 25,
+			"resilienceRating": 17,
+			"id": 32811,
+			"source": "PVP",
+			"phase": 1
+		},
+		"marshalsSilkCuffs": {
+			"name": "Marshal's Silk Cuffs",
+			"stamina": 22,
+			"intellect": 17,
+			"yellow": 1,
+			"socketBonus": {
+				"spellPower": 2
+			},
+			"spellPower": 20,
+			"resilienceRating": 11,
+			"critRating": 12,
+			"id": 29002,
+			"source": "PVP",
+			"phase": 1
+		},
+		"marshalsDreadweaveCuffs": {
+			"name": "Marshal's Dreadweave Cuffs",
+			"stamina": 25,
+			"intellect": 14,
+			"yellow": 1,
+			"socketBonus": {
+				"spellPower": 2
+			},
+			"spellPower": 22,
+			"resilienceRating": 14,
+			"id": 28981,
+			"source": "PVP",
+			"phase": 1
+		},
 		"bracersOfHavok": {
 			"name": "Bracers of Havok",
 			"intellect": 12,
@@ -269,6 +497,29 @@ var items = {
 			"hitRating": 18,
 			"source": "Heroic Auchenai Crypts",
 			"phase": 1,
+		},
+		"gladiatorsFelweaveHandguards": {
+			"name": "Gladiator's Felweave Handguards",
+			"stamina": 39,
+			"intellect": 14,
+			"spellPower": 32,
+			"critRating": 21,
+			"resilienceRating": 21,
+			"setId": 615,
+			"id": 30188,
+			"source": "PVP",
+			"phase": 1
+		},
+		"gladiatorsDreadweaveGloves": {
+			"name": "Gladiator's Dreadweave Gloves",
+			"stamina": 39,
+			"intellect": 25,
+			"spellPower": 32,
+			"resilienceRating": 21,
+			"setId": 568,
+			"id": 24556,
+			"source": "PVP",
+			"phase": 1
 		},
 		"glovesOfOblivion": {
 			"name": "Gloves of Oblivion",
@@ -319,6 +570,48 @@ var items = {
 			"source": "Tailoring",
 			"phase": 1,
 		},
+		"veteransSilkBelt": {
+			"name": "Veteran's Silk Belt",
+			"stamina": 39,
+			"intellect": 27,
+			"spellPower": 32,
+			"resilienceRating": 26,
+			"critRating": 27,
+			"id": 32807,
+			"source": "PVP",
+			"phase": 1
+		},
+		"veteransDreadweaveBelt": {
+			"name": "Veteran's Dreadweave Belt",
+			"stamina": 45,
+			"intellect": 30,
+			"spellPower": 36,
+			"resilienceRating": 31,
+			"id": 32799,
+			"source": "PVP",
+			"phase": 1
+		},
+		"marshalsSilkBelt": {
+			"name": "Marshal's Silk Belt",
+			"stamina": 33,
+			"intellect": 22,
+			"spellPower": 28,
+			"critRating": 24,
+			"resilienceRating": 24,
+			"id": 29001,
+			"source": "PVP",
+			"phase": 1
+		},
+		"marshalsDreadweaveBelt": {
+			"name": "Marshal's Dreadweave Belt",
+			"stamina": 39,
+			"intellect": 27,
+			"spellPower": 32,
+			"resilienceRating": 27,
+			"id": 28980,
+			"source": "PVP",
+			"phase": 1
+		},
 		"beltOfDepravity": {
 			"name": "Belt of Depravity",
 			"stamina": 31,
@@ -349,6 +642,16 @@ var items = {
 			"id": 31461,
 			"source": "Tempest Keep Quest",
 			"phase": 1,
+		},
+		"eyestalkWaistCord": {
+			"name": "Eyestalk Waist Cord",
+			"stamina": 10,
+			"intellect": 9,
+			"spellPower": 41,
+			"critRating": 14,
+			"id": 22730,
+			"source": "AQ40",
+			"phase": 0
 		}
 	},
 	"legs": {
@@ -367,6 +670,29 @@ var items = {
 			"hitRating": 22,
 			"source": "Tailoring",
 			"phase": 1,
+		},
+		"gladiatorsFelweaveTrousers": {
+			"name": "Gladiator's Felweave Trousers",
+			"stamina": 54,
+			"intellect": 25,
+			"spellPower": 42,
+			"resilienceRating": 30,
+			"critRating": 28,
+			"setId": 615,
+			"id": 30201,
+			"source": "PVP",
+			"phase": 1
+		},
+		"gladiatorsDreadweaveLeggings": {
+			"name": "Gladiator's Dreadweave Leggings",
+			"stamina": 60,
+			"intellect": 30,
+			"spellPower": 49,
+			"resilienceRating": 30,
+			"id": 24555,
+			"setId": 568,
+			"source": "PVP",
+			"phase": 1
 		},
 		"breechesOfTheOcculist": {
 			"name": "Breeches of the Occulist",
@@ -406,6 +732,16 @@ var items = {
 			"id": 25711,
 			"source": "The Blood Furnace Quest",
 			"phase": 1,
+		},
+		"leggingsOfPolarity": {
+			"name": "Leggings of Polarity",
+			"stamina": 20,
+			"intellect": 14,
+			"spellPower": 44,
+			"critRating": 28,
+			"id": 23070,
+			"source": "Naxxramas",
+			"phase": 1
 		}
 	},
 	"boots": {
@@ -421,6 +757,48 @@ var items = {
 			"shadowPower": 58,
 			"source": "Tailoring",
 			"phase": 1,
+		},
+		"veteransSilkFootguards": {
+			"name": "Veteran's Silk Footguards",
+			"stamina": 39,
+			"intellect": 27,
+			"spellPower": 32,
+			"resilienceRating": 26,
+			"critRating": 27,
+			"id": 32795,
+			"source": "PVP",
+			"phase": 1
+		},
+		"veteransDreadweaveStalkers": {
+			"name": "Veteran's Dreadweave Stalkers",
+			"stamina": 45,
+			"intellect": 30,
+			"spellPower": 36,
+			"resilienceRating": 31,
+			"id": 32787,
+			"source": "PVP",
+			"phase": 1
+		},
+		"marshalsSilkFootguards": {
+			"name": "Marshal's Silk Footguards",
+			"stamina": 33,
+			"intellect": 23,
+			"spellPower": 28,
+			"resilienceRating": 24,
+			"critRating": 24,
+			"id": 29003,
+			"source": "PVP",
+			"phase": 1
+		},
+		"marshalsDreadweaveStalkers": {
+			"name": "Marshal's Dreadweave Stalkers",
+			"stamina": 40,
+			"intellect": 27,
+			"spellPower": 32,
+			"resilienceRating": 27,
+			"id": 28982,
+			"source": "PVP",
+			"phase": 1
 		},
 		"shattrathJumpers": {
 			"name": "Shattrath Jumpers",
@@ -457,6 +835,18 @@ var items = {
 		}
 	},
 	"ring": {
+		"veteransBandOfDominance": {
+			"name": "Veteran's Band of Dominance",
+			"stamina": 27,
+			"intellect": 12,
+			"spellPower": 29,
+			"resilienceRating": 22,
+			"spellPen": 10,
+			"unique": true,
+			"id": 33056,
+			"source": "PVP",
+			"phase": 1
+		},
 		"ashyensGift": {
 			"name": "Ashyen's Gift",
 			"stamina": 30,
@@ -493,6 +883,34 @@ var items = {
 			"id": 25826,
 			"source": "Honor Hold/Thrallmar - Honored",
 			"phase": 1,
+		},
+		"ringOfTheFallenGod": {
+			"name": "Ring of the Fallen God",
+			"stamina": 5,
+			"intellect": 6,
+			"spellPower": 37,
+			"hitRating": 8,
+			"id": 21709,
+			"source": "AQ40",
+			"phase": 0
+		},
+		"bandOfTheInevitable": {
+			"name": "Band of the Inevitable",
+			"spellPower": 36,
+			"hitRating": 8,
+			"id": 23031,
+			"source": "Naxxramas",
+			"phase": 0
+		},
+		"sealOfTheDamned": {
+			"name": "Seal of the Damned",
+			"stamina": 17,
+			"spellPower": 21,
+			"hitRating": 8,
+			"critRating": 14,
+			"id": 23025,
+			"source": "Naxxramas",
+			"phase": 0
 		}
 	},
 	"trinket": {
@@ -577,16 +995,6 @@ var items = {
 			"source": "Heroic Old Hillsbrad Foothills",
 			"phase": 1
 		},
-		"ancientCrystalTalisman": {
-			"name": "Ancient Crystal Talisman",
-			"spellPower": 27,
-			"onUseSpellPower": 105,
-			"duration": 20,
-			"cooldown": 120,
-			"id": 25620,
-			"source": "Zangarmarsh Quest",
-			"phase": 1
-		},
 		"oculusOfTheHiddenEye": {
 			"name": "Oculus of the Hidden Eye",
 			"spellPower": 34,
@@ -638,9 +1046,64 @@ var items = {
 			"id": 28040,
 			"source": "Hellfire Peninsula Quest",
 			"phase": 1,
+		},
+		"ancientCrystalTalisman": {
+			"name": "Ancient Crystal Talisman",
+			"spellPower": 27,
+			"onUseSpellPower": 105,
+			"duration": 20,
+			"cooldown": 120,
+			"id": 25620,
+			"source": "Zangarmarsh Quest",
+			"phase": 1
+		},
+		"terokkarTabletOfVim": {
+			"name": "Terokkar Tablet of Vim",
+			"hitRating": 22,
+			"onUseSpellPower": 84,
+			"duration": 15,
+			"cooldown": 90,
+			"id": 25936,
+			"source": "Terokkar Forest Quest",
+			"phase": 1
+		},
+		"theRestrainedEssenceOfSapphiron": {
+			"name": "The Restrained Essence of Sapphiron",
+			"spellPower": 40,
+			"onUseSpellPower": 130,
+			"duration": 20,
+			"cooldown": 120,
+			"id": 23046,
+			"source": "Naxxramas",
+			"phase": 0
+		},
+		"markOfTheChampion": {
+			"name": "Mark of the Champion",
+			"spellPower": 85,
+			"id": 23207,
+			"source": "Naxxramas",
+			"phase": 0
+		},
+		"neltharionsTear": {
+			"name": "Neltharion's Tear",
+			"spellPower": 44,
+			"hitRating": 16,
+			"id": 19379,
+			"source": "Blackwing Lair",
+			"phase": 0
 		}
 	},
 	"mainhand": {
+		"gladiatorsSpellblade": {
+			"name": "Gladiator's Spellblade",
+			"stamina": 28,
+			"intellect": 18,
+			"spellPower": 199,
+			"resilienceRating": 18,
+			"id": 28297,
+			"source": "PVP",
+			"phase": 1
+		},
 		"bladeOfTheArchmage": {
 			"name": "Blade of the Archmage",
 			"stamina": 13,
@@ -664,6 +1127,17 @@ var items = {
 			"hitRating": 14,
 			"source": "Shadow Labyrinth",
 			"phase": 1
+		},
+		"wraithBlade": {
+			"name": "Wraith Blade",
+			"stamina": 10,
+			"intellect": 8,
+			"spellPower": 95,
+			"hitRating": 8,
+			"critRating": 14,
+			"id": 22807,
+			"source": "Naxxramas",
+			"phase": 0
 		}
 	},
 	"offhand": {
@@ -673,6 +1147,16 @@ var items = {
 			"shadowPower": 52,
 			"source": "25 Badge of Justice - G'eras",
 			"phase": 1,
+		},
+		"gladiatorsEndgame": {
+			"name": "Gladiator's Endgame",
+			"stamina": 21,
+			"intellect": 14,
+			"spellPower": 19,
+			"resilienceRating": 15,
+			"id": 28346,
+			"source": "PVP",
+			"phase": 1
 		},
 		"lampOfPeacefulRadiance": {
 			"name": "Lamp of Peaceful Radiance",
@@ -692,9 +1176,32 @@ var items = {
 			"hitRating": 12,
 			"source": "Black Morass",
 			"phase": 1,
+		},
+		"sapphironsLeftEye": {
+			"name": "Sapphiron's Left Eye",
+			"stamina": 12,
+			"intellect": 8,
+			"spellPower": 26,
+			"critRating": 14,
+			"hitRating": 8,
+			"id": 23049,
+			"source": "Naxxramas",
+			"phase": 0
 		}
 	},
 	"twohand": {
+		"gladiatorsWarStaff": {
+			"name": "Gladiator's War Staff",
+			"stamina": 48,
+			"intellect": 35,
+			"spellPower": 199,
+			"hitRating": 21,
+			"critRating": 36,
+			"resilienceRating": 25,
+			"id": 24557,
+			"source": "PVP",
+			"phase": 1
+		},
 		"terokksShadowstaff": {
 			"name": "Terokk's Shadowstaff",
 			"stamina": 40,
@@ -722,6 +1229,38 @@ var items = {
 			"hitRating": 16,
 			"source": "Botanica",
 			"phase": 1
+		},
+		"atieshGreatstaffOfTheGuardian": {
+			"name": "Atiesh, Greatstaff of the Guardian",
+			"stamina": 30,
+			"intellect": 29,
+			"spellPower": 150,
+			"critRating": 28,
+			"id": 22630,
+			"source": "Naxxramas",
+			"phase": 0
+		},
+		"brimstoneStaff": {
+			"name": "Brimstone Staff",
+			"stamina": 31,
+			"intellect": 30,
+			"spellPower": 113,
+			"hitRating": 16,
+			"critRating": 14,
+			"id": 22800,
+			"source": "Naxxramas",
+			"phase": 1
+		},
+		"soulseeker": {
+			"name": "Soulseeker",
+			"stamina": 30,
+			"intellect": 31,
+			"spellPower": 126,
+			"critRating": 28,
+			"spellPen": 25,
+			"id": 22799,
+			"source": "Naxxramas",
+			"phase": 0,
 		}
 	},
 	"wand": {
@@ -736,6 +1275,16 @@ var items = {
 			"hitRating": 8,
 			"source": "Arcatraz",
 			"phase": 1,
+		},
+		"gladiatorsTouchOfDefeat": {
+			"name": "Gladiator's Touch of Defeat",
+			"stamina": 15,
+			"intellect": 11,
+			"spellPower": 14,
+			"resilienceRating": 12,
+			"id": 28320,
+			"source": "PVP",
+			"phase": 1
 		},
 		"illidariRodOfDiscipline": {
 			"name": "Illidari Rod of Discipline",
@@ -773,6 +1322,24 @@ var items = {
 			"id": 25640,
 			"source": "Nagrand Quest",
 			"phase": 1,
+		},
+		"wandOfFates": {
+			"name": "Wand of Fates",
+			"stamina": 7,
+			"intellect": 7,
+			"spellPower": 12,
+			"hitRating": 8,
+			"id": 22820,
+			"source": "Naxxramas",
+			"phase": 0
+		},
+		"doomfinger": {
+			"name": "Doomfinger",
+			"spellPower": 16,
+			"critRating": 14,
+			"id": 22821,
+			"source": "Naxxramas",
+			"phase": 0
 		}
 	}
 }
