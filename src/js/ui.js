@@ -267,6 +267,20 @@ $(".talent-icon").mousedown(function(event) {
 	return false;
 });
 
+// to-do: don't allow people to start multiple simulations
+$(".btn").click(function() {
+	//$("#dps-result-div").css('visibility', 'visible');
+	simDPS();
+});
+
+$(".btn").hover(function() {
+	$("#sim-dps").css('color', '#1a1a1a');
+});
+
+$(".btn").mouseout(function() {
+	$("#sim-dps").css('color', 'white');
+});
+
 // User changes races in the simulation settings
 $("#race-dropdown-list").change(function() {
 	let oldRace = $(this).data("currentRace");
@@ -419,4 +433,9 @@ function modifyStatsFromAura(auraObject, checked) {
 	}
 
 	refreshCharacterStats();
+}
+
+function simDPS() {
+	var player = new Player(Player.getSettings());
+	//var simulation = new Simulation(player);
 }

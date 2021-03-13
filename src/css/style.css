@@ -353,6 +353,7 @@ ul {
 
 #item-selection-container {
 	padding: 20px 40px;
+	margin-top: 80px;	
 }
 
 #item-selection-table, #enchant-selection-table {

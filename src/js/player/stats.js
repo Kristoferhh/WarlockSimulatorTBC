@@ -83,7 +83,7 @@ function refreshCharacterStats() {
 	$("#character-spell-power-val").text(characterStats.spellPower);
 	$("#character-shadow-power-val").text(characterStats.shadowPower + " (" + (characterStats.shadowPower + characterStats.spellPower) + ")");
 	$("#character-fire-power-val").text(characterStats.firePower + " (" + (characterStats.firePower + characterStats.spellPower) + ")");
-	$("#character-crit-val").text(Math.round(critRating) + " (" + ((Math.round((critRating/critRatingPerPercent + baseCritChancePercent) * 100) / 100) + (1 * $("#devastation").attr('data-points')) + (1 * $("#backlash").attr('data-points'))) + "%)");
+	$("#character-crit-val").text(Math.round(critRating) + " (" + ((Math.round((critRating/critRatingPerPercent + baseCritChancePercent) * 100) / 100) + Number($("#devastation").attr('data-points')) + Number($("#backlash").attr('data-points'))).toFixed(2) + "%)");
 	$("#character-hit-val").text(Math.round(characterStats.hitRating) + " (" + (Math.round((characterStats.hitRating/hitRatingPerPercent) * 100) / 100) + "%)");
 	$("#character-haste-val").text(Math.round(characterStats.hasteRating) + " (" + (Math.round((characterStats.hasteRating/hasteRatingPerPercent) * 100) / 100) + "%)");
 	$("#character-shadow-damage-modifier-val").text(Math.round((characterStats.shadowModifier * (1 + (0.02 * $("#shadowMastery").attr('data-points')))) * 100) + "%");
