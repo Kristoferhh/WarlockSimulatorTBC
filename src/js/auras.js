@@ -38,9 +38,13 @@ var auras = {
 			"iconName": "spell_holy_prayerofspirit",
 			"id": 27681
 		},
+		"inspiringPresence": {
+			"name": "Inspiring Presence",
+			"iconName": "inv_staff_23",
+			"id": 0 // fix
+		},
 		"moonkinAura": {
 			"name": "Moonkin Aura",
-			"critRating": 110.5, // double check this
 			"iconName": "spell_nature_moonglow",
 			"id": 24907
 		},

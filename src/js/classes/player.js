@@ -1,6 +1,10 @@
 class Player {
 	static getSettings() {
 		return {
+			"auras": {
+				"moonkinAura": $("#moonkin-aura").attr('data-checked'),
+				"inspiringPresence": $("#inspiring-presence").attr('data-checked'),
+			},
 			"talents": {
 				"suppression": parseInt($("#suppression").attr('data-points')),
 				"improvedCorruption": parseInt($("#improvedCorruption").attr('data-points')),
@@ -64,21 +68,38 @@ class Player {
 		}
 	}
 
-	constructor(settings) {
+	constructor(settings = Player.getSettings()) {
 		this.stats = settings.stats;
 		this.enemy = settings.enemy;
+		this.rotation = settings.rotation;
+		this.talents = settings.talents;
 		this.level = 70;
 		this.stats.health = (this.stats.health + (this.stats.stamina * this.stats.staminaModifier) * healthPerStamina) * (1 + (0.01 * settings.talents.felStamina));
-		this.stats.mana = (this.stats.mana + (this.stats.intellect * this.stats.intellectModifier) * manaPerInt) * (1 + (0.01 * settings.talents.felIntellect));
-		this.stats.critChance = baseCritChancePercent + ((this.stats.critRating + ((this.stats.intellect * this.stats.intellectModifier) * critPerInt)) / critRatingPerPercent) + settings.talents.devastation + settings.talents.backlash + settings.talents.demonicTactics;
+		this.stats.maxMana = (this.stats.mana + (this.stats.intellect * this.stats.intellectModifier) * manaPerInt) * (1 + (0.01 * settings.talents.felIntellect));
 		this.stats.shadowModifier *= (1 + (0.02 * settings.talents.shadowMastery));
+
+		// Crit chance
 		this.stats.critChanceMultiplier = 1000;
+		this.stats.critChance = baseCritChancePercent + ((this.stats.critRating + ((this.stats.intellect * this.stats.intellectModifier) * critPerInt)) / critRatingPerPercent) + settings.talents.devastation + settings.talents.backlash + settings.talents.demonicTactics;
+		if (settings.auras.moonkinAura) this.stats.critChance += 5;
 		this.stats.critChance = Math.round(this.stats.critChance * this.stats.critChanceMultiplier); // Multiply the crit chance in order to use a whole number for RNG calculations.
+
+		// Hit chance
 		this.stats.extraHitChance = this.stats.hitRating / hitRatingPerPercent; // hit percent from hit rating
+		if (settings.auras.inspiringPresence) this.stats.extraHitChance += 1;
 		this.stats.hitChance = this.getHitChance(parseInt(this.enemy.level)); // The player's chance of hitting the enemy, between 61% and 99%
 
+		// Assign the filler spell.
+		this.filler;
+		for (let spell in settings.rotation.fillers) {
+			if (settings.rotation.fillers[spell]) {
+				this.filler = spell;
+				break;
+			}
+		}
+
 		console.log("Health: " + Math.round(this.stats.health));
-		console.log("Mana: " + Math.round(this.stats.mana));
+		console.log("Mana: " + Math.round(this.stats.maxMana));
 		console.log("Stamina: " + Math.round(this.stats.stamina * this.stats.staminaModifier));
 		console.log("Intellect: " + Math.round(this.stats.intellect * this.stats.intellectModifier));
 		console.log("Spell Power: " + this.stats.spellPower);
@@ -93,8 +114,26 @@ class Player {
 		console.log("Spell Penetration: " + this.stats.spellPen);
 	}
 
-	isHit(affliction = false) {
-		if (affliction) {
+	initialize() {
+		this.spells = {
+			"lifeTap": new LifeTap(this)
+		}
+
+		if (this.rotation.fillers.shadowBolt) this.spells.shadowBolt = new ShadowBolt(this);
+
+		this.castTimeRemaining = 0;
+		this.gcdValue = 1.5;
+		this.gcdRemaining = 0;
+		this.mana = this.stats.maxMana;
+		this.mp5Timer = 5;
+	}
+
+	cast(spell) {
+		this.spells[spell].cast();
+	}
+
+	isHit(isAfflictionSpell) {
+		if (isAfflictionSpell) {
 			return (this.random(1,100) <= (Math.min(99,this.hitChance + settings.talents.suppression * 2)));
 		} else {
 			return (this.random(1,100) <= Math.min(99,this.hitChance));
@@ -102,7 +141,7 @@ class Player {
 	}
 
 	isCrit(extraCrit = 0) {
-		return (this.random(1,100000) <= (this.stats.critChance + extraCrit * this.stats.critChanceMultiplier));
+		return (this.random(1,(100 * this.stats.critChanceMultiplier)) <= (this.stats.critChance + extraCrit * this.stats.critChanceMultiplier));
 	}
 
 	random(min,max) {
