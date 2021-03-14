@@ -61,11 +61,20 @@ class ShadowBolt extends Spell {
 
 		let dmg = (this.dmg + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient)) * this.player.stats.shadowModifier;
 
+		// Checks if the spell is a crit
 		let isCrit = this.player.isCrit();
+		// Improved Shadow Bolt
+		if (this.player.talents.improvedShadowBolt > 0 && this.player.auras.improvedShadowBolt.active) {
+			dmg *= this.player.auras.improvedShadowBolt.modifier;
+			if (!isCrit) this.player.auras.improvedShadowBolt.decrementStacks();
+		}
 		if (isCrit) {
 			dmg *= (1.5 + 0.5 * this.player.talents.ruin);
 
-			// Add ISB debuff
+			// Apply ISB debuff
+			if (this.player.talents.improvedShadowBolt > 0) {
+				this.player.auras.improvedShadowBolt.apply();
+			}
 		}
 
 		dmg = ~~(dmg *  (1 - 0.0025 * this.player.enemy.shadowResist));

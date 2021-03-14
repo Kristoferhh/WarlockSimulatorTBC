@@ -122,6 +122,9 @@ class Player {
 
 		if (this.rotation.fillers.shadowBolt) this.spells.shadowBolt = new ShadowBolt(this);
 
+		this.auras = {};
+		if (this.talents.improvedShadowBolt > 0 && this.rotation.fillers.shadowBolt) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this);
+
 		this.castTimeRemaining = 0;
 		this.gcdValue = 1.5;
 		this.gcdRemaining = 0;
