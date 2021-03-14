@@ -65,6 +65,8 @@ class ShadowBolt extends Spell {
 		}
 
 		dmg = ~~(dmg *  (1 - 0.0025 * this.player.enemy.shadowResist));
+		if (isCrit) console.log("Shadow Bolt *" + dmg + "*");
+		else console.log("Shadow Bolt " + dmg);
 
 		return dmg;
 	}
@@ -80,6 +82,9 @@ class LifeTap extends Spell {
 
 	cast() {
 		super.cast();
-		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + (this.manaReturn + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient)));
+		let manaGain = this.manaReturn + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient);
+		console.log("Life Tap " + Math.round(manaGain));
+		if (this.player.mana + manaGain > this.player.stats.maxMana) console.log("Life Tap used at too high mana (mana wasted)");
+		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain);
 	}
 }

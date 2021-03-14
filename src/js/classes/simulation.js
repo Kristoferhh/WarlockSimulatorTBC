@@ -28,6 +28,7 @@ class Simulation {
 
 		this.player.castTimeRemaining = Math.max(0,this.player.castTimeRemaining - time);
 		this.player.gcdRemaining = Math.max(0,this.player.gcdRemaining - time);
+		this.player.mp5Timer = Math.max(0,this.player.mp5Timer - time);
 
 		return time;
 	}
@@ -59,7 +60,7 @@ class Simulation {
 			this.totalDamage += this.iterationDamage;
 		}
 
-		alert(this.totalDamage / this.totalDuration);
+		alert(Math.round(this.totalDamage / this.totalDuration));
 		console.log('------- Simulation end -------');
 	}
 }
