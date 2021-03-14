@@ -69,7 +69,7 @@ class Player {
 	}
 
 	constructor(settings = Player.getSettings()) {
-		this.stats = settings.stats;
+		this.stats = JSON.parse(JSON.stringify(settings.stats)); // Create a deep-copy of the character's stats since we need to modify the values.
 		this.enemy = settings.enemy;
 		this.rotation = settings.rotation;
 		this.talents = settings.talents;
