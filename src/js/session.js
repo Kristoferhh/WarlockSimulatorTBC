@@ -29,6 +29,11 @@ for (let stat in raceStats[currentRace]) {
 	}
 }
 
+// Select spells chosen in the rotation from previous sessions
+$("#rotation-list div li").each(function() {
+	$(this).attr('data-checked', localStorage[$(this).attr('id')] || false);
+});
+
 refreshCharacterStats();
 loadItemsBySlot(localStorage['selectedItemSlot'] || "mainhand", (localStorage['selectedItemSubSlot'] || ""));
 $("#race-dropdown-list").data("currentRace", currentRace); // Store the currently selected race to know the user's previous race when changing in the dropdown list.

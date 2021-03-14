@@ -47,11 +47,11 @@ for (let consumable of Object.keys(auras.consumables)) {
 $(".aura").click(function() {
 	let auraType = $(this).attr('data-aura-type');
 	let auraName = $(this).attr('name');
-	modifyStatsFromAura(auras[auraType][auraName], $(this).attr('data-checked') === 'true');
-
-	let checkedVal = $(this).attr('data-checked') == 'true';
+	let checkedVal = $(this).attr('data-checked') === 'true';
 	$(this).attr('data-checked', !checkedVal);
 	localStorage[$(this).attr("name")] = !checkedVal;
+
+	modifyStatsFromAura(auras[auraType][auraName], checkedVal);
 
 	return false;
 });
@@ -267,6 +267,31 @@ $(".talent-icon").mousedown(function(event) {
 	return false;
 });
 
+// Listens to any clicks on the "rotation" spells for dots, filler, curse, and finisher.
+$("#rotation-list div li").click(function() {
+	let clickedSpell = $(this).attr('id');
+
+	if ($(this).hasClass("rotation-filler")) {
+		$(".rotation-filler").each(function() {
+			$(this).attr('data-checked', false);
+			localStorage[$(this).attr('id')] = false;
+		});
+	} else if ($(this).hasClass("rotation-curse")) {
+		$(".rotation-curse").each(function() {
+			if ($(this).attr('id') !== clickedSpell) {
+				$(this).attr('data-checked', false);
+				localStorage[$(this).attr('id')] = false;
+			}
+		});
+	}
+
+	let checkedVal = $(this).attr('data-checked') === 'true';
+	$(this).attr('data-checked', !checkedVal);
+	localStorage[$(this).attr('id')] = !checkedVal;
+
+	return false;
+});
+
 // to-do: don't allow people to start multiple simulations
 $(".btn").click(function() {
 	//$("#dps-result-div").css('visibility', 'visible');
@@ -436,6 +461,8 @@ function modifyStatsFromAura(auraObject, checked) {
 }
 
 function simDPS() {
-	var player = new Player(Player.getSettings());
-	//var simulation = new Simulation(player);
+	var player = new Player();
+	var simulation = new Simulation(player);
+
+	simulation.start();
 }
