@@ -17,20 +17,19 @@ class Simulation {
 	passTime() {
 		let time = Math.max(this.player.gcdRemaining, this.player.castTimeRemaining);
 
+		this.player.fightTime += time; // This needs to be the first modified value since the time in combat needs to be updated before spells start dealing damage/auras expiring etc. for the combat logging.
+
 		// Spells
 		for (let spell in this.player.spells) {
 			let damage = this.player.spells[spell].tick(time);
 			if (damage > 0) {
 				this.iterationDamage += damage;
-				console.log(spell + " " + damage);
 			}
 		}
 
 		this.player.castTimeRemaining = Math.max(0,this.player.castTimeRemaining - time);
 		this.player.gcdRemaining = Math.max(0,this.player.gcdRemaining - time);
 		this.player.mp5Timer = Math.max(0,this.player.mp5Timer - time);
-
-		return time;
 	}
 
 	start() {
@@ -39,12 +38,12 @@ class Simulation {
 		this.startTime = new Date();
 
 		console.log("------- Simualtion start -------");
-		for(var iteration = 1; iteration <= this.iterations; iteration++) {
+		for(this.player.iteration = 1; this.player.iteration <= this.iterations; this.player.iteration++) {
 			this.player.initialize();
 			this.iterationDamage = 0;
 			let fightLength = this.player.random(this.minTime, this.maxTime);
 
-			for(var i = 0; i < fightLength; i += this.passTime()) {
+			for(this.player.fightTime = 0; this.player.fightTime < fightLength; this.passTime()) {
 				if (this.player.castTimeRemaining <= 0) {
 					if (this.player.gcdRemaining <= 0) {
 						if (this.player.spells[this.player.filler].ready()) {
