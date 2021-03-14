@@ -82,11 +82,12 @@ class LifeTap extends Spell {
 		this.name = "Life Tap";
 		this.manaReturn = 582;
 		this.coefficient = 0.8;
+		this.modifier = 1 + (0.1 * this.player.talents.improvedLifeTap);
 	}
 
 	cast() {
 		super.cast();
-		let manaGain = this.manaReturn + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient);
+		let manaGain = (this.manaReturn + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient)) * this.modifier;
 		this.player.combatLog(this.name + " " + Math.round(manaGain));
 		if (this.player.mana + manaGain > this.player.stats.maxMana) console.log("Life Tap used at too high mana (mana wasted)"); // Warning for if the simulation ever decides to use life tap when it would overcap the player on mana.
 		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain);
