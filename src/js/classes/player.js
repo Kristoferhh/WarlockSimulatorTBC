@@ -161,4 +161,10 @@ class Player {
 			return Math.min(99, 61 + this.stats.extraHitChance);
 		}
 	}
+
+	combatLog(info) {
+		if (this.iteration == 1) {
+			console.log("|" + this.fightTime + "|\t" + info);
+		}
+	}
 }

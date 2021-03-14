@@ -18,6 +18,9 @@ class Spell {
 		if (this.castTime > 0) {
 			this.player.castTimeRemaining = this.castTime;
 			this.casting = true
+			this.player.combatLog("Started casting " + this.name);
+		} else {
+			this.player.combatLog("Cast " + this.name);
 		}
 	}
 
@@ -52,6 +55,7 @@ class ShadowBolt extends Spell {
 
 	damage() {
 		if (!this.player.isHit(false)) {
+			this.player.combatLog(this.name + " *miss*");
 			return 0;
 		}
 
@@ -65,8 +69,8 @@ class ShadowBolt extends Spell {
 		}
 
 		dmg = ~~(dmg *  (1 - 0.0025 * this.player.enemy.shadowResist));
-		if (isCrit) console.log("Shadow Bolt *" + dmg + "*");
-		else console.log("Shadow Bolt " + dmg);
+		if (isCrit) this.player.combatLog(this.name + " *" + dmg + "*");
+		else this.player.combatLog(this.name + " " + dmg);
 
 		return dmg;
 	}
@@ -83,8 +87,8 @@ class LifeTap extends Spell {
 	cast() {
 		super.cast();
 		let manaGain = this.manaReturn + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient);
-		console.log("Life Tap " + Math.round(manaGain));
-		if (this.player.mana + manaGain > this.player.stats.maxMana) console.log("Life Tap used at too high mana (mana wasted)");
+		this.player.combatLog(this.name + " " + Math.round(manaGain));
+		if (this.player.mana + manaGain > this.player.stats.maxMana) console.log("Life Tap used at too high mana (mana wasted)"); // Warning for if the simulation ever decides to use life tap when it would overcap the player on mana.
 		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain);
 	}
 }
