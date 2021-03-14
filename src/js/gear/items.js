@@ -95,6 +95,15 @@ var items = {
 		}
 	},
 	"neck": {
+		"manasurgePendant": {
+			"name": "Manasurge Pendant",
+			"stamina": 24,
+			"intellect": 22,
+			"spellPower": 28,
+			"id": 29368,
+			"source": "25 Badge of Justice",
+			"phase": 1
+		},
 		"veteransPendantOfConquest": {
 			"name": "Veteran's Pendant of Conquest",
 			"stamina": 27,
@@ -298,6 +307,16 @@ var items = {
 			"id": 29813,
 			"source": "Netherstorm Quest",
 			"phase": 1,
+		},
+		"shawlOfShiftingProbabilities": {
+			"name": "Shawl of Shifting Probabilities",
+			"stamina": 18,
+			"intellect": 16,
+			"spellPower": 21,
+			"critRating": 22,
+			"id": 29369,
+			"source": "25 Badge of Justice - G'eras",
+			"phase": 1
 		},
 		"cloakOfTheNecropolis": {
 			"name": "Cloak of the Necropolis",
@@ -835,6 +854,16 @@ var items = {
 		}
 	},
 	"ring": {
+		"ringOfCrypticDreams": {
+			"name": "Ring of Cryptic Dreams",
+			"stamina": 16,
+			"intellect": 17,
+			"spellPower": 23,
+			"critRating": 20,
+			"id": 29367,
+			"source": "25 Badge of Justice - G'eras",
+			"phase": 1
+		},
 		"veteransBandOfDominance": {
 			"name": "Veteran's Band of Dominance",
 			"stamina": 27,
@@ -1147,6 +1176,21 @@ var items = {
 			"shadowPower": 52,
 			"source": "25 Badge of Justice - G'eras",
 			"phase": 1,
+		},
+		"flametongueSeal": {
+			"name": "Flametongue Seal",
+			"firePower": 49,
+			"critRating": 17,
+			"id": 29270,
+			"source": "25 Badge of Justice - G'eras",
+			"phase": 1
+		},
+		"khadgarsKnapsack": {
+			"name": "Khadgar's Knapsack",
+			"spellPower": 49,
+			"id": 29273,
+			"source": "25 Badge of Justice - G'eras",
+			"phase": 1
 		},
 		"gladiatorsEndgame": {
 			"name": "Gladiator's Endgame",
