@@ -17,6 +17,7 @@ class Simulation {
 	passTime() {
 		let time = Math.max(this.player.gcdRemaining, this.player.castTimeRemaining);
 
+		// Spells
 		for (let spell in this.player.spells) {
 			let damage = this.player.spells[spell].tick(time);
 			if (damage > 0) {
@@ -24,6 +25,9 @@ class Simulation {
 				console.log(spell + " " + damage);
 			}
 		}
+
+		this.player.castTimeRemaining = Math.max(0,this.player.castTimeRemaining - time);
+		this.player.gcdRemaining = Math.max(0,this.player.gcdRemaining - time);
 
 		return time;
 	}

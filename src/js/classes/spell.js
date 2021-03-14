@@ -21,7 +21,7 @@ class Spell {
 		}
 	}
 
-	dmg() {
+	damage() {
 		return 0;
 	}
 
@@ -34,7 +34,7 @@ class Spell {
 			//this.player.mp5Timer = 5;
 			this.casting = false;
 			
-			return this.dmg();
+			return this.damage();
 		}
 		return 0;
 	}
@@ -43,41 +43,43 @@ class Spell {
 class ShadowBolt extends Spell {
 	constructor(player) {
 		super(player);
+		this.name = "Shadow Bolt";
 		this.manaCost = 420 * (1 - (player.talents.cataclysm / 100));
-		this.castTime = 3 - player.talents.bane / 10;
+		this.castTime = 3 - (player.talents.bane / 10);
 		this.coefficient = 3 / 3.5;
-		this.damage = 633; // Average rank 11 Shadow Bolt damage
+		this.dmg = 633; // Average rank 11 Shadow Bolt base damage
 	}
 
-	dmg() {
+	damage() {
 		if (!this.player.isHit(false)) {
 			return 0;
 		}
 
-		let damage = (this.damage + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient)) * this.player.stats.shadowModifier;
+		let dmg = (this.dmg + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient)) * this.player.stats.shadowModifier;
 
 		let isCrit = this.player.isCrit();
 		if (isCrit) {
-			damage *= (1.5 + 0.5 * this.player.talents.ruin);
+			dmg *= (1.5 + 0.5 * this.player.talents.ruin);
 
 			// Add ISB debuff
 		}
 
-		damage = ~~(damage *  (1 - 0.0025 * this.player.enemy.shadowResist));
+		dmg = ~~(dmg *  (1 - 0.0025 * this.player.enemy.shadowResist));
 
-		return damage;
+		return dmg;
 	}
 }
 
 class LifeTap extends Spell {
 	constructor(player) {
 		super(player);
+		this.name = "Life Tap";
 		this.manaReturn = 582;
 		this.coefficient = 0.8;
 	}
 
 	cast() {
 		super.cast();
-		this.player.mana = Math.max(this.player.maxMana, this.player.mana + (this.manaReturn + ((this.player.spellPower + this.player.shadowPower) * this.coefficient)));
+		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + (this.manaReturn + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient)));
 	}
 }
