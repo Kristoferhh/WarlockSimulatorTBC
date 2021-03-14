@@ -98,6 +98,7 @@ class Player {
 			}
 		}
 
+		console.clear();
 		console.log("Health: " + Math.round(this.stats.health));
 		console.log("Mana: " + Math.round(this.stats.maxMana));
 		console.log("Stamina: " + Math.round(this.stats.stamina * this.stats.staminaModifier));
@@ -134,9 +135,9 @@ class Player {
 
 	isHit(isAfflictionSpell) {
 		if (isAfflictionSpell) {
-			return (this.random(1,100) <= (Math.min(99,this.hitChance + settings.talents.suppression * 2)));
+			return (this.random(1,100) <= (Math.min(99,this.stats.hitChance + settings.talents.suppression * 2)));
 		} else {
-			return (this.random(1,100) <= Math.min(99,this.hitChance));
+			return (this.random(1,100) <= Math.min(99,this.stats.hitChance));
 		}
 	}
 
