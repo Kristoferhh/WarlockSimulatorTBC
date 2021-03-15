@@ -139,7 +139,7 @@ class Player {
 
 	isHit(isAfflictionSpell) {
 		if (isAfflictionSpell) {
-			return (this.random(1,100) <= (Math.min(99,this.stats.hitChance + settings.talents.suppression * 2)));
+			return (this.random(1,100) <= (Math.min(99,this.stats.hitChance + this.talents.suppression * 2)));
 		} else {
 			return (this.random(1,100) <= Math.min(99,this.stats.hitChance));
 		}

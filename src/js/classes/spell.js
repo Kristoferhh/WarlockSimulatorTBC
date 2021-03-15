@@ -125,6 +125,12 @@ class Corruption extends Spell {
 
 	cast() {
 		super.cast();
-		this.player.auras.corruption.apply(this.player.stats.spellPower + this.player.stats.shadowPower);
+
+		// Check if the Corruption hit
+		if (this.player.isHit(true)) {
+			this.player.auras.corruption.apply(this.player.stats.spellPower + this.player.stats.shadowPower);
+		} else {
+			this.player.combatLog(this.name + " *miss*");
+		}
 	}
 }
