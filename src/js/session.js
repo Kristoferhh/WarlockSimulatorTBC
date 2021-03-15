@@ -34,6 +34,11 @@ $("#rotation-list div li").each(function() {
 	$(this).attr('data-checked', localStorage[$(this).attr('id')] || false);
 });
 
+// Use previous simulation's DPS result
+$("#avg-dps").text(localStorage['avgDps'] || "");
+$("#min-dps").text(localStorage['minDps'] || "");
+$("#max-dps").text(localStorage['maxDps'] || "");
+
 refreshCharacterStats();
 loadItemsBySlot(localStorage['selectedItemSlot'] || "mainhand", (localStorage['selectedItemSubSlot'] || ""));
 $("#race-dropdown-list").data("currentRace", currentRace); // Store the currently selected race to know the user's previous race when changing in the dropdown list.

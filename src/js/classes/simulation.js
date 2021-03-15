@@ -81,10 +81,12 @@ class Simulation {
 			else if (iterationDps < minDps) minDps = iterationDps;
 		}
 
-		//alert(Math.round(totalDamage / totalDuration));
-		$("#avg-dps").text(Math.round((totalDamage / totalDuration) * 100) / 100);
-		$("#min-dps").text(Math.round(minDps * 100) / 100);
-		$("#max-dps").text(Math.round(maxDps * 100) / 100);
+		localStorage['avgDps'] = Math.round((totalDamage / totalDuration) * 100) / 100;
+		localStorage['minDps'] = Math.round(minDps * 100) / 100;
+		localStorage['maxDps'] = Math.round(maxDps * 100) / 100;
+		$("#avg-dps").text(localStorage['avgDps']);
+		$("#min-dps").text(localStorage['minDps']);
+		$("#max-dps").text(localStorage['maxDps']);
 		console.log('------- Simulation end -------');
 	}
 }
