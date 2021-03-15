@@ -81,12 +81,12 @@ class Player {
 		// Crit chance
 		this.stats.critChanceMultiplier = 1000;
 		this.stats.critChance = baseCritChancePercent + ((this.stats.critRating + ((this.stats.intellect * this.stats.intellectModifier) * critPerInt)) / critRatingPerPercent) + settings.talents.devastation + settings.talents.backlash + settings.talents.demonicTactics;
-		if (settings.auras.moonkinAura) this.stats.critChance += 5;
+		if (settings.auras.moonkinAura === 'true') this.stats.critChance += 5;
 		this.stats.critChance = Math.round(this.stats.critChance * this.stats.critChanceMultiplier); // Multiply the crit chance in order to use a whole number for RNG calculations.
 
 		// Hit chance
 		this.stats.extraHitChance = this.stats.hitRating / hitRatingPerPercent; // hit percent from hit rating
-		if (settings.auras.inspiringPresence) this.stats.extraHitChance += 1;
+		if (settings.auras.inspiringPresence === 'true') this.stats.extraHitChance += 1;
 		this.stats.hitChance = this.getHitChance(parseInt(this.enemy.level)); // The player's chance of hitting the enemy, between 61% and 99%
 
 		// Assign the filler spell.
