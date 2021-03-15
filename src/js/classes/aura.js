@@ -42,11 +42,52 @@ class ImprovedShadowBolt extends Aura {
 	decrementStacks() {
 		this.stacks--;
 
-		if (this.stacks == 0) {
+		if (this.stacks <= 0) {
 			this.active = false;
 			this.player.combatLog(this.name + " faded");
 		} else {
 			this.player.combatLog(this.name + "(" + this.stacks + ")")
+		}
+	}
+}
+
+class CorruptionDot extends Aura {
+	constructor(player) {
+		super(player);
+		this.player = player;
+		this.name = "Corruption";
+		this.durationTotal = 18;
+		this.tickTimerTotal = 3;
+		this.tickTimerRemaining = 0;
+		this.ticksTotal = this.durationTotal / this.tickTimerTotal; // The amount of times Corruption ticks over the course of its duration
+		this.ticksRemaining = 0;
+		this.spellPower = 0;
+		this.coefficient = 0.936 + (0.12 * player.talents.empoweredCorruption);
+		this.dmg = 1035;
+		this.modifier = 1 + (0.01 * player.talents.contagion);
+	}
+
+	apply(spellPower) {
+		this.active = true;
+		this.tickTimerRemaining = this.tickTimerTotal;
+		this.ticksRemaining = this.ticksTotal;
+		this.spellPower = spellPower;
+	}
+
+	tick(t) {
+		if (this.active) {
+			this.tickTimerRemaining = Math.max(0,this.tickTimerRemaining - t);
+
+			if (this.tickTimerRemaining == 0) {
+				let dmg = ((this.dmg + this.spellPower * this.coefficient) * this.modifier * this.player.stats.shadowModifier) / this.ticksTotal;
+				this.player.combatLog(this.name + " " + Math.round(dmg));
+				this.ticksRemaining--;
+				this.tickTimerRemaining = this.tickTimerTotal;
+
+				if (this.ticksRemaining <= 0) {
+					this.active = false;
+				}
+			}
 		}
 	}
 }

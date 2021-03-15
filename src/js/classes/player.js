@@ -119,11 +119,12 @@ class Player {
 		this.spells = {
 			"lifeTap": new LifeTap(this)
 		}
-
 		if (this.rotation.fillers.shadowBolt) this.spells.shadowBolt = new ShadowBolt(this);
+		if (this.rotation.dots.corruption) this.spells.corruption = new Corruption(this);
 
 		this.auras = {};
 		if (this.talents.improvedShadowBolt > 0 && this.rotation.fillers.shadowBolt) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this);
+		if (this.rotation.dots.corruption) this.auras.corruption = new CorruptionDot(this);
 
 		this.castTimeRemaining = 0;
 		this.gcdValue = 1.5;
@@ -133,7 +134,7 @@ class Player {
 	}
 
 	cast(spell) {
-		this.spells[spell].cast();
+		this.spells[spell].startCast();
 	}
 
 	isHit(isAfflictionSpell) {

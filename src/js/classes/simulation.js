@@ -18,7 +18,7 @@ class Simulation {
 		let time = Math.max(this.player.gcdRemaining, this.player.castTimeRemaining);
 
 		if (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.auras.improvedShadowBolt.durationRemaining < time) time = this.player.auras.improvedShadowBolt.durationRemaining;
-
+		if (this.player.auras.corruption && this.player.auras.corruption.active && this.player.auras.corruption.tickTimerRemaining < time) time = this.player.auras.corruption.tickTimerRemaining; 
 
 		// This needs to be the first modified value since the time in combat needs to be updated before spells start dealing damage/auras expiring etc. for the combat logging.
 		this.player.fightTime += time;
@@ -27,7 +27,7 @@ class Simulation {
 		for (let spell in this.player.spells) {
 			let damage = this.player.spells[spell].tick(time);
 			if (damage > 0) {
-				this.iterationDamage += damage;
+				this.player.iterationDamage += damage;
 			}
 		}
 
@@ -47,20 +47,22 @@ class Simulation {
 	}
 
 	start() {
-		this.totalDamage = 0;
-		this.totalDuration = 0;
-		this.startTime = new Date();
+		let totalDamage = 0;
+		let totalDuration = 0;
+		let startTime = new Date();
 
 		console.log("------- Simualtion start -------");
 		for(this.player.iteration = 1; this.player.iteration <= this.iterations; this.player.iteration++) {
 			this.player.initialize();
-			this.iterationDamage = 0;
+			this.player.iterationDamage = 0;
 			let fightLength = this.player.random(this.minTime, this.maxTime);
 
 			for(this.player.fightTime = 0; this.player.fightTime < fightLength; this.passTime()) {
 				if (this.player.castTimeRemaining <= 0) {
 					if (this.player.gcdRemaining <= 0) {
-						if (this.player.spells[this.player.filler].ready()) {
+						if (this.player.rotation.dots.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready()) {
+							this.player.cast("corruption");
+						} else if (this.player.spells[this.player.filler].ready()) {
 							this.player.cast(this.player.filler);
 						} else {
 							this.player.cast("lifeTap");
@@ -69,11 +71,11 @@ class Simulation {
 				}
 			}
 
-			this.totalDuration += fightLength;
-			this.totalDamage += this.iterationDamage;
+			totalDuration += fightLength;
+			totalDamage += this.player.iterationDamage;
 		}
 
-		alert(Math.round(this.totalDamage / this.totalDuration));
+		alert(Math.round(totalDamage / totalDuration));
 		console.log('------- Simulation end -------');
 	}
 }

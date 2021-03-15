@@ -6,21 +6,37 @@ class Spell {
 		this.cooldownRemaining = 0;
 		this.player = player;
 		this.casting = false;
+		this.dot = false;
 	}
 
 	ready() {
 		return this.player.gcdRemaining <= 0 && this.player.castTimeRemaining <= 0 && this.manaCost <= this.player.mana && this.cooldownRemaining <= 0;
 	}
 
-	cast() {
+	// Starts the cast of a spell.
+	startCast() {
 		this.player.gcdRemaining = this.player.gcdValue;
 
 		if (this.castTime > 0) {
-			this.player.castTimeRemaining = this.castTime;
 			this.casting = true
+			this.player.castTimeRemaining = this.castTime;
 			this.player.combatLog("Started casting " + this.name);
 		} else {
 			this.player.combatLog("Cast " + this.name);
+			this.cast();
+		}
+	}
+
+	// Called when a spell finishes casting or immediately called if the spell has no cast time.
+	cast() {
+		this.player.mana -= this.manaCost;
+		this.cooldownRemaining = this.cooldown;
+		if (this.castTime > 0) this.player.combatLog("Finished casting " + this.name);
+			
+		// Only return this.damage() if the spell is not a dot. If it's a dot then we want to enable the Aura at the end of the cast rather than doing damage.
+		if (!this.dot) {
+			this.casting = false;
+			return this.damage();
 		}
 	}
 
@@ -29,15 +45,10 @@ class Spell {
 	}
 
 	tick(t) {
-		if (this.player.castTimeRemaining > 0) this.player.castTimeRemaining -= t;
+		this.player.castTimeRemaining = Math.max(0, this.player.castTimeRemaining - t);
 
 		if (this.player.castTimeRemaining <= 0 && this.casting) {
-			this.player.mana -= this.manaCost;
-			this.cooldownRemaining = this.cooldown;
-			//this.player.mp5Timer = 5;
-			this.casting = false;
-			
-			return this.damage();
+			return this.cast();
 		}
 		return 0;
 	}
@@ -94,11 +105,26 @@ class LifeTap extends Spell {
 		this.modifier = 1 + (0.1 * this.player.talents.improvedLifeTap);
 	}
 
-	cast() {
-		super.cast();
+	startCast() {
+		super.startCast();
 		let manaGain = (this.manaReturn + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient)) * this.modifier;
 		this.player.combatLog(this.name + " " + Math.round(manaGain));
 		if (this.player.mana + manaGain > this.player.stats.maxMana) console.log("Life Tap used at too high mana (mana wasted)"); // Warning for if the simulation ever decides to use life tap when it would overcap the player on mana.
 		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain);
+	}
+}
+
+class Corruption extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Corruption";
+		this.manaCost = 370;
+		this.castTime = 2 - (0.4 * player.talents.improvedCorruption);
+		this.dot = true;
+	}
+
+	cast() {
+		super.cast();
+		this.player.auras.corruption.apply(this.player.stats.spellPower + this.player.stats.shadowPower);
 	}
 }
