@@ -60,7 +60,7 @@ class ShadowBolt extends Spell {
 		this.name = "Shadow Bolt";
 		this.manaCost = 420 * (1 - (player.talents.cataclysm / 100));
 		this.castTime = 3 - (player.talents.bane / 10);
-		this.coefficient = 3 / 3.5;
+		this.coefficient = (3 / 3.5) + (0.04 * player.talents.shadowAndFlame);
 		this.dmg = 633; // Average rank 11 Shadow Bolt base damage
 	}
 
