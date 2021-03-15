@@ -205,6 +205,16 @@ var items = {
 			"source": "Tailoring",
 			"phase": 1
 		},
+		"spauldersOfTheTornHeart": {
+			"name": "Spaulders of the Torn-Heart",
+			"stamina": 10,
+			"intellect": 7,
+			"spirit": 8,
+			"spellPower": 40,
+			"critRating": 18,
+			"source": "Shadowmoon Valley Quest",
+			"id": 30925
+		},
 		"gladiatorsFelweaveAmice": {
 			"name": "Gladiator's Felweave Amice",
 			"stamina": 42,
@@ -776,6 +786,14 @@ var items = {
 			"shadowPower": 58,
 			"source": "Tailoring",
 			"phase": 1,
+		},
+		"bootsOfBlasphemy": {
+			"name": "Boots of Blaphemy",
+			"stamina": 36,
+			"intellect": 29,
+			"spellPower": 36,
+			"source": "Heroic Slave Pens",
+			"id": 29242
 		},
 		"veteransSilkFootguards": {
 			"name": "Veteran's Silk Footguards",

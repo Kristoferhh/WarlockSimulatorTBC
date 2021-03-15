@@ -221,7 +221,8 @@ ul {
 }
 
 #sim-result-dps-div {
-	padding: 10px;
+	padding: 0 10px 10px 10px;
+	margin-top: -40px;
 	margin-left: 10px;
 	display: inline-block;
 }

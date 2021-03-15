@@ -49,6 +49,8 @@ class Simulation {
 	start() {
 		let totalDamage = 0;
 		let totalDuration = 0;
+		let minDps = 9999;
+		let maxDps = 0;
 		let startTime = new Date();
 
 		console.log("------- Simualtion start -------");
@@ -73,9 +75,16 @@ class Simulation {
 
 			totalDuration += fightLength;
 			totalDamage += this.player.iterationDamage;
+
+			let iterationDps = this.player.iterationDamage / fightLength;
+			if (iterationDps > maxDps) maxDps = iterationDps;
+			else if (iterationDps < minDps) minDps = iterationDps;
 		}
 
-		alert(Math.round(totalDamage / totalDuration));
+		//alert(Math.round(totalDamage / totalDuration));
+		$("#avg-dps").text(Math.round((totalDamage / totalDuration) * 100) / 100);
+		$("#min-dps").text(Math.round(minDps * 100) / 100);
+		$("#max-dps").text(Math.round(maxDps * 100) / 100);
 		console.log('------- Simulation end -------');
 	}
 }

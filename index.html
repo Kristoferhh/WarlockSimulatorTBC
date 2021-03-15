@@ -120,14 +120,18 @@
 				<input value="0" type="number" name="target-fire-resistance" class="settings-right">
 			</li>
 			<!-- hide this if player isn't wearing a tailoring set -->
-			<li id="settings-tailoring">
+			<!--<li id="settings-tailoring">
 				<span class="settings-left">Tailoring</span>
 				<input type="checkbox" name="tailoring" class="settings-right">
-			</li>
+			</li>-->
 		</ul>
 	</section>
 
 	<div id="sidebar-simulation-selection">
+		<div id="sim-result-dps-div">
+			<p><span id="avg-dps"></span><span> DPS</span></p>
+			<p>Min: <span id="min-dps"></span> Max: <span id="max-dps"></span></p>
+		</div>
 		<div class='btn'>
 			<a id="sim-dps" href='#'>Simulate</a>
 		</div>
@@ -291,9 +295,9 @@
 			<li data-slot="belt">Belt</li>
 			<li data-slot="legs">Legs</li>
 			<li data-slot="boots">Boots</li>
-			<li data-slot="ring" data-subslot='1'>Rings</li>
+			<li data-slot="ring" data-subslot='1'>Ring 1</li>
 			<li data-slot="ring" data-subslot='2'>Ring 2</li>
-			<li data-slot="trinket" data-subslot='1'>Trinkets</li>
+			<li data-slot="trinket" data-subslot='1'>Trinket 1</li>
 			<li data-slot="trinket" data-subslot='2'>Trinket 2</li>
 			<li data-slot="wand">Wand</li>
 		</ul>
@@ -373,8 +377,9 @@
 <script type="text/javascript" src="src/js/gear/items.js"></script>
 <script type="text/javascript" src="src/js/gear/enchants.js"></script>
 <script type="text/javascript" src="src/js/player/talents.js"></script>
-<script type="text/javascript" src="src/js/classes/player.js"></script>
 <script type="text/javascript" src="src/js/classes/spell.js"></script>
+<script type="text/javascript" src="src/js/classes/aura.js"></script>
+<script type="text/javascript" src="src/js/classes/player.js"></script>
 <script type="text/javascript" src="src/js/classes/simulation.js"></script>
 <script type="text/javascript" src="src/js/ui.js"></script>
 <script type="text/javascript" src="src/js/session.js"></script>
