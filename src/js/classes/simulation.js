@@ -84,9 +84,11 @@ class Simulation {
 		localStorage['avgDps'] = Math.round((totalDamage / totalDuration) * 100) / 100;
 		localStorage['minDps'] = Math.round(minDps * 100) / 100;
 		localStorage['maxDps'] = Math.round(maxDps * 100) / 100;
+		localStorage['simulationDuration'] = (new Date() - startTime) / 1000;
 		$("#avg-dps").text(localStorage['avgDps']);
 		$("#min-dps").text(localStorage['minDps']);
 		$("#max-dps").text(localStorage['maxDps']);
+		$("#sim-length-result").text(localStorage['simulationDuration'] + "s");
 		console.log('------- Simulation end -------');
 	}
 }

@@ -34,10 +34,11 @@ $("#rotation-list div li").each(function() {
 	$(this).attr('data-checked', localStorage[$(this).attr('id')] || false);
 });
 
-// Use previous simulation's DPS result
+// Use previous simulation's result on the sidebar
 $("#avg-dps").text(localStorage['avgDps'] || "");
 $("#min-dps").text(localStorage['minDps'] || "");
 $("#max-dps").text(localStorage['maxDps'] || "");
+$("#sim-length-result").text(localStorage['simulationDuration'] + "s" || "");
 
 refreshCharacterStats();
 loadItemsBySlot(localStorage['selectedItemSlot'] || "mainhand", (localStorage['selectedItemSubSlot'] || ""));
