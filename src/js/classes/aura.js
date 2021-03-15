@@ -80,6 +80,12 @@ class CorruptionDot extends Aura {
 
 			if (this.tickTimerRemaining == 0) {
 				let dmg = ((this.dmg + this.spellPower * this.coefficient) * this.modifier * this.player.stats.shadowModifier) / this.ticksTotal;
+				// Add bonus from ISB (without removing ISB stacks since it's a dot)
+				if (this.player.talents.improvedShadowBolt > 0 && this.player.auras.improvedShadowBolt.active) {
+					dmg *= this.player.auras.improvedShadowBolt.modifier;
+				}
+
+				this.player.iterationDamage += dmg;
 				this.player.combatLog(this.name + " " + Math.round(dmg));
 				this.ticksRemaining--;
 				this.tickTimerRemaining = this.tickTimerTotal;
