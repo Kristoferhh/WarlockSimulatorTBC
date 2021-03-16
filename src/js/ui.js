@@ -96,6 +96,43 @@ $("#item-slot-selection-list li").click(function() {
 	loadItemsBySlot($(this).attr('data-slot'), $(this).attr('data-subslot') || null);
 });
 
+$("#gem-selection-table").blur(function() {
+	alert('e');
+});
+
+// User clicks on a gem row in the gem selection table
+$("#gem-selection-table").on('click', 'tr', function() {
+	$("#gem-selection-table").css('visibility', 'hidden');
+
+	return false;
+});
+
+// User clicks on one of the item's gem sockets
+$("#item-selection-table tbody").on('click', '.gem', function(event) {
+	// Check if the socket color that was clicked is a different color, otherwise there's no reason to delete and insert new rows.
+	if ($("#gem-selection-table").data('color') !== $(this).data('color')) {
+		$(".gem-row").remove();
+
+		let socketColor = $(this).attr('data-color');
+		for (let gemType in socketInfo[socketColor].gems) {
+			let gemColor = socketInfo[socketColor].gems[gemType];
+
+			for (let gem in gems[gemColor]) {
+				let g = gems[gemColor][gem];
+				$("#gem-selection-table").append("<tr class='gem-row'><td><img width='20' height='20' src='img/" + g.iconName + ".jpg'></td><td><a href='https://tbc.wowhead.com/item=" + g.id + "'>" + g.name + "</a></td></tr>");
+			}
+		}
+	}
+
+	$("#gem-selection-table").css('top', event.pageY - ($("#gem-selection-table").height()) / 2);
+	$("#gem-selection-table").css('left', event.pageX + 50);
+	$("#gem-selection-table").css('visibility', 'visible');
+	$("#gem-selection-table").data('color', $(this).data('color'));
+
+	// Stop the click from being registered by the .item-row listener as well.
+	event.stopPropagation();
+});
+
 // User clicks on an item in the item table
 $("#item-selection-table tbody").on('click', 'tr', function() {
 	let itemSlot = $(this).attr('data-slot');
@@ -349,8 +386,17 @@ function loadItemsBySlot(itemSlot, subSlot = "") {
 	for (let item of Object.keys(items[itemSlot])) {
 		let i = items[itemSlot][item];
 
-		//todo change 'i.spellPower + i.onUseSpellPower' to instead be the average spell power gain from the on-use effect
-		tableBody.append("<tr data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (localStorage['equipped' + itemSlot + (subSlot || "")] == item || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (Math.round(i.hasteRating + (i.onUseHasteRating * i.duration / i.cooldown)) || i.hasteRating || Math.round(i.onUseHasteRating * i.duration / i.cooldown) || '') + "</td><td>" + (localStorage[item + "Dps"] || '') + "</td></tr>")
+		// Add the item's gem sockets
+		let sockets = [];
+		for (let socket in socketInfo) {
+			if (i.hasOwnProperty(socket)) {
+				for(j = 0; j < i[socket]; j++) {
+					sockets.push("<img class='gem' data-color='" + socket + "' src='img/" + socketInfo[socket].iconName + "'>");
+				}
+			}
+		}
+
+		tableBody.append("<tr data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (localStorage['equipped' + itemSlot + (subSlot || "")] == item || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td><div>" + sockets.join('') + "</div></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (Math.round(i.hasteRating + (i.onUseHasteRating * i.duration / i.cooldown)) || i.hasteRating || Math.round(i.onUseHasteRating * i.duration / i.cooldown) || '') + "</td><td>" + (localStorage[item + "Dps"] || '') + "</td></tr>")
 		$("[data-name='" + item +"']").data('subSlot', subSlot);
 	}
 
