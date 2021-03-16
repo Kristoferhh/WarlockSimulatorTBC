@@ -147,12 +147,13 @@ $("#item-selection-table tbody").on('click', '.gem', function(event) {
 		$(".gem-row").remove();
 		$("#gem-selection-table").append('<tr data-color="' + socketColor + '" data-name="none" class="gem-row"><td></td><td>None</td></tr>');
 
-		for (let gemType in socketInfo[socketColor].gems) {
-			let gemColor = socketInfo[socketColor].gems[gemType];
-
-			for (let gem in gems[gemColor]) {
-				let g = gems[gemColor][gem];
-				$("#gem-selection-table").append("<tr data-color='" + gemColor + "' data-name='" + gem + "' class='gem-row'><td><img width='20' height='20' src='img/" + g.iconName + ".jpg'></td><td><a href='https://tbc.wowhead.com/item=" + g.id + "'>" + g.name + "</a></td></tr>");
+		for (let color in gems) {
+			for (let gem in gems[color]) {
+				// Show all gems for normal slots (except for Meta gems) and only show Meta gems for Meta gem slots
+				if (color == socketColor || socketColor !== "meta") {
+					let g = gems[color][gem];
+					$("#gem-selection-table").append("<tr data-color='" + color + "' data-name='" + gem + "' class='gem-row'><td><img width='20' height='20' src='img/" + g.iconName + ".jpg'></td><td><a href='https://tbc.wowhead.com/item=" + g.id + "'>" + g.name + "</a></td></tr>");
+				}
 			}
 		}
 	}
