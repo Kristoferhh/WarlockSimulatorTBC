@@ -30,6 +30,7 @@ var gems = {
 		"teardropCrimsonSpinel": {
 			"name": "Teardrop Crimson Spinel",
 			"spellPower": 12,
+			'iconName': "inv_jewelcrafting_crimsonspinel_02",
 			"id": 32195
 		}
 	},
@@ -37,21 +38,25 @@ var gems = {
 		"rigidLionseye": {
 			"name": "Rigid Lionseye",
 			"hitRating": 10,
+			"iconName": "inv_jewelcrafting_lionseye_02",
 			"id": 32206
 		},
 		"smoothLionseye": {
 			"name": "Smooth Lionseye",
 			"critRating": 10,
+			"iconName": "inv_jewelcrafting_lionseye_02",
 			"id": 32291
 		},
 		"quickLionseye": {
 			"name": "Quick Lionseye",
 			"hasteRating": 10,
+			"iconName": "inv_jewelcrafting_lionseye_02",
 			"id": 35761
 		},
 		"brilliantLionseye": {
 			"name": "Brilliant Lionseye",
 			"intellect": 10,
+			"iconName": "inv_jewelcrafting_lionseye_02",
 			"id": 32204
 		}
 	},
@@ -59,16 +64,19 @@ var gems = {
 		"lustruousEmpyreanSapphire": {
 			"name": "Lustruous Empyrean Sapphire",
 			"mp5": 4,
+			"iconName": "inv_jewelcrafting_empyreansapphire_02",
 			"id": 32202
 		},
 		"sparklingEmpyreanSapphire": {
 			"name": "Sparkling Empyrean Sapphire",
 			"spirit": 10,
+			"iconName": "inv_jewelcrafting_empyreansapphire_02",
 			"id": 32201
 		},
 		"stormyEmpyreanSapphire": {
 			"name": "Stormy Empyrean Sapphire",
 			"spellPen": 13,
+			"iconName": "inv_jewelcrafting_empyreansapphire_02",
 			"id": 32203
 		}
 	},
@@ -77,18 +85,21 @@ var gems = {
 			"name": "Veiled Pyrestone",
 			"spellPower": 6,
 			"hitRating": 5,
+			"iconName": "inv_jewelcrafting_pyrestone_02",
 			"id": 32221
 		},
 		"potentPyrestone": {
 			"name": "Potent Pyrestone",
 			"spellPower": 6,
 			"critRating": 5,
+			"iconName": "inv_jewelcrafting_pyrestone_02",
 			"id": 32304
 		},
 		"iridescentFireOpal": {
 			"name": "Iridescent Fire Opal",
 			"spellPower": 6,
 			"critRating": 4,
+			"iconName": "inv_jewelcrafting_nobletopaz_03",
 			"id": 30593
 		},
 		"recklessPyrestone": {
