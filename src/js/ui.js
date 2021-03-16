@@ -113,8 +113,9 @@ $("#gem-selection-table").on('click', 'tr', function() {
 	let itemSlot = $('tr[data-name="' + itemName + '"]').data('slot');
 	let gemName = $(this).data('name');
 	let gemColor = $(this).data('color');
-	let socket = $('tr[data-name="' + itemName + '"]').find('.gem').eq($("#gem-selection-table").data('socketSlot'));
 	let gemIconName = href = null;
+	let gemID = null;
+	let socket = $('tr[data-name="' + itemName + '"]').find('.gem').eq($("#gem-selection-table").data('socketSlot'));
 	selectedGems[itemSlot] = selectedGems[itemSlot] || {};
 
 	if (!selectedGems[itemSlot][itemName]) {
@@ -129,11 +130,13 @@ $("#gem-selection-table").on('click', 'tr', function() {
 		href = '';
 	} else {
 		gemIconName = gems[gemColor][gemName].iconName + ".jpg";
+		gemID = gems[gemColor][gemName].id;
 		href = 'https://tbc.wowhead.com/item=' + gems[gemColor][gemName].id
 	}
 
 	socket.attr('src', 'img/' + gemIconName);
 	socket.closest('a').attr('href', href);
+	selectedGems[itemSlot][itemName][$("#gem-selection-table").data('socketSlot')] = gemID;
 	localStorage['selectedGems'] = JSON.stringify(selectedGems);
 	$("#gem-selection-table").css('visibility', 'hidden');
 	return false;
@@ -150,7 +153,7 @@ $("#item-selection-table tbody").on('click', '.gem', function(event) {
 		for (let color in gems) {
 			for (let gem in gems[color]) {
 				// Show all gems for normal slots (except for Meta gems) and only show Meta gems for Meta gem slots
-				if (color == socketColor || socketColor !== "meta") {
+				if ((socketColor === "meta" && color == "meta") || (socketColor !== "meta" && color !== "meta")) {
 					let g = gems[color][gem];
 					$("#gem-selection-table").append("<tr data-color='" + color + "' data-name='" + gem + "' class='gem-row'><td><img width='20' height='20' src='img/" + g.iconName + ".jpg'></td><td><a href='https://tbc.wowhead.com/item=" + g.id + "'>" + g.name + "</a></td></tr>");
 				}
