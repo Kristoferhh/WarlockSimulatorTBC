@@ -96,8 +96,12 @@ $("#item-slot-selection-list li").click(function() {
 	loadItemsBySlot($(this).attr('data-slot'), $(this).attr('data-subslot') || null);
 });
 
-$("#gem-selection-table").blur(function() {
-	alert('e');
+// When the user clicks anywhere on the webpage
+$(document).on('click', function(e) {
+	// Hide the gem selection table if the user clicks outside of it.
+	if (e.target.id !== "gem-selection-table") {
+		$("#gem-selection-table").css('visibility', 'hidden');
+	}
 });
 
 // User clicks on a gem row in the gem selection table
@@ -128,6 +132,7 @@ $("#item-selection-table tbody").on('click', '.gem', function(event) {
 	$("#gem-selection-table").css('left', event.pageX + 50);
 	$("#gem-selection-table").css('visibility', 'visible');
 	$("#gem-selection-table").data('color', $(this).data('color'));
+	$("#gem-selection-table").focus();
 
 	// Stop the click from being registered by the .item-row listener as well.
 	event.stopPropagation();
