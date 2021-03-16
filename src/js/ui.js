@@ -1,3 +1,6 @@
+// Object with all the gems the user has equipped on any item, including those that are not equipped. Each key is the item's name and the value is an array with the ID of the gems equipped in that item.
+var selectedGems = localStorage['selectedGems'] ? JSON.parse(localStorage['selectedGems']) : {};
+
 // RAID BUFFS
 for(let buff of Object.keys(auras.buffs)) {
 	let b = auras.buffs[buff];
@@ -106,8 +109,33 @@ $(document).on('click', function(e) {
 
 // User clicks on a gem row in the gem selection table
 $("#gem-selection-table").on('click', 'tr', function() {
-	$("#gem-selection-table").css('visibility', 'hidden');
+	let itemName = $("#gem-selection-table").data('itemName');
+	let itemSlot = $('tr[data-name="' + itemName + '"]').data('slot');
+	let gemName = $(this).data('name');
+	let gemColor = $(this).data('color');
+	let socket = $('tr[data-name="' + itemName + '"]').find('.gem').eq($("#gem-selection-table").data('socketSlot'));
+	let gemIconName = href = null;
+	selectedGems[itemSlot] = selectedGems[itemSlot] || {};
 
+	if (!selectedGems[itemSlot][itemName]) {
+		let socketAmount = $('tr[data-name="' + itemName + '"]').find('.gem').last().data('order') + 1; // The amount of sockets in the item
+
+		selectedGems[itemSlot][itemName] = Array(socketAmount).fill(null);
+	}
+
+	// Check whether the user chose a gem or the option to remove the current gem
+	if (gemName === "none") {
+		gemIconName = socketInfo[gemColor].iconName + ".jpg";
+		href = '';
+	} else {
+		gemIconName = gems[gemColor][gemName].iconName + ".jpg";
+		href = 'https://tbc.wowhead.com/item=' + gems[gemColor][gemName].id
+	}
+
+	socket.attr('src', 'img/' + gemIconName);
+	socket.closest('a').attr('href', href);
+	localStorage['selectedGems'] = JSON.stringify(selectedGems);
+	$("#gem-selection-table").css('visibility', 'hidden');
 	return false;
 });
 
@@ -115,15 +143,16 @@ $("#gem-selection-table").on('click', 'tr', function() {
 $("#item-selection-table tbody").on('click', '.gem', function(event) {
 	// Check if the socket color that was clicked is a different color, otherwise there's no reason to delete and insert new rows.
 	if ($("#gem-selection-table").data('color') !== $(this).data('color')) {
-		$(".gem-row").remove();
-
 		let socketColor = $(this).attr('data-color');
+		$(".gem-row").remove();
+		$("#gem-selection-table").append('<tr data-color="' + socketColor + '" data-name="none" class="gem-row"><td></td><td>None</td></tr>');
+
 		for (let gemType in socketInfo[socketColor].gems) {
 			let gemColor = socketInfo[socketColor].gems[gemType];
 
 			for (let gem in gems[gemColor]) {
 				let g = gems[gemColor][gem];
-				$("#gem-selection-table").append("<tr class='gem-row'><td><img width='20' height='20' src='img/" + g.iconName + ".jpg'></td><td><a href='https://tbc.wowhead.com/item=" + g.id + "'>" + g.name + "</a></td></tr>");
+				$("#gem-selection-table").append("<tr data-color='" + gemColor + "' data-name='" + gem + "' class='gem-row'><td><img width='20' height='20' src='img/" + g.iconName + ".jpg'></td><td><a href='https://tbc.wowhead.com/item=" + g.id + "'>" + g.name + "</a></td></tr>");
 			}
 		}
 	}
@@ -132,10 +161,12 @@ $("#item-selection-table tbody").on('click', '.gem', function(event) {
 	$("#gem-selection-table").css('left', event.pageX + 50);
 	$("#gem-selection-table").css('visibility', 'visible');
 	$("#gem-selection-table").data('color', $(this).data('color'));
-	$("#gem-selection-table").focus();
+	$("#gem-selection-table").data('itemName', $(this).closest('tr').data('name'));
+	$("#gem-selection-table").data('socketSlot', $(this).data('order'));
 
 	// Stop the click from being registered by the .item-row listener as well.
 	event.stopPropagation();
+	return false;
 });
 
 // User clicks on an item in the item table
@@ -393,12 +424,15 @@ function loadItemsBySlot(itemSlot, subSlot = "") {
 
 		// Add the item's gem sockets
 		let sockets = [];
+		let counter = 0;
 		for (let socket in socketInfo) {
 			if (i.hasOwnProperty(socket)) {
 				for(j = 0; j < i[socket]; j++) {
-					sockets.push("<img class='gem' data-color='" + socket + "' src='img/" + socketInfo[socket].iconName + "'>");
+					sockets.push("<a href=''><img width='16' height='16' class='gem' data-color='" + socket + "' data-order='" + counter + "' src='img/" + socketInfo[socket].iconName + ".jpg'></a>");
+					counter++;
 				}
 			}
+
 		}
 
 		tableBody.append("<tr data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (localStorage['equipped' + itemSlot + (subSlot || "")] == item || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td><div>" + sockets.join('') + "</div></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (Math.round(i.hasteRating + (i.onUseHasteRating * i.duration / i.cooldown)) || i.hasteRating || Math.round(i.onUseHasteRating * i.duration / i.cooldown) || '') + "</td><td>" + (localStorage[item + "Dps"] || '') + "</td></tr>")
