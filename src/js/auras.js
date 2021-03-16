@@ -204,7 +204,7 @@ var auras = {
 		"brilliantWizardOil": {
 			"name": "Brilliant Wizard Oil",
 			"spellPower": 36,
-			"crit": 14,
+			"critRating": 14,
 			"iconName": "inv_potion_105",
 			"id": 20749,
 			"weaponOil": true,
