@@ -1,9 +1,20 @@
-// States which color of gems can go into each of the 4 socket types
-var socketColorToGemColor = {
-	"meta": ['meta'],
-	"red": ['red','orange','purple'],
-	"yellow": ['yellow','orange','green'],
-	"blue": ['blue','green','purple']
+var socketInfo = {
+	"meta": {
+		"iconName": "UI-EmptySocket-Meta.png",
+		"gems": ['meta']
+	},
+	"red": {
+		"iconName": "UI-EmptySocket-Red.png",
+		"gems": ['red','orange','purple']
+	},
+	"yellow": {
+		"iconName": "UI-EmptySocket-Yellow.png",
+		"gems": ['yellow','orange','green']
+	},
+	"blue": {
+		"iconName": "UI-EmptySocket-Blue.png",
+		"gems": ['blue','green','purple']
+	}
 }
 //todo add 'phase' to gems
 var gems = {
@@ -121,7 +132,7 @@ var gems = {
 			"name": "Rune Covered Chrysoprase",
 			"critRating": 5,
 			"mp5": 2,
-			"id": 30506,
+			"id": 30560,
 			"iconName": "inv_jewelcrafting_talasite_03"
 		},
 		"radiantSeasprayEmerald": {

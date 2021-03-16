@@ -338,6 +338,24 @@ ul {
 	text-align: center;
 }
 
+#gem-selection-table {
+	position: absolute;
+	left: 50%;
+	border: 4px solid black;
+	padding: 10px;
+	background: #363636;
+	border-radius: .4em;
+}
+
+.gem-row td {
+	padding: 5px 10px 5px 10px;
+}
+
+.gem-row td a {
+	text-decoration: none;
+	color: white;
+}
+
 #item-slot-selection-list {
 	text-align: center;
 	margin-top: 50px;
@@ -374,8 +392,9 @@ ul {
 	text-align: left;
 }
 
-.item-row:hover, .enchant-row:hover {
+.item-row:hover, .enchant-row:hover, .gem-row:hover {
 	cursor: pointer;
+	background-color: rgba(104, 105, 163, 0.3);
 }
 
 #item-selection-table td, #enchant-selection-table td {
@@ -385,10 +404,6 @@ ul {
 .item-row a, .enchant-row a {
 	color: #fff;
 	text-decoration: none;
-}
-
-.item-row:hover, .enchant-row:hover {
-	background-color: rgba(104, 105, 163, 0.3);
 }
 
 table.dataTable tbody tr {
