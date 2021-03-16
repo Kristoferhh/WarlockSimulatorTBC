@@ -38,7 +38,10 @@ $("#rotation-list div li").each(function() {
 $("#avg-dps").text(localStorage['avgDps'] || "");
 $("#min-dps").text(localStorage['minDps'] || "");
 $("#max-dps").text(localStorage['maxDps'] || "");
-$("#sim-length-result").text(localStorage['simulationDuration'] + "s" || "");
+if (localStorage['simulationDuration']) {
+	$("#sim-length-result").text(localStorage['simulationDuration'] + "s");
+}
+
 
 refreshCharacterStats();
 loadItemsBySlot(localStorage['selectedItemSlot'] || "mainhand", (localStorage['selectedItemSubSlot'] || ""));
