@@ -40,9 +40,9 @@ class Simulation {
 		this.player.gcdRemaining = Math.max(0,this.player.gcdRemaining - time);
 		this.player.mp5Timer = Math.max(0,this.player.mp5Timer - time);
 		if (this.player.mp5Timer == 0 && this.player.stats.mp5 > 0) {
-			this.player.mana = Math.min(this.player.maxMana, this.player.mana + this.player.stats.mp5);
+			this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.player.stats.mp5);
 			this.player.mp5Timer = 5;
-			this.player.combatLog(this.player.stats.mp5 + " gained from MP5");
+			this.player.combatLog(this.player.stats.mp5 + " mana gained from MP5");
 		}
 	}
 
