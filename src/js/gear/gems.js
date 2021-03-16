@@ -1,18 +1,18 @@
 var socketInfo = {
 	"meta": {
-		"iconName": "UI-EmptySocket-Meta.png",
+		"iconName": "UI-EmptySocket-Meta",
 		"gems": ['meta']
 	},
 	"red": {
-		"iconName": "UI-EmptySocket-Red.png",
+		"iconName": "UI-EmptySocket-Red",
 		"gems": ['red','orange','purple']
 	},
 	"yellow": {
-		"iconName": "UI-EmptySocket-Yellow.png",
+		"iconName": "UI-EmptySocket-Yellow",
 		"gems": ['yellow','orange','green']
 	},
 	"blue": {
-		"iconName": "UI-EmptySocket-Blue.png",
+		"iconName": "UI-EmptySocket-Blue",
 		"gems": ['blue','green','purple']
 	}
 }
