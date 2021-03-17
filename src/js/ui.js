@@ -432,7 +432,18 @@ function loadItemsBySlot(itemSlot, subSlot = "") {
 		for (let socket in socketInfo) {
 			if (i.hasOwnProperty(socket)) {
 				for(j = 0; j < i[socket]; j++) {
-					sockets.push("<a href=''><img width='16' height='16' class='gem' data-color='" + socket + "' data-order='" + counter + "' src='img/" + socketInfo[socket].iconName + ".jpg'></a>");
+					let gemIcon = socketInfo[socket].iconName;
+
+					if (selectedGems[itemSlot][item]) {
+						for (let color in gems) {
+							for (let gem in gems[color]) {
+								if (gems[color][gem].id == selectedGems[itemSlot][item][counter]) {
+									gemIcon = gems[color][gem].iconName;
+								}
+							}
+						}
+					}
+					sockets.push("<a href=''><img width='16' height='16' class='gem' data-color='" + socket + "' data-order='" + counter + "' src='img/" + gemIcon + ".jpg'></a>");
 					counter++;
 				}
 			}
