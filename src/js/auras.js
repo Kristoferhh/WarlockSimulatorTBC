@@ -1,4 +1,4 @@
-var auras = {
+var _auras = {
 	"buffs": {
 		"felArmor": {
 			"name": "Fel Armor",

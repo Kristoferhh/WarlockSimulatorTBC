@@ -2,49 +2,95 @@
 var selectedGems = localStorage['selectedGems'] ? JSON.parse(localStorage['selectedGems']) : {};
 // Key: Item slot. Value: Equipped item's ID
 var selectedItems = localStorage['selectedItems'] ? JSON.parse(localStorage['selectedItems']) : {};
+// Key: Talent's name. Value: Talent's point amount
+var talents = localStorage['talents'] ? JSON.parse(localStorage['talents']) : {};
+// Key: Aura's name. Value: Boolean
+var auras = localStorage['auras'] ? JSON.parse(localStorage['auras']) : {};
 
 // RAID BUFFS
-for(let buff of Object.keys(auras.buffs)) {
-	let b = auras.buffs[buff];
+for(let buff of Object.keys(_auras.buffs)) {
+	let b = _auras.buffs[buff];
 	let lowerBuffName = b.name.toLowerCase().split(' ').join('-');
 	let raidBuffUl = $("#buff-list");
-	localStorage[buff] = localStorage[buff] || false;
+	auras[buff] = auras[buff] || false;
 
-	raidBuffUl.append($("<li data-aura-type='buffs' data-checked='" + localStorage[buff] + "' name='" + buff + "' id='" + lowerBuffName + "' class='aura'><a href='https://tbc.wowhead.com/spell=" + b.id + "'><img alt='" + b.name + "' src='img/" + b.iconName + ".jpg'></a></li>"));
+	raidBuffUl.append($("<li data-aura-type='buffs' data-checked='" + auras[buff] + "' name='" + buff + "' id='" + lowerBuffName + "' class='aura'><a href='https://tbc.wowhead.com/spell=" + b.id + "'><img alt='" + b.name + "' src='img/" + b.iconName + ".jpg'></a></li>"));
 
 	// If the user already had the buff selected from a previous session then add the stats from it.
-	if (localStorage[buff] === 'true') {
-		modifyStatsFromAura(auras.buffs[buff], false);
+	if (auras[buff] === true) {
+		modifyStatsFromAura(_auras.buffs[buff], false);
 	}
 }
 
 // DEBUFFS
-for (let buff of Object.keys(auras.debuffs)) {
-	let b = auras.debuffs[buff];
+for (let buff of Object.keys(_auras.debuffs)) {
+	let b = _auras.debuffs[buff];
 	let lowerBuffName = b.name.toLowerCase().split(' ').join('-');
 	let debuffUl = $("#debuff-list");
-	localStorage[buff] = localStorage[buff] || false;
+	auras[buff] = auras[buff] || false;
 
-	debuffUl.append($("<li data-aura-type='debuffs' data-checked='" + localStorage[buff] + "' name='" + buff + "' id='" + lowerBuffName + "' class='debuff aura'><a href='https://tbc.wowhead.com/spell=" + b.id + "'><img alt='" + b.name + "' src='img/" + b.iconName + ".jpg'></a></li>"));
+	debuffUl.append($("<li data-aura-type='debuffs' data-checked='" + auras[buff] + "' name='" + buff + "' id='" + lowerBuffName + "' class='debuff aura'><a href='https://tbc.wowhead.com/spell=" + b.id + "'><img alt='" + b.name + "' src='img/" + b.iconName + ".jpg'></a></li>"));
 
 	// Add stats from already enabled debuffs
-	if (localStorage[buff] === 'true') {
-		modifyStatsFromAura(auras.debuffs[buff], false);
+	if (auras[buff] === true) {
+		modifyStatsFromAura(_auras.debuffs[buff], false);
 	}
 }
 
 // CONSUMABLES
-for (let consumable of Object.keys(auras.consumables)) {
-	let c = auras.consumables[consumable];
+for (let consumable of Object.keys(_auras.consumables)) {
+	let c = _auras.consumables[consumable];
 	let lowerConsumableName = c.name.toLowerCase().split(' ').join('-');
 	let consumableUl = $("#consumable-list");
-	localStorage[consumable] = localStorage[consumable] || false;
+	auras[consumable] = auras[consumable] || false;
 
-	consumableUl.append($("<li data-aura-type='consumables' data-checked='" + localStorage[consumable] + "' name='" + consumable + "' id='" + lowerConsumableName + "' class='" + (c.stats ? "stats " : "") + (c.potion ? "potion " : "") + (c.battleElixir ? "battle-elixir " : "") + (c.guardianElixir ? "guardian-elixir " : "") + (c.weaponOil ? "weapon-oil " : "") + (c.foodBuff ? "food-buff " : "") + "consumable aura'><a href='https://tbc.wowhead.com/item=" + c.id + "'><img alt='" + c.name + "' src='img/" + c.iconName + ".jpg'></a></li>"));
+	consumableUl.append($("<li data-aura-type='consumables' data-checked='" + auras[consumable] + "' name='" + consumable + "' id='" + lowerConsumableName + "' class='" + (c.stats ? "stats " : "") + (c.potion ? "potion " : "") + (c.battleElixir ? "battle-elixir " : "") + (c.guardianElixir ? "guardian-elixir " : "") + (c.weaponOil ? "weapon-oil " : "") + (c.foodBuff ? "food-buff " : "") + "consumable aura'><a href='https://tbc.wowhead.com/item=" + c.id + "'><img alt='" + c.name + "' src='img/" + c.iconName + ".jpg'></a></li>"));
 
 	// Add stats from already enabled consumables
-	if (localStorage[consumable] === 'true') {
-		modifyStatsFromAura(auras.consumables[consumable], false);
+	if (auras[consumable] === true) {
+		modifyStatsFromAura(_auras.consumables[consumable], false);
+	}
+}
+
+// Add the talent trees
+for (let tree in _talents) {
+	if (_talents.hasOwnProperty(tree)) {
+		$("#talents-section").append($("<div class='talent-tree-div'><table background='img/talent_tree_background_" + tree + ".jpg' id='talent-table-" + tree + "' class='talent-tree-table'></table><h3 class='talent-tree-name'>" + tree.charAt(0).toUpperCase() + tree.slice(1) + "</h3></div>"));
+		$("#talent-table-" + tree).append($("<tbody></tbody>"));
+		$("#talent-table-" + tree + " tbody").append($("<tr class='" + tree + "-tree-row'></tr>"));
+		let lastRow = $("#talent-table-" + tree + " tbody tr:last");
+		let currentCol = 1;
+
+		for (let talent in _talents[tree]) {
+			let t = _talents[tree][talent];
+			talents[talent] = talents[talent] || 0;
+
+			// Check if the current talent should be in the next row below and create a new row if true
+			if (t.row > $("." + tree + "-tree-row").length) {
+				$("#talent-table-" + tree + " tbody").append($("<tr class='" + tree + "-tree-row'></tr>"));
+				lastRow = $("#talent-table-" + tree + " tbody tr:last");
+				currentCol = 1;
+			}
+
+			// Create empty cells between talents if skipping a number (e.g. going from column 1 straight to column 4)
+			while (currentCol < t.column) {
+				lastRow.append($("<td></td>"));
+				currentCol++;
+			}
+
+			lastRow.append($("<td><div data-points='" + talents[talent] + "' class='talent-icon' data-tree='" + tree + "' id='" + talent + "'><a href='https://classic.wowhead.com/spell=" + t.rankIDs[Math.max(0,talents[talent]-1)] + "'><img src='img/" + t.iconName + ".jpg' alt='" + t.name + "'><span id='" + talent + "-point-amount' class='talent-point-amount'>" + talents[talent] + "</span></a></div></td>"));
+			
+			// Check if the text displaying the talent point amount should be hidden or colored (for maxed out talents)
+			let pointAmount = $("#" + talent + "-point-amount")
+			if (pointAmount.text() <= 0) {
+				pointAmount.hide();
+			} else if (pointAmount.text() == t.rankIDs.length) {
+				pointAmount.css("color","#ffcd45");
+			} else {
+				pointAmount.css("color","#7FFF00")
+			}
+			currentCol++;
+		}
 	}
 }
 
@@ -54,10 +100,11 @@ $(".aura").click(function() {
 	let auraName = $(this).attr('name');
 	let checkedVal = $(this).attr('data-checked') === 'true';
 	$(this).attr('data-checked', !checkedVal);
-	localStorage[$(this).attr("name")] = !checkedVal;
+	auras[$(this).attr('name')] = !checkedVal;
 
-	modifyStatsFromAura(auras[auraType][auraName], checkedVal);
+	modifyStatsFromAura(_auras[auraType][auraName], checkedVal);
 
+	localStorage.auras = JSON.stringify(auras);
 	return false;
 });
 
@@ -82,17 +129,18 @@ $(consumableTypesToTrack.join(',')).click(function(event) {
 		if (consumableName !== clickedConsumableName) {
 			if ($(this).attr('data-checked') === 'true') {
 				$(this).attr('data-checked', false);
-				localStorage[consumableName] = false;
+				auras[consumableName] = false;
 
-				for (let stat in auras.consumables[consumableName]) {
+				for (let stat in _auras.consumables[consumableName]) {
 					if (characterStats.hasOwnProperty(stat)) {
-						characterStats[stat] -= auras.consumables[consumableName][stat];
+						characterStats[stat] -= _auras.consumables[consumableName][stat];
 					}
 				}
 			}
 		}
 	});
 
+	localStorage.auras = JSON.stringify(auras);
 	refreshCharacterStats();
 });
 
@@ -284,49 +332,6 @@ $("#enchant-selection-table tbody").on('click', 'tr', function(event) {
 	return false;
 });
 
-// Add the talent trees
-for (let tree in talents) {
-	if (talents.hasOwnProperty(tree)) {
-		$("#talents-section").append($("<div class='talent-tree-div'><table background='img/talent_tree_background_" + tree + ".jpg' id='talent-table-" + tree + "' class='talent-tree-table'></table><h3 class='talent-tree-name'>" + tree.charAt(0).toUpperCase() + tree.slice(1) + "</h3></div>"));
-		$("#talent-table-" + tree).append($("<tbody></tbody>"));
-		$("#talent-table-" + tree + " tbody").append($("<tr class='" + tree + "-tree-row'></tr>"));
-		let lastRow = $("#talent-table-" + tree + " tbody tr:last");
-		let currentCol = 1;
-
-		for (let talent in talents[tree]) {
-			let t = talents[tree][talent];
-			let lowerTalentName = t.name.toLowerCase().split(' ').join('-');
-			localStorage[lowerTalentName] = localStorage[lowerTalentName] || 0;
-
-			// Check if the current talent should be in the next row below and create a new row if true
-			if (t.row > $("." + tree + "-tree-row").length) {
-				$("#talent-table-" + tree + " tbody").append($("<tr class='" + tree + "-tree-row'></tr>"));
-				lastRow = $("#talent-table-" + tree + " tbody tr:last");
-				currentCol = 1;
-			}
-
-			// Create empty cells between talents if skipping a number (e.g. going from column 1 straight to column 4)
-			while (currentCol < t.column) {
-				lastRow.append($("<td></td>"));
-				currentCol++;
-			}
-
-			lastRow.append($("<td><div data-points='" + localStorage[lowerTalentName] + "' class='talent-icon' data-tree='" + tree + "' id='" + talent + "'><a href='https://classic.wowhead.com/spell=" + t.rankIDs[Math.max(0,localStorage[lowerTalentName]-1)] + "'><img src='img/" + t.iconName + ".jpg' alt='" + t.name + "'><span id='" + lowerTalentName + "-point-amount' class='talent-point-amount'>" + localStorage[lowerTalentName] + "</span></a></div></td>"));
-			
-			// Check if the text displaying the talent point amount should be hidden or colored (for maxed out talents)
-			let pointAmount = $("#" + lowerTalentName + "-point-amount")
-			if (pointAmount.text() <= 0) {
-				pointAmount.hide();
-			} else if (pointAmount.text() == t.rankIDs.length) {
-				pointAmount.css("color","#ffcd45");
-			} else {
-				pointAmount.css("color","#7FFF00")
-			}
-			currentCol++;
-		}
-	}
-}
-
 // Disable the context menu from appearing when the user right clicks a talent
 $(".talent-icon").bind("contextmenu", function(event) {
 	return false;
@@ -342,15 +347,15 @@ $(".talent-icon").mousedown(function(event) {
 	// Check if the click was a left or right click
 	if ((event.which === 1 && talentPointsRemaining > 0) || event.which === 3) {
 		let icon = $(this);
-		let talent = talents[icon.attr('data-tree')][icon.attr('id')]; // get the talent's object
-		let lowerTalentName = talent.name.toLowerCase().split(' ').join('-');
+		let talent = _talents[icon.attr('data-tree')][icon.attr('id')]; // get the talent's object
+		let talentName = $(this).attr('id');
 
 		// left click
 		if (event.which === 1) {
 			// compare the amount of points in the talent vs the amount of ranks before incrementing
 			if (Number(icon.attr('data-points')) < talent.rankIDs.length) {
 				icon.attr('data-points', Number(icon.attr('data-points')) + 1);
-				localStorage[lowerTalentName] = Number(localStorage[lowerTalentName]) + 1;
+				talents[talentName] = Number(talents[talentName]) + 1;
 
 				// todo: move these JS css changes to the css file
 				if (Number(icon.attr('data-points')) == talent.rankIDs.length) {
@@ -364,7 +369,7 @@ $(".talent-icon").mousedown(function(event) {
 			// only decrement if the point amount is above 0
 			if (icon.attr('data-points') > 0) {
 				icon.attr('data-points', Number(icon.attr('data-points'))-1);
-				localStorage[lowerTalentName] = Number(localStorage[lowerTalentName]) - 1;
+				talents[talentName] = Number(talents[talentName]) - 1;
 				icon.children('a').children('span').css('color', "#7FFF00");
 			}
 		}
@@ -384,10 +389,11 @@ $(".talent-icon").mousedown(function(event) {
 			icon.children('a').children('.talent-point-amount').hide();
 		}
 
-		icon.children('a').attr('href', 'https://classic.wowhead.com/spell=' + talent.rankIDs[Math.max(0,localStorage[lowerTalentName]-1)]);
+		icon.children('a').attr('href', 'https://classic.wowhead.com/spell=' + talent.rankIDs[Math.max(0,talents[talentName]-1)]);
 		//$WowheadPower.refreshLinks();
 	}
 
+	localStorage.talents = JSON.stringify(talents);
 	return false;
 });
 
