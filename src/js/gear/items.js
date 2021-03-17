@@ -14,6 +14,7 @@ var items = {
 			"critRating": 24,
 			"hitRating": 16,
 			"setId": 1, // fix
+			"id": 24266,
 			"source": "Tailoring",
 			"phase": 1
 		},
@@ -61,6 +62,7 @@ var items = {
 			},
 			"spellPower": 41,
 			"setId": 1, // fix
+			"id": 28415,
 			"source": "Arcatraz",
 			"phase": 1
 		},
@@ -76,6 +78,7 @@ var items = {
 			},
 			"spellPower": 36,
 			"critRating": 24,
+			"id": 31104,
 			"source": "Shadowmoon Valley Quest",
 			"phase": 1
 		},
@@ -139,6 +142,7 @@ var items = {
 			"intellect": 16,
 			"spellPower": 20,
 			"hitRating": 16,
+			"id": 27758,
 			"source": "Heroic Underbog",
 			"phase": 1,
 		},
@@ -149,6 +153,7 @@ var items = {
 			"spellPower": 23,
 			"critRating": 14,
 			"hitRating": 9,
+			"id": 21625,
 			"source": "Shadow Labyrinth",
 			"phase": 1,
 		},
@@ -157,6 +162,7 @@ var items = {
 			"intellect": 15,
 			"spellPower": 30,
 			"critRating": 10,
+			"id": 31692,
 			"source": "Blade's Edge Mountains Quest",
 			"phase": 1,
 		},
@@ -202,6 +208,7 @@ var items = {
 			},
 			"shadowPower": 51,
 			"setId": 1, // fix
+			"id": 21869,
 			"source": "Tailoring",
 			"phase": 1
 		},
@@ -212,6 +219,7 @@ var items = {
 			"spirit": 8,
 			"spellPower": 40,
 			"critRating": 18,
+			"id": 30925,
 			"source": "Shadowmoon Valley Quest",
 			"id": 30925
 		},
@@ -259,6 +267,7 @@ var items = {
 				"hitRating": 3
 			},
 			"spellPower": 29,
+			"id": 27778,
 			"source": "Shadow Labyrinth",
 			"phase": 1,
 		},
@@ -268,6 +277,7 @@ var items = {
 			"intellect": 25,
 			"spellPower": 30,
 			"hitRating": 12,
+			"id": 27994,
 			"source": "Black Morass",
 			"phase": 1,
 		},
@@ -289,6 +299,7 @@ var items = {
 			"intellect": 18,
 			"spellPower": 23,
 			"hitRating": 12,
+			"id": 27981,
 			"source": "Sethekk Halls",
 			"phase": 1,
 		},
@@ -297,6 +308,7 @@ var items = {
 			"intellect": 11,
 			"spellPower": 26,
 			"hitRating": 10,
+			"id": 31140,
 			"source": "BoE World Drop",
 			"phase": 1,
 		},
@@ -304,6 +316,7 @@ var items = {
 			"name": "Cloak of the Black Void",
 			"intellect": 11,
 			"spellPower": 36,
+			"id": 24252,
 			"source": "Tailoring",
 			"phase": 1,
 		},
@@ -351,6 +364,7 @@ var items = {
 				"hitRating": 3
 			},
 			"shadowPower": 73,
+			"id": 21871,
 			"source": "Tailoring",
 			"phase": 1
 		},
@@ -392,6 +406,7 @@ var items = {
 			"intellect": 23,
 			"spellPower": 51,
 			"hitRating": 30,
+			"id": 31297,
 			"source": "BoE World Drop",
 			"phase": 1,
 		},
@@ -405,6 +420,7 @@ var items = {
 			},
 			"spellPower": 29,
 			"hitRating": 23,
+			"id": 29341,
 			"source": "Auchenai Crypts Quest",
 			"phase": 1
 		},
@@ -432,6 +448,7 @@ var items = {
 			"intellect": 18,
 			"spellPower": 23,
 			"hitRating": 12,
+			"id": 27462,
 			"source": "Heroic Hellfire Ramparts",
 			"phase": 1,
 		},
@@ -501,6 +518,7 @@ var items = {
 				"critRating": 2
 			},
 			"spellPower": 31,
+			"id": 24250,
 			"source": "Tailoring",
 			"phase": 1,
 		},
@@ -513,6 +531,7 @@ var items = {
 				"stamina": 3
 			},
 			"spellPower": 21,
+			"id": 28174,
 			"source": "Auchindon Quest",
 			"phase": 1
 		}
@@ -524,6 +543,7 @@ var items = {
 			"intellect": 24,
 			"spellPower": 30,
 			"hitRating": 18,
+			"id": 27493,
 			"source": "Heroic Auchenai Crypts",
 			"phase": 1,
 		},
@@ -556,6 +576,7 @@ var items = {
 			"intellect": 21,
 			"spellPower": 27,
 			"hitRating": 20,
+			"id": 27537,
 			"source": "Shattered Halls",
 			"phase": 1,
 		},
@@ -570,6 +591,7 @@ var items = {
 			},
 			"spellPower": 28,
 			"spellPen": 9,
+			"id": 29317,
 			"source": "Caverns of Time Quest",
 			"phase": 1
 		},
@@ -596,6 +618,7 @@ var items = {
 			},
 			"spellPower": 40,
 			"critRating": 20,
+			"id": 24256,
 			"source": "Tailoring",
 			"phase": 1,
 		},
@@ -647,6 +670,7 @@ var items = {
 			"intellect": 27,
 			"spellPower": 35,
 			"hitRating": 17,
+			"id": 29241,
 			"source": "Heroic Arcatraz",
 			"phase": 1,
 		},
@@ -660,6 +684,7 @@ var items = {
 			},
 			"spellPower": 31,
 			"critRating": 9,
+			"id": 27843,
 			"source": "Heroic Mana-Tombs",
 			"phase": 1,
 		},
@@ -697,6 +722,7 @@ var items = {
 			"spellPower": 47,
 			"critRating": 26,
 			"hitRating": 22,
+			"id": 24262,
 			"source": "Tailoring",
 			"phase": 1,
 		},
@@ -734,6 +760,7 @@ var items = {
 			},
 			"spellPower": 37,
 			"critRating": 23,
+			"id": 30531,
 			"source": "Heroic Black Morass",
 			"phase": 1,
 		},
@@ -748,6 +775,7 @@ var items = {
 				"spellPower": 5
 			},
 			"spellPower": 37,
+			"id": 28185,
 			"source": "Black Morass",
 			"phase": 1,
 		},
@@ -784,6 +812,7 @@ var items = {
 				"hitRating": 3
 			},
 			"shadowPower": 58,
+			"id": 21870,
 			"source": "Tailoring",
 			"phase": 1,
 		},
@@ -792,6 +821,7 @@ var items = {
 			"stamina": 36,
 			"intellect": 29,
 			"spellPower": 36,
+			"id": 29242,
 			"source": "Heroic Slave Pens",
 			"id": 29242
 		},
@@ -847,6 +877,7 @@ var items = {
 				"intellect": 3
 			},
 			"spellPower": 30,
+			"id": 28179,
 			"source": "Auchindon Quest",
 			"phase": 1,
 		},
@@ -856,6 +887,7 @@ var items = {
 			"intellect": 24,
 			"spellPower": 31,
 			"hitRating": 14,
+			"id": 27821,
 			"source": "Heroic Mana-Tombs",
 			"phase": 1,
 		},
@@ -899,6 +931,7 @@ var items = {
 			"stamina": 30,
 			"spellPower": 24,
 			"hitRating": 21,
+			"id": 29172,
 			"source": "Cenarion Expedition - Exalted",
 			"phase": 1,
 		},
@@ -909,6 +942,7 @@ var items = {
 			"spellPower": 23,
 			"critRating": 14,
 			"hitRating": 10,
+			"id": 28227,
 			"source": "Heroic Old Hillsbrad Foothills",
 			"phase": 1,
 		},
@@ -1157,12 +1191,14 @@ var items = {
 			"intellect": 11,
 			"spellPower": 160,
 			"critRating": 21,
+			"id": 29153,
 			"source": "Honor Hold/Thrallmar - Exalted",
 			"phase": 1,
 		},
 		"bladeOfWizardry": {
 			"name": "Blade of Wizardry",
 			"spellPower": 160,
+			"id": 31336,
 			"source": "BoE World Drop",
 			"phase": 11
 		},
@@ -1172,6 +1208,7 @@ var items = {
 			"intellect": 14,
 			"spellPower": 131,
 			"hitRating": 14,
+			"id": 27905,
 			"source": "Shadow Labyrinth",
 			"phase": 1
 		},
@@ -1192,6 +1229,7 @@ var items = {
 			"name": "Orb of the Soul-Eater",
 			"stamina": 18,
 			"shadowPower": 52,
+			"id": 29272,
 			"source": "25 Badge of Justice - G'eras",
 			"phase": 1,
 		},
@@ -1227,6 +1265,7 @@ var items = {
 			"spellPower": 22,
 			"critRating": 13,
 			"hitRating": 12,
+			"id": 28412,
 			"source": "Arcatraz",
 			"phase": 1
 		},
@@ -1236,6 +1275,7 @@ var items = {
 			"intellect": 18,
 			"spellPower": 23,
 			"hitRating": 12,
+			"id": 28187,
 			"source": "Black Morass",
 			"phase": 1,
 		},
@@ -1270,6 +1310,7 @@ var items = {
 			"intellect": 42,
 			"spellPower": 169,
 			"critRating": 37,
+			"id": 29355,
 			"source": "Heroic Sethekk Halls",
 			"phase": 1,
 		},
@@ -1279,6 +1320,7 @@ var items = {
 			"spellPower": 122,
 			"hitRating": 19,
 			"critRating": 26,
+			"id": 29130,
 			"source": "The Aldor - Revered",
 			"phase": 1
 		},
@@ -1289,6 +1331,7 @@ var items = {
 			"spellPower": 121,
 			"critRating": 26,
 			"hitRating": 16,
+			"id": 28341,
 			"source": "Botanica",
 			"phase": 1
 		},
@@ -1335,6 +1378,7 @@ var items = {
 			"intellect": 10,
 			"spellPower": 14,
 			"hitRating": 8,
+			"id": 28386,
 			"source": "Arcatraz",
 			"phase": 1,
 		},
@@ -1359,6 +1403,7 @@ var items = {
 				"spellPower": 2
 			},
 			"spellPower": 14,
+			"id": 32872,
 			"source": "Shadowmoon Valley Quest",
 			"phase": 1
 		},
@@ -1371,6 +1416,7 @@ var items = {
 			"intellect": 9,
 			"spellPower": 12,
 			"hitRating": 7,
+			"id": 25939,
 			"source": "Mana-Tombs",
 			"phase": 1
 		},
