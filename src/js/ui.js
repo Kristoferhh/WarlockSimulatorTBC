@@ -1,5 +1,7 @@
 // Object with all the gems the user has equipped on any item, including those that are not equipped. Each key is the item's name and the value is an array with the ID of the gems equipped in that item.
 var selectedGems = localStorage['selectedGems'] ? JSON.parse(localStorage['selectedGems']) : {};
+// Key: Item slot. Value: Equipped item's ID
+var selectedItems = localStorage['selectedItems'] ? JSON.parse(localStorage['selectedItems']) : {};
 
 // RAID BUFFS
 for(let buff of Object.keys(auras.buffs)) {
@@ -116,6 +118,7 @@ $("#gem-selection-table").on('click', 'tr', function() {
 	let gemIconName = href = null;
 	let gemID = null;
 	let socket = $('tr[data-name="' + itemName + '"]').find('.gem').eq($("#gem-selection-table").data('socketSlot'));
+	let socketSlot = $("#gem-selection-table").data('socketSlot');
 	selectedGems[itemSlot] = selectedGems[itemSlot] || {};
 
 	if (!selectedGems[itemSlot][itemName]) {
@@ -134,9 +137,21 @@ $("#gem-selection-table").on('click', 'tr', function() {
 		href = 'https://tbc.wowhead.com/item=' + gems[gemColor][gemName].id
 	}
 
+	// Remove stats from old gem if equipped
+	if (selectedGems[itemSlot][itemName][socketSlot]) {
+		for (let color in gems) {
+			for (let gem in gems[color]) {
+				if (gems[color][gem].id == selectedGems[itemSlot][itemName][socketSlot]) {
+					modifyStatsFromGem(gem, 'remove');
+					break
+				} 
+			}
+		}
+	}
+	modifyStatsFromGem(gemName, 'add'); // Add stats from new gem
 	socket.attr('src', 'img/' + gemIconName);
 	socket.closest('a').attr('href', href);
-	selectedGems[itemSlot][itemName][$("#gem-selection-table").data('socketSlot')] = gemID;
+	selectedGems[itemSlot][itemName][socketSlot] = gemID;
 	localStorage['selectedGems'] = JSON.stringify(selectedGems);
 	$("#gem-selection-table").css('visibility', 'hidden');
 	return false;
@@ -177,43 +192,75 @@ $("#item-selection-table tbody").on('click', '.gem', function(event) {
 $("#item-selection-table tbody").on('click', 'tr', function() {
 	let itemSlot = $(this).attr('data-slot');
 	let itemName = $(this).attr('data-name');
-	let subSlot = $(this).data('subSlot') || ""; // Workaround for having two selections for rings and trinkets but only one selection for the other slots.
+	let subSlot = localStorage['selectedItemSubSlot'] || $(this).data('subslot') || ""; // Workaround for having two selections for rings and trinkets but only one selection for the other slots.
 
 	// Toggle the item's data-selected boolean.
 	let equipped = $(this).attr('data-selected') == 'true';
 	$(this).attr('data-selected', !equipped);
 
 	// Check if the user already has an item equipped in this slot and unequip it if so
-	if (localStorage['equipped' + itemSlot + subSlot] !== null && localStorage['equipped' + itemSlot + subSlot] !== itemName) {
+	if (selectedItems[itemSlot + subSlot] && selectedItems[itemSlot + subSlot] != $(this).closest('tr').data('wowhead-id')) {
 		// Set the old item's data-selected value to false and remove the item's stats from the player.
-		$('[data-name="' + localStorage['equipped' + itemSlot + subSlot] +'"]').attr('data-selected', false);
-		modifyStatsFromItem(localStorage['equipped' + itemSlot + subSlot], itemSlot, subSlot);
+		$('[data-wowhead-id="' + selectedItems[itemSlot + subSlot] +'"]').attr('data-selected', false);
+		for (let slot in items) {
+			for (let item in items[slot]) {
+				if (items[slot][item].id == selectedItems[itemSlot + subSlot]) {
+					// Remove the stats from the item
+					modifyStatsFromItem(items[slot][item], true);
+					selectedItems[itemSlot + subSlot] = null;
+					break
+				}
+			}
+		}
 	}
 
-	// Add or remove the stats from the item depending on whether the player has the item equipped or not.
-	modifyStatsFromItem(itemName,itemSlot,subSlot);
+	// Add the stats from the item
+	modifyStatsFromItem(items[itemSlot][itemName], false);
+	selectedItems[itemSlot + subSlot] = items[itemSlot][itemName].id;
 
-	// If the user is equipping a main hand or offhand then equip their twohander if they have one equipped and vice versa
+	// If the user is equipping a main hand or offhand then unequip their twohander if they have one equipped and vice versa
 	if (itemSlot == "mainhand" || itemSlot == "offhand") {
-		if (localStorage['equippedtwohand']) {
-			modifyStatsFromItem(localStorage['equippedtwohand'], 'twohand');
-			localStorage.removeItem('equippedtwohand');
+		if (selectedItems['twohand'] !== null) {
+			itemSlotLoop:
+			for (let slot in items) {
+				for (let item in items[slot]) {
+					if (items[slot][item].id == selectedItems['twohand']) {
+						modifyStatsFromItem(items[slot][item], true);
+						selectedItems['twohand'] = null;
+						break itemSlotLoop;
+					}
+				}
+			}
 		}
 	} else {
-		if (localStorage['equippedmainhand']) {
-			modifyStatsFromItem(localStorage['equippedmainhand'], 'mainhand');
-			localStorage.removeItem('equippedmainhand');
+		if (selectedItems['mainhand'] !== null) {
+			itemSlotLoop:
+			for (let slot in items) {
+				for (let item in items[slot]) {
+					if (items[slot][item].id == selectedItems['mainhand']) {
+						modifyStatsFromItem(items[slot][item], true);
+						selectedItems['mainhand'] = null;
+						break itemSlotLoop;
+					}
+				}
+			}
 		}
-		if (localStorage['equippedoffhand']) {
-			modifyStatsFromItem(localStorage['equippedoffhand'], 'offhand');
-			localStorage.removeItem('equippedoffhand');
+		if (selectedItems['offhand']) {
+			itemSlotLoop:
+			for (let slot in items) {
+				for (let item in items[slot]) {
+					if (items[slot][item].id == selectedItems['offhand']) {
+						modifyStatsFromItem(items[slot][item], true);
+						selectedItems['offhand'] = null;
+						break itemSlotLoop;
+					}
+				}
+			}
 		}
 	}
 
-	// Return false so that the user doesn't get redirected to wowhead's website when he clicks the item.
+	localStorage.selectedItems = JSON.stringify(selectedItems);
 	return false;
-
-	//todo implement code to automatically unequip 2h when equipping 1h/offhand and vice versa.
 });
 
 // User clicks on an enchant
@@ -434,7 +481,7 @@ function loadItemsBySlot(itemSlot, subSlot = "") {
 				for(j = 0; j < i[socket]; j++) {
 					let gemIcon = socketInfo[socket].iconName;
 
-					if (selectedGems[itemSlot][item]) {
+					if (selectedGems[itemSlot] && selectedGems[itemSlot][item]) {
 						for (let color in gems) {
 							for (let gem in gems[color]) {
 								if (gems[color][gem].id == selectedGems[itemSlot][item][counter]) {
@@ -450,8 +497,7 @@ function loadItemsBySlot(itemSlot, subSlot = "") {
 
 		}
 
-		tableBody.append("<tr data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (localStorage['equipped' + itemSlot + (subSlot || "")] == item || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td><div>" + sockets.join('') + "</div></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (Math.round(i.hasteRating + (i.onUseHasteRating * i.duration / i.cooldown)) || i.hasteRating || Math.round(i.onUseHasteRating * i.duration / i.cooldown) || '') + "</td><td>" + (localStorage[item + "Dps"] || '') + "</td></tr>")
-		$("[data-name='" + item +"']").data('subSlot', subSlot);
+		tableBody.append("<tr data-subslot='" + localStorage['selectedItemSubSlot'] + "' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage['selectedItemSubSlot']] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td><div>" + sockets.join('') + "</div></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (Math.round(i.hasteRating + (i.onUseHasteRating * i.duration / i.cooldown)) || i.hasteRating || Math.round(i.onUseHasteRating * i.duration / i.cooldown) || '') + "</td><td>" + (localStorage[item + "Dps"] || '') + "</td></tr>")
 	}
 
 	loadEnchantsBySlot(itemSlot);
@@ -482,10 +528,7 @@ function loadEnchantsBySlot(itemSlot) {
 
 // Equips or unequips an item. If the player has the item equipped then unequip it, else equip it.
 // loadingUnequippedItems is set to true when the user is loading the website and it needs to add the stats from the user's equipped items from previous sessions.
-function modifyStatsFromItem(itemName, itemSlot, subSlot = "", loadingEquippedItems = false) {
-	let itemObj = items[itemSlot][itemName];
-	let equipped = localStorage['equipped' + itemSlot + subSlot] == itemName || false;
-
+function modifyStatsFromItem(itemObj, equipped, loadingEquippedItems = false) {
 	// If the user has the item equipped and is not loading the stats from equipped items when loading the website
 	if (equipped && !loadingEquippedItems) {
 		// Loop through the stats on the item and add them to/remove them from the character's stats.
@@ -495,18 +538,13 @@ function modifyStatsFromItem(itemName, itemSlot, subSlot = "", loadingEquippedIt
 				characterStats[stat] -= itemObj[stat];
 			}
 		}
-
-		localStorage.removeItem('equipped' + itemSlot + subSlot);
 	} else {
 		for (let stat in itemObj) {
 			if (characterStats.hasOwnProperty(stat)) {
 				characterStats[stat] += itemObj[stat];
 			}
 		}
-
-		localStorage['equipped' + itemSlot + subSlot] = itemName;
 	}
-
 	refreshCharacterStats();
 }
 
@@ -534,6 +572,26 @@ function modifyStatsFromEnchant(enchantName, itemSlot, loadingEquippedEnchants =
 
 	if (!loadingEquippedEnchants) {
 		refreshCharacterStats();
+	}
+}
+
+function modifyStatsFromGem(gemName, action) {
+	for (let color in gems) {
+		for (let gem in gems[color]) {
+			if (gem == gemName) {
+				for (let property in gems[color][gem]) {
+					if (characterStats.hasOwnProperty(property)) {
+						if (action == 'add') {
+							characterStats[property] += gems[color][gem][property];
+						} else if (action == 'remove') {
+							characterStats[property] -= gems[color][gem][property];
+						}
+					}
+				}
+
+				refreshCharacterStats();
+			}
+		}
 	}
 }
 

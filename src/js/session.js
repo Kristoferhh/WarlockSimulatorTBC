@@ -1,12 +1,11 @@
 // Add the stats from all the items the user has equipped from previous sessions
-for (let itemSlot in items) {
-	//todo fix this mess
-	if (localStorage['equipped' + itemSlot] || localStorage['equipped' + itemSlot + '1'] || localStorage['equipped' + itemSlot + '2']) {
-		if (localStorage['equipped' + itemSlot]) {
-			modifyStatsFromItem(localStorage['equipped' + itemSlot], itemSlot, "", true);
-		} else {
-			if (localStorage['equipped' + itemSlot + '1']) modifyStatsFromItem(localStorage['equipped' + itemSlot + '1'], itemSlot, '1', true);
-			if (localStorage['equipped' + itemSlot + '2']) modifyStatsFromItem(localStorage['equipped' + itemSlot + '2'], itemSlot, '2', true);
+for (let itemSlot in selectedItems) {
+	for (let slot in items) {
+		for (let item in items[slot]) {
+			if (items[slot][item].id == selectedItems[itemSlot]) {
+				modifyStatsFromItem(items[slot][item], true, true);
+				break;
+			}
 		}
 	}
 }
