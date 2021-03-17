@@ -159,20 +159,20 @@ $(document).on('click', function(e) {
 
 // User clicks on a gem row in the gem selection table
 $("#gem-selection-table").on('click', 'tr', function() {
-	let itemName = $("#gem-selection-table").data('itemName');
-	let itemSlot = $('tr[data-name="' + itemName + '"]').data('slot');
+	let itemID = $("#gem-selection-table").data('itemID');
+	let itemSlot = $('tr[data-wowhead-id="' + itemID + '"]').data('slot');
 	let gemName = $(this).data('name');
 	let gemColor = $(this).data('color');
 	let gemIconName = href = null;
 	let gemID = null;
-	let socket = $('tr[data-name="' + itemName + '"]').find('.gem').eq($("#gem-selection-table").data('socketSlot'));
+	let socket = $('tr[data-wowhead-id="' + itemID + '"]').find('.gem').eq($("#gem-selection-table").data('socketSlot'));
 	let socketSlot = $("#gem-selection-table").data('socketSlot');
 	selectedGems[itemSlot] = selectedGems[itemSlot] || {};
 
-	if (!selectedGems[itemSlot][itemName]) {
-		let socketAmount = $('tr[data-name="' + itemName + '"]').find('.gem').last().data('order') + 1; // The amount of sockets in the item
+	if (!selectedGems[itemSlot][itemID]) {
+		let socketAmount = $('tr[data-wowhead-id="' + itemID + '"]').find('.gem').last().data('order') + 1; // The amount of sockets in the item
 
-		selectedGems[itemSlot][itemName] = Array(socketAmount).fill(null);
+		selectedGems[itemSlot][itemID] = Array(socketAmount).fill(null);
 	}
 
 	// Check whether the user chose a gem or the option to remove the current gem
@@ -185,22 +185,26 @@ $("#gem-selection-table").on('click', 'tr', function() {
 		href = 'https://tbc.wowhead.com/item=' + gems[gemColor][gemName].id
 	}
 
-	// Remove stats from old gem if equipped
-	if (selectedGems[itemSlot][itemName][socketSlot]) {
-		for (let color in gems) {
-			for (let gem in gems[color]) {
-				if (gems[color][gem].id == selectedGems[itemSlot][itemName][socketSlot]) {
-					modifyStatsFromGem(gem, 'remove');
-					break
-				} 
+	// Check if the socket that was changed was on an equipped item
+	if (socket.closest('tr').data('wowhead-id') == selectedItems[itemSlot]) {
+		// Remove stats from old gem if equipped
+		if (selectedGems[itemSlot][itemID][socketSlot]) {
+			for (let color in gems) {
+				for (let gem in gems[color]) {
+					if (gems[color][gem].id == selectedGems[itemSlot][itemID][socketSlot]) {
+						modifyStatsFromGem(gem, 'remove');
+						break
+					} 
+				}
 			}
 		}
+		modifyStatsFromGem(gemName, 'add'); // Add stats from new gem
 	}
-	modifyStatsFromGem(gemName, 'add'); // Add stats from new gem
+
 	socket.attr('src', 'img/' + gemIconName);
 	socket.closest('a').attr('href', href);
-	selectedGems[itemSlot][itemName][socketSlot] = gemID;
-	localStorage['selectedGems'] = JSON.stringify(selectedGems);
+	selectedGems[itemSlot][itemID][socketSlot] = gemID;
+	localStorage.selectedGems = JSON.stringify(selectedGems);
 	$("#gem-selection-table").css('visibility', 'hidden');
 	return false;
 });
@@ -228,7 +232,7 @@ $("#item-selection-table tbody").on('click', '.gem', function(event) {
 	$("#gem-selection-table").css('left', event.pageX + 50);
 	$("#gem-selection-table").css('visibility', 'visible');
 	$("#gem-selection-table").data('color', $(this).data('color'));
-	$("#gem-selection-table").data('itemName', $(this).closest('tr').data('name'));
+	$("#gem-selection-table").data('itemID', $(this).closest('tr').data('wowhead-id'));
 	$("#gem-selection-table").data('socketSlot', $(this).data('order'));
 
 	// Stop the click from being registered by the .item-row listener as well.
@@ -487,10 +491,10 @@ function loadItemsBySlot(itemSlot, subSlot = "") {
 				for(j = 0; j < i[socket]; j++) {
 					let gemIcon = socketInfo[socket].iconName;
 
-					if (selectedGems[itemSlot] && selectedGems[itemSlot][item]) {
+					if (selectedGems[itemSlot] && selectedGems[itemSlot][i.id]) {
 						for (let color in gems) {
 							for (let gem in gems[color]) {
-								if (gems[color][gem].id == selectedGems[itemSlot][item][counter]) {
+								if (gems[color][gem].id == selectedGems[itemSlot][i.id][counter]) {
 									gemIcon = gems[color][gem].iconName;
 								}
 							}
