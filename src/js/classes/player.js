@@ -91,7 +91,7 @@ class Player {
 		this.stats.hitChance = Math.round(this.getHitChance(parseInt(this.enemy.level)) * this.stats.hitChanceMultiplier); // The player's chance of hitting the enemy, between 61% and 99%
 
 		// Assign the filler spell.
-		this.filler = "shadowBolt"; // Assign Shadow Bolt as the default in case the user hasn't selected any filler spell
+		this.filler;
 		for (let spell in settings.rotation.fillers) {
 			if (settings.rotation.fillers[spell]) {
 				this.filler = spell;
