@@ -85,9 +85,10 @@ class Player {
 		this.stats.critChance = Math.round(this.stats.critChance * this.stats.critChanceMultiplier); // Multiply the crit chance in order to use a whole number for RNG calculations.
 
 		// Hit chance
+		this.stats.hitChanceMultiplier = 1000;
 		this.stats.extraHitChance = this.stats.hitRating / hitRatingPerPercent; // hit percent from hit rating
 		if (settings.auras.inspiringPresence === 'true') this.stats.extraHitChance += 1;
-		this.stats.hitChance = this.getHitChance(parseInt(this.enemy.level)); // The player's chance of hitting the enemy, between 61% and 99%
+		this.stats.hitChance = Math.round(this.getHitChance(parseInt(this.enemy.level)) * this.stats.hitChanceMultiplier); // The player's chance of hitting the enemy, between 61% and 99%
 
 		// Assign the filler spell.
 		this.filler;
@@ -142,9 +143,9 @@ class Player {
 
 	isHit(isAfflictionSpell) {
 		if (isAfflictionSpell) {
-			return (this.random(1,100) <= (Math.min(99,this.stats.hitChance + this.talents.suppression * 2)));
+			return (this.random(1,100 * this.stats.hitChanceMultiplier) <= (Math.min(99 * this.stats.hitChanceMultiplier,this.stats.hitChance + this.talents.suppression * 2 * this.stats.hitChanceMultiplier)));
 		} else {
-			return (this.random(1,100) <= Math.min(99,this.stats.hitChance));
+			return (this.random(1,100 * this.stats.hitChanceMultiplier) <= Math.min(99 * this.stats.hitChanceMultiplier,this.stats.hitChance));
 		}
 	}
 
