@@ -232,6 +232,7 @@ ul {
 }
 
 #damage-breakdown-table {
+	margin-left: 8px;
 	padding: 10px;
 	width: 70%;
 	display: inline-block;

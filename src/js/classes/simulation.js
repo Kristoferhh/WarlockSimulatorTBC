@@ -100,5 +100,6 @@ class Simulation {
 			if (s.damage > 0 || s.casts > 0) tableBody.append("<tr class='spell-damage-information'><td>" + s.name + "</td><td>" + (~~(((s.damage / totalDamage) * 100) * 100) / 100).toFixed(2) + "%" + "</td><td>" + s.casts + "</td><td>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td></tr>");
 		}
 		$("#damage-breakdown-table").css("visibility", "visible");
+		$("#damage-breakdown-section h3").css("visibility", 'visible');
 	}
 }
