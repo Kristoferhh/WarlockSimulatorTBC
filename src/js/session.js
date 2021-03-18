@@ -18,7 +18,16 @@ for (let itemSlot in enchants) {
 }
 
 // Add stats from gems in equipped items
-
+for (itemSlot in selectedItems) {
+	let itemID = selectedItems[itemSlot];
+	if (selectedGems[itemSlot][itemID]) {
+		for (gemID of selectedGems[itemSlot][itemID]) {
+			if (gemID !== null) {
+				modifyStatsFromGem(gemID, 'add');
+			}
+		}
+	}
+}
 
 // Add stats from the player's selected race
 let currentRace = $("#race-dropdown-list").val();
