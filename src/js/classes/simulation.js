@@ -15,13 +15,15 @@ class Simulation {
 	}
 
 	passTime() {
-		let time = Math.max(this.player.gcdRemaining, this.player.castTimeRemaining);
+		let time = Math.max(this.player.gcdRemaining, this.player.castTimeRemaining, 0.5);
 
 		if (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.auras.improvedShadowBolt.durationRemaining < time) time = this.player.auras.improvedShadowBolt.durationRemaining;
 		if (this.player.auras.corruption && this.player.auras.corruption.active && this.player.auras.corruption.tickTimerRemaining < time) time = this.player.auras.corruption.tickTimerRemaining; 
+		if (this.player.mp5Timer < time) time = this.player.mp5Timer;
 
 		// This needs to be the first modified value since the time in combat needs to be updated before spells start dealing damage/auras expiring etc. for the combat logging.
 		this.player.fightTime += time;
+		this.player.castTimeRemaining = Math.max(0,this.player.castTimeRemaining - time);
 
 		// Spells
 		for (let spell in this.player.spells) {
@@ -36,7 +38,6 @@ class Simulation {
 			this.player.auras[aura].tick(time);
 		}
 
-		this.player.castTimeRemaining = Math.max(0,this.player.castTimeRemaining - time);
 		this.player.gcdRemaining = Math.max(0,this.player.gcdRemaining - time);
 		this.player.mp5Timer = Math.max(0,this.player.mp5Timer - time);
 		if (this.player.mp5Timer == 0 && this.player.stats.mp5 > 0) {
