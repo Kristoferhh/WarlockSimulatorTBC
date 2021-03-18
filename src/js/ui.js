@@ -217,15 +217,14 @@ $("#item-selection-table tbody").on('contextmenu', '.gem', function(event) {
 		let itemSlot = $(this).closest('tr').data('slot');
 		let itemID = $(this).closest('tr').data('wowhead-id');
 		let socketOrder = $(this).data('order');
-
-		
+	
 		$(this).attr('src', 'img/' + socketInfo[socketColor].iconName + '.jpg');
 		$(this).closest('a').attr('href', '');
 		modifyStatsFromGem(selectedGems[itemSlot][itemID][socketOrder], 'remove');
 		selectedGems[itemSlot][itemID][socketOrder] = null;
 		localStorage.selectedGems = JSON.stringify(selectedGems);
 	}
-	
+
 	return false;
 });
 
@@ -327,7 +326,7 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 				}
 			}
 		}
-	} else {
+	} else if (itemSlot == "twohand") {
 		if (selectedItems['mainhand'] !== null) {
 			itemSlotLoop:
 			for (let slot in items) {
@@ -340,7 +339,7 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 				}
 			}
 		}
-		if (selectedItems['offhand']) {
+		if (selectedItems['offhand'] !== null) {
 			itemSlotLoop:
 			for (let slot in items) {
 				for (let item in items[slot]) {
