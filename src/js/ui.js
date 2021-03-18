@@ -255,13 +255,24 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 	if (selectedItems[itemSlot + subSlot]) {
 		// Set the old item's data-selected value to false and remove the item's stats from the player.
 		$('[data-wowhead-id="' + selectedItems[itemSlot + subSlot] +'"]').attr('data-selected', false);
+		itemLoop:
 		for (let slot in items) {
 			for (let item in items[slot]) {
 				if (items[slot][item].id == selectedItems[itemSlot + subSlot]) {
 					// Remove the stats from the item
 					modifyStatsFromItem(items[slot][item], 'remove');
+
+					// Remove stats from gems equipped in the item
+					if (selectedGems[slot] && selectedGems[slot][selectedItems[itemSlot + subSlot]]) {
+						for (gemID of selectedGems[slot][selectedItems[itemSlot + subSlot]]) {
+							if (gemID !== null) {
+								modifyStatsFromGem(gemID, 'remove');
+							}
+						}
+					}
+
 					selectedItems[itemSlot + subSlot] = null;
-					break
+					break itemLoop;
 				}
 			}
 		}
@@ -271,6 +282,15 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 	if (!equipped) {
 		modifyStatsFromItem(items[itemSlot][itemName], 'add');
 		selectedItems[itemSlot + subSlot] = items[itemSlot][itemName].id;
+
+		// Add stats from the item's equipped gems
+		if (selectedGems[itemSlot + subSlot] && selectedGems[itemSlot + subSlot][items[itemSlot][itemName].id]) {
+			for (gemID of selectedGems[itemSlot + subSlot][items[itemSlot][itemName].id]) {
+				if (gemID !== null) {
+					modifyStatsFromGem(gemID, 'add');
+				}
+			}
+		}
 	}
 
 	// If the user is equipping a main hand or offhand then unequip their twohander if they have one equipped and vice versa
@@ -493,17 +513,19 @@ function loadItemsBySlot(itemSlot, subSlot = "") {
 			if (i.hasOwnProperty(socket)) {
 				for(j = 0; j < i[socket]; j++) {
 					let gemIcon = socketInfo[socket].iconName;
+					let gemHref = '';
 
 					if (selectedGems[itemSlot] && selectedGems[itemSlot][i.id]) {
 						for (let color in gems) {
 							for (let gem in gems[color]) {
 								if (gems[color][gem].id == selectedGems[itemSlot][i.id][counter]) {
 									gemIcon = gems[color][gem].iconName;
+									gemHref = 'https://tbc.wowhead.com/item=' + gems[color][gem].id;
 								}
 							}
 						}
 					}
-					sockets.push("<a href=''><img width='16' height='16' class='gem' data-color='" + socket + "' data-order='" + counter + "' src='img/" + gemIcon + ".jpg'></a>");
+					sockets.push("<a href='" + gemHref + "'><img width='16' height='16' class='gem' data-color='" + socket + "' data-order='" + counter + "' src='img/" + gemIcon + ".jpg'></a>");
 					counter++;
 				}
 			}
