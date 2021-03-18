@@ -172,7 +172,7 @@ class Player {
 
 	combatLog(info) {
 		if (this.iteration == 1) {
-			console.log("|" + this.fightTime + "|\t" + info);
+			console.log("|" + (Math.round(this.fightTime * 10) / 10) + "|\t" + info);
 		}
 	}
 }
