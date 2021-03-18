@@ -3,7 +3,7 @@ for (let itemSlot in selectedItems) {
 	for (let slot in items) {
 		for (let item in items[slot]) {
 			if (items[slot][item].id == selectedItems[itemSlot]) {
-				modifyStatsFromItem(items[slot][item], true, true);
+				modifyStatsFromItem(items[slot][item], 'add');
 				break;
 			}
 		}
@@ -16,6 +16,9 @@ for (let itemSlot in enchants) {
 		modifyStatsFromEnchant(localStorage['equipped' + itemSlot + "Enchant"], itemSlot, true);
 	}
 }
+
+// Add stats from gems in equipped items
+
 
 // Add stats from the player's selected race
 let currentRace = $("#race-dropdown-list").val();

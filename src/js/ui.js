@@ -258,7 +258,7 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 			for (let item in items[slot]) {
 				if (items[slot][item].id == selectedItems[itemSlot + subSlot]) {
 					// Remove the stats from the item
-					modifyStatsFromItem(items[slot][item], true);
+					modifyStatsFromItem(items[slot][item], 'remove');
 					selectedItems[itemSlot + subSlot] = null;
 					break
 				}
@@ -267,7 +267,7 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 	}
 
 	// Add the stats from the item
-	modifyStatsFromItem(items[itemSlot][itemName], false);
+	modifyStatsFromItem(items[itemSlot][itemName], 'add');
 	selectedItems[itemSlot + subSlot] = items[itemSlot][itemName].id;
 
 	// If the user is equipping a main hand or offhand then unequip their twohander if they have one equipped and vice versa
@@ -277,7 +277,7 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 			for (let slot in items) {
 				for (let item in items[slot]) {
 					if (items[slot][item].id == selectedItems['twohand']) {
-						modifyStatsFromItem(items[slot][item], true);
+						modifyStatsFromItem(items[slot][item], 'remove');
 						selectedItems['twohand'] = null;
 						break itemSlotLoop;
 					}
@@ -290,7 +290,7 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 			for (let slot in items) {
 				for (let item in items[slot]) {
 					if (items[slot][item].id == selectedItems['mainhand']) {
-						modifyStatsFromItem(items[slot][item], true);
+						modifyStatsFromItem(items[slot][item], 'remove');
 						selectedItems['mainhand'] = null;
 						break itemSlotLoop;
 					}
@@ -302,7 +302,7 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 			for (let slot in items) {
 				for (let item in items[slot]) {
 					if (items[slot][item].id == selectedItems['offhand']) {
-						modifyStatsFromItem(items[slot][item], true);
+						modifyStatsFromItem(items[slot][item], 'remove');
 						selectedItems['offhand'] = null;
 						break itemSlotLoop;
 					}
@@ -538,9 +538,9 @@ function loadEnchantsBySlot(itemSlot) {
 
 // Equips or unequips an item. If the player has the item equipped then unequip it, else equip it.
 // loadingUnequippedItems is set to true when the user is loading the website and it needs to add the stats from the user's equipped items from previous sessions.
-function modifyStatsFromItem(itemObj, equipped, loadingEquippedItems = false) {
+function modifyStatsFromItem(itemObj, action) {
 	// If the user has the item equipped and is not loading the stats from equipped items when loading the website
-	if (equipped && !loadingEquippedItems) {
+	if (action == 'remove') {
 		// Loop through the stats on the item and add them to/remove them from the character's stats.
 		for (let stat in itemObj) {
 			// Check if the item property is a character stat such as stamina/spell power.
@@ -548,7 +548,7 @@ function modifyStatsFromItem(itemObj, equipped, loadingEquippedItems = false) {
 				characterStats[stat] -= itemObj[stat];
 			}
 		}
-	} else {
+	} else if (action == 'add') {
 		for (let stat in itemObj) {
 			if (characterStats.hasOwnProperty(stat)) {
 				characterStats[stat] += itemObj[stat];
