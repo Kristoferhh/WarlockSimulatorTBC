@@ -192,13 +192,13 @@ $("#gem-selection-table").on('click', 'tr', function() {
 			for (let color in gems) {
 				for (let gem in gems[color]) {
 					if (gems[color][gem].id == selectedGems[itemSlot][itemID][socketSlot]) {
-						modifyStatsFromGem(gem, 'remove');
+						modifyStatsFromGem(gems[color][gem].id, 'remove');
 						break
 					} 
 				}
 			}
 		}
-		modifyStatsFromGem(gemName, 'add'); // Add stats from new gem
+		modifyStatsFromGem(gemID, 'add'); // Add stats from new gem
 	}
 
 	socket.attr('src', 'img/' + gemIconName);
@@ -244,14 +244,15 @@ $("#item-selection-table tbody").on('click', '.gem', function(event) {
 $("#item-selection-table tbody").on('click', 'tr', function() {
 	let itemSlot = $(this).attr('data-slot');
 	let itemName = $(this).attr('data-name');
+	let itemID = $(this).closest('tr').data('wowhead-id');
 	let subSlot = localStorage['selectedItemSubSlot'] || $(this).data('subslot') || ""; // Workaround for having two selections for rings and trinkets but only one selection for the other slots.
 
 	// Toggle the item's data-selected boolean.
-	let equipped = $(this).attr('data-selected') == 'true';
+	let equipped = $(this).attr('data-selected') == 'true' && selectedItems[itemSlot + subSlot] && selectedItems[itemSlot + subSlot] == itemID;
 	$(this).attr('data-selected', !equipped);
 
 	// Check if the user already has an item equipped in this slot and unequip it if so
-	if (selectedItems[itemSlot + subSlot] && selectedItems[itemSlot + subSlot] != $(this).closest('tr').data('wowhead-id')) {
+	if (selectedItems[itemSlot + subSlot]) {
 		// Set the old item's data-selected value to false and remove the item's stats from the player.
 		$('[data-wowhead-id="' + selectedItems[itemSlot + subSlot] +'"]').attr('data-selected', false);
 		for (let slot in items) {
@@ -267,8 +268,10 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 	}
 
 	// Add the stats from the item
-	modifyStatsFromItem(items[itemSlot][itemName], 'add');
-	selectedItems[itemSlot + subSlot] = items[itemSlot][itemName].id;
+	if (!equipped) {
+		modifyStatsFromItem(items[itemSlot][itemName], 'add');
+		selectedItems[itemSlot + subSlot] = items[itemSlot][itemName].id;
+	}
 
 	// If the user is equipping a main hand or offhand then unequip their twohander if they have one equipped and vice versa
 	if (itemSlot == "mainhand" || itemSlot == "offhand") {
@@ -555,6 +558,7 @@ function modifyStatsFromItem(itemObj, action) {
 			}
 		}
 	}
+
 	refreshCharacterStats();
 }
 
@@ -585,10 +589,10 @@ function modifyStatsFromEnchant(enchantName, itemSlot, loadingEquippedEnchants =
 	}
 }
 
-function modifyStatsFromGem(gemName, action) {
+function modifyStatsFromGem(gemID, action) {
 	for (let color in gems) {
 		for (let gem in gems[color]) {
-			if (gem == gemName) {
+			if (gems[color][gem].id == gemID) {
 				for (let property in gems[color][gem]) {
 					if (characterStats.hasOwnProperty(property)) {
 						if (action == 'add') {
@@ -600,6 +604,7 @@ function modifyStatsFromGem(gemName, action) {
 				}
 
 				refreshCharacterStats();
+				return;
 			}
 		}
 	}
