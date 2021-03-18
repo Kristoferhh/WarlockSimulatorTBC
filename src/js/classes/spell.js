@@ -31,11 +31,11 @@ class Spell {
 	cast() {
 		this.player.mana -= this.manaCost;
 		this.cooldownRemaining = this.cooldown;
+		this.casting = false;
 		if (this.castTime > 0) this.player.combatLog("Finished casting " + this.name);
 			
 		// Only return this.damage() if the spell is not a dot. If it's a dot then we want to enable the Aura at the end of the cast rather than doing damage.
 		if (!this.dot) {
-			this.casting = false;
 			return this.damage();
 		}
 	}
@@ -129,7 +129,7 @@ class Corruption extends Spell {
 		this.name = "Corruption";
 		player.damageBreakdown.corruption = player.damageBreakdown.corruption || {"name": this.name};
 		this.manaCost = 370;
-		this.castTime = 2 - (0.4 * player.talents.improvedCorruption);
+		this.castTime = Math.round((2 - (0.4 * player.talents.improvedCorruption)) * 100) / 100;
 		this.dot = true;
 	}
 
