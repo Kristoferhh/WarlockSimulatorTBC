@@ -20,7 +20,7 @@ for (let itemSlot in enchants) {
 // Add stats from gems in equipped items
 for (itemSlot in selectedItems) {
 	let itemID = selectedItems[itemSlot];
-	if (selectedGems[itemSlot][itemID]) {
+	if (selectedGems[itemSlot] && selectedGems[itemSlot][itemID]) {
 		for (gemID of selectedGems[itemSlot][itemID]) {
 			if (gemID !== null) {
 				modifyStatsFromGem(gemID, 'add');
