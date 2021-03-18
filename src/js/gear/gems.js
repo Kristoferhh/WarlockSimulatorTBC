@@ -32,6 +32,30 @@ var gems = {
 			"spellPower": 12,
 			'iconName': "inv_jewelcrafting_crimsonspinel_02",
 			"id": 32195
+		},
+		"runedLivingRuby": {
+			"name": "Runed Living Ruby",
+			"spellPower": 9,
+			"iconName": "inv_jewelcrafting_livingruby_03",
+			"id": 24030
+		},
+		"starkBloodGarnet": {
+			"name": "Stark Blood Garnet",
+			"spellPower": 8,
+			"iconName": "inv_misc_gem_ruby_01",
+			"id": 27777
+		},
+		"runedBloodGarnate": {
+			"name": "Runed Blood Garnet",
+			"spellPower": 7,
+			"iconName": "inv_misc_gem_bloodgem_02",
+			"id": 23096
+		},
+		"runedTourmaline": {
+			"name": "Runed Tourmaline",
+			"spellPower": 5,
+			"iconName": "inv_misc_gem_ruby_03",
+			"id": 28461
 		}
 	},
 	"yellow": {
