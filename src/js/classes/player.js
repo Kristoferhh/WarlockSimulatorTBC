@@ -125,10 +125,16 @@ class Player {
 		}
 		if (this.rotation.fillers.shadowBolt) this.spells.shadowBolt = new ShadowBolt(this);
 		if (this.rotation.dots.corruption) this.spells.corruption = new Corruption(this);
+		if (this.rotation.dots.unstableAffliction) this.spells.unstableAffliction = new UnstableAffliction(this);
+		if (this.rotation.dots.siphonLife) this.spells.siphonLife = new SiphonLife(this);
+		if (this.rotation.dots.immolate) this.spells.immolate = new Immolate(this);
 
 		this.auras = {};
 		if (this.talents.improvedShadowBolt > 0 && this.rotation.fillers.shadowBolt) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this);
 		if (this.rotation.dots.corruption) this.auras.corruption = new CorruptionDot(this);
+		if (this.rotation.dots.unstableAffliction) this.auras.unstableAffliction = new UnstableAfflictionDot(this);
+		if (this.rotation.dots.siphonLife) this.auras.siphonLife = new SiphonLifeDot(this);
+		if (this.rotation.dots.immolate) this.auras.immolate = new ImmolateDot(this);
 
 		this.castTimeRemaining = 0;
 		this.gcdValue = 1.5;

@@ -39,7 +39,7 @@ class DamageOverTime {
 
 				let dmg = ((this.dmg + sp * this.coefficient) * this.modifier * this.player.stats[this.school + "Modifier"]) / this.ticksTotal;
 				// Add bonus from ISB (without removing ISB stacks since it's a dot)
-				if (this.player.talents.improvedShadowBolt > 0 && this.player.auras.improvedShadowBolt.active) {
+				if (this.school == "shadow" && this.player.talents.improvedShadowBolt > 0 && this.player.auras.improvedShadowBolt.active) {
 					dmg *= this.player.auras.improvedShadowBolt.modifier;
 				}
 
@@ -96,12 +96,28 @@ class SiphonLifeDot extends DamageOverTime {
 		this.durationTotal = 30;
 		this.tickTimerTotal = 3;
 		this.ticksTotal = this.durationTotal / this.tickTimerTotal;
-		this.snapshots = false;
-		this.dmg = 69.5;
+		this.snapshots = true;
+		this.dmg = 695;
 		this.school = "shadow";
 		this.name = "Siphon Life";
 		this.varName = "siphonLife";
 		this.coefficient = 1;
 		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {'name': this.name};
+	}
+}
+
+class ImmolateDot extends DamageOverTime {
+	constructor(player) {
+		super(player);
+		this.durationTotal = 15;
+		this.tickTimerTotal = 3;
+		this.ticksTotal = this.durationTotal / this.tickTimerTotal;
+		this.snapshots = true;
+		this.dmg = 615;
+		this.school = "fire";
+		this.name = "Immolate";
+		this.varName = "immolate";
+		this.coefficient = 0.65;
+		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
 	}
 }

@@ -16,10 +16,13 @@ class Simulation {
 
 	passTime() {
 		let time = this.player.castTimeRemaining;
-		if (time == 0) time = this.player.gcdRemaining;
+		if (time == 0) time = Math.max(0.1,this.player.gcdRemaining);
 
 		if (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.auras.improvedShadowBolt.durationRemaining < time) time = this.player.auras.improvedShadowBolt.durationRemaining;
 		if (this.player.auras.corruption && this.player.auras.corruption.active && this.player.auras.corruption.tickTimerRemaining < time) time = this.player.auras.corruption.tickTimerRemaining; 
+		if (this.player.auras.unstableAffliction && this.player.auras.unstableAffliction.active && this.player.auras.unstableAffliction.tickTimerRemaining < time) time = this.player.auras.unstableAffliction.tickTimerRemaining;
+		if (this.player.auras.siphonLife && this.player.auras.siphonLife.active && this.player.auras.siphonLife.tickTimerRemaining < time) time = this.player.auras.siphonLife.tickTimerRemaining;
+		if (this.player.auras.immolate && this.player.auras.immolate.active && this.player.auras.immolate.tickTimerRemaining < time) time = this.player.auras.immolate.tickTimerRemaining;
 		if (this.player.mp5Timer < time) time = this.player.mp5Timer;
 
 		// This needs to be the first modified value since the time in combat needs to be updated before spells start dealing damage/auras expiring etc. for the combat logging.
@@ -64,8 +67,14 @@ class Simulation {
 			for(this.player.fightTime = 0; this.player.fightTime < fightLength; this.passTime()) {
 				if (this.player.castTimeRemaining <= 0) {
 					if (this.player.gcdRemaining <= 0) {
-						if (this.player.rotation.dots.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready()) {
+						if (this.player.rotation.dots.unstableAffliction && !this.player.auras.unstableAffliction.active && this.player.spells.unstableAffliction.ready()) {
+							this.player.cast("unstableAffliction");
+						} else if (this.player.rotation.dots.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready()) {
 							this.player.cast("corruption");
+						} else if (this.player.rotation.dots.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.ready()) {
+							this.player.cast("siphonLife");
+						} else if (this.player.rotation.dots.immolate && !this.player.auras.immolate.active && this.player.spells.immolate.ready()) {
+							this.player.cast("immolate");
 						} else if (this.player.spells[this.player.filler].ready()) {
 							this.player.cast(this.player.filler);
 						} else {

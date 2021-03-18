@@ -75,7 +75,7 @@ class ShadowBolt extends Spell {
 
 		// Check if the spell hits or misses
 		if (!this.player.isHit(false)) {
-			this.player.combatLog(this.name + " *miss*");
+			this.player.combatLog(this.name + " *resist*");
 			this.player.damageBreakdown.shadowBolt.misses = this.player.damageBreakdown.shadowBolt.misses + 1 || 1;
 			return 0;
 		}
@@ -127,7 +127,8 @@ class Corruption extends Spell {
 	constructor(player) {
 		super(player);
 		this.name = "Corruption";
-		player.damageBreakdown.corruption = player.damageBreakdown.corruption || {"name": this.name};
+		this.varName = "corruption";
+		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
 		this.manaCost = 370;
 		this.castTime = Math.round((2 - (0.4 * player.talents.improvedCorruption)) * 100) / 100;
 		this.dot = true;
@@ -135,14 +136,110 @@ class Corruption extends Spell {
 
 	cast() {
 		super.cast();
-		this.player.damageBreakdown.corruption.casts = this.player.damageBreakdown.corruption.casts + 1 || 1;
+		this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1;
 
 		// Check if the Corruption hit
 		if (this.player.isHit(true)) {
 			this.player.auras.corruption.apply(this.player.stats.spellPower + this.player.stats.shadowPower);
 		} else {
-			this.player.combatLog(this.name + " *miss*");
-			this.player.damageBreakdown.corruption.misses = this.player.damageBreakdown.corruption.misses + 1 || 1;
+			this.player.combatLog(this.name + " *resist*");
+			this.player.damageBreakdown[this.varName].misses = this.player.damageBreakdown[this.varName].misses + 1 || 1;
 		}
+	}
+}
+
+class UnstableAffliction extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Unstable Affliction";
+		this.varName = "unstableAffliction";
+		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
+		this.manaCost = 400;
+		this.castTime = 1.5;
+		this.dot = true;
+	}
+
+	cast() {
+		super.cast();
+		this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1;
+
+		if (this.player.isHit(true)) {
+			this.player.auras[this.varName].apply(this.player.stats.spellPower + this.player.stats.shadowPower);
+		} else {
+			this.player.combatLog(this.name + " *resist*");
+			this.player.damageBreakdown[this.varName].misses = this.player.damageBreakdown[this.varName].misses + 1 || 1;
+		}
+	}
+}
+
+class SiphonLife extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Siphon Life";
+		this.varName = "siphonLife";
+		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
+		this.manaCost = 410;
+		this.castTime = 0;
+		this.dot = true;
+	}
+
+	cast() {
+		super.cast();
+		this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1;
+
+		if (this.player.isHit(true)) {
+			this.player.auras[this.varName].apply(this.player.stats.spellPower + this.player.stats.shadowPower);
+		} else {
+			this.player.combatLog(this.name + " *resist*");
+			this.player.damageBreakdown[this.varName].misses = this.player.damageBreakdown[this.varName].misses + 1 || 1;
+		}
+	}
+}
+
+class Immolate extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Immolate";
+		this.varName = "immolate";
+		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
+		this.manaCost = 445;
+		this.castTime = 2 - (0.1 * player.talents.bane);
+		this.dot = true;
+		this.dmg = 331.5;
+		this.coefficient = 0.2;
+	}
+
+	cast() {
+		super.cast();
+		this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1;
+
+		if (this.player.isHit(false)) {
+			this.player.auras[this.varName].apply(this.player.stats.spellPower + this.player.stats.firePower);
+			return this.damage();
+		} else {
+			this.player.combatLog(this.name + " *resist*");
+			this.player.damageBreakdown[this.varName].misses = this.player.damageBreakdown[this.varName].misses + 1 || 1;
+		}
+	}
+
+	damage() {
+		// Checks if the spell is a crit.
+		let isCrit = this.player.isCrit();
+		if (isCrit) {
+			// Increment the crit counter whether the spell hits or not so that the crit % on the damage breakdown is correct. Otherwise the crit % will be lower due to lost crits when the spell misses.
+			this.player.damageBreakdown[this.varName].crits = this.player.damageBreakdown[this.varName].crits + 1 || 1;
+		}
+
+		let dmg = (this.dmg + ((this.player.stats.spellPower + this.player.stats.firePower) * this.coefficient)) * this.player.stats.fireModifier;
+		if (isCrit) {
+			dmg *= (1.5 + 0.5 * this.player.talents.ruin);
+		}
+
+		dmg = ~~(dmg *  (1 - 0.0025 * this.player.enemy.shadowResist));
+		if (isCrit) this.player.combatLog(this.name + " *" + dmg + "*");
+		else this.player.combatLog(this.name + " " + dmg);
+
+		this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg;
+		return dmg;
 	}
 }
