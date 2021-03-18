@@ -209,7 +209,27 @@ $("#gem-selection-table").on('click', 'tr', function() {
 	return false;
 });
 
-// User clicks on one of the item's gem sockets
+// Tracks right clicks on item sockets
+$("#item-selection-table tbody").on('contextmenu', '.gem', function(event) {
+	// Check whether there is a gem in the socket or not
+	if ($(this).closest('a').attr('href') !== "") {
+		let socketColor = $(this).data('color');
+		let itemSlot = $(this).closest('tr').data('slot');
+		let itemID = $(this).closest('tr').data('wowhead-id');
+		let socketOrder = $(this).data('order');
+
+		
+		$(this).attr('src', 'img/' + socketInfo[socketColor].iconName + '.jpg');
+		$(this).closest('a').attr('href', '');
+		modifyStatsFromGem(selectedGems[itemSlot][itemID][socketOrder], 'remove');
+		selectedGems[itemSlot][itemID][socketOrder] = null;
+		localStorage.selectedGems = JSON.stringify(selectedGems);
+	}
+	
+	return false;
+});
+
+// User left-clicks on one of the item's gem sockets
 $("#item-selection-table tbody").on('click', '.gem', function(event) {
 	// Check if the socket color that was clicked is a different color, otherwise there's no reason to delete and insert new rows.
 	if ($("#gem-selection-table").data('color') !== $(this).data('color')) {
