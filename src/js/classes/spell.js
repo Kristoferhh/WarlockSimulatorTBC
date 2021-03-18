@@ -117,6 +117,92 @@ class ShadowBolt extends Spell {
 	}
 }
 
+class Incinerate extends Spell {
+	constructor(player) {
+		super(player);
+		this.castTime = 2.5;
+		this.manaCost = 355 * (1 - 0.1 * player.talents.cataclysm);
+		this.coefficient = 0.7143 + (0.04 * player.talents.shadowAndFlame);
+		this.dmg = 479;
+		this.bonusDamageFromImmolate = 120; // The bonus damage gained when Immolate is up on the target
+		this.name = "Incinerate";
+		this.varName = "incinerate";
+		this.doesDamage = true;
+		this.canCrit = true;
+		this.school = "fire";
+		this.type = "destruction";
+		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
+	}
+}
+
+class SearingPain extends Spell {
+	constructor(player) {
+		super(player);
+		this.castTime = 1.5;
+		this.manaCost = 205 * (1 - 0.1 * player.talents.cataclysm);
+		this.coefficient = 0.4286;
+		this.dmg = 295;
+		this.name = "Searing Pain";
+		this.varName = "searingPain";
+		this.doesDamage = true;
+		this.canCrit = true;
+		this.school = "fire";
+		this.type = "destruction";
+		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
+	}
+}
+
+class SoulFire extends Spell {
+	constructor(player) {
+		super(player);
+		this.castTime = 6 - (0.4 * player.talents.bane);
+		this.manaCost = 250 * (1 - 0.1 * player.talents.cataclysm);
+		this.coefficient = 1.15;
+		this.dmg = 1130;
+		this.name = "Soul Fire";
+		this.varName = "soulFire";
+		this.doesDamage = true;
+		this.canCrit = true;
+		this.school = "fire";
+		this.type = "destruction";
+		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
+	}
+}
+
+class Shadowburn extends Spell {
+	constructor(player) {
+		super(player);
+		this.cooldown = 15;
+		this.manaCost = 515 * (1 - 0.1 * player.talents.cataclysm);
+		this.coefficient = 0.4286;
+		this.dmg = 694;
+		this.name = "Shadowburn";
+		this.varName = "shadowburn";
+		this.doesDamage = true;
+		this.canCrit = true;
+		this.school = "shadow";
+		this.type = "destruction";
+		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
+	}
+}
+
+class DeathCoil extends Spell {
+	constructor(player) {
+		super(player);
+		this.cooldown = 120;
+		this.manaCost = 600;
+		this.coefficient = 0.22;
+		this.dmg = 578.5;
+		this.name = "Death Coil";
+		this.varName = "deathCoil";
+		this.doesDamage = true;
+		this.canCrit = false; // confirm
+		this.school = "shadow";
+		this.type = "affliction";
+		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
+	}
+}
+
 class LifeTap extends Spell {
 	constructor(player) {
 		super(player);
