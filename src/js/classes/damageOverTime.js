@@ -5,17 +5,21 @@ class DamageOverTime {
 		this.durationTotal = 0;
 		this.tickTimerTotal = 3;
 		this.tickTimerRemaining = 0;
-		this.ticksTotal = this.durationTotal / this.tickTimerTotal;
 		this.ticksRemaining = 0;
-		this.snapshots = false;
+		this.snapshots = true;
 		this.dmg = 0;
 		this.spellPower = 0;
 		this.modifier = 1;
 		this.active = false;
 		this.school = null;
 		this.name = null;
-		this.varName = null;
 		this.coefficient = 0;
+	}
+
+	setup() {
+		this.ticksTotal = this.durationTotal / this.tickTimerTotal;
+		this.varName = camelCase(this.name);
+		this.player.damageBreakdown[this.varName] = this.player.damageBreakdown[this.varName] || {"name": this.name};
 	}
 
 	apply(spellPower) {
@@ -62,15 +66,12 @@ class CorruptionDot extends DamageOverTime {
 		super(player);
 		this.durationTotal = 18;
 		this.tickTimerTotal = 3;
-		this.ticksTotal = this.durationTotal / this.tickTimerTotal;
-		this.snapshots = true;
 		this.dmg = 1035;
 		this.modifier = 1 + (0.01 * player.talents.contagion);
 		this.school = "shadow";
 		this.name = "Corruption";
-		this.varName = "corruption";
 		this.coefficient = 0.936 + (0.12 * player.talents.empoweredCorruption);
-		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
+		this.setup();
 	}
 }
 
@@ -79,14 +80,11 @@ class UnstableAfflictionDot extends DamageOverTime {
 		super(player);
 		this.durationTotal = 18;
 		this.tickTimerTotal = 3;
-		this.ticksTotal = this.durationTotal / this.tickTimerTotal;
-		this.snapshots = true;
 		this.dmg = 1155;
 		this.school = "shadow";
 		this.name = "Unstable Affliction";
-		this.varName = "unstableAffliction";
 		this.coefficient = 1.2;
-		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
+		this.setup();
 	}
 }
 
@@ -95,14 +93,11 @@ class SiphonLifeDot extends DamageOverTime {
 		super(player);
 		this.durationTotal = 30;
 		this.tickTimerTotal = 3;
-		this.ticksTotal = this.durationTotal / this.tickTimerTotal;
-		this.snapshots = true;
 		this.dmg = 695;
 		this.school = "shadow";
 		this.name = "Siphon Life";
-		this.varName = "siphonLife";
 		this.coefficient = 1;
-		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {'name': this.name};
+		this.setup();
 	}
 }
 
@@ -111,13 +106,23 @@ class ImmolateDot extends DamageOverTime {
 		super(player);
 		this.durationTotal = 15;
 		this.tickTimerTotal = 3;
-		this.ticksTotal = this.durationTotal / this.tickTimerTotal;
-		this.snapshots = true;
 		this.dmg = 615;
 		this.school = "fire";
 		this.name = "Immolate";
-		this.varName = "immolate";
 		this.coefficient = 0.65;
-		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
+		this.setup();
+	}
+}
+
+class CurseOfAgonyDot extends DamageOverTime {
+	constructor(player) {
+		super(player);
+		this.durationTotal = 24;
+		this.tickTimerTotal = 3;
+		this.dmg = 1698;
+		this.school = "shadow";
+		this.name = "Curse of Agony";
+		this.coefficient = 1.2;
+		this.setup();
 	}
 }

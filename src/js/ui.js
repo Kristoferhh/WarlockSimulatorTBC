@@ -680,3 +680,13 @@ function simDPS() {
 
 	simulation.start();
 }
+
+function camelCase(string) {
+	newStr = string.split(' ');
+	for (let s of newStr) {
+		s = s.charAt(0).toUpperCase() + s.substring(1);
+	}
+	newStr = newStr.join('');
+	newStr = newStr.charAt(0).toLowerCase() + newStr.substring(1);
+	return newStr;
+}
