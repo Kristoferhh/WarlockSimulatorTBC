@@ -67,6 +67,15 @@ class ShadowBolt extends Spell {
 
 	damage() {
 		this.player.damageBreakdown.shadowBolt.casts = this.player.damageBreakdown.shadowBolt.casts + 1 || 1;
+
+		// Checks if the spell is a crit.
+		let isCrit = this.player.isCrit();
+		if (isCrit) {
+			// Increment the crit counter whether the spell hits or not so that the crit % on the damage breakdown is correct. Otherwise the crit % will be lower due to lost crits when the spell misses.
+			this.player.damageBreakdown.shadowBolt.crits = this.player.damageBreakdown.shadowBolt.crits + 1 || 1;
+		}
+
+		// Check if the spell hits or misses
 		if (!this.player.isHit(false)) {
 			this.player.combatLog(this.name + " *miss*");
 			this.player.damageBreakdown.shadowBolt.misses = this.player.damageBreakdown.shadowBolt.misses + 1 || 1;
@@ -75,15 +84,12 @@ class ShadowBolt extends Spell {
 
 		let dmg = (this.dmg + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient)) * this.player.stats.shadowModifier;
 
-		// Checks if the spell is a crit
-		let isCrit = this.player.isCrit();
 		// Improved Shadow Bolt
 		if (this.player.talents.improvedShadowBolt > 0 && this.player.auras.improvedShadowBolt.active) {
 			dmg *= this.player.auras.improvedShadowBolt.modifier;
 			if (!isCrit) this.player.auras.improvedShadowBolt.decrementStacks();
 		}
 		if (isCrit) {
-			this.player.damageBreakdown.shadowBolt.crits = this.player.damageBreakdown.shadowBolt.crits + 1 || 1;
 			dmg *= (1.5 + 0.5 * this.player.talents.ruin);
 
 			// Apply ISB debuff
