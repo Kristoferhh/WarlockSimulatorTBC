@@ -45,8 +45,6 @@ class Spell {
 	}
 
 	tick(t) {
-		this.player.castTimeRemaining = Math.max(0, this.player.castTimeRemaining - t);
-
 		if (this.player.castTimeRemaining <= 0 && this.casting) {
 			return this.cast();
 		}
