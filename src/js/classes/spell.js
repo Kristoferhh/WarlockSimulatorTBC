@@ -1,24 +1,29 @@
 class Spell {
 	constructor(player) {
+		this.player = player;
 		this.castTime = 0;
 		this.manaCost = 0;
 		this.cooldown = 0;
 		this.cooldownRemaining = 0;
-		this.player = player;
 		this.casting = false;
-		this.dot = false;
+		this.name = null;
+		this.varName = null; // Same as this.name except it's written in camelCase
+		this.isDot = false;
+		this.doesDamage = false;
+		this.canCrit = false;
+		this.school = null; // The school that the spell belongs to such as shadow or fire
+		this.type = null; // affliction or destruction
 	}
 
 	ready() {
 		return this.player.gcdRemaining <= 0 && this.player.castTimeRemaining <= 0 && this.manaCost <= this.player.mana && this.cooldownRemaining <= 0;
 	}
 
-	// Starts the cast of a spell.
 	startCast() {
 		this.player.gcdRemaining = this.player.gcdValue;
 
 		if (this.castTime > 0) {
-			this.casting = true
+			this.casting = true;
 			this.player.castTimeRemaining = this.castTime;
 			this.player.combatLog("Started casting " + this.name);
 		} else {
@@ -29,79 +34,86 @@ class Spell {
 
 	// Called when a spell finishes casting or immediately called if the spell has no cast time.
 	cast() {
+		this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1;
 		this.player.mana -= this.manaCost;
 		this.cooldownRemaining = this.cooldown;
 		this.casting = false;
 		if (this.castTime > 0) this.player.combatLog("Finished casting " + this.name);
-			
-		// Only return this.damage() if the spell is not a dot. If it's a dot then we want to enable the Aura at the end of the cast rather than doing damage.
-		if (!this.dot) {
-			return this.damage();
+
+		let isCrit = false;
+		if (this.canCrit) {
+			// Checks if the spell is a crit.
+			isCrit = this.player.isCrit(); // todo add extra crit from Improved Searing Pain
+			if (isCrit) {
+				// Increment the crit counter whether the spell hits or not so that the crit % on the damage breakdown is correct. Otherwise the crit % will be lower due to lost crits when the spell misses.
+				this.player.damageBreakdown[this.varName].crits = this.player.damageBreakdown[this.varName].crits + 1 || 1;
+			}
+		}
+
+		// Check if the spell hits or misses
+		if (!this.player.isHit(this.type === "affliction")) {
+			this.player.combatLog(this.name + " *resist*");
+			this.player.damageBreakdown[this.varName].misses = this.player.damageBreakdown[this.varName].misses + 1 || 1;
+			return 0;
+		}
+
+		if (this.isDot) {
+			this.player.auras[this.varName].apply(this.player.stats.spellPower + this.player.stats[this.school + "Power"]);
+		}
+
+		if (this.doesDamage) {
+			return this.damage(isCrit);
 		}
 	}
 
-	damage() {
-		return 0;
+	damage(isCrit) {
+		// Calculate the damage
+		let dmg = (this.dmg + ((this.player.stats.spellPower + this.player.stats[this.school + "Power"]) * this.coefficient)) * this.player.stats[this.school + "Modifier"];
+		// Improved Shadow Bolt
+		if (this.varName == "shadowBolt" && this.player.talents.improvedShadowBolt > 0 && this.player.auras.improvedShadowBolt.active) {
+			dmg *= this.player.auras.improvedShadowBolt.modifier;
+			if (!isCrit) this.player.auras.improvedShadowBolt.decrementStacks();
+		}
+		if (isCrit) {
+			let critMultiplier = 1.5;
+			if (this.type == "destruction" && this.player.talents.ruin > 0) {
+				critMultiplier += 0.5;
+			}
+			dmg *= critMultiplier;
+
+			// Apply ISB debuff if casting Shadow Bolt
+			if (this.varName == "shadowBolt" && this.player.talents.improvedShadowBolt > 0) {
+				this.player.auras.improvedShadowBolt.apply();
+			}
+		}
+		dmg = ~~(dmg *  (1 - 0.0025 * this.player.enemy[this.school + "Resist"]));
+		if (isCrit) this.player.combatLog(this.name + " *" + dmg + "*");
+		else this.player.combatLog(this.name + " " + dmg);
+		this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg;
+		return dmg;
 	}
 
 	tick(t) {
-		if (this.player.castTimeRemaining <= 0 && this.casting) {
+		if (this.casting && this.player.castTimeRemaining <= 0) {
 			return this.cast();
 		}
-		return 0;
 	}
 }
 
 class ShadowBolt extends Spell {
 	constructor(player) {
 		super(player);
-		this.name = "Shadow Bolt";
-		player.damageBreakdown.shadowBolt = player.damageBreakdown.shadowBolt || {"name": this.name};
-		this.manaCost = 420 * (1 - (player.talents.cataclysm / 100));
-		this.castTime = 3 - (player.talents.bane / 10);
+		this.castTime = 3 - (0.1 * player.talents.bane);
+		this.manaCost = 420 * (1 - 0.1 * player.talents.cataclysm);
 		this.coefficient = (3 / 3.5) + (0.04 * player.talents.shadowAndFlame);
 		this.dmg = 633; // Average rank 11 Shadow Bolt base damage
-	}
-
-	damage() {
-		this.player.damageBreakdown.shadowBolt.casts = this.player.damageBreakdown.shadowBolt.casts + 1 || 1;
-
-		// Checks if the spell is a crit.
-		let isCrit = this.player.isCrit();
-		if (isCrit) {
-			// Increment the crit counter whether the spell hits or not so that the crit % on the damage breakdown is correct. Otherwise the crit % will be lower due to lost crits when the spell misses.
-			this.player.damageBreakdown.shadowBolt.crits = this.player.damageBreakdown.shadowBolt.crits + 1 || 1;
-		}
-
-		// Check if the spell hits or misses
-		if (!this.player.isHit(false)) {
-			this.player.combatLog(this.name + " *resist*");
-			this.player.damageBreakdown.shadowBolt.misses = this.player.damageBreakdown.shadowBolt.misses + 1 || 1;
-			return 0;
-		}
-
-		let dmg = (this.dmg + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient)) * this.player.stats.shadowModifier;
-
-		// Improved Shadow Bolt
-		if (this.player.talents.improvedShadowBolt > 0 && this.player.auras.improvedShadowBolt.active) {
-			dmg *= this.player.auras.improvedShadowBolt.modifier;
-			if (!isCrit) this.player.auras.improvedShadowBolt.decrementStacks();
-		}
-		if (isCrit) {
-			dmg *= (1.5 + 0.5 * this.player.talents.ruin);
-
-			// Apply ISB debuff
-			if (this.player.talents.improvedShadowBolt > 0) {
-				this.player.auras.improvedShadowBolt.apply();
-			}
-		}
-
-		dmg = ~~(dmg *  (1 - 0.0025 * this.player.enemy.shadowResist));
-		if (isCrit) this.player.combatLog(this.name + " *" + dmg + "*");
-		else this.player.combatLog(this.name + " " + dmg);
-
-		this.player.damageBreakdown.shadowBolt.damage = this.player.damageBreakdown.shadowBolt.damage + dmg || dmg;
-		return dmg;
+		this.name = "Shadow Bolt";
+		this.varName = "shadowBolt";
+		this.doesDamage = true;
+		this.canCrit = true;
+		this.school = "shadow";
+		this.type = "destruction";
+		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
 	}
 }
 
@@ -109,17 +121,19 @@ class LifeTap extends Spell {
 	constructor(player) {
 		super(player);
 		this.name = "Life Tap";
+		this.varName = "lifeTap";
 		this.manaReturn = 582;
 		this.coefficient = 0.8;
 		this.modifier = 1 + (0.1 * this.player.talents.improvedLifeTap);
 	}
 
-	startCast() {
-		super.startCast();
+	cast() {
+		this.casting = false;
 		let manaGain = (this.manaReturn + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient)) * this.modifier;
 		this.player.combatLog(this.name + " " + Math.round(manaGain));
 		if (this.player.mana + manaGain > this.player.stats.maxMana) console.log("Life Tap used at too high mana (mana wasted)"); // Warning for if the simulation ever decides to use life tap when it would overcap the player on mana.
 		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain);
+
 	}
 }
 
@@ -131,20 +145,9 @@ class Corruption extends Spell {
 		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
 		this.manaCost = 370;
 		this.castTime = Math.round((2 - (0.4 * player.talents.improvedCorruption)) * 100) / 100;
-		this.dot = true;
-	}
-
-	cast() {
-		super.cast();
-		this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1;
-
-		// Check if the Corruption hit
-		if (this.player.isHit(true)) {
-			this.player.auras.corruption.apply(this.player.stats.spellPower + this.player.stats.shadowPower);
-		} else {
-			this.player.combatLog(this.name + " *resist*");
-			this.player.damageBreakdown[this.varName].misses = this.player.damageBreakdown[this.varName].misses + 1 || 1;
-		}
+		this.isDot = true;
+		this.school = "shadow";
+		this.type = "affliction";
 	}
 }
 
@@ -156,19 +159,9 @@ class UnstableAffliction extends Spell {
 		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
 		this.manaCost = 400;
 		this.castTime = 1.5;
-		this.dot = true;
-	}
-
-	cast() {
-		super.cast();
-		this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1;
-
-		if (this.player.isHit(true)) {
-			this.player.auras[this.varName].apply(this.player.stats.spellPower + this.player.stats.shadowPower);
-		} else {
-			this.player.combatLog(this.name + " *resist*");
-			this.player.damageBreakdown[this.varName].misses = this.player.damageBreakdown[this.varName].misses + 1 || 1;
-		}
+		this.isDot = true;
+		this.school = "shadow";
+		this.type = "affliction";
 	}
 }
 
@@ -180,19 +173,9 @@ class SiphonLife extends Spell {
 		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
 		this.manaCost = 410;
 		this.castTime = 0;
-		this.dot = true;
-	}
-
-	cast() {
-		super.cast();
-		this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1;
-
-		if (this.player.isHit(true)) {
-			this.player.auras[this.varName].apply(this.player.stats.spellPower + this.player.stats.shadowPower);
-		} else {
-			this.player.combatLog(this.name + " *resist*");
-			this.player.damageBreakdown[this.varName].misses = this.player.damageBreakdown[this.varName].misses + 1 || 1;
-		}
+		this.isDot = true;
+		this.school = "shadow";
+		this.type = "affliction";
 	}
 }
 
@@ -204,42 +187,12 @@ class Immolate extends Spell {
 		player.damageBreakdown[this.varName] = player.damageBreakdown[this.varName] || {"name": this.name};
 		this.manaCost = 445;
 		this.castTime = 2 - (0.1 * player.talents.bane);
-		this.dot = true;
+		this.isDot = true;
+		this.doesDamage = true;
+		this.canCrit = true;
 		this.dmg = 331.5;
 		this.coefficient = 0.2;
-	}
-
-	cast() {
-		super.cast();
-		this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1;
-
-		if (this.player.isHit(false)) {
-			this.player.auras[this.varName].apply(this.player.stats.spellPower + this.player.stats.firePower);
-			return this.damage();
-		} else {
-			this.player.combatLog(this.name + " *resist*");
-			this.player.damageBreakdown[this.varName].misses = this.player.damageBreakdown[this.varName].misses + 1 || 1;
-		}
-	}
-
-	damage() {
-		// Checks if the spell is a crit.
-		let isCrit = this.player.isCrit();
-		if (isCrit) {
-			// Increment the crit counter whether the spell hits or not so that the crit % on the damage breakdown is correct. Otherwise the crit % will be lower due to lost crits when the spell misses.
-			this.player.damageBreakdown[this.varName].crits = this.player.damageBreakdown[this.varName].crits + 1 || 1;
-		}
-
-		let dmg = (this.dmg + ((this.player.stats.spellPower + this.player.stats.firePower) * this.coefficient)) * this.player.stats.fireModifier;
-		if (isCrit) {
-			dmg *= (1.5 + 0.5 * this.player.talents.ruin);
-		}
-
-		dmg = ~~(dmg *  (1 - 0.0025 * this.player.enemy.shadowResist));
-		if (isCrit) this.player.combatLog(this.name + " *" + dmg + "*");
-		else this.player.combatLog(this.name + " " + dmg);
-
-		this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg;
-		return dmg;
+		this.school = "fire";
+		this.type = "destruction";
 	}
 }
