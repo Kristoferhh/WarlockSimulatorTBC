@@ -105,6 +105,13 @@ var gems = {
 		}
 	},
 	"orange": {
+		"potentOrnateTopaz": {
+			"name": "Potent Ornate Topaz",
+			"spellPower": 6,
+			"critRating": 5,
+			"iconName": "inv_misc_gem_opal_02",
+			"id": 28123
+		},
 		"veiledPyrestone": {
 			"name": "Veiled Pyrestone",
 			"spellPower": 6,
@@ -186,6 +193,20 @@ var gems = {
 		}
 	},
 	"purple": {
+		"glowingTanzanite": {
+			"name": "Glowing Tanzanite",
+			"stamina": 6,
+			"spellPower": 6,
+			"iconName": "inv_jewelcrafting_nightseye_03",
+			"id": 30555
+		},
+		"glowingNightseye": {
+			"name": "Glowing Nightseye",
+			"stamina": 6,
+			"spellPower": 5,
+			"iconName": "inv_jewelcrafting_nightseye_03",
+			"id": 24056
+		},
 		"royalShadowsongAmethyst": {
 			"name": "Royal Shadowsong Amethyst",
 			"spellPower": 6,

@@ -98,6 +98,14 @@ var items = {
 		}
 	},
 	"neck": {
+		"ritssynsLostPendant": {
+			"name": "Ritssyn's Lost Pendant",
+			"stamina": 24,
+			"shadowPower": 51,
+			"id": 30666,
+			"source": "Karazhan",
+			"phase": 1 // maybe 2? Wowhead says added in 2.1
+		},
 		"manasurgePendant": {
 			"name": "Manasurge Pendant",
 			"stamina": 24,
@@ -197,6 +205,21 @@ var items = {
 		}
 	},
 	"shoulders": {
+		"mantleOfTheCorruptor": {
+			"name": "Mantle of the Corruptor",
+			"stamina": 37,
+			"intellect": 24,
+			"spellPower": 41,
+			"hitRating": 18,
+			"yellow": 2,
+			"socketBonus": {
+				"spellPower": 4
+			},
+			"setId": 646,
+			"id": 30215,
+			"source": "The Eye",
+			"phase": 2
+		},
 		"frozenShadoweaveShoulders": {
 			"name": "Frozen Shadoweave Shoulders",
 			"stamina": 21,
@@ -293,6 +316,16 @@ var items = {
 		}
 	},
 	"back": {
+		"nethervoidCloak": {
+			"name": "Nethervoid Cloak",
+			"stamina": 27,
+			"intellect": 18,
+			"shadowPower": 53,
+			"hitRating": 18,
+			"id": 32590,
+			"source": "Mount Hyjal",
+			"phase": 3
+		},
 		"sethekkOracleCloak": {
 			"name": "Sethekk Oracle Cloak",
 			"stamina": 18,
@@ -442,6 +475,19 @@ var items = {
 		}
 	},
 	"bracer": {
+		"vindicatorsDreadweaveCuffs": {
+			"name": "Vindicator's Dreadweave Cuffs",
+			"stamina": 37,
+			"intellect": 20,
+			"spellPower": 29,
+			"yellow": 1,
+			"socketBonus": {
+				"spellPower": 2
+			},
+			"id": 33883,
+			"source": "Sunwell Plateau",
+			"phase": 5
+		},
 		"crimsonBracersOfGloom": {
 			"name": "Crimson Bracers of Gloom",
 			"stamina": 18,
@@ -537,6 +583,21 @@ var items = {
 		}
 	},
 	"gloves": {
+		"handwrapsOfFlowingThought": {
+			"name": "Handwraps of Flowing Thought",
+			"stamina": 24,
+			"intellect": 22,
+			"spellPower": 35,
+			"hitRating": 14,
+			"yellow": 1,
+			"blue": 1,
+			"socketBonus": {
+				"hitRating": 3
+			},
+			"id": 28507,
+			"source": "Karazhan",
+			"phase": 1
+		},
 		"glovesOfTheDeadwatcher": {
 			"name": "Gloves of the Deadwatcher",
 			"stamina": 24,
@@ -607,6 +668,20 @@ var items = {
 		}
 	},
 	"belt": {
+		"beltOfBlasting": {
+			"name": "Belt of Blasting",
+			"spellPower": 50,
+			"hitRating": 23,
+			"critRating": 30,
+			"blue": 1,
+			"yellow": 1,
+			"socketBonus": {
+				"spellPower": 4
+			},
+			"id": 30038,
+			"source": "Tailoring",
+			"phase": 2
+		},
 		"girdleOfRuination": {
 			"name": "Girdle of Ruination",
 			"stamina": 18,
@@ -621,6 +696,15 @@ var items = {
 			"id": 24256,
 			"source": "Tailoring",
 			"phase": 1,
+		},
+		"sashOfSerpentra": {
+			"name": "Sash of Serpentra",
+			"stamina": 31,
+			"intellect": 21,
+			"spellPower": 25,
+			"hitRating": 17,
+			"id": 27795,
+			"source": "Steamvaults"
 		},
 		"veteransSilkBelt": {
 			"name": "Veteran's Silk Belt",
@@ -709,6 +793,21 @@ var items = {
 		}
 	},
 	"legs": {
+		"leggingsOfTheCorruptor": {
+			"name": "Leggings of the Corruptor",
+			"stamina":  48,
+			"intellect": 32,
+			"yellow": 1,
+			"socketBonus": {
+				"stamina": 3
+			},
+			"spellPower": 55,
+			"hitRating": 24,
+			"critRating": 32,
+			"setId": 646,
+			"id": 30213,
+			"source": "Serpentshrine Cavern",
+		},
 		"spellstrikePants": {
 			"name": "Spellstrike Pants",
 			"stamina": 12,
@@ -802,6 +901,15 @@ var items = {
 		}
 	},
 	"boots": {
+		"bootsOfTheShiftingNightmare": {
+			"name": "Boots of the Shifting Nightmare",
+			"stamina": 41,
+			"intellect": 22,
+			"shadowPower": 59,
+			"hitRating": 18,
+			"source": "Serpentshrine Cavern",
+			"phase": 2
+		},
 		"frozenShadoweaveBoots": {
 			"name": "Frozen Shadoweave Boots",
 			"stamina": 15,
@@ -904,6 +1012,15 @@ var items = {
 		}
 	},
 	"ring": {
+		"sealOfTheExorcist": {
+			"name": "Seal of the Exorcist",
+			"stamina": 24,
+			"spellPower": 28,
+			"hitRating": 12,
+			"resilienceRating": 11,
+			"id": 28555,
+			"source": "50 Spirit Stones"
+		},
 		"ringOfCrypticDreams": {
 			"name": "Ring of Cryptic Dreams",
 			"stamina": 16,
@@ -1175,6 +1292,17 @@ var items = {
 		}
 	},
 	"mainhand": {
+		"vengefulGladiatorsSpellblade": {
+			"name": "Vengeful Gladiator's Spellblade",
+			"stamina": 30,
+			"intellect": 20,
+			"spellPower": 247,
+			"hitRating": 17,
+			"resilienceRating": 17,
+			"id": 33763,
+			"source": "Arena",
+			"phase": 4 // possibly phase 3
+		},
 		"gladiatorsSpellblade": {
 			"name": "Gladiator's Spellblade",
 			"stamina": 28,
@@ -1369,6 +1497,19 @@ var items = {
 		}
 	},
 	"wand": {
+		"carvedWitchDoctorsStick": {
+			"name": "Carved Witch Doctor's Stick",
+			"stamina": 9,
+			"intellect": 15,
+			"spellPower": 18,
+			"blue": 1,
+			"socketBonus": {
+				"spellPower": 2
+			},
+			"id": 33192,
+			"source": "25 Badge of Justice - G'eras",
+			"phase": 4 // confirm
+		},
 		"netherCoresControlRod": {
 			"name": "Nether Core's Control Rod",
 			"damageLower": 163,
