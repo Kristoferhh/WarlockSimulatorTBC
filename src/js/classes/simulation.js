@@ -15,7 +15,8 @@ class Simulation {
 	}
 
 	passTime() {
-		let time = Math.max(this.player.gcdRemaining, this.player.castTimeRemaining, 0.5);
+		let time = this.player.castTimeRemaining;
+		if (time == 0) time = this.player.gcdRemaining;
 
 		if (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.auras.improvedShadowBolt.durationRemaining < time) time = this.player.auras.improvedShadowBolt.durationRemaining;
 		if (this.player.auras.corruption && this.player.auras.corruption.active && this.player.auras.corruption.tickTimerRemaining < time) time = this.player.auras.corruption.tickTimerRemaining; 
