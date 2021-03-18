@@ -85,6 +85,7 @@ class CorruptionDot extends Aura {
 					dmg *= this.player.auras.improvedShadowBolt.modifier;
 				}
 
+				this.player.damageBreakdown.corruption.damage = this.player.damageBreakdown.corruption.damage + dmg || dmg;
 				this.player.iterationDamage += dmg;
 				this.player.combatLog(this.name + " " + Math.round(dmg));
 				this.ticksRemaining--;

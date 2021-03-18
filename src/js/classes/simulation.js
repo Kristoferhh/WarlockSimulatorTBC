@@ -81,6 +81,7 @@ class Simulation {
 			else if (iterationDps < minDps) minDps = iterationDps;
 		}
 
+		console.log('------- Simulation end -------');
 		localStorage['avgDps'] = Math.round((totalDamage / totalDuration) * 100) / 100;
 		localStorage['minDps'] = Math.round(minDps * 100) / 100;
 		localStorage['maxDps'] = Math.round(maxDps * 100) / 100;
@@ -89,6 +90,13 @@ class Simulation {
 		$("#min-dps").text(localStorage['minDps']);
 		$("#max-dps").text(localStorage['maxDps']);
 		$("#sim-length-result").text(localStorage['simulationDuration'] + "s");
-		console.log('------- Simulation end -------');
+
+		$(".spell-damage-information").remove();
+		let tableBody = $("#damage-breakdown-table tbody");
+		for (let spell of Object.keys(this.player.damageBreakdown)) {
+			let s = this.player.damageBreakdown[spell];
+			if (s.damage > 0 || s.casts > 0) tableBody.append("<tr class='spell-damage-information'><td>" + s.name + "</td><td>" + (~~(((s.damage / totalDamage) * 100) * 100) / 100).toFixed(2) + "%" + "</td><td>" + s.casts + "</td><td>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td></tr>");
+		}
+		$("#damage-breakdown-table").css("visibility", "visible");
 	}
 }

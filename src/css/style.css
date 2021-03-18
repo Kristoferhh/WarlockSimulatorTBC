@@ -202,7 +202,7 @@ ul {
 	line-height: 1px;
 }
 
-#simulation-results-section {
+#damage-breakdown-section {
 	width: max(354px, 70%);
 	display: inline-block;
 	vertical-align: top;
@@ -216,7 +216,7 @@ ul {
 	margin-top: 20px;
 }
 
-#simulation-results-section h3 {
+#damage-breakdown-section h3 {
 	margin-left: 20px;
 }
 
@@ -231,22 +231,22 @@ ul {
 	text-align: center;
 }
 
-#dps-breakdown-table {
+#damage-breakdown-table {
 	padding: 10px;
 	width: 70%;
 	display: inline-block;
 	visibility: hidden;
 }
 
-#dps-breakdown-table th, #dps-breakdown-table td {
+#damage-breakdown-table th, #damage-breakdown-table td {
 	text-align: center;
 }
 
-#dps-breakdown-table td:nth-child(1) {
+#damage-breakdown-table td:nth-child(1) {
 	text-align: left;
 }
 
-#dps-breakdown-table tr {
+#damage-breakdown-table tr {
 	line-height: 20px;
 }
 

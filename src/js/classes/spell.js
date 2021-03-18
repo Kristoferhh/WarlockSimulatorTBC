@@ -58,6 +58,7 @@ class ShadowBolt extends Spell {
 	constructor(player) {
 		super(player);
 		this.name = "Shadow Bolt";
+		player.damageBreakdown.shadowBolt = player.damageBreakdown.shadowBolt || {"name": this.name};
 		this.manaCost = 420 * (1 - (player.talents.cataclysm / 100));
 		this.castTime = 3 - (player.talents.bane / 10);
 		this.coefficient = (3 / 3.5) + (0.04 * player.talents.shadowAndFlame);
@@ -65,8 +66,10 @@ class ShadowBolt extends Spell {
 	}
 
 	damage() {
+		this.player.damageBreakdown.shadowBolt.casts = this.player.damageBreakdown.shadowBolt.casts + 1 || 1;
 		if (!this.player.isHit(false)) {
 			this.player.combatLog(this.name + " *miss*");
+			this.player.damageBreakdown.shadowBolt.misses = this.player.damageBreakdown.shadowBolt.misses + 1 || 1;
 			return 0;
 		}
 
@@ -80,6 +83,7 @@ class ShadowBolt extends Spell {
 			if (!isCrit) this.player.auras.improvedShadowBolt.decrementStacks();
 		}
 		if (isCrit) {
+			this.player.damageBreakdown.shadowBolt.crits = this.player.damageBreakdown.shadowBolt.crits + 1 || 1;
 			dmg *= (1.5 + 0.5 * this.player.talents.ruin);
 
 			// Apply ISB debuff
@@ -92,6 +96,7 @@ class ShadowBolt extends Spell {
 		if (isCrit) this.player.combatLog(this.name + " *" + dmg + "*");
 		else this.player.combatLog(this.name + " " + dmg);
 
+		this.player.damageBreakdown.shadowBolt.damage = this.player.damageBreakdown.shadowBolt.damage + dmg || dmg;
 		return dmg;
 	}
 }
@@ -118,6 +123,7 @@ class Corruption extends Spell {
 	constructor(player) {
 		super(player);
 		this.name = "Corruption";
+		player.damageBreakdown.corruption = player.damageBreakdown.corruption || {"name": this.name};
 		this.manaCost = 370;
 		this.castTime = 2 - (0.4 * player.talents.improvedCorruption);
 		this.dot = true;
@@ -125,12 +131,14 @@ class Corruption extends Spell {
 
 	cast() {
 		super.cast();
+		this.player.damageBreakdown.corruption.casts = this.player.damageBreakdown.corruption.casts + 1 || 1;
 
 		// Check if the Corruption hit
 		if (this.player.isHit(true)) {
 			this.player.auras.corruption.apply(this.player.stats.spellPower + this.player.stats.shadowPower);
 		} else {
 			this.player.combatLog(this.name + " *miss*");
+			this.player.damageBreakdown.corruption.misses = this.player.damageBreakdown.corruption.misses + 1 || 1;
 		}
 	}
 }

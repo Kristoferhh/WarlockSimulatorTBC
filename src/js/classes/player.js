@@ -98,6 +98,9 @@ class Player {
 			}
 		}
 
+		// Records all information about damage done for each spell such as crit %, miss %, average damage per cast etc.
+		this.damageBreakdown = {};
+
 		console.clear();
 		console.log("Health: " + Math.round(this.stats.health));
 		console.log("Mana: " + Math.round(this.stats.maxMana));
