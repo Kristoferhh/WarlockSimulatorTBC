@@ -73,16 +73,16 @@ var raceStats = {
 
 // Refreshes the player's values in the sidebar when changing e.g. gear, consumables, or buffs.
 function refreshCharacterStats() {
-	let staminaModifier = characterStats.staminaModifier * (1 + (0.03 * $("#demonicEmbrace").attr('data-points')));
+	let staminaModifier = characterStats.staminaModifier * (1 + (0.03 * talents.demonicEmbrace));
 	let critRating = characterStats.critRating + ((characterStats.intellect * characterStats.intellectModifier) * critPerInt);
-	let critChance = Math.round((critRating / critRatingPerPercent + baseCritChancePercent) * 100) / 100 + Number($("#devastation").attr('data-points')) + Number($("#backlash").attr('data-points'));
-	if ($("#moonkin-aura").attr('data-checked') === 'true') {
+	let critChance = Math.round((critRating / critRatingPerPercent + baseCritChancePercent) * 100) / 100 + talents.devastation + talents.backlash;
+	if (auras.moonkinAura) {
 		critChance += 5;
 	}
 	critChance = critChance.toFixed(2);
 
 	let hitChance = Math.round((characterStats.hitRating / hitRatingPerPercent) * 100) / 100;
-	if ($("#inspiring-presence").attr('data-checked') === 'true') {
+	if (auras.inspiringPresence) {
 		hitChance += 1;
 	}
 	hitChance = hitChance.toFixed(2);
@@ -102,8 +102,8 @@ function refreshCharacterStats() {
 		spellPower += 100 * (1 + 0.1 * talents.demonicAegis);
 	}
 
-	$("#character-health-val").text(Math.round((characterStats.health + (characterStats.stamina * staminaModifier) * healthPerStamina) * (1 + (0.01 * $("#felStamina").attr('data-points')))));
-	$("#character-mana-val").text(Math.round((characterStats.mana + (characterStats.intellect * characterStats.intellectModifier) * manaPerInt) * (1 + (0.01 * $("#felIntellect").attr('data-points')))));
+	$("#character-health-val").text(Math.round((characterStats.health + (characterStats.stamina * staminaModifier) * healthPerStamina) * (1 + (0.01 * talents.felStamina))));
+	$("#character-mana-val").text(Math.round((characterStats.mana + (characterStats.intellect * characterStats.intellectModifier) * manaPerInt) * (1 + (0.01 * talents.felIntellect))));
 	$("#character-stamina-val").text(Math.round(characterStats.stamina * staminaModifier));
 	$("#character-intellect-val").text(Math.round(characterStats.intellect * characterStats.intellectModifier));
 	$("#character-spell-power-val").text(spellPower);
@@ -112,7 +112,7 @@ function refreshCharacterStats() {
 	$("#character-crit-val").text(Math.round(critRating) + " (" + critChance + "%)");
 	$("#character-hit-val").text(Math.round(characterStats.hitRating) + " (" + hitChance + "%)");
 	$("#character-haste-val").text(Math.round(characterStats.hasteRating) + " (" + (Math.round((characterStats.hasteRating/hasteRatingPerPercent) * 100) / 100) + "%)");
-	$("#character-shadow-damage-modifier-val").text(Math.round((shadowModifier * (1 + (0.02 * $("#shadowMastery").attr('data-points')))) * 100) + "%");
+	$("#character-shadow-damage-modifier-val").text(Math.round((shadowModifier * (1 + (0.02 * talents.shadowMastery))) * 100) + "%");
 	$("#character-fire-damage-modifier-val").text(Math.round(fireModifier * 100) + "%");
 	$("#character-mp5-val").text(characterStats.mp5);
 	$("#character-spell-pen-val").text(characterStats.spellPen);
