@@ -126,7 +126,8 @@ class Simulation {
 		let tableBody = $("#damage-breakdown-table tbody");
 		for (let spell of Object.keys(this.player.damageBreakdown)) {
 			let s = this.player.damageBreakdown[spell];
-			if (s.damage > 0 || s.casts > 0) tableBody.append("<tr class='spell-damage-information'><td>" + s.name + "</td><td>" + (~~(((s.damage / totalDamage) * 100) * 100) / 100).toFixed(2) + "%" + "</td><td>" + s.casts + "</td><td>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td></tr>");
+			let percentDamage = (~~(((s.damage / totalDamage) * 100) * 100) / 100).toFixed(2);
+			if (s.damage > 0 || s.casts > 0) tableBody.append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / this.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td></tr>");
 		}
 		$("#damage-breakdown-table").css("visibility", "visible");
 		$("#damage-breakdown-section h3").css("visibility", 'visible');
