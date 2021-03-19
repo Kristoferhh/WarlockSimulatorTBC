@@ -681,8 +681,12 @@ function simDPS() {
 	simulation.start();
 }
 
+function random(min,max) {
+	return ~~(Math.random() * max) + min;
+}
+
 function camelCase(string) {
-	newStr = string.split(' ');
+	let newStr = string.split(' ');
 	for (let i = 0; i < newStr.length; i++) {
 		newStr[i] = newStr[i].charAt(0).toUpperCase() + newStr[i].substring(1);
 	}
