@@ -131,6 +131,7 @@ class Player {
 		if (this.rotation.dots.unstableAffliction) this.spells.unstableAffliction = new UnstableAffliction(this);
 		if (this.rotation.dots.siphonLife) this.spells.siphonLife = new SiphonLife(this);
 		if (this.rotation.dots.immolate) this.spells.immolate = new Immolate(this);
+		if (this.rotation.curses.curseOfAgony) this.spells.curseOfAgony = new CurseOfAgony(this);
 		if (this.rotation.finishers.shadowburn) this.spells.shadowburn = new Shadowburn(this);
 		if (this.rotation.finishers.deathCoil) this.spells.deathCoil = new DeathCoil(this);
 
@@ -140,6 +141,7 @@ class Player {
 		if (this.rotation.dots.unstableAffliction) this.auras.unstableAffliction = new UnstableAfflictionDot(this);
 		if (this.rotation.dots.siphonLife) this.auras.siphonLife = new SiphonLifeDot(this);
 		if (this.rotation.dots.immolate) this.auras.immolate = new ImmolateDot(this);
+		if (this.rotation.curses.curseOfAgony) this.auras.curseOfAgony = new CurseOfAgonyDot(this);
 
 		this.castTimeRemaining = 0;
 		this.gcdValue = 1.5;

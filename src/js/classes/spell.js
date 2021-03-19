@@ -281,3 +281,15 @@ class Immolate extends Spell {
 		this.setup();
 	}
 }
+
+class CurseOfAgony extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Curse of Agony";
+		this.manaCost = 265;
+		this.isDot = true;
+		this.school = "shadow";
+		this.type = "affliction";
+		this.setup();
+	}
+}
