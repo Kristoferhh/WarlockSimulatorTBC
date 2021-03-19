@@ -203,22 +203,19 @@ ul {
 }
 
 #damage-breakdown-section {
-	width: max(354px, 45%);
+	/*width: max(354px, 45%);*/
+	/*width: 50%;*/
 	display: inline-block;
 	vertical-align: top;
 }
 
-#dps-result-div {
+/*#dps-result-div {
 	display: inline-block;
 	visibility: hidden;
-	width: 100%;
-	line-height: 10px;
+	/*width: 100%;*/
+	/*line-height: 10px;
 	margin-top: 20px;
-}
-
-#damage-breakdown-section h3 {
-	margin-left: 20px;
-}
+}*/
 
 #sim-result-dps-div {
 	padding: 0 10px 10px 10px;
@@ -234,17 +231,28 @@ ul {
 #damage-breakdown-table {
 	margin-left: 8px;
 	padding: 10px;
-	width: 70%;
+	/*width: 100%;*/
 	display: inline-block;
 	visibility: hidden;
+	border-spacing: 0;
 }
 
-#damage-breakdown-table th, #damage-breakdown-table td {
+#damage-breakdown-table .number {
+	text-align: right;
+}
+
+/*#damage-breakdown-table th, #damage-breakdown-table td {
 	text-align: center;
+}*/
+
+#damage-breakdown-table td/*:nth-child(1)*/ {
+	text-align: left;
+	border: 1px solid black;
+	border-collapse: collapse;
 }
 
-#damage-breakdown-table td:nth-child(1) {
-	text-align: left;
+#damage-breakdown-table td, #damage-breakdown-table col {
+	padding: 10px;
 }
 
 #damage-breakdown-table tr {
@@ -260,6 +268,7 @@ ul {
 	width: 618px;
 	display: inline-block;
 	vertical-align: top;
+	position: relative;
 	float: right;
 	margin: 5px 2px 0px 0px;
 }
@@ -359,7 +368,9 @@ ul {
 
 #item-slot-selection-list {
 	text-align: center;
-	margin-top: 50px;
+	width: 100%;
+	white-space: nowrap;
+	/*margin-top: 50px;*/
 }
 
 #item-slot-selection-list li {
@@ -373,7 +384,7 @@ ul {
 
 #item-selection-container {
 	padding: 0px 40px;
-	margin-top: 80px;	
+	/*margin-top: 80px;*/	
 }
 
 #item-selection-table, #enchant-selection-table {

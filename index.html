@@ -8,12 +8,13 @@
 	<link rel="stylesheet" type="text/css" href="src/css/style.css">
 	<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
 	<script type="text/javascript" src="dist/js/libs/jquery-3.5.1.min.js"></script>
-	<script type="text/javascript" src="dist/js/libs/jquery.tablesorter.min.js"></script>
-	<script type="text/javascript" src="dist/js/libs/jquery.tablesorter.widgets.min.js"></script>
+	<!--<script type="text/javascript" src="dist/js/libs/jquery.tablesorter.min.js"></script>
+	<script type="text/javascript" src="dist/js/libs/jquery.tablesorter.widgets.min.js"></script>-->
 	<script>const whTooltips = {/*droppedby: false, dropchance: false, */colorLinks: false, iconizeLinks: false, renameLinks: false};</script>
 	<script src="https://wow.zamimg.com/widgets/power.js"></script>
 	<script src="https://wow.zamimg.com/js/basic.js?35"></script>
-	<script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+	<!--<script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>-->
+	<!--<script type="text/javascript" src="dist/js/libs/cssrefresh.js"></script>-->
 </head>
 <body>
 <div id="sidebar">
@@ -139,46 +140,47 @@
 	</div>
 </div>
 <div id="main">
-	<!-- BUFFS & DEBUFFS-->
-	<section id="buffs-and-debuffs-section">
-		<!-- RAID BUFFS -->
-		<h3>Buffs</h3>
-		<ul id="buff-list"></ul>
+	<div style='height: 430px;'>
+		<!-- BUFFS & DEBUFFS-->
+		<section id="buffs-and-debuffs-section">
+			<!-- RAID BUFFS -->
+			<h3>Buffs</h3>
+			<ul id="buff-list"></ul>
 
-		<!-- DEBUFFS -->
-		<h3>Debuffs</h3>
-		<ul id="debuff-list"></ul>
+			<!-- DEBUFFS -->
+			<h3>Debuffs</h3>
+			<ul id="debuff-list"></ul>
 
-		<!-- CONSUMABLES -->
-		<h3>Consumables</h3>
-		<ul id="consumable-list"></ul>
-	</section>
+			<!-- CONSUMABLES -->
+			<h3>Consumables</h3>
+			<ul id="consumable-list"></ul>
+		</section>
 
-	<!-- ROTATION -->
-	<section id="rotation-section">
-		<h3>Rotation</h3>
-		<ul id="rotation-list"></ul>
-	</section>
+		<!-- ROTATION -->
+		<section id="rotation-section">
+			<h3>Rotation</h3>
+			<ul id="rotation-list"></ul>
+		</section>
 
-	<!-- TALENTS -->
-	<section id="talents-section"></section>
+		<!-- TALENTS -->
+		<section id="talents-section"></section>
+	</div>
 
 	<!-- SIM RESULTS -->
 	<section id="damage-breakdown-section">
-		<h3 style="visibility: hidden">Spell Breakdown</h3>
-
 		<table id="damage-breakdown-table" class="tablesorter">
 			<colgroup>
-				<col style="width: 30%;">
-				<col style="width: 13%;">
-				<col style="width: 13%;">
-				<col style="width: 15%;">
-				<col style="width: 13%;">
-				<col style="width: 13%;">
+				<col>
+				<col>
+				<col>
+				<col>
+				<col>
+				<col>
+				<col>
 			</colgroup>
 			<thead>
-				<th style="text-align: left;">Name</th>
-				<th>Dmg %</th>
+				<th>Name</th>
+				<th>Damage</th>
 				<th>Casts</th>
 				<th>Avg Cast</th>
 				<th>Crit %</th>
