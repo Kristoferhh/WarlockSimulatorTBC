@@ -1,10 +1,7 @@
 class Player {
 	static getSettings() {
 		return {
-			"auras": {
-				"moonkinAura": $("#moonkin-aura").attr('data-checked'),
-				"inspiringPresence": $("#inspiring-presence").attr('data-checked'),
-			},
+			"auras": auras,
 			"talents": talents,
 			"stats": characterStats,
 			"enemy": {
@@ -30,13 +27,13 @@ class Player {
 		// Crit chance
 		this.stats.critChanceMultiplier = 1000;
 		this.stats.critChance = baseCritChancePercent + ((this.stats.critRating + ((this.stats.intellect * this.stats.intellectModifier) * critPerInt)) / critRatingPerPercent) + settings.talents.devastation + settings.talents.backlash + settings.talents.demonicTactics;
-		if (settings.auras.moonkinAura === 'true') this.stats.critChance += 5;
+		if (settings.auras.moonkinAura === true) this.stats.critChance += 5;
 		this.stats.critChance = Math.round(this.stats.critChance * this.stats.critChanceMultiplier); // Multiply the crit chance in order to use a whole number for RNG calculations.
 
 		// Hit chance
 		this.stats.hitChanceMultiplier = 1000;
 		this.stats.extraHitChance = this.stats.hitRating / hitRatingPerPercent; // hit percent from hit rating
-		if (settings.auras.inspiringPresence === 'true') this.stats.extraHitChance += 1;
+		if (settings.auras.inspiringPresence === true) this.stats.extraHitChance += 1;
 		this.stats.hitChance = Math.round(this.getHitChance(parseInt(this.enemy.level)) * this.stats.hitChanceMultiplier); // The player's chance of hitting the enemy, between 61% and 99%
 
 		// Assign the filler spell.
@@ -58,7 +55,7 @@ class Player {
 			}
 		}
 
-		// Check if user has Demonic Sacrifice selected
+		// Add bonus damage % from Demonic Sacrifice
 		if (this.talents.demonicSacrifice === 1) {
 			// Add 15% to shadow modifier if the user selected Shadow Bolt, otherwise add 15% to the fire modifier if they selected Incinerate or Searing Pain.
 			if (this.rotation.filler.shadowBolt) {
@@ -66,6 +63,11 @@ class Player {
 			} else if (this.rotation.filler.incinerate || this.rotation.filler.searingPain) {
 				this.stats.fireModifier *= 1.15;
 			}
+		}
+
+		// Add spell power from Fel Armor
+		if (settings.auras.felArmor) {
+			this.stats.spellPower += (100 * (1 + 0.1 * this.talents.demonicAegis));
 		}
 
 		// Records all information about damage done for each spell such as crit %, miss %, average damage per cast etc.

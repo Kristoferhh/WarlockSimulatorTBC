@@ -2,7 +2,6 @@ var _auras = {
 	"buffs": {
 		"felArmor": {
 			"name": "Fel Armor",
-			"spellPower": 100,
 			"iconName": "spell_shadow_felarmour",
 			"id": 44520
 		},

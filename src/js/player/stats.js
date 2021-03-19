@@ -97,13 +97,18 @@ function refreshCharacterStats() {
 		}
 	}
 
+	let spellPower = characterStats.spellPower;
+	if ($("#fel-armor").data('checked')) {
+		spellPower += 100 * (1 + 0.1 * $("#demonicAegis").data('points'));
+	}
+
 	$("#character-health-val").text(Math.round((characterStats.health + (characterStats.stamina * staminaModifier) * healthPerStamina) * (1 + (0.01 * $("#felStamina").attr('data-points')))));
 	$("#character-mana-val").text(Math.round((characterStats.mana + (characterStats.intellect * characterStats.intellectModifier) * manaPerInt) * (1 + (0.01 * $("#felIntellect").attr('data-points')))));
 	$("#character-stamina-val").text(Math.round(characterStats.stamina * staminaModifier));
 	$("#character-intellect-val").text(Math.round(characterStats.intellect * characterStats.intellectModifier));
-	$("#character-spell-power-val").text(characterStats.spellPower);
-	$("#character-shadow-power-val").text(characterStats.shadowPower + " (" + (characterStats.shadowPower + characterStats.spellPower) + ")");
-	$("#character-fire-power-val").text(characterStats.firePower + " (" + (characterStats.firePower + characterStats.spellPower) + ")");
+	$("#character-spell-power-val").text(spellPower);
+	$("#character-shadow-power-val").text(characterStats.shadowPower + " (" + (characterStats.shadowPower + spellPower) + ")");
+	$("#character-fire-power-val").text(characterStats.firePower + " (" + (characterStats.firePower + spellPower) + ")");
 	$("#character-crit-val").text(Math.round(critRating) + " (" + critChance + "%)");
 	$("#character-hit-val").text(Math.round(characterStats.hitRating) + " (" + hitChance + "%)");
 	$("#character-haste-val").text(Math.round(characterStats.hasteRating) + " (" + (Math.round((characterStats.hasteRating/hasteRatingPerPercent) * 100) / 100) + "%)");
