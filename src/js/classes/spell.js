@@ -60,15 +60,17 @@ class Spell {
 		if (!this.player.isHit(this.type === "affliction")) {
 			this.player.combatLog(this.name + " *resist*");
 			this.player.damageBreakdown[this.varName].misses = this.player.damageBreakdown[this.varName].misses + 1 || 1;
-			return 0;
+			return;
 		}
 
 		if (this.isDot) {
 			this.player.auras[this.varName].apply(this.player.stats.spellPower + this.player.stats[this.school + "Power"]);
+		} else if (this.isAura) {
+			this.player.auras[this.varName].apply();
 		}
 
 		if (this.doesDamage) {
-			return this.damage(isCrit);
+			this.damage(isCrit);
 		}
 	}
 
@@ -76,9 +78,9 @@ class Spell {
 		// Calculate the damage
 		let dmg = (this.dmg + ((this.player.stats.spellPower + this.player.stats[this.school + "Power"]) * this.coefficient)) * this.player.stats[this.school + "Modifier"];
 		// Improved Shadow Bolt
-		if (this.varName == "shadowBolt" && this.player.talents.improvedShadowBolt > 0 && this.player.auras.improvedShadowBolt.active) {
+		if (this.school == "shadow" && this.player.talents.improvedShadowBolt > 0 && this.player.auras.improvedShadowBolt.active) {
 			dmg *= this.player.auras.improvedShadowBolt.modifier;
-			if (!isCrit) this.player.auras.improvedShadowBolt.decrementStacks();
+			if (!isCrit && this.varName == "shadowBolt") this.player.auras.improvedShadowBolt.decrementStacks();
 		}
 		if (isCrit) {
 			let critMultiplier = 1.5;
@@ -96,12 +98,14 @@ class Spell {
 		if (isCrit) this.player.combatLog(this.name + " *" + dmg + "*");
 		else this.player.combatLog(this.name + " " + dmg);
 		this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg;
-		return dmg;
+		this.player.iterationDamage += dmg;
 	}
 
 	tick(t) {
+		this.cooldownRemaining = Math.max(0, this.cooldownRemaining - t);
+
 		if (this.casting && this.player.castTimeRemaining <= 0) {
-			return this.cast();
+			this.cast();
 		}
 	}
 }
@@ -290,6 +294,44 @@ class CurseOfAgony extends Spell {
 		this.isDot = true;
 		this.school = "shadow";
 		this.type = "affliction";
+		this.setup();
+	}
+}
+
+class CurseOfTheElements extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Curse of the Elements";
+		this.manaCost = 260;
+		this.type = "affliction";
+		this.isAura = true;
+		this.setup();
+	}
+}
+
+class CurseOfRecklessness extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Curse of Recklessness";
+		this.manaCost = 160;
+		this.type = "affliction";
+		this.isAura = true;
+		this.setup();
+	}
+}
+
+class CurseOfDoom extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Curse of Doom";
+		this.manaCost = 380;
+		this.dmg = 4200;
+		this.coefficient = 2;
+		this.cooldown = 60;
+		this.doesDamage = true;
+		this.school = "shadow";
+		this.type = "affliction";
+		this.isAura = true;
 		this.setup();
 	}
 }

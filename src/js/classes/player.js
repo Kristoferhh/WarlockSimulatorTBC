@@ -92,10 +92,20 @@ class Player {
 		this.stats.hitChance = Math.round(this.getHitChance(parseInt(this.enemy.level)) * this.stats.hitChanceMultiplier); // The player's chance of hitting the enemy, between 61% and 99%
 
 		// Assign the filler spell.
-		this.filler;
+		this.filler = null;
 		for (let spell in settings.rotation.fillers) {
 			if (settings.rotation.fillers[spell]) {
 				this.filler = spell;
+				break;
+			}
+		}
+
+		// Assign the curse (if selected)
+		this.curse = null;
+		for (let spell in settings.rotation.curses) {
+			// Ignore the curse if user selected Curse of Agony since this will be the highest cast priority.
+			if (settings.rotation.curses[spell] && spell !== "curseOfAgony") {
+				this.curse = spell;
 				break;
 			}
 		}
@@ -132,6 +142,9 @@ class Player {
 		if (this.rotation.dots.siphonLife) this.spells.siphonLife = new SiphonLife(this);
 		if (this.rotation.dots.immolate) this.spells.immolate = new Immolate(this);
 		if (this.rotation.curses.curseOfAgony) this.spells.curseOfAgony = new CurseOfAgony(this);
+		if (this.rotation.curses.curseOfTheElements) this.spells.curseOfTheElements = new CurseOfTheElements(this);
+		if (this.rotation.curses.curseOfRecklessness) this.spells.curseOfRecklessness = new CurseOfRecklessness(this);
+		if (this.rotation.curses.curseOfDoom) this.spells.curseOfDoom = new CurseOfDoom(this); this.spells.curseOfAgony = new CurseOfAgony(this);
 		if (this.rotation.finishers.shadowburn) this.spells.shadowburn = new Shadowburn(this);
 		if (this.rotation.finishers.deathCoil) this.spells.deathCoil = new DeathCoil(this);
 
@@ -142,6 +155,9 @@ class Player {
 		if (this.rotation.dots.siphonLife) this.auras.siphonLife = new SiphonLifeDot(this);
 		if (this.rotation.dots.immolate) this.auras.immolate = new ImmolateDot(this);
 		if (this.rotation.curses.curseOfAgony) this.auras.curseOfAgony = new CurseOfAgonyDot(this);
+		if (this.rotation.curses.curseOfTheElements) this.auras.curseOfTheElements = new CurseOfTheElementsAura(this);
+		if (this.rotation.curses.curseOfRecklessness) this.auras.curseOfRecklessness = new CurseOfRecklessnessAura(this);
+		if (this.rotation.curses.curseOfDoom) this.auras.curseOfDoom = new CurseOfDoomAura(this); this.auras.curseOfAgony = new CurseOfAgonyDot(this);
 
 		this.castTimeRemaining = 0;
 		this.gcdValue = 1.5;

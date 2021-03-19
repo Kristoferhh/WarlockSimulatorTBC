@@ -24,6 +24,8 @@ class Simulation {
 		if (this.player.auras.siphonLife && this.player.auras.siphonLife.active && this.player.auras.siphonLife.tickTimerRemaining < time) time = this.player.auras.siphonLife.tickTimerRemaining;
 		if (this.player.auras.immolate && this.player.auras.immolate.active && this.player.auras.immolate.tickTimerRemaining < time) time = this.player.auras.immolate.tickTimerRemaining;
 		if (this.player.auras.curseOfAgony && this.player.auras.curseOfAgony.active && this.player.auras.curseOfAgony.tickTimerRemaining < time) time = this.player.auras.curseOfAgony.tickTimerRemaining;
+		if (this.player.auras.curseOfTheElements && this.player.auras.curseOfTheElements.active && this.player.auras.curseOfTheElements.durationRemaining < time) time = this.player.auras.curseOfTheElements.durationRemaining;
+		if (this.player.auras.curseOfRecklessness && this.player.auras.curseOfRecklessness.active && this.player.auras.curseOfRecklessness.durationRemaining < time) time = this.player.auras.curseOfRecklessness.durationRemaining;
 		if (this.player.mp5Timer < time) time = this.player.mp5Timer;
 
 		// This needs to be the first modified value since the time in combat needs to be updated before spells start dealing damage/auras expiring etc. for the combat logging.
@@ -32,23 +34,22 @@ class Simulation {
 
 		// Spells
 		for (let spell in this.player.spells) {
-			let damage = this.player.spells[spell].tick(time);
-			if (damage > 0) {
-				this.player.iterationDamage += damage;
-			}
+			this.player.spells[spell].tick(time);
 		}
 
 		// Auras
 		for (let aura in this.player.auras) {
-			this.player.auras[aura].tick(time);
+			if (this.player.auras[aura].active) this.player.auras[aura].tick(time);
 		}
 
 		this.player.gcdRemaining = Math.max(0,this.player.gcdRemaining - time);
 		this.player.mp5Timer = Math.max(0,this.player.mp5Timer - time);
-		if (this.player.mp5Timer == 0 && this.player.stats.mp5 > 0) {
-			this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.player.stats.mp5);
+		if (this.player.mp5Timer == 0) {
 			this.player.mp5Timer = 5;
-			this.player.combatLog(this.player.stats.mp5 + " mana gained from MP5");
+			if (this.player.stats.mp5 > 0) {
+				this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.player.stats.mp5);
+				this.player.combatLog(this.player.stats.mp5 + " mana gained from MP5");
+			}
 		}
 	}
 
@@ -80,7 +81,9 @@ class Simulation {
 								this.player.cast('lifeTap');
 							}
 						} else {
-							if (this.player.rotation.dots.unstableAffliction && !this.player.auras.unstableAffliction.active && this.player.spells.unstableAffliction.ready() && ((timeRemaining - this.player.spells.unstableAffliction.castTime) / this.player.auras.unstableAffliction.durationTotal) >= 9/18) {
+							if (this.player.curse && !this.player.auras[this.player.curse].active && this.player.spells[this.player.curse].ready()) {
+								this.player.cast(this.player.curse);
+							} else if (this.player.rotation.dots.unstableAffliction && !this.player.auras.unstableAffliction.active && this.player.spells.unstableAffliction.ready() && ((timeRemaining - this.player.spells.unstableAffliction.castTime) / this.player.auras.unstableAffliction.durationTotal) >= 9/18) {
 								this.player.cast("unstableAffliction");
 							} else if (this.player.rotation.dots.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready() && ((timeRemaining - this.player.spells.corruption.castTime) / this.player.auras.corruption.durationTotal) >= 9/18) {
 								this.player.cast("corruption");
