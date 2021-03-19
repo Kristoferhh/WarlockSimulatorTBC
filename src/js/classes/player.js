@@ -109,7 +109,7 @@ class Player {
 		if (this.rotation.finisher.deathCoil) this.spells.deathCoil = new DeathCoil(this);
 
 		this.auras = {};
-		if (this.talents.improvedShadowBolt > 0 && this.rotation.filler.shadowBolt) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this);
+		if (this.talents.improvedShadowBolt > 0) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this);
 		if (this.rotation.dot.corruption) this.auras.corruption = new CorruptionDot(this);
 		if (this.rotation.dot.unstableAffliction) this.auras.unstableAffliction = new UnstableAfflictionDot(this);
 		if (this.rotation.dot.siphonLife) this.auras.siphonLife = new SiphonLifeDot(this);

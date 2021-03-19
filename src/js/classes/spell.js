@@ -75,8 +75,14 @@ class Spell {
 	}
 
 	damage(isCrit) {
-		// Calculate the damage
-		let dmg = (this.dmg + ((this.player.stats.spellPower + this.player.stats[this.school + "Power"]) * this.coefficient)) * this.player.stats[this.school + "Modifier"];
+		let dmg = this.dmg;
+		// If casting Incinerate and Immolate is up, add the bonus damage.
+		if (this.varName == "incinerate" && this.player.rotation.dot.immolate && this.player.auras.immolate.active) {
+			dmg += this.bonusDamageFromImmolate;
+		}
+		dmg += ((this.player.stats.spellPower + this.player.stats[this.school + "Power"]) * this.coefficient);
+		dmg *= this.player.stats[this.school + "Modifier"];
+
 		// Improved Shadow Bolt
 		if (this.school == "shadow" && this.player.talents.improvedShadowBolt > 0 && this.player.auras.improvedShadowBolt.active) {
 			dmg *= this.player.auras.improvedShadowBolt.modifier;
