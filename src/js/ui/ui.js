@@ -6,6 +6,7 @@ var selectedItems = localStorage['selectedItems'] ? JSON.parse(localStorage['sel
 var talents = localStorage['talents'] ? JSON.parse(localStorage['talents']) : {};
 // Key: Aura's name. Value: Boolean
 var auras = localStorage['auras'] ? JSON.parse(localStorage['auras']) : {};
+var rotation = localStorage['rotation'] ? JSON.parse(localStorage['rotation']) : {};
 
 // RAID BUFFS
 for(let buff of Object.keys(_auras.buffs)) {
@@ -50,6 +51,17 @@ for (let consumable of Object.keys(_auras.consumables)) {
 	if (auras[consumable] === true) {
 		modifyStatsFromAura(_auras.consumables[consumable], false);
 	}
+}
+
+// Spell Selection
+for (let type in _spellSelection) {
+	let rotationList = $("#rotation-list");
+	let str = "<div><h4>" + _spellSelection[type].header + "</h4>";
+	for (let spell in _spellSelection[type].spells) {
+		str += "<li data-name='" + spell + "' class='rotation-" + type + "' data-checked='" + (rotation[spell] || false) + "' id='" + type + "-" + spell + "'><a href=https://tbc.wowhead.com/spell=" + _spellSelection[type].spells[spell].id + "><img src='img/" + _spellSelection[type].spells[spell].iconName + ".jpg' alt='" + _spellSelection[type].spells[spell].name + "'></a></li>";
+	}
+	str += "</div>";
+	rotationList.append(str);
 }
 
 // Add the talent trees
@@ -445,26 +457,32 @@ $(".talent-icon").mousedown(function(event) {
 
 // Listens to any clicks on the "rotation" spells for dots, filler, curse, and finisher.
 $("#rotation-list div li").click(function() {
-	let clickedSpell = $(this).attr('id');
+	let clickedSpell = $(this).data('name');
+	let refreshStats = false;
 
 	if ($(this).hasClass("rotation-filler")) {
 		$(".rotation-filler").each(function() {
 			$(this).attr('data-checked', false);
-			localStorage[$(this).attr('id')] = false;
+			rotation[$(this).data('name')] = false;
 		});
+
+		if ($("#demonicSacrifice").data('points') == 1) {
+			refreshStats = true;
+		}
 	} else if ($(this).hasClass("rotation-curse")) {
 		$(".rotation-curse").each(function() {
-			if ($(this).attr('id') !== clickedSpell) {
+			if ($(this).data('name') !== clickedSpell) {
 				$(this).attr('data-checked', false);
-				localStorage[$(this).attr('id')] = false;
+				rotation[$(this).data('name')] = false;
 			}
 		});
 	}
 
 	let checkedVal = $(this).attr('data-checked') === 'true';
 	$(this).attr('data-checked', !checkedVal);
-	localStorage[$(this).attr('id')] = !checkedVal;
-
+	rotation[$(this).data('name')] = !checkedVal;
+	localStorage.rotation = JSON.stringify(rotation);
+	if (refreshStats) refreshCharacterStats();
 	return false;
 });
 
