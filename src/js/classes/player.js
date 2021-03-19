@@ -77,6 +77,7 @@ class Player {
 		this.stats.health = (this.stats.health + (this.stats.stamina * this.stats.staminaModifier) * healthPerStamina) * (1 + (0.01 * settings.talents.felStamina));
 		this.stats.maxMana = (this.stats.mana + (this.stats.intellect * this.stats.intellectModifier) * manaPerInt) * (1 + (0.01 * settings.talents.felIntellect));
 		this.stats.shadowModifier *= (1 + (0.02 * settings.talents.shadowMastery));
+		this.spellTravelTime = 1; //
 
 		// Crit chance
 		this.stats.critChanceMultiplier = 1000;
@@ -124,10 +125,14 @@ class Player {
 			"lifeTap": new LifeTap(this)
 		}
 		if (this.rotation.fillers.shadowBolt) this.spells.shadowBolt = new ShadowBolt(this);
+		else if (this.rotation.fillers.searingPain) this.spells.searingPain = new SearingPain(this);
+		else if (this.rotation.fillers.incinerate) this.spells.incinerate = new Incinerate(this);
 		if (this.rotation.dots.corruption) this.spells.corruption = new Corruption(this);
 		if (this.rotation.dots.unstableAffliction) this.spells.unstableAffliction = new UnstableAffliction(this);
 		if (this.rotation.dots.siphonLife) this.spells.siphonLife = new SiphonLife(this);
 		if (this.rotation.dots.immolate) this.spells.immolate = new Immolate(this);
+		if (this.rotation.finishers.shadowburn) this.spells.shadowburn = new Shadowburn(this);
+		if (this.rotation.finishers.deathCoil) this.spells.deathCoil = new DeathCoil(this);
 
 		this.auras = {};
 		if (this.talents.improvedShadowBolt > 0 && this.rotation.fillers.shadowBolt) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this);

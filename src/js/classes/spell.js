@@ -13,6 +13,7 @@ class Spell {
 		this.canCrit = false;
 		this.school = null; // The school that the spell belongs to such as shadow or fire
 		this.type = null; // affliction or destruction
+		this.travelTime = 0;
 	}
 
 	setup() {
@@ -117,6 +118,7 @@ class ShadowBolt extends Spell {
 		this.canCrit = true;
 		this.school = "shadow";
 		this.type = "destruction";
+		this.travelTime = player.spellTravelTime;
 		this.setup();
 	}
 }
@@ -134,6 +136,7 @@ class Incinerate extends Spell {
 		this.canCrit = true;
 		this.school = "fire";
 		this.type = "destruction";
+		this.travelTime = player.spellTravelTime;
 		this.setup();
 	}
 }
@@ -166,6 +169,7 @@ class SoulFire extends Spell {
 		this.canCrit = true;
 		this.school = "fire";
 		this.type = "destruction";
+		this.travelTime = player.spellTravelTime;
 		this.setup();
 	}
 }
@@ -198,6 +202,7 @@ class DeathCoil extends Spell {
 		this.canCrit = false; // confirm
 		this.school = "shadow";
 		this.type = "affliction";
+		this.travelTime = player.spellTravelTime;
 		this.setup();
 	}
 }
