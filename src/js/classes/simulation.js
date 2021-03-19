@@ -26,6 +26,7 @@ class Simulation {
 		if (this.player.auras.curseOfAgony && this.player.auras.curseOfAgony.active && this.player.auras.curseOfAgony.tickTimerRemaining < time) time = this.player.auras.curseOfAgony.tickTimerRemaining;
 		if (this.player.auras.curseOfTheElements && this.player.auras.curseOfTheElements.active && this.player.auras.curseOfTheElements.durationRemaining < time) time = this.player.auras.curseOfTheElements.durationRemaining;
 		if (this.player.auras.curseOfRecklessness && this.player.auras.curseOfRecklessness.active && this.player.auras.curseOfRecklessness.durationRemaining < time) time = this.player.auras.curseOfRecklessness.durationRemaining;
+		if (this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.shadowTrance.durationRemaining < time) time = this.player.auras.shadowTrance.durationRemaining;
 		if (this.player.mp5Timer < time) time = this.player.mp5Timer;
 
 		// This needs to be the first modified value since the time in combat needs to be updated before spells start dealing damage/auras expiring etc. for the combat logging.
@@ -34,7 +35,7 @@ class Simulation {
 
 		// Spells
 		for (let spell in this.player.spells) {
-			this.player.spells[spell].tick(time);
+			if (this.player.spells[spell].cooldownRemaining > 0 || this.player.spells[spell].casting) this.player.spells[spell].tick(time);
 		}
 
 		// Auras
@@ -64,7 +65,7 @@ class Simulation {
 		for(this.player.iteration = 1; this.player.iteration <= this.iterations; this.player.iteration++) {
 			this.player.initialize();
 			this.player.iterationDamage = 0;
-			let fightLength = this.player.random(this.minTime, this.maxTime);
+			let fightLength = random(this.minTime, this.maxTime);
 
 			for(this.player.fightTime = 0; this.player.fightTime < fightLength; this.passTime()) {
 				if (this.player.castTimeRemaining <= 0) {

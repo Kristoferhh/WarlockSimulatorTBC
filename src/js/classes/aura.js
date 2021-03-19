@@ -10,7 +10,14 @@ class Aura {
 		this.durationRemaining = Math.max(0, this.durationRemaining - t);
 
 		if (this.durationRemaining == 0) {
+			this.fade();
+		}
+	}
+
+	fade() {
+		if (this.active) {
 			this.active = false;
+			this.player.combatLog(this.name + " faded");
 		}
 	}
 
@@ -70,5 +77,13 @@ class CurseOfDoomAura extends Aura {
 		super(player);
 		this.name = "Curse of Doom";
 		this.durationTotal = 60;
+	}
+}
+
+class ShadowTrance extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Shadow Trance (Nightfall)";
+		this.durationTotal = 10;
 	}
 }

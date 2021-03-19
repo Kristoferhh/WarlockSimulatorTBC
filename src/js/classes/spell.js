@@ -113,7 +113,7 @@ class Spell {
 class ShadowBolt extends Spell {
 	constructor(player) {
 		super(player);
-		this.castTime = 3 - (0.1 * player.talents.bane);
+		this.castTime = this.calculateCastTime();
 		this.manaCost = 420 * (1 - 0.1 * player.talents.cataclysm);
 		this.coefficient = (3 / 3.5) + (0.04 * player.talents.shadowAndFlame);
 		this.dmg = 633; // Average rank 11 Shadow Bolt base damage
@@ -124,6 +124,21 @@ class ShadowBolt extends Spell {
 		this.type = "destruction";
 		this.travelTime = player.spellTravelTime;
 		this.setup();
+	}
+
+	startCast() {
+		if (this.player.auras.shadowTrance && this.player.auras.shadowTrance.active) {
+			this.castTime = 0;
+		}
+		super.startCast();
+		if (this.player.auras.shadowTrance && this.player.auras.shadowTrance.active) {
+			this.castTime = this.calculateCastTime();
+			this.player.auras.shadowTrance.fade();
+		}
+	}
+
+	calculateCastTime() {
+		return 3 - (0.1 * this.player.talents.bane);
 	}
 }
 

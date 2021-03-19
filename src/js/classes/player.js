@@ -158,6 +158,7 @@ class Player {
 		if (this.rotation.curses.curseOfTheElements) this.auras.curseOfTheElements = new CurseOfTheElementsAura(this);
 		if (this.rotation.curses.curseOfRecklessness) this.auras.curseOfRecklessness = new CurseOfRecklessnessAura(this);
 		if (this.rotation.curses.curseOfDoom) this.auras.curseOfDoom = new CurseOfDoomAura(this); this.auras.curseOfAgony = new CurseOfAgonyDot(this);
+		if (this.talents.nightfall > 0) this.auras.shadowTrance = new ShadowTrance(this);
 
 		this.castTimeRemaining = 0;
 		this.gcdValue = 1.5;
@@ -172,18 +173,14 @@ class Player {
 
 	isHit(isAfflictionSpell) {
 		if (isAfflictionSpell) {
-			return (this.random(1,100 * this.stats.hitChanceMultiplier) <= (Math.min(99 * this.stats.hitChanceMultiplier,this.stats.hitChance + this.talents.suppression * 2 * this.stats.hitChanceMultiplier)));
+			return (random(1,100 * this.stats.hitChanceMultiplier) <= (Math.min(99 * this.stats.hitChanceMultiplier,this.stats.hitChance + this.talents.suppression * 2 * this.stats.hitChanceMultiplier)));
 		} else {
-			return (this.random(1,100 * this.stats.hitChanceMultiplier) <= Math.min(99 * this.stats.hitChanceMultiplier,this.stats.hitChance));
+			return (random(1,100 * this.stats.hitChanceMultiplier) <= Math.min(99 * this.stats.hitChanceMultiplier,this.stats.hitChance));
 		}
 	}
 
 	isCrit(extraCrit = 0) {
-		return (this.random(1,(100 * this.stats.critChanceMultiplier)) <= (this.stats.critChance + extraCrit * this.stats.critChanceMultiplier));
-	}
-
-	random(min,max) {
-		return ~~(Math.random() * max) + min;
+		return (random(1,(100 * this.stats.critChanceMultiplier)) <= (this.stats.critChance + extraCrit * this.stats.critChanceMultiplier));
 	}
 
 	// formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/

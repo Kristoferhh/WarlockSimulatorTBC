@@ -47,6 +47,13 @@ class DamageOverTime {
 					dmg *= this.player.auras.improvedShadowBolt.modifier;
 				}
 
+				// Check for Nightfall proc
+				if (this.varName == "corruption" && this.player.talents.nightfall > 0) {
+					if (random(1,100) <= this.player.talents.nightfall * 2) {
+						this.player.auras.shadowTrance.apply();
+					}
+				}
+
 				this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg;
 				this.player.iterationDamage += dmg;
 				this.player.combatLog(this.name + " " + Math.round(dmg));
