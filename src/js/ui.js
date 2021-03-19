@@ -683,8 +683,8 @@ function simDPS() {
 
 function camelCase(string) {
 	newStr = string.split(' ');
-	for (let s of newStr) {
-		s = s.charAt(0).toUpperCase() + s.substring(1);
+	for (let i = 0; i < newStr.length; i++) {
+		newStr[i] = newStr[i].charAt(0).toUpperCase() + newStr[i].substring(1);
 	}
 	newStr = newStr.join('');
 	newStr = newStr.charAt(0).toLowerCase() + newStr.substring(1);
