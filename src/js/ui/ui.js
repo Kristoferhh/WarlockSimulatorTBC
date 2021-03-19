@@ -58,7 +58,8 @@ for (let type in _spellSelection) {
 	let rotationList = $("#rotation-list");
 	let str = "<div><h4>" + _spellSelection[type].header + "</h4>";
 	for (let spell in _spellSelection[type].spells) {
-		str += "<li data-name='" + spell + "' class='rotation-" + type + "' data-checked='" + (rotation[spell] || false) + "' id='" + type + "-" + spell + "'><a href=https://tbc.wowhead.com/spell=" + _spellSelection[type].spells[spell].id + "><img src='img/" + _spellSelection[type].spells[spell].iconName + ".jpg' alt='" + _spellSelection[type].spells[spell].name + "'></a></li>";
+		rotation[type] = rotation[type] || {};
+		str += "<li data-type='" + type + "' data-name='" + spell + "' class='rotation-" + type + "' data-checked='" + (rotation[type][spell] || false) + "' id='" + type + "-" + spell + "'><a href=https://tbc.wowhead.com/spell=" + _spellSelection[type].spells[spell].id + "><img src='img/" + _spellSelection[type].spells[spell].iconName + ".jpg' alt='" + _spellSelection[type].spells[spell].name + "'></a></li>";
 	}
 	str += "</div>";
 	rotationList.append(str);
@@ -463,7 +464,7 @@ $("#rotation-list div li").click(function() {
 	if ($(this).hasClass("rotation-filler")) {
 		$(".rotation-filler").each(function() {
 			$(this).attr('data-checked', false);
-			rotation[$(this).data('name')] = false;
+			rotation[$(this).data('type')][$(this).data('name')] = false;
 		});
 
 		if ($("#demonicSacrifice").data('points') == 1) {
@@ -473,14 +474,14 @@ $("#rotation-list div li").click(function() {
 		$(".rotation-curse").each(function() {
 			if ($(this).data('name') !== clickedSpell) {
 				$(this).attr('data-checked', false);
-				rotation[$(this).data('name')] = false;
+				rotation[$(this).data('type')][$(this).data('name')] = false;
 			}
 		});
 	}
 
 	let checkedVal = $(this).attr('data-checked') === 'true';
 	$(this).attr('data-checked', !checkedVal);
-	rotation[$(this).data('name')] = !checkedVal;
+	rotation[$(this).data('type')][$(this).data('name')] = !checkedVal;
 	localStorage.rotation = JSON.stringify(rotation);
 	if (refreshStats) refreshCharacterStats();
 	return false;

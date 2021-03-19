@@ -5,66 +5,14 @@ class Player {
 				"moonkinAura": $("#moonkin-aura").attr('data-checked'),
 				"inspiringPresence": $("#inspiring-presence").attr('data-checked'),
 			},
-			"talents": {
-				"suppression": parseInt($("#suppression").attr('data-points')),
-				"improvedCorruption": parseInt($("#improvedCorruption").attr('data-points')),
-				"improvedLifeTap": parseInt($("#improvedLifeTap").attr('data-points')),
-				"improvedCurseOfAgony": parseInt($("#improvedCurseOfAgony").attr('data-points')),
-				"amplifyCurse": parseInt($("#amplifyCurse").attr('data-points')),
-				"nightfall": parseInt($("#nightfall").attr('data-points')),
-				"empoweredCorruption": parseInt($("#empoweredCorruption").attr('data-points')),
-				"siphonLife": parseInt($("#siphonLife").attr('data-points')),
-				"shadowMastery": parseInt($("#shadowMastery").attr('data-points')),
-				"contagion": parseInt($("#contagion").attr('data-points')),
-				"unstableAffliction": parseInt($("#unstableAffliction").attr('data-points')),
-				"felIntellect": parseInt($("#felIntellect").attr('data-points')),
-				"felStamina": parseInt($("#felStamina").attr('data-points')),
-				"demonicAegis": parseInt($("#demonicAegis").attr('data-points')),
-				"demonicSacrifice": parseInt($("#demonicSacrifice").attr('data-points')),
-				"demonicKnowledge": parseInt($("#demonicKnowledge").attr('data-points')),
-				"demonicTactics": parseInt($("#demonicTactics").attr('data-points')),
-				"improvedShadowBolt": parseInt($("#improvedShadowBolt").attr('data-points')),
-				"cataclysm": parseInt($("#cataclysm").attr('data-points')),
-				"bane": parseInt($("#bane").attr('data-points')),
-				"devastation": parseInt($("#devastation").attr('data-points')),
-				"shadowburn": parseInt($("#shadowburn").attr('data-points')),
-				"improvedSearingPain": parseInt($("#improvedSearingPain").attr('data-points')),
-				"improvedImmolate": parseInt($("#improvedImmolate").attr('data-points')),
-				"ruin": parseInt($("#ruin").attr('data-points')),
-				"emberstorm": parseInt($("#emberstorm").attr('data-points')),
-				"backlash": parseInt($("#backlash").attr('data-points')),
-				"conflagrate": parseInt($("#conflagrate").attr('data-points')),
-				"shadowAndFlame": parseInt($("#shadowAndFlame").attr('data-points'))
-			},
+			"talents": talents,
 			"stats": characterStats,
 			"enemy": {
 				"level": $("input[name='target-level']").val(),
 				"shadowResist": $("input[name='target-shadow-resistance']").val(),
 				"fireResist": $("input[name='target-fire-resistance']").val()
 			},
-			"rotation": {
-				"dots": {
-					"immolate": $("#dot-immolate").attr('data-checked') === 'true',
-					"corruption": $("#dot-corruption").attr('data-checked') === 'true',
-					"siphonLife": $("#dot-siphon-life").attr('data-checked') === 'true',
-					"unstableAffliction": $("#dot-unstable-affliction").attr('data-checked') === 'true'
-				},
-				"fillers": {
-					"searingPain": $("#filler-searing-pain").attr('data-checked') === 'true',
-					"shadowBolt": $("#filler-shadow-bolt").attr('data-checked') === 'true',
-					"incinerate": $("#filler-incinerate").attr('data-checked') === 'true',
-				},
-				"curses": {
-					"curseOfRecklessness": $("#curse-curse-of-recklessness").attr('data-checked') === 'true',
-					"curseOfTheElements": $("#curse-curse-of-the-elements").attr('data-checked') === 'true',
-					"curseOfDoom": $("#curse-curse-of-doom").attr('data-checked') === 'true',
-					"curseOfAgony": $("#curse-curse-of-agony").attr('data-checked') === 'true'
-				},
-				"finishers": {
-					"deathCoil": $("#finisher-death-coil").attr('data-checked') === 'true',
-					"shadowburn": $("#finisher-shadowburn").attr('data-checked') === 'true',
-				}
-			},
+			"rotation": rotation
 		}
 	}
 
@@ -93,8 +41,8 @@ class Player {
 
 		// Assign the filler spell.
 		this.filler = null;
-		for (let spell in settings.rotation.fillers) {
-			if (settings.rotation.fillers[spell]) {
+		for (let spell in settings.rotation.filler) {
+			if (settings.rotation.filler[spell]) {
 				this.filler = spell;
 				break;
 			}
@@ -102,11 +50,21 @@ class Player {
 
 		// Assign the curse (if selected)
 		this.curse = null;
-		for (let spell in settings.rotation.curses) {
+		for (let spell in settings.rotation.curse) {
 			// Ignore the curse if user selected Curse of Agony since this will be the highest cast priority.
-			if (settings.rotation.curses[spell] && spell !== "curseOfAgony") {
+			if (settings.rotation.curse[spell] && spell !== "curseOfAgony") {
 				this.curse = spell;
 				break;
+			}
+		}
+
+		// Check if user has Demonic Sacrifice selected
+		if (this.talents.demonicSacrifice === 1) {
+			// Add 15% to shadow modifier if the user selected Shadow Bolt, otherwise add 15% to the fire modifier if they selected Incinerate or Searing Pain.
+			if (this.rotation.filler.shadowBolt) {
+				this.stats.shadowModifier *= 1.15;
+			} else if (this.rotation.filler.incinerate || this.rotation.filler.searingPain) {
+				this.stats.fireModifier *= 1.15;
 			}
 		}
 
@@ -134,30 +92,30 @@ class Player {
 		this.spells = {
 			"lifeTap": new LifeTap(this)
 		}
-		if (this.rotation.fillers.shadowBolt) this.spells.shadowBolt = new ShadowBolt(this);
-		else if (this.rotation.fillers.searingPain) this.spells.searingPain = new SearingPain(this);
-		else if (this.rotation.fillers.incinerate) this.spells.incinerate = new Incinerate(this);
-		if (this.rotation.dots.corruption) this.spells.corruption = new Corruption(this);
-		if (this.rotation.dots.unstableAffliction) this.spells.unstableAffliction = new UnstableAffliction(this);
-		if (this.rotation.dots.siphonLife) this.spells.siphonLife = new SiphonLife(this);
-		if (this.rotation.dots.immolate) this.spells.immolate = new Immolate(this);
-		if (this.rotation.curses.curseOfAgony) this.spells.curseOfAgony = new CurseOfAgony(this);
-		if (this.rotation.curses.curseOfTheElements) this.spells.curseOfTheElements = new CurseOfTheElements(this);
-		if (this.rotation.curses.curseOfRecklessness) this.spells.curseOfRecklessness = new CurseOfRecklessness(this);
-		if (this.rotation.curses.curseOfDoom) this.spells.curseOfDoom = new CurseOfDoom(this); this.spells.curseOfAgony = new CurseOfAgony(this);
-		if (this.rotation.finishers.shadowburn) this.spells.shadowburn = new Shadowburn(this);
-		if (this.rotation.finishers.deathCoil) this.spells.deathCoil = new DeathCoil(this);
+		if (this.rotation.filler.shadowBolt) this.spells.shadowBolt = new ShadowBolt(this);
+		else if (this.rotation.filler.searingPain) this.spells.searingPain = new SearingPain(this);
+		else if (this.rotation.filler.incinerate) this.spells.incinerate = new Incinerate(this);
+		if (this.rotation.dot.corruption) this.spells.corruption = new Corruption(this);
+		if (this.rotation.dot.unstableAffliction) this.spells.unstableAffliction = new UnstableAffliction(this);
+		if (this.rotation.dot.siphonLife) this.spells.siphonLife = new SiphonLife(this);
+		if (this.rotation.dot.immolate) this.spells.immolate = new Immolate(this);
+		if (this.rotation.curse.curseOfAgony) this.spells.curseOfAgony = new CurseOfAgony(this);
+		if (this.rotation.curse.curseOfTheElements) this.spells.curseOfTheElements = new CurseOfTheElements(this);
+		if (this.rotation.curse.curseOfRecklessness) this.spells.curseOfRecklessness = new CurseOfRecklessness(this);
+		if (this.rotation.curse.curseOfDoom) this.spells.curseOfDoom = new CurseOfDoom(this); this.spells.curseOfAgony = new CurseOfAgony(this);
+		if (this.rotation.finisher.shadowburn) this.spells.shadowburn = new Shadowburn(this);
+		if (this.rotation.finisher.deathCoil) this.spells.deathCoil = new DeathCoil(this);
 
 		this.auras = {};
-		if (this.talents.improvedShadowBolt > 0 && this.rotation.fillers.shadowBolt) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this);
-		if (this.rotation.dots.corruption) this.auras.corruption = new CorruptionDot(this);
-		if (this.rotation.dots.unstableAffliction) this.auras.unstableAffliction = new UnstableAfflictionDot(this);
-		if (this.rotation.dots.siphonLife) this.auras.siphonLife = new SiphonLifeDot(this);
-		if (this.rotation.dots.immolate) this.auras.immolate = new ImmolateDot(this);
-		if (this.rotation.curses.curseOfAgony) this.auras.curseOfAgony = new CurseOfAgonyDot(this);
-		if (this.rotation.curses.curseOfTheElements) this.auras.curseOfTheElements = new CurseOfTheElementsAura(this);
-		if (this.rotation.curses.curseOfRecklessness) this.auras.curseOfRecklessness = new CurseOfRecklessnessAura(this);
-		if (this.rotation.curses.curseOfDoom) this.auras.curseOfDoom = new CurseOfDoomAura(this); this.auras.curseOfAgony = new CurseOfAgonyDot(this);
+		if (this.talents.improvedShadowBolt > 0 && this.rotation.filler.shadowBolt) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this);
+		if (this.rotation.dot.corruption) this.auras.corruption = new CorruptionDot(this);
+		if (this.rotation.dot.unstableAffliction) this.auras.unstableAffliction = new UnstableAfflictionDot(this);
+		if (this.rotation.dot.siphonLife) this.auras.siphonLife = new SiphonLifeDot(this);
+		if (this.rotation.dot.immolate) this.auras.immolate = new ImmolateDot(this);
+		if (this.rotation.curse.curseOfAgony) this.auras.curseOfAgony = new CurseOfAgonyDot(this);
+		if (this.rotation.curse.curseOfTheElements) this.auras.curseOfTheElements = new CurseOfTheElementsAura(this);
+		if (this.rotation.curse.curseOfRecklessness) this.auras.curseOfRecklessness = new CurseOfRecklessnessAura(this);
+		if (this.rotation.curse.curseOfDoom) this.auras.curseOfDoom = new CurseOfDoomAura(this); this.auras.curseOfAgony = new CurseOfAgonyDot(this);
 		if (this.talents.nightfall > 0) this.auras.shadowTrance = new ShadowTrance(this);
 
 		this.castTimeRemaining = 0;

@@ -87,6 +87,16 @@ function refreshCharacterStats() {
 	}
 	hitChance = hitChance.toFixed(2);
 
+	let shadowModifier = characterStats.shadowModifier;
+	let fireModifier = characterStats.fireModifier;
+	if ($("#demonicSacrifice").data('points') === 1) {
+		if ($("#filler-shadowBolt").data('checked') === true) {
+			shadowModifier *= 1.15;
+		} else if ($("#filler-incinerate").data('checked') === true || $("#filler-searingPain").data('checked') === true) {
+			fireModifier *= 1.15;
+		}
+	}
+
 	$("#character-health-val").text(Math.round((characterStats.health + (characterStats.stamina * staminaModifier) * healthPerStamina) * (1 + (0.01 * $("#felStamina").attr('data-points')))));
 	$("#character-mana-val").text(Math.round((characterStats.mana + (characterStats.intellect * characterStats.intellectModifier) * manaPerInt) * (1 + (0.01 * $("#felIntellect").attr('data-points')))));
 	$("#character-stamina-val").text(Math.round(characterStats.stamina * staminaModifier));
@@ -97,8 +107,8 @@ function refreshCharacterStats() {
 	$("#character-crit-val").text(Math.round(critRating) + " (" + critChance + "%)");
 	$("#character-hit-val").text(Math.round(characterStats.hitRating) + " (" + hitChance + "%)");
 	$("#character-haste-val").text(Math.round(characterStats.hasteRating) + " (" + (Math.round((characterStats.hasteRating/hasteRatingPerPercent) * 100) / 100) + "%)");
-	$("#character-shadow-damage-modifier-val").text(Math.round((characterStats.shadowModifier * (1 + (0.02 * $("#shadowMastery").attr('data-points')))) * 100) + "%");
-	$("#character-fire-damage-modifier-val").text(Math.round(characterStats.fireModifier * 100) + "%");
+	$("#character-shadow-damage-modifier-val").text(Math.round((shadowModifier * (1 + (0.02 * $("#shadowMastery").attr('data-points')))) * 100) + "%");
+	$("#character-fire-damage-modifier-val").text(Math.round(fireModifier * 100) + "%");
 	$("#character-mp5-val").text(characterStats.mp5);
 	$("#character-spell-pen-val").text(characterStats.spellPen);
 }
