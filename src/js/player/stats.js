@@ -89,17 +89,17 @@ function refreshCharacterStats() {
 
 	let shadowModifier = characterStats.shadowModifier;
 	let fireModifier = characterStats.fireModifier;
-	if ($("#demonicSacrifice").data('points') === 1) {
-		if ($("#filler-shadowBolt").data('checked') === true) {
+	if (talents.demonicSacrifice === 1) {
+		if (rotation.filler.shadowBolt) {
 			shadowModifier *= 1.15;
-		} else if ($("#filler-incinerate").data('checked') === true || $("#filler-searingPain").data('checked') === true) {
+		} else if (rotation.filler.incinerate || rotation.filler.searingPain) {
 			fireModifier *= 1.15;
 		}
 	}
 
 	let spellPower = characterStats.spellPower;
-	if ($("#fel-armor").data('checked')) {
-		spellPower += 100 * (1 + 0.1 * $("#demonicAegis").data('points'));
+	if (auras.felArmor) {
+		spellPower += 100 * (1 + 0.1 * talents.demonicAegis);
 	}
 
 	$("#character-health-val").text(Math.round((characterStats.health + (characterStats.stamina * staminaModifier) * healthPerStamina) * (1 + (0.01 * $("#felStamina").attr('data-points')))));
