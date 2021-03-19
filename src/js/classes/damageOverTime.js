@@ -126,7 +126,8 @@ class CurseOfAgonyDot extends DamageOverTime {
 		super(player);
 		this.durationTotal = 24;
 		this.tickTimerTotal = 3;
-		this.dmg = 1698;
+		this.dmg = 1698 * (1 + 0.05 * player.talents.improvedCurseOfAgony);
+		this.modifier = 1 + (0.01 * player.talents.contagion);
 		this.school = "shadow";
 		this.name = "Curse of Agony";
 		this.coefficient = 1.2;
