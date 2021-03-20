@@ -10,10 +10,15 @@ for (let itemSlot in selectedItems) {
 	}
 }
 
-// Same as above but for enchants
-for (let itemSlot in enchants) {
-	if (localStorage['equipped' + itemSlot + "Enchant"]) {
-		modifyStatsFromEnchant(localStorage['equipped' + itemSlot + "Enchant"], itemSlot, true);
+// Same as above but for enchants\
+for (let itemSlot in selectedEnchants) {
+	for (let slot in enchants) {
+		for (let enchant in enchants[slot]) {
+			if (enchants[slot][enchant].id == selectedEnchants[itemSlot]) {
+				modifyStatsFromEnchant(enchants[slot][enchant].id, 'add');
+				break;
+			}
+		}
 	}
 }
 

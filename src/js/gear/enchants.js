@@ -411,11 +411,11 @@ var enchants = {
 	},
 	"weapon": {
 		"soulfrost": {
-		"name": "Soulfrost",
-		"shadowPower": 54,
-		"id": 27982,
-		"source": "Enchanting",
-		"phase": 1
+			"name": "Soulfrost",
+			"shadowPower": 54,
+			"id": 27982,
+			"source": "Enchanting",
+			"phase": 1
 		},
 		"majorSpellpower": {
 			"name": "Major Spellpower",
