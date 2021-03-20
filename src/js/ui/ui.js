@@ -731,16 +731,24 @@ function modifyStatsFromAura(auraObject, checked) {
 }
 
 function simDPS() {
-	let simWorker = new SimWorker((simResult) => {
-		localStorage['avgDps'] = simResult.averageDamage;
-		localStorage['minDps'] = simResult.minDps;
-		localStorage['maxDps'] = simResult.maxDps;
-		localStorage['simulationDuration'] = simResult.length;
-		$("#avg-dps").text(simResult.averageDamage);
-		$("#min-dps").text(simResult.minDps);
-		$("#max-dps").text(simResult.maxDps);
-		$("#sim-length-result").text(simResult.length + "s");
-	});
+	let simWorker = new SimWorker(
+		(simulationEnd) => {
+			localStorage['avgDps'] = simulationEnd.averageDamage;
+			localStorage['minDps'] = simulationEnd.minDps;
+			localStorage['maxDps'] = simulationEnd.maxDps;
+			localStorage['simulationDuration'] = simulationEnd.length;
+			$("#avg-dps").text(simulationEnd.averageDamage);
+			$("#min-dps").text(simulationEnd.minDps);
+			$("#max-dps").text(simulationEnd.maxDps);
+			$("#sim-length-result").text(simulationEnd.length + "s");
+			$(".btn").css('background', 'none');
+		},
+		(simulationUpdate) => {
+			$("#avg-dps").text(simulationUpdate.averageDamage);
+			// Uses the sim button as a progress bar by coloring it based on how many iterations are done with
+			$(".btn").css('background', 'linear-gradient(to right, #9482C9 ' + simulationUpdate.percent + '%, transparent ' + simulationUpdate.percent + '%)');
+		}
+	);
 
 	simWorker.start({
 		"player": Player.getSettings(),

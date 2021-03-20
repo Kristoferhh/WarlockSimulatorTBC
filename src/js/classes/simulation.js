@@ -7,12 +7,13 @@ class Simulation {
 		}
 	}
 
-	constructor(player, settings = Simulation.getSettings(), simulationEnd) {
+	constructor(player, settings = Simulation.getSettings(), simulationEnd, simulationUpdate) {
 		this.player = player;
 		this.iterations = settings.iterations;
 		this.minTime = settings.minTime;
 		this.maxTime = settings.maxTime;
 		this.simulationEnd = simulationEnd;
+		this.simulationUpdate = simulationUpdate;
 	}
 
 	passTime() {
@@ -111,6 +112,14 @@ class Simulation {
 			let iterationDps = this.player.iterationDamage / fightLength;
 			if (iterationDps > maxDps) maxDps = iterationDps;
 			else if (iterationDps < minDps) minDps = iterationDps;
+
+			// Send an update to the sim worker for every 1% of progress
+			if (this.player.iteration % ~~(this.iterations / 100) == 0) {
+				this.simulationUpdate({
+					"averageDamage": Math.round((totalDamage / totalDuration) * 100) / 100,
+					"percent": (this.player.iteration / this.iterations) * 100
+				});
+			}
 		}
 
 		console.log('------- Simulation end -------');
