@@ -86,7 +86,7 @@ class Spell {
 		// Improved Shadow Bolt
 		if (this.school == "shadow" && this.player.talents.improvedShadowBolt > 0 && this.player.auras.improvedShadowBolt.active) {
 			dmg *= this.player.auras.improvedShadowBolt.modifier;
-			if (!isCrit && this.varName == "shadowBolt") this.player.auras.improvedShadowBolt.decrementStacks();
+			if (!this.isDot) this.player.auras.improvedShadowBolt.decrementStacks();
 		}
 		if (isCrit) {
 			let critMultiplier = 1.5;
