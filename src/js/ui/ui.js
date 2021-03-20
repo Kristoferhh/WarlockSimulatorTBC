@@ -112,6 +112,12 @@ for (let tree in _talents) {
 	}
 }
 
+// Add in the pre-requisite talent arrows (todo: find a better way to do this)
+/*$("#talent-table-affliction").append("<div data-row='3' data-column='3' class='talent-arrow'><img width='15' height='60' src='img/talent_arrow_down.jpg'></div>"); // Amplify Curse to Curse of Exhaustion
+$("#talent-table-affliction").append("<div data-row='5' data-column='2' class='talent-arrow'><img width='15' height='10' src='img/talent_arrow_down.jpg'></div>"); // Siphon Life to Shadow Mastery
+$("#talent-table-affliction").append("<div data-row='7' data-column='2' class='talent-arrow'><img width='15' height='60' src='img/talent_arrow_down.jpg'></div>"); // Contagion to Unstable Agony
+$("#talent-table-demonology").append("<div data-row='3' data-column='2' class='talent-arrow'><img width='15' height='10' src='img/talent_arrow_down.jpg'></div>");*/ // Fel Domination to Master Summoner
+
 // When a buff/debuff/consumable is clicked
 $(".aura").click(function() {
 	let auraType = $(this).attr('data-aura-type');
@@ -419,6 +425,11 @@ $(".talent-icon").mousedown(function(event) {
 		if (event.which === 1) {
 			// compare the amount of points in the talent vs the amount of ranks before incrementing
 			if (Number(icon.attr('data-points')) < talent.rankIDs.length && talentTree.data('points') >= (talent.row - 1) * 5) {
+				// If the talent has another talent that needs to be selected before this one is selectable, then check if the required talent is selected.
+				if (talent.requirement && talents[talent.requirement.name] < talent.requirement.points) {
+					return;
+				}
+
 				icon.attr('data-points', Number(icon.attr('data-points')) + 1);
 				talents[talentName] = Number(talents[talentName]) + 1;
 				talentPointsRemaining--;
@@ -435,6 +446,14 @@ $(".talent-icon").mousedown(function(event) {
 		} else if (event.which === 3) {
 			// only decrement if the point amount is above 0
 			if (icon.attr('data-points') > 0) {
+				let talentTreeName = $(this).data('tree');
+				// Check if the talent is locked due to a dependency (such as not being able to remove Amplify Curse because Curse of Exhaustion is selected)
+				for (let t in _talents[talentTreeName]) {
+					if (_talents[talentTreeName][t].requirement && _talents[talentTreeName][t].requirement.name == talentName && talents[t] > 0) {
+						return;
+					}
+				}
+
 				icon.attr('data-points', Number(icon.attr('data-points'))-1);
 				talents[talentName] = Number(talents[talentName]) - 1;
 				talentPointsRemaining++;

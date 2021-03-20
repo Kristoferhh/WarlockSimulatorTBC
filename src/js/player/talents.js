@@ -106,7 +106,10 @@ var _talents = {
 			"iconName": "spell_shadow_grimward",
 			"row": 5,
 			"column": 3,
-			"requirement": 18288
+			"requirement": {
+				"name": "amplifyCurse",
+				"points": 1
+			}
 		},
 		"shadowMastery": {
 			"name": "Shadow Mastery",
@@ -114,7 +117,10 @@ var _talents = {
 			"iconName": "spell_shadow_shadetruesight",
 			"row": 6,
 			"column": 2,
-			"requirement": 18265
+			"requirement": {
+				"name": "siphonLife",
+				"points": 1
+			}
 		},
 		"contagion": {
 			"name": "Contagion",
@@ -150,7 +156,10 @@ var _talents = {
 			"iconName": "spell_shadow_unstableaffliction_3",
 			"row": 9,
 			"column": 2,
-			"requirement": 0 // set to 5/5 Contagion ID
+			"requirement": {
+				"name": "contagion",
+				"points": 5
+			}
 		}
 	},
 	"demonology": {
@@ -229,7 +238,11 @@ var _talents = {
 			"rankIDs": [18709,18710],
 			"iconName": "spell_shadow_impphaseshift",
 			"row": 4,
-			"column": 2
+			"column": 2,
+			"requirement": {
+				"name": "felDomination",
+				"points": 1
+			}
 		},
 		"unholyPower": {
 			"name": "Unholy Power",
@@ -271,7 +284,11 @@ var _talents = {
 			"rankIDs": [23785,23822,23823,23824,23825],
 			"iconName": "spell_shadow_shadowpact",
 			"row": 6,
-			"column": 3
+			"column": 3,
+			"requirement": {
+				"name": "unholyPower",
+				"points": 5
+			}
 		},
 		"demonicResilience": {
 			"name": "Demonic Resilience",
@@ -285,7 +302,11 @@ var _talents = {
 			"rankIDs": [19028],
 			"iconName": "spell_shadow_gathershadows",
 			"row": 7,
-			"column": 2
+			"column": 2,
+			"requirement": {
+				"name": "demonicSacrifice",
+				"points": 1
+			}
 		},
 		"demonicKnowledge": {
 			"name": "Demonic Knowledge",
@@ -371,7 +392,7 @@ var _talents = {
 			"rankIDs": [18135,18136],
 			"iconName": "spell_fire_lavaspawn",
 			"row": 4,
-			"column": 1
+			"column": 1,
 		},
 		"destructiveReach": {
 			"name": "Destructive Reach",
@@ -392,7 +413,11 @@ var _talents = {
 			"rankIDs": [18096,18073],
 			"iconName": "spell_fire_volcano",
 			"row": 5,
-			"column": 1
+			"column": 1,
+			"requirement": {
+				"name": "intensity",
+				"points": 2
+			}
 		},
 		"improvedImmolate": {
 			"name": "Improved Immolate",
@@ -406,7 +431,11 @@ var _talents = {
 			"rankIDs": [17959],
 			"iconName": "spell_shadow_shadowwordpain",
 			"row": 5,
-			"column": 3
+			"column": 3,
+			"requirement": {
+				"name": "devastation",
+				"points": 5
+			}
 		},
 		"netherProtection": {
 			"name": "Nether Protection",
@@ -434,7 +463,11 @@ var _talents = {
 			"rankIDs": [17962],
 			"iconName": "spell_fire_fireball",
 			"row": 7,
-			"column": 2
+			"column": 2,
+			"requirement": {
+				"name": "improvedImmolate",
+				"points": 5
+			}
 		},
 		"soulLeech": {
 			"name": "Soul Leech",
@@ -455,7 +488,11 @@ var _talents = {
 			"rankIDs": [0],
 			"iconName": "spell_shadow_shadowfury",
 			"row": 9,
-			"column": 2
+			"column": 2,
+			"requirement": {
+				"name": "shadowAndFlame",
+				"points": 5
+			}
 		}
 	}
 }
