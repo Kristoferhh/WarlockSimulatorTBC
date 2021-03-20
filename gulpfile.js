@@ -7,7 +7,7 @@ gulp.task('browser-sync', function() {
             baseDir: "./"
         }
     });
-    gulp.watch("src/css/.css").on('change', browserSync.reload);
+    gulp.watch("src/css/*.css").on('change', browserSync.reload);
 });
 
 gulp.task("default", gulp.series(["browser-sync"]));
