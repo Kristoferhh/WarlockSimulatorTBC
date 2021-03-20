@@ -68,8 +68,9 @@ for (let type in _spellSelection) {
 // Add the talent trees
 for (let tree in _talents) {
 	if (_talents.hasOwnProperty(tree)) {
-		$("#talents-section").append($("<div class='talent-tree-div'><table background='img/talent_tree_background_" + tree + ".jpg' id='talent-table-" + tree + "' class='talent-tree-table'></table><h3 class='talent-tree-name'>" + tree.charAt(0).toUpperCase() + tree.slice(1) + "</h3></div>"));
+		$("#talents-section").append($("<div class='talent-tree-div'><table data-name='" + tree + "' background='img/talent_tree_background_" + tree + ".jpg' id='talent-table-" + tree + "' class='talent-tree-table'></table><div class='talent-tree-name'><h3 style='display: inline-block;' data-name='" + tree + "'>" + tree.charAt(0).toUpperCase() + tree.slice(1) + "</h3><span class='clear-talent-tree'>&#10060;</span></div></div>"));
 		$("#talent-table-" + tree).append($("<tbody></tbody>"));
+		$("#talent-table-" + tree).data('points', 0);
 		$("#talent-table-" + tree + " tbody").append($("<tr class='" + tree + "-tree-row'></tr>"));
 		let lastRow = $("#talent-table-" + tree + " tbody tr:last");
 		let currentCol = 1;
@@ -77,6 +78,8 @@ for (let tree in _talents) {
 		for (let talent in _talents[tree]) {
 			let t = _talents[tree][talent];
 			talents[talent] = talents[talent] || 0;
+			talentPointsRemaining -= talents[talent];
+			$("#talent-table-" + tree).data('points', $("#talent-table-" + tree).data('points') + talents[talent]);
 
 			// Check if the current talent should be in the next row below and create a new row if true
 			if (t.row > $("." + tree + "-tree-row").length) {
@@ -104,6 +107,8 @@ for (let tree in _talents) {
 			}
 			currentCol++;
 		}
+
+		updateTalentTreeName($("#talent-table-" + tree));
 	}
 }
 
@@ -408,13 +413,16 @@ $(".talent-icon").mousedown(function(event) {
 		let icon = $(this);
 		let talent = _talents[icon.attr('data-tree')][icon.attr('id')]; // get the talent's object
 		let talentName = $(this).attr('id');
+		let talentTree = $("#talent-table-" + $(this).data('tree'));
 
 		// left click
 		if (event.which === 1) {
 			// compare the amount of points in the talent vs the amount of ranks before incrementing
-			if (Number(icon.attr('data-points')) < talent.rankIDs.length) {
+			if (Number(icon.attr('data-points')) < talent.rankIDs.length && talentTree.data('points') >= (talent.row - 1) * 5) {
 				icon.attr('data-points', Number(icon.attr('data-points')) + 1);
 				talents[talentName] = Number(talents[talentName]) + 1;
+				talentPointsRemaining--;
+				talentTree.data('points', talentTree.data('points') + 1);
 
 				// todo: move these JS css changes to the css file
 				if (Number(icon.attr('data-points')) == talent.rankIDs.length) {
@@ -429,31 +437,29 @@ $(".talent-icon").mousedown(function(event) {
 			if (icon.attr('data-points') > 0) {
 				icon.attr('data-points', Number(icon.attr('data-points'))-1);
 				talents[talentName] = Number(talents[talentName]) - 1;
+				talentPointsRemaining++;
+				talentTree.data('points', talentTree.data('points') - 1);
 				icon.children('a').children('span').css('color', "#7FFF00");
 			}
 		}
 
+		updateTalentTreeName(talentTree);
+
 		// if these talents are changed then the character stats in the sidebar need to be updated
-		if (talent.name == "Demonic Embrace" || talent.name == "Devastation" || talent.name == "Backlash" || talent.name == "Fel Stamina" || talent.name == "Fel Intellect" || talent.name == "Master Demonologist" || talent.name == "Soul Link" || talent.name == "Demonic Tactics" || talent.name == "Shadow Mastery") {
+		if (talent.name == "Demonic Aegis" || talent.name == "Demonic Embrace" || talent.name == "Devastation" || talent.name == "Backlash" || talent.name == "Fel Stamina" || talent.name == "Fel Intellect" || talent.name == "Master Demonologist" || talent.name == "Soul Link" || talent.name == "Demonic Tactics" || talent.name == "Shadow Mastery") {
 			refreshCharacterStats();
 		}
 
-		// update the point amount on the talent icon
-		icon.children('a').children('.talent-point-amount').text(icon.attr('data-points'));
-
-		// if the point amount is 0 then we hide the amount, otherwise we show it
-		if (icon.children('a').children('.talent-point-amount').text() > 0) {
-			icon.children('a').children('.talent-point-amount').show();
-		} else {
-			icon.children('a').children('.talent-point-amount').hide();
-		}
-
-		icon.children('a').attr('href', 'https://classic.wowhead.com/spell=' + talent.rankIDs[Math.max(0,talents[talentName]-1)]);
-		//$WowheadPower.refreshLinks();
+		updateTalentInformation(icon);
 	}
 
 	localStorage.talents = JSON.stringify(talents);
 	return false;
+});
+
+// User clicks on the red X next to a talent tree's name to clear it
+$(".clear-talent-tree").click(function() {
+	clearTalentTree($(this).closest('div').find('h3').data('name'));
 });
 
 // Listens to any clicks on the "rotation" spells for dots, filler, curse, and finisher.
@@ -696,7 +702,6 @@ function modifyStatsFromAura(auraObject, checked) {
 function simDPS() {
 	var player = new Player();
 	var simulation = new Simulation(player);
-
 	simulation.start();
 }
 
@@ -712,4 +717,40 @@ function camelCase(string) {
 	newStr = newStr.join('');
 	newStr = newStr.charAt(0).toLowerCase() + newStr.substring(1);
 	return newStr;
+}
+
+function updateTalentTreeName(talentTreeObj) {
+	let talentTreeName = talentTreeObj.data('name');
+	talentTreeName = talentTreeName.charAt(0).toUpperCase() + talentTreeName.slice(1);
+	if (talentTreeObj.data('points') > 0) {
+		talentTreeName += " (" + talentTreeObj.data('points') + ")";
+	}
+	$(".talent-tree-name h3[data-name='" + talentTreeObj.data('name') + "']").text(talentTreeName);
+}
+
+function updateTalentInformation(talentUiObj) {
+	// Update the point amount on the talent icon
+	talentUiObj.children('a').children('.talent-point-amount').text(talentUiObj.attr('data-points'));
+	// if the point amount is 0 then we hide the amount
+	if (talentUiObj.children('a').children('.talent-point-amount').text() > 0) {
+		talentUiObj.children('a').children('.talent-point-amount').show();
+	} else {
+		talentUiObj.children('a').children('.talent-point-amount').hide();
+	}
+	talentUiObj.children('a').attr('href', 'https://classic.wowhead.com/spell=' + _talents[talentUiObj.data('tree')][talentUiObj.attr('id')].rankIDs[Math.max(0,talents[talentUiObj.attr('id')]-1)]);
+	//$WowheadPower.refreshLinks();
+}
+
+function clearTalentTree(talentTreeName) {
+	if ($("#talent-table-" + talentTreeName).data('points') > 0) {
+		for (let talent in _talents[talentTreeName]) {
+			talentPointsRemaining += talents[talent];
+			talents[talent] = 0;
+			$("#" + talent).attr('data-points', 0);
+			$("#talent-table-" + talentTreeName).data('points', 0);
+			updateTalentInformation($("#" + talent));
+		}
+		updateTalentTreeName($("#talent-table-" + talentTreeName));
+		localStorage.talents = JSON.stringify(talents);
+	}
 }

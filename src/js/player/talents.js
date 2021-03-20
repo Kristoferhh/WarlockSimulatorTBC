@@ -1,4 +1,5 @@
-var talentPointsRemaining = 61;
+var totalTalentPoints = 61;
+var talentPointsRemaining = totalTalentPoints;
 var _talents = {
 	"affliction": {
 		"suppression": {
