@@ -560,8 +560,16 @@ $("#race-dropdown-list").change(function() {
 
 // Loads items into the item table
 function loadItemsBySlot(itemSlot, subSlot = "") {
+	// Set old item slot's selected value to false
+	$("#item-slot-selection-list li[data-selected='true']").attr('data-selected', 'false');
+	// Set the new item slot's seleected value to true
+	let newItemSlotSelector = "#item-slot-selection-list li[data-slot='" + itemSlot + "']";
+	// If the item has a subslot then add a subslot selector to the query
+	if (subSlot !== null) newItemSlotSelector += "[data-subslot='" + subSlot + "']";
+	$(newItemSlotSelector).attr('data-selected', 'true');
 	localStorage['selectedItemSlot'] = itemSlot;
 	localStorage['selectedItemSubSlot'] = (subSlot || "");
+
 	// Removes all current item rows
 	$(".item-row").remove(); 
 	let tableBody = $("#item-selection-table tbody");

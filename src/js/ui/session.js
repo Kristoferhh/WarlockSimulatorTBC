@@ -50,6 +50,9 @@ if (localStorage['simulationDuration']) {
 
 
 refreshCharacterStats();
-loadItemsBySlot(localStorage['selectedItemSlot'] || "mainhand", (localStorage['selectedItemSubSlot'] || ""));
 $("#race-dropdown-list").data("currentRace", currentRace); // Store the currently selected race to know the user's previous race when changing in the dropdown list.
 $("#race").text($("#race-dropdown-list").children("option:selected").text()); // Set the player's race at the top of the sidebar (just a visual description)
+loadItemsBySlot(localStorage['selectedItemSlot'] || "mainhand", (localStorage['selectedItemSubSlot'] || ""));
+let newItemSelector = "#item-slot-selection-list li[data-slot='" + (localStorage['selectedItemSlot'] || "mainhand") + "']";
+if (localStorage['selectedItemSubSlot']) newItemSelector += "[data-subslot='" + localStorage(selectedItemSubSlot) + "']";
+$(newItemSelector).attr('data-selected', 'true');
