@@ -247,12 +247,12 @@ ul {
 
 #damage-breakdown-table td/*:nth-child(1)*/ {
 	text-align: left;
-	border: 1px solid black;
-	border-collapse: collapse;
 }
 
-#damage-breakdown-table td, #damage-breakdown-table col {
+#damage-breakdown-table td, #damage-breakdown-table th {
 	padding: 10px;
+	border: 1px solid black;
+	border-collapse: collapse;
 }
 
 #damage-breakdown-table tr {
@@ -314,6 +314,12 @@ ul {
 .talent-icon img {
 	width: 40px;
 	height: 40px;
+}
+
+.clear-talent-tree {
+	display: inline-block;
+	cursor: pointer;
+	user-select: none;
 }
 
 .btn {
