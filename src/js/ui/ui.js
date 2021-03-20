@@ -742,11 +742,13 @@ function simDPS() {
 			$("#max-dps").text(simulationEnd.maxDps);
 			$("#sim-length-result").text(simulationEnd.length + "s");
 			$(".btn").css('background', 'none');
+			$("#sim-dps").text("Simulate");
 		},
 		(simulationUpdate) => {
 			$("#avg-dps").text(simulationUpdate.averageDamage);
 			// Uses the sim button as a progress bar by coloring it based on how many iterations are done with
 			$(".btn").css('background', 'linear-gradient(to right, #9482C9 ' + simulationUpdate.percent + '%, transparent ' + simulationUpdate.percent + '%)');
+			$("#sim-dps").text(Math.round(simulationUpdate.percent) + "%");
 		}
 	);
 
