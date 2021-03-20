@@ -120,7 +120,7 @@ class ShadowBolt extends Spell {
 	constructor(player) {
 		super(player);
 		this.castTime = this.calculateCastTime();
-		this.manaCost = 420 * (1 - 0.1 * player.talents.cataclysm);
+		this.manaCost = 420 * (1 - 0.01 * player.talents.cataclysm);
 		this.coefficient = (3 / 3.5) + (0.04 * player.talents.shadowAndFlame);
 		this.dmg = 633; // Average rank 11 Shadow Bolt base damage
 		this.name = "Shadow Bolt";
@@ -152,7 +152,7 @@ class Incinerate extends Spell {
 	constructor(player) {
 		super(player);
 		this.castTime = 2.5;
-		this.manaCost = 355 * (1 - 0.1 * player.talents.cataclysm);
+		this.manaCost = 355 * (1 - 0.01 * player.talents.cataclysm);
 		this.coefficient = 0.7143 + (0.04 * player.talents.shadowAndFlame);
 		this.dmg = 479;
 		this.bonusDamageFromImmolate = 120; // The bonus damage gained when Immolate is up on the target
@@ -170,7 +170,7 @@ class SearingPain extends Spell {
 	constructor(player) {
 		super(player);
 		this.castTime = 1.5;
-		this.manaCost = 205 * (1 - 0.1 * player.talents.cataclysm);
+		this.manaCost = 205 * (1 - 0.01 * player.talents.cataclysm);
 		this.coefficient = 0.4286;
 		this.dmg = 295;
 		this.name = "Searing Pain";
@@ -186,7 +186,7 @@ class SoulFire extends Spell {
 	constructor(player) {
 		super(player);
 		this.castTime = 6 - (0.4 * player.talents.bane);
-		this.manaCost = 250 * (1 - 0.1 * player.talents.cataclysm);
+		this.manaCost = 250 * (1 - 0.01 * player.talents.cataclysm);
 		this.coefficient = 1.15;
 		this.dmg = 1130;
 		this.name = "Soul Fire";
@@ -203,7 +203,7 @@ class Shadowburn extends Spell {
 	constructor(player) {
 		super(player);
 		this.cooldown = 15;
-		this.manaCost = 515 * (1 - 0.1 * player.talents.cataclysm);
+		this.manaCost = 515 * (1 - 0.01 * player.talents.cataclysm);
 		this.coefficient = 0.4286;
 		this.dmg = 694;
 		this.name = "Shadowburn";
@@ -232,6 +232,36 @@ class DeathCoil extends Spell {
 	}
 }
 
+class Shadowfury extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Shadowfury";
+		this.dmg = 670.5;
+		this.manaCost = 710 * (1 - 0.01 * player.talents.cataclysm);
+		this.doesDamage = true;
+		this.school = "shadow";
+		this.type = "destruction";
+		this.cooldown = 20;
+		this.coefficient = 0.195;
+		this.canCrit = true; // confirm
+		this.setup();
+	}
+}
+
+class SeedOfCorruption extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Seed of Corruption";
+		this.dmg = 1380;
+		this.manaCost = 882;
+		this.doesDamage = true;
+		this.school = "shadow";
+		this.type = "affliction";
+		this.coefficient = 0.22;
+		this.setup();
+	}
+}
+
 class LifeTap extends Spell {
 	constructor(player) {
 		super(player);
@@ -248,6 +278,23 @@ class LifeTap extends Spell {
 		if (this.player.mana + manaGain > this.player.stats.maxMana) console.log("Life Tap used at too high mana (mana wasted)"); // Warning for if the simulation ever decides to use life tap when it would overcap the player on mana.
 		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain);
 
+	}
+}
+
+class DarkPact extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Dark Pact";
+		this.manaReturn = 700;
+		this.coefficient = 0.96;
+	}
+
+	cast() {
+		this.casting = false;
+		let manaGain = this.manaReturn + (this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient;
+		this.player.combatLog(this.name + " " + Math.round(manaGain));
+		if (this.player.mana + manaGain > this.player.stats.maxMana) console.log("Dark Pact used at too high mana (mana wasted)");
+		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain);
 	}
 }
 
