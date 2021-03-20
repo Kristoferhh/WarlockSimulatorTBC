@@ -7,11 +7,12 @@ class Simulation {
 		}
 	}
 
-	constructor(player, settings = Simulation.getSettings()) {
+	constructor(player, settings = Simulation.getSettings(), simulationEnd) {
 		this.player = player;
 		this.iterations = settings.iterations;
 		this.minTime = settings.minTime;
 		this.maxTime = settings.maxTime;
+		this.simulationEnd = simulationEnd;
 	}
 
 	passTime() {
@@ -113,16 +114,14 @@ class Simulation {
 		}
 
 		console.log('------- Simulation end -------');
-		localStorage['avgDps'] = Math.round((totalDamage / totalDuration) * 100) / 100;
-		localStorage['minDps'] = Math.round(minDps * 100) / 100;
-		localStorage['maxDps'] = Math.round(maxDps * 100) / 100;
-		localStorage['simulationDuration'] = (new Date() - startTime) / 1000;
-		$("#avg-dps").text(localStorage['avgDps']);
-		$("#min-dps").text(localStorage['minDps']);
-		$("#max-dps").text(localStorage['maxDps']);
-		$("#sim-length-result").text(localStorage['simulationDuration'] + "s");
+		this.simulationEnd({
+			"averageDamage": Math.round((totalDamage / totalDuration) * 100) / 100,
+			"minDps": Math.round(minDps * 100) / 100,
+			"maxDps": Math.round(maxDps * 100) / 100,
+			"length": (new Date() - startTime) / 1000
+		});
 
-		$(".spell-damage-information").remove();
+		/*$(".spell-damage-information").remove();
 		let tableBody = $("#damage-breakdown-table tbody");
 		for (let spell of Object.keys(this.player.damageBreakdown)) {
 			let s = this.player.damageBreakdown[spell];
@@ -130,6 +129,6 @@ class Simulation {
 			if (s.damage > 0 || s.casts > 0) tableBody.append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / this.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td></tr>");
 		}
 		$("#damage-breakdown-table").css("visibility", "visible");
-		$("#damage-breakdown-section h3").css("visibility", 'visible');
+		$("#damage-breakdown-section h3").css("visibility", 'visible');*/
 	}
 }

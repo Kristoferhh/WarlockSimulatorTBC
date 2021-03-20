@@ -621,7 +621,7 @@ function loadEnchantsBySlot(itemSlot, subSlot = null) {
 	}
 
 	if (enchants[itemSlot]) {
-		$(".enchant-row").remove(); // Removes all item enchant rows
+		$(".enchant-row").remove();
 		let tableBody = $("#enchant-selection-table tbody");
 
 		for (let enchant of Object.keys(enchants[itemSlot])) {
@@ -731,25 +731,21 @@ function modifyStatsFromAura(auraObject, checked) {
 }
 
 function simDPS() {
-	var player = new Player();
-	var simulation = new Simulation(player);
-	simulation.start();
-}
+	let simWorker = new SimWorker((simResult) => {
+		localStorage['avgDps'] = simResult.averageDamage;
+		localStorage['minDps'] = simResult.minDps;
+		localStorage['maxDps'] = simResult.maxDps;
+		localStorage['simulationDuration'] = simResult.length;
+		$("#avg-dps").text(simResult.averageDamage);
+		$("#min-dps").text(simResult.minDps);
+		$("#max-dps").text(simResult.maxDps);
+		$("#sim-length-result").text(simResult.length + "s");
+	});
 
-function random(min,max) {
-	min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function camelCase(string) {
-	let newStr = string.split(' ');
-	for (let i = 0; i < newStr.length; i++) {
-		newStr[i] = newStr[i].charAt(0).toUpperCase() + newStr[i].substring(1);
-	}
-	newStr = newStr.join('');
-	newStr = newStr.charAt(0).toLowerCase() + newStr.substring(1);
-	return newStr;
+	simWorker.start({
+		"player": Player.getSettings(),
+		"simulation": Simulation.getSettings(),
+	});
 }
 
 function updateTalentTreeName(talentTreeObj) {
