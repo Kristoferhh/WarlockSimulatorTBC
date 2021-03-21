@@ -8,6 +8,7 @@ var talents = localStorage['talents'] ? JSON.parse(localStorage['talents']) : {}
 var auras = localStorage['auras'] ? JSON.parse(localStorage['auras']) : {};
 var rotation = localStorage['rotation'] ? JSON.parse(localStorage['rotation']) : {};
 var selectedEnchants = localStorage['selectedEnchants'] ? JSON.parse(localStorage['selectedEnchants']) : {};
+var savedItemDPS = localStorage['savedItemDPS'] ? JSON.parse(localStorage['savedItemDPS']) : {};
 
 // RAID BUFFS
 for(let buff of Object.keys(_auras.buffs)) {
@@ -519,17 +520,25 @@ $("#rotation-list div li").click(function() {
 });
 
 // to-do: don't allow people to start multiple simulations
-$(".btn").click(function() {
-	//$("#dps-result-div").css('visibility', 'visible');
-	simDPS();
+$("#sim-dps").click(function() {
+	simDPS([$(".item-row[data-selected='true']").data('wowhead-id')]);
+});
+
+$("#sim-all-items").click(function() {
+	let arr = [];
+	$(".item-row").each(function(i) {
+		arr.push($(this).data('wowhead-id'));
+	});
+	$("#damage-breakdown-table").hide();
+	simDPS(arr);
 });
 
 $(".btn").hover(function() {
-	$("#sim-dps").css('color', '#1a1a1a');
+	$(this).find('a').css('color', '#1a1a1a');
 });
 
 $(".btn").mouseout(function() {
-	$("#sim-dps").css('color', 'white');
+	$(this).find('a').css('color', 'white');
 });
 
 // User changes races in the simulation settings
@@ -575,6 +584,7 @@ function loadItemsBySlot(itemSlot, subSlot = "") {
 	$(newItemSlotSelector).attr('data-selected', 'true');
 	localStorage['selectedItemSlot'] = itemSlot;
 	localStorage['selectedItemSubSlot'] = (subSlot || "");
+	savedItemDPS[itemSlot + subSlot] = savedItemDPS[itemSlot + subSlot] || {};
 
 	// Removes all current item rows
 	$(".item-row").remove(); 
@@ -609,7 +619,7 @@ function loadItemsBySlot(itemSlot, subSlot = "") {
 
 		}
 
-		tableBody.append("<tr data-subslot='" + localStorage['selectedItemSubSlot'] + "' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage['selectedItemSubSlot']] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td><div>" + sockets.join('') + "</div></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (Math.round(i.hasteRating + (i.onUseHasteRating * i.duration / i.cooldown)) || i.hasteRating || Math.round(i.onUseHasteRating * i.duration / i.cooldown) || '') + "</td><td>" + (localStorage[item + "Dps"] || '') + "</td></tr>")
+		tableBody.append("<tr data-subslot='" + localStorage['selectedItemSubSlot'] + "' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage['selectedItemSubSlot']] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td><div>" + sockets.join('') + "</div></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (Math.round(i.hasteRating + (i.onUseHasteRating * i.duration / i.cooldown)) || i.hasteRating || Math.round(i.onUseHasteRating * i.duration / i.cooldown) || '') + "</td><td class='item-dps'>" + (savedItemDPS[itemSlot + subSlot][i.id] || '') + "</td></tr>")
 	}
 
 	loadEnchantsBySlot(itemSlot, subSlot);
@@ -730,32 +740,59 @@ function modifyStatsFromAura(auraObject, checked) {
 	refreshCharacterStats();
 }
 
-function simDPS() {
-	let simWorker = new SimWorker(
-		(simulationEnd) => {
-			localStorage['avgDps'] = simulationEnd.averageDamage;
-			localStorage['minDps'] = simulationEnd.minDps;
-			localStorage['maxDps'] = simulationEnd.maxDps;
-			localStorage['simulationDuration'] = simulationEnd.length;
-			$("#avg-dps").text(simulationEnd.averageDamage);
-			$("#min-dps").text(simulationEnd.minDps);
-			$("#max-dps").text(simulationEnd.maxDps);
-			$("#sim-length-result").text(simulationEnd.length + "s");
-			$(".btn").css('background', 'none');
-			$("#sim-dps").text("Simulate");
-		},
-		(simulationUpdate) => {
-			$("#avg-dps").text(simulationUpdate.averageDamage);
-			// Uses the sim button as a progress bar by coloring it based on how many iterations are done with
-			$(".btn").css('background', 'linear-gradient(to right, #9482C9 ' + simulationUpdate.percent + '%, transparent ' + simulationUpdate.percent + '%)');
-			$("#sim-dps").text(Math.round(simulationUpdate.percent) + "%");
-		}
-	);
+function simDPS(items) {
+	let item = $("#item-slot-selection-list li[data-selected='true']");
+	let itemSlot = item.attr('data-slot');
+	let itemSubslot = item.attr('data-subslot') || '';
 
-	simWorker.start({
-		"player": Player.getSettings(),
-		"simulation": Simulation.getSettings(),
-	});
+	for (itemID of items) {
+		let simWorker = new SimWorker(
+			(simulationEnd) => {
+				// DPS information on the sidebar
+				let avgDps = Math.round((simulationEnd.totalDamage / simulationEnd.totalDuration) * 100) / 100
+				localStorage['avgDps'] = avgDps;
+				localStorage['minDps'] = simulationEnd.minDps;
+				localStorage['maxDps'] = simulationEnd.maxDps;
+				localStorage['simulationDuration'] = simulationEnd.length;
+				$("#avg-dps").text(avgDps);
+				$("#min-dps").text(simulationEnd.minDps);
+				$("#max-dps").text(simulationEnd.maxDps);
+				$("#sim-length-result").text(simulationEnd.length + "s");
+				savedItemDPS[itemSlot + itemSubslot][simulationEnd.itemID] = avgDps;
+				localStorage.savedItemDPS = JSON.stringify(savedItemDPS);
+
+				// Remove the background coloring (progress bar)
+				$(".btn").css('background', 'none');
+				$("#sim-dps").text("Simulate");
+
+				// Setup the damage breakdown table (showing avg damage, avg cast etc. for each spell)
+				$(".spell-damage-information").remove();
+				for (let spell of Object.keys(simulationEnd.damageBreakdown)) {
+					let s = simulationEnd.damageBreakdown[spell];
+					let percentDamage = (~~(((s.damage / simulationEnd.totalDamage) * 100) * 100) / 100).toFixed(2);
+					if (s.damage > 0 || s.casts > 0) $("#damage-breakdown-table tbody").append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td></tr>");
+				}
+				$("#damage-breakdown-table").css("visibility", "visible");
+				$("#damage-breakdown-section h3").css("visibility", 'visible');
+			},
+			(simulationUpdate) => {
+				$("#avg-dps").text(simulationUpdate.averageDamage);
+				// Uses the sim button as a progress bar by coloring it based on how many iterations are done with
+				$(".btn").css('background', 'linear-gradient(to right, #9482C9 ' + simulationUpdate.percent + '%, transparent ' + simulationUpdate.percent + '%)');
+				$("#sim-dps").text(Math.round(simulationUpdate.percent) + "%");
+				// Set the DPS value on the item in the item selection list
+				$(".item-row[data-wowhead-id='" + simulationUpdate.itemID + "']").find('.item-dps').text(simulationUpdate.averageDamage);
+			}
+		);
+
+		simWorker.start({
+			"player": Player.getSettings(),
+			"simulation": Simulation.getSettings(),
+			"itemSlot": itemSlot,
+			"itemID": itemID,
+			"itemAmount": items.length
+		});
+	}
 }
 
 function updateTalentTreeName(talentTreeObj) {

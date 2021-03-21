@@ -5,11 +5,13 @@ importScripts(
 	'./classes/spell.js',
 	'./functions.js',
 	'./classes/aura.js',
-	'./classes/damageOverTime.js'
+	'./classes/damageOverTime.js',
+	'./gear/items.js',
+	'./gear/gems.js'
 );
 
 onmessage = function(e) {
-	var player = new Player(e.data.player);
+	var player = new Player(e.data.player, e.data.itemSlot || null, e.data.itemID || null);
 	var simulation = new Simulation(player, e.data.simulation,
 		(simulationEnd) => {
 			this.postMessage({

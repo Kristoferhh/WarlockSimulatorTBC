@@ -117,27 +117,22 @@ class Simulation {
 			if (this.player.iteration % ~~(this.iterations / 100) == 0) {
 				this.simulationUpdate({
 					"averageDamage": Math.round((totalDamage / totalDuration) * 100) / 100,
-					"percent": (this.player.iteration / this.iterations) * 100
+					"percent": (this.player.iteration / this.iterations) * 100,
+					"itemID": this.player.itemID
 				});
 			}
 		}
 
 		console.log('------- Simulation end -------');
 		this.simulationEnd({
-			"averageDamage": Math.round((totalDamage / totalDuration) * 100) / 100,
 			"minDps": Math.round(minDps * 100) / 100,
 			"maxDps": Math.round(maxDps * 100) / 100,
-			"length": (new Date() - startTime) / 1000
+			"length": (new Date() - startTime) / 1000,
+			"damageBreakdown": this.player.damageBreakdown,
+			"iterations": this.iterations,
+			"totalDamage": totalDamage,
+			"totalDuration": totalDuration,
+			"itemID": this.player.itemID
 		});
-
-		/*$(".spell-damage-information").remove();
-		let tableBody = $("#damage-breakdown-table tbody");
-		for (let spell of Object.keys(this.player.damageBreakdown)) {
-			let s = this.player.damageBreakdown[spell];
-			let percentDamage = (~~(((s.damage / totalDamage) * 100) * 100) / 100).toFixed(2);
-			if (s.damage > 0 || s.casts > 0) tableBody.append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / this.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td></tr>");
-		}
-		$("#damage-breakdown-table").css("visibility", "visible");
-		$("#damage-breakdown-section h3").css("visibility", 'visible');*/
 	}
 }

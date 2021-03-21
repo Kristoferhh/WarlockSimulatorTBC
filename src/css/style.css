@@ -17,8 +17,8 @@ ul {
 }
 
 #character-section {
-	height: 440px;
 	vertical-align: top;
+	height: 410px;
 	/*border-right: 1px solid gray;*/
 }
 
@@ -365,18 +365,18 @@ ul {
 	user-select: none;
 }
 
-#sim-dps {
+.btn a {
 	color: white;
 	text-decoration: none;
+}
+
+.btn:hover {
+	background-color: #fff;
 }
 
 #sim-length-result {
 	margin-top: 15px;
 	font-weight: bold;
-}
-
-.btn:hover {
-	background-color: #fff;
 }
 
 #sidebar-simulation-selection {

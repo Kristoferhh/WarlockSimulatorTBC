@@ -2,6 +2,9 @@ class Player {
 	static getSettings() {
 		return {
 			"auras": auras,
+			"items": selectedItems,
+			"enchants": selectedEnchants,
+			"gems": selectedGems,
 			"talents": talents,
 			"stats": characterStats,
 			"enemy": {
@@ -9,20 +12,84 @@ class Player {
 				"shadowResist": $("input[name='target-shadow-resistance']").val(),
 				"fireResist": $("input[name='target-fire-resistance']").val()
 			},
-			"rotation": rotation
+			"rotation": rotation,
+			"selectedItemSlot": $("#item-slot-selection-list li[data-selected='true']").attr('data-slot')
 		}
 	}
 
-	constructor(settings = Player.getSettings()) {
+	constructor(settings = Player.getSettings(), customItemSlot = null, customItemID = null) {
 		this.stats = JSON.parse(JSON.stringify(settings.stats)); // Create a deep-copy of the character's stats since we need to modify the values.
 		this.enemy = settings.enemy;
 		this.rotation = settings.rotation;
 		this.talents = settings.talents;
 		this.level = 70;
+		this.itemID = customItemID || settings.items[settings.selectedItemSlot] || 0;
+
+		// If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
+		if (customItemSlot && customItemID && customItemID !== settings.items[customItemSlot]) {
+			// Loop through all items in the custom item slot
+			for (let item in items[customItemSlot]) {
+				// Check if this is the currently equipped item
+				if (items[customItemSlot][item].id == settings.items[customItemSlot]) {
+					// Remove stats from currently equipped item
+					for (let stat in items[customItemSlot][item]) {
+						if (this.stats.hasOwnProperty(stat)) {
+							this.stats[stat] -= items[customItemSlot][item][stat];
+						}
+					}
+					// Remove stats from gems in the equipped item if there are any
+					if (settings.gems[customItemSlot][settings.items[customItemSlot]]) {
+						// Loop through each socket in the equipped item
+						for (let socket in settings.gems[customItemSlot][settings.items[customItemSlot]]) {
+							// Find the gem that is equipped in the socket by looking for its ID
+							for (let socketColor in gems) {
+								for (let gem in gems[socketColor]) {
+									// Check if the ID matches
+									if (gems[socketColor][gem].id == settings.gems[customItemSlot][settings.items[customItemSlot]][socket]) {
+										// Loop through the gem's stats and remove them from the player
+										for (let stat in gems[socketColor][gem]) {
+											if (this.stats.hasOwnProperty(stat)) {
+												this.stats[stat] -= gems[socketColor][gem][stat];
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				// Check if this is the custom item
+				else if (items[customItemSlot][item].id == customItemID) {
+					// Add stats from the item
+					for (let stat in items[customItemSlot][item]) {
+						if (this.stats.hasOwnProperty(stat)) {
+							this.stats[stat] += items[customItemSlot][item][stat];
+						}
+					}
+					// Add stats from any gems equipped in the custom item
+					if (settings.gems[customItemSlot][customItemID]) {
+						for (let socket in settings.gems[customItemSlot][customItemID]) {
+							for (let socketColor in gems) {
+								for (let gem in gems[socketColor]) {
+									if (gems[socketColor][gem].id == settings.gems[customItemSlot][customItemID][socket]) {
+										for (let stat in gems[socketColor][gem]) {
+											if (this.stats.hasOwnProperty(stat)) {
+												this.stats[stat] += gems[socketColor][gem][stat];
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
 		this.stats.health = (this.stats.health + (this.stats.stamina * this.stats.staminaModifier) * healthPerStamina) * (1 + (0.01 * settings.talents.felStamina));
 		this.stats.maxMana = (this.stats.mana + (this.stats.intellect * this.stats.intellectModifier) * manaPerInt) * (1 + (0.01 * settings.talents.felIntellect));
 		this.stats.shadowModifier *= (1 + (0.02 * settings.talents.shadowMastery));
-		this.spellTravelTime = 1; //
+		this.spellTravelTime = 1;
 
 		// Crit chance
 		this.stats.critChanceMultiplier = 1000;
