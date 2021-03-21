@@ -21,7 +21,7 @@ var gems = {
 	"meta": {
 		"chaoticSkyfireDiamond": {
 			"name": "Chaotic Skyfire Diamond",
-			"spellPower": 12,
+			"critRating": 12,
 			"id": 34220,
 			"iconName": "inv_misc_gem_diamond_07"
 		}
