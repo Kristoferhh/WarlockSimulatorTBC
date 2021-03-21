@@ -143,7 +143,7 @@
 	</div>
 </div>
 <div id="main">
-	<div style='height: 430px;'>
+	<div style='min-height: 460px;'>
 		<!-- BUFFS & DEBUFFS-->
 		<section id="buffs-and-debuffs-section">
 			<!-- RAID BUFFS -->
@@ -167,31 +167,31 @@
 
 		<!-- TALENTS -->
 		<section id="talents-section"></section>
-	</div>
 
-	<!-- SIM RESULTS -->
-	<section id="damage-breakdown-section">
-		<table id="damage-breakdown-table" class="tablesorter">
-			<colgroup>
-				<col>
-				<col>
-				<col>
-				<col>
-				<col>
-				<col>
-				<col>
-			</colgroup>
-			<thead>
-				<th>Name</th>
-				<th>Damage</th>
-				<th>Casts</th>
-				<th>Avg Cast</th>
-				<th>Crit %</th>
-				<th>Miss %</th>
-			</thead>
-			<tbody></tbody>
-		</table>
-	</section>
+		<!-- SIM RESULTS -->
+		<section id="damage-breakdown-section">
+			<table id="damage-breakdown-table" class="tablesorter">
+				<colgroup>
+					<col>
+					<col>
+					<col>
+					<col>
+					<col>
+					<col>
+					<col>
+				</colgroup>
+				<thead>
+					<th>Name</th>
+					<th>Damage</th>
+					<th>Casts</th>
+					<th>Avg Cast</th>
+					<th>Crit %</th>
+					<th>Miss %</th>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</section>
+	</div>
 
 	<!-- ITEMS -->
 	<!-- Gem Selection Table -->
@@ -222,9 +222,9 @@
 			<colgroup id="item-selection-colgroup">
 				<col style="width: 17%">
 				<col style="width: 3%">
-				<col style="width: 16%">
-				<col style="width: 4%">
-				<col style="width: 4%">
+				<col style="width: 13%">
+				<col style="width: 3%">
+				<col style="width: 3%">
 				<col style="width: 5%">
 				<col style="width: 6.5%">
 				<col style="width: 4.5%">
@@ -232,15 +232,15 @@
 				<col style="width: 3%">
 				<col style="width: 3%">
 				<!--<col style="width: 4%">-->
-				<col style="width: 4%">
+				<col style="width: 8%">
 			</colgroup>
 			<thead>
 				<tr id="item-selection-header">
 					<th id="header-name">Name</th>
 					<th id="header-gems"></th>
 					<th id="header-source">Source</th>
-					<th id="header-stamina">Stamina</th>
-					<th id="header-intellect">Intellect</th>
+					<th id="header-stamina">Stam</th>
+					<th id="header-intellect">Int</th>
 					<th id="header-spell-power">Spell Power</th>
 					<th id="header-shadow-power">Shadow Power</th>
 					<th id="header-fire-power">Fire Power</th>
@@ -296,6 +296,7 @@
 <script type="text/javascript" src="src/js/player/stats.js"></script>
 <script type="text/javascript" src="src/js/gear/gems.js"></script>
 <script type="text/javascript" src="src/js/gear/items.js"></script>
+<script type="text/javascript" src="src/js/gear/sets.js"></script>
 <script type="text/javascript" src="src/js/gear/enchants.js"></script>
 <script type="text/javascript" src="src/js/player/talents.js"></script>
 <script type="text/javascript" src="src/js/classes/spell.js"></script>
