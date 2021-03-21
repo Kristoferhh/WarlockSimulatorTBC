@@ -1,3 +1,6 @@
+// Max	
+			// Start a new simulation that's waiting in the queue if there are any remainingimum amount of workers that can be running at any given time.
+const maxWorkers =  navigator.hardwareConcurrency || 8;
 // Object with all the gems the user has equipped on any item, including those that are not equipped. Each key is the item's name and the value is an array with the ID of the gems equipped in that item.
 var selectedGems = localStorage['selectedGems'] ? JSON.parse(localStorage['selectedGems']) : {};
 // Key: Item slot. Value: Equipped item's ID
@@ -8,6 +11,7 @@ var talents = localStorage['talents'] ? JSON.parse(localStorage['talents']) : {}
 var auras = localStorage['auras'] ? JSON.parse(localStorage['auras']) : {};
 var rotation = localStorage['rotation'] ? JSON.parse(localStorage['rotation']) : {};
 var selectedEnchants = localStorage['selectedEnchants'] ? JSON.parse(localStorage['selectedEnchants']) : {};
+// Key: Item ID. Value: Item's saved DPS from previous simulations.
 var savedItemDPS = localStorage['savedItemDPS'] ? JSON.parse(localStorage['savedItemDPS']) : {};
 
 // RAID BUFFS
@@ -745,13 +749,16 @@ function simDPS(items) {
 	let itemSlot = item.attr('data-slot');
 	let itemSubslot = item.attr('data-subslot') || '';
 	let itemAmount = items.length;
+	let simulationsRunning = 0;
 	let simulationsFinished = 0;
 	let multiSimInfo = [];
+	let simulations = [];
+	let simIndex = 0;
 
-	for (itemID of items) {
-		multiSimInfo.push([itemID,0]);
+	for (let i = 0; i < items.length; i++) {
+		multiSimInfo.push([items[i],0]);
 
-		let simWorker = new SimWorker(
+		simulations.push(new SimWorker(
 			(simulationEnd) => {
 				simulationsFinished++;
 				// DPS information on the sidebar
@@ -787,6 +794,11 @@ function simDPS(items) {
 						$("#damage-breakdown-section").css('display', 'inline-block');
 					}
 				}
+	
+				// Start a new simulation that's waiting in the queue if there are any remaining
+				if (simulationsRunning - simulationsFinished < maxWorkers && simIndex < simulations.length) {
+					simulations[simIndex++].start();
+				}
 			},
 			(simulationUpdate) => {
 				if (itemAmount === 1) {
@@ -809,16 +821,21 @@ function simDPS(items) {
 				}
 				// Set the DPS value on the item in the item selection list
 				$(".item-row[data-wowhead-id='" + simulationUpdate.itemID + "']").find('.item-dps').text(simulationUpdate.averageDamage);
+			},
+			{
+				"player": Player.getSettings(),
+				"simulation": Simulation.getSettings(),
+				"itemSlot": itemSlot,
+				"itemID": items[i],
+				"itemAmount": itemAmount
 			}
-		);
+		));
+	}
 
-		simWorker.start({
-			"player": Player.getSettings(),
-			"simulation": Simulation.getSettings(),
-			"itemSlot": itemSlot,
-			"itemID": itemID,
-			"itemAmount": itemAmount
-		});
+	// Start as many simulations as 'maxWorkers' says can be run at once.
+	while (simulationsRunning < maxWorkers && simIndex < simulations.length) {
+		simulations[simIndex++].start();
+		simulationsRunning++;
 	}
 }
 
