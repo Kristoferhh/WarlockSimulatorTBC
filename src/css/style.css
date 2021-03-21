@@ -7,13 +7,13 @@ ul {
 	position: fixed;
 	height: 100%;
 	width: clamp(300px, 20%, 380px);
-	background-color: #595959;
+	background-color: #226F54;
 	overflow: hidden;
 }
 
 #main {
 	margin-left: clamp(300px, 20%, 380px);
-	background-color: #3a495f;
+	background-color: #0B3954;
 }
 
 #character-section {
