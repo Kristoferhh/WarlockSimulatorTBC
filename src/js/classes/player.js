@@ -38,7 +38,7 @@ class Player {
 						}
 					}
 					// Remove stats from gems in the equipped item if there are any
-					if (settings.gems[customItemSlot][settings.items[customItemSlot]]) {
+					if (settings.gems[customItemSlot] && settings.gems[customItemSlot][settings.items[customItemSlot]]) {
 						// Loop through each socket in the equipped item
 						for (let socket in settings.gems[customItemSlot][settings.items[customItemSlot]]) {
 							// Find the gem that is equipped in the socket by looking for its ID
@@ -67,7 +67,7 @@ class Player {
 						}
 					}
 					// Add stats from any gems equipped in the custom item
-					if (settings.gems[customItemSlot][customItemID]) {
+					if (settings.gems[customItemSlot] && settings.gems[customItemSlot][customItemID]) {
 						for (let socket in settings.gems[customItemSlot][customItemID]) {
 							for (let socketColor in gems) {
 								for (let gem in gems[socketColor]) {
