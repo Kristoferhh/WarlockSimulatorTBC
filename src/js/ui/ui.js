@@ -744,26 +744,36 @@ function simDPS(items) {
 	let item = $("#item-slot-selection-list li[data-selected='true']");
 	let itemSlot = item.attr('data-slot');
 	let itemSubslot = item.attr('data-subslot') || '';
+	let itemAmount = items.length;
+	let simulationsFinished = 0;
+	let multiSimInfo = [];
 
 	for (itemID of items) {
+		multiSimInfo.push([itemID,0]);
+
 		let simWorker = new SimWorker(
 			(simulationEnd) => {
+				simulationsFinished++;
 				// DPS information on the sidebar
 				let avgDps = Math.round((simulationEnd.totalDamage / simulationEnd.totalDuration) * 100) / 100
-				localStorage['avgDps'] = avgDps;
-				localStorage['minDps'] = simulationEnd.minDps;
-				localStorage['maxDps'] = simulationEnd.maxDps;
-				localStorage['simulationDuration'] = simulationEnd.length;
-				$("#avg-dps").text(avgDps);
-				$("#min-dps").text(simulationEnd.minDps);
-				$("#max-dps").text(simulationEnd.maxDps);
-				$("#sim-length-result").text(simulationEnd.length + "s");
+				if (itemAmount === 1) {
+					localStorage['avgDps'] = avgDps;
+					localStorage['minDps'] = simulationEnd.minDps;
+					localStorage['maxDps'] = simulationEnd.maxDps;
+					localStorage['simulationDuration'] = simulationEnd.length;
+					$("#avg-dps").text(avgDps);
+					$("#min-dps").text(simulationEnd.minDps);
+					$("#max-dps").text(simulationEnd.maxDps);
+					$("#sim-length-result").text(simulationEnd.length + "s");
+					$("#sim-dps a").text("Simulate");
+				} else if (simulationsFinished == itemAmount) {
+					$("#sim-all-items a").text("Simulate All Items");
+				}
 				savedItemDPS[itemSlot + itemSubslot][simulationEnd.itemID] = avgDps;
 				localStorage.savedItemDPS = JSON.stringify(savedItemDPS);
 
 				// Remove the background coloring (progress bar)
 				$(".btn").css('background', 'none');
-				$("#sim-dps").text("Simulate");
 
 				// Setup the damage breakdown table (showing avg damage, avg cast etc. for each spell)
 				$(".spell-damage-information").remove();
@@ -776,10 +786,24 @@ function simDPS(items) {
 				$("#damage-breakdown-section h3").css("visibility", 'visible');
 			},
 			(simulationUpdate) => {
-				$("#avg-dps").text(simulationUpdate.averageDamage);
-				// Uses the sim button as a progress bar by coloring it based on how many iterations are done with
-				$(".btn").css('background', 'linear-gradient(to right, #9482C9 ' + simulationUpdate.percent + '%, transparent ' + simulationUpdate.percent + '%)');
-				$("#sim-dps").text(Math.round(simulationUpdate.percent) + "%");
+				if (itemAmount === 1) {
+					$("#avg-dps").text(simulationUpdate.averageDamage)
+					// Uses the sim button as a progress bar by coloring it based on how many iterations are done with
+					$("#sim-dps").css('background', 'linear-gradient(to right, #9482C9 ' + simulationUpdate.percent + '%, transparent ' + simulationUpdate.percent + '%)');
+					$("#sim-dps a").text(Math.round(simulationUpdate.percent) + "%");
+				} else {
+					// multiSimInfo tracks the % progress of each simulation and the least progressed simulation's % is used for the multi simulation button/progress bar
+					let smallestValue = 100;
+					for(let i = 0; i < multiSimInfo.length; i++) {
+						if (multiSimInfo[i][0] == simulationUpdate.itemID) {
+							multiSimInfo[i][1] = simulationUpdate.percent;
+						}
+						if (multiSimInfo[i][1] < smallestValue) smallestValue = multiSimInfo[i][1];
+					}
+
+					$("#sim-all-items").css('background', 'linear-gradient(to right, #9482C9 ' + smallestValue + '%, transparent ' + smallestValue + '%)');
+					$("#sim-all-items a").text(smallestValue + "%");
+				}
 				// Set the DPS value on the item in the item selection list
 				$(".item-row[data-wowhead-id='" + simulationUpdate.itemID + "']").find('.item-dps').text(simulationUpdate.averageDamage);
 			}
@@ -790,7 +814,7 @@ function simDPS(items) {
 			"simulation": Simulation.getSettings(),
 			"itemSlot": itemSlot,
 			"itemID": itemID,
-			"itemAmount": items.length
+			"itemAmount": itemAmount
 		});
 	}
 }

@@ -117,7 +117,7 @@ class Simulation {
 			if (this.player.iteration % ~~(this.iterations / 100) == 0) {
 				this.simulationUpdate({
 					"averageDamage": Math.round((totalDamage / totalDuration) * 100) / 100,
-					"percent": (this.player.iteration / this.iterations) * 100,
+					"percent": Math.round((this.player.iteration / this.iterations) * 100),
 					"itemID": this.player.itemID
 				});
 			}
