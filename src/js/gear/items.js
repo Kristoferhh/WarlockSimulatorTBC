@@ -1,5 +1,286 @@
 var items = {
 	"head": {
+		"helmOfArcanePurity": {
+			"name": "Helm of Arcane Purity",
+			"stamina": 51,
+			"intellect": 42,
+			"spirit": 38,
+			"meta": 1,
+			"red": 1,
+			"socketBonus": {
+				"spellPower": 5
+			},
+			"spellPower": 75,
+			"critRating": 30,
+			"id": 34405,
+			"source": "Sunwell Plateau",
+			"phase": 5
+		},
+		"annihilatorHologogs": {
+			"name": "Annihilator Holo-gogs",
+			"stamina": 81,
+			"critRating": 42,
+			"meta": 1,
+			"blue": 1,
+			"socketBonus": {
+				"spellPower": 5
+			},
+			"spellPower": 81,
+			"critRating": 42,
+			"id": 34847,
+			"source": "Engineering",
+			"phase": 5
+		},
+		"hoodOfHexing": {
+			"name": "Hood of Hexing",
+			"stamina": 24,
+			"intellect": 33,
+			"red": 1,
+			"yellow": 1,
+			"blue": 1,
+			"socketBonus": {
+				"spellPower": 5
+			},
+			"spellPower": 56,
+			"hitRating": 31,
+			"critRating": 24,
+			"id": 33453,
+			"source": "Zul'Aman",
+			"phase": 4
+		},
+		"vengefulGladiatorsFelweaveCowl": {
+			"name": "Vengeful Gladiator's Felweave Cowl",
+			"stamina": 67,
+			"intellect": 15,
+			"meta": 1,
+			"red": 1,
+			"socketBonus": {
+				"resilienceRating": 4
+			},
+			"spellPower": 47,
+			"critRating": 22,
+			"resilienceRating": 33,
+			"id": 33683,
+			"source": "Arena",
+			"phase": 4 // confirm
+		},
+		"vengefulGladiatorsDreadweaveHood": {
+			"name": "Vengeful Gladiator's Dreadweave Hood",
+			"stamina": 73,
+			"intellect": 25,
+			"meta": 1,
+			"red": 1,
+			"socketBonus": {
+				"resilienceRating": 4
+			},
+			"spellPower": 42,
+			"resilienceRating": 33,
+			"id": 33677,
+			"source": "Arena",
+			"phase": 4 //confirm
+		},
+		"cowlOfTheIllidariHighlord": {
+			"name": "Cowl of the Illidari Highlord",
+			"stamina": 33,
+			"intellect": 31,
+			"meta": 1,
+			"blue": 1,
+			"socketBonus": {
+				"spellPower": 5
+			},
+			"spellPower": 64,
+			"hitRating": 21,
+			"critRating": 47,
+			"id": 32525,
+			"source": "Black Temple",
+			"phase": 3
+		},
+		"mercilessGladiatorsFelweaveCowl": {
+			"name": "Merciless Gladiator's Felweave Cowl",
+			"stamina": 60,
+			"intellect": 11,
+			"meta": 1,
+			"red": 1,
+			"socketBonus": {
+				"resilienceRating": 4
+			},
+			"spellPower": 42,
+			"critRating": 18,
+			"resilienceRating": 33,
+			"id": 31980,
+			"source": "Arena",
+			"phase": 3 //confirm
+		},
+		"mercilessGladiatorsDreadweaveCowl": {
+			"name": "Merciless Gladiator's Dreadweave Cowl",
+			"stamina": 66,
+			"intellect": 20,
+			"meta": 1,
+			"red": 1,
+			"socketBonus": {
+				"resilienceRating": 4
+			},
+			"spellPower": 36,
+			"resilienceRating": 33,
+			"id": 31974,
+			"source": "Arena",
+			"phase": 3 //confirm
+		},
+		"hoodOfTheMalefic": {
+			"name": "Hood of the Malefic",
+			"stamina": 55,
+			"intellect": 36,
+			"meta": 1,
+			"yellow": 1,
+			"socketBonus": {
+				"spellPower": 5
+			},
+			"spellPower": 63,
+			"hitRating": 16,
+			"critRating": 32,
+			"setId": 670,
+			"id": 31051,
+			"source": "Hyjal Summit",
+			"phase": 3
+		},
+		"manabindersCowl": {
+			"name": "Mana-Binders Cowl",
+			"stamina": 38,
+			"intellect": 29,
+			"meta": 1,
+			"yellow": 1,
+			"socketBonus": {
+				"spellPower": 5
+			},
+			"spellPower": 34,
+			"critRating": 15,
+			"id": 32089,
+			"source": "50 Badge of Justice - G'eras",
+			"phase": 3 // confirm
+		},
+		"destructionHologogs": {
+			"name": "Destruction Holo-gogs",
+			"stamina": 22,
+			"intellect": 24,
+			"meta": 1,
+			"blue": 1,
+			"socketBonus": {
+				"spellPower": 5
+			},
+			"spellPower": 64,
+			"critRating": 29,
+			"id": 32494,
+			"source": "Engineering",
+			"phase": 3
+		},
+		"hoodOfTheCorruptor": {
+			"name": "Hood of the Corruptor",
+			"stamina": 57,
+			"intellect": 33,
+			"meta": 1,
+			"blue": 1,
+			"socketBonus": {
+				"spellPower": 5
+			},
+			"spellPower": 55,
+			"critRating": 31,
+			"setId": 646,
+			"id": 30212,
+			"source": "Serpentshrine Cavern",
+			"phase": 2
+		},
+		"cowlOfTheGrandEngineer": {
+			"name": "Cowl of the Grand Engineer",
+			"stamina": 22,
+			"intellect": 27,
+			"yellow": 2,
+			"blue": 1,
+			"socketBonus": {
+				"spellPower": 5
+			},
+			"spellPower": 53,
+			"hitRating": 16,
+			"critRating": 35,
+			"id": 29986,
+			"source": "The Eye",
+			"phase": 2
+		},
+		"gladiatorsFelweaveCowl": {
+			"name": "Gladiator's Felweave Cowl",
+			"stamina": 54,
+			"intellect": 15,
+			"meta": 1,
+			"red": 1,
+			"socketBonus": {
+				"resilienceRating": 4
+			},
+			"spellPower": 37,
+			"critRating": 18,
+			"resilienceRating": 30,
+			"id": 30187,
+			"source": "Arena",
+			"phase": 2 // confirm
+		},
+		"gladiatorsDreadweaveHood": {
+			"name": "Gladiator's Dreadweave Hood",
+			"stamina": 60,
+			"intellect": 20,
+			"meta": 1,
+			"red": 1,
+			"socketBonus": {
+				"resilienceRating": 4
+			},
+			"spellPower": 32,
+			"resilienceRating": 30,
+			"id": 24553,
+			"source": "Arena",
+			"phase": 2 // confirm
+		},
+		"collarOfChogall": {
+			"name": "Collar of Cho'gall",
+			"stamina": 42,
+			"intellect": 36,
+			"spellPower": 68,
+			"id": 28804,
+			"source": "Gruul's Lair",
+			"phase": 1
+		},
+		"unimindHeaddress": {
+			"name": "Uni-Mind Headdress",
+			"stamina": 31,
+			"intellect": 40,
+			"spellPower": 46,
+			"hitRating": 19,
+			"critRating": 25,
+			"id": 28744,
+			"source": "Karazhan",
+			"phase": 1
+		},
+		"wickedWitchsHat": {
+			"name": "Wicked Witch's Hat",
+			"stamina": 38,
+			"intellect": 37,
+			"spellPower": 43,
+			"critRating": 32,
+			"id": 28586,
+			"source": "Karazhan",
+			"phase": 1
+		},
+		"voidheartCrown": {
+			"name": "Voidheart Crown",
+			"stamina": 39,
+			"intellect": 36,
+			"meta": 1,
+			"red": 1,
+			"socketBonus": {
+				"hitRating": 4
+			},
+			"spellPower": 40,
+			"critRating": 19,
+			"id": 28963,
+			"source": "Karazhan",
+			"phase": 1
+		},
 		"spellstrikeHood": {
 			"name": "Spellstrike Hood",
 			"stamina": 16,
@@ -323,7 +604,7 @@ var items = {
 			"shadowPower": 53,
 			"hitRating": 18,
 			"id": 32590,
-			"source": "Mount Hyjal",
+			"source": "Hyjal Summit",
 			"phase": 3
 		},
 		"sethekkOracleCloak": {
@@ -907,6 +1188,7 @@ var items = {
 			"intellect": 22,
 			"shadowPower": 59,
 			"hitRating": 18,
+			"id": 30050,
 			"source": "Serpentshrine Cavern",
 			"phase": 2
 		},
