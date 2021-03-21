@@ -202,13 +202,6 @@ ul {
 	line-height: 1px;
 }
 
-#damage-breakdown-section {
-	/*width: max(354px, 45%);*/
-	/*width: 50%;*/
-	display: inline-block;
-	vertical-align: top;
-}
-
 /*#dps-result-div {
 	display: inline-block;
 	visibility: hidden;
@@ -228,12 +221,18 @@ ul {
 	text-align: center;
 }
 
+#damage-breakdown-section {
+	/*width: max(354px, 45%);*/
+	/*width: 50%;*/
+	display: none;
+	vertical-align: top;
+}
+
 #damage-breakdown-table {
 	margin-left: 8px;
 	padding: 10px;
 	/*width: 100%;*/
 	display: inline-block;
-	visibility: hidden;
 	border-spacing: 0;
 }
 

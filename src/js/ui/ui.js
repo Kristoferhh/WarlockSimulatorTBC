@@ -529,7 +529,7 @@ $("#sim-all-items").click(function() {
 	$(".item-row").each(function(i) {
 		arr.push($(this).data('wowhead-id'));
 	});
-	$("#damage-breakdown-table").hide();
+	$("#damage-breakdown-section").hide();
 	simDPS(arr);
 });
 
@@ -772,18 +772,21 @@ function simDPS(items) {
 				savedItemDPS[itemSlot + itemSubslot][simulationEnd.itemID] = avgDps;
 				localStorage.savedItemDPS = JSON.stringify(savedItemDPS);
 
-				// Remove the background coloring (progress bar)
-				$(".btn").css('background', 'none');
+				if (simulationsFinished === itemAmount) {
+					// Remove the background coloring (progress bar)
+					$(".btn").css('background', 'none');
 
-				// Setup the damage breakdown table (showing avg damage, avg cast etc. for each spell)
-				$(".spell-damage-information").remove();
-				for (let spell of Object.keys(simulationEnd.damageBreakdown)) {
-					let s = simulationEnd.damageBreakdown[spell];
-					let percentDamage = (~~(((s.damage / simulationEnd.totalDamage) * 100) * 100) / 100).toFixed(2);
-					if (s.damage > 0 || s.casts > 0) $("#damage-breakdown-table tbody").append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td></tr>");
+					if (itemAmount === 1) {
+						// Setup the damage breakdown table (showing avg damage, avg cast etc. for each spell)
+						$(".spell-damage-information").remove();
+						for (let spell of Object.keys(simulationEnd.damageBreakdown)) {
+							let s = simulationEnd.damageBreakdown[spell];
+							let percentDamage = (~~(((s.damage / simulationEnd.totalDamage) * 100) * 100) / 100).toFixed(2);
+							if (s.damage > 0 || s.casts > 0) $("#damage-breakdown-table tbody").append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td></tr>");
+						}
+						$("#damage-breakdown-section").css('display', 'inline-block');
+					}
 				}
-				$("#damage-breakdown-table").css("visibility", "visible");
-				$("#damage-breakdown-section h3").css("visibility", 'visible');
 			},
 			(simulationUpdate) => {
 				if (itemAmount === 1) {
