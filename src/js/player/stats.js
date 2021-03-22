@@ -115,5 +115,4 @@ function refreshCharacterStats() {
 	$("#character-shadow-damage-modifier-val").text(Math.round((shadowModifier * (1 + (0.02 * talents.shadowMastery))) * 100) + "%");
 	$("#character-fire-damage-modifier-val").text(Math.round(fireModifier * 100) + "%");
 	$("#character-mp5-val").text(characterStats.mp5);
-	$("#character-spell-pen-val").text(characterStats.spellPen);
 }

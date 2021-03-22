@@ -1,4 +1,4 @@
-var socketInfo = {
+const socketInfo = {
 	"meta": {
 		"iconName": "UI-EmptySocket-Meta",
 		"gems": ['meta']
@@ -17,7 +17,7 @@ var socketInfo = {
 	}
 }
 //todo add 'phase' to gems
-var gems = {
+const gems = {
 	"meta": {
 		"chaoticSkyfireDiamond": {
 			"name": "Chaotic Skyfire Diamond",

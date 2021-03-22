@@ -263,12 +263,15 @@ ul {
 	font-weight: 700;
 }
 
+#talents-container {
+	display: inline-block;
+	float: right;
+}
+
 #talents-section {
 	width: 618px;
-	display: inline-block;
 	vertical-align: top;
 	position: relative;
-	float: right;
 	margin: 5px 2px 0px 0px;
 }
 

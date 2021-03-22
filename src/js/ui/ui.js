@@ -100,7 +100,7 @@ for (let tree in _talents) {
 				currentCol++;
 			}
 
-			lastRow.append($("<td><div data-points='" + talents[talent] + "' class='talent-icon' data-tree='" + tree + "' id='" + talent + "'><a href='https://classic.wowhead.com/spell=" + t.rankIDs[Math.max(0,talents[talent]-1)] + "'><img src='img/" + t.iconName + ".jpg' alt='" + t.name + "'><span id='" + talent + "-point-amount' class='talent-point-amount'>" + talents[talent] + "</span></a></div></td>"));
+			lastRow.append($("<td><div data-maxpoints='" + t.rankIDs.length + "' data-points='" + talents[talent] + "' class='talent-icon' data-tree='" + tree + "' id='" + talent + "'><a href='https://classic.wowhead.com/spell=" + t.rankIDs[Math.max(0,talents[talent]-1)] + "'><img src='img/" + t.iconName + ".jpg' alt='" + t.name + "'><span id='" + talent + "-point-amount' class='talent-point-amount'>" + talents[talent] + "</span></a></div></td>"));
 			
 			// Check if the text displaying the talent point amount should be hidden or colored (for maxed out talents)
 			let pointAmount = $("#" + talent + "-point-amount")
@@ -114,7 +114,7 @@ for (let tree in _talents) {
 			currentCol++;
 		}
 
-		updateTalentTreeName($("#talent-table-" + tree));
+		updateTalentTreeNames();
 	}
 }
 
@@ -413,6 +413,29 @@ $("#enchant-selection-table tbody").on('click', 'tr', function(event) {
 	return false;
 });
 
+$(".preset-talent-button").click(function() {
+	talents = presetTalents[$(this).data('name')];
+	talentPointsRemaining = totalTalentPoints;
+
+	$(".talent-tree-table").each(function() {
+		$(this).data('points', 0);
+	});
+	$(".talent-icon").each(function() {
+		talents[$(this).attr('id')] = talents[$(this).attr('id')] || 0;
+		let pointAmount = talents[$(this).attr('id')];
+		let talentTableObj = $(this).closest('table');
+
+		$(this).attr('data-points', pointAmount);
+		talentTableObj.data('points', talentTableObj.data('points') + pointAmount);
+		talentPointsRemaining -= pointAmount || 0;
+		updateTalentInformation($(this));
+		updateTalentTreeNames();
+	});
+
+	localStorage.talents = JSON.stringify(talents);
+	refreshCharacterStats();
+});
+
 // Disable the context menu from appearing when the user right clicks a talent
 $(".talent-icon").bind("contextmenu", function(event) {
 	return false;
@@ -445,13 +468,6 @@ $(".talent-icon").mousedown(function(event) {
 				talents[talentName] = Number(talents[talentName]) + 1;
 				talentPointsRemaining--;
 				talentTree.data('points', talentTree.data('points') + 1);
-
-				// todo: move these JS css changes to the css file
-				if (Number(icon.attr('data-points')) == talent.rankIDs.length) {
-					icon.children('a').children('span').css('color', "#ffcd45");	
-				} else {
-					icon.children('a').children('span').css('color', "#7FFF00");
-				}
 			}
 		// right click
 		} else if (event.which === 3) {
@@ -473,7 +489,7 @@ $(".talent-icon").mousedown(function(event) {
 			}
 		}
 
-		updateTalentTreeName(talentTree);
+		updateTalentTreeNames();
 
 		// if these talents are changed then the character stats in the sidebar need to be updated
 		if (talent.name == "Demonic Aegis" || talent.name == "Demonic Embrace" || talent.name == "Devastation" || talent.name == "Backlash" || talent.name == "Fel Stamina" || talent.name == "Fel Intellect" || talent.name == "Master Demonologist" || talent.name == "Soul Link" || talent.name == "Demonic Tactics" || talent.name == "Shadow Mastery") {
@@ -526,6 +542,7 @@ $("#rotation-list div li").click(function() {
 // to-do: don't allow people to start multiple simulations
 $("#sim-dps").click(function() {
 	simDPS([$(".item-row[data-selected='true']").data('wowhead-id')]);
+	return false;
 });
 
 $("#sim-all-items").click(function() {
@@ -535,6 +552,7 @@ $("#sim-all-items").click(function() {
 	});
 	$("#damage-breakdown-section").hide();
 	simDPS(arr);
+	return false;
 });
 
 $(".btn").hover(function() {
@@ -626,6 +644,7 @@ function loadItemsBySlot(itemSlot, subSlot = "") {
 		tableBody.append("<tr data-subslot='" + localStorage['selectedItemSubSlot'] + "' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage['selectedItemSubSlot']] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td><div>" + sockets.join('') + "</div></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (Math.round(i.hasteRating + (i.onUseHasteRating * i.duration / i.cooldown)) || i.hasteRating || Math.round(i.onUseHasteRating * i.duration / i.cooldown) || '') + "</td><td class='item-dps'>" + (savedItemDPS[itemSlot + subSlot][i.id] || '') + "</td></tr>")
 	}
 
+	sortItemTable();
 	loadEnchantsBySlot(itemSlot, subSlot);
 }
 
@@ -670,8 +689,6 @@ function modifyStatsFromItem(itemObj, action) {
 			}
 		}
 	}
-
-	refreshCharacterStats();
 }
 
 // Adds or removes an enchant's stats from the player
@@ -713,8 +730,6 @@ function modifyStatsFromGem(gemID, action) {
 						}
 					}
 				}
-
-				refreshCharacterStats();
 				return;
 			}
 		}
@@ -740,8 +755,6 @@ function modifyStatsFromAura(auraObject, checked) {
 			}
 		}
 	}
-
-	refreshCharacterStats();
 }
 
 function simDPS(items) {
@@ -798,6 +811,8 @@ function simDPS(items) {
 				// Start a new simulation that's waiting in the queue if there are any remaining
 				if (simulationsRunning - simulationsFinished < maxWorkers && simIndex < simulations.length) {
 					simulations[simIndex++].start();
+				} else if (simulationsFinished == simulations.length) {
+					$("#item-selection-table").tablesorter();
 				}
 			},
 			(simulationUpdate) => {
@@ -839,13 +854,15 @@ function simDPS(items) {
 	}
 }
 
-function updateTalentTreeName(talentTreeObj) {
-	let talentTreeName = talentTreeObj.data('name');
-	talentTreeName = talentTreeName.charAt(0).toUpperCase() + talentTreeName.slice(1);
-	if (talentTreeObj.data('points') > 0) {
-		talentTreeName += " (" + talentTreeObj.data('points') + ")";
-	}
-	$(".talent-tree-name h3[data-name='" + talentTreeObj.data('name') + "']").text(talentTreeName);
+function updateTalentTreeNames() {
+	$(".talent-tree-table").each(function() {
+		let talentTreeName = $(this).data('name');
+		talentTreeName = talentTreeName.charAt(0).toUpperCase() + talentTreeName.slice(1);
+		if ($(this).data('points') > 0) {
+			talentTreeName += " (" + $(this).data('points') + ")";
+		}
+		$(".talent-tree-name h3[data-name='" + $(this).data('name') + "']").text(talentTreeName);
+	});
 }
 
 function updateTalentInformation(talentUiObj) {
@@ -859,6 +876,13 @@ function updateTalentInformation(talentUiObj) {
 	}
 	talentUiObj.children('a').attr('href', 'https://classic.wowhead.com/spell=' + _talents[talentUiObj.data('tree')][talentUiObj.attr('id')].rankIDs[Math.max(0,talents[talentUiObj.attr('id')]-1)]);
 	//$WowheadPower.refreshLinks();
+
+	// todo: move these JS css changes to the css file
+	if (Number(talentUiObj.attr('data-points')) == Number(talentUiObj.attr('data-maxpoints'))) {
+		talentUiObj.children('a').children('span').css('color', "#ffcd45");	
+	} else {
+		talentUiObj.children('a').children('span').css('color', "#7FFF00");
+	}
 }
 
 function clearTalentTree(talentTreeName) {
@@ -870,7 +894,11 @@ function clearTalentTree(talentTreeName) {
 			$("#talent-table-" + talentTreeName).data('points', 0);
 			updateTalentInformation($("#" + talent));
 		}
-		updateTalentTreeName($("#talent-table-" + talentTreeName));
+		updateTalentTreeNames();
 		localStorage.talents = JSON.stringify(talents);
 	}
+}
+
+function sortItemTable() {
+	$("#item-selection-table").tablesorter();
 }

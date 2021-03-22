@@ -1,4 +1,4 @@
-var enchants = {
+const enchants = {
 	"head": {
 		"glyphOfPower": {
 			"name": "Glyph of Power",

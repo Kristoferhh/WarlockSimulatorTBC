@@ -12,7 +12,6 @@ class SimWorker {
 	}
 
 	start() {
-		//alert(JSON.stringify(this.workerParams));
 		this.worker.postMessage(this.workerParams);
 	}
 }

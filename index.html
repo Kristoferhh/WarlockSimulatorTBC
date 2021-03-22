@@ -8,13 +8,10 @@
 	<link rel="stylesheet" type="text/css" href="src/css/style.css">
 	<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
 	<script type="text/javascript" src="dist/js/libs/jquery-3.5.1.min.js"></script>
-	<!--<script type="text/javascript" src="dist/js/libs/jquery.tablesorter.min.js"></script>
-	<script type="text/javascript" src="dist/js/libs/jquery.tablesorter.widgets.min.js"></script>-->
+	<script type="text/javascript" src="dist/js/libs/jquery.tablesorter.min.js"></script>
 	<script>const whTooltips = {/*droppedby: false, dropchance: false, */colorLinks: false, iconizeLinks: false, renameLinks: false};</script>
 	<script src="https://wow.zamimg.com/widgets/power.js"></script>
 	<script src="https://wow.zamimg.com/js/basic.js?35"></script>
-	<!--<script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>-->
-	<!--<script type="text/javascript" src="dist/js/libs/cssrefresh.js"></script>-->
 </head>
 <body>
 <div id="sidebar">
@@ -101,11 +98,11 @@
 			</li>
 			<li>
 				<span class="settings-left">Min Fight Length</span>
-				<input value="120" type="number" name="min-fight-length" class="settings-right">
+				<input value="150" type="number" name="min-fight-length" class="settings-right">
 			</li>
 			<li>
 				<span class="settings-left">Max Fight Length</span>
-				<input value="600" type="number" name="max-fight-length" class="settings-right">
+				<input value="210" type="number" name="max-fight-length" class="settings-right">
 			</li>
 			<li>
 				<span class="settings-left">Target Level</span>
@@ -143,7 +140,7 @@
 	</div>
 </div>
 <div id="main">
-	<div style='min-height: 460px;'>
+	<div style='min-height: 500px;'>
 		<!-- BUFFS & DEBUFFS-->
 		<section id="buffs-and-debuffs-section">
 			<!-- RAID BUFFS -->
@@ -166,20 +163,17 @@
 		</section>
 
 		<!-- TALENTS -->
-		<section id="talents-section"></section>
+		<div id="talents-container">
+			<button class="preset-talent-button" data-name="affliction">Affliction</button>
+			<button class="preset-talent-button" data-name="destructionShadow">Destruction (Shadow)</button>
+			<button class="preset-talent-button" data-name="destructionFire">Destruction (Fire)</button>
+			<button class="preset-talent-button" data-name="demonology">Demonology (pets not supported yet)</button>
+			<section id="talents-section"></section>
+		</div>
 
 		<!-- SIM RESULTS -->
 		<section id="damage-breakdown-section">
 			<table id="damage-breakdown-table" class="tablesorter">
-				<colgroup>
-					<col>
-					<col>
-					<col>
-					<col>
-					<col>
-					<col>
-					<col>
-				</colgroup>
 				<thead>
 					<th>Name</th>
 					<th>Damage</th>
@@ -218,7 +212,7 @@
 			<li data-slot="trinket" data-subslot='2'>Trinket 2</li>
 			<li data-slot="wand">Wand</li>
 		</ul>
-		<table id="item-selection-table" data-type="mainhand">
+		<table id="item-selection-table" data-type="mainhand" class="tablesorter" data-sortlist='[[11,1]]'>
 			<colgroup id="item-selection-colgroup">
 				<col style="width: 17%">
 				<col style="width: 3%">
@@ -298,7 +292,8 @@
 <script type="text/javascript" src="src/js/gear/items.js"></script>
 <script type="text/javascript" src="src/js/gear/sets.js"></script>
 <script type="text/javascript" src="src/js/gear/enchants.js"></script>
-<script type="text/javascript" src="src/js/player/talents.js"></script>
+<script type="text/javascript" src="src/js/player/talents/talents.js"></script>
+<script type="text/javascript" src="src/js/player/talents/presetTalents.js"></script>
 <script type="text/javascript" src="src/js/classes/spell.js"></script>
 <script type="text/javascript" src="src/js/classes/aura.js"></script>
 <script type="text/javascript" src="src/js/classes/damageOverTime.js"></script>

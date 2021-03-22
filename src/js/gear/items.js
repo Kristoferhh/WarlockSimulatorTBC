@@ -1,4 +1,4 @@
-var items = {
+const items = {
 	"head": {
 		"helmOfArcanePurity": {
 			"name": "Helm of Arcane Purity",
@@ -376,6 +376,18 @@ var items = {
 			"id": 28183,
 			"source": "Steamvaults Quest",
 			"phase": 1,
+		},
+		"plagueheartCirclet": {
+			"name": "Plagueheart Circlet",
+			"stamina": 28,
+			"intellect": 25,
+			"spellPower": 33,
+			"critRating": 28,
+			"hitRating": 8,
+			"setId": 529,
+			"id": 22506,
+			"source": "Naxxramas",
+			"phase": 0
 		}
 	},
 	"neck": {
@@ -594,6 +606,17 @@ var items = {
 			"id": 27816,
 			"source": "Heroic Mana-Tombs",
 			"phase": 1
+		},
+		"plagueheartShoulderpads": {
+			"name": "Plagueheart Shoulderpads",
+			"stamina": 22,
+			"intellect": 12,
+			"spellPower": 36,
+			"hitRating": 8,
+			"setId": 529,
+			"id": 22507,
+			"source": "Naxxramas",
+			"phase": 0
 		}
 	},
 	"back": {
@@ -753,6 +776,18 @@ var items = {
 			"id": 28229,
 			"source": "Botanica",
 			"phase": 1,
+		},
+		"plagueheartRobe": {
+			"name": "Plagueheart Robe",
+			"stamina": 27,
+			"intellect": 22,
+			"spellPower": 51,
+			"hitRating": 8,
+			"critRating": 14,
+			"setId": 529,
+			"id": 22504,
+			"source": "Naxxramas",
+			"phase": 0
 		}
 	},
 	"bracer": {
@@ -861,6 +896,16 @@ var items = {
 			"id": 28174,
 			"source": "Auchindon Quest",
 			"phase": 1
+		},
+		"plagueheartBindings": {
+			"name": "Plagueheart Bindings",
+			"stamina": 23,
+			"intellect": 14,
+			"spellPower": 23,
+			"setId": 529,
+			"id": 22511,
+			"source": "Naxxramas",
+			"phase": 1
 		}
 	},
 	"gloves": {
@@ -946,6 +991,17 @@ var items = {
 			"id": 30930,
 			"source": "Shadowmoon Valley Quest",
 			"phase": 1,
+		},
+		"plagueheartGloves": {
+			"name": "Plagueheart Gloves",
+			"stamina": 25,
+			"intellect": 17,
+			"spellPower": 26,
+			"intellect": 14,
+			"setId": 529,
+			"id": 22509,
+			"source": "Naxxramas",
+			"phase": 1
 		}
 	},
 	"belt": {
@@ -1071,6 +1127,17 @@ var items = {
 			"id": 22730,
 			"source": "AQ40",
 			"phase": 0
+		},
+		"plagueheartBelt": {
+			"name": "Plagueheart Belt",
+			"stamina": 23,
+			"intellect": 12,
+			"spellPower": 34,
+			"critRating": 14,
+			"setId": 529,
+			"id": 22510,
+			"source": "Naxxramas",
+			"phase": 0
 		}
 	},
 	"legs": {
@@ -1177,6 +1244,18 @@ var items = {
 			"spellPower": 44,
 			"critRating": 28,
 			"id": 23070,
+			"source": "Naxxramas",
+			"phase": 1
+		},
+		"plagueheartLeggings": {
+			"name": "Plagueheart Leggings",
+			"stamina": 30,
+			"intellect": 25,
+			"spellPower": 37,
+			"critRating": 14,
+			"spellPen": 10,
+			"setId": 529,
+			"id": 22505,
 			"source": "Naxxramas",
 			"phase": 1
 		}
@@ -1291,6 +1370,17 @@ var items = {
 			"id": 25957,
 			"source": "Mana-Tombs",
 			"phase": 1,
+		},
+		"plagueheartSandals": {
+			"name": "Plagueheart Sandals",
+			"stamina": 20,
+			"intellect": 16,
+			"spellPower": 32,
+			"critRating": 14,
+			"setId": 529,
+			"id": 22508,
+			"source": "Naxxramas",
+			"phase": 0
 		}
 	},
 	"ring": {
@@ -1389,6 +1479,15 @@ var items = {
 			"hitRating": 8,
 			"critRating": 14,
 			"id": 23025,
+			"source": "Naxxramas",
+			"phase": 0
+		},
+		"plagueheartRing": {
+			"name": "Plagueheart Ring",
+			"stamina": 24,
+			"spellPower": 29,
+			"setId": 529,
+			"id": 23063,
 			"source": "Naxxramas",
 			"phase": 0
 		}
@@ -1749,7 +1848,7 @@ var items = {
 			"name": "Atiesh, Greatstaff of the Guardian",
 			"stamina": 30,
 			"intellect": 29,
-			"spellPower": 150,
+			"spellPower": 183,
 			"critRating": 28,
 			"id": 22630,
 			"source": "Naxxramas",

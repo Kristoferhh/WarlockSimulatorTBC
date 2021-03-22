@@ -45,7 +45,7 @@ var _spellSelection = {
 		}
 	},
 	"curse": {
-		"header": "Curses",
+		"header": "Curse",
 		"spells": {
 			"curseOfRecklessness": {
 				"name": "Curse of Recklessness",
