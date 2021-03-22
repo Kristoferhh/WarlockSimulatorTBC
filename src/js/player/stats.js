@@ -75,7 +75,7 @@ var raceStats = {
 function refreshCharacterStats() {
 	let staminaModifier = characterStats.staminaModifier * (1 + (0.03 * talents.demonicEmbrace));
 	let critRating = characterStats.critRating + ((characterStats.intellect * characterStats.intellectModifier) * critPerInt);
-	let critChance = Math.round((critRating / critRatingPerPercent + baseCritChancePercent) * 100) / 100 + talents.devastation + talents.backlash;
+	let critChance = Math.round((critRating / critRatingPerPercent + baseCritChancePercent) * 100) / 100 + talents.devastation + talents.backlash + talents.demonicTactics;
 	if (auras.moonkinAura) {
 		critChance += 5;
 	}
