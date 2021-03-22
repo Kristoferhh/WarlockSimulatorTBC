@@ -8,6 +8,7 @@ class Player {
 			"gems": selectedGems,
 			"talents": talents,
 			"stats": characterStats,
+			"simSettings": settings,
 			"enemy": {
 				"level": $("input[name='target-level']").val(),
 				"shadowResist": $("input[name='target-shadow-resistance']").val(),
@@ -19,6 +20,7 @@ class Player {
 	}
 
 	constructor(settings = Player.getSettings(), customItemSlot = null, customItemID = null) {
+		console.clear();
 		this.stats = JSON.parse(JSON.stringify(settings.stats)); // Create a deep-copy of the character's stats since we need to modify the values.
 		this.stats.manaCostModifier = 1;
 		this.enemy = settings.enemy;
@@ -151,17 +153,24 @@ class Player {
 			this.stats.spellPower += (100 * (1 + 0.1 * this.talents.demonicAegis));
 		}
 		// Add spell power from Improved Divine Spirit
-		//if (settings.auras.prayerOfSpirit) 
+		if (settings.auras.prayerOfSpirit && settings.simSettings.improvedDivineSpirit) this.stats.spellPower += (this.stats.spirit * this.stats.spiritModifier * (0 + ((Number(settings.simSettings.improvedDivineSpirit) || 0) / 10)));
+
+		// Add % dmg modifiers from Curse of the Elements + Malediction
+		if (settings.auras.curseOfTheElements) {
+			this.stats.shadowModifier *= 1.1 + (0.01 * (settings.simSettings.improvedCurseOfTheElements || 0));
+			this.stats.fireModifier *= 1.1 + (0.01 * (settings.simSettings.improvedCurseOfTheElements || 0));
+		}
+
+		// Add stamina from blood pact (if stamina is ever needed for the sim)
 
 		// Records all information about damage done for each spell such as crit %, miss %, average damage per cast etc.
 		this.damageBreakdown = {};
 
-		console.clear();
 		console.log("Health: " + Math.round(this.stats.health));
 		console.log("Mana: " + Math.round(this.stats.maxMana));
 		console.log("Stamina: " + Math.round(this.stats.stamina * this.stats.staminaModifier));
 		console.log("Intellect: " + Math.round(this.stats.intellect * this.stats.intellectModifier));
-		console.log("Spell Power: " + this.stats.spellPower);
+		console.log("Spell Power: " + Math.round(this.stats.spellPower));
 		console.log("Shadow Power: " + this.stats.shadowPower);
 		console.log("Fire Power: " + this.stats.firePower);
 		console.log("Crit Chance: " + Math.round((this.stats.critChance / this.stats.critChanceMultiplier) * 100) / 100 + "%");

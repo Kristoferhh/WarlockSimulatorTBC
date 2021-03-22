@@ -116,14 +116,7 @@ var _auras = {
 	"debuffs": {
 		"curseOfTheElements": {
 			"name": "Curse of the Elements",
-			"fireModifier": 1.1,
-			"shadowModifier": 1.1,
-			"arcaneModifier": 1.1,
-			"frostModifier": 1.1,
-			"fireResistReduction": 88,
-			"shadowResistReduction": 88,
-			"arcaneResistReduction": 88,
-			"frostResistReduction": 88,
+			"spellPen": 88,
 			"iconName": "spell_shadow_chilltouch",
 			"id": 11722
 		},

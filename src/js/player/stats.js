@@ -105,6 +105,10 @@ function refreshCharacterStats() {
 			fireModifier *= 1.15;
 		}
 	}
+	if (auras.curseOfTheElements) {
+		shadowModifier *= 1.1 + (0.01 * $("#improvedCurseOfTheElements").val());
+		fireModifier *= 1.1 + (0.01 * $("#improvedCurseOfTheElements").val());
+	}
 
 	let spellPower = characterStats.spellPower;
 	if (auras.felArmor) spellPower += 100 * (1 + 0.1 * talents.demonicAegis);
