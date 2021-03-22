@@ -19,6 +19,23 @@ var _auras = {
 			"iconName": "spell_holy_greaterblessingofwisdom",
 			"id": 25918,
 		},
+		"manaSpringTotem": {
+			"name": "Mana Spring Totem",
+			"mp5": 50,
+			"iconName": "spell_nature_manaregentotem",
+			"id": 10497
+		},
+		"wrathOfAirTotem": {
+			"name": "Wrath of Air Totem",
+			"spellPower": 101,
+			"iconName": "spell_nature_slowingtotem",
+			"id": 3738
+		},
+		"totemOfWrath": {
+			"name": "Totem of Wrath",
+			"iconName": "spell_fire_totemofwrath",
+			"id": 30706
+		},
 		"markOfTheWild": {
 			"name": "Mark of the Wild",
 			"stamina": 14,

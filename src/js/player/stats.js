@@ -79,20 +79,16 @@ function refreshCharacterStats() {
 	if ($("#petChoice select").children("option:selected").val() === "imp" && (talents.demonicSacrifice === 0 || (talents.masterDemonologist > 0 && $("#sacrificePet").children("option:selected").val() === "no"))) {
 		stamina += 70 * (1 + 0.1 * talents.improvedImp);
 	}
+
 	let critRating = characterStats.critRating + ((characterStats.intellect * characterStats.intellectModifier) * critPerInt);
 	let critChance = Math.round((critRating / critRatingPerPercent + baseCritChancePercent) * 100) / 100 + talents.devastation + talents.backlash + talents.demonicTactics;
-	if (auras.moonkinAura) {
-		critChance += 5;
-	}
-	if (auras.judgementOfTheCrusader) {
-		critChance += 3;
-	}
+	if (auras.moonkinAura) critChance += 5;
+	if (auras.judgementOfTheCrusader) critChance += 3;
+	if (auras.totemOfWrath) critChance += 3;
 	critChance = critChance.toFixed(2);
 
 	let hitChance = Math.round((characterStats.hitRating / hitRatingPerPercent) * 100) / 100;
-	if (auras.inspiringPresence) {
-		hitChance += 1;
-	}
+	if (auras.inspiringPresence) hitChance += 1;
 	hitChance = hitChance.toFixed(2);
 
 	let shadowModifier = characterStats.shadowModifier;
