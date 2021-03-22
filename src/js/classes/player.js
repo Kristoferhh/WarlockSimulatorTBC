@@ -28,8 +28,8 @@ class Player {
 		this.itemID = customItemID || settings.items[settings.selectedItemSlot] || 0;
 		this.sets = settings.sets;
 		this.selectedAuras = settings.auras;
-		this.enemy.shadowResist = Math.max(this.enemy.shadowResist, (this.enemy.level - this.level) * 8);
-		this.enemy.fireResist = Math.max(this.enemy.fireResist, (this.enemy.level - this.level) * 8);
+		this.enemy.shadowResist = Math.max(this.enemy.shadowResist - this.stats.spellPen, (this.enemy.level - this.level) * 8, 0);
+		this.enemy.fireResist = Math.max(this.enemy.fireResist - this.stats.spellPen, (this.enemy.level - this.level) * 8, 0);
 
 		// If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
 		if (customItemSlot && customItemID && customItemID !== settings.items[customItemSlot]) {
