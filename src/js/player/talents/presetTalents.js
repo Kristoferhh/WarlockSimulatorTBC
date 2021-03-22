@@ -85,10 +85,11 @@ const presetTalents = {
 		"soulLink": 1,
 		"demonicKnowledge": 3,
 		"demonicTactics": 5,
-		"felguard": 1,
+		"summonFelguard": 1,
 		"improvedShadowBolt": 5,
 		"bane": 5,
-		"devastation": 5
+		"devastation": 5,
+		"shadowburn": 1
 	},
 	"demonologyNoFelguard": {
 		"improvedCorruption": 1,
