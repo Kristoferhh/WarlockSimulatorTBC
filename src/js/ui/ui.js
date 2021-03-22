@@ -132,9 +132,12 @@ $(".aura").click(function() {
 	$(this).attr('data-checked', !checkedVal);
 	auras[$(this).attr('name')] = !checkedVal;
 
+	if (auraName == "curseOfTheElements" || auraName == "prayerOfSpirit" || auraName == "powerInfusion" || auraName == "powerOfTheGuardianWarlock" || auraName == "powerOfTheGuardianMage" || auraName == "drumsOfBattle" || auraName == "drumsOfWar" || auraName == "drumsOfRestoration" || auraName == "bloodlust") {
+		updateAdditionalSettingsVisibility();
+	}
 	modifyStatsFromAura(_auras[auraType][auraName], checkedVal);
-
 	localStorage.auras = JSON.stringify(auras);
+	refreshCharacterStats();
 	return false;
 });
 
@@ -434,6 +437,7 @@ $(".preset-talent-button").click(function() {
 
 	localStorage.talents = JSON.stringify(talents);
 	refreshCharacterStats();
+	updateAdditionalSettingsVisibility();
 });
 
 // Disable the context menu from appearing when the user right clicks a talent
@@ -490,12 +494,12 @@ $(".talent-icon").mousedown(function(event) {
 		}
 
 		updateTalentTreeNames();
-
-		// if these talents are changed then the character stats in the sidebar need to be updated
-		if (talent.name == "Demonic Aegis" || talent.name == "Demonic Embrace" || talent.name == "Devastation" || talent.name == "Backlash" || talent.name == "Fel Stamina" || talent.name == "Fel Intellect" || talent.name == "Master Demonologist" || talent.name == "Soul Link" || talent.name == "Demonic Tactics" || talent.name == "Shadow Mastery") {
+		if (talent.name == "Conflagrate" || talent.name == "Master Demonologist" || talent.name == "Demonic Sacrifice" || talent.name == "Summon Felguard" || talent.name == "Dark Pact") {
+			updateAdditionalSettingsVisibility();
+		}
+		if (talent.name == "Improved Imp" || talent.name == "Demonic Aegis" || talent.name == "Demonic Embrace" || talent.name == "Devastation" || talent.name == "Backlash" || talent.name == "Fel Stamina" || talent.name == "Fel Intellect" || talent.name == "Master Demonologist" || talent.name == "Soul Link" || talent.name == "Demonic Tactics" || talent.name == "Shadow Mastery") {
 			refreshCharacterStats();
 		}
-
 		updateTalentInformation(icon);
 	}
 
@@ -537,6 +541,10 @@ $("#rotation-list div li").click(function() {
 	localStorage.rotation = JSON.stringify(rotation);
 	if (refreshStats) refreshCharacterStats();
 	return false;
+});
+
+$("#auraAndTalentSettings select").change(function() {
+	refreshCharacterStats();
 });
 
 // to-do: don't allow people to start multiple simulations
@@ -897,8 +905,91 @@ function clearTalentTree(talentTreeName) {
 		updateTalentTreeNames();
 		localStorage.talents = JSON.stringify(talents);
 	}
+
+	refreshCharacterStats();
+	updateAdditionalSettingsVisibility();
 }
 
 function sortItemTable() {
 	$("#item-selection-table").tablesorter();
+}
+
+function updateAdditionalSettingsVisibility() {
+	if (talents.demonicSacrifice === 1 && (talents.masterDemonologist > 0 || talents.darkPact > 0)) {
+		$("#sacrificePet").show();
+	} else {
+		$("#sacrificePet").hide();
+	}
+
+	if (talents.demonicSacrifice === 0 || talents.masterDemonologist > 0 || talents.darkPact > 0) {
+		$("#petChoice").show();
+	} else {
+		$("#petChoice").hide();
+	}
+
+	if (talents.summonFelguard === 0) {
+		$("#petChoice option[value='felguard']").hide();
+	} else {
+		$("#petChoice option[value='felguard']").show();
+	}
+
+	if (auras.curseOfTheElements) {
+		$("#improvedCurseOfTheElements").show();
+	} else {
+		$("#improvedCurseOfTheElements").hide();
+	}
+
+	if (auras.prayerOfSpirit) {
+		$("#improvedDivineSpirit").show();
+	} else {
+		$("#improvedDivineSpirit").hide();
+	}
+
+	if (talents.conflagrate > 0) {
+		$("#conflagrateUse").show();
+	} else {
+		$("#conflagrateUse").hide();
+	}
+
+	if (auras.powerInfusion) {
+		$("#powerInfusionAmount").show();
+	} else {
+		$("#powerInfusionAmount").hide();
+	}
+
+	if (auras.powerOfTheGuardianMage) {
+		$("#mageAtieshAmount").show();
+	} else {
+		$("#mageAtieshAmount").hide();
+	}
+
+	if (auras.powerOfTheGuardianWarlock) {
+		$("#warlockAtieshAmount").show();
+	} else {
+		$("#warlockAtieshAmount").hide();
+	}
+
+	if (auras.drumsOfBattle) {
+		$("#drumsOfBattleAmount").show();
+	} else {
+		$("#drumsOfBattleAmount").hide();
+	}
+
+	if (auras.drumsOfWar) {
+		$("#drumsOfWarAmount").show();
+	} else {
+		$("#drumsOfWarAmount").hide();
+	}
+
+	if (auras.drumsOfRestoration) {
+		$("#drumsOfRestorationAmount").show();
+	} else {
+		$("#drumsOfRestorationAmount").hide();
+	}
+
+	if (auras.bloodlust) {
+		$("#bloodlustAmount").show();
+	} else {
+		$("#bloodlustAmount").hide();
+	}
 }

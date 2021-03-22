@@ -162,13 +162,142 @@
 			<ul id="rotation-list"></ul>
 		</section>
 
+		<!-- Additional settings related to auras and talents -->
+		<section id="auraAndTalentSettings">
+			<div id="petChoice">
+				<label class="settings-left" for="petChoice">Pet</label>
+				<select class="settings-right" name="petChoice">
+					<option value="imp">Imp</option>
+					<option value="succubus">Succubus</option>
+					<option value="felguard">Felguard</option>
+				</select>
+			</div>
+
+			<div id="sacrificePet">
+				<label class="settings-left" for="sacrificePet">Sacrifice pet?</label>
+				<select class="settings-right" name="sacrificePet">
+					<option value="no">No</option>
+					<option value="yes">Yes</option>
+				</select>
+			</div>
+
+			<div id="improvedCurseOfTheElements">
+				<label class="settings-left">Malediction?</label>
+				<select class="settings-right" name="improvedCurseOfTheElements">
+					<option value='0'>No</option>
+					<option value='1'>1/3</option>
+					<option value='2'>2/3</option>
+					<option value='3'>3/3</option>
+				</select>
+			</div>
+
+			<div id="powerInfusionAmount">
+				<label class="settings-left" for="powerInfusionAmount">PI amount</label>
+				<select class="settings-right" name="powerInfusionAmount">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>
+					<option value="11">11</option>
+					<option value="12">12</option>
+				</select>
+			</div>
+
+			<div id="bloodlustAmount">
+				<label class="settings-left" for="bloodlustAmount">Bloodlust amount</label>
+				<select class="settings-right" name="bloodlustAmount">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+				</select>
+			</div>
+
+			<div id="improvedDivineSpirit">
+				<label class="settings-left" for="improvedDivineSpirit">Improved Divine Spirit?</label>
+				<select class="settings-right" name="improvedDivineSpirit">
+					<option value="0">No</option>
+					<option value="1">1/2</option>
+					<option value="2">2/2</option>
+				</select>
+			</div>
+
+			<div id="conflagrateUse">
+				<label class="settings-left" for="conflagrateUse">When to use Conflagrate?</label>
+				<select class="settings-right" name="conflagrateUse">
+					<option value="onCooldown">As soon as it's ready</option>
+					<option value="immolateAlmostOut">When Immolate has almost run out</option>
+				</select>
+			</div>
+
+			<div id="drumsOfWarAmount">
+				<label class="settings-left" for="drumsOfWarAmount">Drums of War amount</label>
+				<select class="settings-right" name="drumsOfWarAmount">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value='5'>5</option>
+				</select>
+			</div>
+
+			<div id="mageAtieshAmount">
+				<label class="settings-left" for="mageAtieshAmount">Mage Atiesh amount</label>
+				<select class="settings-right" name="mageAtieshAmount">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+				</select>
+			</div>
+
+			<div id="drumsOfBattleAmount">
+				<label class="settings-left" for="drumsOfBattleAmount">Drums of Battle amount</label>
+				<select class="settings-right" name="drumsOfBattleAmount">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+			</div>
+
+			<div id="warlockAtieshAmount">
+				<label class="settings-left" for="warlockAtieshAmount">Warlock Atiesh amount</label>
+				<select class="settings-right" name="warlockAtieshAmount">
+					<option disabled="disabled" value="0">>> Do not count your own Atiesh <<</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+				</select>
+			</div>
+
+			<div id="drumsOfRestorationAmount">
+				<label class="settings-left" for="drumsOfRestorationAmount">Drums of Restoration amount</label>
+				<select class="settings-right" name="drumsOfRestorationAmount">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+			</div>
+		</section>
+
 		<!-- TALENTS -->
 		<div id="talents-container">
-			<button class="preset-talent-button" data-name="affliction">Affliction</button>
-			<button class="preset-talent-button" data-name="destructionShadow">Destruction (Shadow)</button>
-			<button class="preset-talent-button" data-name="destructionFire">Destruction (Fire)</button>
-			<button class="preset-talent-button" data-name="demonology">Demonology</button>
-			<button class="preset-talent-button" data-name="demonologyNoFelguard">Demonology (No Felguard)</button>
+			<button class="preset-talent-button" data-name="affliction">Affliction</button><!--
+			--><button class="preset-talent-button" data-name="destructionShadow">Destruction (Shadow)</button><!--
+			--><button class="preset-talent-button" data-name="destructionFire">Destruction (Fire)</button><!--
+			--><button class="preset-talent-button" data-name="demonology">Demonology</button><!--
+			--><button class="preset-talent-button" data-name="demonologyNoFelguard">Demonology (No Felguard)</button>
 			<section id="talents-section"></section>
 		</div>
 

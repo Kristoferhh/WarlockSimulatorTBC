@@ -74,10 +74,18 @@ var raceStats = {
 // Refreshes the player's values in the sidebar when changing e.g. gear, consumables, or buffs.
 function refreshCharacterStats() {
 	let staminaModifier = characterStats.staminaModifier * (1 + (0.03 * talents.demonicEmbrace));
+	let stamina = characterStats.stamina;
+	// Blood Pact
+	if ($("#petChoice select").children("option:selected").val() === "imp" && (talents.demonicSacrifice === 0 || (talents.masterDemonologist > 0 && $("#sacrificePet").children("option:selected").val() === "no"))) {
+		stamina += 70 * (1 + 0.1 * talents.improvedImp);
+	}
 	let critRating = characterStats.critRating + ((characterStats.intellect * characterStats.intellectModifier) * critPerInt);
 	let critChance = Math.round((critRating / critRatingPerPercent + baseCritChancePercent) * 100) / 100 + talents.devastation + talents.backlash + talents.demonicTactics;
 	if (auras.moonkinAura) {
 		critChance += 5;
+	}
+	if (auras.judgementOfTheCrusader) {
+		critChance += 3;
 	}
 	critChance = critChance.toFixed(2);
 
@@ -89,7 +97,7 @@ function refreshCharacterStats() {
 
 	let shadowModifier = characterStats.shadowModifier;
 	let fireModifier = characterStats.fireModifier;
-	if (talents.demonicSacrifice === 1) {
+	if (talents.demonicSacrifice === 1 && (talents.masterDemonologist === 0 || $("#sacrificePet").children('option:selected').val() === 'yes')) {
 		if (rotation.filler.shadowBolt) {
 			shadowModifier *= 1.15;
 		} else if (rotation.filler.incinerate || rotation.filler.searingPain) {
@@ -102,9 +110,9 @@ function refreshCharacterStats() {
 		spellPower += 100 * (1 + 0.1 * talents.demonicAegis);
 	}
 
-	$("#character-health-val").text(Math.round((characterStats.health + (characterStats.stamina * staminaModifier) * healthPerStamina) * (1 + (0.01 * talents.felStamina))));
+	$("#character-health-val").text(Math.round((characterStats.health + (stamina * staminaModifier) * healthPerStamina) * (1 + (0.01 * talents.felStamina))));
 	$("#character-mana-val").text(Math.round((characterStats.mana + (characterStats.intellect * characterStats.intellectModifier) * manaPerInt) * (1 + (0.01 * talents.felIntellect))));
-	$("#character-stamina-val").text(Math.round(characterStats.stamina * staminaModifier));
+	$("#character-stamina-val").text(Math.round(stamina * staminaModifier));
 	$("#character-intellect-val").text(Math.round(characterStats.intellect * characterStats.intellectModifier));
 	$("#character-spell-power-val").text(spellPower);
 	$("#character-shadow-power-val").text(characterStats.shadowPower + " (" + (characterStats.shadowPower + spellPower) + ")");
