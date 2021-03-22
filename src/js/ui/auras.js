@@ -46,7 +46,7 @@ var _auras = {
 		"inspiringPresence": {
 			"name": "Inspiring Presence",
 			"iconName": "inv_staff_23",
-			"id": 0 // fix
+			"id": 28878
 		},
 		"moonkinAura": {
 			"name": "Moonkin Aura",
@@ -73,14 +73,22 @@ var _auras = {
 		"drumsOfBattle": {
 			"name": "Drums of Battle",
 			"iconName": "inv_misc_drum_02",
+			"id": 35476
 		},
 		"drumsOfWar": {
 			"name": "Drums of War",
-			"iconName": "inv_misc_drum_03"
+			"iconName": "inv_misc_drum_03",
+			"id": 35475
+		},
+		"drumsOfRestoration": {
+			"name": "Drums of Restoration",
+			"iconName": "inv_misc_drum_07",
+			"id": 35478
 		},
 		"bloodlust": {
 			"name": "Bloodlust",
 			"iconName": "spell_nature_bloodlust",
+			"id": 2825
 		}
 	},
 	"debuffs": {
@@ -116,11 +124,11 @@ var _auras = {
 			"arcaneModifier": 1.05,
 			"frostModifier": 1.05,
 			"natureModifier": 1.05,
-			"iconName": "Spell_shadow_misery" // missing wowhead id
+			"iconName": "Spell_shadow_misery",
+			"id": 33200
 		},
 		"judgementOfTheCrusader": {
 			"name": "Judgement of the Crusader",
-			"critRating": 66.3, // double check this
 			"iconName": "spell_holy_holysmite",
 			"id": 21183
 		}
