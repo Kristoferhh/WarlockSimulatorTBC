@@ -32,6 +32,8 @@ class Simulation {
 		if (this.player.auras.shadowFlameshadow && this.player.auras.shadowFlameshadow.active && this.player.auras.shadowFlameshadow.durationRemaining < time) time = this.player.auras.shadowFlameshadow.durationRemaining;
 		if (this.player.auras.shadowFlamefire && this.player.auras.shadowFlamefire.active && this.player.auras.shadowFlamefire.durationRemaining < time) time = this.player.auras.shadowFlamefire.durationRemaining;
 		if (this.player.auras.spellstrikeProc && this.player.auras.spellstrikeProc.active && this.player.auras.spellstrikeProc.durationRemaining < time) time = this.player.auras.spellstrikeProc.durationRemaining;
+		if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.cooldownRemaining > 0 && this.player.auras.powerInfusion.cooldownRemaining < time) time = this.player.auras.powerInfusion.cooldownRemaining;
+		if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.active && this.player.auras.powerInfusion.durationRemaining < time) time = this.player.auras.powerInfusion.durationRemaining;
 		if (this.player.mp5Timer < time) time = this.player.mp5Timer;
 
 		// This needs to be the first modified value since the time in combat needs to be updated before spells start dealing damage/auras expiring etc. for the combat logging.
@@ -45,7 +47,7 @@ class Simulation {
 
 		// Auras
 		for (let aura in this.player.auras) {
-			if (this.player.auras[aura].active) this.player.auras[aura].tick(time);
+			if (this.player.auras[aura].active || this.player.auras[aura].name == "Power Infusion") this.player.auras[aura].tick(time);
 		}
 
 		this.player.gcdRemaining = Math.max(0,this.player.gcdRemaining - time);
@@ -74,10 +76,15 @@ class Simulation {
 
 			for(this.player.fightTime = 0; this.player.fightTime < fightLength; this.passTime()) {
 				if (this.player.castTimeRemaining <= 0) {
+					// Spells on the global cooldown
 					if (this.player.gcdRemaining <= 0) {
 						let timeRemaining = fightLength - this.player.fightTime;
 						// Not enough time left to cast another filler spell.
 						if ((this.player.rotation.finisher.deathCoil || this.player.rotation.finisher.shadowburn) && timeRemaining <= (this.player.spells[this.player.filler].castTime + this.player.spells[this.player.filler].travelTime)) {
+							// Use Power Infusion
+							if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.ready()) {
+								this.player.auras.powerInfusion.apply();
+							}
 							// Cast Death Coil if there's time to cast both Death Coil and Shadowburn (need to cast Death Coil first because of the travel time). Otherwise only cast Shadowburn
 							if (this.player.rotation.finisher.deathCoil && this.player.spells.deathCoil.ready() && (timeRemaining - this.player.gcdValue > this.player.spells.deathCoil.travelTime)) {
 								this.player.cast("deathCoil");
@@ -91,15 +98,19 @@ class Simulation {
 								this.player.cast(this.player.curse);
 							} else if (this.player.rotation.dot.unstableAffliction && !this.player.auras.unstableAffliction.active && this.player.spells.unstableAffliction.ready() && ((timeRemaining - this.player.spells.unstableAffliction.castTime) / this.player.auras.unstableAffliction.durationTotal) >= 9/this.player.auras.unstableAffliction.durationTotal) {
 								this.player.cast("unstableAffliction");
-							} else if (this.player.rotation.dot.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready() && ((timeRemaining - this.player.spells.corruption.castTime) / this.player.auras.corruption.durationTotal) >= 9/this.player.auras.corruption.durationTotal) {
-								this.player.cast("corruption");
 							} else if (this.player.rotation.curse.curseOfAgony && !this.player.auras.curseOfAgony.active && this.player.spells.curseOfAgony.ready() && (timeRemaining / this.player.auras.curseOfAgony.durationTotal) >= 1) {
 								this.player.cast("curseOfAgony");
 							} else if (this.player.rotation.dot.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.ready()  && (timeRemaining / this.player.auras.siphonLife.durationTotal) >= 1) {
 								this.player.cast("siphonLife");
 							} else if (this.player.rotation.dot.immolate && !this.player.auras.immolate.active && this.player.spells.immolate.ready()  && ((timeRemaining - this.player.spells.immolate.castTime) / this.player.auras.immolate.durationTotal) >= 12/this.player.auras.immolate.durationTotal) {
 								this.player.cast("immolate");
+							} else if (this.player.rotation.dot.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready() && ((timeRemaining - this.player.spells.corruption.castTime) / this.player.auras.corruption.durationTotal) >= 9/this.player.auras.corruption.durationTotal) {
+								this.player.cast("corruption");
 							} else if (this.player.spells[this.player.filler].ready()) {
+								// Use Power Infusion
+								if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.ready()) {
+									this.player.auras.powerInfusion.apply();
+								}
 								this.player.cast(this.player.filler);
 							} else {
 								this.player.cast("lifeTap");

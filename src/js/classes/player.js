@@ -20,12 +20,14 @@ class Player {
 
 	constructor(settings = Player.getSettings(), customItemSlot = null, customItemID = null) {
 		this.stats = JSON.parse(JSON.stringify(settings.stats)); // Create a deep-copy of the character's stats since we need to modify the values.
+		this.stats.manaCostModifier = 1;
 		this.enemy = settings.enemy;
 		this.rotation = settings.rotation;
 		this.talents = settings.talents;
 		this.level = 70;
 		this.itemID = customItemID || settings.items[settings.selectedItemSlot] || 0;
 		this.sets = settings.sets;
+		this.selectedAuras = settings.auras;
 
 		// If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
 		if (customItemSlot && customItemID && customItemID !== settings.items[customItemSlot]) {
@@ -186,6 +188,8 @@ class Player {
 		if (this.rotation.finisher.deathCoil) this.spells.deathCoil = new DeathCoil(this);
 
 		this.auras = {};
+
+		if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusion(this);
 		if (this.talents.improvedShadowBolt > 0) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this);
 		if (this.rotation.dot.corruption) this.auras.corruption = new CorruptionDot(this);
 		if (this.rotation.dot.unstableAffliction) this.auras.unstableAffliction = new UnstableAfflictionDot(this);

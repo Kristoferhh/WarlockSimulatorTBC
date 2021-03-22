@@ -159,3 +159,41 @@ class SpellstrikeProc extends Aura {
 		super.fade();
 	}
 }
+
+class PowerInfusion extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Power Infusion";
+		this.durationTotal = 15;
+		this.cooldown = 180;
+		this.cooldownRemaining = 0;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.stats.shadowModifier *= 1.2;
+			this.player.stats.fireModifier *= 1.2;
+			this.player.stats.manaCostModifier *= 0.8;
+		}
+		this.cooldownRemaining = this.cooldown;
+		super.apply();
+	}
+
+	fade() {
+		if (this.active) {
+			this.player.stats.shadowModifier /= 1.2;
+			this.player.stats.fireModifier /= 1.2;
+			this.player.stats.manaCostModifier /= 0.8;
+		}
+		super.fade();
+	}
+
+	tick(t) {
+		this.cooldownRemaining = Math.max(0,this.cooldownRemaining - t);
+		super.tick(t);
+	}
+
+	ready() {
+		return this.cooldownRemaining <= 0;
+	}
+}

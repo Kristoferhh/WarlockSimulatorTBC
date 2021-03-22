@@ -132,7 +132,7 @@ $(".aura").click(function() {
 	$(this).attr('data-checked', !checkedVal);
 	auras[$(this).attr('name')] = !checkedVal;
 
-	if (auraName == "curseOfTheElements" || auraName == "prayerOfSpirit" || auraName == "powerInfusion" || auraName == "powerOfTheGuardianWarlock" || auraName == "powerOfTheGuardianMage" || auraName == "drumsOfBattle" || auraName == "drumsOfWar" || auraName == "drumsOfRestoration" || auraName == "bloodlust") {
+	if (auraName == "curseOfTheElements" || auraName == "prayerOfSpirit" || auraName == "powerOfTheGuardianWarlock" || auraName == "powerOfTheGuardianMage" || auraName == "drumsOfBattle" || auraName == "drumsOfWar" || auraName == "drumsOfRestoration" || auraName == "bloodlust") {
 		updateAdditionalSettingsVisibility();
 	}
 	modifyStatsFromAura(_auras[auraType][auraName], checkedVal);
@@ -940,7 +940,7 @@ function updateSetBonuses() {
 	for (set in setBonusCounter) {
 		for (let i = sets[set].bonuses.length-1; i >= 0; i--) {
 			if (sets[set].bonuses[i] <= setBonusCounter[set]) {
-				$("#sidebar-sets").append("<li class='sidebar-set-bonus'>" + sets[set].name + " (" + sets[set].bonuses[i] + ")</li>")
+				$("#sidebar-sets").append("<li class='sidebar-set-bonus'><a href='https://tbc.wowhead.com/item-set=" + set + "'>" + sets[set].name + " (" + sets[set].bonuses[i] + ")</a></li>")
 				break;
 			}
 		}
@@ -984,12 +984,6 @@ function updateAdditionalSettingsVisibility() {
 		$("#conflagrateUse").show();
 	} else {
 		$("#conflagrateUse").hide();
-	}
-
-	if (auras.powerInfusion) {
-		$("#powerInfusionAmount").show();
-	} else {
-		$("#powerInfusionAmount").hide();
 	}
 
 	if (auras.powerOfTheGuardianMage) {

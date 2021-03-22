@@ -19,6 +19,11 @@ var _auras = {
 			"iconName": "spell_holy_greaterblessingofwisdom",
 			"id": 25918,
 		},
+		"judgementOfWisdom": {
+			"name": "Judgement of Wisdom",
+			"iconName": "spell_holy_righteousnessaura",
+			"id": 20354
+		},
 		"manaSpringTotem": {
 			"name": "Mana Spring Totem",
 			"mp5": 50,

@@ -448,7 +448,7 @@ ul {
 	padding: 5px;
 }
 
-.item-row a, .enchant-row a {
+.item-row a, .enchant-row a, .sidebar-set-bonus a {
 	color: #fff;
 	text-decoration: none;
 }

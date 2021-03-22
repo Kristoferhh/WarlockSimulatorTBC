@@ -42,7 +42,7 @@ class Spell {
 	// Called when a spell finishes casting or immediately called if the spell has no cast time.
 	cast() {
 		this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1;
-		this.player.mana -= this.manaCost;
+		this.player.mana -= (this.manaCost * this.player.stats.manaCostModifier);
 		this.cooldownRemaining = this.cooldown;
 		this.casting = false;
 		if (this.castTime > 0) this.player.combatLog("Finished casting " + this.name);
