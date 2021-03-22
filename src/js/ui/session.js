@@ -36,12 +36,14 @@ for (itemSlot in selectedItems) {
 
 // Add stats from the player's selected race
 let currentRace = $("#race-dropdown-list").val();
-if (currentRace == "gnome") {
-	characterStats.intellectModifier *= 1.05;
-}
 for (let stat in raceStats[currentRace]) {
 	if (characterStats.hasOwnProperty(stat)) {
-		characterStats[stat] += raceStats[currentRace][stat];
+		// Check if the buff is a modifier to know whether to add/subtract or multiply/divide the stat
+		if (stat.toLowerCase().search("modifier") !== -1) {
+			characterStats[stat] *= raceStats[currentRace][stat];
+		} else {
+			characterStats[stat] += raceStats[currentRace][stat];
+		}
 	}
 }
 

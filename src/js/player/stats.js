@@ -43,26 +43,31 @@ var raceStats = {
 		"stamina": 75,
 		"intellect": 136,
 		"spirit": 131,
-		"arcaneResist": 10
+		"arcaneResist": 10,
+		"intellectModifier": 1.05
 	},
 	"human": {
 		"stamina": 76,
 		"intellect": 129,
+		"spirit": 132,
 		"spiritModifier": 1.1
 	},
 	"orc": {
 		"stamina": 78,
 		"intellect": 126,
+		"spirit": 134,
 		"petDamageModifier": 1.05
 	},
 	"undead": {
 		"stamina": 77,
 		"intellect": 131,
+		"spirit": 144,
 		"shadowResist": 10
 	},
 	"bloodElf": {
 		"stamina": 74,
 		"intellect": 133,
+		"spirit": 130,
 		"fireResist": 5,
 		"frostResist": 5,
 		"shadowResist": 5,
@@ -102,10 +107,10 @@ function refreshCharacterStats() {
 	}
 
 	let spellPower = characterStats.spellPower;
-	if (auras.felArmor) {
-		spellPower += 100 * (1 + 0.1 * talents.demonicAegis);
-	}
-
+	if (auras.felArmor) spellPower += 100 * (1 + 0.1 * talents.demonicAegis);
+	if (auras.prayerOfSpirit) spellPower += (characterStats.spirit * characterStats.spiritModifier * (0.1 * $("#improvedDivineSpirit select").children('option:selected').val())); 
+	spellPower = Math.round(spellPower);
+	
 	$("#character-health-val").text(Math.round((characterStats.health + (stamina * staminaModifier) * healthPerStamina) * (1 + (0.01 * talents.felStamina))));
 	$("#character-mana-val").text(Math.round((characterStats.mana + (characterStats.intellect * characterStats.intellectModifier) * manaPerInt) * (1 + (0.01 * talents.felIntellect))));
 	$("#character-stamina-val").text(Math.round(stamina * staminaModifier));

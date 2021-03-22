@@ -579,24 +579,26 @@ $("#race-dropdown-list").change(function() {
 	$(this).data("currentRace", newRace);
 
 	// Remove the previous race's stats
-	// If the old race was Gnome then reduce the intellect modifier by 5%
-	if (oldRace == "gnome") {
-		characterStats.intellectModifier /= 1.05;
-	}
 	for (let stat in raceStats[oldRace]) {
 		if (characterStats.hasOwnProperty(stat)) {
-			characterStats[stat] -= raceStats[oldRace][stat];
+			// Check if the buff is a modifier to know whether to add/subtract or multiply/divide the stat
+			if (stat.toLowerCase().search("modifier") !== -1) {
+				characterStats[stat] /= raceStats[oldRace][stat];
+			} else {
+				characterStats[stat] -= raceStats[oldRace][stat];
+			}
 		}
 	}
 
 	// Add the new race's stats
-	// If the new race is Gnome then increase intellect by 5%
-	if (newRace == "gnome") {
-		characterStats.intellectModifier *= 1.05;
-	}
 	for (let stat in raceStats[newRace]) {
 		if (characterStats.hasOwnProperty(stat)) {
-			characterStats[stat] += raceStats[newRace][stat];
+			// Check if the buff is a modifier to know whether to add/subtract or multiply/divide the stat
+			if (stat.toLowerCase().search("modifier") !== -1) {
+				characterStats[stat] *= raceStats[newRace][stat];
+			} else {
+				characterStats[stat] += raceStats[newRace][stat];
+			}
 		}
 	}
 
