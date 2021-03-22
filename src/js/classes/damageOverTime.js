@@ -18,6 +18,7 @@ class DamageOverTime {
 
 	setup() {
 		this.ticksTotal = this.durationTotal / this.tickTimerTotal;
+		this.originalDurationTotal = this.durationTotal;
 		this.varName = camelCase(this.name);
 		this.player.damageBreakdown[this.varName] = this.player.damageBreakdown[this.varName] || {"name": this.name};
 	}
@@ -27,6 +28,12 @@ class DamageOverTime {
 		this.tickTimerRemaining = this.tickTimerTotal;
 		this.ticksRemaining = this.ticksTotal;
 		this.spellPower = spellPower;
+	}
+
+	fade() {
+		this.active = false;
+		this.tickTimerRemaining = 0;
+		this.ticksRemaining = 0;
 	}
 
 	tick(t) {
@@ -41,9 +48,9 @@ class DamageOverTime {
 					sp = this.player.stats.spellPower + this.player.stats[this.school + "Power"];
 				}
 
-				let dmg = ((this.dmg + sp * this.coefficient) * this.modifier * this.player.stats[this.school + "Modifier"]) / this.ticksTotal;
+				let dmg = ((this.dmg + sp * this.coefficient) * this.modifier * this.player.stats[this.school + "Modifier"]) / (this.originalDurationTotal / this.tickTimerTotal);
 				// Add bonus from ISB (without removing ISB stacks since it's a dot)
-				if (this.school == "shadow" && this.player.talents.improvedShadowBolt > 0 && this.player.auras.improvedShadowBolt.active) {
+				if (this.school == "shadow" && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active) {
 					dmg *= this.player.auras.improvedShadowBolt.modifier;
 				}
 
@@ -74,11 +81,26 @@ class CorruptionDot extends DamageOverTime {
 		this.durationTotal = 18;
 		this.tickTimerTotal = 3;
 		this.dmg = 1035;
-		this.modifier = 1 + (0.01 * player.talents.contagion);
+		this.modifier = 1 + (0.01 * this.player.talents.contagion);
 		this.school = "shadow";
 		this.name = "Corruption";
 		this.coefficient = 0.936 + (0.12 * player.talents.empoweredCorruption);
+		this.boosted = false; // Track whether the corruption's dmg has been boosted by T5 4pc or not
 		this.setup();
+
+		if (player.sets['529'] >= 4) this.modifier *= 1.12;		// T3 4pc
+		if (player.sets['645'] >= 4) this.durationTotal += 3;	// T4 4pc
+		if (player.sets['646'] >= 4)
+		this.ticksTotal = this.durationTotal / this.tickTimerTotal;
+	}
+
+	apply(spellPower) {
+		// T5 4pc
+		if (this.boosted) {
+			this.modifier /= 1.1;
+			this.boosted = false;
+		}
+		super.apply(spellPower);
 	}
 }
 
@@ -117,7 +139,19 @@ class ImmolateDot extends DamageOverTime {
 		this.school = "fire";
 		this.name = "Immolate";
 		this.coefficient = 0.65;
+		this.boosted = false; // Track whether the Immolate's dmg has been boosted by T5 4pc or not
 		this.setup();
+
+		if (player.sets['645'] >= 4) this.durationTotal += 3;	// T4 4pc
+		this.ticksTotal = this.durationTotal / this.tickTimerTotal;
+	}
+
+	apply(spellPower) {
+		if (this.boosted) {
+			this.modifier /= 1.1;
+			this.boosted = false;
+		}
+		super.apply(spellPower);
 	}
 }
 

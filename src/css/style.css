@@ -18,13 +18,16 @@ ul {
 
 #character-section {
 	vertical-align: top;
-	height: 410px;
-	/*border-right: 1px solid gray;*/
 }
 
 #character-race, #character-level {
 	text-align: center;
 	line-height: 10px;
+}
+
+#character-stats {
+	min-height: 380px;
+	border-bottom: 1px solid gray;
 }
 
 #character-stats li {
@@ -72,6 +75,10 @@ ul {
 	border-top: 0;
 	margin-left: -21px;
 	margin-top: -21px;
+}
+
+#sidebar-sets {
+	min-height: 220px;
 }
 
 #item-section {
@@ -143,20 +150,6 @@ ul {
 	cursor: pointer;
 }
 
-#sim-settings {
-	/*border-right: 1px solid gray;*/
-}
-
-/*#sim-settings h3 {
-	margin-left: 44px;
-	line-height: 1px;
-}*/
-
-#sim-settings ul li {
-	width: 87%;
-	padding: 5px 0px;
-}
-
 .settings-left, .settings-right {
 	display: inline-block;
 }
@@ -164,6 +157,10 @@ ul {
 .settings-right {
 	float: right;
 	width: 30%;
+}
+
+.settings-left {
+	margin-left: -40px;
 }
 
 #rotation-section {
@@ -202,20 +199,12 @@ ul {
 	line-height: 1px;
 }
 
-#auraAndTalentSettings {
+#sim-settings {
 	display: inline-block;
 	padding: 15px;
 	line-height: 25px;
 	width: 24%;
 }
-
-/*#dps-result-div {
-	display: inline-block;
-	visibility: hidden;
-	/*width: 100%;*/
-	/*line-height: 10px;
-	margin-top: 20px;
-}*/
 
 #sim-result-dps-div {
 	padding: 0 10px 10px 10px;
@@ -389,8 +378,8 @@ ul {
 }
 
 #sidebar-simulation-selection {
-	margin-top: 50px;
 	text-align: center;
+	vertical-align: bottom;
 }
 
 #gem-selection-table {
@@ -416,7 +405,6 @@ ul {
 	text-align: center;
 	width: 100%;
 	white-space: nowrap;
-	/*margin-top: 50px;*/
 }
 
 #item-slot-selection-list li {
@@ -435,17 +423,13 @@ ul {
 
 #item-selection-container {
 	padding: 0px 40px;
-	/*margin-top: 80px;*/	
+	min-height: 1500px;
 }
 
 #item-selection-table, #enchant-selection-table {
 	width: 100%;
 	border-spacing: 0px;
 }
-
-/*#item-selection-table th:not(:first-child), #enchant-selection-table th:not(:first-child) {
-	text-align: center;
-}*/
 
 #enchant-selection-table {
 	margin-top: 60px;

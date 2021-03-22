@@ -9,6 +9,7 @@ class Spell {
 		this.name = null;
 		this.varName = null; // Same as this.name except it's written in camelCase
 		this.isDot = false;
+		this.modifier = 1;
 		this.doesDamage = false;
 		this.canCrit = false;
 		this.school = null; // The school that the spell belongs to such as shadow or fire
@@ -72,6 +73,12 @@ class Spell {
 		if (this.doesDamage) {
 			this.damage(isCrit);
 		}
+
+		// T4 2pc
+		// 10% proc rate on all shadow or fire spells (including when dots applied) (needs confirmation)
+		if (this.player.sets['645'] >= 2 && ['shadow','fire'].includes(this.school) && random(1,100) <= 10) {
+			this.player.auras['shadowFlame' + this.school].apply();	
+		}
 	}
 
 	damage(isCrit) {
@@ -82,6 +89,7 @@ class Spell {
 		}
 		dmg += ((this.player.stats.spellPower + this.player.stats[this.school + "Power"]) * this.coefficient);
 		dmg *= this.player.stats[this.school + "Modifier"];
+		dmg *= this.modifier;
 
 		// Improved Shadow Bolt
 		if (this.school == "shadow" && this.player.talents.improvedShadowBolt > 0 && this.player.auras.improvedShadowBolt.active) {
@@ -105,6 +113,23 @@ class Spell {
 		else this.player.combatLog(this.name + " " + dmg);
 		this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg;
 		this.player.iterationDamage += dmg;
+
+		// Check for Spellstrike proc
+		if (this.player.sets['559'] == 2 && random(1,100) <= 5) {
+			this.player.auras.spellstrikeProc.apply();
+		}
+
+		// T5 4pc. Increase Corruption & Immolate dmg when Shadow Bolt/Incinerate hits
+		// The way it's set up to work is that when Corruption or Immolate is applied, its modifier is 100% (or whatever its default modifier is), then after it's applied, if a Shadow Bolt/Incinerate hits, it increases the damage of *that* Corruption/Immolate aura by 10%. If it's re-applied, the 10% dmg is gone until a new Shadow Bolt/Incinerate hits. Please correct if this is not the way it works.
+		if (this.player.sets['646'] >= 4) {
+			if (this.varName == "shadowBolt" && !this.player.auras.corruption.boosted) {
+				this.player.auras.corruption.boosted = true;
+				this.player.auras.corruption.modifier *= 1.1;
+			} else if (this.varName == "incinerate" && !this.player.auras.immolate.boosted) {
+				this.player.auras.immolate.boosted = true;
+				this.player.auras.immolate.modifier *= 1.1;
+			}
+		}
 	}
 
 	tick(t) {
@@ -130,6 +155,8 @@ class ShadowBolt extends Spell {
 		this.type = "destruction";
 		this.travelTime = player.spellTravelTime;
 		this.setup();
+
+		if (player.sets['670'] >= 4) this.modifier *= 1.06; // T6 4pc
 	}
 
 	startCast() {
@@ -163,6 +190,8 @@ class Incinerate extends Spell {
 		this.type = "destruction";
 		this.travelTime = player.spellTravelTime;
 		this.setup();
+
+		if (player.sets['670'] >= 4) this.modifier *= 1.06; // T6 4pc
 	}
 }
 

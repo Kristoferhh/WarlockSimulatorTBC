@@ -14,10 +14,10 @@ class Aura {
 		}
 	}
 
-	fade() {
+	fade(endOfIteration = false) {
 		if (this.active) {
 			this.active = false;
-			this.player.combatLog(this.name + " faded");
+			if (!endOfIteration) this.player.combatLog(this.name + " faded");
 		}
 	}
 
@@ -42,6 +42,11 @@ class ImprovedShadowBolt extends Aura {
 	apply() {
 		super.apply();
 		this.stacks = this.maxStacks;
+	}
+
+	fade() {
+		this.stacks = 0;
+		super.fade();
 	}
 
 	decrementStacks() {
@@ -85,5 +90,72 @@ class ShadowTrance extends Aura {
 		super(player);
 		this.name = "Shadow Trance (Nightfall)";
 		this.durationTotal = 10;
+	}
+}
+
+class ShadowFlameShadow extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Shadow Flame (shadow) (T4 2pc bonus)";
+		this.durationTotal = 15;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.stats.shadowPower += 135;
+			super.apply();
+		}
+	}
+
+	fade() {
+		if (this.active) {
+			this.player.stats.shadowPower -= 135;
+		}
+
+		super.fade();
+	}
+}
+
+class ShadowFlameFire extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Shadow Flame (fire) (T4 2pc bonus)";
+		this.durationTotal = 15;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.stats.firePower += 135;
+			super.apply();
+		}
+	}
+
+	fade() {
+		if (this.active) {
+			this.player.stats.firePower -= 135;
+		}
+		super.fade();
+	}
+}
+
+class SpellstrikeProc extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Spellstrike Proc";
+		this.durationTotal = 10;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.stats.spellPower += 92;
+			super.apply();
+		}
+	}
+
+	fade() {
+		if (this.active) {
+			this.player.stats.spellPower -= 92;
+		}
+		super.fade();
 	}
 }

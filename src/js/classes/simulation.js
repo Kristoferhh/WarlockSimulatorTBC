@@ -29,6 +29,9 @@ class Simulation {
 		if (this.player.auras.curseOfTheElements && this.player.auras.curseOfTheElements.active && this.player.auras.curseOfTheElements.durationRemaining < time) time = this.player.auras.curseOfTheElements.durationRemaining;
 		if (this.player.auras.curseOfRecklessness && this.player.auras.curseOfRecklessness.active && this.player.auras.curseOfRecklessness.durationRemaining < time) time = this.player.auras.curseOfRecklessness.durationRemaining;
 		if (this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.shadowTrance.durationRemaining < time) time = this.player.auras.shadowTrance.durationRemaining;
+		if (this.player.auras.shadowFlameshadow && this.player.auras.shadowFlameshadow.active && this.player.auras.shadowFlameshadow.durationRemaining < time) time = this.player.auras.shadowFlameshadow.durationRemaining;
+		if (this.player.auras.shadowFlamefire && this.player.auras.shadowFlamefire.active && this.player.auras.shadowFlamefire.durationRemaining < time) time = this.player.auras.shadowFlamefire.durationRemaining;
+		if (this.player.auras.spellstrikeProc && this.player.auras.spellstrikeProc.active && this.player.auras.spellstrikeProc.durationRemaining < time) time = this.player.auras.spellstrikeProc.durationRemaining;
 		if (this.player.mp5Timer < time) time = this.player.mp5Timer;
 
 		// This needs to be the first modified value since the time in combat needs to be updated before spells start dealing damage/auras expiring etc. for the combat logging.
@@ -74,7 +77,7 @@ class Simulation {
 					if (this.player.gcdRemaining <= 0) {
 						let timeRemaining = fightLength - this.player.fightTime;
 						// Not enough time left to cast another filler spell.
-						if (timeRemaining <= (this.player.spells[this.player.filler].castTime + this.player.spells[this.player.filler].travelTime)) {
+						if ((this.player.rotation.finisher.deathCoil || this.player.rotation.finisher.shadowburn) && timeRemaining <= (this.player.spells[this.player.filler].castTime + this.player.spells[this.player.filler].travelTime)) {
 							// Cast Death Coil if there's time to cast both Death Coil and Shadowburn (need to cast Death Coil first because of the travel time). Otherwise only cast Shadowburn
 							if (this.player.rotation.finisher.deathCoil && this.player.spells.deathCoil.ready() && (timeRemaining - this.player.gcdValue > this.player.spells.deathCoil.travelTime)) {
 								this.player.cast("deathCoil");
@@ -86,15 +89,15 @@ class Simulation {
 						} else {
 							if (this.player.curse && !this.player.auras[this.player.curse].active && this.player.spells[this.player.curse].ready()) {
 								this.player.cast(this.player.curse);
-							} else if (this.player.rotation.dot.unstableAffliction && !this.player.auras.unstableAffliction.active && this.player.spells.unstableAffliction.ready() && ((timeRemaining - this.player.spells.unstableAffliction.castTime) / this.player.auras.unstableAffliction.durationTotal) >= 9/18) {
+							} else if (this.player.rotation.dot.unstableAffliction && !this.player.auras.unstableAffliction.active && this.player.spells.unstableAffliction.ready() && ((timeRemaining - this.player.spells.unstableAffliction.castTime) / this.player.auras.unstableAffliction.durationTotal) >= 9/this.player.auras.unstableAffliction.durationTotal) {
 								this.player.cast("unstableAffliction");
-							} else if (this.player.rotation.dot.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready() && ((timeRemaining - this.player.spells.corruption.castTime) / this.player.auras.corruption.durationTotal) >= 9/18) {
+							} else if (this.player.rotation.dot.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready() && ((timeRemaining - this.player.spells.corruption.castTime) / this.player.auras.corruption.durationTotal) >= 9/this.player.auras.corruption.durationTotal) {
 								this.player.cast("corruption");
 							} else if (this.player.rotation.curse.curseOfAgony && !this.player.auras.curseOfAgony.active && this.player.spells.curseOfAgony.ready() && (timeRemaining / this.player.auras.curseOfAgony.durationTotal) >= 1) {
 								this.player.cast("curseOfAgony");
 							} else if (this.player.rotation.dot.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.ready()  && (timeRemaining / this.player.auras.siphonLife.durationTotal) >= 1) {
 								this.player.cast("siphonLife");
-							} else if (this.player.rotation.dot.immolate && !this.player.auras.immolate.active && this.player.spells.immolate.ready()  && ((timeRemaining - this.player.spells.immolate.castTime) / this.player.auras.immolate.durationTotal) >= 12/15) {
+							} else if (this.player.rotation.dot.immolate && !this.player.auras.immolate.active && this.player.spells.immolate.ready()  && ((timeRemaining - this.player.spells.immolate.castTime) / this.player.auras.immolate.durationTotal) >= 12/this.player.auras.immolate.durationTotal) {
 								this.player.cast("immolate");
 							} else if (this.player.spells[this.player.filler].ready()) {
 								this.player.cast(this.player.filler);
@@ -120,6 +123,11 @@ class Simulation {
 					"percent": Math.round((this.player.iteration / this.iterations) * 100),
 					"itemID": this.player.itemID
 				});
+			}
+
+			// Reset/end all active auras
+			for (let aura in this.player.auras) {
+				this.player.auras[aura].fade(true);
 			}
 		}
 

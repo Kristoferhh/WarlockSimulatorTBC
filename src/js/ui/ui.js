@@ -386,6 +386,7 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 		}
 	}
 
+	updateSetBonuses();
 	localStorage.selectedItems = JSON.stringify(selectedItems);
 	return false;
 });
@@ -543,7 +544,7 @@ $("#rotation-list div li").click(function() {
 	return false;
 });
 
-$("#auraAndTalentSettings select").change(function() {
+$("#sim-settings select").change(function() {
 	refreshCharacterStats();
 });
 
@@ -797,6 +798,7 @@ function simDPS(items) {
 				} else if (simulationsFinished == itemAmount) {
 					$("#sim-all-items a").text("Simulate All Items");
 				}
+				savedItemDPS[itemSlot + itemSubslot] = savedItemDPS[itemSlot + itemSubslot] || {};
 				savedItemDPS[itemSlot + itemSubslot][simulationEnd.itemID] = avgDps;
 				localStorage.savedItemDPS = JSON.stringify(savedItemDPS);
 
@@ -813,14 +815,13 @@ function simDPS(items) {
 							if (s.damage > 0 || s.casts > 0) $("#damage-breakdown-table tbody").append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td></tr>");
 						}
 						$("#damage-breakdown-section").css('display', 'inline-block');
+						$("#damage-breakdown-table").tablesorter();
 					}
 				}
 	
 				// Start a new simulation that's waiting in the queue if there are any remaining
 				if (simulationsRunning - simulationsFinished < maxWorkers && simIndex < simulations.length) {
 					simulations[simIndex++].start();
-				} else if (simulationsFinished == simulations.length) {
-					$("#item-selection-table").tablesorter();
 				}
 			},
 			(simulationUpdate) => {
@@ -912,6 +913,40 @@ function clearTalentTree(talentTreeName) {
 
 function sortItemTable() {
 	$("#item-selection-table").tablesorter();
+}
+
+function updateSetBonuses() {
+	$(".sidebar-set-bonus").remove();
+	let setBonusCounter = {};
+
+	for (let itemSlot in selectedItems) {
+		let itemID = selectedItems[itemSlot];
+		if (itemID) {
+			if (itemSlot == "ring1" || itemSlot == "ring2" || itemSlot == "trinket1" || itemSlot == "trinket2") {
+				itemSlot = itemSlot.substring(0,itemSlot.length-1);
+			}
+			for (let item in items[itemSlot]) {
+				if (items[itemSlot][item].id === itemID) {
+					let setID = items[itemSlot][item].setID;
+					if (setID) {
+						setBonusCounter[setID] = setBonusCounter[setID] + 1 || 1;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	for (set in setBonusCounter) {
+		for (let i = sets[set].bonuses.length-1; i >= 0; i--) {
+			if (sets[set].bonuses[i] <= setBonusCounter[set]) {
+				$("#sidebar-sets").append("<li class='sidebar-set-bonus'>" + sets[set].name + " (" + sets[set].bonuses[i] + ")</li>")
+				break;
+			}
+		}
+	}
+
+	localStorage.setBonuses = JSON.stringify(setBonusCounter);
 }
 
 function updateAdditionalSettingsVisibility() {

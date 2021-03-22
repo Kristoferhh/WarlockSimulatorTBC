@@ -6,8 +6,8 @@ importScripts(
 	'./functions.js',
 	'./classes/aura.js',
 	'./classes/damageOverTime.js',
-	'./gear/items.js',
-	'./gear/gems.js'
+	'./items/items.js',
+	'./items/gems.js'
 );
 
 onmessage = function(e) {

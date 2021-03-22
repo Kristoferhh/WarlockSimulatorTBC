@@ -3,6 +3,7 @@ class Player {
 		return {
 			"auras": auras,
 			"items": selectedItems,
+			"sets": JSON.parse(localStorage.setBonuses),
 			"enchants": selectedEnchants,
 			"gems": selectedGems,
 			"talents": talents,
@@ -24,6 +25,7 @@ class Player {
 		this.talents = settings.talents;
 		this.level = 70;
 		this.itemID = customItemID || settings.items[settings.selectedItemSlot] || 0;
+		this.sets = settings.sets;
 
 		// If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
 		if (customItemSlot && customItemID && customItemID !== settings.items[customItemSlot]) {
@@ -36,6 +38,9 @@ class Player {
 						if (this.stats.hasOwnProperty(stat)) {
 							this.stats[stat] -= items[customItemSlot][item][stat];
 						}
+					}
+					if (items[customItemSlot][item].hasOwnProperty("setID")) {
+						this.sets[items[customItemSlot][item].setID]--;
 					}
 					// Remove stats from gems in the equipped item if there are any
 					if (settings.gems[customItemSlot] && settings.gems[customItemSlot][settings.items[customItemSlot]]) {
@@ -65,6 +70,9 @@ class Player {
 						if (this.stats.hasOwnProperty(stat)) {
 							this.stats[stat] += items[customItemSlot][item][stat];
 						}
+					}
+					if (items[customItemSlot][item].hasOwnProperty("setID")) {
+						this.sets[items[customItemSlot][item].setID]++;
 					}
 					// Add stats from any gems equipped in the custom item
 					if (settings.gems[customItemSlot] && settings.gems[customItemSlot][customItemID]) {
@@ -96,6 +104,7 @@ class Player {
 		this.stats.critChance = baseCritChancePercent + ((this.stats.critRating + ((this.stats.intellect * this.stats.intellectModifier) * critPerInt)) / critRatingPerPercent) + settings.talents.devastation + settings.talents.backlash + settings.talents.demonicTactics;
 		if (settings.auras.moonkinAura) this.stats.critChance += 5;
 		if (settings.auras.judgementOfTheCrusader) this.stats.critChance += 3;
+		if (settings.auras.totemOfWrath) this.stats.critChance += 3;
 		this.stats.critChance = Math.round(this.stats.critChance * this.stats.critChanceMultiplier); // Multiply the crit chance in order to use a whole number for RNG calculations.
 
 		// Hit chance
@@ -187,6 +196,11 @@ class Player {
 		if (this.rotation.curse.curseOfRecklessness) this.auras.curseOfRecklessness = new CurseOfRecklessnessAura(this);
 		if (this.rotation.curse.curseOfDoom) this.auras.curseOfDoom = new CurseOfDoomAura(this); this.auras.curseOfAgony = new CurseOfAgonyDot(this);
 		if (this.talents.nightfall > 0) this.auras.shadowTrance = new ShadowTrance(this);
+		if (this.sets['645'] >= 2) {
+			this.auras.shadowFlameshadow = new ShadowFlameShadow(this);
+			this.auras.shadowFlamefire = new ShadowFlameFire(this);
+		}
+		if (this.sets['559'] == 2) this.auras.spellstrikeProc = new SpellstrikeProc(this);
 
 		this.castTimeRemaining = 0;
 		this.gcdValue = 1.5;

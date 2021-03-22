@@ -138,7 +138,7 @@ const items = {
 			"spellPower": 63,
 			"hitRating": 16,
 			"critRating": 32,
-			"setId": 670,
+			"setID": 670,
 			"id": 31051,
 			"source": "Hyjal Summit",
 			"phase": 3
@@ -184,7 +184,7 @@ const items = {
 			},
 			"spellPower": 55,
 			"critRating": 31,
-			"setId": 646,
+			"setID": 646,
 			"id": 30212,
 			"source": "Serpentshrine Cavern",
 			"phase": 2
@@ -277,6 +277,7 @@ const items = {
 			},
 			"spellPower": 40,
 			"critRating": 19,
+			"setID": 645,
 			"id": 28963,
 			"source": "Karazhan",
 			"phase": 1
@@ -294,7 +295,7 @@ const items = {
 			"spellPower": 47,
 			"critRating": 24,
 			"hitRating": 16,
-			"setId": 1, // fix
+			"setID": 559,
 			"id": 24266,
 			"source": "Tailoring",
 			"phase": 1
@@ -311,7 +312,7 @@ const items = {
 			"spellPower": 37,
 			"critRating": 18,
 			"resilienceRating": 30,
-			"setId": 615,
+			"setID": 615,
 			"id": 30187,
 			"source": "PVP",
 			"phase": 1
@@ -327,7 +328,7 @@ const items = {
 			},
 			"spellPower": 32,
 			"resilienceRating": 30,
-			"setId": 568,
+			"setID": 568,
 			"id": 24553,
 			"source": "PVP",
 			"phase": 1
@@ -342,7 +343,7 @@ const items = {
 				"spellPower": 5
 			},
 			"spellPower": 41,
-			"setId": 1, // fix
+			"setID": 1, // fix
 			"id": 28415,
 			"source": "Arcatraz",
 			"phase": 1
@@ -384,7 +385,7 @@ const items = {
 			"spellPower": 33,
 			"critRating": 28,
 			"hitRating": 8,
-			"setId": 529,
+			"setID": 529,
 			"id": 22506,
 			"source": "Naxxramas",
 			"phase": 0
@@ -498,6 +499,23 @@ const items = {
 		}
 	},
 	"shoulders": {
+		"mantleOfTheMalefic": {
+			"name": "Mantle of the Malefic",
+			"stamina": 45,
+			"intellect": 22,
+			"blue": 1,
+			"yellow": 1,
+			"socketBonus": {
+				"spellPower": 4
+			},
+			"spellPower": 46,
+			"hitRating": 21,
+			"critRating": 13,
+			"setID": 670,
+			"id": 31054,
+			"source": "Black Temple",
+			"phase": 3
+		},
 		"mantleOfTheCorruptor": {
 			"name": "Mantle of the Corruptor",
 			"stamina": 37,
@@ -508,10 +526,26 @@ const items = {
 			"socketBonus": {
 				"spellPower": 4
 			},
-			"setId": 646,
+			"setID": 646,
 			"id": 30215,
 			"source": "The Eye",
 			"phase": 2
+		},
+		"voidheartMantle": {
+			"name": "Voidheart Mantle",
+			"stamina": 26,
+			"intellect": 22,
+			"blue": 1,
+			"yellow": 1,
+			"socketBonus": {
+				"spellPower": 4
+			},
+			"spellPower": 37,
+			"hitRating": 14,
+			"setID": 645,
+			"id": 28967,
+			"source": "Gruul's Lair",
+			"phase": 1
 		},
 		"frozenShadoweaveShoulders": {
 			"name": "Frozen Shadoweave Shoulders",
@@ -523,7 +557,7 @@ const items = {
 				"hitRating": 3
 			},
 			"shadowPower": 51,
-			"setId": 1, // fix
+			"setID": 1, // fix
 			"id": 21869,
 			"source": "Tailoring",
 			"phase": 1
@@ -551,7 +585,7 @@ const items = {
 			"spellPower": 32,
 			"critRating": 12,
 			"resilienceRating": 21,
-			"setId": 615,
+			"setID": 615,
 			"id": 30186,
 			"source": "PVP",
 			"phase": 1
@@ -568,7 +602,7 @@ const items = {
 			"spellPower": 32,
 			"resilienceRating": 21,
 			"hitRating": 12,
-			"setId": 568,
+			"setID": 568,
 			"id": 24554,
 			"source": "PVP",
 			"phase": 1
@@ -613,7 +647,7 @@ const items = {
 			"intellect": 12,
 			"spellPower": 36,
 			"hitRating": 8,
-			"setId": 529,
+			"setID": 529,
 			"id": 22507,
 			"source": "Naxxramas",
 			"phase": 0
@@ -691,6 +725,51 @@ const items = {
 		}
 	},
 	"chest": {
+		"robeOfTheMalefic": {
+			"name": "Robe of the Malefic",
+			"stamina": 66,
+			"intellect": 29,
+			"yellow": 2,
+			"blue": 1,
+			"socketBonus": {
+				"spellPower": 5
+			},
+			"spellPower": 63,
+			"hitRating": 28,
+			"setID": 670,
+			"id": 31052,
+			"source": "Black Temple",
+			"phase": 3
+		},
+		"robeOfTheCorruptor": {
+			"name": "Robe of the Corruptor",
+			"stamina": 48,
+			"intellect": 33,
+			"yellow": 3,
+			"socketBonus": {
+				"spellPower": 5
+			},
+			"spellPower": 55,
+			"hitRating": 23,
+			"setID": 646,
+			"id": 30214,
+			"source": "The Eye",
+			"phase": 2
+		},
+		"voidheartRobe": {
+			"name": "Voidheart Robe",
+			"stamina": 42,
+			"intellect": 33,
+			"yellow": 2,
+			"red": 1,
+			"socketBonus": {
+				"stamina": 6
+			},
+			"setID": 645,
+			"id": 28964,
+			"source": "Magtheridon's Lair",
+			"phase": 1
+		},
 		"frozenShadoweaveRobe": {
 			"name": "Frozen Shadoweave Robe",
 			"stamina": 30,
@@ -717,7 +796,7 @@ const items = {
 			"spellPower": 32,
 			"resilienceRating": 24,
 			"critRating": 27,
-			"setId": 615,
+			"setID": 615,
 			"id": 30200,
 			"source": "PVP",
 			"phase": 1
@@ -733,7 +812,7 @@ const items = {
 			},
 			"spellPower": 36,
 			"resilienceRating": 24,
-			"setId": 568,
+			"setID": 568,
 			"id": 24552,
 			"source": "PVP",
 			"phase": 1
@@ -784,13 +863,29 @@ const items = {
 			"spellPower": 51,
 			"hitRating": 8,
 			"critRating": 14,
-			"setId": 529,
+			"setID": 529,
 			"id": 22504,
 			"source": "Naxxramas",
 			"phase": 0
 		}
 	},
 	"bracer": {
+		"bracersOfTheMalefic": {
+			"name": "Bracers of the Malefic",
+			"stamina": 18,
+			"intellect": 22,
+			"yellow": 1,
+			"socketBonus": {
+				"spellPower": 2
+			},
+			"spellPower": 39,
+			"critRating": 18,
+			"hasteRating": 21,
+			"setID": 670,
+			"id": 34436,
+			"source": "Sunwell Plateau",
+			"phase": 5
+		},
 		"vindicatorsDreadweaveCuffs": {
 			"name": "Vindicator's Dreadweave Cuffs",
 			"stamina": 37,
@@ -902,13 +997,51 @@ const items = {
 			"stamina": 23,
 			"intellect": 14,
 			"spellPower": 23,
-			"setId": 529,
+			"setID": 529,
 			"id": 22511,
 			"source": "Naxxramas",
 			"phase": 1
 		}
 	},
 	"gloves": {
+		"glovesOfTheMalefic": {
+			"name": "Gloves of the Malefic",
+			"stamina": 57,
+			"intellect": 27,
+			"yellow": 1,
+			"socketBonus": {
+				"hitRating": 2
+			},
+			"spellPower": 46,
+			"critRating": 19,
+			"hitRating": 11,
+			"setID": 670,
+			"id": 31050,
+			"source": "Hyjal Summit",
+			"phase": 3
+		},
+		"glovesOfTheCorruptor": {
+			"name": "Gloves of the Corruptor",
+			"stamina": 50,
+			"intellect": 24,
+			"spellPower": 42,
+			"critRating": 25,
+			"setID": 646,
+			"id": 30211,
+			"source": "Serpentshrine Cavern",
+			"phase": 2
+		},
+		"voidheartGloves": {
+			"name": "Voidheart Gloves",
+			"stamina": 34,
+			"intellect": 28,
+			"spellPower": 35,
+			"critRating": 22,
+			"setID": 645,
+			"id": 28968,
+			"source": "Karazhan",
+			"phase": 1
+		},
 		"handwrapsOfFlowingThought": {
 			"name": "Handwraps of Flowing Thought",
 			"stamina": 24,
@@ -941,7 +1074,7 @@ const items = {
 			"spellPower": 32,
 			"critRating": 21,
 			"resilienceRating": 21,
-			"setId": 615,
+			"setID": 615,
 			"id": 30188,
 			"source": "PVP",
 			"phase": 1
@@ -952,7 +1085,7 @@ const items = {
 			"intellect": 25,
 			"spellPower": 32,
 			"resilienceRating": 21,
-			"setId": 568,
+			"setID": 568,
 			"id": 24556,
 			"source": "PVP",
 			"phase": 1
@@ -998,13 +1131,30 @@ const items = {
 			"intellect": 17,
 			"spellPower": 26,
 			"intellect": 14,
-			"setId": 529,
+			"setID": 529,
 			"id": 22509,
 			"source": "Naxxramas",
 			"phase": 1
 		}
 	},
 	"belt": {
+		"beltOfTheMalefic": {
+			"name": "Belt of the Malefic",
+			"stamina": 25,
+			"intellect": 29,
+			"yellow": 1,
+			"socketBonus": {
+				"spellPower": 2
+			},
+			"spellPower": 50,
+			"hasteRating": 29,
+			"critRating": 20,
+			"hitRating": 20,
+			"setID": 670,
+			"id": 34541,
+			"source": "Sunwell Plateau",
+			"phase": 5
+		},
 		"beltOfBlasting": {
 			"name": "Belt of Blasting",
 			"spellPower": 50,
@@ -1134,13 +1284,29 @@ const items = {
 			"intellect": 12,
 			"spellPower": 34,
 			"critRating": 14,
-			"setId": 529,
+			"setID": 529,
 			"id": 22510,
 			"source": "Naxxramas",
 			"phase": 0
 		}
 	},
 	"legs": {
+		"leggingsOfTheMalefic": {
+			"name": "Leggings of the Malefic",
+			"stamina": 55,
+			"intellect": 44,
+			"yellow": 1,
+			"socketBonus": {
+				"hitRating": 2
+			},
+			"spellPower": 62,
+			"critRating": 37,
+			"hitRating": 19,
+			"setID": 670,
+			"id": 31053,
+			"source": "Black Temple",
+			"phase": 3
+		},
 		"leggingsOfTheCorruptor": {
 			"name": "Leggings of the Corruptor",
 			"stamina":  48,
@@ -1152,9 +1318,22 @@ const items = {
 			"spellPower": 55,
 			"hitRating": 24,
 			"critRating": 32,
-			"setId": 646,
+			"setID": 646,
 			"id": 30213,
 			"source": "Serpentshrine Cavern",
+			"phase": 2
+		},
+		"voidheartLeggings": {
+			"name": "Voidheart Leggings",
+			"stamina": 42,
+			"intellect": 38,
+			"spellPower": 49,
+			"critRating": 25,
+			"hitRating": 17,
+			"setID": 645,
+			"id": 28966,
+			"source": "Gruul's Lair",
+			"phase": 1
 		},
 		"spellstrikePants": {
 			"name": "Spellstrike Pants",
@@ -1169,6 +1348,7 @@ const items = {
 			"spellPower": 47,
 			"critRating": 26,
 			"hitRating": 22,
+			"setID": 559,
 			"id": 24262,
 			"source": "Tailoring",
 			"phase": 1,
@@ -1180,7 +1360,7 @@ const items = {
 			"spellPower": 42,
 			"resilienceRating": 30,
 			"critRating": 28,
-			"setId": 615,
+			"setID": 615,
 			"id": 30201,
 			"source": "PVP",
 			"phase": 1
@@ -1192,7 +1372,7 @@ const items = {
 			"spellPower": 49,
 			"resilienceRating": 30,
 			"id": 24555,
-			"setId": 568,
+			"setID": 568,
 			"source": "PVP",
 			"phase": 1
 		},
@@ -1254,13 +1434,30 @@ const items = {
 			"spellPower": 37,
 			"critRating": 14,
 			"spellPen": 10,
-			"setId": 529,
+			"setID": 529,
 			"id": 22505,
 			"source": "Naxxramas",
 			"phase": 1
 		}
 	},
 	"boots": {
+		"bootsOfTheMalefic": {
+			"name": "Boots of the Malefic",
+			"stamina": 24,
+			"intellect": 26,
+			"yellow": 1,
+			"socketBonus": {
+				"spellPower": 2
+			},
+			"spellPower": 50,
+			"hasteRating": 29,
+			"critRating": 16,
+			"hitRating": 28,
+			"setID": 670,
+			"id": 34564,
+			"source": "Sunwell Plateau",
+			"phase": 5
+		},
 		"bootsOfTheShiftingNightmare": {
 			"name": "Boots of the Shifting Nightmare",
 			"stamina": 41,
@@ -1377,7 +1574,7 @@ const items = {
 			"intellect": 16,
 			"spellPower": 32,
 			"critRating": 14,
-			"setId": 529,
+			"setID": 529,
 			"id": 22508,
 			"source": "Naxxramas",
 			"phase": 0
@@ -1486,7 +1683,7 @@ const items = {
 			"name": "Plagueheart Ring",
 			"stamina": 24,
 			"spellPower": 29,
-			"setId": 529,
+			"setID": 529,
 			"id": 23063,
 			"source": "Naxxramas",
 			"phase": 0
