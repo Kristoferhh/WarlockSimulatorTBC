@@ -47,6 +47,13 @@ for (let stat in raceStats[currentRace]) {
 	}
 }
 
+// Load saved simulation settings
+$("#sim-settings select, #sim-settings input").each(function() {
+	if (settings[$(this).attr('id')]) {
+		$(this).val(settings[$(this).attr('id')]);
+	}
+});
+
 // Use previous simulation's result on the sidebar
 $("#avg-dps").text(localStorage['avgDps'] || "");
 $("#min-dps").text(localStorage['minDps'] || "");

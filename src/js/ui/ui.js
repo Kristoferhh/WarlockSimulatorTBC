@@ -1,7 +1,6 @@
-// Max	
-			// Start a new simulation that's waiting in the queue if there are any remainingimum amount of workers that can be running at any given time.
+// Maximum amount of web workers that should be run concurrently
 const maxWorkers =  navigator.hardwareConcurrency || 8;
-// Object with all the gems the user has equipped on any item, including those that are not equipped. Each key is the item's name and the value is an array with the ID of the gems equipped in that item.
+// Object with all the gems the user has equipped on any item, including items that are not equipped. Each key is the item's name and the value is an array with the ID of the gems equipped in that item.
 var selectedGems = localStorage['selectedGems'] ? JSON.parse(localStorage['selectedGems']) : {};
 // Key: Item slot. Value: Equipped item's ID
 var selectedItems = localStorage['selectedItems'] ? JSON.parse(localStorage['selectedItems']) : {};
@@ -13,6 +12,7 @@ var rotation = localStorage['rotation'] ? JSON.parse(localStorage['rotation']) :
 var selectedEnchants = localStorage['selectedEnchants'] ? JSON.parse(localStorage['selectedEnchants']) : {};
 // Key: Item ID. Value: Item's saved DPS from previous simulations.
 var savedItemDPS = localStorage['savedItemDPS'] ? JSON.parse(localStorage['savedItemDPS']) : {};
+var settings = localStorage.settings ? JSON.parse(localStorage.settings) : {};
 
 // RAID BUFFS
 for(let buff of Object.keys(_auras.buffs)) {
@@ -544,7 +544,9 @@ $("#rotation-list div li").click(function() {
 	return false;
 });
 
-$("#sim-settings select").change(function() {
+$("#sim-settings select, #sim-settings input").change(function() {
+	settings[$(this).attr('id')] = $(this).val();
+	localStorage.settings = JSON.stringify(settings);
 	refreshCharacterStats();
 });
 
@@ -953,74 +955,74 @@ function updateSetBonuses() {
 
 function updateAdditionalSettingsVisibility() {
 	if (talents.demonicSacrifice === 1 && (talents.masterDemonologist > 0 || talents.darkPact > 0)) {
-		$("#sacrificePet").show();
+		$("#sacrificePet").closest('li').show();
 	} else {
-		$("#sacrificePet").hide();
+		$("#sacrificePet").closest('li').hide();
 	}
 
 	if (talents.demonicSacrifice === 0 || talents.masterDemonologist > 0 || talents.darkPact > 0) {
-		$("#petChoice").show();
+		$("#petChoice").closest('li').show();
 	} else {
-		$("#petChoice").hide();
+		$("#petChoice").closest('li').hide();
 	}
 
 	if (talents.summonFelguard === 0) {
-		$("#petChoice option[value='felguard']").hide();
+		$("#petChoice option[value='felguard']").closest('li').hide();
 	} else {
-		$("#petChoice option[value='felguard']").show();
+		$("#petChoice option[value='felguard']").closest('li').show();
 	}
 
 	if (auras.curseOfTheElements) {
-		$("#improvedCurseOfTheElements").show();
+		$("#improvedCurseOfTheElements").closest('li').show();
 	} else {
-		$("#improvedCurseOfTheElements").hide();
+		$("#improvedCurseOfTheElements").closest('li').hide();
 	}
 
 	if (auras.prayerOfSpirit) {
-		$("#improvedDivineSpirit").show();
+		$("#improvedDivineSpirit").closest('li').show();
 	} else {
-		$("#improvedDivineSpirit").hide();
+		$("#improvedDivineSpirit").closest('li').hide();
 	}
 
 	if (talents.conflagrate > 0) {
-		$("#conflagrateUse").show();
+		$("#conflagrateUse").closest('li').show();
 	} else {
-		$("#conflagrateUse").hide();
+		$("#conflagrateUse").closest('li').hide();
 	}
 
 	if (auras.powerOfTheGuardianMage) {
-		$("#mageAtieshAmount").show();
+		$("#mageAtieshAmount").closest('li').show();
 	} else {
-		$("#mageAtieshAmount").hide();
+		$("#mageAtieshAmount").closest('li').hide();
 	}
 
 	if (auras.powerOfTheGuardianWarlock) {
-		$("#warlockAtieshAmount").show();
+		$("#warlockAtieshAmount").closest('li').show();
 	} else {
-		$("#warlockAtieshAmount").hide();
+		$("#warlockAtieshAmount").closest('li').hide();
 	}
 
 	if (auras.drumsOfBattle) {
-		$("#drumsOfBattleAmount").show();
+		$("#drumsOfBattleAmount").closest('li').show();
 	} else {
-		$("#drumsOfBattleAmount").hide();
+		$("#drumsOfBattleAmount").closest('li').hide();
 	}
 
 	if (auras.drumsOfWar) {
-		$("#drumsOfWarAmount").show();
+		$("#drumsOfWarAmount").closest('li').show();
 	} else {
-		$("#drumsOfWarAmount").hide();
+		$("#drumsOfWarAmount").closest('li').hide();
 	}
 
 	if (auras.drumsOfRestoration) {
-		$("#drumsOfRestorationAmount").show();
+		$("#drumsOfRestorationAmount").closest('li').show();
 	} else {
-		$("#drumsOfRestorationAmount").hide();
+		$("#drumsOfRestorationAmount").closest('li').hide();
 	}
 
 	if (auras.bloodlust) {
-		$("#bloodlustAmount").show();
+		$("#bloodlustAmount").closest('li').show();
 	} else {
-		$("#bloodlustAmount").hide();
+		$("#bloodlustAmount").closest('li').hide();
 	}
 }

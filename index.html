@@ -137,56 +137,55 @@
 				</li>
 				<li>
 					<span class="settings-left">Iterations</span>
-					<input value="10000" step='1000' min="0" type="number" name="iterations" class="settings-right">
+					<input id="iterations" value="10000" step='1000' min="0" type="number" name="iterations" class="settings-right">
 				</li>
 				<li>
 					<span class="settings-left">Min Fight Length</span>
-					<input value="150" type="number" name="min-fight-length" class="settings-right">
+					<input id="min-fight-length" value="150" type="number" name="min-fight-length" class="settings-right">
 				</li>
 				<li>
 					<span class="settings-left">Max Fight Length</span>
-					<input value="210" type="number" name="max-fight-length" class="settings-right">
+					<input id="max-fight-length" value="210" type="number" name="max-fight-length" class="settings-right">
 				</li>
 				<li>
 					<span class="settings-left">Target Level</span>
-					<input value="73" type="number" name="target-level" class="settings-right">
+					<input id="target-level" value="73" type="number" name="target-level" class="settings-right">
 				</li>
 				<li>
 					<span class="settings-left">Target Shadow Resistance</span>
-					<input value="0" type="number" name="target-shadow-resistance" class="settings-right">
+					<input id="target-shadow-resistance" value="0" type="number" name="target-shadow-resistance" class="settings-right">
 				</li>
-				<!--<p id="shadow-resist-info">Note: The only bosses in Classic that have more than 0 shadow resistance are Lucifron (208 SR), Gehennas (112 SR), and Kel'Thuzad (124 SR)<br>Thanks to Tesram (Mograine-EU) for these values.</p>-->
 				<li>
 					<span class="settings-left">Target Fire Resistance</span>
-					<input value="0" type="number" name="target-fire-resistance" class="settings-right">
+					<input id="target-fire-resistance" value="0" type="number" name="target-fire-resistance" class="settings-right">
 				</li>
-				<li id="petChoice">
+				<li>
 					<label class="settings-left" for="petChoice">Pet</label>
-					<select class="settings-right" name="petChoice">
+					<select id="petChoice" class="settings-right" name="petChoice">
 						<option value="imp">Imp</option>
 						<option value="succubus">Succubus</option>
 						<option value="felguard">Felguard</option>
 					</select>
 				</li>
-				<li id="sacrificePet">
+				<li>
 					<label class="settings-left" for="sacrificePet">Sacrifice pet?</label>
-					<select class="settings-right" name="sacrificePet">
+					<select id="sacrificePet" class="settings-right" name="sacrificePet">
 						<option value="no">No</option>
 						<option value="yes">Yes</option>
 					</select>
 				</li>
-				<li id="improvedCurseOfTheElements">
+				<li>
 					<label class="settings-left">Malediction?</label>
-					<select class="settings-right" name="improvedCurseOfTheElements">
+					<select id="improvedCurseOfTheElements" class="settings-right" name="improvedCurseOfTheElements">
 						<option value='0'>No</option>
 						<option value='1'>1/3</option>
 						<option value='2'>2/3</option>
 						<option value='3'>3/3</option>
 					</select>
 				</li>
-				<li id="bloodlustAmount">
+				<li>
 					<label class="settings-left" for="bloodlustAmount">Bloodlust amount</label>
-					<select class="settings-right" name="bloodlustAmount">
+					<select id="bloodlustAmount" class="settings-right" name="bloodlustAmount">
 						<option value="1">1</option>
 						<option value="2">2</option>
 						<option value="3">3</option>
@@ -194,26 +193,26 @@
 					</select>
 				</li>
 
-				<li id="improvedDivineSpirit">
+				<li>
 					<label class="settings-left" for="improvedDivineSpirit">Improved Divine Spirit?</label>
-					<select class="settings-right" name="improvedDivineSpirit">
+					<select id="improvedDivineSpirit" class="settings-right" name="improvedDivineSpirit">
 						<option value="0">No</option>
 						<option value="1">1/2</option>
 						<option value="2">2/2</option>
 					</select>
 				</li>
 
-				<li id="conflagrateUse">
+				<li>
 					<label class="settings-left" for="conflagrateUse">When to use Conflagrate?</label>
-					<select class="settings-right" name="conflagrateUse">
+					<select id="conflagrateUse" class="settings-right" name="conflagrateUse">
 						<option value="onCooldown">As soon as it's ready</option>
 						<option value="immolateAlmostOut">When Immolate has almost run out</option>
 					</select>
 				</li>
 
-				<li id="drumsOfWarAmount">
+				<li>
 					<label class="settings-left" for="drumsOfWarAmount">Drums of War amount</label>
-					<select class="settings-right" name="drumsOfWarAmount">
+					<select id="drumsOfWarAmount" class="settings-right" name="drumsOfWarAmount">
 						<option value="1">1</option>
 						<option value="2">2</option>
 						<option value="3">3</option>
@@ -222,9 +221,9 @@
 					</select>
 				</li>
 
-				<li id="mageAtieshAmount">
+				<li>
 					<label class="settings-left" for="mageAtieshAmount">Mage Atiesh amount</label>
-					<select class="settings-right" name="mageAtieshAmount">
+					<select id="mageAtieshAmount" class="settings-right" name="mageAtieshAmount">
 						<option value="1">1</option>
 						<option value="2">2</option>
 						<option value="3">3</option>
@@ -232,9 +231,9 @@
 					</select>
 				</li>
 
-				<li id="drumsOfBattleAmount">
+				<li>
 					<label class="settings-left" for="drumsOfBattleAmount">Drums of Battle amount</label>
-					<select class="settings-right" name="drumsOfBattleAmount">
+					<select id="drumsOfBattleAmount" class="settings-right" name="drumsOfBattleAmount">
 						<option value="1">1</option>
 						<option value="2">2</option>
 						<option value="3">3</option>
@@ -243,9 +242,9 @@
 					</select>
 				</li>
 
-				<li id="warlockAtieshAmount">
+				<li>
 					<label class="settings-left" for="warlockAtieshAmount">Warlock Atiesh amount</label>
-					<select class="settings-right" name="warlockAtieshAmount">
+					<select id="warlockAtieshAmount" class="settings-right" name="warlockAtieshAmount">
 						<option disabled="disabled" value="0">>> Do not count your own Atiesh <<</option>
 						<option value="1">1</option>
 						<option value="2">2</option>
@@ -254,9 +253,9 @@
 					</select>
 				</li>
 
-				<li id="drumsOfRestorationAmount">
+				<li>
 					<label class="settings-left" for="drumsOfRestorationAmount">Drums of Restoration amount</label>
-					<select class="settings-right" name="drumsOfRestorationAmount">
+					<select id="drumsOfRestorationAmount" class="settings-right" name="drumsOfRestorationAmount">
 						<option value="1">1</option>
 						<option value="2">2</option>
 						<option value="3">3</option>

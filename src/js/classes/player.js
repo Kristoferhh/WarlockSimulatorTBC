@@ -28,6 +28,8 @@ class Player {
 		this.itemID = customItemID || settings.items[settings.selectedItemSlot] || 0;
 		this.sets = settings.sets;
 		this.selectedAuras = settings.auras;
+		this.enemy.shadowResist = Math.max(this.enemy.shadowResist, (this.enemy.level - this.level) * 8);
+		this.enemy.fireResist = Math.max(this.enemy.fireResist, (this.enemy.level - this.level) * 8);
 
 		// If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
 		if (customItemSlot && customItemID && customItemID !== settings.items[customItemSlot]) {
@@ -148,6 +150,8 @@ class Player {
 		if (settings.auras.felArmor) {
 			this.stats.spellPower += (100 * (1 + 0.1 * this.talents.demonicAegis));
 		}
+		// Add spell power from Improved Divine Spirit
+		//if (settings.auras.prayerOfSpirit) 
 
 		// Records all information about damage done for each spell such as crit %, miss %, average damage per cast etc.
 		this.damageBreakdown = {};

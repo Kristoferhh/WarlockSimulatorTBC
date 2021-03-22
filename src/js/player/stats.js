@@ -81,7 +81,7 @@ function refreshCharacterStats() {
 	let staminaModifier = characterStats.staminaModifier * (1 + (0.03 * talents.demonicEmbrace));
 	let stamina = characterStats.stamina;
 	// Blood Pact
-	if ($("#petChoice select").children("option:selected").val() === "imp" && (talents.demonicSacrifice === 0 || (talents.masterDemonologist > 0 && $("#sacrificePet").children("option:selected").val() === "no"))) {
+	if ($("#petChoice").val() === "imp" && (talents.demonicSacrifice === 0 || (talents.masterDemonologist > 0 && $("#sacrificePet").val() === "no"))) {
 		stamina += 70 * (1 + 0.1 * talents.improvedImp);
 	}
 
@@ -98,7 +98,7 @@ function refreshCharacterStats() {
 
 	let shadowModifier = characterStats.shadowModifier;
 	let fireModifier = characterStats.fireModifier;
-	if (talents.demonicSacrifice === 1 && (talents.masterDemonologist === 0 || $("#sacrificePet").children('option:selected').val() === 'yes')) {
+	if (talents.demonicSacrifice === 1 && (talents.masterDemonologist === 0 || $("#sacrificePet").val() === 'yes')) {
 		if (rotation.filler.shadowBolt) {
 			shadowModifier *= 1.15;
 		} else if (rotation.filler.incinerate || rotation.filler.searingPain) {
@@ -108,9 +108,9 @@ function refreshCharacterStats() {
 
 	let spellPower = characterStats.spellPower;
 	if (auras.felArmor) spellPower += 100 * (1 + 0.1 * talents.demonicAegis);
-	if (auras.prayerOfSpirit) spellPower += (characterStats.spirit * characterStats.spiritModifier * (0.1 * $("#improvedDivineSpirit select").children('option:selected').val())); 
+	if (auras.prayerOfSpirit) spellPower += (characterStats.spirit * characterStats.spiritModifier * (0.1 * $("#improvedDivineSpirit").val())); 
 	spellPower = Math.round(spellPower);
-	
+
 	$("#character-health-val").text(Math.round((characterStats.health + (stamina * staminaModifier) * healthPerStamina) * (1 + (0.01 * talents.felStamina))));
 	$("#character-mana-val").text(Math.round((characterStats.mana + (characterStats.intellect * characterStats.intellectModifier) * manaPerInt) * (1 + (0.01 * talents.felIntellect))));
 	$("#character-stamina-val").text(Math.round(stamina * staminaModifier));
