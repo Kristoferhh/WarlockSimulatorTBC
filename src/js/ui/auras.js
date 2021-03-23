@@ -1,4 +1,4 @@
-var _auras = {
+const _auras = {
 	"buffs": {
 		"felArmor": {
 			"name": "Fel Armor",

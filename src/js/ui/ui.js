@@ -967,9 +967,9 @@ function updateAdditionalSettingsVisibility() {
 	}
 
 	if (talents.summonFelguard === 0) {
-		$("#petChoice option[value='felguard']").closest('li').hide();
+		$("#petChoice option[value='felguard']").hide();
 	} else {
-		$("#petChoice option[value='felguard']").closest('li').show();
+		$("#petChoice option[value='felguard']").show();
 	}
 
 	if (auras.curseOfTheElements) {
