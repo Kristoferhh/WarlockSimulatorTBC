@@ -70,5 +70,5 @@ let newItemSelector = "#item-slot-selection-list li[data-slot='" + (localStorage
 if (localStorage['selectedItemSubSlot']) newItemSelector += "[data-subslot='" + localStorage.selectedItemSubSlot + "']";
 $(newItemSelector).attr('data-selected', 'true');
 refreshCharacterStats();
-updateAdditionalSettingsVisibility();
+updateSimulationSettingsVisibility();
 updateSetBonuses();

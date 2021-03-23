@@ -85,7 +85,7 @@ class Spell {
 	damage(isCrit) {
 		let dmg = this.dmg;
 		// If casting Incinerate and Immolate is up, add the bonus damage.
-		if (this.varName == "incinerate" && this.player.rotation.dot.immolate && this.player.auras.immolate.active) {
+		if (this.varName == "incinerate" && this.player.auras.immolate && this.player.auras.immolate.active) {
 			dmg += this.bonusDamageFromImmolate;
 		}
 		dmg += ((this.player.stats.spellPower + this.player.stats[this.school + "Power"]) * this.coefficient);
@@ -179,7 +179,7 @@ class ShadowBolt extends Spell {
 class Incinerate extends Spell {
 	constructor(player) {
 		super(player);
-		this.castTime = 2.5;
+		this.castTime = Math.round((2.5 * (1 - 0.02 * player.talents.emberstorm)) * 100) / 100;
 		this.manaCost = 355 * (1 - 0.01 * player.talents.cataclysm);
 		this.coefficient = 0.7143 + (0.04 * player.talents.shadowAndFlame);
 		this.dmg = 479;
@@ -379,6 +379,7 @@ class Immolate extends Spell {
 		this.canCrit = true;
 		this.dmg = 331.5;
 		this.coefficient = 0.2;
+		this.modifier = 1 + 0.05 * player.talents.improvedImmolate;
 		this.school = "fire";
 		this.type = "destruction";
 		this.setup();

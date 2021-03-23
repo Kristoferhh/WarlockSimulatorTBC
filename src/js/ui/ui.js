@@ -133,7 +133,7 @@ $(".aura").click(function() {
 	auras[$(this).attr('name')] = !checkedVal;
 
 	if (auraName == "curseOfTheElements" || auraName == "prayerOfSpirit" || auraName == "powerOfTheGuardianWarlock" || auraName == "powerOfTheGuardianMage" || auraName == "drumsOfBattle" || auraName == "drumsOfWar" || auraName == "drumsOfRestoration" || auraName == "bloodlust") {
-		updateAdditionalSettingsVisibility();
+		updateSimulationSettingsVisibility();
 	}
 	modifyStatsFromAura(_auras[auraType][auraName], checkedVal);
 	localStorage.auras = JSON.stringify(auras);
@@ -466,7 +466,7 @@ $(".preset-talent-button").click(function() {
 
 	localStorage.talents = JSON.stringify(talents);
 	refreshCharacterStats();
-	updateAdditionalSettingsVisibility();
+	updateSimulationSettingsVisibility();
 });
 
 // Disable the context menu from appearing when the user right clicks a talent
@@ -524,9 +524,9 @@ $(".talent-icon").mousedown(function(event) {
 
 		updateTalentTreeNames();
 		if (talent.name == "Conflagrate" || talent.name == "Master Demonologist" || talent.name == "Demonic Sacrifice" || talent.name == "Summon Felguard" || talent.name == "Dark Pact") {
-			updateAdditionalSettingsVisibility();
+			updateSimulationSettingsVisibility();
 		}
-		if (talent.name == "Improved Imp" || talent.name == "Demonic Aegis" || talent.name == "Demonic Embrace" || talent.name == "Devastation" || talent.name == "Backlash" || talent.name == "Fel Stamina" || talent.name == "Fel Intellect" || talent.name == "Master Demonologist" || talent.name == "Soul Link" || talent.name == "Demonic Tactics" || talent.name == "Shadow Mastery") {
+		if (talent.name == "Emberstorm" || talent.name == "Improved Imp" || talent.name == "Demonic Aegis" || talent.name == "Demonic Embrace" || talent.name == "Devastation" || talent.name == "Backlash" || talent.name == "Fel Stamina" || talent.name == "Fel Intellect" || talent.name == "Master Demonologist" || talent.name == "Soul Link" || talent.name == "Demonic Tactics" || talent.name == "Shadow Mastery") {
 			refreshCharacterStats();
 		}
 		updateTalentInformation(icon);
@@ -940,7 +940,7 @@ function clearTalentTree(talentTreeName) {
 	}
 
 	refreshCharacterStats();
-	updateAdditionalSettingsVisibility();
+	updateSimulationSettingsVisibility();
 }
 
 function sortItemTable() {
@@ -984,7 +984,7 @@ function updateSetBonuses() {
 	localStorage.setBonuses = JSON.stringify(setBonusCounter);
 }
 
-function updateAdditionalSettingsVisibility() {
+function updateSimulationSettingsVisibility() {
 	if (talents.demonicSacrifice === 1 && (talents.masterDemonologist > 0 || talents.darkPact > 0)) {
 		$("#sacrificePet").closest('li').show();
 	} else {

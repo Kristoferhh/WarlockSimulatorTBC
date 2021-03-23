@@ -177,6 +177,9 @@ class Player {
 			this.stats.fireModifier *= 1.1 + (0.01 * (settings.simSettings.improvedCurseOfTheElements || 0));
 		}
 
+		// Add fire dmg % from Emberstorm
+		if (settings.talents.emberstorm > 0) this.stats.fireModifier *= 1 + (0.02 * settings.talents.emberstorm);
+
 		// Add stamina from blood pact (if stamina is ever needed for the sim)
 
 		// Records all information about damage done for each spell such as crit %, miss %, average damage per cast etc.
