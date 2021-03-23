@@ -75,7 +75,7 @@ class Simulation {
 		let totalDuration = 0;
 		let minDps = 9999;
 		let maxDps = 0;
-		let startTime = new Date();
+		let startTime = performance.now();
 
 		console.log("------- Simualtion start -------");
 		for(this.player.iteration = 1; this.player.iteration <= this.iterations; this.player.iteration++) {
@@ -105,29 +105,31 @@ class Simulation {
 						} else {
 							if (this.player.curse && !this.player.auras[this.player.curse].active && this.player.spells[this.player.curse].ready()) {
 								this.player.cast(this.player.curse);
-							} else if (this.player.rotation.dot.unstableAffliction && !this.player.auras.unstableAffliction.active && this.player.spells.unstableAffliction.ready() && ((timeRemaining - this.player.spells.unstableAffliction.castTime) / this.player.auras.unstableAffliction.durationTotal) >= 9/this.player.auras.unstableAffliction.durationTotal) {
-								this.player.cast("unstableAffliction");
-							} else if (this.player.rotation.curse.curseOfAgony && !this.player.auras.curseOfAgony.active && this.player.spells.curseOfAgony.ready() && (timeRemaining / this.player.auras.curseOfAgony.durationTotal) >= 1) {
-								this.player.cast("curseOfAgony");
-							} else if (this.player.rotation.dot.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.ready()  && (timeRemaining / this.player.auras.siphonLife.durationTotal) >= 1) {
-								this.player.cast("siphonLife");
-							} else if (this.player.rotation.dot.immolate && !this.player.auras.immolate.active && this.player.spells.immolate.ready()  && ((timeRemaining - this.player.spells.immolate.castTime) / this.player.auras.immolate.durationTotal) >= 12/this.player.auras.immolate.durationTotal) {
-								this.player.cast("immolate");
-							} else if (this.player.rotation.dot.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready() && ((timeRemaining - this.player.spells.corruption.castTime) / this.player.auras.corruption.durationTotal) >= 9/this.player.auras.corruption.durationTotal) {
-								this.player.cast("corruption");
-							} else if (this.player.spells[this.player.filler].ready()) {
-								// Use Power Infusion
-								if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.ready()) {
-									this.player.auras.powerInfusion.apply();
-								}
-								for (let trinket in this.player.trinkets) {
-									if (this.player.trinkets[trinket].ready()) {
-										this.player.trinkets[trinket].use();
-									}
-								}
-								this.player.cast(this.player.filler);
 							} else {
-								this.player.cast("lifeTap");
+								if (this.player.rotation.dot.unstableAffliction && !this.player.auras.unstableAffliction.active && this.player.spells.unstableAffliction.ready() && ((timeRemaining - this.player.spells.unstableAffliction.castTime) / this.player.auras.unstableAffliction.durationTotal) >= 9/this.player.auras.unstableAffliction.durationTotal) {
+									this.player.cast("unstableAffliction");
+								} else if (this.player.rotation.curse.curseOfAgony && !this.player.auras.curseOfAgony.active && this.player.spells.curseOfAgony.ready() && (timeRemaining / this.player.auras.curseOfAgony.durationTotal) >= 1) {
+									this.player.cast("curseOfAgony");
+								} else if (this.player.rotation.dot.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.ready()  && (timeRemaining / this.player.auras.siphonLife.durationTotal) >= 1) {
+									this.player.cast("siphonLife");
+								} else if (this.player.rotation.dot.immolate && !this.player.auras.immolate.active && this.player.spells.immolate.ready()  && ((timeRemaining - this.player.spells.immolate.castTime) / this.player.auras.immolate.durationTotal) >= 12/this.player.auras.immolate.durationTotal) {
+									this.player.cast("immolate");
+								} else if (this.player.rotation.dot.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready() && ((timeRemaining - this.player.spells.corruption.castTime) / this.player.auras.corruption.durationTotal) >= 9/this.player.auras.corruption.durationTotal) {
+									this.player.cast("corruption");
+								} else if (this.player.spells[this.player.filler].ready()) {
+									// Use Power Infusion
+									if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.ready()) {
+										this.player.auras.powerInfusion.apply();
+									}
+									for (let trinket in this.player.trinkets) {
+										if (this.player.trinkets[trinket].ready()) {
+											this.player.trinkets[trinket].use();
+										}
+									}
+									this.player.cast(this.player.filler);
+								} else {
+									this.player.cast("lifeTap");
+								}
 							}
 						}
 					}
@@ -160,7 +162,7 @@ class Simulation {
 		this.simulationEnd({
 			"minDps": Math.round(minDps * 100) / 100,
 			"maxDps": Math.round(maxDps * 100) / 100,
-			"length": (new Date() - startTime) / 1000,
+			"length": (performance.now() - startTime) / 1000,
 			"damageBreakdown": this.player.damageBreakdown,
 			"iterations": this.iterations,
 			"totalDamage": totalDamage,

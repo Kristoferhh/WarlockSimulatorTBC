@@ -177,6 +177,33 @@ $(consumableTypesToTrack.join(',')).click(function(event) {
 	refreshCharacterStats();
 });
 
+// User clicks on one of the preset item set buttons above the item slot selection menu
+$(".preset-item-set").click(function() {
+	let name = $(this).data('name');
+	if (presetItemSets[name]) {
+		for (itemSlot in presetItemSets[name]) {
+			if (selectedItems[itemSlot] !== presetItemSets[name][itemSlot]) {
+				for (item in items[itemSlot]) {
+					if (items[itemSlot][item].id == presetItemSets[name][itemSlot]) {
+						modifyStatsFromItem(items[itemSlot][item], 'add');
+					} else if (items[itemSlot][item].id == selectedItems[itemSlot]) {
+						modifyStatsFromItem(items[itemSlot][item], 'remove');
+					}
+				}
+				if (itemSlot == (localStorage['selectedItemSlot'] + localStorage['selectedItemSubSlot'])) {
+					$(".item-row[data-wowhead-id='" + selectedItems[itemSlot] + "']").attr('data-selected', 'false');
+					$(".item-row[data-wowhead-id='" + presetItemSets[name][itemSlot] + "']").attr('data-selected', 'true');
+				}
+				selectedItems[itemSlot] = presetItemSets[name][itemSlot];
+			}
+		}
+		selectedItems = presetItemSets[name];
+		localStorage.selectedItems = JSON.stringify(selectedItems);
+		refreshCharacterStats();
+		updateSetBonuses();
+	}
+});
+
 // User clicks on an item slot in the selection above the item table
 $("#item-slot-selection-list li").click(function() {
 	loadItemsBySlot($(this).attr('data-slot'), $(this).attr('data-subslot') || null);
@@ -387,6 +414,7 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 	}
 
 	updateSetBonuses();
+	refreshCharacterStats();
 	localStorage.selectedItems = JSON.stringify(selectedItems);
 	return false;
 });
@@ -942,10 +970,13 @@ function updateSetBonuses() {
 	}
 
 	for (set in setBonusCounter) {
-		for (let i = sets[set].bonuses.length-1; i >= 0; i--) {
-			if (sets[set].bonuses[i] <= setBonusCounter[set]) {
-				$("#sidebar-sets").append("<li class='sidebar-set-bonus'><a href='https://tbc.wowhead.com/item-set=" + set + "'>" + sets[set].name + " (" + sets[set].bonuses[i] + ")</a></li>")
-				break;
+		// Check if the item's set has actually been implemented
+		if (sets[set]) {
+			for (let i = sets[set].bonuses.length-1; i >= 0; i--) {
+				if (sets[set].bonuses[i] <= setBonusCounter[set]) {
+					$("#sidebar-sets").append("<li class='sidebar-set-bonus'><a href='https://tbc.wowhead.com/item-set=" + set + "'>" + sets[set].name + " (" + sets[set].bonuses[i] + ")</a></li>")
+					break;
+				}
 			}
 		}
 	}

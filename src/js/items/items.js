@@ -992,6 +992,15 @@ const items = {
 			"source": "Auchindon Quest",
 			"phase": 1
 		},
+		"rockfuryBracers": {
+			"name": "Rockfury Bracers",
+			"stamina": 7,
+			"spellPower": 27,
+			"hitRating": 8,
+			"id": 21186,
+			"source": "Silithus Quest",
+			"phase": 0
+		},
 		"plagueheartBindings": {
 			"name": "Plagueheart Bindings",
 			"stamina": 23,
@@ -1000,7 +1009,7 @@ const items = {
 			"setID": 529,
 			"id": 22511,
 			"source": "Naxxramas",
-			"phase": 1
+			"phase": 0
 		}
 	},
 	"gloves": {
@@ -1124,6 +1133,16 @@ const items = {
 			"id": 30930,
 			"source": "Shadowmoon Valley Quest",
 			"phase": 1,
+		},
+		"darkStormGauntlets": {
+			"name": "Dark Storm Gauntlets",
+			"stamina": 19,
+			"intellect": 15,
+			"spellPower": 37,
+			"hitRating": 8,
+			"id": 21585,
+			"source": "AQ40",
+			"phase": 0
 		},
 		"plagueheartGloves": {
 			"name": "Plagueheart Gloves",
@@ -1721,6 +1740,20 @@ const items = {
 			"source": "Black Temple",
 			"phase": 3, // confirm
 		},
+		"sextantOfUnstableCurrents": {
+			"name": "Sextant of Unstable Currents",
+			"critRating": 40,
+			"id": 30626,
+			"source": "Serpentshrine Cavern",
+			"phase": 2
+		},
+		"voidStarTalisman": {
+			"name": "Voidstar Talisman",
+			"spellPower": 48,
+			"id": 30449,
+			"source": "The Eye",
+			"phase": 2
+		},
 		"eyeOfMagtheridon": {
 			"name": "Eye of Magtheridon",
 			"spellPower": 54,
@@ -1759,6 +1792,12 @@ const items = {
 			"cooldown": 90,
 			"id": 29132,
 			"source": "The Scryers - Revered",
+			"phase": 1
+		},
+		"theLightningCapacitor": {
+			"name": "The Lightning Capacitor",
+			"id": 28785,
+			"source": "Karazhan",
 			"phase": 1
 		},
 		"arcanistsStone": {
