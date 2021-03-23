@@ -46,9 +46,9 @@ class ImprovedShadowBolt extends Aura {
 		this.stacks = this.maxStacks;
 	}
 
-	fade() {
+	fade(endOfIteration = false) {
 		this.stacks = 0;
-		super.fade();
+		super.fade(endOfIteration);
 	}
 
 	decrementStacks() {
@@ -97,7 +97,7 @@ class CurseOfDoomAura extends Aura {
 		if (this.active && !endOfIteration) {
 			this.player.spells.curseOfDoom.damage(false);
 		}
-		super.fade();
+		super.fade(endOfIteration);
 	}
 }
 
@@ -123,12 +123,12 @@ class ShadowFlameShadow extends Aura {
 		}
 	}
 
-	fade() {
+	fade(endOfIteration = false) {
 		if (this.active) {
 			this.player.stats.shadowPower -= 135;
 		}
 
-		super.fade();
+		super.fade(endOfIteration);
 	}
 }
 
@@ -146,11 +146,11 @@ class ShadowFlameFire extends Aura {
 		}
 	}
 
-	fade() {
+	fade(endOfIteration = false) {
 		if (this.active) {
 			this.player.stats.firePower -= 135;
 		}
-		super.fade();
+		super.fade(endOfIteration);
 	}
 }
 
@@ -168,11 +168,11 @@ class SpellstrikeProc extends Aura {
 		}
 	}
 
-	fade() {
+	fade(endOfIteration = false) {
 		if (this.active) {
 			this.player.stats.spellPower -= 92;
 		}
-		super.fade();
+		super.fade(endOfIteration);
 	}
 }
 
@@ -199,13 +199,13 @@ class PowerInfusion extends Aura {
 		super.apply();
 	}
 
-	fade() {
+	fade(endOfIteration = false) {
 		if (this.active) {
 			this.player.stats.shadowModifier /= 1.2;
 			this.player.stats.fireModifier /= 1.2;
 			this.player.stats.manaCostModifier /= 0.8;
 		}
-		super.fade();
+		super.fade(endOfIteration);
 	}
 
 	tick(t) {
@@ -215,5 +215,120 @@ class PowerInfusion extends Aura {
 
 	ready() {
 		return this.cooldownRemaining <= 0;
+	}
+}
+
+class EyeOfMagtheridon extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Eye of Magtheridon";
+		this.durationTotal = 10;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.stats.spellPower += 170;
+		}
+		super.apply();
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active) {
+			this.player.stats.spellPower -= 170;
+		}
+		super.fade(endOfIteration);
+	}
+}
+
+class SextantOfUnstableCurrents extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Sextant of Unstable Currents";
+		this.durationTotal = 15;
+		this.hiddenCooldown = 45;
+		this.hiddenCooldownRemaining = 0;
+		this.procChance = 20; // percent
+	}
+
+	apply() {
+		if (!this.active && this.hiddenCooldownRemaining == 0) {
+			this.player.stats.spellPower += 190;
+			this.hiddenCooldownRemaining = this.hiddenCooldown;
+			super.apply();
+		}
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active) {
+			this.player.stats.spellPower -= 190;
+		}
+		super.fade(endOfIteration);
+	}
+
+	tick(t) {
+		this.hiddenCooldownRemaining = Math.max(0,this.hiddenCooldownRemaining - t);
+		super.tick(t);
+	}
+}
+
+class QuagmirransEye extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Quagmirran's Eye";
+		this.hiddenCooldown = 45;
+		this.hiddenCooldownRemaining = 0;
+		this.durationTotal = 6;
+		this.procChance = 10;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.stats.hasteRating += 320;
+			this.hiddenCooldownRemaining = this.hiddenCooldown;
+			super.apply();
+		}
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active) {
+			this.player.stats.hasteRating -= 320;
+		}
+		super.fade(endOfIteration);
+	}
+
+	tick(t) {
+		this.hiddenCooldownRemaining = Math.max(0,this.hiddenCooldownRemaining - t);
+		super.tick(t);
+	}
+}
+
+class ShiffarsNexusHorn extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Shiffar's Nexus-Horn";
+		this.hiddenCooldown = 45;
+		this.hiddenCooldownRemaining = 0;
+		this.durationTotal = 10;
+		this.procChance = 20;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.stats.spellPower += 225;
+			this.hiddenCooldownRemaining = this.hiddenCooldown;
+			super.apply();
+		}
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active) {
+			this.player.stats.spellPower -= 225;
+		}
+		super.fade(endOfIteration);
+	}
+
+	tick(t) {
+		this.hiddenCooldownRemaining = Math.max(0,this.hiddenCooldownRemaining - t);
+		super.tick(t);
 	}
 }

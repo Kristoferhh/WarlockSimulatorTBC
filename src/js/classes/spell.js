@@ -70,6 +70,11 @@ class Spell {
 			return;
 		}
 
+		if (isCrit && this.canCrit) {
+			if (this.player.trinketIds.includes(30626) && random(1,100) <= this.player.auras.sextantOfUnstableCurrents.procChance) this.player.auras.sextantOfUnstableCurrents.apply(); // Sextant of Unstable Currents
+			if (this.player.trinketIds.includes(28418) && random(1,100) <= this.player.auras.shiffarsNexusHorn.procChance) this.player.auras.shiffarsNexusHorn.apply(); // Shiffar's Nexus-Horn
+		}
+
 		if (this.isDot) {
 			this.player.auras[this.varName].apply(this.player.stats.spellPower + this.player.stats[this.school + "Power"]);
 		} else if (this.isAura) {
@@ -84,6 +89,11 @@ class Spell {
 		// 10% proc rate on all shadow or fire spells (including when dots applied) (needs confirmation)
 		if (this.player.sets['645'] >= 2 && ['shadow','fire'].includes(this.school) && random(1,100) <= 10) {
 			this.player.auras['shadowFlame' + this.school].apply();	
+		}
+
+		// Quagmirran's Eye
+		if (this.player.auras.quagmirransEye && this.player.auras.quagmirransEye.hiddenCooldownRemaining <= 0 && random(1,100) <= this.player.auras.quagmirransEye.procChance) {
+			this.player.auras.quagmirransEye.apply();
 		}
 	}
 

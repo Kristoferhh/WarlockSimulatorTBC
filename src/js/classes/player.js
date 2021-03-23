@@ -32,6 +32,7 @@ class Player {
 		this.selectedAuras = settings.auras;
 		this.enemy.shadowResist = Math.max(this.enemy.shadowResist - this.stats.spellPen, (this.enemy.level - this.level) * 8, 0);
 		this.enemy.fireResist = Math.max(this.enemy.fireResist - this.stats.spellPen, (this.enemy.level - this.level) * 8, 0);
+		this.trinketIds = [settings.items['trinket1'],settings.items['trinket2']];
 
 		// If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
 		if (customItemSlot && customItemID && customItemID !== settings.items[customItemSlot]) {
@@ -122,18 +123,18 @@ class Player {
 		// Trinkets
 		//todo optimize
 		this.trinkets = [];
-		if ([settings.items['trinket1'],settings.items['trinket2']].includes(23046)) this.trinkets.push(new RestrainedEssenceOfSapphiron(this));
-		if ([settings.items['trinket1'],settings.items['trinket2']].includes(34429)) this.trinkets.push(new ShiftingNaaruSliver(this));
-		if ([settings.items['trinket1'],settings.items['trinket2']].includes(32483)) this.trinkets.push(new SkullOfGuldan(this));
-		if ([settings.items['trinket1'],settings.items['trinket2']].includes(33829)) this.trinkets.push(new HexShrunkenHead(this));
-		if ([settings.items['trinket1'],settings.items['trinket2']].includes(29370)) this.trinkets.push(new IconOfTheSilverCrescent(this));
-		if ([settings.items['trinket1'],settings.items['trinket2']].includes(29132)) this.trinkets.push(new ScryersBloodgem(this));
-		if ([settings.items['trinket1'],settings.items['trinket2']].includes(25620)) this.trinkets.push(new AncientCrystalTalisman(this));
-		if ([settings.items['trinket1'],settings.items['trinket2']].includes(28223)) this.trinkets.push(new ArcanistsStone(this));
-		if ([settings.items['trinket1'],settings.items['trinket2']].includes(25936)) this.trinkets.push(new TerokkarTabletOfVim(this));
-		if ([settings.items['trinket1'],settings.items['trinket2']].includes(29179)) this.trinkets.push(new XirisGift(this));
-		if ([settings.items['trinket1'],settings.items['trinket2']].includes(28040)) this.trinkets.push(new VengeanceOfTheIllidari(this));
-		if ([settings.items['trinket1'],settings.items['trinket2']].includes(24126)) this.trinkets.push(new FigurineLivingRubySerpent(this));
+		if (this.trinketIds.includes(23046)) this.trinkets.push(new RestrainedEssenceOfSapphiron(this));
+		if (this.trinketIds.includes(34429)) this.trinkets.push(new ShiftingNaaruSliver(this));
+		if (this.trinketIds.includes(32483)) this.trinkets.push(new SkullOfGuldan(this));
+		if (this.trinketIds.includes(33829)) this.trinkets.push(new HexShrunkenHead(this));
+		if (this.trinketIds.includes(29370)) this.trinkets.push(new IconOfTheSilverCrescent(this));
+		if (this.trinketIds.includes(29132)) this.trinkets.push(new ScryersBloodgem(this));
+		if (this.trinketIds.includes(25620)) this.trinkets.push(new AncientCrystalTalisman(this));
+		if (this.trinketIds.includes(28223)) this.trinkets.push(new ArcanistsStone(this));
+		if (this.trinketIds.includes(25936)) this.trinkets.push(new TerokkarTabletOfVim(this));
+		if (this.trinketIds.includes(29179)) this.trinkets.push(new XirisGift(this));
+		if (this.trinketIds.includes(28040)) this.trinkets.push(new VengeanceOfTheIllidari(this));
+		if (this.trinketIds.includes(24126)) this.trinkets.push(new FigurineLivingRubySerpent(this));
 
 		// Assign the filler spell.
 		this.filler = null;
@@ -231,6 +232,10 @@ class Player {
 		if (this.rotation.curse.curseOfRecklessness) this.auras.curseOfRecklessness = new CurseOfRecklessnessAura(this);
 		if (this.rotation.curse.curseOfDoom) this.auras.curseOfDoom = new CurseOfDoomAura(this); this.auras.curseOfAgony = new CurseOfAgonyDot(this);
 		if (this.talents.nightfall > 0) this.auras.shadowTrance = new ShadowTrance(this);
+		if (this.trinketIds.includes(28789)) this.auras.eyeOfMagtheridon = new EyeOfMagtheridon(this);
+		if (this.trinketIds.includes(30626)) this.auras.sextantOfUnstableCurrents = new SextantOfUnstableCurrents(this);
+		if (this.trinketIds.includes(27683)) this.auras.quagmirransEye = new QuagmirransEye(this);
+		if (this.trinketIds.includes(28418)) this.auras.shiffarsNexusHorn = new ShiffarsNexusHorn(this);
 		if (this.sets['645'] >= 2) {
 			this.auras.shadowFlameshadow = new ShadowFlameShadow(this);
 			this.auras.shadowFlamefire = new ShadowFlameFire(this);
@@ -251,11 +256,19 @@ class Player {
 	}
 
 	isHit(isAfflictionSpell) {
+		let hit;
 		if (isAfflictionSpell) {
-			return (random(1,100 * this.stats.hitChanceMultiplier) <= (Math.min(99 * this.stats.hitChanceMultiplier,this.stats.hitChance + this.talents.suppression * 2 * this.stats.hitChanceMultiplier)));
+			hit = (random(1,100 * this.stats.hitChanceMultiplier) <= (Math.min(99 * this.stats.hitChanceMultiplier,this.stats.hitChance + this.talents.suppression * 2 * this.stats.hitChanceMultiplier)));
 		} else {
-			return (random(1,100 * this.stats.hitChanceMultiplier) <= Math.min(99 * this.stats.hitChanceMultiplier,this.stats.hitChance));
+			hit = (random(1,100 * this.stats.hitChanceMultiplier) <= Math.min(99 * this.stats.hitChanceMultiplier,this.stats.hitChance));
 		}
+
+		// Eye of Magtheridon
+		if (!hit && this.trinketIds.includes(28789)) {
+			this.auras.eyeOfMagtheridon.apply();
+		}
+
+		return hit;
 	}
 
 	isCrit(extraCrit = 0) {
