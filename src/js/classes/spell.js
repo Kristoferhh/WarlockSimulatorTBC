@@ -82,18 +82,19 @@ class Spell {
 		}
 	}
 
-	damage(isCrit) {
+	damage(isCrit, spellPower = this.player.stats.spellPower, shadowPower = this.player.stats.shadowPower, firePower = this.player.stats.firePower) {
 		let dmg = this.dmg;
 		// If casting Incinerate and Immolate is up, add the bonus damage.
 		if (this.varName == "incinerate" && this.player.auras.immolate && this.player.auras.immolate.active) {
 			dmg += this.bonusDamageFromImmolate;
 		}
-		dmg += ((this.player.stats.spellPower + this.player.stats[this.school + "Power"]) * this.coefficient);
+		if (this.school == "shadow") dmg += ((spellPower + shadowPower) * this.coefficient);
+		else if (this.school == "fire") dmg += ((spellPower + firePower) * this.coefficient);
 		dmg *= this.player.stats[this.school + "Modifier"];
 		dmg *= this.modifier;
 
 		// Improved Shadow Bolt
-		if (this.school == "shadow" && this.player.talents.improvedShadowBolt > 0 && this.player.auras.improvedShadowBolt.active) {
+		if (this.school == "shadow" && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active) {
 			dmg *= this.player.auras.improvedShadowBolt.modifier;
 			if (!this.isDot) this.player.auras.improvedShadowBolt.decrementStacks();
 		}
@@ -306,7 +307,7 @@ class LifeTap extends Spell {
 		this.casting = false;
 		let manaGain = (this.manaReturn + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient)) * this.modifier;
 		this.player.combatLog(this.name + " " + Math.round(manaGain));
-		if (this.player.mana + manaGain > this.player.stats.maxMana) console.log("Life Tap used at too high mana (mana wasted)"); // Warning for if the simulation ever decides to use life tap when it would overcap the player on mana.
+		if (this.player.mana + manaGain > this.player.stats.maxMana) this.player.combatLog("Life Tap used at too high mana (mana wasted)"); // Warning for if the simulation ever decides to use life tap when it would overcap the player on mana.
 		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain);
 
 	}
@@ -428,7 +429,6 @@ class CurseOfDoom extends Spell {
 		this.dmg = 4200;
 		this.coefficient = 2;
 		this.cooldown = 60;
-		this.doesDamage = true;
 		this.school = "shadow";
 		this.type = "affliction";
 		this.isAura = true;

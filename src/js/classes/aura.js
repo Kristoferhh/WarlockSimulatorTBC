@@ -17,7 +17,9 @@ class Aura {
 	fade(endOfIteration = false) {
 		if (this.active) {
 			this.active = false;
-			if (!endOfIteration) this.player.combatLog(this.name + " faded");
+			if (!endOfIteration) {
+				this.player.combatLog(this.name + " faded");
+			}
 		}
 	}
 
@@ -82,6 +84,20 @@ class CurseOfDoomAura extends Aura {
 		super(player);
 		this.name = "Curse of Doom";
 		this.durationTotal = 60;
+		this.dmg = 4200;
+		this.coefficient = 2;
+	}
+
+	apply() {
+		this.spellPower = this.player.stats.spellPower + this.player.stats.shadowPower;
+		super.apply();
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active && !endOfIteration) {
+			this.player.spells.curseOfDoom.damage(false);
+		}
+		super.fade();
 	}
 }
 
