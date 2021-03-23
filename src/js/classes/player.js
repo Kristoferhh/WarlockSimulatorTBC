@@ -220,7 +220,6 @@ class Player {
 		if (this.rotation.finisher.deathCoil) this.spells.deathCoil = new DeathCoil(this);
 
 		this.auras = {};
-
 		if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusion(this);
 		if (this.talents.improvedShadowBolt > 0) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this);
 		if (this.rotation.dot.corruption) this.auras.corruption = new CorruptionDot(this);
@@ -237,7 +236,9 @@ class Player {
 			this.auras.shadowFlamefire = new ShadowFlameFire(this);
 		}
 		if (this.sets['559'] == 2) this.auras.spellstrikeProc = new SpellstrikeProc(this);
+	}
 
+	reset() {
 		this.castTimeRemaining = 0;
 		this.gcdValue = 1.5;
 		this.gcdRemaining = 0;
@@ -275,7 +276,7 @@ class Player {
 	}
 
 	combatLog(info) {
-		if (this.iteration == 1) {
+		if (this.iteration == 2) {
 			console.log("|" + (Math.round(this.fightTime * 10) / 10) + "|\t" + info);
 		}
 	}

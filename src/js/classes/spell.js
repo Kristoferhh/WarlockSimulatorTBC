@@ -4,8 +4,6 @@ class Spell {
 		this.castTime = 0;
 		this.manaCost = 0;
 		this.cooldown = 0;
-		this.cooldownRemaining = 0;
-		this.casting = false;
 		this.name = null;
 		this.varName = null; // Same as this.name except it's written in camelCase
 		this.isDot = false;
@@ -16,6 +14,13 @@ class Spell {
 		this.type = null; // affliction or destruction
 		this.travelTime = 0;
 		this.bonusCrit = 0;
+		this.cooldownRemaining = 0;
+		this.casting = false;
+	}
+
+	reset() {
+		this.cooldownRemaining = 0;
+		this.casting = false;
 	}
 
 	setup() {

@@ -29,9 +29,9 @@ class Trinket {
 		}
 	}
 
-	fade() {
+	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.combatLog(this.name + " faded");
+			if (!endOfIteration) this.player.combatLog(this.name + " faded");
 			for (let stat in this.stats) {
 				if (this.player.stats.hasOwnProperty(stat)) {
 					this.player.stats[stat] -= this.stats[stat];

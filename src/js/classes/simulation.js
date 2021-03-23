@@ -20,6 +20,7 @@ class Simulation {
 		let time = this.player.castTimeRemaining;
 		if (time == 0) time = Math.max(0.1,this.player.gcdRemaining);
 
+		// Look for the shortest time until an action needs to be done
 		if (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.auras.improvedShadowBolt.durationRemaining < time) time = this.player.auras.improvedShadowBolt.durationRemaining;
 		if (this.player.auras.corruption && this.player.auras.corruption.active && this.player.auras.corruption.tickTimerRemaining < time) time = this.player.auras.corruption.tickTimerRemaining; 
 		if (this.player.auras.unstableAffliction && this.player.auras.unstableAffliction.active && this.player.auras.unstableAffliction.tickTimerRemaining < time) time = this.player.auras.unstableAffliction.tickTimerRemaining;
@@ -28,6 +29,7 @@ class Simulation {
 		if (this.player.auras.curseOfAgony && this.player.auras.curseOfAgony.active && this.player.auras.curseOfAgony.tickTimerRemaining < time) time = this.player.auras.curseOfAgony.tickTimerRemaining;
 		if (this.player.auras.curseOfTheElements && this.player.auras.curseOfTheElements.active && this.player.auras.curseOfTheElements.durationRemaining < time) time = this.player.auras.curseOfTheElements.durationRemaining;
 		if (this.player.auras.curseOfRecklessness && this.player.auras.curseOfRecklessness.active && this.player.auras.curseOfRecklessness.durationRemaining < time) time = this.player.auras.curseOfRecklessness.durationRemaining;
+		if (this.player.auras.curseOfDoom && this.player.auras.curseOfDoom.active && this.player.auras.curseOfDoom.durationRemaining < time) time = this.player.auras.curseOfDoom.durationRemaining; 
 		if (this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.shadowTrance.durationRemaining < time) time = this.player.auras.shadowTrance.durationRemaining;
 		if (this.player.auras.shadowFlameshadow && this.player.auras.shadowFlameshadow.active && this.player.auras.shadowFlameshadow.durationRemaining < time) time = this.player.auras.shadowFlameshadow.durationRemaining;
 		if (this.player.auras.shadowFlamefire && this.player.auras.shadowFlamefire.active && this.player.auras.shadowFlamefire.durationRemaining < time) time = this.player.auras.shadowFlamefire.durationRemaining;
@@ -35,30 +37,47 @@ class Simulation {
 		if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.cooldownRemaining > 0 && this.player.auras.powerInfusion.cooldownRemaining < time) time = this.player.auras.powerInfusion.cooldownRemaining;
 		if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.active && this.player.auras.powerInfusion.durationRemaining < time) time = this.player.auras.powerInfusion.durationRemaining;
 		if (this.player.mp5Timer < time) time = this.player.mp5Timer;
-		for (let trinket in this.player.trinkets) {
-			if (this.player.trinkets[trinket].active && this.player.trinkets[trinket].durationRemaining < time) time = this.player.trinkets[trinket].durationRemaining;
-			if (this.player.trinkets[trinket].cooldownRemaining > 0 && this.player.trinkets[trinket].cooldownRemaining < time) time = this.player.trinkets[trinket].cooldownRemaining;
+		for (let i = 0; i < 2; i++) {
+			if (this.player.trinkets[i]) {
+				if (this.player.trinkets[i].active && this.player.trinkets[i].durationRemaining < time) time = this.player.trinkets[i].durationRemaining;
+				if (this.player.trinkets[i].cooldownRemaining > 0 && this.player.trinkets[i].cooldownRemaining < time) time = this.player.trinkets[i].cooldownRemaining;
+			}
 		}
 
+		// Pass time
 		// This needs to be the first modified value since the time in combat needs to be updated before spells start dealing damage/auras expiring etc. for the combat logging.
 		this.player.fightTime += time;
 		this.player.castTimeRemaining = Math.max(0,this.player.castTimeRemaining - time);
 
 		// Spells
-		for (let spell in this.player.spells) {
-			if (this.player.spells[spell].cooldownRemaining > 0 || this.player.spells[spell].casting) this.player.spells[spell].tick(time);
-		}
+		if (this.player.spells.shadowBolt && this.player.spells.shadowBolt.casting) this.player.spells.shadowBolt.tick(time);
+		if (this.player.spells.incinerate && this.player.spells.incinerate.casting) this.player.spells.incinerate.tick(time);
+		if (this.player.spells.searingPain && this.player.spells.searingPain.casting) this.player.spells.searingPain.tick(time);
+		if (this.player.spells.immolate && this.player.spells.immolate.casting) this.player.spells.immolate.tick(time);
+		if (this.player.spells.corruption && this.player.spells.corruption.casting) this.player.spells.corruption.tick(time);
+		if (this.player.spells.unstableAffliction && this.player.spells.unstableAffliction.casting) this.player.spells.unstableAffliction.tick(time);
+		if (this.player.spells.deathCoil && this.player.spells.deathCoil.cooldownRemaining > 0) this.player.spells.deathCoil.tick(time);
+		if (this.player.spells.shadowburn && this.player.spells.shadowburn.cooldownRemaining > 0) this.player.spells.shadowburn.tick(time);
 
 		// Auras
-		for (let aura in this.player.auras) {
-			if (this.player.auras[aura].active || this.player.auras[aura].name == "Power Infusion") this.player.auras[aura].tick(time);
-		}
+		if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.tick(time);
+		if (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active) this.player.auras.improvedShadowBolt.tick(time);
+		if (this.player.auras.corruption && this.player.auras.corruption.active) this.player.auras.corruption.tick(time);
+		if (this.player.auras.unstableAffliction && this.player.auras.unstableAffliction.active) this.player.auras.unstableAffliction.tick(time);
+		if (this.player.auras.siphonLife && this.player.auras.siphonLife.active) this.player.auras.siphonLife.tick(time);
+		if (this.player.auras.immolate && this.player.auras.immolate.active) this.player.auras.immolate.tick(time);
+		if (this.player.auras.curseOfAgony && this.player.auras.curseOfAgony.active) this.player.auras.curseOfAgony.tick(time);
+		if (this.player.auras.curseOfTheElements && this.player.auras.curseOfTheElements.active) this.player.auras.curseOfTheElements.tick(time);
+		if (this.player.auras.curseOfRecklessness && this.player.auras.curseOfRecklessness.active) this.player.auras.curseOfRecklessness.tick(time);
+		if (this.player.auras.curseOfDoom && this.player.auras.curseOfDoom.active) this.player.auras.curseOfDoom.tick(time);
+		if (this.player.auras.shadowFlameshadow && this.player.auras.shadowFlameshadow.active) this.player.auras.shadowFlameshadow.tick(time);
+		if (this.player.auras.shadowFlamefire && this.player.auras.shadowFlamefire.active) this.player.auras.shadowFlamefire.tick(time);
+		if (this.player.auras.spellstrikeProc && this.player.auras.spellstrikeProc.active) this.player.auras.spellstrikeProc.tick(time);
 
 		// Trinkets
-		for (let trinket in this.player.trinkets) {
-			this.player.trinkets[trinket].tick(time);
-		}
-
+		if (this.player.trinkets[0]) this.player.trinkets[0].tick(time);
+		if (this.player.trinkets[1]) this.player.trinkets[1].tick(time);
+		
 		this.player.gcdRemaining = Math.max(0,this.player.gcdRemaining - time);
 		this.player.mp5Timer = Math.max(0,this.player.mp5Timer - time);
 		if (this.player.mp5Timer == 0) {
@@ -76,10 +95,26 @@ class Simulation {
 		let minDps = 9999;
 		let maxDps = 0;
 		let startTime = performance.now();
+		this.player.initialize();
+		this.timeTotal = 0; // Used for benchmarking
 
 		console.log("------- Simualtion start -------");
 		for(this.player.iteration = 1; this.player.iteration <= this.iterations; this.player.iteration++) {
-			this.player.initialize();
+			let b = performance.now();
+			// Reset/initialize values for spells that have a cooldown or a cast time
+			if (this.player.spells.shadowBolt) this.player.spells.shadowBolt.reset();
+			if (this.player.spells.incinerate) this.player.spells.incinerate.reset();
+			if (this.player.spells.searingPain) this.player.spells.searingPain.reset();
+			if (this.player.spells.corruption) this.player.spells.corruption.reset();
+			if (this.player.spells.unstableAffliction) this.player.spells.unstableAffliction.reset();
+			if (this.player.spells.immolate) this.player.spells.immolate.reset();
+			if (this.player.spells.curseOfDoom) this.player.spells.curseOfDoom.reset();
+			if (this.player.spells.shadowburn) this.player.spells.shadowburn.reset();
+			if (this.player.spells.deathCoil) this.player.spells.deathCoil.reset();
+			if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.reset();
+			this.player.reset(); // Resets mana, global cooldown etc.
+			this.timeTotal += performance.now() - b;
+
 			this.player.iterationDamage = 0;
 			let fightLength = random(this.minTime, this.maxTime);
 
@@ -103,8 +138,10 @@ class Simulation {
 								this.player.cast('lifeTap');
 							}
 						} else {
-							if (this.player.curse && !this.player.auras[this.player.curse].active && this.player.spells[this.player.curse].ready()) {
-								this.player.cast(this.player.curse);
+							if (this.player.curse && !this.player.auras[this.player.curse].active && !this.player.auras.curseOfAgony.active && (this.player.spells[this.player.curse].ready() || this.player.spells.curseOfAgony.ready())) {
+								if ((this.player.curse == "curseOfDoom" && timeRemaining > 60) || this.player.curse !== "curseOfDoom") this.player.cast(this.player.curse);
+								//todo the sim says it's worth to cast CoA here even if it would only be up for <40% of its duration, confirm.
+								else if (timeRemaining / this.player.auras.curseOfAgony.durationTotal >= 18/24) this.player.cast("curseOfAgony");
 							} else {
 								if (this.player.rotation.dot.unstableAffliction && !this.player.auras.unstableAffliction.active && this.player.spells.unstableAffliction.ready() && ((timeRemaining - this.player.spells.unstableAffliction.castTime) / this.player.auras.unstableAffliction.durationTotal) >= 9/this.player.auras.unstableAffliction.durationTotal) {
 									this.player.cast("unstableAffliction");
@@ -121,10 +158,8 @@ class Simulation {
 									if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.ready()) {
 										this.player.auras.powerInfusion.apply();
 									}
-									for (let trinket in this.player.trinkets) {
-										if (this.player.trinkets[trinket].ready()) {
-											this.player.trinkets[trinket].use();
-										}
+									for (let i = 0; i < 2; i++) {
+										if (this.player.trinkets[0] && this.player.trinkets[0].ready()) this.player.trinkets[0].use();
 									}
 									this.player.cast(this.player.filler);
 								} else {
@@ -152,11 +187,25 @@ class Simulation {
 				});
 			}
 
-			// Reset/end all active auras
-			for (let aura in this.player.auras) {
-				this.player.auras[aura].fade(true);
+			// Reset/end all active auras and spell cooldowns
+			if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.fade(true);
+			if (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active) this.player.auras.improvedShadowBolt.fade(true);
+			if (this.player.auras.corruption && this.player.auras.corruption.active) this.player.auras.corruption.fade(true);
+			if (this.player.auras.unstableAffliction && this.player.auras.unstableAffliction.active) this.player.auras.unstableAffliction.fade(true);
+			if (this.player.auras.siphonLife && this.player.auras.siphonLife.active) this.player.auras.siphonLife.fade(true);
+			if (this.player.auras.immolate && this.player.auras.immolate.active) this.player.auras.immolate.fade(true);
+			if (this.player.auras.curseOfAgony && this.player.auras.curseOfAgony.active) this.player.auras.curseOfAgony.fade(true);
+			if (this.player.auras.curseOfTheElements && this.player.auras.curseOfTheElements.active) this.player.auras.curseOfTheElements.fade(true);
+			if (this.player.auras.curseOfRecklessness && this.player.auras.curseOfRecklessness.active) this.player.auras.curseOfRecklessness.fade(true);
+			if (this.player.auras.curseOfDoom && this.player.auras.curseOfDoom.active) this.player.auras.curseOfDoom.fade(true);
+			if (this.player.auras.shadowFlameshadow && this.player.auras.shadowFlameshadow.active) this.player.auras.shadowFlameshadow.fade(true);
+			if (this.player.auras.shadowFlamefire && this.player.auras.shadowFlamefire.active) this.player.auras.shadowFlamefire.fade(true);
+			if (this.player.auras.spellstrikeProc && this.player.auras.spellstrikeProc.active) this.player.auras.spellstrikeProc.fade(true);
+			for (let i = 0; i < 2; i++) {
+				if (this.player.trinkets[i]) this.player.trinkets[i].fade(true);
 			}
 		}
+		if (this.timeTotal > 0) console.log(this.timeTotal);
 
 		console.log('------- Simulation end -------');
 		this.simulationEnd({

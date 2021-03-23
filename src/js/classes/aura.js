@@ -185,6 +185,10 @@ class PowerInfusion extends Aura {
 		this.cooldownRemaining = 0;
 	}
 
+	reset() {
+		this.cooldownRemaining = 0;
+	}
+
 	apply() {
 		if (!this.active) {
 			this.player.stats.shadowModifier *= 1.2;
