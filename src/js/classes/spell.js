@@ -15,6 +15,7 @@ class Spell {
 		this.school = null; // The school that the spell belongs to such as shadow or fire
 		this.type = null; // affliction or destruction
 		this.travelTime = 0;
+		this.bonusCrit = 0;
 	}
 
 	setup() {
@@ -50,7 +51,7 @@ class Spell {
 		let isCrit = false;
 		if (this.canCrit) {
 			// Checks if the spell is a crit.
-			isCrit = this.player.isCrit(); // todo add extra crit from Improved Searing Pain
+			isCrit = this.player.isCrit(this.bonusCrit);
 			if (isCrit) {
 				// Increment the crit counter whether the spell hits or not so that the crit % on the damage breakdown is correct. Otherwise the crit % will be lower due to lost crits when the spell misses.
 				this.player.damageBreakdown[this.varName].crits = this.player.damageBreakdown[this.varName].crits + 1 || 1;
@@ -207,6 +208,7 @@ class SearingPain extends Spell {
 		this.canCrit = true;
 		this.school = "fire";
 		this.type = "destruction";
+		this.bonusCrit = 4 * player.talents.improvedSearingPain;
 		this.setup();
 	}
 }
