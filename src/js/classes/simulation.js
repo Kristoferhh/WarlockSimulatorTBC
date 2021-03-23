@@ -35,6 +35,10 @@ class Simulation {
 		if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.cooldownRemaining > 0 && this.player.auras.powerInfusion.cooldownRemaining < time) time = this.player.auras.powerInfusion.cooldownRemaining;
 		if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.active && this.player.auras.powerInfusion.durationRemaining < time) time = this.player.auras.powerInfusion.durationRemaining;
 		if (this.player.mp5Timer < time) time = this.player.mp5Timer;
+		for (let trinket in this.player.trinkets) {
+			if (this.player.trinkets[trinket].active && this.player.trinkets[trinket].durationRemaining < time) time = this.player.trinkets[trinket].durationRemaining;
+			if (this.player.trinkets[trinket].cooldownRemaining > 0 && this.player.trinkets[trinket].cooldownRemaining < time) time = this.player.trinkets[trinket].cooldownRemaining;
+		}
 
 		// This needs to be the first modified value since the time in combat needs to be updated before spells start dealing damage/auras expiring etc. for the combat logging.
 		this.player.fightTime += time;
@@ -48,6 +52,11 @@ class Simulation {
 		// Auras
 		for (let aura in this.player.auras) {
 			if (this.player.auras[aura].active || this.player.auras[aura].name == "Power Infusion") this.player.auras[aura].tick(time);
+		}
+
+		// Trinkets
+		for (let trinket in this.player.trinkets) {
+			this.player.trinkets[trinket].tick(time);
 		}
 
 		this.player.gcdRemaining = Math.max(0,this.player.gcdRemaining - time);
@@ -110,6 +119,11 @@ class Simulation {
 								// Use Power Infusion
 								if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.ready()) {
 									this.player.auras.powerInfusion.apply();
+								}
+								for (let trinket in this.player.trinkets) {
+									if (this.player.trinkets[trinket].ready()) {
+										this.player.trinkets[trinket].use();
+									}
 								}
 								this.player.cast(this.player.filler);
 							} else {

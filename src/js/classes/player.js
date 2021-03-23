@@ -119,6 +119,22 @@ class Player {
 		if (settings.auras.inspiringPresence === true) this.stats.extraHitChance += 1;
 		this.stats.hitChance = Math.round(this.getHitChance(parseInt(this.enemy.level)) * this.stats.hitChanceMultiplier); // The player's chance of hitting the enemy, between 61% and 99%
 
+		// Trinkets
+		//todo optimize
+		this.trinkets = [];
+		if ([settings.items['trinket1'],settings.items['trinket2']].includes(23046)) this.trinkets.push(new RestrainedEssenceOfSapphiron(this));
+		if ([settings.items['trinket1'],settings.items['trinket2']].includes(34429)) this.trinkets.push(new ShiftingNaaruSliver(this));
+		if ([settings.items['trinket1'],settings.items['trinket2']].includes(32483)) this.trinkets.push(new SkullOfGuldan(this));
+		if ([settings.items['trinket1'],settings.items['trinket2']].includes(33829)) this.trinkets.push(new HexShrunkenHead(this));
+		if ([settings.items['trinket1'],settings.items['trinket2']].includes(29370)) this.trinkets.push(new IconOfTheSilverCrescent(this));
+		if ([settings.items['trinket1'],settings.items['trinket2']].includes(29132)) this.trinkets.push(new ScryersBloodgem(this));
+		if ([settings.items['trinket1'],settings.items['trinket2']].includes(25620)) this.trinkets.push(new AncientCrystalTalisman(this));
+		if ([settings.items['trinket1'],settings.items['trinket2']].includes(28223)) this.trinkets.push(new ArcanistsStone(this));
+		if ([settings.items['trinket1'],settings.items['trinket2']].includes(25936)) this.trinkets.push(new TerokkarTabletOfVim(this));
+		if ([settings.items['trinket1'],settings.items['trinket2']].includes(29179)) this.trinkets.push(new XirisGift(this));
+		if ([settings.items['trinket1'],settings.items['trinket2']].includes(28040)) this.trinkets.push(new VengeanceOfTheIllidari(this));
+		if ([settings.items['trinket1'],settings.items['trinket2']].includes(24126)) this.trinkets.push(new FigurineLivingRubySerpent(this));
+
 		// Assign the filler spell.
 		this.filler = null;
 		for (let spell in settings.rotation.filler) {
