@@ -576,6 +576,7 @@ $("#sim-settings select, #sim-settings input").change(function() {
 	settings[$(this).attr('id')] = $(this).val();
 	localStorage.settings = JSON.stringify(settings);
 	refreshCharacterStats();
+	updateSimulationSettingsVisibility();
 });
 
 // to-do: don't allow people to start multiple simulations
@@ -850,7 +851,7 @@ function simDPS(items) {
 						for (let spell of Object.keys(simulationEnd.damageBreakdown)) {
 							let s = simulationEnd.damageBreakdown[spell];
 							let percentDamage = (~~(((s.damage / simulationEnd.totalDamage) * 100) * 100) / 100).toFixed(2);
-							if (s.damage > 0 || s.casts > 0) $("#damage-breakdown-table tbody").append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + Math.round((s.damage / simulationEnd.totalDuration) * 100) / 100 + "</td></tr>");
+							if (s.damage > 0 || s.casts > 0) $("#damage-breakdown-table tbody").append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (Math.round((s.damage / simulationEnd.totalDuration) * 100) / 100 || 0) + "</td></tr>");
 						}
 						$("#damage-breakdown-section").css('display', 'inline-block');
 						$("#damage-breakdown-table").tablesorter();
@@ -1000,8 +1001,15 @@ function updateSimulationSettingsVisibility() {
 
 	if (talents.demonicSacrifice === 0 || talents.masterDemonologist > 0 || talents.darkPact > 0) {
 		$("#petChoice").closest('li').show();
+
+		if (!$("#sacrificePet").is(":visible") || $("#sacrificePet").val() == "no") {
+			$("#petMode").closest('li').show();
+		} else {
+			$("#petMode").closest('li').hide();
+		}
 	} else {
 		$("#petChoice").closest('li').hide();
+		$("#petMode").closest('li').hide();
 	}
 
 	if (talents.summonFelguard === 0) {

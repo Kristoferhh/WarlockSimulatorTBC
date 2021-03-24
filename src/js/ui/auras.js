@@ -141,12 +141,12 @@ const _auras = {
 			"natureModifier": 1.05,
 			"iconName": "Spell_shadow_misery",
 			"id": 33200
-		},
+		}/*,
 		"judgementOfTheCrusader": {
 			"name": "Judgement of the Crusader",
 			"iconName": "spell_holy_holysmite",
 			"id": 21183
-		}
+		}*/
 	},
 	"consumables": {
 		"flaskOfPureDeath": {

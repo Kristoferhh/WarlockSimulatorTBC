@@ -179,6 +179,7 @@ class Player {
 			this.stats.spellPower += (100 * (1 + 0.1 * this.talents.demonicAegis));
 		}
 		// Add spell power from Improved Divine Spirit
+		this.stats.spiritModifier *= (1 - (0.01 * settings.talents.demonicEmbrace));
 		if (settings.auras.prayerOfSpirit && settings.simSettings.improvedDivineSpirit) this.stats.spellPower += (this.stats.spirit * this.stats.spiritModifier * (0 + ((Number(settings.simSettings.improvedDivineSpirit) || 0) / 10)));
 
 		// Add % dmg modifiers from Curse of the Elements + Malediction

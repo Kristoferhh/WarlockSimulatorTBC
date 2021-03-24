@@ -78,6 +78,7 @@ var raceStats = {
 
 // Refreshes the player's values in the sidebar when changing e.g. gear, consumables, or buffs.
 function refreshCharacterStats() {
+	let spiritModifier = characterStats.spiritModifier * (1 - (0.01 * talents.demonicEmbrace));
 	let staminaModifier = characterStats.staminaModifier * (1 + (0.03 * talents.demonicEmbrace));
 	let stamina = characterStats.stamina;
 	// Blood Pact
@@ -113,7 +114,7 @@ function refreshCharacterStats() {
 
 	let spellPower = characterStats.spellPower;
 	if (auras.felArmor) spellPower += 100 * (1 + 0.1 * talents.demonicAegis);
-	if (auras.prayerOfSpirit) spellPower += (characterStats.spirit * characterStats.spiritModifier * (0.1 * $("#improvedDivineSpirit").val())); 
+	if (auras.prayerOfSpirit) spellPower += (characterStats.spirit * spiritModifier * (0.1 * $("#improvedDivineSpirit").val())); 
 	spellPower = Math.round(spellPower);
 
 	$("#character-health-val").text(Math.round((characterStats.health + (stamina * staminaModifier) * healthPerStamina) * (1 + (0.01 * talents.felStamina))));

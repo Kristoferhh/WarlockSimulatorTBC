@@ -128,6 +128,7 @@ class SiphonLifeDot extends DamageOverTime {
 		this.school = "shadow";
 		this.name = "Siphon Life";
 		this.coefficient = 1;
+		this.minimumDuration = 30;
 		this.setup();
 	}
 }
