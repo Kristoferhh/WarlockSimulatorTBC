@@ -132,7 +132,7 @@ $(".aura").click(function() {
 	$(this).attr('data-checked', !checkedVal);
 	auras[$(this).attr('name')] = !checkedVal;
 
-	if (auraName == "curseOfTheElements" || auraName == "prayerOfSpirit" || auraName == "powerOfTheGuardianWarlock" || auraName == "powerOfTheGuardianMage" || auraName == "drumsOfBattle" || auraName == "drumsOfWar" || auraName == "drumsOfRestoration" || auraName == "bloodlust") {
+	if (auraName == "totemOfWrath" || auraName == "curseOfTheElements" || auraName == "prayerOfSpirit" || auraName == "powerOfTheGuardianWarlock" || auraName == "powerOfTheGuardianMage" || auraName == "drumsOfBattle" || auraName == "drumsOfWar" || auraName == "drumsOfRestoration" || auraName == "bloodlust") {
 		updateSimulationSettingsVisibility();
 	}
 	modifyStatsFromAura(_auras[auraType][auraName], checkedVal);
@@ -637,7 +637,7 @@ $("#race-dropdown-list").change(function() {
 });
 
 // Loads items into the item table
-function loadItemsBySlot(itemSlot, subSlot = "") {
+function loadItemsBySlot(itemSlot, subSlot) {
 	// Set old item slot's selected value to false
 	$("#item-slot-selection-list li[data-selected='true']").attr('data-selected', 'false');
 	// Set the new item slot's seleected value to true
@@ -655,6 +655,12 @@ function loadItemsBySlot(itemSlot, subSlot = "") {
 
 	for (let item of Object.keys(items[itemSlot])) {
 		let i = items[itemSlot][item];
+
+		// If an item is unique and it is already equipped in the other slot then skip it
+		if (i.unique && (itemSlot == "ring" || itemSlot == "trinket") && subSlot !== null) {
+			let otherSlot = subSlot == '1' ? '2' : '1';
+			if (selectedItems[itemSlot + otherSlot] == i.id) continue;
+		}
 
 		// Add the item's gem sockets
 		let sockets = [];
@@ -801,7 +807,7 @@ function modifyStatsFromAura(auraObject, checked) {
 function simDPS(items) {
 	let item = $("#item-slot-selection-list li[data-selected='true']");
 	let itemSlot = item.attr('data-slot');
-	let itemSubslot = item.attr('data-subslot') || '';
+	let itemSubSlot = item.attr('data-subslot') || '';
 	let itemAmount = items.length;
 	let simulationsRunning = 0;
 	let simulationsFinished = 0;
@@ -830,8 +836,8 @@ function simDPS(items) {
 				} else if (simulationsFinished == itemAmount) {
 					$("#sim-all-items a").text("Simulate All Items");
 				}
-				savedItemDPS[itemSlot + itemSubslot] = savedItemDPS[itemSlot + itemSubslot] || {};
-				savedItemDPS[itemSlot + itemSubslot][simulationEnd.itemID] = avgDps;
+				savedItemDPS[itemSlot + itemSubSlot] = savedItemDPS[itemSlot + itemSubSlot] || {};
+				savedItemDPS[itemSlot + itemSubSlot][simulationEnd.itemID] = avgDps;
 				localStorage.savedItemDPS = JSON.stringify(savedItemDPS);
 
 				if (simulationsFinished === itemAmount) {
@@ -882,6 +888,7 @@ function simDPS(items) {
 				"player": Player.getSettings(),
 				"simulation": Simulation.getSettings(),
 				"itemSlot": itemSlot,
+				"itemSubSlot": itemSubSlot,
 				"itemID": items[i],
 				"itemAmount": itemAmount
 			}
@@ -1055,5 +1062,11 @@ function updateSimulationSettingsVisibility() {
 		$("#bloodlustAmount").closest('li').show();
 	} else {
 		$("#bloodlustAmount").closest('li').hide();
+	}
+
+	if (auras.totemOfWrath) {
+		$("#totemOfWrathAmount").closest('li').show();
+	} else {
+		$("#totemOfWrathAmount").closest('li').hide();
 	}
 }

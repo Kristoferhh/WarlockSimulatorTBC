@@ -1,7 +1,7 @@
 // Convertion calculations
 const hitRatingPerPercent = 12.6;
-const critRatingPerPercent = 22.08; // maybe 22.1
-const hasteRatingPerPercent = 15.77; // maybe 15.7
+const critRatingPerPercent = 22.08;
+const hasteRatingPerPercent = 15.77;
 const manaPerInt = 15;
 const healthPerStamina = 10;
 const critPerInt = 1 / 81.95;
@@ -89,7 +89,7 @@ function refreshCharacterStats() {
 	let critChance = Math.round((critRating / critRatingPerPercent + baseCritChancePercent) * 100) / 100 + talents.devastation + talents.backlash + talents.demonicTactics;
 	if (auras.moonkinAura) critChance += 5;
 	if (auras.judgementOfTheCrusader) critChance += 3;
-	if (auras.totemOfWrath) critChance += 3;
+	if (auras.totemOfWrath) critChance += 3 * $("#totemOfWrathAmount").val();
 	critChance = critChance.toFixed(2);
 
 	let hitChance = Math.round((characterStats.hitRating / hitRatingPerPercent) * 100) / 100;
