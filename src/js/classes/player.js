@@ -222,10 +222,10 @@ class Player {
 		if (this.rotation.dot.unstableAffliction) this.spells.unstableAffliction = new UnstableAffliction(this);
 		if (this.rotation.dot.siphonLife) this.spells.siphonLife = new SiphonLife(this);
 		if (this.rotation.dot.immolate) this.spells.immolate = new Immolate(this);
-		if (this.rotation.curse.curseOfAgony) this.spells.curseOfAgony = new CurseOfAgony(this);
+		if (this.rotation.curse.curseOfAgony || this.rotation.curse.curseOfDoom) this.spells.curseOfAgony = new CurseOfAgony(this);
 		if (this.rotation.curse.curseOfTheElements) this.spells.curseOfTheElements = new CurseOfTheElements(this);
 		if (this.rotation.curse.curseOfRecklessness) this.spells.curseOfRecklessness = new CurseOfRecklessness(this);
-		if (this.rotation.curse.curseOfDoom) this.spells.curseOfDoom = new CurseOfDoom(this); this.spells.curseOfAgony = new CurseOfAgony(this);
+		if (this.rotation.curse.curseOfDoom) this.spells.curseOfDoom = new CurseOfDoom(this);
 		if (this.rotation.finisher.shadowburn) this.spells.shadowburn = new Shadowburn(this);
 		if (this.rotation.finisher.deathCoil) this.spells.deathCoil = new DeathCoil(this);
 
@@ -236,10 +236,10 @@ class Player {
 		if (this.rotation.dot.unstableAffliction) this.auras.unstableAffliction = new UnstableAfflictionDot(this);
 		if (this.rotation.dot.siphonLife) this.auras.siphonLife = new SiphonLifeDot(this);
 		if (this.rotation.dot.immolate) this.auras.immolate = new ImmolateDot(this);
-		if (this.rotation.curse.curseOfAgony) this.auras.curseOfAgony = new CurseOfAgonyDot(this);
+		if (this.rotation.curse.curseOfAgony || this.rotation.curse.curseOfDoom) this.auras.curseOfAgony = new CurseOfAgonyDot(this);
 		if (this.rotation.curse.curseOfTheElements) this.auras.curseOfTheElements = new CurseOfTheElementsAura(this);
 		if (this.rotation.curse.curseOfRecklessness) this.auras.curseOfRecklessness = new CurseOfRecklessnessAura(this);
-		if (this.rotation.curse.curseOfDoom) this.auras.curseOfDoom = new CurseOfDoomAura(this); this.auras.curseOfAgony = new CurseOfAgonyDot(this);
+		if (this.rotation.curse.curseOfDoom) this.auras.curseOfDoom = new CurseOfDoomAura(this);
 		if (this.talents.nightfall > 0) this.auras.shadowTrance = new ShadowTrance(this);
 		if (this.trinketIds.includes(28789)) this.auras.eyeOfMagtheridon = new EyeOfMagtheridon(this);
 		if (this.trinketIds.includes(30626)) this.auras.sextantOfUnstableCurrents = new SextantOfUnstableCurrents(this);

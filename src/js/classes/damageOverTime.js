@@ -85,6 +85,7 @@ class CorruptionDot extends DamageOverTime {
 		this.school = "shadow";
 		this.name = "Corruption";
 		this.coefficient = 0.936 + (0.12 * player.talents.empoweredCorruption);
+		this.minimumDuration = 9;
 		this.boosted = false; // Track whether the corruption's dmg has been boosted by T5 4pc or not
 		this.setup();
 
@@ -113,6 +114,7 @@ class UnstableAfflictionDot extends DamageOverTime {
 		this.school = "shadow";
 		this.name = "Unstable Affliction";
 		this.coefficient = 1.2;
+		this.minimumDuration = 9;
 		this.setup();
 	}
 }
@@ -139,6 +141,7 @@ class ImmolateDot extends DamageOverTime {
 		this.school = "fire";
 		this.name = "Immolate";
 		this.coefficient = 0.65;
+		this.minimumDuration = 12;
 		this.boosted = false; // Track whether the Immolate's dmg has been boosted by T5 4pc or not
 		this.setup();
 
@@ -165,6 +168,7 @@ class CurseOfAgonyDot extends DamageOverTime {
 		this.school = "shadow";
 		this.name = "Curse of Agony";
 		this.coefficient = 1.2;
+		this.minimumDuration = 15;
 		this.setup();
 	}
 }

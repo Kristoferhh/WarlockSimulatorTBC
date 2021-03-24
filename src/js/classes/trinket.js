@@ -88,11 +88,6 @@ class SkullOfGuldan extends Trinket {
 			"hasteRating": 175
 		}
 	}
-
-	use() {
-		this.player.combatLog(">>>>>>>>>>>>>> AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH <<<<<<<<<<<<<<<<<<<<");
-		super.use();
-	}
 }
 
 class HexShrunkenHead extends Trinket {

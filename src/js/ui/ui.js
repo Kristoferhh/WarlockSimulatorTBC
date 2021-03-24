@@ -895,7 +895,7 @@ function simDPS(items) {
 		));
 	}
 
-	// Start as many simulations as 'maxWorkers' says can be run at once.
+	// Start as many simulations as 'maxWorkers' says can be run simultaneously.
 	while (simulationsRunning < maxWorkers && simIndex < simulations.length) {
 		simulations[simIndex++].start();
 		simulationsRunning++;
