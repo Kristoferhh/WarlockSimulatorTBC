@@ -6,7 +6,7 @@ ul {
 	border-right: 1px solid gray;
 	position: fixed;
 	height: 100%;
-	width: clamp(300px, 20%, 380px);
+	width: clamp(315px, 20%, 380px);
 	background-color: #226F54;
 	overflow: hidden;
 }
@@ -203,7 +203,8 @@ ul {
 	display: inline-block;
 	padding: 15px;
 	line-height: 25px;
-	width: 24%;
+	margin: auto;
+	width: 300px;
 }
 
 #sim-result-dps-div {
@@ -262,6 +263,10 @@ ul {
 #talents-container {
 	display: inline-block;
 	float: right;
+}
+
+#preset-talent-buttons {
+	text-align: center;
 }
 
 #talents-section {
@@ -404,7 +409,6 @@ ul {
 #item-slot-selection-list {
 	text-align: center;
 	width: 100%;
-	white-space: nowrap;
 }
 
 #item-slot-selection-list li {
@@ -494,10 +498,20 @@ body {
 	}
 }
 
-@media screen and (max-width: 1445px) {
+@media screen and (max-width: 1830px) {
+	#talents-container {
+		display: block;
+		float: none;
+	}
 	#talents-section {
 		width: 100%;
-		display: block;
 		text-align: center;
+
+	}
+}
+
+@media screen and (max-width: 1147px) {
+	#sim-settings {
+		display: block;
 	}
 }
