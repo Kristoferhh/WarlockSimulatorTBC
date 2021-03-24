@@ -164,9 +164,11 @@ class Simulation {
 							// If a curse if active but no curse is up (if Curse of Doom is selected then it checks if both CoD and Curse of Agony are not up since CoA is used when theres <60 sec left of the fight)
 							// If the curse is CoD then it checks if there's more than 60 seconds left of the fight or it checks if a CoA cast would be up for at least an x amount of seconds (minimum uptime for it to be worth casting although this depends on how much damage the player would do with their filler so this value might need to be changed)
 							if (this.player.curse && !this.player.auras[this.player.curse].active && ((this.player.auras.curseOfAgony && !this.player.auras.curseOfAgony.active) || !this.player.auras.curseOfAgony) && (this.player.spells[this.player.curse].ready() || this.player.spells.curseOfAgony.ready()) && (((this.player.curse == "curseOfDoom" && timeRemaining > 60) || this.player.curse !== "curseOfDoom") || timeRemaining >= this.player.auras.curseOfAgony.minimumDuration)) {
-								if ((this.player.curse == "curseOfDoom" && timeRemaining > 60) || this.player.curse !== "curseOfDoom") this.player.cast(this.player.curse);
-								//todo the sim says it's worth to cast CoA here even if it would only be up for <40% of its duration, confirm.
-								else if (timeRemaining >= this.player.auras.curseOfAgony.minimumDuration) this.player.cast("curseOfAgony");
+								if ((this.player.curse == "curseOfDoom" && timeRemaining > 60) || this.player.curse !== "curseOfDoom") {
+									this.player.cast(this.player.curse);
+								} else if (timeRemaining >= this.player.auras.curseOfAgony.minimumDuration) {
+									this.player.cast("curseOfAgony");
+								}
 							} else {
 								if (this.player.rotation.curse.curseOfAgony && !this.player.auras.curseOfAgony.active && this.player.spells.curseOfAgony.ready() && timeRemaining >= this.player.auras.curseOfAgony.minimumDuration) {
 									this.player.cast("curseOfAgony");
@@ -183,8 +185,16 @@ class Simulation {
 									if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.ready()) {
 										this.player.auras.powerInfusion.apply();
 									}
+									// Use on-use trinkets
 									for (let i = 0; i < 2; i++) {
-										if (this.player.trinkets[0] && this.player.trinkets[0].ready()) this.player.trinkets[0].use();
+										if (this.player.trinkets[i] && this.player.trinkets[i].ready()) {
+											this.player.trinkets[i].use();
+											// Set the other on-use trinket (if another is equipped) on cooldown for the duration of the trinket just used
+											let otherTrinketSlot = i == 1 ? 2 : 1;
+											if (this.player.trinkets[otherTrinketSlot] && this.player.trinkets[otherTrinketSlot].ready()) {
+												this.player.trinkets[otherTrinketSlot].cooldownRemaining = this.player.trinkets[i].duration;
+											}
+										}
 									}
 									this.player.cast(this.player.filler);
 								} else {

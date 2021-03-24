@@ -130,18 +130,17 @@ class Player {
 		this.stats.hitChance = Math.round(this.getHitChance(parseInt(this.enemy.level)) * this.stats.hitChanceMultiplier); // The player's chance of hitting the enemy, between 61% and 99%
 
 		// Trinkets
-		//todo optimize
 		this.trinkets = [];
-		if (this.trinketIds.includes(23046)) this.trinkets.push(new RestrainedEssenceOfSapphiron(this));
-		if (this.trinketIds.includes(34429)) this.trinkets.push(new ShiftingNaaruSliver(this));
 		if (this.trinketIds.includes(32483)) this.trinkets.push(new SkullOfGuldan(this));
+		if (this.trinketIds.includes(34429)) this.trinkets.push(new ShiftingNaaruSliver(this));
 		if (this.trinketIds.includes(33829)) this.trinkets.push(new HexShrunkenHead(this));
 		if (this.trinketIds.includes(29370)) this.trinkets.push(new IconOfTheSilverCrescent(this));
 		if (this.trinketIds.includes(29132)) this.trinkets.push(new ScryersBloodgem(this));
+		if (this.trinketIds.includes(23046)) this.trinkets.push(new RestrainedEssenceOfSapphiron(this));
+		if (this.trinketIds.includes(29179)) this.trinkets.push(new XirisGift(this));
 		if (this.trinketIds.includes(25620)) this.trinkets.push(new AncientCrystalTalisman(this));
 		if (this.trinketIds.includes(28223)) this.trinkets.push(new ArcanistsStone(this));
 		if (this.trinketIds.includes(25936)) this.trinkets.push(new TerokkarTabletOfVim(this));
-		if (this.trinketIds.includes(29179)) this.trinkets.push(new XirisGift(this));
 		if (this.trinketIds.includes(28040)) this.trinkets.push(new VengeanceOfTheIllidari(this));
 		if (this.trinketIds.includes(24126)) this.trinkets.push(new FigurineLivingRubySerpent(this));
 
