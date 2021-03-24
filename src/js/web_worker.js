@@ -12,7 +12,7 @@ importScripts(
 );
 
 onmessage = function(e) {
-	var player = new Player(e.data.player, e.data.itemSlot || null, e.data.itemID || null);
+	var player = new Player(e.data.player, e.data.itemSlot || null, e.data.itemSubSlot || null, e.data.itemID || null);
 	var simulation = new Simulation(player, e.data.simulation,
 		(simulationEnd) => {
 			this.postMessage({

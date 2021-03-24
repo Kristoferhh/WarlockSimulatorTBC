@@ -6,12 +6,15 @@ class Trinket {
 		this.active = false;
 		this.duration = 0;
 		this.durationRemaining = 0;
-		this.name = "undefined";
 		this.sharesCooldown = true;
 	}
 
 	ready() {
 		return this.cooldownRemaining <= 0;
+	}
+
+	reset() {
+		this.cooldownRemaining = 0;
 	}
 
 	use() {
@@ -84,6 +87,11 @@ class SkullOfGuldan extends Trinket {
 		this.stats = {
 			"hasteRating": 175
 		}
+	}
+
+	use() {
+		this.player.combatLog(">>>>>>>>>>>>>> AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH <<<<<<<<<<<<<<<<<<<<");
+		super.use();
 	}
 }
 

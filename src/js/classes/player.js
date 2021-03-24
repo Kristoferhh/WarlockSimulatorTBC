@@ -19,7 +19,7 @@ class Player {
 		}
 	}
 
-	constructor(settings = Player.getSettings(), customItemSlot = null, customItemID = null) {
+	constructor(settings, customItemSlot, customItemSubSlot, customItemID) {
 		console.clear();
 		this.stats = JSON.parse(JSON.stringify(settings.stats)); // Create a deep-copy of the character's stats since we need to modify the values.
 		this.stats.manaCostModifier = 1;
@@ -35,11 +35,11 @@ class Player {
 		this.trinketIds = [settings.items['trinket1'],settings.items['trinket2']];
 
 		// If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
-		if (customItemSlot && customItemID && customItemID !== settings.items[customItemSlot]) {
+		if (customItemSlot && customItemID && customItemID !== settings.items[customItemSlot + customItemSubSlot]) {
 			// Loop through all items in the custom item slot
 			for (let item in items[customItemSlot]) {
 				// Check if this is the currently equipped item
-				if (items[customItemSlot][item].id == settings.items[customItemSlot]) {
+				if (items[customItemSlot][item].id == settings.items[customItemSlot + customItemSubSlot]) {
 					// Remove stats from currently equipped item
 					for (let stat in items[customItemSlot][item]) {
 						if (this.stats.hasOwnProperty(stat)) {
@@ -49,15 +49,19 @@ class Player {
 					if (items[customItemSlot][item].hasOwnProperty("setID")) {
 						this.sets[items[customItemSlot][item].setID]--;
 					}
+					// If the item we're unequipping is a trinket we have equipped, then set its ID to null in the trinketIds array
+					if (this.trinketIds.includes(items[customItemSlot][item].id)) {
+						this.trinketIds[this.trinketIds.indexOf(items[customItemSlot][item].id)] = null;
+					}
 					// Remove stats from gems in the equipped item if there are any
-					if (settings.gems[customItemSlot] && settings.gems[customItemSlot][settings.items[customItemSlot]]) {
+					if (settings.gems[customItemSlot] && settings.gems[customItemSlot][settings.items[customItemSlot + customItemSubSlot]]) {
 						// Loop through each socket in the equipped item
-						for (let socket in settings.gems[customItemSlot][settings.items[customItemSlot]]) {
+						for (let socket in settings.gems[customItemSlot][settings.items[customItemSlot + customItemSubSlot]]) {
 							// Find the gem that is equipped in the socket by looking for its ID
 							for (let socketColor in gems) {
 								for (let gem in gems[socketColor]) {
 									// Check if the ID matches
-									if (gems[socketColor][gem].id == settings.gems[customItemSlot][settings.items[customItemSlot]][socket]) {
+									if (gems[socketColor][gem].id == settings.gems[customItemSlot][settings.items[customItemSlot + customItemSubSlot]][socket]) {
 										// Loop through the gem's stats and remove them from the player
 										for (let stat in gems[socketColor][gem]) {
 											if (this.stats.hasOwnProperty(stat)) {
@@ -99,6 +103,11 @@ class Player {
 					}
 				}
 			}
+		}
+		
+		// If neither of the trinkets' ids are null then either the test item is not a trinket or it's the item we already have equipped
+		if (this.trinketIds.indexOf(null) !== -1) {
+			this.trinketIds[this.trinketIds.indexOf(null)] = customItemID;
 		}
 
 		this.stats.health = (this.stats.health + (this.stats.stamina * this.stats.staminaModifier) * healthPerStamina) * (1 + (0.01 * settings.talents.felStamina));
@@ -290,7 +299,7 @@ class Player {
 
 	combatLog(info) {
 		if (this.iteration == 2) {
-			console.log("|" + (Math.round(this.fightTime * 10) / 10) + "|\t" + info);
+			console.log("|" + (Math.round(this.fightTime * 10000) / 10000).toFixed(4) + "| " + info);
 		}
 	}
 }

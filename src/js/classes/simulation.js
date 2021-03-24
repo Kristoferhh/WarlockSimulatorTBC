@@ -18,7 +18,7 @@ class Simulation {
 
 	passTime() {
 		let time = this.player.castTimeRemaining;
-		if (time == 0) time = Math.max(0.1,this.player.gcdRemaining);
+		if (time == 0) time = this.player.gcdRemaining
 
 		// Look for the shortest time until an action needs to be done
 		if (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.auras.improvedShadowBolt.durationRemaining < time) time = this.player.auras.improvedShadowBolt.durationRemaining;
@@ -161,16 +161,16 @@ class Simulation {
 								//todo the sim says it's worth to cast CoA here even if it would only be up for <40% of its duration, confirm.
 								else if (timeRemaining / this.player.auras.curseOfAgony.durationTotal >= 18/24) this.player.cast("curseOfAgony");
 							} else {
-								if (this.player.rotation.dot.unstableAffliction && !this.player.auras.unstableAffliction.active && this.player.spells.unstableAffliction.ready() && ((timeRemaining - this.player.spells.unstableAffliction.castTime) / this.player.auras.unstableAffliction.durationTotal) >= 9/this.player.auras.unstableAffliction.durationTotal) {
-									this.player.cast("unstableAffliction");
-								} else if (this.player.rotation.curse.curseOfAgony && !this.player.auras.curseOfAgony.active && this.player.spells.curseOfAgony.ready() && (timeRemaining / this.player.auras.curseOfAgony.durationTotal) >= 1) {
+								if (this.player.rotation.curse.curseOfAgony && !this.player.auras.curseOfAgony.active && this.player.spells.curseOfAgony.ready() && (timeRemaining / this.player.auras.curseOfAgony.durationTotal) >= 1) {
 									this.player.cast("curseOfAgony");
+								} else if (this.player.rotation.dot.unstableAffliction && !this.player.auras.unstableAffliction.active && this.player.spells.unstableAffliction.ready() && ((timeRemaining - this.player.spells.unstableAffliction.castTime) / this.player.auras.unstableAffliction.durationTotal) >= 9/this.player.auras.unstableAffliction.durationTotal) {
+									this.player.cast("unstableAffliction");
 								} else if (this.player.rotation.dot.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.ready()  && (timeRemaining / this.player.auras.siphonLife.durationTotal) >= 1) {
 									this.player.cast("siphonLife");
-								} else if (this.player.rotation.dot.immolate && !this.player.auras.immolate.active && this.player.spells.immolate.ready()  && ((timeRemaining - this.player.spells.immolate.castTime) / this.player.auras.immolate.durationTotal) >= 12/this.player.auras.immolate.durationTotal) {
-									this.player.cast("immolate");
 								} else if (this.player.rotation.dot.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready() && ((timeRemaining - this.player.spells.corruption.castTime) / this.player.auras.corruption.durationTotal) >= 9/this.player.auras.corruption.durationTotal) {
 									this.player.cast("corruption");
+								} else if (this.player.rotation.dot.immolate && !this.player.auras.immolate.active && this.player.spells.immolate.ready()  && ((timeRemaining - this.player.spells.immolate.castTime) / this.player.auras.immolate.durationTotal) >= 12/this.player.auras.immolate.durationTotal) {
+									this.player.cast("immolate");
 								} else if (this.player.spells[this.player.filler].ready()) {
 									// Use Power Infusion
 									if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.ready()) {
@@ -224,7 +224,10 @@ class Simulation {
 			if (this.player.auras.quagmirransEye && this.player.auras.quagmirransEye.active) this.player.auras.quagmirransEye.fade(true);
 			if (this.player.auras.shiffarsNexusHorn && this.player.auras.shiffarsNexusHorn.active) this.player.auras.shiffarsNexusHorn.fade(true);
 			for (let i = 0; i < 2; i++) {
-				if (this.player.trinkets[i]) this.player.trinkets[i].fade(true);
+				if (this.player.trinkets[i]) {
+					this.player.trinkets[i].fade(true);
+					this.player.trinkets[i].reset();
+				}
 			}
 		}
 		if (this.timeTotal > 0) console.log(this.timeTotal);

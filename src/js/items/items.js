@@ -1606,6 +1606,7 @@ const items = {
 			"spellPower": 28,
 			"hitRating": 12,
 			"resilienceRating": 11,
+			"unique": true,
 			"id": 28555,
 			"source": "50 Spirit Stones"
 		},
@@ -1615,6 +1616,7 @@ const items = {
 			"intellect": 17,
 			"spellPower": 23,
 			"critRating": 20,
+			"unique": true,
 			"id": 29367,
 			"source": "25 Badge of Justice - G'eras",
 			"phase": 1
@@ -1636,6 +1638,7 @@ const items = {
 			"stamina": 30,
 			"spellPower": 24,
 			"hitRating": 21,
+			"unique": true,
 			"id": 29172,
 			"source": "Cenarion Expedition - Exalted",
 			"phase": 1,
@@ -1647,6 +1650,7 @@ const items = {
 			"spellPower": 23,
 			"critRating": 14,
 			"hitRating": 10,
+			"unique": true,
 			"id": 28227,
 			"source": "Heroic Old Hillsbrad Foothills",
 			"phase": 1,
@@ -1657,6 +1661,7 @@ const items = {
 			"spellPower": 23,
 			"critRating": 17,
 			"spellPen": 15,
+			"unique": true,
 			"id": 29320,
 			"source": "Caverns of Time Quest",
 			"phase": 1,
@@ -1666,6 +1671,7 @@ const items = {
 			"intellect": 15,
 			"spellPower": 18,
 			"critRating": 14,
+			"unique": true,
 			"id": 25826,
 			"source": "Honor Hold/Thrallmar - Honored",
 			"phase": 1,
@@ -1676,6 +1682,7 @@ const items = {
 			"intellect": 6,
 			"spellPower": 37,
 			"hitRating": 8,
+			"unique": true,
 			"id": 21709,
 			"source": "AQ40",
 			"phase": 0
@@ -1684,6 +1691,7 @@ const items = {
 			"name": "Band of the Inevitable",
 			"spellPower": 36,
 			"hitRating": 8,
+			"unique": true,
 			"id": 23031,
 			"source": "Naxxramas",
 			"phase": 0
@@ -1694,6 +1702,7 @@ const items = {
 			"spellPower": 21,
 			"hitRating": 8,
 			"critRating": 14,
+			"unique": true,
 			"id": 23025,
 			"source": "Naxxramas",
 			"phase": 0
@@ -1703,6 +1712,7 @@ const items = {
 			"stamina": 24,
 			"spellPower": 29,
 			"setID": 529,
+			"unique": true,
 			"id": 23063,
 			"source": "Naxxramas",
 			"phase": 0
@@ -1715,6 +1725,7 @@ const items = {
 			"onUseSpellPower": 320,
 			"duration": 15,
 			"cooldown": 90,
+			"unique": true,
 			"id": 34429,
 			"source": "Sunwell Plateau",
 			"phase": 5 // confirm
@@ -1725,6 +1736,7 @@ const items = {
 			"onUseSpellPower": 211,
 			"duration": 20,
 			"cooldown": 120,
+			"unique": true,
 			"id": 33829,
 			"source": "Zul'Aman",
 			"phase": 4, // confirm
@@ -1736,6 +1748,7 @@ const items = {
 			"onUseHasteRating": 175,
 			"duration": 20,
 			"cooldown": 120,
+			"unique": true,
 			"id": 32483,
 			"source": "Black Temple",
 			"phase": 3, // confirm
@@ -1743,6 +1756,7 @@ const items = {
 		"sextantOfUnstableCurrents": {
 			"name": "Sextant of Unstable Currents",
 			"critRating": 40,
+			"unique": true,
 			"id": 30626,
 			"source": "Serpentshrine Cavern",
 			"phase": 2
@@ -1750,6 +1764,7 @@ const items = {
 		"voidStarTalisman": {
 			"name": "Voidstar Talisman",
 			"spellPower": 48,
+			"unique": true,
 			"id": 30449,
 			"source": "The Eye",
 			"phase": 2
@@ -1757,12 +1772,14 @@ const items = {
 		"eyeOfMagtheridon": {
 			"name": "Eye of Magtheridon",
 			"spellPower": 54,
+			"unique": true,
 			"id": 28789,
 			"source": "Magtheridon's Lair",
 			"phase": 1
 		},
 		"darkmoonCardCrusade": {
 			"name": "Darkmoon Card: Crusade",
+			"unique": true,
 			"id": 31856,
 			"source": "Blessings Deck",
 			"phase": 2, // unsure?
@@ -1773,6 +1790,7 @@ const items = {
 			"onUseSpellPower": 155,
 			"duration": 20,
 			"cooldown": 120,
+			"unique": true,
 			"id": 29370,
 			"source": "41 Badge of Justice - G'eras",
 			"phase": 1,
@@ -1780,6 +1798,7 @@ const items = {
 		"quagmirransEye": {
 			"name": "Quagmirran's Eye",
 			"spellPower": 38,
+			"unique": true,
 			"id": 27683,
 			"source": "Heroic Slave Pens",
 			"phase": 1
@@ -1790,12 +1809,14 @@ const items = {
 			"onUseSpellPower": 151,
 			"duration": 15,
 			"cooldown": 90,
+			"unique": true,
 			"id": 29132,
 			"source": "The Scryers - Revered",
 			"phase": 1
 		},
 		"theLightningCapacitor": {
 			"name": "The Lightning Capacitor",
+			"unique": true,
 			"id": 28785,
 			"source": "Karazhan",
 			"phase": 1
@@ -1806,6 +1827,7 @@ const items = {
 			"onUseSpellPower": 168,
 			"duration": 20,
 			"cooldown": 120,
+			"unique": true,
 			"id": 28223,
 			"source": "Heroic Old Hillsbrad Foothills",
 			"phase": 1
@@ -1813,6 +1835,7 @@ const items = {
 		"oculusOfTheHiddenEye": {
 			"name": "Oculus of the Hidden Eye",
 			"spellPower": 34,
+			"unique": true,
 			"id": 26055,
 			"source": "Auchenai Crypts",
 			"phase": 1
@@ -1820,6 +1843,7 @@ const items = {
 		"markOfDefiance": {
 			"name": "Mark of Defiance",
 			"spellPower": 33,
+			"unique": true,
 			"id": 27922,
 			"source": "30 Mark of Honor Hold / Thrallmar",
 			"phase": 1
@@ -1830,6 +1854,7 @@ const items = {
 			"onUseSpellPower": 151,
 			"duration": 15,
 			"cooldown": 90,
+			"unique": true,
 			"id": 29179,
 			"source": "The Sha'tar -  Revered",
 			"phase": 1
@@ -1837,6 +1862,7 @@ const items = {
 		"shiffarsNexusHorn": {
 			"name": "Shiffar's Nexus-Horn",
 			"critRating": 30,
+			"unique": true,
 			"id": 28418,
 			"source": "Arcatraz",
 			"phase": 1
@@ -1848,6 +1874,7 @@ const items = {
 			"onUseSpellPower": 151,
 			"duration": 20,
 			"cooldown": 300,
+			"unique": true,
 			"id": 24126,
 			"source": "Jewelcrafting",
 			"phase": 1
@@ -1858,6 +1885,7 @@ const items = {
 			"onUseSpellPower": 120,
 			"duration": 15,
 			"cooldown": 90,
+			"unique": true,
 			"id": 28040,
 			"source": "Hellfire Peninsula Quest",
 			"phase": 1,
@@ -1868,6 +1896,7 @@ const items = {
 			"onUseSpellPower": 105,
 			"duration": 20,
 			"cooldown": 120,
+			"unique": true,
 			"id": 25620,
 			"source": "Zangarmarsh Quest",
 			"phase": 1
@@ -1878,6 +1907,7 @@ const items = {
 			"onUseSpellPower": 84,
 			"duration": 15,
 			"cooldown": 90,
+			"unique": true,
 			"id": 25936,
 			"source": "Terokkar Forest Quest",
 			"phase": 1
@@ -1888,6 +1918,7 @@ const items = {
 			"onUseSpellPower": 130,
 			"duration": 20,
 			"cooldown": 120,
+			"unique": true,
 			"id": 23046,
 			"source": "Naxxramas",
 			"phase": 0
@@ -1895,6 +1926,7 @@ const items = {
 		"markOfTheChampion": {
 			"name": "Mark of the Champion",
 			"spellPower": 85,
+			"unique": true,
 			"id": 23207,
 			"source": "Naxxramas",
 			"phase": 0
@@ -1903,6 +1935,7 @@ const items = {
 			"name": "Neltharion's Tear",
 			"spellPower": 44,
 			"hitRating": 16,
+			"unique": true,
 			"id": 19379,
 			"source": "Blackwing Lair",
 			"phase": 0

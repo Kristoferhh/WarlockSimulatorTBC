@@ -33,12 +33,13 @@ class Spell {
 	}
 
 	startCast() {
-		this.player.gcdRemaining = this.player.gcdValue;
+		// 1 second is the minimum for global cooldown?
+		this.player.gcdRemaining = Math.max(1,Math.round((this.player.gcdValue / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000);
 
 		if (this.castTime > 0) {
 			this.casting = true;
-			this.player.castTimeRemaining = this.castTime;
-			this.player.combatLog("Started casting " + this.name);
+			this.player.castTimeRemaining = Math.round((this.castTime / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000;
+			this.player.combatLog("Started casting " + this.name + ". Cast time: " + this.player.castTimeRemaining + " (" + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + "% haste at a base cast speed of " + this.castTime + "). Global cooldown: " + this.player.gcdRemaining);
 		} else {
 			this.player.combatLog("Cast " + this.name);
 			this.cast();
