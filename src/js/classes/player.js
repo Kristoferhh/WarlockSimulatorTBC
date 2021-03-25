@@ -20,7 +20,7 @@ class Player {
 		}
 	}
 
-	constructor(settings, customItemSlot, customItemSubSlot, customItemID) {
+	constructor(settings, customItemSlot = null, customItemSubSlot = "", customItemID = null) {
 		console.clear();
 		this.stats = JSON.parse(JSON.stringify(settings.stats)); // Create a deep-copy of the character's stats since we need to modify the values.
 		this.stats.manaCostModifier = 1;
@@ -28,7 +28,6 @@ class Player {
 		this.rotation = settings.rotation;
 		this.talents = settings.talents;
 		this.level = 70;
-		this.itemID = customItemID || settings.items[settings.selectedItemSlot] || 0;
 		this.sets = settings.sets;
 		this.selectedAuras = settings.auras;
 		this.enemy.shadowResist = Math.max(this.enemy.shadowResist - this.stats.spellPen, (this.enemy.level - this.level) * 8, 0);
