@@ -1022,6 +1022,12 @@ function updateSimulationSettingsVisibility() {
 		$("#petMode").closest('li').hide();
 	}
 
+	if ($("#petMode").is(":visible") && $("#petMode").val() == PetModes.AGGRESSIVE) {
+		$("#enemyArmor").closest('li').show();
+	} else {
+		$("#enemyArmor").closest('li').hide();
+	}
+
 	if (talents.summonFelguard === 0) {
 		$("#petChoice option[value='felguard']").hide();
 	} else {

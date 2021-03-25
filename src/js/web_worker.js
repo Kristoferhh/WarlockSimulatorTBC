@@ -4,6 +4,7 @@ importScripts(
 	'./player/stats.js',
 	'./classes/simulation.js',
 	'./classes/spell.js',
+	'./classes/petSpell.js',
 	'./classes/trinket.js',
 	'./functions.js',
 	'./classes/aura.js',

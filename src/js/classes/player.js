@@ -10,10 +10,10 @@ class Player {
 			"stats": characterStats,
 			"simSettings": settings,
 			"enemy": {
-				"level": $("input[name='target-level']").val(),
-				"shadowResist": $("input[name='target-shadow-resistance']").val(),
-				"fireResist": $("input[name='target-fire-resistance']").val(),
-				"armor": 7700 // fix
+				"level": parseInt($("input[name='target-level']").val()),
+				"shadowResist": parseInt($("input[name='target-shadow-resistance']").val()),
+				"fireResist": parseInt($("input[name='target-fire-resistance']").val()),
+				"armor": parseInt($("input[name='enemyArmor']").val())
 			},
 			"rotation": rotation,
 			"selectedItemSlot": $("#item-slot-selection-list li[data-selected='true']").attr('data-slot')

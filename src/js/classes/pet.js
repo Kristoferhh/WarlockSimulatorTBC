@@ -20,14 +20,15 @@ class Pet {
 	constructor(player) {
 		this.player = player;
 		this.statModifiers = {};
-		this.ap = 0;
-		this.spellPower = 0;
 		this.swingTimerRemaining = 0;
 		this.enemyDodgeChance = 5;
 		this.castTimeRemaining = 0;
 		this.critChance = 5 + player.talents.demonicTactics;
 		this.spellCritChance = 5 + player.talents.demonicTactics;
 		this.modifier = 1 * (1 + (0.04 * player.talents.unholyPower)) * (1 + (0.05 * player.talents.soulLink));
+		this.intellectModifier = 1 + (0.05 * player.talents.felIntellect);
+		this.staminaModifier = 1;
+		this.mp5 = 0;
 		this.player.damageBreakdown = {};
 		// Formula from https://wowpedia.fandom.com/wiki/Armor
 		if (player.level >= 60 && player.level <= 79) {
@@ -45,67 +46,28 @@ class Pet {
 		}
 	}
 
+	calculateStatsFromPlayer() {
+		this.stamina = (this.stats.baseStamina + 0.3 * (this.player.stats.stamina * this.player.stats.staminaModifier)) * this.staminaModifier;
+		this.ap = this.stats.baseAp + (this.player.stats.spellPower + Math.max(this.player.stats.shadowPower,this.player.stats.firePower)) * 0.57;
+		this.spellPower = (this.player.stats.spellPower + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15;
+		this.intellect = (this.stats.baseIntellect + 0.3 * (this.player.stats.intellect * this.player.stats.intellectModifier)) * this.intellectModifier;
+		this.maxMana = this.stats.baseMana + this.intellect * 4.7 * this.intellectModifier; // confirm
+	}
+
+	cast(spellName) {
+		this.spells[spellName].startCast();
+	}
+
 	reset() {
 		this.mana = this.maxMana;
 	}
 
-	ready() {
-		if (this.type == PetTypes.MELEE) {
-			return this.swingTimerRemaining <= 0;
-		} else if (this.type == PetTypes.RANGED) {
-			return this.castTimeRemaining <= 0;
-		}
-	}
-
-	attack() {
-		if (this.type == PetTypes.MELEE) {
-			this.swingTimerRemaining = this.swingTimer;
-			this.player.damageBreakdown.melee.casts = this.player.damageBreakdown.melee.casts + 1 || 1;
-			// Check for crit
-			let isCrit = random(1,100) * this.player.stats.critChanceMultiplier <= this.critChance * this.player.stats.critChanceMultiplier;
-			if (isCrit) {
-				this.player.damageBreakdown.melee.crits = this.player.damageBreakdown.melee.crits + 1 || 1;
-			}
-			// Check for hit
-			let isMiss = random(1,100) > this.hitChance;
-			if (isMiss) {
-				this.player.damageBreakdown.melee.misses = this.player.damageBreakdown.melee.misses + 1 || 1;
-				// If the attack missed but it was calculated to be a crit (this is the way WoW calculates crits, by calculating it across all attacks, even misses)
-				if (isCrit) {
-					this.player.damageBreakdown.melee.missedCrits = this.player.damageBreakdown.melee.missedCrits + 1 || 1;
-				}
-				this.player.combatLog(this.name + " melee *miss*");
-			}
-			// Check for dodge
-			let isDodge = random(1,100) <= this.enemyDodgeChance;
-			if (isDodge) {
-				this.player.damageBreakdown.melee.dodges = this.player.damageBreakdown.melee.dodges + 1 || 1;
-				this.player.combatLog(this.name + " melee *dodge*");
-			}
-			if (isMiss || isDodge) return;
-
-			// Calculate damage
-			let dmg = this.damage + this.ap / 7;
-			dmg *= this.modifier;
-			if (isCrit) {
-				dmg *= 1.5;
-			}
-			// Apply physical damage reduction from armor
-			dmg *= this.armorMultiplier;
-
-			this.player.iterationDamage += dmg;
-			if (isCrit) this.player.combatLog(this.name + " melee *" + Math.round(dmg) + "*");
-			else this.player.combatLog(this.name + " melee " + Math.round(dmg));
-			this.player.damageBreakdown.melee.damage = this.player.damageBreakdown.melee.damage + dmg || dmg;
-		}
-	}
-
 	tick(t) {
 		if (this.type == PetTypes.MELEE) {
-			this.swingTimerRemaining = Math.max(0, this.swingTimerRemaining - t);
-		} else if (this.type == PetTypes.RANGED) {
+			this.spells.melee.tick(t);
+		} /*else if (this.type == PetTypes.RANGED) {
 			this.castTimeRemaining = Math.max(0, this.castTimeRemaining - t);
-		}
+		}*/
 	}
 }
 
@@ -114,10 +76,14 @@ class Imp extends Pet {
 		super(player);
 		this.name = "Imp";
 		this.type = PetTypes.RANGED;
-		this.stamina = 114;
-		this.intellect = 327;
-		this.maxMana = 849 + this.intellect * 4.7 * (1 + 0.05 * player.talents.felIntellect);
+		this.stats = {
+			"baseStamina": 114,
+			"baseIntellect": 327,
+			"baseAp": 0,
+			"baseMana": 849
+		};
 		this.pet = Pets.IMP;
+		this.calculateStatsFromPlayer();
 	}
 }
 
@@ -135,14 +101,17 @@ class Succubus extends Pet {
 		super(player);
 		this.name = "Succubus";
 		this.type = PetTypes.MELEE;
-		this.damage = 105;
-		this.stamina = 114; // confirm
-		this.intellect = 133;
-		this.ap = 286;
+		this.stats = {
+			"baseStamina": 114,
+			"baseIntellect": 133,
+			"baseAp": 286,
+			"baseMana": 1109
+		}
+		this.dmg = 105;
 		this.healthPerStamina = 7;
 		this.modifier *= 1 + (0.02 * player.masterDemonologist);
-		this.maxMana = 1109 + this.intellect * 10.6 * (1 + 0.05 * player.talents.felIntellect);
 		this.pet = Pets.SUCCUBUS;
+		this.calculateStatsFromPlayer();
 	}
 }
 
@@ -160,17 +129,29 @@ class Felguard extends Pet {
 		super(player);
 		this.name = "Felguard";
 		this.type = PetTypes.MELEE;
-		this.damage = 206; // base melee damage
-		this.stamina = 322;
-		this.intellect = 152;
-		this.swingTimer = 2;
-		this.maxMana = 849 + this.intellect * 4.7 * (1 + 0.05 * player.talents.felIntellect); // confirm
-		this.modifier *= 1 + (0.01 * player.talents.masterDemonologist);
 		this.pet = Pets.FELGUARD;
+		this.stats = {
+			"baseStamina": 322,
+			"baseAp": 286,
+			"baseIntellect": 152,
+			"baseMana": 849
+		};
+		this.dmg = 206; // base melee damage
+		this.swingTimer = 2;
+		this.modifier *= 1 + (0.01 * player.talents.masterDemonologist);
 		this.player.damageBreakdown.melee = {"name": "Melee (Felguard)"};
+		this.calculateStatsFromPlayer();
 	}
 
 	initialize() {
+		this.spells = {
+			"melee": new FelguardMelee(this),
+			"cleave": new FelguardCleave(this)
+		};
+	}
 
+	tick(t) {
+		this.spells.cleave.tick(t);
+		super.tick(t);
 	}
 }

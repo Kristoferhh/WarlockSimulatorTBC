@@ -167,18 +167,22 @@
 					</select>
 				</li>
 				<li>
-					<label class="settings-left" for="petMode">Pet mode</label>
-					<select id="petMode" class="settings-right" name="petMode">
-						<option value="passive">Passive</option>
-						<option value="aggressive">Aggressive</option>
-					</select>
-				</li>
-				<li>
 					<label class="settings-left" for="sacrificePet">Sacrifice pet?</label>
 					<select id="sacrificePet" class="settings-right" name="sacrificePet">
 						<option value="no">No</option>
 						<option value="yes">Yes</option>
 					</select>
+				</li>
+				<li>
+					<label class="settings-left" for="petMode">Pet mode</label>
+					<select id="petMode" class="settings-right" name="petMode">
+						<option value="0">Passive</option>
+						<option value="1">Aggressive</option>
+					</select>
+				</li>
+				<li>
+					<label class="settings-left" for="enemyArmor">Enemy Armor</label>
+					<input id="enemyArmor" class="settings-right" value="7700" type="number" min='0' max='10000' name="enemyArmor">
 				</li>
 				<li>
 					<label class="settings-left">Malediction?</label>
@@ -436,6 +440,7 @@
 <script type="text/javascript" src="src/js/player/talents/talents.js"></script>
 <script type="text/javascript" src="src/js/player/talents/presetTalents.js"></script>
 <script type="text/javascript" src="src/js/classes/spell.js"></script>
+<script type="text/javascript" src="src/js/classes/petSpell.js"></script>
 <script type="text/javascript" src="src/js/classes/trinket.js"></script>
 <script type="text/javascript" src="src/js/classes/aura.js"></script>
 <script type="text/javascript" src="src/js/classes/damageOverTime.js"></script>

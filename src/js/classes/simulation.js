@@ -22,10 +22,10 @@ class Simulation {
 
 		// Look for the shortest time until an action needs to be done
 		if (this.player.pet) {
-			if (this.player.pet.type == PetTypes.MELEE && this.player.pet.swingTimerRemaining > 0 && this.player.pet.swingTimerRemaining < time) time = this.player.pet.swingTimerRemaining;
-			else if (this.player.pet.type == PetTypes.RANGED && this.player.pet.castTimeRemaining > 0 && this.player.pet.castTimeRemaining < time) time = this.player.pet.castTimeRemaining;
+			if (this.player.pet.type == PetTypes.MELEE && this.player.pet.spells.melee.cooldown < time) time = this.player.pet.spells.melee.cooldown;
+			//else if (this.player.pet.type == PetTypes.RANGED && this.player.pet.castTimeRemaining > 0 && this.player.pet.castTimeRemaining < time) time = this.player.pet.castTimeRemaining;
 
-			/*if (this.player.pet.pet == Pets.IMP) {
+			if (this.player.pet.pet == Pets.IMP) {
 
 			} else if (this.player.pet.pet == Pets.VOIDWALKER) {
 
@@ -34,8 +34,8 @@ class Simulation {
 			} else if (this.player.pet.pet == Pets.FELHUNTER) {
 				
 			} else if (this.player.pet.pet == Pets.FELGUARD) {
-				
-			}*/
+				if (this.player.pet.spells.cleave.cooldownRemaining > 0 && this.player.pet.spells.cleave.cooldownRemaining < time) time = this.player.pet.spells.cleave.cooldownRemaining;
+			}
 		}
 
 		if (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.auras.improvedShadowBolt.durationRemaining < time) time = this.player.auras.improvedShadowBolt.durationRemaining;
@@ -128,6 +128,10 @@ class Simulation {
 				this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.player.stats.mp5);
 				this.player.combatLog(this.player.stats.mp5 + " mana gained from MP5");
 			}
+			if (this.player.pet.mp5 > 0) {
+				this.player.pet.mana = Math.min(this.player.pet.maxMana, this.player.pet.mana + this.player.pet.mp5);
+				this.player.combatLog(this.player.pet.name + " gains " + this.player.pet.mp5 + " mana from MP5");
+			}
 		}
 
 		return time;
@@ -166,8 +170,11 @@ class Simulation {
 				// Pet
 				if (this.player.pet) {
 					if (this.player.pet.type == PetTypes.MELEE) {
-						if (this.player.pet.ready()) {
-							this.player.pet.attack();
+						if (this.player.pet.spells.melee.ready()) {
+							this.player.pet.cast("melee");
+						}
+						if (this.player.pet.spells.cleave && this.player.pet.spells.cleave.ready()) {
+							this.player.pet.cast("cleave");
 						}
 					} else if (this.player.pet.type == PetTypes.RANGED) {
 
