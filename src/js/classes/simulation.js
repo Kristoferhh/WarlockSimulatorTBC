@@ -21,6 +21,23 @@ class Simulation {
 		if (time == 0 || (this.player.gcdRemaining > 0 && this.player.gcdRemaining < time)) time = this.player.gcdRemaining
 
 		// Look for the shortest time until an action needs to be done
+		if (this.player.pet) {
+			if (this.player.pet.type == PetTypes.MELEE && this.player.pet.swingTimerRemaining > 0 && this.player.pet.swingTimerRemaining < time) time = this.player.pet.swingTimerRemaining;
+			else if (this.player.pet.type == PetTypes.RANGED && this.player.pet.castTimeRemaining > 0 && this.player.pet.castTimeRemaining < time) time = this.player.pet.castTimeRemaining;
+
+			/*if (this.player.pet.pet == Pets.IMP) {
+
+			} else if (this.player.pet.pet == Pets.VOIDWALKER) {
+
+			} else if (this.player.pet.pet == Pets.SUCCUBUS) {
+				
+			} else if (this.player.pet.pet == Pets.FELHUNTER) {
+				
+			} else if (this.player.pet.pet == Pets.FELGUARD) {
+				
+			}*/
+		}
+
 		if (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.auras.improvedShadowBolt.durationRemaining < time) time = this.player.auras.improvedShadowBolt.durationRemaining;
 		if (this.player.auras.corruption && this.player.auras.corruption.active && this.player.auras.corruption.tickTimerRemaining < time) time = this.player.auras.corruption.tickTimerRemaining; 
 		if (this.player.auras.unstableAffliction && this.player.auras.unstableAffliction.active && this.player.auras.unstableAffliction.tickTimerRemaining < time) time = this.player.auras.unstableAffliction.tickTimerRemaining;
@@ -65,6 +82,9 @@ class Simulation {
 		// This needs to be the first modified value since the time in combat needs to be updated before spells start dealing damage/auras expiring etc. for the combat logging.
 		this.player.fightTime += time;
 		this.player.castTimeRemaining = Math.max(0,this.player.castTimeRemaining - time);
+
+		// Pet
+		if (this.player.pet) this.player.pet.tick(time);
 
 		// Spells
 		if (this.player.spells.shadowBolt && this.player.spells.shadowBolt.casting) this.player.spells.shadowBolt.tick(time);
@@ -122,7 +142,6 @@ class Simulation {
 		this.player.initialize();
 		this.timeTotal = 0; // Used for benchmarking
 
-		console.log("------- Simulation start -------");
 		for(this.player.iteration = 1; this.player.iteration <= this.iterations; this.player.iteration++) {
 			// Reset/initialize values for spells that have a cooldown or a cast time
 			if (this.player.spells.shadowBolt) this.player.spells.shadowBolt.reset();
@@ -135,13 +154,27 @@ class Simulation {
 			if (this.player.spells.shadowburn) this.player.spells.shadowburn.reset();
 			if (this.player.spells.deathCoil) this.player.spells.deathCoil.reset();
 			if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.reset();
+			if (this.player.pet) this.player.pet.reset();
 			this.player.reset(); // Resets mana, global cooldown etc.
 
 			this.player.iterationDamage = 0;
+			this.player.fightTime = 0;
 			let fightLength = random(this.minTime, this.maxTime);
-			this.player.combatLog("Fight length: " + fightLength);
+			this.player.combatLog("Fight length: " + fightLength + " seconds");
 
-			for(this.player.fightTime = 0; this.player.fightTime < fightLength;) {
+			while(this.player.fightTime < fightLength) {
+				// Pet
+				if (this.player.pet) {
+					if (this.player.pet.type == PetTypes.MELEE) {
+						if (this.player.pet.ready()) {
+							this.player.pet.attack();
+						}
+					} else if (this.player.pet.type == PetTypes.RANGED) {
+
+					}
+				}
+
+				// Player
 				if (this.player.castTimeRemaining <= 0) {
 					// Spells on the global cooldown
 					if (this.player.gcdRemaining <= 0) {
@@ -253,13 +286,14 @@ class Simulation {
 			}
 		}
 		if (this.timeTotal > 0) console.log(this.timeTotal);
+		if (this.player.pet) console.log(JSON.stringify(this.player.pet.damageBreakdown));
 
-		console.log('------- Simulation end -------');
 		this.simulationEnd({
 			"minDps": Math.round(minDps * 100) / 100,
 			"maxDps": Math.round(maxDps * 100) / 100,
 			"length": (performance.now() - startTime) / 1000,
 			"damageBreakdown": this.player.damageBreakdown,
+			"combatlog": this.player.combatlog,
 			"iterations": this.iterations,
 			"totalDamage": totalDamage,
 			"totalDuration": totalDuration,

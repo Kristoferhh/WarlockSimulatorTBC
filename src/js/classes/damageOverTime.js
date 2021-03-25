@@ -24,6 +24,8 @@ class DamageOverTime {
 	}
 
 	apply(spellPower) {
+		if (this.active) this.player.combatLog(this.name + " refreshed");
+		else this.player.combatLog(this.name + " applied");
 		this.active = true;
 		this.tickTimerRemaining = this.tickTimerTotal;
 		this.ticksRemaining = this.ticksTotal;

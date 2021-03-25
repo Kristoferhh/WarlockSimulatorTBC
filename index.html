@@ -80,7 +80,7 @@
 		</ul>
 
 		<ul id="sidebar-sets">
-			<li><h3>Set bonuses</h3></li>
+			<li><h3>Set Bonuses</h3></li>
 			<li class="sidebar-set-bonus">Plagueheart Raiment (4)</li>
 		</ul>
 
@@ -89,12 +89,9 @@
 				<p><span id="avg-dps"></span><span> DPS</span></p>
 				<p>Min: <span id="min-dps"></span> Max: <span id="max-dps"></span></p>
 			</div>
-			<div class='btn' id='sim-dps'>
-				<a href='#'>Simulate</a>
-			</div>
-			<div class='btn' id='sim-all-items'>
-				<a href='#'>Simulate All Items</a>
-			</div>
+			<div class='btn' id='sim-dps'>Simulate</div>
+			<div class='btn' id='sim-all-items'>Simulate All Items</div>
+			<div class='btn' id='show-combat-log'>Show Combat Log</div>
 			<p id="sim-length-result"></p>
 		</div>
 	</section>
@@ -162,9 +159,11 @@
 				<li>
 					<label class="settings-left" for="petChoice">Pet</label>
 					<select id="petChoice" class="settings-right" name="petChoice">
-						<option value="imp">Imp</option>
-						<option disabled="disabled" value="succubus">Succubus</option>
-						<option disabled="disabled" value="felguard">Felguard</option>
+						<option value="0">Imp</option>
+						<option value="1">Voidwalker</option>
+						<option disabled="disabled" value="2">Succubus</option>
+						<option value="3">Felhunter</option>
+						<option value="4">Felguard</option>
 					</select>
 				</li>
 				<li>
@@ -305,12 +304,15 @@
 					<th>Avg Cast</th>
 					<th>Crit %</th>
 					<th>Miss %</th>
+					<th>Dodge %</th>
 					<th>Dps</th>
 				</thead>
 				<tbody></tbody>
 			</table>
 		</section>
 	</div>
+
+	<div id="combat-log"></div>
 
 	<!-- ITEMS -->
 	<!-- Gem Selection Table -->
@@ -438,6 +440,7 @@
 <script type="text/javascript" src="src/js/classes/aura.js"></script>
 <script type="text/javascript" src="src/js/classes/damageOverTime.js"></script>
 <script type="text/javascript" src="src/js/classes/player.js"></script>
+<script type="text/javascript" src="src/js/classes/pet.js"></script>
 <script type="text/javascript" src="src/js/classes/simulation.js"></script>
 <script type="text/javascript" src="src/js/functions.js"></script>
 <script type="text/javascript" src="src/js/classes/simWorker.js"></script>

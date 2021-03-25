@@ -114,6 +114,7 @@ class ShadowFlameShadow extends Aura {
 		super(player);
 		this.name = "Shadow Flame (shadow) (T4 2pc bonus)";
 		this.durationTotal = 15;
+		this.procChance = 10;
 	}
 
 	apply() {
@@ -137,6 +138,7 @@ class ShadowFlameFire extends Aura {
 		super(player);
 		this.name = "Shadow Flame (fire) (T4 2pc bonus)";
 		this.durationTotal = 15;
+		this.procChance = 10;
 	}
 
 	apply() {

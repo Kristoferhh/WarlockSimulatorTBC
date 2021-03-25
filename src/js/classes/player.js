@@ -12,7 +12,8 @@ class Player {
 			"enemy": {
 				"level": $("input[name='target-level']").val(),
 				"shadowResist": $("input[name='target-shadow-resistance']").val(),
-				"fireResist": $("input[name='target-fire-resistance']").val()
+				"fireResist": $("input[name='target-fire-resistance']").val(),
+				"armor": 7700 // fix
 			},
 			"rotation": rotation,
 			"selectedItemSlot": $("#item-slot-selection-list li[data-selected='true']").attr('data-slot')
@@ -33,6 +34,7 @@ class Player {
 		this.enemy.shadowResist = Math.max(this.enemy.shadowResist - this.stats.spellPen, (this.enemy.level - this.level) * 8, 0);
 		this.enemy.fireResist = Math.max(this.enemy.fireResist - this.stats.spellPen, (this.enemy.level - this.level) * 8, 0);
 		this.trinketIds = [settings.items['trinket1'],settings.items['trinket2']];
+		this.combatlog = [];
 
 		// If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
 		if (customItemSlot && customItemID && customItemID !== settings.items[customItemSlot + customItemSubSlot]) {
@@ -127,7 +129,7 @@ class Player {
 		this.stats.hitChanceMultiplier = 1000;
 		this.stats.extraHitChance = this.stats.hitRating / hitRatingPerPercent; // hit percent from hit rating
 		if (settings.auras.inspiringPresence === true) this.stats.extraHitChance += 1;
-		this.stats.hitChance = Math.round(this.getHitChance(parseInt(this.enemy.level)) * this.stats.hitChanceMultiplier); // The player's chance of hitting the enemy, between 61% and 99%
+		this.stats.hitChance = Math.round(this.getHitChance(this.stats.extraHitChance) * this.stats.hitChanceMultiplier); // The player's chance of hitting the enemy, between 61% and 99%
 
 		// Trinkets
 		this.trinkets = [];
@@ -194,6 +196,17 @@ class Player {
 
 		// Records all information about damage done for each spell such as crit %, miss %, average damage per cast etc.
 		this.damageBreakdown = {};
+
+		// Pet
+		if (settings.talents.demonicSacrifice !== 0 || settings.talents.masterDemonologist > 0) {
+			let selectedPet = settings.simSettings.petChoice;
+			if (selectedPet == Pets.IMP) this.pet = new Imp(this);
+			else if (selectedPet == Pets.VOIDWALKER) this.pet = new Voidwalker(this);
+			else if (selectedPet == Pets.SUCCUBUS) this.pet = new Succubus(this);
+			else if (selectedPet == Pets.FELHUNTER) this.pet = new Felhunter(this);
+			else if (selectedPet == Pets.FELGUARD) this.pet = new Felguard(this);
+			this.pet.initialize();
+		}
 
 		console.log("Health: " + Math.round(this.stats.health));
 		console.log("Mana: " + Math.round(this.stats.maxMana));
@@ -285,21 +298,21 @@ class Player {
 	}
 
 	// formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/
-	getHitChance(targetLevel) {
-		if ((targetLevel - this.level) <= 2) {
-			return Math.min(99, 100 - (targetLevel - this.level) - 4 + this.stats.extraHitChance);
-		} else if ((targetLevel - this.level) == 3) { // target 3 levels above
-			return Math.min(99, 83 + this.stats.extraHitChance);
-		} else if ((targetLevel - this.level) == 4) { // target 4 levels above
-			return Math.min(99, 72 + this.stats.extraHitChance);
+	getHitChance(extraHitChance) {
+		if ((parseInt(this.enemy.level) - this.level) <= 2) {
+			return Math.min(99, 100 - (parseInt(this.enemy.level) - this.level) - 4 + extraHitChance);
+		} else if ((parseInt(this.enemy.level) - this.level) == 3) { // target 3 levels above
+			return Math.min(99, 83 + extraHitChance);
+		} else if ((parseInt(this.enemy.level) - this.level) == 4) { // target 4 levels above
+			return Math.min(99, 72 + extraHitChance);
 		} else { // target 5+ levels above
-			return Math.min(99, 61 + this.stats.extraHitChance);
+			return Math.min(99, 61 + extraHitChance);
 		}
 	}
 
 	combatLog(info) {
 		if (this.iteration == 2) {
-			console.log("|" + (Math.round(this.fightTime * 10000) / 10000).toFixed(4) + "| " + info);
+			this.combatlog.push("|" + (Math.round(this.fightTime * 10000) / 10000).toFixed(4) + "| " + info);
 		}
 	}
 }

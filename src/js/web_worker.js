@@ -1,5 +1,6 @@
 importScripts(
 	'./classes/player.js',
+	'./classes/pet.js',
 	'./player/stats.js',
 	'./classes/simulation.js',
 	'./classes/spell.js',

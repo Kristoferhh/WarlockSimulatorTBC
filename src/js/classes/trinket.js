@@ -22,8 +22,8 @@ class Trinket {
 			this.player.combatLog(this.name + " used");
 			for (let stat in this.stats) {
 				if (this.player.stats.hasOwnProperty(stat)) {
+					this.player.combatLog(stat + " + " + this.stats[stat] + " (" + Math.round(this.player.stats[stat]) + " -> " + Math.round(this.player.stats[stat] + this.stats[stat]) + ")");
 					this.player.stats[stat] += this.stats[stat];
-					this.player.combatLog(stat + " + " + this.stats[stat] + " (now: " + this.player.stats[stat] + ")");
 				}
 			}
 			this.active = true;
@@ -37,8 +37,8 @@ class Trinket {
 			if (!endOfIteration) this.player.combatLog(this.name + " faded");
 			for (let stat in this.stats) {
 				if (this.player.stats.hasOwnProperty(stat)) {
+					this.player.combatLog(stat + " - " + this.stats[stat] + " (" + Math.round(this.player.stats[stat]) + " -> " + Math.round(this.player.stats[stat] - this.stats[stat]) + ")");
 					this.player.stats[stat] -= this.stats[stat];
-					this.player.combatLog(stat + " - " + this.stats[stat] + " (now: " + this.player.stats[stat] + ")");
 				}
 			}
 			this.active = false;

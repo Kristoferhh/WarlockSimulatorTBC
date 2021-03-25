@@ -100,7 +100,7 @@ for (let tree in _talents) {
 				currentCol++;
 			}
 
-			lastRow.append($("<td><div data-maxpoints='" + t.rankIDs.length + "' data-points='" + talents[talent] + "' class='talent-icon' data-tree='" + tree + "' id='" + talent + "'><a href='https://classic.wowhead.com/spell=" + t.rankIDs[Math.max(0,talents[talent]-1)] + "'><img src='img/" + t.iconName + ".jpg' alt='" + t.name + "'><span id='" + talent + "-point-amount' class='talent-point-amount'>" + talents[talent] + "</span></a></div></td>"));
+			lastRow.append($("<td><div data-maxpoints='" + t.rankIDs.length + "' data-points='" + talents[talent] + "' class='talent-icon' data-tree='" + tree + "' id='" + talent + "'><a href='https://tbc.wowhead.com/spell=" + t.rankIDs[Math.max(0,talents[talent]-1)] + "'><img src='img/" + t.iconName + ".jpg' alt='" + t.name + "'><span id='" + talent + "-point-amount' class='talent-point-amount'>" + talents[talent] + "</span></a></div></td>"));
 			
 			// Check if the text displaying the talent point amount should be hidden or colored (for maxed out talents)
 			let pointAmount = $("#" + talent + "-point-amount")
@@ -207,6 +207,10 @@ $(".preset-item-set").click(function() {
 // User clicks on an item slot in the selection above the item table
 $("#item-slot-selection-list li").click(function() {
 	loadItemsBySlot($(this).attr('data-slot'), $(this).attr('data-subslot') || null);
+});
+
+$("#show-combat-log").click(function() {
+	$("#combat-log").toggle();
 });
 
 // When the user clicks anywhere on the webpage
@@ -833,9 +837,15 @@ function simDPS(items) {
 					$("#min-dps").text(simulationEnd.minDps);
 					$("#max-dps").text(simulationEnd.maxDps);
 					$("#sim-length-result").text(simulationEnd.length + "s");
-					$("#sim-dps a").text("Simulate");
+					$("#sim-dps").text("Simulate");
+
+					// Populate the combat log
+					$("#combat-log p").remove();
+					for(let entry in simulationEnd.combatlog) {
+						$("#combat-log").append("<p>" + simulationEnd.combatlog[entry] + "</p>");
+					}
 				} else if (simulationsFinished == itemAmount) {
-					$("#sim-all-items a").text("Simulate All Items");
+					$("#sim-all-items").text("Simulate All Items");
 				}
 				savedItemDPS[itemSlot + itemSubSlot] = savedItemDPS[itemSlot + itemSubSlot] || {};
 				savedItemDPS[itemSlot + itemSubSlot][simulationEnd.itemID] = avgDps;
@@ -843,7 +853,7 @@ function simDPS(items) {
 
 				if (simulationsFinished === itemAmount) {
 					// Remove the background coloring (progress bar)
-					$(".btn").css('background', 'none');
+					$(".btn").css('background', '');
 
 					if (itemAmount === 1) {
 						// Setup the damage breakdown table (showing avg damage, avg cast etc. for each spell)
@@ -851,7 +861,7 @@ function simDPS(items) {
 						for (let spell of Object.keys(simulationEnd.damageBreakdown)) {
 							let s = simulationEnd.damageBreakdown[spell];
 							let percentDamage = (~~(((s.damage / simulationEnd.totalDamage) * 100) * 100) / 100).toFixed(2);
-							if (s.damage > 0 || s.casts > 0) $("#damage-breakdown-table tbody").append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (Math.round((s.damage / simulationEnd.totalDuration) * 100) / 100 || 0) + "</td></tr>");
+							if (s.damage > 0 || s.casts > 0) $("#damage-breakdown-table tbody").append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.dodges / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (Math.round((s.damage / simulationEnd.totalDuration) * 100) / 100 || 0) + "</td></tr>");
 						}
 						$("#damage-breakdown-section").css('display', 'inline-block');
 						$("#damage-breakdown-table").tablesorter();
@@ -868,7 +878,7 @@ function simDPS(items) {
 					$("#avg-dps").text(simulationUpdate.averageDamage)
 					// Uses the sim button as a progress bar by coloring it based on how many iterations are done with
 					$("#sim-dps").css('background', 'linear-gradient(to right, #9482C9 ' + simulationUpdate.percent + '%, transparent ' + simulationUpdate.percent + '%)');
-					$("#sim-dps a").text(Math.round(simulationUpdate.percent) + "%");
+					$("#sim-dps").text(Math.round(simulationUpdate.percent) + "%");
 				} else {
 					// multiSimInfo tracks the % progress of each simulation and the least progressed simulation's % is used for the multi simulation button/progress bar
 					let smallestValue = 100;
@@ -880,7 +890,7 @@ function simDPS(items) {
 					}
 
 					$("#sim-all-items").css('background', 'linear-gradient(to right, #9482C9 ' + smallestValue + '%, transparent ' + smallestValue + '%)');
-					$("#sim-all-items a").text(smallestValue + "%");
+					$("#sim-all-items").text(smallestValue + "%");
 				}
 				// Set the DPS value on the item in the item selection list
 				$(".item-row[data-wowhead-id='" + simulationUpdate.itemID + "']").find('.item-dps').text(simulationUpdate.averageDamage);
@@ -923,7 +933,7 @@ function updateTalentInformation(talentUiObj) {
 	} else {
 		talentUiObj.children('a').children('.talent-point-amount').hide();
 	}
-	talentUiObj.children('a').attr('href', 'https://classic.wowhead.com/spell=' + _talents[talentUiObj.data('tree')][talentUiObj.attr('id')].rankIDs[Math.max(0,talents[talentUiObj.attr('id')]-1)]);
+	talentUiObj.children('a').attr('href', 'https://tbc.wowhead.com/spell=' + _talents[talentUiObj.data('tree')][talentUiObj.attr('id')].rankIDs[Math.max(0,talents[talentUiObj.attr('id')]-1)]);
 	//$WowheadPower.refreshLinks();
 
 	// todo: move these JS css changes to the css file

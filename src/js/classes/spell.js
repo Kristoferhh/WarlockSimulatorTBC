@@ -88,7 +88,7 @@ class Spell {
 
 		// T4 2pc
 		// 10% proc rate on all shadow or fire spells (including when dots applied) (needs confirmation)
-		if (this.player.sets['645'] >= 2 && ['shadow','fire'].includes(this.school) && random(1,100) <= 10) {
+		if (this.player.sets['645'] >= 2 && ['shadow','fire'].includes(this.school) && random(1,100) <= this.player.auras['shadowFlame' + this.school].procChance) {
 			this.player.auras['shadowFlame' + this.school].apply();	
 		}
 

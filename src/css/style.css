@@ -211,7 +211,6 @@ ul {
 	padding: 0 10px 10px 10px;
 	margin-top: -40px;
 	margin-left: 10px;
-	display: inline-block;
 }
 
 #sim-result-dps-div p {
@@ -219,8 +218,6 @@ ul {
 }
 
 #damage-breakdown-section {
-	/*width: max(354px, 45%);*/
-	/*width: 50%;*/
 	display: none;
 	vertical-align: top;
 }
@@ -228,7 +225,6 @@ ul {
 #damage-breakdown-table {
 	margin-left: 8px;
 	padding: 10px;
-	/*width: 100%;*/
 	display: inline-block;
 	border-spacing: 0;
 }
@@ -236,10 +232,6 @@ ul {
 #damage-breakdown-table .number {
 	text-align: right;
 }
-
-/*#damage-breakdown-table th, #damage-breakdown-table td {
-	text-align: center;
-}*/
 
 #damage-breakdown-table td/*:nth-child(1)*/ {
 	text-align: left;
@@ -253,6 +245,17 @@ ul {
 
 #damage-breakdown-table tr {
 	line-height: 20px;
+}
+
+#combat-log {
+	top: 5%;
+	height: 90%;
+	overflow: auto;
+	background-color: black;
+	position: absolute;
+	display: none;
+	padding: 1px 10px 1px 10px;
+	line-height: 5px;
 }
 
 #avg-dps {
@@ -361,20 +364,15 @@ ul {
 	border-radius: 4px;
 	width: 40%;
 	height: 18px;
-	margin-left: 30%;
+	display: inline-block;
 	padding: 15px 0px 15px 0px;
-	/*padding: 15px 50px;*/
-	transition: all .2s ease-in;
+	/*transition: all .2s ease-in;*/
 	user-select: none;
-}
-
-.btn a {
-	color: white;
-	text-decoration: none;
 }
 
 .btn:hover {
 	background-color: #fff;
+	color: black;
 }
 
 #sim-length-result {
