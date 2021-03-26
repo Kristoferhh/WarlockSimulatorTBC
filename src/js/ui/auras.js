@@ -169,8 +169,8 @@ const _auras = {
 				"iconName": "ability_warrior_sunder",
 				"id": 25225
 			},
-			"improvedExposeArmor": {
-				"name": "Improved Expose Armor",
+			"exposeArmor": {
+				"name": "Expose Armor",
 				"iconName": "ability_warrior_riposte",
 				"id": 26866
 			},

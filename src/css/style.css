@@ -26,27 +26,23 @@ ul {
 }
 
 #character-stats {
-	min-height: 380px;
+	padding-bottom: 15px;
 	border-bottom: 1px solid gray;
 }
 
 #character-stats li {
 	margin-right: 40px;
+	line-height: 12px;
 }
 
 #character-stats li p {
 	margin-bottom: -8px;
 	padding-bottom: 5px;
-	line-height: 15px;
 }
 
 .character-stat, .character-stat-val {
 	width: 50%;
 	display: inline-block;
-}
-
-.character-stat {
-	float: left;
 }
 
 .character-stat-val {

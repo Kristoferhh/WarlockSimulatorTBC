@@ -97,7 +97,7 @@ $(".aura").click(function() {
 	$(this).attr('data-checked', !checkedVal);
 	auras[$(this).attr('name')] = !checkedVal;
 
-	if (auraName == "totemOfWrath" || auraName == "curseOfTheElements" || auraName == "prayerOfSpirit" || auraName == "powerOfTheGuardianWarlock" || auraName == "powerOfTheGuardianMage" || auraName == "drumsOfBattle" || auraName == "drumsOfWar" || auraName == "drumsOfRestoration" || auraName == "bloodlust") {
+	if (auraName == "faerieFire" || auraName == "vampiricTouch" || auraName == "exposeArmor" || auraName == "exposeWeakness" || auraName == "totemOfWrath" || auraName == "curseOfTheElements" || auraName == "prayerOfSpirit" || auraName == "powerOfTheGuardianWarlock" || auraName == "powerOfTheGuardianMage" || auraName == "drumsOfBattle" || auraName == "drumsOfWar" || auraName == "drumsOfRestoration" || auraName == "bloodlust") {
 		updateSimulationSettingsVisibility();
 	}
 	if (!$(this).hasClass("petBuff")) {
@@ -544,7 +544,7 @@ $("#rotation-list div li").click(function() {
 });
 
 $("#sim-settings select, #sim-settings input").change(function() {
-	settings[$(this).attr('id')] = $(this).val();
+	settings[$(this).attr('name')] = $(this).val();
 	localStorage.settings = JSON.stringify(settings);
 	refreshCharacterStats();
 	updateSimulationSettingsVisibility();
@@ -971,28 +971,30 @@ function updateSetBonuses() {
 
 function updateSimulationSettingsVisibility() {
 	if (talents.demonicSacrifice === 1 && (talents.masterDemonologist > 0 || talents.darkPact > 0)) {
-		$("#sacrificePet").closest('li').show();
+		$("#sacrificePet").show();
 	} else {
-		$("#sacrificePet").closest('li').hide();
+		$("#sacrificePet").hide();
 	}
 
 	if (talents.demonicSacrifice === 0 || talents.masterDemonologist > 0 || talents.darkPact > 0) {
-		$("#petChoice").closest('li').show();
+		$("#petChoice").show();
 
-		if (!$("#sacrificePet").is(":visible") || $("#sacrificePet").val() == "no") {
-			$("#petMode").closest('li').show();
+		if (!$("#sacrificePet").is(":visible") || $("#sacrificePet").children('select').val() == "no") {
+			$("#petMode").show();
 		} else {
-			$("#petMode").closest('li').hide();
+			$("#petMode").hide();
 		}
 	} else {
-		$("#petChoice").closest('li').hide();
-		$("#petMode").closest('li').hide();
+		$("#petChoice").hide();
+		$("#petMode").hide();
 	}
 
-	if ($("#petMode").is(":visible") && $("#petMode").val() == PetModes.AGGRESSIVE) {
-		$("#enemyArmor").closest('li').show();
+	if ($("#petMode").is(":visible") && $("#petMode").children('select').val() == PetModes.AGGRESSIVE) {
+		$("#enemyArmor").show();
+		$("#enemy-armor-val").closest('li').show();
 	} else {
-		$("#enemyArmor").closest('li').hide();
+		$("#enemyArmor").hide();
+		$("#enemy-armor-val").closest('li').hide();
 	}
 
 	if (talents.summonFelguard === 0) {
@@ -1002,62 +1004,88 @@ function updateSimulationSettingsVisibility() {
 	}
 
 	if (auras.curseOfTheElements) {
-		$("#improvedCurseOfTheElements").closest('li').show();
+		$("#improvedCurseOfTheElements").show();
 	} else {
-		$("#improvedCurseOfTheElements").closest('li').hide();
+		$("#improvedCurseOfTheElements").hide();
 	}
 
 	if (auras.prayerOfSpirit) {
-		$("#improvedDivineSpirit").closest('li').show();
+		$("#improvedDivineSpirit").show();
 	} else {
-		$("#improvedDivineSpirit").closest('li').hide();
+		$("#improvedDivineSpirit").hide();
 	}
 
 	if (talents.conflagrate > 0) {
-		$("#conflagrateUse").closest('li').show();
+		$("#conflagrateUse").show();
 	} else {
-		$("#conflagrateUse").closest('li').hide();
+		$("#conflagrateUse").hide();
 	}
 
 	if (auras.powerOfTheGuardianMage) {
-		$("#mageAtieshAmount").closest('li').show();
+		$("#mageAtieshAmount").show();
 	} else {
-		$("#mageAtieshAmount").closest('li').hide();
+		$("#mageAtieshAmount").hide();
 	}
 
 	if (auras.powerOfTheGuardianWarlock) {
-		$("#warlockAtieshAmount").closest('li').show();
+		$("#warlockAtieshAmount").show();
 	} else {
-		$("#warlockAtieshAmount").closest('li').hide();
+		$("#warlockAtieshAmount").hide();
 	}
 
 	if (auras.drumsOfBattle) {
-		$("#drumsOfBattleAmount").closest('li').show();
+		$("#drumsOfBattleAmount").show();
 	} else {
-		$("#drumsOfBattleAmount").closest('li').hide();
+		$("#drumsOfBattleAmount").hide();
 	}
 
 	if (auras.drumsOfWar) {
-		$("#drumsOfWarAmount").closest('li').show();
+		$("#drumsOfWarAmount").show();
 	} else {
-		$("#drumsOfWarAmount").closest('li').hide();
+		$("#drumsOfWarAmount").hide();
 	}
 
 	if (auras.drumsOfRestoration) {
-		$("#drumsOfRestorationAmount").closest('li').show();
+		$("#drumsOfRestorationAmount").show();
 	} else {
-		$("#drumsOfRestorationAmount").closest('li').hide();
+		$("#drumsOfRestorationAmount").hide();
 	}
 
 	if (auras.bloodlust) {
-		$("#bloodlustAmount").closest('li').show();
+		$("#bloodlustAmount").show();
 	} else {
-		$("#bloodlustAmount").closest('li').hide();
+		$("#bloodlustAmount").hide();
 	}
 
 	if (auras.totemOfWrath) {
-		$("#totemOfWrathAmount").closest('li').show();
+		$("#totemOfWrathAmount").show();
 	} else {
-		$("#totemOfWrathAmount").closest('li').hide();
+		$("#totemOfWrathAmount").hide();
+	}
+
+	if (auras.vampiricTouch) {
+		$("#shadowPriestDps").show();
+	} else {
+		$("#shadowPriestDps").hide();
+	}
+
+	if (auras.faerieFire) {
+		$("#improvedFaerieFire").show();
+	} else {
+		$("#improvedFaerieFire").hide();
+	}
+
+	if (auras.exposeArmor) {
+		$("#improvedExposeArmor").show();
+	} else {
+		$("#improvedExposeArmor").hide();
+	}
+
+	if (auras.exposeWeakness) {
+		$("#survivalHunterAgility").show();
+		$("#exposeWeaknessUptime").show();
+	} else {
+		$("#survivalHunterAgility").hide();
+		$("#exposeWeaknessUptime").hide();
 	}
 }

@@ -49,8 +49,8 @@ for (let stat in raceStats[currentRace]) {
 
 // Load saved simulation settings
 $("#sim-settings select, #sim-settings input").each(function() {
-	if (settings[$(this).attr('id')]) {
-		$(this).val(settings[$(this).attr('id')]);
+	if (settings[$(this).attr('name')]) {
+		$(this).val(settings[$(this).attr('name')]);
 	}
 });
 

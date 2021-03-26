@@ -85,18 +85,18 @@ function refreshCharacterStats() {
 	if ($("#petChoice").val() === "imp" && (talents.demonicSacrifice === 0 || (talents.masterDemonologist > 0 && $("#sacrificePet").val() === "no"))) {
 		stamina += 70 * (1 + 0.1 * talents.improvedImp);
 	}
-
+	// Crit
 	let critRating = characterStats.critRating + ((characterStats.intellect * characterStats.intellectModifier) * critPerInt);
 	let critChance = Math.round((critRating / critRatingPerPercent + baseCritChancePercent) * 100) / 100 + talents.devastation + talents.backlash + talents.demonicTactics;
 	if (auras.moonkinAura) critChance += 5;
 	if (auras.judgementOfTheCrusader) critChance += 3;
 	if (auras.totemOfWrath) critChance += 3 * $("#totemOfWrathAmount").val();
 	critChance = critChance.toFixed(2);
-
+	// Hit
 	let hitChance = Math.round((characterStats.hitRating / hitRatingPerPercent) * 100) / 100;
 	if (auras.inspiringPresence) hitChance += 1;
 	hitChance = hitChance.toFixed(2);
-
+	// Shadow/Fire damage % modifiers
 	let shadowModifier = characterStats.shadowModifier;
 	let fireModifier = characterStats.fireModifier;
 	if (talents.demonicSacrifice === 1 && (talents.masterDemonologist === 0 || $("#sacrificePet").val() === 'yes')) {
@@ -111,11 +111,17 @@ function refreshCharacterStats() {
 		fireModifier *= 1.1 + (0.01 * $("#improvedCurseOfTheElements").val());
 	}
 	if (talents.emberstorm > 0) fireModifier *= 1 + (0.02 * talents.emberstorm);
-
+	// Spell Power
 	let spellPower = characterStats.spellPower;
 	if (auras.felArmor) spellPower += 100 * (1 + 0.1 * talents.demonicAegis);
 	if (auras.prayerOfSpirit) spellPower += (characterStats.spirit * spiritModifier * (0.1 * $("#improvedDivineSpirit").val())); 
 	spellPower = Math.round(spellPower);
+	// Enemy armor
+	let enemyArmor = $("input[name='enemyArmor']").val();
+	if (auras.faerieFire) enemyArmor -= 610;
+	if ((auras.sunderArmor && auras.exposeArmor && settings.improvedExposeArmor == 2) || (auras.exposeArmor && !auras.sunderArmor)) enemyArmor -= 2050 * (1 + 0.25 * settings.improvedExposeArmor);
+	else if (auras.sunderArmor) enemyArmor -= 520 * 5;
+	if (auras.curseOfRecklessness) enemyArmor -= 800;
 
 	$("#character-health-val").text(Math.round((characterStats.health + (stamina * staminaModifier) * healthPerStamina) * (1 + (0.01 * talents.felStamina))));
 	$("#character-mana-val").text(Math.round((characterStats.mana + (characterStats.intellect * characterStats.intellectModifier) * manaPerInt) * (1 + (0.01 * talents.felIntellect))));
@@ -130,4 +136,5 @@ function refreshCharacterStats() {
 	$("#character-shadow-damage-modifier-val").text(Math.round((shadowModifier * (1 + (0.02 * talents.shadowMastery))) * 100) + "%");
 	$("#character-fire-damage-modifier-val").text(Math.round(fireModifier * 100) + "%");
 	$("#character-mp5-val").text(characterStats.mp5);
+	$("#enemy-armor-val").text(Math.max(0,enemyArmor));
 }

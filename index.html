@@ -73,6 +73,10 @@
 				<p class="character-stat">MP5</p>
 				<p class="character-stat-val" id="character-mp5-val"></p>
 			</li>
+			<li>
+				<p class="character-stat">Enemy Armor</p>
+				<p class="character-stat-val" id="enemy-armor-val"></p>
+			</li>
 			<!--<li>
 				<p class="character-stat">Spell Penetration</p>
 				<p class="character-stat-val" id="character-spell-pen-val"></p>
@@ -144,9 +148,9 @@
 					<span class="settings-left">Target Fire Resistance</span>
 					<input id="target-fire-resistance" value="0" type="number" name="target-fire-resistance" class="settings-right">
 				</li>
-				<li>
+				<li id='petChoice'>
 					<label class="settings-left" for="petChoice">Pet</label>
-					<select id="petChoice" class="settings-right" name="petChoice">
+					<select class="settings-right" name="petChoice">
 						<option value="0">Imp</option>
 						<option value="1">Voidwalker</option>
 						<option disabled="disabled" value="2">Succubus</option>
@@ -154,63 +158,60 @@
 						<option value="4">Felguard</option>
 					</select>
 				</li>
-				<li>
+				<li id="sacrificePet">
 					<label class="settings-left" for="sacrificePet">Sacrifice pet?</label>
-					<select id="sacrificePet" class="settings-right" name="sacrificePet">
+					<select class="settings-right" name="sacrificePet">
 						<option value="no">No</option>
 						<option value="yes">Yes</option>
 					</select>
 				</li>
-				<li>
+				<li id="petMode">
 					<label class="settings-left" for="petMode">Pet mode</label>
-					<select id="petMode" class="settings-right" name="petMode">
+					<select class="settings-right" name="petMode">
 						<option value="0">Passive</option>
 						<option value="1">Aggressive</option>
 					</select>
 				</li>
-				<li>
+				<li id="enemyArmor">
 					<label class="settings-left" for="enemyArmor">Enemy Armor</label>
-					<input id="enemyArmor" class="settings-right" value="7700" type="number" min='0' max='10000' name="enemyArmor">
+					<input class="settings-right" value="7700" type="number" min='0' max='10000' name="enemyArmor">
 				</li>
-				<li>
+				<li id="improvedCurseOfTheElements">
 					<label class="settings-left">Malediction?</label>
-					<select id="improvedCurseOfTheElements" class="settings-right" name="improvedCurseOfTheElements">
+					<select class="settings-right" name="improvedCurseOfTheElements">
 						<option value='0'>No</option>
 						<option value='1'>1/3</option>
 						<option value='2'>2/3</option>
 						<option value='3'>3/3</option>
 					</select>
 				</li>
-				<li>
+				<li id="bloodlustAmount">
 					<label class="settings-left" for="bloodlustAmount">Bloodlust amount</label>
-					<select id="bloodlustAmount" class="settings-right" name="bloodlustAmount">
+					<select class="settings-right" name="bloodlustAmount">
 						<option value="1">1</option>
 						<option value="2">2</option>
 						<option value="3">3</option>
 						<option value="4">4</option>
 					</select>
 				</li>
-
-				<li>
+				<li id="improvedDivineSpirit">
 					<label class="settings-left" for="improvedDivineSpirit">Improved Divine Spirit?</label>
-					<select id="improvedDivineSpirit" class="settings-right" name="improvedDivineSpirit">
+					<select class="settings-right" name="improvedDivineSpirit">
 						<option value="0">No</option>
 						<option value="1">1/2</option>
 						<option value="2">2/2</option>
 					</select>
 				</li>
-
-				<li>
+				<li id="conflagrateUse">
 					<label class="settings-left" for="conflagrateUse">When to use Conflagrate?</label>
-					<select id="conflagrateUse" class="settings-right" name="conflagrateUse">
+					<select class="settings-right" name="conflagrateUse">
 						<option value="onCooldown">As soon as it's ready</option>
 						<option value="immolateAlmostOut">When Immolate has almost run out</option>
 					</select>
 				</li>
-
-				<li>
+				<li id="drumsOfWarAmount">
 					<label class="settings-left" for="drumsOfWarAmount">Drums of War amount</label>
-					<select id="drumsOfWarAmount" class="settings-right" name="drumsOfWarAmount">
+					<select class="settings-right" name="drumsOfWarAmount">
 						<option value="1">1</option>
 						<option value="2">2</option>
 						<option value="3">3</option>
@@ -218,20 +219,18 @@
 						<option value='5'>5</option>
 					</select>
 				</li>
-
-				<li>
+				<li id="mageAtieshAmount">
 					<label class="settings-left" for="mageAtieshAmount">Mage Atiesh amount</label>
-					<select id="mageAtieshAmount" class="settings-right" name="mageAtieshAmount">
+					<select class="settings-right" name="mageAtieshAmount">
 						<option value="1">1</option>
 						<option value="2">2</option>
 						<option value="3">3</option>
 						<option value="4">4</option>
 					</select>
 				</li>
-
-				<li>
+				<li id="drumsOfBattleAmount">
 					<label class="settings-left" for="drumsOfBattleAmount">Drums of Battle amount</label>
-					<select id="drumsOfBattleAmount" class="settings-right" name="drumsOfBattleAmount">
+					<select class="settings-right" name="drumsOfBattleAmount">
 						<option value="1">1</option>
 						<option value="2">2</option>
 						<option value="3">3</option>
@@ -239,10 +238,9 @@
 						<option value="5">5</option>
 					</select>
 				</li>
-
-				<li>
+				<li id="warlockAtieshAmount">
 					<label class="settings-left" for="warlockAtieshAmount">Warlock Atiesh amount</label>
-					<select id="warlockAtieshAmount" class="settings-right" name="warlockAtieshAmount">
+					<select class="settings-right" name="warlockAtieshAmount">
 						<option disabled="disabled" value="0">>> Do not count your own Atiesh <<</option>
 						<option value="1">1</option>
 						<option value="2">2</option>
@@ -250,10 +248,9 @@
 						<option value="4">4</option>
 					</select>
 				</li>
-
-				<li>
+				<li id="drumsOfRestorationAmount">
 					<label class="settings-left" for="drumsOfRestorationAmount">Drums of Restoration amount</label>
-					<select id="drumsOfRestorationAmount" class="settings-right" name="drumsOfRestorationAmount">
+					<select class="settings-right" name="drumsOfRestorationAmount">
 						<option value="1">1</option>
 						<option value="2">2</option>
 						<option value="3">3</option>
@@ -261,15 +258,41 @@
 						<option value="5">5</option>
 					</select>
 				</li>
-
-				<li>
+				<li id="totemOfWrathAmount">
 					<label class="settings-left" for="totemOfWrathAmount">Totem of Wrath amount</label>
-					<select id="totemOfWrathAmount" class="settings-right" name="totemOfWrathAmount">
+					<select class="settings-right" name="totemOfWrathAmount">
 						<option value="1">1</option>
 						<option value="2">2</option>
 						<option value="3">3</option>
 						<option value="4">4</option>
 					</select>
+				</li>
+				<li id='shadowPriestDps'>
+					<label class="settings-left" for="shadowPriestDps">Shadow Priest Dps</label>
+					<input class='settings-right' value="1000" type="number" min='0' name="shadowPriestDps">
+				</li>
+				<li id='improvedFaerieFire'>
+					<label class='settings-left' for="improvedFaerieFire">Improved Faerie Fire?</label>
+					<select class='settings-right' name='improvedFaerieFire'>
+						<option value='no'>No</option>
+						<option value='yes'>Yes</option>
+					</select>
+				</li>
+				<li id='improvedExposeArmor'>
+					<label class='settings-left' for="improvedExposeArmor">Improved Expose Armor?</label>
+					<select class='settings-right' name='improvedExposeArmor'>
+						<option value='0'>No</option>
+						<option value='1'>1/2</option>
+						<option value='2'>2/2</option>
+					</select>
+				</li>
+				<li id='survivalHunterAgility'>
+					<label class="settings-left" for="survivalHunterAgility">Survival Hunter Agility</label>
+					<input class='settings-right' value="800" type="number" min='0' name="survivalHunterAgility">
+				</li>
+				<li id='exposeWeaknessUptime'>
+					<label class="settings-left" for="exposeWeaknessUptime">Expose Weakness Uptime %</label>
+					<input class='settings-right' value="70" type="number" min='0' name="exposeWeaknessUptime">
 				</li>
 			</ul>
 		</section>
