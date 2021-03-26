@@ -459,6 +459,16 @@ const items = {
 			"source": "Shadow Labyrinth",
 			"phase": 1,
 		},
+		"eyeOfTheNight": {
+			"name": "Eye of the Night",
+			"spellPower": 34,
+			"critRating": 26,
+			"hitRating": 16,
+			"spellPen": 15,
+			"id": 24116,
+			"source": "Jewelcrafting BoE",
+			"phase": 1
+		},
 		"natashasEmberNecklace": {
 			"name": "Natasha's Ember Necklace",
 			"intellect": 15,

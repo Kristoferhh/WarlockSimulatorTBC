@@ -14,48 +14,13 @@ var selectedEnchants = localStorage['selectedEnchants'] ? JSON.parse(localStorag
 var savedItemDPS = localStorage['savedItemDPS'] ? JSON.parse(localStorage['savedItemDPS']) : {};
 var settings = localStorage.settings ? JSON.parse(localStorage.settings) : {};
 
-// RAID BUFFS
-for(let buff of Object.keys(_auras.buffs)) {
-	let b = _auras.buffs[buff];
-	let lowerBuffName = b.name.toLowerCase().split(' ').join('-');
-	let raidBuffUl = $("#buff-list");
-	auras[buff] = auras[buff] || false;
-
-	raidBuffUl.append($("<li data-aura-type='buffs' data-checked='" + auras[buff] + "' name='" + buff + "' id='" + lowerBuffName + "' class='aura'><a href='https://tbc.wowhead.com/spell=" + b.id + "'><img alt='" + b.name + "' src='img/" + b.iconName + ".jpg'></a></li>"));
-
-	// If the user already had the buff selected from a previous session then add the stats from it.
-	if (auras[buff] === true) {
-		modifyStatsFromAura(_auras.buffs[buff], false);
-	}
-}
-
-// DEBUFFS
-for (let buff of Object.keys(_auras.debuffs)) {
-	let b = _auras.debuffs[buff];
-	let lowerBuffName = b.name.toLowerCase().split(' ').join('-');
-	let debuffUl = $("#debuff-list");
-	auras[buff] = auras[buff] || false;
-
-	debuffUl.append($("<li data-aura-type='debuffs' data-checked='" + auras[buff] + "' name='" + buff + "' id='" + lowerBuffName + "' class='debuff aura'><a href='https://tbc.wowhead.com/spell=" + b.id + "'><img alt='" + b.name + "' src='img/" + b.iconName + ".jpg'></a></li>"));
-
-	// Add stats from already enabled debuffs
-	if (auras[buff] === true) {
-		modifyStatsFromAura(_auras.debuffs[buff], false);
-	}
-}
-
-// CONSUMABLES
-for (let consumable of Object.keys(_auras.consumables)) {
-	let c = _auras.consumables[consumable];
-	let lowerConsumableName = c.name.toLowerCase().split(' ').join('-');
-	let consumableUl = $("#consumable-list");
-	auras[consumable] = auras[consumable] || false;
-
-	consumableUl.append($("<li data-aura-type='consumables' data-checked='" + auras[consumable] + "' name='" + consumable + "' id='" + lowerConsumableName + "' class='" + (c.stats ? "stats " : "") + (c.potion ? "potion " : "") + (c.battleElixir ? "battle-elixir " : "") + (c.guardianElixir ? "guardian-elixir " : "") + (c.weaponOil ? "weapon-oil " : "") + (c.foodBuff ? "food-buff " : "") + "consumable aura'><a href='https://tbc.wowhead.com/item=" + c.id + "'><img alt='" + c.name + "' src='img/" + c.iconName + ".jpg'></a></li>"));
-
-	// Add stats from already enabled consumables
-	if (auras[consumable] === true) {
-		modifyStatsFromAura(_auras.consumables[consumable], false);
+// Buffs, debuffs, consumables, and pet buffs
+for (let auraType in _auras) {
+	let lowerAuraType = auraType.toLowerCase().split(' ').join('-');
+	$("#buffs-and-debuffs-section").append("<h3>" + _auras[auraType].heading + "</h3><ul id='" + lowerAuraType + "-list'></ul>");
+	for (let aura in _auras[auraType].auras) {
+		let a = _auras[auraType].auras[aura];
+		$("#" + lowerAuraType + "-list").append("<li data-aura-type='" + auraType + "' data-checked='" + (auras[aura] || false) + "' name='" + aura + "' id='" + aura.toLowerCase().split(' ').join('-') + "' class='" + (a.stats ? "stats " : "") + (a.potion ? "potion " : "") + (a.battleElixir ? "battle-elixir " : "") + (a.guardianElixir ? "guardian-elixir " : "") + (a.weaponOil ? "weapon-oil " : "") + (a.foodBuff ? "food-buff " : "") + auraType + " aura'><a href='https://tbc.wowhead.com/" + _auras[auraType].type + "=" + a.id + "'><img alt='" + a.name + "' src='img/" + a.iconName + ".jpg'></a></li>");
 	}
 }
 
@@ -71,7 +36,7 @@ for (let type in _spellSelection) {
 	rotationList.append(str);
 }
 
-// Add the talent trees
+// Talent trees
 for (let tree in _talents) {
 	if (_talents.hasOwnProperty(tree)) {
 		$("#talents-section").append($("<div class='talent-tree-div'><table data-name='" + tree + "' background='img/talent_tree_background_" + tree + ".jpg' id='talent-table-" + tree + "' class='talent-tree-table'></table><div class='talent-tree-name'><h3 style='display: inline-block;' data-name='" + tree + "'>" + tree.charAt(0).toUpperCase() + tree.slice(1) + "</h3><span class='clear-talent-tree'>&#10060;</span></div></div>"));
@@ -135,7 +100,7 @@ $(".aura").click(function() {
 	if (auraName == "totemOfWrath" || auraName == "curseOfTheElements" || auraName == "prayerOfSpirit" || auraName == "powerOfTheGuardianWarlock" || auraName == "powerOfTheGuardianMage" || auraName == "drumsOfBattle" || auraName == "drumsOfWar" || auraName == "drumsOfRestoration" || auraName == "bloodlust") {
 		updateSimulationSettingsVisibility();
 	}
-	modifyStatsFromAura(_auras[auraType][auraName], checkedVal);
+	modifyStatsFromAura(_auras[auraType].auras[auraName], checkedVal);
 	localStorage.auras = JSON.stringify(auras);
 	refreshCharacterStats();
 	return false;
@@ -164,9 +129,9 @@ $(consumableTypesToTrack.join(',')).click(function(event) {
 				$(this).attr('data-checked', false);
 				auras[consumableName] = false;
 
-				for (let stat in _auras.consumables[consumableName]) {
+				for (let stat in _auras.consumables.auras[consumableName]) {
 					if (characterStats.hasOwnProperty(stat)) {
-						characterStats[stat] -= _auras.consumables[consumableName][stat];
+						characterStats[stat] -= _auras.consumables.auras[consumableName][stat];
 					}
 				}
 			}

@@ -5,22 +5,22 @@ var _spellSelection = {
 			"immolate": {
 				"name": "Immolate",
 				"iconName": "spell_fire_immolation",
-				"id": 25309,
+				"id": 27215,
 			},
 			"corruption": {
 				"name": "Corruption",
 				"iconName": "spell_shadow_abominationexplosion",
-				"id": 25311,
+				"id": 27216,
 			},
 			"siphonLife": {
 				"name": "Siphon Life",
 				"iconName": "spell_shadow_requiem",
-				"id": 18881,
+				"id": 30911,
 			},
 			"unstableAffliction": {
 				"name": "Unstable Affliction",
 				"iconName": "spell_shadow_unstableaffliction_3",
-				"id": 30108,
+				"id": 30405,
 			}
 		}
 	},
@@ -30,17 +30,17 @@ var _spellSelection = {
 			"searingPain": {
 				"name": "Searing Pain",
 				"iconName": "spell_fire_soulburn",
-				"id": 17923,
+				"id": 30459,
 			},
 			"shadowBolt": {
 				"name": "Shadow Bolt",
 				"iconName": "spell_shadow_shadowbolt",
-				"id": 25307,
+				"id": 27209,
 			},
 			"incinerate": {
 				"name": "Incinerate",
 				"iconName": "spell_fire_burnout",
-				"id": 29722,
+				"id": 32231,
 			}
 		}
 	},
@@ -50,22 +50,22 @@ var _spellSelection = {
 			"curseOfRecklessness": {
 				"name": "Curse of Recklessness",
 				"iconName": "spell_shadow_unholystrength",
-				"id": 11717,
+				"id": 27226,
 			},
 			"curseOfTheElements": {
 				"name": "Curse of the Elements",
 				"iconName": "spell_shadow_chilltouch",
-				"id": 11722,
+				"id": 27228,
 			},
 			"curseOfDoom": {
 				"name": "Curse of Doom",
 				"iconName": "spell_shadow_auraofdarkness",
-				"id": 603,
+				"id": 30910,
 			},
 			"curseOfAgony": {
 				"name": "Curse of Agony",
 				"iconName": "spell_shadow_curseofsargeras",
-				"id": 11713,
+				"id": 27218,
 			}
 		}
 	},
@@ -75,12 +75,12 @@ var _spellSelection = {
 			"deathCoil": {
 				"name": "Death Coil",
 				"iconName": "spell_shadow_deathcoil",
-				"id": 17926,
+				"id": 27223,
 			},
 			"shadowburn": {
 				"name": "Shadowburn",
 				"iconName": "spell_shadow_scourgebuild",
-				"id": 18871,
+				"id": 30546,
 			}
 		}
 	}

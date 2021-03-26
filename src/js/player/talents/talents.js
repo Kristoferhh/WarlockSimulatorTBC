@@ -37,8 +37,8 @@ var _talents = {
 			"row": 2,
 			"column": 3
 		},
-		"improvedDrainLife": {
-			"name": "Improved Drain Life",
+		"soulSiphon": {
+			"name": "Soul Siphon",
 			"rankIDs": [17804,17805],
 			"iconName": "spell_shadow_lifedrain02",
 			"row": 2,
@@ -81,14 +81,14 @@ var _talents = {
 		},
 		"empoweredCorruption": {
 			"name": "Empowered Corruption",
-			"rankIDs": [17864,18393,0],
+			"rankIDs": [32381,32382,32383],
 			"iconName": "spell_shadow_abominationexplosion",
 			"row": 4,
 			"column": 4
 		},
 		"shadowEmbrace": {
 			"name": "Shadow Embrace",
-			"rankIDs": [0,0,0,0,0],
+			"rankIDs": [32385,32387,32392,32393,32394],
 			"iconName": "spell_shadow_shadowembrace",
 			"row": 5,
 			"column": 1
@@ -124,7 +124,7 @@ var _talents = {
 		},
 		"contagion": {
 			"name": "Contagion",
-			"rankIDs": [0,0,0,0,0],
+			"rankIDs": [30060,30061,30062,30063,30064],
 			"iconName": "Spell_shadow_painfulafflictions",
 			"row": 7,
 			"column": 2
@@ -138,21 +138,21 @@ var _talents = {
 		},
 		"improvedHowlOfTerror": {
 			"name": "Improved Howl of Terror",
-			"rankIDs": [0,0],
+			"rankIDs": [30054,30057],
 			"iconName": "spell_shadow_deathscream",
 			"row": 8,
 			"column": 1
 		},
 		"malediction": {
 			"name": "Malediction",
-			"rankIDs": [0,0,0],
+			"rankIDs": [32477,32483,32484],
 			"iconName": "spell_shadow_curseofachimonde",
 			"row": 8,
 			"column": 3
 		},
 		"unstableAffliction": {
 			"name": "Unstable Affliction",
-			"rankIDs": [0],
+			"rankIDs": [30108],
 			"iconName": "spell_shadow_unstableaffliction_3",
 			"row": 9,
 			"column": 2,
@@ -228,7 +228,7 @@ var _talents = {
 		},
 		"demonicAegis": {
 			"name": "Demonic Aegis",
-			"rankIDs": [18709,18710, 0],
+			"rankIDs": [30143,30144,30145],
 			"iconName": "spell_shadow_ragingscream",
 			"row": 3,
 			"column": 4
@@ -274,7 +274,7 @@ var _talents = {
 		},
 		"manaFeed": {
 			"name": "Mana Feed",
-			"rankIDs": [0,0,0],
+			"rankIDs": [30326,30327,30328],
 			"iconName": "spell_shadow_manafeed",
 			"row": 6,
 			"column": 1
@@ -292,7 +292,7 @@ var _talents = {
 		},
 		"demonicResilience": {
 			"name": "Demonic Resilience",
-			"rankIDs": [0,0,0],
+			"rankIDs": [30319,30320,30321],
 			"iconName": "spell_shadow_demonicfortitude",
 			"row": 7,
 			"column": 1
@@ -310,21 +310,21 @@ var _talents = {
 		},
 		"demonicKnowledge": {
 			"name": "Demonic Knowledge",
-			"rankIDs": [18774,18775,0],
+			"rankIDs": [35691,35692,35693],
 			"iconName": "Spell_shadow_improvedvampiricembrace",
 			"row": 7,
 			"column": 3
 		},
 		"demonicTactics": {
 			"name": "Demonic Tactics",
-			"rankIDs": [0,0,0,0,0],
+			"rankIDs": [30242,30245,30246,30247,30248],
 			"iconName": "Spell_shadow_demonictactics",
 			"row": 8,
 			"column": 2
 		},
 		"summonFelguard": {
 			"name": "Summon Felguard",
-			"rankIDs": [0],
+			"rankIDs": [30146],
 			"iconName": "spell_shadow_summonfelguard",
 			"row": 9,
 			"column": 2
@@ -439,7 +439,7 @@ var _talents = {
 		},
 		"netherProtection": {
 			"name": "Nether Protection",
-			"rankIDs": [0,0,0],
+			"rankIDs": [30299,30301,30302],
 			"iconName": "spell_shadow_netherprotection",
 			"row": 6,
 			"column": 1
@@ -453,7 +453,7 @@ var _talents = {
 		},
 		"backlash": {
 			"name": "Backlash",
-			"rankIDs": [0,0,0],
+			"rankIDs": [34935,34938,34939],
 			"iconName": "spell_fire_playingwithfire",
 			"row": 7,
 			"column": 1
@@ -471,21 +471,21 @@ var _talents = {
 		},
 		"soulLeech": {
 			"name": "Soul Leech",
-			"rankIDs": [0,0,0],
+			"rankIDs": [30293,30295,30296],
 			"iconName": "spell_shadow_soulleech_3",
 			"row": 7,
 			"column": 3
 		},
 		"shadowAndFlame": {
 			"name": "Shadow and Flame",
-			"rankIDs": [0,0,0,0,0],
+			"rankIDs": [30288,30289,30290,30291,30292],
 			"iconName": "spell_shadow_shadowandflame",
 			"row": 8,
 			"column": 2
 		},
 		"shadowfury": {
 			"name": "Shadowfury",
-			"rankIDs": [0],
+			"rankIDs": [30283],
 			"iconName": "spell_shadow_shadowfury",
 			"row": 9,
 			"column": 2,
