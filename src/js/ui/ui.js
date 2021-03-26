@@ -20,7 +20,7 @@ for (let auraType in _auras) {
 	$("#buffs-and-debuffs-section").append("<h3>" + _auras[auraType].heading + "</h3><ul id='" + lowerAuraType + "-list'></ul>");
 	for (let aura in _auras[auraType].auras) {
 		let a = _auras[auraType].auras[aura];
-		$("#" + lowerAuraType + "-list").append("<li data-aura-type='" + auraType + "' data-checked='" + (auras[aura] || false) + "' name='" + aura + "' id='" + aura.toLowerCase().split(' ').join('-') + "' class='" + (a.stats ? "stats " : "") + (a.potion ? "potion " : "") + (a.battleElixir ? "battle-elixir " : "") + (a.guardianElixir ? "guardian-elixir " : "") + (a.weaponOil ? "weapon-oil " : "") + (a.foodBuff ? "food-buff " : "") + auraType + " aura'><a href='https://tbc.wowhead.com/" + _auras[auraType].type + "=" + a.id + "'><img alt='" + a.name + "' src='img/" + a.iconName + ".jpg'></a></li>");
+		$("#" + lowerAuraType + "-list").append("<li data-aura-type='" + auraType + "' data-checked='" + (auras[aura] || false) + "' name='" + aura + "' id='" + aura.toLowerCase().split(' ').join('-') + "' class='" + (a.stats ? "stats " : "") + (a.potion ? "potion " : "") + (a.battleElixir ? "battle-elixir " : "") + (a.guardianElixir ? "guardian-elixir " : "") + (a.weaponOil ? "weapon-oil " : "") + (a.foodBuff ? "food-buff " : "") + (a.petOnly ? "petBuff " : "") + auraType + " aura'><a href='https://tbc.wowhead.com/" + _auras[auraType].type + "=" + a.id + "'><img alt='" + a.name + "' src='img/" + a.iconName + ".jpg'></a></li>");
 	}
 }
 
@@ -100,9 +100,11 @@ $(".aura").click(function() {
 	if (auraName == "totemOfWrath" || auraName == "curseOfTheElements" || auraName == "prayerOfSpirit" || auraName == "powerOfTheGuardianWarlock" || auraName == "powerOfTheGuardianMage" || auraName == "drumsOfBattle" || auraName == "drumsOfWar" || auraName == "drumsOfRestoration" || auraName == "bloodlust") {
 		updateSimulationSettingsVisibility();
 	}
-	modifyStatsFromAura(_auras[auraType].auras[auraName], checkedVal);
+	if (!$(this).hasClass("petBuff")) {
+		modifyStatsFromAura(_auras[auraType].auras[auraName], checkedVal);
+		refreshCharacterStats();
+	}
 	localStorage.auras = JSON.stringify(auras);
-	refreshCharacterStats();
 	return false;
 });
 

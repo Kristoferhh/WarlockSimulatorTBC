@@ -114,54 +114,6 @@ const _auras = {
 				"name": "Bloodlust",
 				"iconName": "spell_nature_bloodlust",
 				"id": 2825
-			},
-			"heroicPresence": {
-				"name": "Heroic Presence",
-				"iconName": "inv_helmet_21",
-				"id": 6562,
-				"petOnly": true
-			},
-			"blessingOfMight": {
-				"name": "Blessing of Might",
-				"iconName": "spell_holy_greaterblessingofkings",
-				"id": 27141,
-				"petOnly": true
-			},
-			"strengthOfEarthTotem": {
-				"name": "Strength of Earth Totem",
-				"iconName": "spell_nature_earthbindtotem",
-				"id": 25528,
-				"petOnly": true
-			},
-			"graceOfAirTotem": {
-				"name": "Grace of Air Totem",
-				"iconName": "spell_nature_invisibilitytotem",
-				"id": 10627,
-				"petOnly": true
-			},
-			"battleShout": {
-				"name": "Battle Shout",
-				"iconName": "ability_warrior_battleshout",
-				"id": 2048,
-				"petOnly": true
-			},
-			"trueshotAura": {
-				"name": "Trueshot Aura",
-				"iconName": "ability_trueshot",
-				"id": 31519,
-				"petOnly": true
-			},
-			"leaderOfThePack": {
-				"name": "Leader of the Pack",
-				"iconName": "spell_nature_unyeildingstamina",
-				"id": 17007,
-				"petOnly": true
-			},
-			"unleashedRage": {
-				"name": "Unleashed Rage",
-				"iconName": "spell_nature_unleashedrage",
-				"id": 30811,
-				"petOnly": true
 			}
 		}
 	},
@@ -339,6 +291,77 @@ const _auras = {
 				"iconName": "inv_potion_26",
 				"id": 23123,
 				"weaponOil": true,
+			}
+		}
+	},
+	"petBuffs": {
+		"heading": "Pet Buffs (your pet also inherits group-wide buffs selected above)",
+		"type": "spell",
+		"auras": {
+			"heroicPresence": {
+				"name": "Heroic Presence",
+				"iconName": "inv_helmet_21",
+				"id": 6562
+			},
+			"blessingOfMight": {
+				"name": "Blessing of Might",
+				"iconName": "spell_holy_greaterblessingofkings",
+				"id": 27141
+			},
+			"strengthOfEarthTotem": {
+				"name": "Strength of Earth Totem",
+				"iconName": "spell_nature_earthbindtotem",
+				"id": 25528
+			},
+			"graceOfAirTotem": {
+				"name": "Grace of Air Totem",
+				"iconName": "spell_nature_invisibilitytotem",
+				"id": 10627
+			},
+			"battleShout": {
+				"name": "Battle Shout",
+				"iconName": "ability_warrior_battleshout",
+				"id": 2048
+			},
+			"trueshotAura": {
+				"name": "Trueshot Aura",
+				"iconName": "ability_trueshot",
+				"id": 31519
+			},
+			"leaderOfThePack": {
+				"name": "Leader of the Pack",
+				"iconName": "spell_nature_unyeildingstamina",
+				"id": 17007
+			},
+			"unleashedRage": {
+				"name": "Unleashed Rage",
+				"iconName": "spell_nature_unleashedrage",
+				"id": 30811
+			},
+			"scrollOfStaminaV": {
+				"name": "Scroll of Stamina V",
+				"iconName": "inv_scroll_07",
+				"id": 33081
+			},
+			"scrollOfIntellectV": {
+				"name": "Scroll of Intellect V",
+				"iconName": "inv_scroll_01",
+				"id": 33078
+			},
+			"scrollOfStrengthV": {
+				"name": "Scroll of Strength V",
+				"iconName": "inv_scroll_02",
+				"id": 33082
+			},
+			"scrollOfAgilityV": {
+				"name": "Scroll of Agility V",
+				"iconName": "inv_scroll_02",
+				"id": 33077
+			},
+			"scrollOfSpiritV": {
+				"name": "Scroll of Spirit V",
+				"iconName": "inv_scroll_01",
+				"id": 33080
 			}
 		}
 	}
