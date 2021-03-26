@@ -22,7 +22,8 @@ class Simulation {
 
 		// Look for the shortest time until an action needs to be done
 		if (this.player.pet) {
-			if (this.player.pet.type == PetTypes.MELEE && this.player.pet.spells.melee.cooldown < time) time = this.player.pet.spells.melee.cooldown;
+			if (this.player.pet.fiveSecondRuleTimerRemaining < time) time = this.player.pet.fiveSecondRuleTimerRemaining;
+			if (this.player.pet.type == PetTypes.MELEE && this.player.pet.spells.melee.cooldownRemaining < time) time = this.player.pet.spells.melee.cooldownRemaining;
 			//else if (this.player.pet.type == PetTypes.RANGED && this.player.pet.castTimeRemaining > 0 && this.player.pet.castTimeRemaining < time) time = this.player.pet.castTimeRemaining;
 
 			if (this.player.pet.pet == Pets.IMP) {
@@ -168,7 +169,7 @@ class Simulation {
 
 			while(this.player.fightTime < fightLength) {
 				// Pet
-				if (this.player.pet) {
+				if (this.player.pet && this.player.pet.mode == PetModes.AGGRESSIVE) {
 					if (this.player.pet.type == PetTypes.MELEE) {
 						if (this.player.pet.spells.melee.ready()) {
 							this.player.pet.cast("melee");
@@ -285,7 +286,6 @@ class Simulation {
 			if (this.player.auras.sextantOfUnstableCurrents && this.player.auras.sextantOfUnstableCurrents.active) this.player.auras.sextantOfUnstableCurrents.fade(true);
 			if (this.player.auras.quagmirransEye && this.player.auras.quagmirransEye.active) this.player.auras.quagmirransEye.fade(true);
 			if (this.player.auras.shiffarsNexusHorn && this.player.auras.shiffarsNexusHorn.active) this.player.auras.shiffarsNexusHorn.fade(true);
-			if (this.player.pet && this.player.pet.pet == Pets.FELGUARD) this.player.pet.auras.demonicFrenzy.fade(true);
 			for (let i = 0; i < 2; i++) {
 				if (this.player.trinkets[i]) {
 					this.player.trinkets[i].fade(true);

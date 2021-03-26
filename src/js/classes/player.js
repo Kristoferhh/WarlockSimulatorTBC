@@ -201,11 +201,11 @@ class Player {
 		this.demonicKnowledgeSp = 0;
 		if (settings.talents.demonicSacrifice !== 0 || settings.talents.masterDemonologist > 0) {
 			let selectedPet = settings.simSettings.petChoice;
-			if (selectedPet == Pets.IMP) this.pet = new Imp(this);
-			else if (selectedPet == Pets.VOIDWALKER) this.pet = new Voidwalker(this);
-			else if (selectedPet == Pets.SUCCUBUS) this.pet = new Succubus(this);
-			else if (selectedPet == Pets.FELHUNTER) this.pet = new Felhunter(this);
-			else if (selectedPet == Pets.FELGUARD) this.pet = new Felguard(this);
+			if (selectedPet == Pets.IMP) this.pet = new Imp(this, settings);
+			else if (selectedPet == Pets.VOIDWALKER) this.pet = new Voidwalker(this, settings);
+			else if (selectedPet == Pets.SUCCUBUS) this.pet = new Succubus(this, settings);
+			else if (selectedPet == Pets.FELHUNTER) this.pet = new Felhunter(this, settings);
+			else if (selectedPet == Pets.FELGUARD) this.pet = new Felguard(this, settings);
 			this.pet.initialize();
 		}
 
@@ -213,7 +213,7 @@ class Player {
 		console.log("Mana: " + Math.round(this.stats.maxMana));
 		console.log("Stamina: " + Math.round(this.stats.stamina * this.stats.staminaModifier));
 		console.log("Intellect: " + Math.round(this.stats.intellect * this.stats.intellectModifier));
-		console.log("Spell Power: " + Math.round(this.stats.spellPower + this.demonicKnowledgeSp));
+		console.log("Spell Power: " + Math.round(this.stats.spellPower) + " + " + Math.round(this.demonicKnowledgeSp) + " from Demonic Knowledge");
 		console.log("Shadow Power: " + this.stats.shadowPower);
 		console.log("Fire Power: " + this.stats.firePower);
 		console.log("Crit Chance: " + Math.round((this.stats.critChance / this.stats.critChanceMultiplier) * 100) / 100 + "%");
@@ -225,11 +225,19 @@ class Player {
 		console.log("Spell Penetration: " + this.stats.spellPen);
 		if (this.pet) {
 			console.log('---------------- Pet ----------------');
-			console.log("Mana: " + Math.round(this.pet.maxMana));
-			console.log("Stamina: " + Math.round(this.pet.stamina));
-			console.log("Intellect: " + Math.round(this.pet.intellect));
-			console.log("Attack Power: " + Math.round(this.pet.ap));
-			console.log("Spell Power: " + Math.round(this.pet.spellPower));
+			console.log("Stamina: " + Math.round(this.pet.stats.stamina * this.pet.stats.staminaModifier));
+			console.log("Intellect: " + Math.round(this.pet.stats.intellect * this.pet.stats.intellectModifier));
+			console.log("Strength: " + Math.round(this.pet.stats.strength * this.pet.stats.strengthModifier));
+			console.log("Agility: " + Math.round(this.pet.stats.agility * this.pet.stats.agilityModifier));
+			console.log("Spirit: " + Math.round(this.pet.stats.spirit * this.pet.stats.spiritModifier));
+			console.log("Attack Power: " + Math.round(this.pet.stats.ap * this.pet.stats.apModifier));
+			console.log("Spell Power: " + Math.round(this.pet.stats.spellPower));
+			console.log("Mana: " + Math.round(this.pet.stats.maxMana));
+			console.log("Hit Chance: " + this.pet.stats.hitChance);
+			console.log("Crit Chance: " + this.pet.stats.critChance);
+			console.log("Spell Hit Chance: " + this.pet.stats.spellHitChance);
+			console.log("Spell Crit Chance: " + this.pet.stats.spellCritChance);
+			console.log("Enemy Armor: " + Math.round(this.enemy.armor));
 		}
 	}
 

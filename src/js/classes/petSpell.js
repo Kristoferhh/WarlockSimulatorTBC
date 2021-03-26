@@ -7,10 +7,11 @@ class PetSpell {
 		this.cooldownRemaining = 0;
 		this.castTime = 0;
 		this.manaCost = 0;
+		this.resetsFiveSecondRule = true; // true if it's a spell that resets the five second rule for mana regen from spirit (true for everything but melee attacks)
 	}
 
 	ready() {
-		return this.cooldownRemaining <= 0 && this.pet.mana >= this.manaCost;
+		return this.cooldownRemaining <= 0 && this.pet.stats.currentMana >= this.manaCost;
 	}
 
 	tick(t) {
@@ -32,18 +33,20 @@ class PetSpell {
 
 	cast() {
 		this.cooldownRemaining = this.cooldown;
-		if (this.manaCost > 0) this.pet.mana = Math.max(0, this.pet.mana - this.manaCost);
+		if (this.resetsFiveSecondRule) this.pet.fiveSecondRuleTimerRemaining = 5;
+		if (this.manaCost > 0) this.pet.stats.currentMana = Math.max(0, this.pet.stats.currentMana - this.manaCost);
 		if (this.castTime > 0) this.pet.player.combatLog(this.pet.name + " finished casting " + this.name);
 		else this.pet.player.combatLog(this.pet.name + " casts " + this.name);
 		this.pet.player.damageBreakdown[this.varName].casts = this.pet.player.damageBreakdown[this.varName].casts + 1 || 1;
 
 		// Check for crit
-		let isCrit = this.canCrit && random(1,100) * this.pet.player.stats.critChanceMultiplier <= this.pet.critChance * this.pet.player.stats.critChanceMultiplier;
+		//todo fix so it uses spell crit for spells and melee hit for melee hits
+		let isCrit = this.canCrit && random(1,100) * this.pet.player.stats.critChanceMultiplier <= this.pet.stats.critChance * this.pet.player.stats.critChanceMultiplier;
 		if (isCrit) {
 			this.pet.player.damageBreakdown[this.varName].crits = this.pet.player.damageBreakdown[this.varName].crits + 1 || 1;
 		}
 		// Check for miss
-		let isMiss = random(1,100) > this.pet.hitChance;
+		let isMiss = random(1,100) > this.pet.stats.hitChance;
 		if (isMiss) {
 			this.pet.player.damageBreakdown[this.varName].misses = this.pet.player.damageBreakdown[this.varName].misses + 1 || 1;
 			this.pet.player.combatLog(this.pet.name + " " + this.name + " *miss*");
@@ -58,7 +61,7 @@ class PetSpell {
 		if (isMiss || isDodge) return;
 
 		// Calculate damage
-		let dmg = this.calculateDamage() * this.pet.damageModifier;
+		let dmg = this.calculateDamage() * this.pet.stats.damageModifier;
 		if (isCrit) {
 			dmg *= 1.5; // pets use different multiplier maybe?
 		}
@@ -85,10 +88,11 @@ class FelguardMelee extends PetSpell {
 		this.name = "Melee";
 		this.varName = "melee";
 		this.pet.player.damageBreakdown[this.varName] = {"name": "Melee (Felguard)"};
+		this.resetsFiveSecondRule = false;
 	}
 
 	calculateDamage() {
-		return this.pet.dmg + (this.pet.ap * (1 + (0.05 * this.pet.auras.demonicFrenzy.stacks))) / 7;
+		return this.pet.dmg + (this.pet.stats.ap * this.pet.stats.apModifier * (1 + (0.05 * this.pet.auras.demonicFrenzy.stacks))) / 7;
 	}
 }
 
@@ -103,6 +107,6 @@ class FelguardCleave extends PetSpell {
 	}
 
 	calculateDamage() {
-		return (this.pet.dmg + (this.pet.ap * (1 + (0.05 * this.pet.auras.demonicFrenzy.stacks))) / 7) + 78;
+		return this.pet.spells.melee.calculateDamage() + 78;
 	}
 }
