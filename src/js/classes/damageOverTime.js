@@ -47,7 +47,7 @@ class DamageOverTime {
 				if (this.snapshots) {
 					sp = this.spellPower;
 				} else {
-					sp = this.player.stats.spellPower + this.player.stats[this.school + "Power"];
+					sp = this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats[this.school + "Power"];
 				}
 
 				let dmg = ((this.dmg + sp * this.coefficient) * this.modifier * this.player.stats[this.school + "Modifier"]) / (this.originalDurationTotal / this.tickTimerTotal);

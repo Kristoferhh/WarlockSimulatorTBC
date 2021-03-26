@@ -8,6 +8,7 @@ importScripts(
 	'./classes/trinket.js',
 	'./functions.js',
 	'./classes/aura.js',
+	'./classes/petAura.js',
 	'./classes/damageOverTime.js',
 	'./items/items.js',
 	'./items/gems.js'

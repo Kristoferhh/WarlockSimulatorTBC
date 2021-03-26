@@ -28,6 +28,7 @@ class Player {
 		this.rotation = settings.rotation;
 		this.talents = settings.talents;
 		this.level = 70;
+		this.itemID = customItemID || settings.items[settings.selectedItemSlot] || 0;
 		this.sets = settings.sets;
 		this.selectedAuras = settings.auras;
 		this.enemy.shadowResist = Math.max(this.enemy.shadowResist - this.stats.spellPen, (this.enemy.level - this.level) * 8, 0);
@@ -197,6 +198,7 @@ class Player {
 		this.damageBreakdown = {};
 
 		// Pet
+		this.demonicKnowledgeSp = 0;
 		if (settings.talents.demonicSacrifice !== 0 || settings.talents.masterDemonologist > 0) {
 			let selectedPet = settings.simSettings.petChoice;
 			if (selectedPet == Pets.IMP) this.pet = new Imp(this);
@@ -211,7 +213,7 @@ class Player {
 		console.log("Mana: " + Math.round(this.stats.maxMana));
 		console.log("Stamina: " + Math.round(this.stats.stamina * this.stats.staminaModifier));
 		console.log("Intellect: " + Math.round(this.stats.intellect * this.stats.intellectModifier));
-		console.log("Spell Power: " + Math.round(this.stats.spellPower));
+		console.log("Spell Power: " + Math.round(this.stats.spellPower + this.demonicKnowledgeSp));
 		console.log("Shadow Power: " + this.stats.shadowPower);
 		console.log("Fire Power: " + this.stats.firePower);
 		console.log("Crit Chance: " + Math.round((this.stats.critChance / this.stats.critChanceMultiplier) * 100) / 100 + "%");
@@ -221,6 +223,14 @@ class Player {
 		console.log("Fire Modifier: " + Math.round(this.stats.fireModifier * 100) + "%");
 		console.log("MP5: " + this.stats.mp5);
 		console.log("Spell Penetration: " + this.stats.spellPen);
+		if (this.pet) {
+			console.log('---------------- Pet ----------------');
+			console.log("Mana: " + Math.round(this.pet.maxMana));
+			console.log("Stamina: " + Math.round(this.pet.stamina));
+			console.log("Intellect: " + Math.round(this.pet.intellect));
+			console.log("Attack Power: " + Math.round(this.pet.ap));
+			console.log("Spell Power: " + Math.round(this.pet.spellPower));
+		}
 	}
 
 	initialize() {

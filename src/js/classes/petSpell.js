@@ -4,7 +4,6 @@ class PetSpell {
 		this.casting = false;
 		this.casting = false;
 		this.canCrit = true;
-		this.modifier = 1;
 		this.cooldownRemaining = 0;
 		this.castTime = 0;
 		this.manaCost = 0;
@@ -59,7 +58,7 @@ class PetSpell {
 		if (isMiss || isDodge) return;
 
 		// Calculate damage
-		let dmg = this.calculateDamage();
+		let dmg = this.calculateDamage() * this.pet.damageModifier;
 		if (isCrit) {
 			dmg *= 1.5; // pets use different multiplier maybe?
 		}
@@ -72,6 +71,10 @@ class PetSpell {
 		if (isCrit) this.pet.player.combatLog(this.pet.name + " " + this.name + " *" + Math.round(dmg) + "*");
 		else this.pet.player.combatLog(this.pet.name + " " + this.name + " " + Math.round(dmg));
 		this.pet.player.damageBreakdown[this.varName].damage = this.pet.player.damageBreakdown[this.varName].damage + dmg || dmg;
+
+		if (this.pet.pet == Pets.FELGUARD) {
+			this.pet.auras.demonicFrenzy.apply();
+		}
 	}
 }
 
@@ -85,7 +88,7 @@ class FelguardMelee extends PetSpell {
 	}
 
 	calculateDamage() {
-		return this.pet.dmg + this.pet.ap / 7;
+		return this.pet.dmg + (this.pet.ap * (1 + (0.05 * this.pet.auras.demonicFrenzy.stacks))) / 7;
 	}
 }
 
@@ -100,6 +103,6 @@ class FelguardCleave extends PetSpell {
 	}
 
 	calculateDamage() {
-		return ((this.pet.dmg + this.pet.ap / 7) + 78) * this.modifier;
+		return (this.pet.dmg + (this.pet.ap * (1 + (0.05 * this.pet.auras.demonicFrenzy.stacks))) / 7) + 78;
 	}
 }

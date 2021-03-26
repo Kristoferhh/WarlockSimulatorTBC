@@ -25,7 +25,7 @@ class Pet {
 		this.castTimeRemaining = 0;
 		this.critChance = 5 + player.talents.demonicTactics;
 		this.spellCritChance = 5 + player.talents.demonicTactics;
-		this.modifier = 1 * (1 + (0.04 * player.talents.unholyPower)) * (1 + (0.05 * player.talents.soulLink));
+		this.damageModifier = 1 * (1 + (0.04 * player.talents.unholyPower)) * (1 + (0.05 * player.talents.soulLink));
 		this.intellectModifier = 1 + (0.05 * player.talents.felIntellect);
 		this.staminaModifier = 1;
 		this.mp5 = 0;
@@ -48,9 +48,10 @@ class Pet {
 
 	calculateStatsFromPlayer() {
 		this.stamina = (this.stats.baseStamina + 0.3 * (this.player.stats.stamina * this.player.stats.staminaModifier)) * this.staminaModifier;
-		this.ap = this.stats.baseAp + (this.player.stats.spellPower + Math.max(this.player.stats.shadowPower,this.player.stats.firePower)) * 0.57;
-		this.spellPower = (this.player.stats.spellPower + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15;
 		this.intellect = (this.stats.baseIntellect + 0.3 * (this.player.stats.intellect * this.player.stats.intellectModifier)) * this.intellectModifier;
+		this.player.demonicKnowledgeSp = (this.stamina + this.intellect) * (0.04 * this.player.talents.demonicKnowledge);
+		this.ap = this.stats.baseAp + (this.player.stats.spellPower + Math.max(this.player.stats.shadowPower,this.player.stats.firePower)) * 0.57;
+		this.spellPower = (this.player.stats.spellPower + this.player.demonicKnowledgeSp + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15;
 		this.maxMana = this.stats.baseMana + this.intellect * 4.7 * this.intellectModifier; // confirm
 	}
 
@@ -138,7 +139,7 @@ class Felguard extends Pet {
 		};
 		this.dmg = 206; // base melee damage
 		this.swingTimer = 2;
-		this.modifier *= 1 + (0.01 * player.talents.masterDemonologist);
+		this.damageModifier *= 1 + (0.01 * player.talents.masterDemonologist);
 		this.player.damageBreakdown.melee = {"name": "Melee (Felguard)"};
 		this.calculateStatsFromPlayer();
 	}
@@ -147,6 +148,9 @@ class Felguard extends Pet {
 		this.spells = {
 			"melee": new FelguardMelee(this),
 			"cleave": new FelguardCleave(this)
+		};
+		this.auras = {
+			"demonicFrenzy": new DemonicFrenzy(this)
 		};
 	}
 

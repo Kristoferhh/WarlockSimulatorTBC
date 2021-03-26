@@ -128,7 +128,7 @@ class Simulation {
 				this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.player.stats.mp5);
 				this.player.combatLog(this.player.stats.mp5 + " mana gained from MP5");
 			}
-			if (this.player.pet.mp5 > 0) {
+			if (this.player.pet && this.player.pet.mp5 > 0) {
 				this.player.pet.mana = Math.min(this.player.pet.maxMana, this.player.pet.mana + this.player.pet.mp5);
 				this.player.combatLog(this.player.pet.name + " gains " + this.player.pet.mp5 + " mana from MP5");
 			}
@@ -285,6 +285,7 @@ class Simulation {
 			if (this.player.auras.sextantOfUnstableCurrents && this.player.auras.sextantOfUnstableCurrents.active) this.player.auras.sextantOfUnstableCurrents.fade(true);
 			if (this.player.auras.quagmirransEye && this.player.auras.quagmirransEye.active) this.player.auras.quagmirransEye.fade(true);
 			if (this.player.auras.shiffarsNexusHorn && this.player.auras.shiffarsNexusHorn.active) this.player.auras.shiffarsNexusHorn.fade(true);
+			if (this.player.pet && this.player.pet.pet == Pets.FELGUARD) this.player.pet.auras.demonicFrenzy.fade(true);
 			for (let i = 0; i < 2; i++) {
 				if (this.player.trinkets[i]) {
 					this.player.trinkets[i].fade(true);

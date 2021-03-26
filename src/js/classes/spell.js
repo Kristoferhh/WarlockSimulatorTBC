@@ -77,7 +77,7 @@ class Spell {
 		}
 
 		if (this.isDot) {
-			this.player.auras[this.varName].apply(this.player.stats.spellPower + this.player.stats[this.school + "Power"]);
+			this.player.auras[this.varName].apply(this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats[this.school + "Power"]);
 		} else if (this.isAura) {
 			this.player.auras[this.varName].apply();
 		}
@@ -98,7 +98,7 @@ class Spell {
 		}
 	}
 
-	damage(isCrit, spellPower = this.player.stats.spellPower, shadowPower = this.player.stats.shadowPower, firePower = this.player.stats.firePower) {
+	damage(isCrit, spellPower = this.player.stats.spellPower + this.player.demonicKnowledgeSp, shadowPower = this.player.stats.shadowPower, firePower = this.player.stats.firePower) {
 		let dmg = this.dmg;
 		// If casting Incinerate and Immolate is up, add the bonus damage.
 		if (this.varName == "incinerate" && this.player.auras.immolate && this.player.auras.immolate.active) {
@@ -321,7 +321,7 @@ class LifeTap extends Spell {
 
 	cast() {
 		this.casting = false;
-		let manaGain = (this.manaReturn + ((this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient)) * this.modifier;
+		let manaGain = (this.manaReturn + ((this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats.shadowPower) * this.coefficient)) * this.modifier;
 		this.player.combatLog(this.name + " " + Math.round(manaGain));
 		if (this.player.mana + manaGain > this.player.stats.maxMana) this.player.combatLog("Life Tap used at too high mana (mana wasted)"); // Warning for if the simulation ever decides to use life tap when it would overcap the player on mana.
 		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain);
@@ -339,7 +339,7 @@ class DarkPact extends Spell {
 
 	cast() {
 		this.casting = false;
-		let manaGain = this.manaReturn + (this.player.stats.spellPower + this.player.stats.shadowPower) * this.coefficient;
+		let manaGain = this.manaReturn + (this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats.shadowPower) * this.coefficient;
 		this.player.combatLog(this.name + " " + Math.round(manaGain));
 		if (this.player.mana + manaGain > this.player.stats.maxMana) console.log("Dark Pact used at too high mana (mana wasted)");
 		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain);

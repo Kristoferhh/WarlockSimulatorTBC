@@ -89,7 +89,7 @@ class CurseOfDoomAura extends Aura {
 	}
 
 	apply() {
-		this.spellPower = this.player.stats.spellPower + this.player.stats.shadowPower;
+		this.spellPower = this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats.shadowPower;
 		super.apply();
 	}
 
