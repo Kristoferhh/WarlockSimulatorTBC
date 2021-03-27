@@ -34,9 +34,14 @@ class PetSpell {
 	cast() {
 		this.cooldownRemaining = this.cooldown;
 		if (this.resetsFiveSecondRule) this.pet.fiveSecondRuleTimerRemaining = 5;
-		if (this.manaCost > 0) this.pet.stats.currentMana = Math.max(0, this.pet.stats.currentMana - this.manaCost);
-		if (this.castTime > 0) this.pet.player.combatLog(this.pet.name + " finished casting " + this.name);
-		else this.pet.player.combatLog(this.pet.name + " casts " + this.name);
+		let combatLogEntry = this.pet.name;
+		if (this.castTime > 0) combatLogEntry += " finished casting " + this.name;
+		else combatLogEntry += " casts " + this.name;
+		if (this.manaCost > 0) {
+			this.pet.stats.currentMana = Math.max(0, this.pet.stats.currentMana - this.manaCost);
+			combatLogEntry += ". Pet mana: " + Math.round(this.pet.stats.currentMana) + "/" + Math.round(this.pet.stats.maxMana);
+		}
+		this.pet.player.combatLog(combatLogEntry);
 		this.pet.player.damageBreakdown[this.varName].casts = this.pet.player.damageBreakdown[this.varName].casts + 1 || 1;
 
 		// Check for crit

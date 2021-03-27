@@ -94,7 +94,7 @@ class Pet {
 			let multiplier = parseInt(this.simSettings.improvedDivineSpirit);
 			this.stats.spirit += 50 * (1 + (0.1 * multiplier));
 		}
-		if (this.playerAuras.inspiringPresence) this.stats.spellHitChance = Math.max(99, this.stats.spellHitChance + 1);
+		if (this.playerAuras.inspiringPresence) this.stats.spellHitChance = Math.min(99, this.stats.spellHitChance + 1);
 		if (this.playerAuras.moonkinAura) this.stats.spellCritChance += 5;
 		//todo add atiesh auras
 		if (this.playerAuras.judgementOfTheCrusader) this.stats.critChance += 3; // add spell crit too?
@@ -179,9 +179,9 @@ class Pet {
 			this.spiritTickTimerRemaining = 2;
 			if (this.fiveSecondRuleTimerRemaining <= 0) {
 				// Fromula from https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1601392
-				let manaGain = 5 * Math.sqrt(this.stats.intellect * this.stats.intellectModifier) * (this.stats.spirit * this.stats.spiritModifier) * 0.009327;
-				this.stats.currentMana = Math.max(this.stats.maxMana, this.stats.currentMana + manaGain);
-				this.player.combatLog(this.name + " gains " + Math.round(manaGain) + " mana from Spirit regeneration");
+				let manaGain = (5 * Math.sqrt(this.stats.intellect * this.stats.intellectModifier) * (this.stats.spirit * this.stats.spiritModifier) * 0.009327) / 2.5; // Divide by 2.5 since it calculates mana per five seconds but the tick is every 2 seconds
+				this.stats.currentMana = Math.min(this.stats.maxMana, this.stats.currentMana + manaGain);
+				this.player.combatLog(this.name + " gains " + Math.round(manaGain) + " mana from Spirit regeneration. Pet mana: " + Math.round(this.stats.currentMana) + "/" + Math.round(this.stats.maxMana));
 			}
 		}
 	}
