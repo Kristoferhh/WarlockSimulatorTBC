@@ -47,6 +47,15 @@ for (let stat in raceStats[currentRace]) {
 	}
 }
 
+// Add stats from selected auras
+for (let auraType in _auras) {
+	for (let aura in _auras[auraType].auras) {
+		if (auras[aura]) {
+			modifyStatsFromAura(_auras[auraType].auras[aura], false);
+		}
+	}
+}
+
 // Load saved simulation settings
 $("#sim-settings select, #sim-settings input").each(function() {
 	if (settings[$(this).attr('name')]) {
