@@ -325,6 +325,11 @@ class LifeTap extends Spell {
 		this.player.combatLog(this.name + " " + Math.round(manaGain));
 		if (this.player.mana + manaGain > this.player.stats.maxMana) this.player.combatLog("Life Tap used at too high mana (mana wasted)"); // Warning for if the simulation ever decides to use life tap when it would overcap the player on mana.
 		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain);
+		if (this.player.pet && this.player.talents.manaFeed > 0) {
+			let petManaGain = manaGain * (this.player.talents.manaFeed / 3);
+			this.player.pet.stats.currentMana = Math.max(this.player.pet.stats.maxMana, petManaGain);
+			this.player.combatLog(this.player.pet.name + " gains " + Math.round(petManaGain) + " mana from Mana Feed");
+		}
 
 	}
 }
