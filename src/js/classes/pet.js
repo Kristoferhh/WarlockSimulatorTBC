@@ -23,6 +23,8 @@ class Pet {
 		this.playerAuras = settings.auras;
 		this.enemyDodgeChance = 5;
 		this.castTimeRemaining = 0;
+		this.fiveSecondRuleTimerRemaining = 5;
+		this.spiritTickTimerRemaining = 1.5;
 		this.mode = this.simSettings.petMode;
 		this.stats = {
 			"mp5": 0,
@@ -163,7 +165,8 @@ class Pet {
 
 	reset() {
 		this.stats.currentMana = this.stats.maxMana;
-		this.fiveSecondRuleTimerRemaining = 5; // The mana gained every 5 seconds from spirit (unrelated to normal mp5 on items)
+		this.fiveSecondRuleTimerRemaining = 5; // If higher than 0 then the pet can't gain mana from Spirit regen
+		this.spiritTickTimerRemaining = 1.5; // Unsure what the initial value should be since the Felguard isnt supposed to gain a Spirit regen tick between every Cleave (confirm)
 	}
 
 	tick(t) {
@@ -174,12 +177,15 @@ class Pet {
 		}*/
 
 		this.fiveSecondRuleTimerRemaining = Math.max(0, this.fiveSecondRuleTimerRemaining - t);
-		if (this.fiveSecondRuleTimerRemaining <= 0) {
-			// Fromula from https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1601392
-			let manaGain = 5 * Math.sqrt(this.stats.intellect * this.stats.intellectModifier) * (this.stats.spirit * this.stats.spiritModifier) * 0.009327;
-			this.stats.currentMana = Math.max(this.stats.maxMana, this.stats.currentMana + manaGain);
-			this.player.combatLog(this.name + " gains " + Math.round(manaGain) + " mana from Spirit regeneration");
-			this.fiveSecondRuleTimerRemaining = 5;
+		this.spiritTickTimerRemaining = Math.max(0, this.spiritTickTimerRemaining - t);
+		if (this.spiritTickTimerRemaining <= 0) {
+			this.spiritTickTimerRemaining = 2;
+			if (this.fiveSecondRuleTimerRemaining <= 0) {
+				// Fromula from https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1601392
+				let manaGain = 5 * Math.sqrt(this.stats.intellect * this.stats.intellectModifier) * (this.stats.spirit * this.stats.spiritModifier) * 0.009327;
+				this.stats.currentMana = Math.max(this.stats.maxMana, this.stats.currentMana + manaGain);
+				this.player.combatLog(this.name + " gains " + Math.round(manaGain) + " mana from Spirit regeneration");
+			}
 		}
 	}
 }

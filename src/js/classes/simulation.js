@@ -16,13 +16,14 @@ class Simulation {
 		this.simulationUpdate = simulationUpdate;
 	}
 
+	// IMPORTANT: The reason this function contains a lot of hardcoded auras and spells instead of using loops is because using loops takes ~4-5 times longer than this method.
 	passTime() {
 		let time = this.player.castTimeRemaining;
 		if (time == 0 || (this.player.gcdRemaining > 0 && this.player.gcdRemaining < time)) time = this.player.gcdRemaining
 
 		// Look for the shortest time until an action needs to be done
 		if (this.player.pet) {
-			if (this.player.pet.fiveSecondRuleTimerRemaining < time) time = this.player.pet.fiveSecondRuleTimerRemaining;
+			if (this.player.pet.spiritTickTimerRemaining < time) time = this.player.pet.spiritTickTimerRemaining;
 			if (this.player.pet.type == PetTypes.MELEE && this.player.pet.spells.melee.cooldownRemaining < time) time = this.player.pet.spells.melee.cooldownRemaining;
 			//else if (this.player.pet.type == PetTypes.RANGED && this.player.pet.castTimeRemaining > 0 && this.player.pet.castTimeRemaining < time) time = this.player.pet.castTimeRemaining;
 
