@@ -327,7 +327,7 @@ class LifeTap extends Spell {
 		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain);
 		if (this.player.pet && this.player.talents.manaFeed > 0) {
 			let petManaGain = manaGain * (this.player.talents.manaFeed / 3);
-			this.player.pet.stats.currentMana = Math.max(this.player.pet.stats.maxMana, petManaGain);
+			this.player.pet.stats.currentMana = Math.min(this.player.pet.stats.maxMana, this.player.pet.stats.currentMana + petManaGain);
 			this.player.combatLog(this.player.pet.name + " gains " + Math.round(petManaGain) + " mana from Mana Feed");
 		}
 
