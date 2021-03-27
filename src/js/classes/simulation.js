@@ -24,19 +24,23 @@ class Simulation {
 		// Look for the shortest time until an action needs to be done
 		if (this.player.pet) {
 			if (this.player.pet.spiritTickTimerRemaining < time) time = this.player.pet.spiritTickTimerRemaining;
-			if (this.player.pet.type == PetTypes.MELEE && this.player.pet.spells.melee.cooldownRemaining < time) time = this.player.pet.spells.melee.cooldownRemaining;
-			//else if (this.player.pet.type == PetTypes.RANGED && this.player.pet.castTimeRemaining > 0 && this.player.pet.castTimeRemaining < time) time = this.player.pet.castTimeRemaining;
 
-			if (this.player.pet.pet == Pets.IMP) {
+			// Pet's attacks/abilities and such
+			if (this.player.pet.mode == PetModes.AGGRESSIVE) {
+				if (this.player.pet.type == PetTypes.MELEE && this.player.pet.spells.melee.cooldownRemaining < time) time = this.player.pet.spells.melee.cooldownRemaining;
+				//else if (this.player.pet.type == PetTypes.RANGED && this.player.pet.castTimeRemaining > 0 && this.player.pet.castTimeRemaining < time) time = this.player.pet.castTimeRemaining;
 
-			} else if (this.player.pet.pet == Pets.VOIDWALKER) {
+				if (this.player.pet.pet == Pets.IMP) {
 
-			} else if (this.player.pet.pet == Pets.SUCCUBUS) {
-				
-			} else if (this.player.pet.pet == Pets.FELHUNTER) {
-				
-			} else if (this.player.pet.pet == Pets.FELGUARD) {
-				if (this.player.pet.spells.cleave.cooldownRemaining > 0 && this.player.pet.spells.cleave.cooldownRemaining < time) time = this.player.pet.spells.cleave.cooldownRemaining;
+				} else if (this.player.pet.pet == Pets.VOIDWALKER) {
+
+				} else if (this.player.pet.pet == Pets.SUCCUBUS) {
+					
+				} else if (this.player.pet.pet == Pets.FELHUNTER) {
+					
+				} else if (this.player.pet.pet == Pets.FELGUARD) {
+					if (this.player.pet.spells.cleave.cooldownRemaining > 0 && this.player.pet.spells.cleave.cooldownRemaining < time) time = this.player.pet.spells.cleave.cooldownRemaining;
+				}
 			}
 		}
 
