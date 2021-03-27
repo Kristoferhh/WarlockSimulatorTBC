@@ -131,40 +131,6 @@ class Player {
 		if (settings.auras.inspiringPresence === true) this.stats.extraHitChance += 1;
 		this.stats.hitChance = Math.round(this.getHitChance(this.stats.extraHitChance) * this.stats.hitChanceMultiplier); // The player's chance of hitting the enemy, between 61% and 99%
 
-		// Trinkets
-		this.trinkets = [];
-		if (this.trinketIds.includes(32483)) this.trinkets.push(new SkullOfGuldan(this));
-		if (this.trinketIds.includes(34429)) this.trinkets.push(new ShiftingNaaruSliver(this));
-		if (this.trinketIds.includes(33829)) this.trinkets.push(new HexShrunkenHead(this));
-		if (this.trinketIds.includes(29370)) this.trinkets.push(new IconOfTheSilverCrescent(this));
-		if (this.trinketIds.includes(29132)) this.trinkets.push(new ScryersBloodgem(this));
-		if (this.trinketIds.includes(23046)) this.trinkets.push(new RestrainedEssenceOfSapphiron(this));
-		if (this.trinketIds.includes(29179)) this.trinkets.push(new XirisGift(this));
-		if (this.trinketIds.includes(25620)) this.trinkets.push(new AncientCrystalTalisman(this));
-		if (this.trinketIds.includes(28223)) this.trinkets.push(new ArcanistsStone(this));
-		if (this.trinketIds.includes(25936)) this.trinkets.push(new TerokkarTabletOfVim(this));
-		if (this.trinketIds.includes(28040)) this.trinkets.push(new VengeanceOfTheIllidari(this));
-		if (this.trinketIds.includes(24126)) this.trinkets.push(new FigurineLivingRubySerpent(this));
-
-		// Assign the filler spell.
-		this.filler = null;
-		for (let spell in settings.rotation.filler) {
-			if (settings.rotation.filler[spell]) {
-				this.filler = spell;
-				break;
-			}
-		}
-
-		// Assign the curse (if selected)
-		this.curse = null;
-		for (let spell in settings.rotation.curse) {
-			// Ignore the curse if user selected Curse of Agony since this will be the highest cast priority.
-			if (settings.rotation.curse[spell] && spell !== "curseOfAgony") {
-				this.curse = spell;
-				break;
-			}
-		}
-
 		// Add bonus damage % from Demonic Sacrifice
 		if (settings.talents.demonicSacrifice === 1 && settings.simSettings.sacrificePet == 'yes') {
 			if (settings.simSettings.petChoice == Pets.IMP) {
@@ -206,6 +172,44 @@ class Player {
 		this.stats.spiritModifier *= (1 - (0.01 * settings.talents.demonicEmbrace));
 		if (settings.auras.prayerOfSpirit && settings.simSettings.improvedDivineSpirit) this.stats.spellPower += (this.stats.spirit * this.stats.spiritModifier * (0 + ((Number(settings.simSettings.improvedDivineSpirit) || 0) / 10)));
 		// Add stamina from blood pact (if stamina is ever needed for the sim)
+		// Add mp5 from Vampiric Touch
+		if (settings.auras.vampiricTouch) {
+			this.stats.mp5 += settings.simSettings.shadowPriestDps * 0.05;
+		}
+
+		// Trinkets
+		this.trinkets = [];
+		if (this.trinketIds.includes(32483)) this.trinkets.push(new SkullOfGuldan(this));
+		if (this.trinketIds.includes(34429)) this.trinkets.push(new ShiftingNaaruSliver(this));
+		if (this.trinketIds.includes(33829)) this.trinkets.push(new HexShrunkenHead(this));
+		if (this.trinketIds.includes(29370)) this.trinkets.push(new IconOfTheSilverCrescent(this));
+		if (this.trinketIds.includes(29132)) this.trinkets.push(new ScryersBloodgem(this));
+		if (this.trinketIds.includes(23046)) this.trinkets.push(new RestrainedEssenceOfSapphiron(this));
+		if (this.trinketIds.includes(29179)) this.trinkets.push(new XirisGift(this));
+		if (this.trinketIds.includes(25620)) this.trinkets.push(new AncientCrystalTalisman(this));
+		if (this.trinketIds.includes(28223)) this.trinkets.push(new ArcanistsStone(this));
+		if (this.trinketIds.includes(25936)) this.trinkets.push(new TerokkarTabletOfVim(this));
+		if (this.trinketIds.includes(28040)) this.trinkets.push(new VengeanceOfTheIllidari(this));
+		if (this.trinketIds.includes(24126)) this.trinkets.push(new FigurineLivingRubySerpent(this));
+
+		// Assign the filler spell.
+		this.filler = null;
+		for (let spell in settings.rotation.filler) {
+			if (settings.rotation.filler[spell]) {
+				this.filler = spell;
+				break;
+			}
+		}
+
+		// Assign the curse (if selected)
+		this.curse = null;
+		for (let spell in settings.rotation.curse) {
+			// Ignore the curse if user selected Curse of Agony since this will be the highest cast priority.
+			if (settings.rotation.curse[spell] && spell !== "curseOfAgony") {
+				this.curse = spell;
+				break;
+			}
+		}
 
 		// Records all information about damage done for each spell such as crit %, miss %, average damage per cast etc.
 		this.damageBreakdown = {};
@@ -248,6 +252,7 @@ class Player {
 			console.log("Attack Power: " + Math.round(this.pet.stats.ap * this.pet.stats.apModifier));
 			console.log("Spell Power: " + Math.round(this.pet.stats.spellPower));
 			console.log("Mana: " + Math.round(this.pet.stats.maxMana));
+			console.log("MP5: " + Math.round(this.pet.stats.mp5));
 			console.log("Hit Chance: " + this.pet.stats.hitChance + "%");
 			console.log("Crit Chance: " + this.pet.stats.critChance + "%");
 			console.log("Spell Hit Chance: " + this.pet.stats.spellHitChance + "%");

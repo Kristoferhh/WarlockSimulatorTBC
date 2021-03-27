@@ -17,10 +17,10 @@ var settings = localStorage.settings ? JSON.parse(localStorage.settings) : {};
 // Buffs, debuffs, consumables, and pet buffs
 for (let auraType in _auras) {
 	let lowerAuraType = auraType.toLowerCase().split(' ').join('-');
-	$("#buffs-and-debuffs-section").append("<h3>" + _auras[auraType].heading + "</h3><ul id='" + lowerAuraType + "-list'></ul>");
+	$("#buffs-and-debuffs-section").append("<h3 id='" + auraType + "-heading'>" + _auras[auraType].heading + "</h3><ul id='" + lowerAuraType + "-list'></ul>");
 	for (let aura in _auras[auraType].auras) {
 		let a = _auras[auraType].auras[aura];
-		$("#" + lowerAuraType + "-list").append("<li data-aura-type='" + auraType + "' data-checked='" + (auras[aura] || false) + "' name='" + aura + "' id='" + aura.toLowerCase().split(' ').join('-') + "' class='" + (a.stats ? "stats " : "") + (a.potion ? "potion " : "") + (a.battleElixir ? "battle-elixir " : "") + (a.guardianElixir ? "guardian-elixir " : "") + (a.weaponOil ? "weapon-oil " : "") + (a.foodBuff ? "food-buff " : "") + (a.petOnly ? "petBuff " : "") + auraType + " aura'><a href='https://tbc.wowhead.com/" + _auras[auraType].type + "=" + a.id + "'><img alt='" + a.name + "' src='img/" + a.iconName + ".jpg'></a></li>");
+		$("#" + lowerAuraType + "-list").append("<li data-aura-type='" + auraType + "' data-checked='" + (auras[aura] || false) + "' name='" + aura + "' id='" + aura.toLowerCase().split(' ').join('-') + "' class='" + (a.stats ? "stats " : "") + (a.potion ? "potion " : "") + (a.battleElixir ? "battle-elixir " : "") + (a.guardianElixir ? "guardian-elixir " : "") + (a.weaponOil ? "weapon-oil " : "") + (a.foodBuff ? "food-buff " : "") + (a.petOnly ? "petBuff " : "") + (a.forPet ? "petDebuff " : "") + auraType + " aura'><a href='https://tbc.wowhead.com/" + _auras[auraType].type + "=" + a.id + "'><img alt='" + a.name + "' src='img/" + a.iconName + ".jpg'></a></li>");
 	}
 }
 
@@ -970,12 +970,24 @@ function updateSetBonuses() {
 }
 
 function updateSimulationSettingsVisibility() {
-	if ($("#petMode").children('select').val() == PetModes.AGGRESSIVE && $("#sacrificePet").children('select').val() !== 'yes') {
-		$("#enemyArmor").show();
-		$("#enemy-armor-val").closest('li').show();
+	if ($("#sacrificePet").children('select').val() == 'no') {
+		$("#petBuffs-heading").show();
+		$(".petBuffs").show();
+		if ($("#petMode").children('select').val() == PetModes.AGGRESSIVE) {
+			$("#enemyArmor").show();
+			$("#enemy-armor-val").closest('li').show();
+			$(".petDebuff").show();
+		} else {
+			$("#enemyArmor").hide();
+			$("#enemy-armor-val").closest('li').hide();
+			$(".petDebuff").hide();
+		}
 	} else {
+		$("#petBuffs-heading").hide();
+		$(".petBuffs").hide();
 		$("#enemyArmor").hide();
 		$("#enemy-armor-val").closest('li').hide();
+		$(".petDebuff").hide();
 	}
 
 	if (talents.summonFelguard === 0) {

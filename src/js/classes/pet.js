@@ -98,7 +98,7 @@ class Pet {
 		if (this.playerAuras.moonkinAura) this.stats.spellCritChance += 5;
 		//todo add atiesh auras
 		if (this.playerAuras.judgementOfTheCrusader) this.stats.critChance += 3; // add spell crit too?
-		//todo add vampiric touch
+		if (this.playerAuras.vampiricTouch) this.stats.mp5 += this.simSettings.shadowPriestDps * 0.05;
 		if (this.playerAuras.faerieFire) {
 			let improved = this.simSettings.improvedFaerieFire == "yes";
 			if (improved) this.stats.hitChance += 3;

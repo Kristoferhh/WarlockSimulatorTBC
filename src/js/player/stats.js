@@ -142,7 +142,14 @@ function refreshCharacterStats() {
 	if (auras.felArmor) spellPower += 100 * (1 + 0.1 * talents.demonicAegis);
 	if (auras.prayerOfSpirit) spellPower += (characterStats.spirit * spiritModifier * (0.1 * $("select[name='improvedDivineSpirit']").val())); 
 	spellPower = Math.round(spellPower);
-	
+
+	// MP5
+	let mp5 = characterStats.mp5;
+	// Add mp5 from Vampiric Touch
+	if (auras.vampiricTouch) {
+		mp5 += settings.shadowPriestDps * 0.05;
+	}
+
 	// Enemy armor
 	let enemyArmor = $("input[name='enemyArmor']").val();
 	if (auras.faerieFire) enemyArmor -= 610;
@@ -162,6 +169,6 @@ function refreshCharacterStats() {
 	$("#character-haste-val").text(Math.round(characterStats.hasteRating) + " (" + (Math.round((characterStats.hasteRating/hasteRatingPerPercent) * 100) / 100) + "%)");
 	$("#character-shadow-damage-modifier-val").text(Math.round((shadowModifier * (1 + (0.02 * talents.shadowMastery))) * 100) + "%");
 	$("#character-fire-damage-modifier-val").text(Math.round(fireModifier * 100) + "%");
-	$("#character-mp5-val").text(characterStats.mp5);
+	$("#character-mp5-val").text(Math.round(mp5));
 	$("#enemy-armor-val").text(Math.max(0,enemyArmor));
 }

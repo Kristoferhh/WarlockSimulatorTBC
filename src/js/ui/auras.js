@@ -162,31 +162,37 @@ const _auras = {
 			"faerieFire": {
 				"name": "Faerie Fire",
 				"iconName": "spell_nature_faeriefire",
+				"forPet": true,
 				"id": 26993
 			},
 			"sunderArmor": {
 				"name": "Sunder Armor",
 				"iconName": "ability_warrior_sunder",
+				"forPet": true,
 				"id": 25225
 			},
 			"exposeArmor": {
 				"name": "Expose Armor",
 				"iconName": "ability_warrior_riposte",
+				"forPet": true,
 				"id": 26866
 			},
 			"curseOfRecklessness": {
 				"name": "Curse of Recklessness",
 				"iconName": "spell_shadow_unholystrength",
+				"forPet": true,
 				"id": 27226
 			},
 			"bloodFrenzy": {
 				"name": "Blood Frenzy",
 				"iconName": "ability_warrior_bloodfrenzy",
+				"forPet": true,
 				"id": 29859
 			},
 			"exposeWeakness": {
 				"name": "Expose Weakness",
 				"iconName": "ability_rogue_findweakness",
+				"forPet": true,
 				"id": 34503
 			},
 

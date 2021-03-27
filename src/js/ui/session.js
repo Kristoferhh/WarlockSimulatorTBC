@@ -60,6 +60,9 @@ for (let auraType in _auras) {
 $("#sim-settings select, #sim-settings input").each(function() {
 	if (settings[$(this).attr('name')]) {
 		$(this).val(settings[$(this).attr('name')]);
+	} else {
+		// If the setting is not initialized in the settings object then set it to its default value
+		settings[$(this).attr('name')] = $(this).val();
 	}
 });
 
