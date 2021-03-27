@@ -166,15 +166,40 @@ class Player {
 		}
 
 		// Add bonus damage % from Demonic Sacrifice
-		if (this.talents.demonicSacrifice === 1) {
+		if (settings.talents.demonicSacrifice === 1 && ((settings.talents.masterDemonologist == 0 && settings.talents.soulLink == 0) || settings.simSettings.sacrificePet == 'yes')) {
 			// Add 15% to shadow modifier if the user selected Shadow Bolt, otherwise add 15% to the fire modifier if they selected Incinerate or Searing Pain.
 			if (this.rotation.filler.shadowBolt) {
 				this.stats.shadowModifier *= 1.15;
 			} else if (this.rotation.filler.incinerate || this.rotation.filler.searingPain) {
 				this.stats.fireModifier *= 1.15;
 			}
+			console.log('DS');
 		}
-
+		// Add damage % multiplier from Master Demonologist and Soul Link
+		if ((settings.talents.masterDemonologist > 0 || settings.talents.soulLink == 1) && (settings.talents.demonicSacrifice == 0 || settings.simSettings.sacrificePet == 'no')) {
+			if (settings.talents.soulLink == 1) {
+				this.stats.shadowModifier *= 1.05;
+				this.stats.fireModifier *= 1.05;
+				console.log('SL');
+			}
+			if (settings.talents.masterDemonologist > 0) {
+				if ( settings.simSettings.petChoice == Pets.SUCCUBUS) {
+					this.stats.shadowModifier *= 1.1;
+					this.stats.fireModifier *= 1.1;
+				} else if (settings.simSettings.petChoice == Pets.FELGUARD) {
+					this.stats.shadowModifier *= 1.05;
+					this.stats.fireModifier *= 1.05;
+				}
+				console.log('MD');
+			}
+		}
+		// Add % dmg modifiers from Curse of the Elements + Malediction
+		if (settings.auras.curseOfTheElements) {
+			this.stats.shadowModifier *= 1.1 + (0.01 * (settings.simSettings.improvedCurseOfTheElements || 0));
+			this.stats.fireModifier *= 1.1 + (0.01 * (settings.simSettings.improvedCurseOfTheElements || 0));
+		}
+		// Add fire dmg % from Emberstorm
+		if (settings.talents.emberstorm > 0) this.stats.fireModifier *= 1 + (0.02 * settings.talents.emberstorm);
 		// Add spell power from Fel Armor
 		if (settings.auras.felArmor) {
 			this.stats.spellPower += (100 * (1 + 0.1 * this.talents.demonicAegis));
@@ -182,16 +207,6 @@ class Player {
 		// Add spell power from Improved Divine Spirit
 		this.stats.spiritModifier *= (1 - (0.01 * settings.talents.demonicEmbrace));
 		if (settings.auras.prayerOfSpirit && settings.simSettings.improvedDivineSpirit) this.stats.spellPower += (this.stats.spirit * this.stats.spiritModifier * (0 + ((Number(settings.simSettings.improvedDivineSpirit) || 0) / 10)));
-
-		// Add % dmg modifiers from Curse of the Elements + Malediction
-		if (settings.auras.curseOfTheElements) {
-			this.stats.shadowModifier *= 1.1 + (0.01 * (settings.simSettings.improvedCurseOfTheElements || 0));
-			this.stats.fireModifier *= 1.1 + (0.01 * (settings.simSettings.improvedCurseOfTheElements || 0));
-		}
-
-		// Add fire dmg % from Emberstorm
-		if (settings.talents.emberstorm > 0) this.stats.fireModifier *= 1 + (0.02 * settings.talents.emberstorm);
-
 		// Add stamina from blood pact (if stamina is ever needed for the sim)
 
 		// Records all information about damage done for each spell such as crit %, miss %, average damage per cast etc.
@@ -199,7 +214,7 @@ class Player {
 
 		// Pet
 		this.demonicKnowledgeSp = 0;
-		if (settings.talents.demonicSacrifice !== 0 || settings.talents.masterDemonologist > 0) {
+		if (settings.talents.demonicSacrifice !== 0 && (settings.simSettings.sacrificePet == 'no' && settings.simSettings.petMode == PetModes.AGGRESSIVE)) {
 			let selectedPet = settings.simSettings.petChoice;
 			if (selectedPet == Pets.IMP) this.pet = new Imp(this, settings);
 			else if (selectedPet == Pets.VOIDWALKER) this.pet = new Voidwalker(this, settings);

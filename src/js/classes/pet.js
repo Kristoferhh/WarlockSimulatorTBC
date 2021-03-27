@@ -24,7 +24,7 @@ class Pet {
 		this.enemyDodgeChance = 5;
 		this.castTimeRemaining = 0;
 		this.fiveSecondRuleTimerRemaining = 5;
-		this.spiritTickTimerRemaining = 1.5;
+		this.spiritTickTimerRemaining = 2;
 		this.mode = this.simSettings.petMode;
 		this.stats = {
 			"mp5": 0,
@@ -116,7 +116,7 @@ class Pet {
 			this.player.enemy.armor = Math.max(0, this.player.enemy.armor - 2600);
 		}
 		if (this.playerAuras.curseOfRecklessness) this.player.enemy.armor = Math.max(0, this.player.enemy.armor - 800);
-		if (this.playerAuras.exposeWeakness) this.stats.ap += (this.simSettings.survivalHunterAgility * 0.25 * (this.simSettings.exposeWeaknessUptime / 100));
+		if (this.playerAuras.exposeWeakness) this.stats.ap += (this.simSettings.survivalHunterAgility * 0.25 * (this.simSettings.exposeWeaknessUptime / 100)) || 0;
 		if (this.playerAuras.heroicPresence) this.stats.hitChance++;
 		if (this.playerAuras.blessingOfMight) this.stats.ap += 220;
 		if (this.playerAuras.strengthOfEarthTotem) this.stats.strength += 86; // need to find out how much AP demons get from Strength
@@ -166,7 +166,7 @@ class Pet {
 	reset() {
 		this.stats.currentMana = this.stats.maxMana;
 		this.fiveSecondRuleTimerRemaining = 5; // If higher than 0 then the pet can't gain mana from Spirit regen
-		this.spiritTickTimerRemaining = 1.5; // Unsure what the initial value should be since the Felguard isnt supposed to gain a Spirit regen tick between every Cleave (confirm)
+		this.spiritTickTimerRemaining = 2; // Unsure what the initial value should be since the Felguard isnt supposed to gain a Spirit regen tick between every Cleave (confirm)
 	}
 
 	tick(t) {
