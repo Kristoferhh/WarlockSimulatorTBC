@@ -213,8 +213,8 @@ class Player {
 		this.damageBreakdown = {};
 
 		// Pet
-		this.demonicKnowledgeSp = 0;
-		if (settings.talents.demonicSacrifice !== 0 && (settings.simSettings.sacrificePet == 'no' && settings.simSettings.petMode == PetModes.AGGRESSIVE)) {
+		this.demonicKnowledgeSp = 0; // Spell Power from the Demonic Knowledge talent
+		if (settings.talents.demonicSacrifice === 0 || ((settings.talents.masterDemonologist > 0 || settings.talents.soulLink > 0 || settings.talents.darkPact > 0) && settings.simSettings.sacrificePet == 'no' && settings.simSettings.petMode == PetModes.AGGRESSIVE)) {
 			let selectedPet = settings.simSettings.petChoice;
 			if (selectedPet == Pets.IMP) this.pet = new Imp(this, settings);
 			else if (selectedPet == Pets.VOIDWALKER) this.pet = new Voidwalker(this, settings);
