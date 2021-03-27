@@ -970,26 +970,7 @@ function updateSetBonuses() {
 }
 
 function updateSimulationSettingsVisibility() {
-	if (talents.demonicSacrifice === 1 && (talents.masterDemonologist > 0 || talents.darkPact > 0)) {
-		$("#sacrificePet").show();
-	} else {
-		$("#sacrificePet").hide();
-	}
-
-	if (talents.demonicSacrifice === 0 || talents.masterDemonologist > 0 || talents.darkPact > 0) {
-		$("#petChoice").show();
-
-		if (!$("#sacrificePet").is(":visible") || $("#sacrificePet").children('select').val() == "no") {
-			$("#petMode").show();
-		} else {
-			$("#petMode").hide();
-		}
-	} else {
-		$("#petChoice").hide();
-		$("#petMode").hide();
-	}
-
-	if ($("#petMode").is(":visible") && $("#petMode").children('select').val() == PetModes.AGGRESSIVE) {
+	if ($("#petMode").children('select').val() == PetModes.AGGRESSIVE && $("#sacrificePet").children('select').val() !== 'yes') {
 		$("#enemyArmor").show();
 		$("#enemy-armor-val").closest('li').show();
 	} else {

@@ -81,10 +81,7 @@ function refreshCharacterStats() {
 	let spiritModifier = characterStats.spiritModifier * (1 - (0.01 * talents.demonicEmbrace));
 	let staminaModifier = characterStats.staminaModifier * (1 + (0.03 * talents.demonicEmbrace));
 	let stamina = characterStats.stamina;
-	// Blood Pact
-	if ($("select[name='petChoice']").val() === "imp" && (talents.demonicSacrifice === 0 || $("select[name='sacrificePet']").val() === "no")) {
-		stamina += 70 * (1 + 0.1 * talents.improvedImp);
-	}
+
 	// Crit
 	let critRating = characterStats.critRating + ((characterStats.intellect * characterStats.intellectModifier) * critPerInt);
 	let critChance = Math.round((critRating / critRatingPerPercent + baseCritChancePercent) * 100) / 100 + talents.devastation + talents.backlash + talents.demonicTactics;
@@ -92,29 +89,42 @@ function refreshCharacterStats() {
 	if (auras.judgementOfTheCrusader) critChance += 3;
 	if (auras.totemOfWrath) critChance += 3 * $("select[name='totemOfWrathAmount']").val();
 	critChance = critChance.toFixed(2);
+
 	// Hit
 	let hitChance = Math.round((characterStats.hitRating / hitRatingPerPercent) * 100) / 100;
 	if (auras.inspiringPresence) hitChance += 1;
 	hitChance = hitChance.toFixed(2);
+
 	// Shadow/Fire damage % modifiers
 	let shadowModifier = characterStats.shadowModifier;
 	let fireModifier = characterStats.fireModifier;
-	if (talents.demonicSacrifice === 1 && ((talents.masterDemonologist === 0 && talents.soulLink == 0) || $("select[name='sacrificePet']").val() === 'yes')) {
-		if (rotation.filler.shadowBolt) {
-			shadowModifier *= 1.15;
-		} else if (rotation.filler.incinerate || rotation.filler.searingPain) {
+	// Add stats from pets/pet-related talents
+	if (talents.demonicSacrifice === 1 && $("select[name='sacrificePet']").val() === 'yes') {
+		let pet = $("select[name='petChoice']").val();
+		if (pet == Pets.IMP) {
 			fireModifier *= 1.15;
-		}
-	}
-	if ((talents.masterDemonologist > 0 || talents.soulLink > 0) && (talents.demonicSacrifice == 0 || $("select[name='sacrificePet']").val() == 'no')) {
-		if ($("select[name='petChoice']").val() == Pets.SUCCUBUS) {
+		} else if (pet == Pets.SUCCUBUS) {
+			shadowModifier *= 1.15;
+		} else if (pet == Pets.FELGUARD) {
 			shadowModifier *= 1.1;
-			fireModifier *= 1.1;
-		} else if ($("select[name='petChoice']").val() == Pets.FELGUARD) {
-			shadowModifier *= 1.05;
-			fireModifier *= 1.05;
 		}
-		if (talents.soulLink) {
+	} else {
+		// Blood Pact
+		if ($("select[name='petChoice']").val() === Pets.IMP) {
+			stamina += 70 * (1 + 0.1 * talents.improvedImp);
+		}
+		// Master Demonologist
+		if (talents.masterDemonologist > 0) {
+			if ($("select[name='petChoice']").val() == Pets.SUCCUBUS) {
+				shadowModifier *= 1.1;
+				fireModifier *= 1.1;
+			} else if ($("select[name='petChoice']").val() == Pets.FELGUARD) {
+				shadowModifier *= 1.05;
+				fireModifier *= 1.05;
+			}
+		}
+		// Soul Link
+		if (talents.soulLink > 0) {
 			shadowModifier *= 1.05;
 			fireModifier *= 1.05;
 		}
@@ -123,12 +133,16 @@ function refreshCharacterStats() {
 		shadowModifier *= 1.1 + (0.01 * $("select[name='improvedCurseOfTheElements']").val());
 		fireModifier *= 1.1 + (0.01 * $("select[name='improvedCurseOfTheElements']").val());
 	}
-	if (talents.emberstorm > 0) fireModifier *= 1 + (0.02 * talents.emberstorm);
+	if (talents.emberstorm > 0) {
+		fireModifier *= 1 + (0.02 * talents.emberstorm);
+	}
+
 	// Spell Power
 	let spellPower = characterStats.spellPower;
 	if (auras.felArmor) spellPower += 100 * (1 + 0.1 * talents.demonicAegis);
 	if (auras.prayerOfSpirit) spellPower += (characterStats.spirit * spiritModifier * (0.1 * $("select[name='improvedDivineSpirit']").val())); 
 	spellPower = Math.round(spellPower);
+	
 	// Enemy armor
 	let enemyArmor = $("input[name='enemyArmor']").val();
 	if (auras.faerieFire) enemyArmor -= 610;

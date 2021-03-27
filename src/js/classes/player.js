@@ -166,21 +166,20 @@ class Player {
 		}
 
 		// Add bonus damage % from Demonic Sacrifice
-		if (settings.talents.demonicSacrifice === 1 && ((settings.talents.masterDemonologist == 0 && settings.talents.soulLink == 0) || settings.simSettings.sacrificePet == 'yes')) {
-			// Add 15% to shadow modifier if the user selected Shadow Bolt, otherwise add 15% to the fire modifier if they selected Incinerate or Searing Pain.
-			if (this.rotation.filler.shadowBolt) {
-				this.stats.shadowModifier *= 1.15;
-			} else if (this.rotation.filler.incinerate || this.rotation.filler.searingPain) {
+		if (settings.talents.demonicSacrifice === 1 && settings.simSettings.sacrificePet == 'yes') {
+			if (settings.simSettings.petChoice == Pets.IMP) {
 				this.stats.fireModifier *= 1.15;
+			} else if (settings.simSettings.petChoice == Pets.SUCCUBUS) {
+				this.stats.shadowModifier *= 1.15;
+			} else if (settings.simSettings.petChoice == Pets.FELGUARD) {
+				this.stats.shadowModifier *= 1.1;
+				//todo add aura to regen mana and add Felhunter sacrifice
 			}
-			console.log('DS');
-		}
-		// Add damage % multiplier from Master Demonologist and Soul Link
-		if ((settings.talents.masterDemonologist > 0 || settings.talents.soulLink == 1) && (settings.talents.demonicSacrifice == 0 || settings.simSettings.sacrificePet == 'no')) {
-			if (settings.talents.soulLink == 1) {
+		} else {
+			// Add damage % multiplier from Master Demonologist and Soul Link
+			if (settings.talents.soulLink > 0) {
 				this.stats.shadowModifier *= 1.05;
 				this.stats.fireModifier *= 1.05;
-				console.log('SL');
 			}
 			if (settings.talents.masterDemonologist > 0) {
 				if ( settings.simSettings.petChoice == Pets.SUCCUBUS) {
@@ -190,7 +189,6 @@ class Player {
 					this.stats.shadowModifier *= 1.05;
 					this.stats.fireModifier *= 1.05;
 				}
-				console.log('MD');
 			}
 		}
 		// Add % dmg modifiers from Curse of the Elements + Malediction
@@ -214,14 +212,16 @@ class Player {
 
 		// Pet
 		this.demonicKnowledgeSp = 0; // Spell Power from the Demonic Knowledge talent
-		if (settings.talents.demonicSacrifice === 0 || ((settings.talents.masterDemonologist > 0 || settings.talents.soulLink > 0 || settings.talents.darkPact > 0) && settings.simSettings.sacrificePet == 'no' && settings.simSettings.petMode == PetModes.AGGRESSIVE)) {
+		if (settings.simSettings.sacrificePet == 'no' || settings.talents.demonicSacrifice == 0) {
 			let selectedPet = settings.simSettings.petChoice;
 			if (selectedPet == Pets.IMP) this.pet = new Imp(this, settings);
 			else if (selectedPet == Pets.VOIDWALKER) this.pet = new Voidwalker(this, settings);
 			else if (selectedPet == Pets.SUCCUBUS) this.pet = new Succubus(this, settings);
 			else if (selectedPet == Pets.FELHUNTER) this.pet = new Felhunter(this, settings);
-			else if (selectedPet == Pets.FELGUARD) this.pet = new Felguard(this, settings);
-			this.pet.initialize();
+			else if (selectedPet == Pets.FELGUARD && settings.talents.summonFelguard > 0) this.pet = new Felguard(this, settings);
+			if (this.pet) {
+				this.pet.initialize();
+			}
 		}
 
 		console.log("Health: " + Math.round(this.stats.health));
