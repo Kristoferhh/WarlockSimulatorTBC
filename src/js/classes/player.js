@@ -248,10 +248,10 @@ class Player {
 			console.log("Attack Power: " + Math.round(this.pet.stats.ap * this.pet.stats.apModifier));
 			console.log("Spell Power: " + Math.round(this.pet.stats.spellPower));
 			console.log("Mana: " + Math.round(this.pet.stats.maxMana));
-			console.log("Hit Chance: " + this.pet.stats.hitChance);
-			console.log("Crit Chance: " + this.pet.stats.critChance);
-			console.log("Spell Hit Chance: " + this.pet.stats.spellHitChance);
-			console.log("Spell Crit Chance: " + this.pet.stats.spellCritChance);
+			console.log("Hit Chance: " + this.pet.stats.hitChance + "%");
+			console.log("Crit Chance: " + this.pet.stats.critChance + "%");
+			console.log("Spell Hit Chance: " + this.pet.stats.spellHitChance + "%");
+			console.log("Spell Crit Chance: " + this.pet.stats.spellCritChance + "%");
 			console.log("Enemy Armor: " + Math.round(this.enemy.armor));
 		}
 	}

@@ -48,31 +48,28 @@ class Pet {
 	// Calculates stats from buffs/debuffs/pet buffs
 	calculateStatsFromAuras() {
 		// Calculate melee hit chance
-		if (this.type == PetTypes.MELEE) {
-			// Formula from https://wowwiki-archive.fandom.com/wiki/Hit?oldid=1584399
-			if (this.player.enemy.level - this.player.level <= 2) {
-				this.stats.hitChance = 100 - (5 + (this.player.enemy.level - this.player.level) * 0.5);
-			} else if (this.player.enemy.level - this.player.level > 2) {
-				this.stats.hitChance = 100 - (7 + (this.player.enemy.level - this.player.level - 2) * 2);
-			}
+		// Formula from https://wowwiki-archive.fandom.com/wiki/Hit?oldid=1584399
+		if (this.player.enemy.level - this.player.level <= 2) {
+			this.stats.hitChance = 100 - (5 + (this.player.enemy.level - this.player.level) * 0.5);
+		} else if (this.player.enemy.level - this.player.level > 2) {
+			this.stats.hitChance = 100 - (7 + (this.player.enemy.level - this.player.level - 2) * 2);
 		}
+
 		// Calculate spell hit chance
-		if (this.type == PetTypes.RANGED) {
-			// Formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/
-			if ((parseInt(this.player.enemy.level) - this.player.level) <= 2) {
-				this.stats.spellHitChance = Math.min(99, 100 - (parseInt(this.player.enemy.level) - this.player.level) - 4);
-			} else if ((parseInt(this.player.enemy.level) - this.player.level) == 3) { // target 3 levels above
-				this.stats.spellHitChance = 83;
-			} else if ((parseInt(this.player.enemy.level) - this.player.level) == 4) { // target 4 levels above
-				this.stats.spellHitChance = 72;
-			} else { // target 5+ levels above
-				this.stats.spellHitChance = 61;
-			}
+		// Formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/
+		if ((parseInt(this.player.enemy.level) - this.player.level) <= 2) {
+			this.stats.spellHitChance = Math.min(99, 100 - (parseInt(this.player.enemy.level) - this.player.level) - 4);
+		} else if ((parseInt(this.player.enemy.level) - this.player.level) == 3) { // target 3 levels above
+			this.stats.spellHitChance = 83;
+		} else if ((parseInt(this.player.enemy.level) - this.player.level) == 4) { // target 4 levels above
+			this.stats.spellHitChance = 72;
+		} else { // target 5+ levels above
+			this.stats.spellHitChance = 61;
 		}
 
 		// Initialize values
-		this.critChance = 5 + this.player.talents.demonicTactics;
-		this.spellCritChance = 5 + this.player.talents.demonicTactics;
+		this.stats.critChance = 5 + this.player.talents.demonicTactics;
+		this.stats.spellCritChance = 5 + this.player.talents.demonicTactics;
 
 		// Configure stats based on selected auras
 		if (this.playerAuras.blessingOfKings) {
@@ -85,7 +82,7 @@ class Pet {
 		if (this.playerAuras.blessingOfWisdom) this.stats.mp5 += 41;
 		if (this.playerAuras.manaSpringTotem) this.stats.mp5 += 50;
 		if (this.playerAuras.wrathOfAirTotem) this.stats.spellPower += 101;
-		if (this.playerAuras.totemOfWrath) this.stats.spellCritChance += 3 * this.simSettings.totemOfWrathAmount;
+		if (this.playerAuras.totemOfWrath) this.stats.spellCritChance += 3 * parseInt(this.simSettings.totemOfWrathAmount);
 		// todo implement improved motw
 		if (this.playerAuras.markOfTheWild) {
 			this.stats.stamina += 14;
@@ -94,7 +91,7 @@ class Pet {
 		}
 		if (this.playerAuras.arcaneIntellect) this.stats.intellect += 40;
 		if (this.playerAuras.prayerOfSpirit) {
-			let multiplier = this.simSettings.improvedDivineSpirit;
+			let multiplier = parseInt(this.simSettings.improvedDivineSpirit);
 			this.stats.spirit += 50 * (1 + (0.1 * multiplier));
 		}
 		if (this.playerAuras.inspiringPresence) this.stats.spellHitChance = Math.max(99, this.stats.spellHitChance + 1);
