@@ -645,7 +645,11 @@ function loadItemsBySlot(itemSlot, subSlot) {
 	// Set the new item slot's seleected value to true
 	let newItemSlotSelector = "#item-slot-selection-list li[data-slot='" + itemSlot + "']";
 	// If the item has a subslot then add a subslot selector to the query
-	if (subSlot !== null) newItemSlotSelector += "[data-subslot='" + subSlot + "']";
+	if (subSlot !== null) {
+		newItemSlotSelector += "[data-subslot='" + subSlot + "']";
+	} else {
+		subSlot = "";
+	}
 	$(newItemSlotSelector).attr('data-selected', 'true');
 	localStorage['selectedItemSlot'] = itemSlot;
 	localStorage['selectedItemSubSlot'] = (subSlot || "");
@@ -694,10 +698,9 @@ function loadItemsBySlot(itemSlot, subSlot) {
 
 		}
 
-		tableBody.append("<tr data-subslot='" + localStorage['selectedItemSubSlot'] + "' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage['selectedItemSubSlot']] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td><div>" + sockets.join('') + "</div></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (Math.round(i.hasteRating + (i.onUseHasteRating * i.duration / i.cooldown)) || i.hasteRating || Math.round(i.onUseHasteRating * i.duration / i.cooldown) || '') + "</td><td class='item-dps'>" + (savedItemDPS[itemSlot + subSlot][i.id] || '') + "</td></tr>")
+		tableBody.append("<tr data-subslot='" + localStorage['selectedItemSubSlot'] + "' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage['selectedItemSubSlot']] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td><div>" + sockets.join('') + "</div></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (Math.round(i.hasteRating + (i.onUseHasteRating * i.duration / i.cooldown)) || i.hasteRating || Math.round(i.onUseHasteRating * i.duration / i.cooldown) || '') + "</td><td class='item-dps'>" + (savedItemDPS[itemSlot + subSlot][i.id] || '') + "</td></tr>").trigger("update");
 	}
 
-	sortItemTable();
 	loadEnchantsBySlot(itemSlot, subSlot);
 }
 
@@ -862,10 +865,9 @@ function simDPS(items) {
 						for (let spell of Object.keys(simulationEnd.damageBreakdown)) {
 							let s = simulationEnd.damageBreakdown[spell];
 							let percentDamage = (~~(((s.damage / simulationEnd.totalDamage) * 100) * 100) / 100).toFixed(2);
-							if (s.damage > 0 || s.casts > 0) $("#damage-breakdown-table tbody").append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.dodges / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (Math.round((s.damage / simulationEnd.totalDuration) * 100) / 100 || 0) + "</td></tr>");
+							if (s.damage > 0 || s.casts > 0) $("#damage-breakdown-table tbody").append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ("(" + ~~(s.dotDamage / s.casts) + ")") : "") + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.dodges / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (Math.round((s.damage / simulationEnd.totalDuration) * 100) / 100 || 0) + "</td></tr>").trigger("update");
 						}
 						$("#damage-breakdown-section").css('display', 'inline-block');
-						$("#damage-breakdown-table").tablesorter();
 					}
 				}
 	
@@ -895,6 +897,7 @@ function simDPS(items) {
 				}
 				// Set the DPS value on the item in the item selection list
 				$(".item-row[data-wowhead-id='" + simulationUpdate.itemID + "']").find('.item-dps').text(simulationUpdate.averageDamage);
+				$("#item-selection-table").trigger("update");
 			},
 			{
 				"player": Player.getSettings(),
@@ -960,10 +963,6 @@ function clearTalentTree(talentTreeName) {
 
 	refreshCharacterStats();
 	updateSimulationSettingsVisibility();
-}
-
-function sortItemTable() {
-	$("#item-selection-table").tablesorter();
 }
 
 function updateSetBonuses() {
