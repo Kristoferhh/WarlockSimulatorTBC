@@ -8,6 +8,13 @@ $("#sim-settings select, #sim-settings input").each(function() {
 	}
 });
 
+// Load checked items sources
+$("#source-filters ul li").each(function() {
+	let s = $(this).attr('data-source');
+	let val = $(this).attr('data-value');
+	$(this).attr('data-checked', sources[s] && sources[s][val] || false);
+});
+
 // Add the stats from all the items the user has equipped from previous sessions
 for (let itemSlot in selectedItems) {
 	for (let slot in items) {

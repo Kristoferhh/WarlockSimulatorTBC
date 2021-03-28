@@ -400,6 +400,33 @@ ul {
 	color: white;
 }
 
+#preset-item-sets, #source-filters {
+	display: flex;
+}
+
+#source-filters {
+	margin-left: auto;
+}
+
+#source-filters ul li {
+	border: 1px solid white;
+	border-radius: 3px;
+	padding: 5px;
+	display: inline-block;
+	line-height: 17px;
+}
+
+#source-filters ul li[data-checked='true'] {
+	color: black;
+	background-color: white;
+}
+
+#source-filters ul li:hover {
+	color: black;
+	background-color: white;
+	opacity: 50%;
+	cursor: pointer;
+}
 
 #item-slot-selection-list {
 	text-align: center;

@@ -334,12 +334,27 @@
 	<table id="gem-selection-table" cellspacing="0" data-color='none' style="visibility: hidden;"></table>
 
 	<div id="item-selection-container">
-		<button class="preset-item-set" data-name='prebis'>Pre-Raid BiS</button>
-		<button class="preset-item-set" data-name='phase1bis'>Phase 1 BiS</button>
-		<button class="preset-item-set" data-name='phase2bis'>Phase 2 BiS</button>
-		<button class="preset-item-set" data-name='phase3bis'>Phase 3 BiS</button>
-		<button class="preset-item-set" data-name='phase4bis'>Phase 4 BiS</button>
-		<button class="preset-item-set" data-name='phase5bis'>Phase 5 BiS</button>
+		<div style="display: flex; align-items: center; height: 20px">
+			<div id="preset-item-sets">
+				<button class="preset-item-set" data-name='prebis'>Pre-Raid BiS</button>
+				<button class="preset-item-set" data-name='phase1bis'>Phase 1 BiS</button>
+				<button class="preset-item-set" data-name='phase2bis'>Phase 2 BiS</button>
+				<button class="preset-item-set" data-name='phase3bis'>Phase 3 BiS</button>
+				<button class="preset-item-set" data-name='phase4bis'>Phase 4 BiS</button>
+				<button class="preset-item-set" data-name='phase5bis'>Phase 5 BiS</button>
+			</div>
+
+			<div id="source-filters">
+				<ul>
+					<li data-checked='false' data-source='phase' data-value='0'>Classic</li>
+					<li data-checked='false' data-source='phase' data-value='1'>P1</li>
+					<li data-checked='false' data-source='phase' data-value='2'>P2</li>
+					<li data-checked='false' data-source='phase' data-value='3'>P3</li>
+					<li data-checked='false' data-source='phase' data-value='4'>P4</li>
+					<li data-checked='false' data-source='phase' data-value='5'>P5</li>
+				</ul>
+			</div>
+		</div>
 
 		<ul id="item-slot-selection-list">
 			<li data-slot="mainhand">Main Hand</li>

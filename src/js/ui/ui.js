@@ -13,6 +13,7 @@ var selectedEnchants = localStorage['selectedEnchants'] ? JSON.parse(localStorag
 // Key: Item ID. Value: Item's saved DPS from previous simulations.
 var savedItemDPS = localStorage['savedItemDPS'] ? JSON.parse(localStorage['savedItemDPS']) : {};
 var settings = localStorage.settings ? JSON.parse(localStorage.settings) : {};
+var sources = localStorage.sources ? JSON.parse(localStorage.sources) : {};
 
 // Buffs, debuffs, consumables, and pet buffs
 for (let auraType in _auras) {
@@ -20,7 +21,7 @@ for (let auraType in _auras) {
 	$("#buffs-and-debuffs-section").append("<h3 id='" + auraType + "-heading'>" + _auras[auraType].heading + "</h3><ul id='" + lowerAuraType + "-list'></ul>");
 	for (let aura in _auras[auraType].auras) {
 		let a = _auras[auraType].auras[aura];
-		$("#" + lowerAuraType + "-list").append("<li data-aura-type='" + auraType + "' data-checked='" + (auras[aura] || false) + "' name='" + aura + "' id='" + aura.toLowerCase().split(' ').join('-') + "' class='" + (a.stats ? "stats " : "") + (a.potion ? "potion " : "") + (a.battleElixir ? "battle-elixir " : "") + (a.guardianElixir ? "guardian-elixir " : "") + (a.weaponOil ? "weapon-oil " : "") + (a.foodBuff ? "food-buff " : "") + (a.petOnly ? "petBuff " : "") + (a.forPet ? "petDebuff " : "") + auraType + " aura'><a href='https://tbc.wowhead.com/" + _auras[auraType].type + "=" + a.id + "'><img alt='" + a.name + "' src='img/" + a.iconName + ".jpg'></a></li>");
+		$("#" + lowerAuraType + "-list").append("<li data-aura-type='" + auraType + "' data-checked='" + (auras[aura] || false) + "' name='" + aura + "' id='" + aura + "' class='" + (a.stats ? "stats " : "") + (a.potion ? "potion " : "") + (a.battleElixir ? "battle-elixir " : "") + (a.guardianElixir ? "guardian-elixir " : "") + (a.weaponOil ? "weapon-oil " : "") + (a.foodBuff ? "food-buff " : "") + (a.petOnly ? "petBuff " : "") + (a.forPet ? "petDebuff " : "") + auraType + " aura'><a href='https://tbc.wowhead.com/" + _auras[auraType].type + "=" + a.id + "'><img alt='" + a.name + "' src='img/" + a.iconName + ".jpg'></a></li>");
 	}
 }
 
@@ -169,6 +170,20 @@ $(".preset-item-set").click(function() {
 		refreshCharacterStats();
 		updateSetBonuses();
 	}
+});
+
+// User clicks on one of the item source buttons
+$("#source-filters ul li").click(function() {
+	// Toggle the source's checked value
+	let checked = $(this).attr('data-checked') == 'true';
+	let source = $(this).attr('data-source');
+
+	$(this).attr('data-checked', !checked);
+	sources[source] = sources[source] || {};
+	sources[source][$(this).attr('data-value')] = !checked;
+	localStorage.sources = JSON.stringify(sources);
+	// Reload the item list
+	loadItemsBySlot(localStorage['selectedItemSlot'] || "mainhand", (localStorage['selectedItemSubSlot'] || ""));
 });
 
 // User clicks on an item slot in the selection above the item table
@@ -643,6 +658,10 @@ function loadItemsBySlot(itemSlot, subSlot) {
 	for (let item of Object.keys(items[itemSlot])) {
 		let i = items[itemSlot][item];
 
+		if (!sources.phase || !sources.phase[i.phase]) {
+			continue;
+		}
+
 		// If an item is unique and it is already equipped in the other slot then skip it
 		if (i.unique && (itemSlot == "ring" || itemSlot == "trinket") && subSlot !== null) {
 			let otherSlot = subSlot == '1' ? '2' : '1';
@@ -1077,19 +1096,19 @@ function updateSimulationSettingsVisibility() {
 		$("#shadowPriestDps").hide();
 	}
 
-	if (auras.faerieFire) {
+	if ($("#faerieFire").is(":visible") && auras.faerieFire) {
 		$("#improvedFaerieFire").show();
 	} else {
 		$("#improvedFaerieFire").hide();
 	}
 
-	if (auras.exposeArmor) {
+	if ($("#exposeArmor").is(":visible") && auras.exposeArmor) {
 		$("#improvedExposeArmor").show();
 	} else {
 		$("#improvedExposeArmor").hide();
 	}
 
-	if (auras.exposeWeakness) {
+	if ($("#exposeWeakness").is(":visible") && auras.exposeWeakness) {
 		$("#survivalHunterAgility").show();
 		$("#exposeWeaknessUptime").show();
 	} else {
