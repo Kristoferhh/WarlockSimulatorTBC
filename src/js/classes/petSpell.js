@@ -76,7 +76,12 @@ class PetSpell {
 		if (isCrit) {
 			dmg *= 1.5; // pets use different multiplier maybe?
 		}
-		// Armor damage reduction if melee
+		// Add damage from ISB if it's Lash of Pain
+		if (this.varName == "lashOfPain" && this.pet.player.auras.improvedShadowBolt && this.pet.player.auras.improvedShadowBolt.active) {
+			dmg *= this.pet.player.auras.improvedShadowBolt.modifier;
+			this.pet.player.auras.improvedShadowBolt.decrementStacks();
+		} 
+		// Armor damage reduction if physical
 		if (this.type == SpellTypes.PHYSICAL) {
 			dmg *= this.pet.armorMultiplier;
 		}

@@ -27,6 +27,7 @@ class Player {
 		this.enemy = settings.enemy;
 		this.rotation = settings.rotation;
 		this.talents = settings.talents;
+		this.simSettings = settings.simSettings;
 		this.level = 70;
 		this.itemID = customItemID || settings.items[settings.selectedItemSlot] || 0;
 		this.sets = settings.sets;

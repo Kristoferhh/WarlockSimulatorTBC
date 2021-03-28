@@ -132,11 +132,11 @@ class Simulation {
 			this.player.mp5Timer = 5;
 			if (this.player.stats.mp5 > 0) {
 				this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.player.stats.mp5);
-				this.player.combatLog(this.player.stats.mp5 + " mana gained from MP5");
+				this.player.combatLog("Player gains " + Math.round(this.player.stats.mp5) + " mana from MP5. Player mana: " + Math.round(this.player.mana) + "/" + Math.round(this.player.stats.maxMana));
 			}
 			if (this.player.pet && this.player.pet.stats.mp5 > 0) {
-				this.player.pet.currentMana = Math.min(this.player.pet.maxMana, this.player.pet.currentMana + this.player.pet.stats.mp5);
-				this.player.combatLog(this.player.pet.name + " gains " + this.player.pet.stats.mp5 + " mana from MP5");
+				this.player.pet.stats.currentMana = Math.min(this.player.pet.stats.maxMana, this.player.pet.stats.currentMana + this.player.pet.stats.mp5);
+				this.player.combatLog(this.player.pet.name + " gains " + this.player.pet.stats.mp5 + " mana from MP5. Pet mana: " + Math.round(this.player.pet.stats.currentMana) + "/" + Math.round(this.player.pet.stats.maxMana));
 			}
 		}
 
@@ -182,7 +182,7 @@ class Simulation {
 						if (this.player.pet.spells.cleave && this.player.pet.spells.cleave.ready()) {
 							this.player.pet.cast("cleave");
 						}
-						if (this.player.pet.spells.lashOfPain && this.player.pet.spells.lashOfPain.ready()) {
+						if (this.player.pet.spells.lashOfPain && this.player.pet.spells.lashOfPain.ready() && (!this.player.auras.improvedShadowBolt || this.player.simSettings.lashOfPainUsage === 'onCooldown' || (this.player.simSettings.lashOfPainUsage == 'noISB' && !this.player.auras.improvedShadowBolt.active))) {
 							this.player.pet.cast("lashOfPain");
 						}
 					} else if (this.player.pet.type == PetTypes.RANGED) {
