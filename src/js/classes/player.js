@@ -257,7 +257,9 @@ class Player {
 			console.log("Crit Chance: " + this.pet.stats.critChance + "%");
 			console.log("Spell Hit Chance: " + this.pet.stats.spellHitChance + "%");
 			console.log("Spell Crit Chance: " + this.pet.stats.spellCritChance + "%");
-			console.log("Enemy Armor: " + Math.round(this.enemy.armor));
+			console.log("Damage Modifier: " + Math.round(this.pet.stats.damageModifier * 100) + "%");
+			if (this.pet.spells.lashOfPain) console.log("Lash of Pain modifier: " + Math.round(this.pet.spells.lashOfPain.modifier * 100) + "% (in addition to the normal pet damage % modifier)");
+			if (this.pet.type == PetTypes.MELEE) console.log("Enemy Armor: " + Math.round(this.enemy.armor) + " = " + Math.round((1 - this.pet.armorMultiplier) * 100) + "% physical damage reduction");
 		}
 	}
 

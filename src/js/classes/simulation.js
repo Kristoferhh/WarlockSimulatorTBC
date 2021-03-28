@@ -27,7 +27,7 @@ class Simulation {
 
 			// Pet's attacks/abilities and such
 			if (this.player.pet.mode == PetModes.AGGRESSIVE) {
-				if (this.player.pet.type == PetTypes.MELEE && this.player.pet.spells.melee.cooldownRemaining < time) time = this.player.pet.spells.melee.cooldownRemaining;
+				if (this.player.pet.spells.melee && this.player.pet.spells.melee.cooldownRemaining < time) time = this.player.pet.spells.melee.cooldownRemaining;
 				//else if (this.player.pet.type == PetTypes.RANGED && this.player.pet.castTimeRemaining > 0 && this.player.pet.castTimeRemaining < time) time = this.player.pet.castTimeRemaining;
 
 				if (this.player.pet.pet == Pets.IMP) {
@@ -35,7 +35,7 @@ class Simulation {
 				} else if (this.player.pet.pet == Pets.VOIDWALKER) {
 
 				} else if (this.player.pet.pet == Pets.SUCCUBUS) {
-					
+					if (this.player.pet.spells.lashOfPain.cooldownRemaining > 0 && this.player.pet.spells.lashOfPain.cooldownRemaining < time) time = this.player.pet.spells.lashOfPain.cooldownRemaining;
 				} else if (this.player.pet.pet == Pets.FELHUNTER) {
 					
 				} else if (this.player.pet.pet == Pets.FELGUARD) {
@@ -134,9 +134,9 @@ class Simulation {
 				this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.player.stats.mp5);
 				this.player.combatLog(this.player.stats.mp5 + " mana gained from MP5");
 			}
-			if (this.player.pet && this.player.pet.mp5 > 0) {
-				this.player.pet.mana = Math.min(this.player.pet.maxMana, this.player.pet.mana + this.player.pet.mp5);
-				this.player.combatLog(this.player.pet.name + " gains " + this.player.pet.mp5 + " mana from MP5");
+			if (this.player.pet && this.player.pet.stats.mp5 > 0) {
+				this.player.pet.currentMana = Math.min(this.player.pet.maxMana, this.player.pet.currentMana + this.player.pet.stats.mp5);
+				this.player.combatLog(this.player.pet.name + " gains " + this.player.pet.stats.mp5 + " mana from MP5");
 			}
 		}
 
@@ -181,6 +181,9 @@ class Simulation {
 						}
 						if (this.player.pet.spells.cleave && this.player.pet.spells.cleave.ready()) {
 							this.player.pet.cast("cleave");
+						}
+						if (this.player.pet.spells.lashOfPain && this.player.pet.spells.lashOfPain.ready()) {
+							this.player.pet.cast("lashOfPain");
 						}
 					} else if (this.player.pet.type == PetTypes.RANGED) {
 

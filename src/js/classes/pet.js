@@ -26,6 +26,8 @@ class Pet {
 		this.fiveSecondRuleTimerRemaining = 5;
 		this.spiritTickTimerRemaining = 2;
 		this.mode = this.simSettings.petMode;
+		this.spells = {};
+		this.auras = {};
 		this.stats = {
 			"mp5": 0,
 			"ap": 0,
@@ -43,6 +45,12 @@ class Pet {
 			"damageModifier": 1 * (1 + (0.04 * player.talents.unholyPower)) * (1 + (0.05 * player.talents.soulLink)),
 			"currentMana": 0
 		};
+	}
+
+	initialize() {
+		if (this.type == PetTypes.MELEE) {
+			this.spells.melee = new Melee(this);
+		}
 	}
 
 	// Calculates stats from buffs/debuffs/pet buffs
@@ -143,9 +151,9 @@ class Pet {
 	}
 
 	calculateStatsFromPlayer() {
-		this.stats.stamina = (this.stats.stamina + 0.3 * (this.player.stats.stamina * this.player.stats.staminaModifier)) * this.stats.staminaModifier;
-		this.stats.intellect = (this.stats.intellect + 0.3 * (this.player.stats.intellect * this.player.stats.intellectModifier)) * this.stats.intellectModifier;
-		this.player.demonicKnowledgeSp = (this.stats.stamina + this.stats.intellect) * (0.04 * this.player.talents.demonicKnowledge);
+		this.stats.stamina += 0.3 * (this.player.stats.stamina * this.player.stats.staminaModifier);
+		this.stats.intellect += 0.3 * (this.player.stats.intellect * this.player.stats.intellectModifier);
+		this.player.demonicKnowledgeSp = ((this.stats.stamina * this.stats.staminaModifier) + (this.stats.intellect * this.stats.intellectModifier)) * (0.04 * this.player.talents.demonicKnowledge);
 		this.stats.ap = this.stats.ap + (this.player.stats.spellPower + Math.max(this.player.stats.shadowPower,this.player.stats.firePower)) * 0.57;
 		this.stats.spellPower = (this.player.stats.spellPower + this.player.demonicKnowledgeSp + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15;
 		this.stats.maxMana = this.stats.mana + this.stats.intellect * 4.7 * this.stats.intellectModifier; // confirm
@@ -164,6 +172,9 @@ class Pet {
 		this.stats.currentMana = this.stats.maxMana;
 		this.fiveSecondRuleTimerRemaining = 5; // If higher than 0 then the pet can't gain mana from Spirit regen
 		this.spiritTickTimerRemaining = 2; // Unsure what the initial value should be since the Felguard isnt supposed to gain a Spirit regen tick between every Cleave (confirm)
+		if (this.type == PetTypes.MELEE) {
+			this.spells.melee.cooldownRemaining = 0;
+		}
 	}
 
 	tick(t) {
@@ -213,6 +224,7 @@ class Succubus extends Pet {
 	constructor(player, settings) {
 		super(player, settings);
 		this.name = "Succubus";
+		this.pet = Pets.SUCCUBUS;
 		this.type = PetTypes.MELEE;
 		this.stats.stamina = 114;
 		this.stats.intellect = 133;
@@ -220,9 +232,23 @@ class Succubus extends Pet {
 		this.stats.ap = 286;
 		this.dmg = 105;
 		this.healthPerStamina = 7;
-		this.modifier *= 1 + (0.02 * player.masterDemonologist);
-		this.pet = Pets.SUCCUBUS;
+		this.stats.damageModifier *= 1 + (0.02 * player.talents.masterDemonologist);
 		this.setup();
+	}
+
+	reset() {
+		this.spells.lashOfPain.cooldownRemaining = 0;
+		super.reset();
+	}
+
+	initialize() {
+		this.spells.lashOfPain = new SuccubusLashOfPain(this);
+		super.initialize();
+	}
+
+	tick(t) {
+		this.spells.lashOfPain.tick(t);
+		super.tick(t);
 	}
 }
 
@@ -253,20 +279,15 @@ class Felguard extends Pet {
 	}
 
 	reset() {
-		this.spells.melee.cooldownRemaining = 0;
 		this.spells.cleave.cooldownRemaining = 0;
 		this.auras.demonicFrenzy.fade(true);
 		super.reset();
 	}
 
 	initialize() {
-		this.spells = {
-			"melee": new FelguardMelee(this),
-			"cleave": new FelguardCleave(this)
-		};
-		this.auras = {
-			"demonicFrenzy": new DemonicFrenzy(this)
-		};
+		this.spells.cleave = new FelguardCleave(this);
+		this.auras.demonicFrenzy = new DemonicFrenzy(this);
+		super.initialize();
 	}
 
 	tick(t) {
