@@ -1,3 +1,13 @@
+// Load saved simulation settings
+$("#sim-settings select, #sim-settings input").each(function() {
+	if (settings[$(this).attr('name')]) {
+		$(this).val(settings[$(this).attr('name')]);
+	} else {
+		// If the setting is not initialized in the settings object then set it to its default value
+		settings[$(this).attr('name')] = $(this).val();
+	}
+});
+
 // Add the stats from all the items the user has equipped from previous sessions
 for (let itemSlot in selectedItems) {
 	for (let slot in items) {
@@ -55,16 +65,6 @@ for (let auraType in _auras) {
 		}
 	}
 }
-
-// Load saved simulation settings
-$("#sim-settings select, #sim-settings input").each(function() {
-	if (settings[$(this).attr('name')]) {
-		$(this).val(settings[$(this).attr('name')]);
-	} else {
-		// If the setting is not initialized in the settings object then set it to its default value
-		settings[$(this).attr('name')] = $(this).val();
-	}
-});
 
 // Use previous simulation's result on the sidebar
 $("#avg-dps").text(localStorage['avgDps'] || "");
