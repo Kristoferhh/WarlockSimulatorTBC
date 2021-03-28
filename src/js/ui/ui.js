@@ -435,6 +435,21 @@ $(".preset-talent-button").click(function() {
 		updateTalentTreeNames();
 	});
 
+	// Disable spells that aren't available anymore with the new talents
+	if (talents.siphonLife == 0) {
+		rotation.dot.siphonLife = false;
+		$("#dot-siphonLife").attr('data-checked', 'false');
+	}
+	if (talents.unstableAffliction == 0) {
+		rotation.dot.unstableAffliction = false;
+		$("#dot-unstableAffliction").attr('data-checked', 'false');
+	}
+	if (talents.shadowburn == 0) {
+		rotation.finisher.shadowburn = false;
+		$("#finisher-shadowburn").attr('data-checked', 'false');
+	}
+
+	localStorage.rotation = JSON.stringify(rotation);
 	localStorage.talents = JSON.stringify(talents);
 	refreshCharacterStats();
 	updateSimulationSettingsVisibility();
