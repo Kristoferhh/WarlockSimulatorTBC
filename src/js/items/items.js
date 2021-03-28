@@ -731,7 +731,7 @@ const items = {
 			"hitRating": 8,
 			"id": 23050,
 			"source": "Naxxramas",
-			"phase": 1
+			"phase": 0
 		}
 	},
 	"chest": {
@@ -1163,7 +1163,7 @@ const items = {
 			"setID": 529,
 			"id": 22509,
 			"source": "Naxxramas",
-			"phase": 1
+			"phase": 0
 		}
 	},
 	"belt": {
@@ -1454,7 +1454,7 @@ const items = {
 			"critRating": 28,
 			"id": 23070,
 			"source": "Naxxramas",
-			"phase": 1
+			"phase": 0
 		},
 		"plagueheartLeggings": {
 			"name": "Plagueheart Leggings",
@@ -1466,7 +1466,7 @@ const items = {
 			"setID": 529,
 			"id": 22505,
 			"source": "Naxxramas",
-			"phase": 1
+			"phase": 0
 		}
 	},
 	"boots": {
@@ -2142,7 +2142,7 @@ const items = {
 			"critRating": 14,
 			"id": 22800,
 			"source": "Naxxramas",
-			"phase": 1
+			"phase": 0
 		},
 		"soulseeker": {
 			"name": "Soulseeker",
