@@ -13,7 +13,7 @@ var selectedEnchants = localStorage['selectedEnchants'] ? JSON.parse(localStorag
 // Key: Item ID. Value: Item's saved DPS from previous simulations.
 var savedItemDPS = localStorage['savedItemDPS'] ? JSON.parse(localStorage['savedItemDPS']) : {};
 var settings = localStorage.settings ? JSON.parse(localStorage.settings) : {};
-var sources = localStorage.sources ? JSON.parse(localStorage.sources) : {};
+var sources = localStorage.sources ? JSON.parse(localStorage.sources) : {"phase": {"1": true}};
 
 // Buffs, debuffs, consumables, and pet buffs
 for (let auraType in _auras) {
