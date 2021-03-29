@@ -134,11 +134,11 @@ class Player {
 
 		// Add bonus damage % from Demonic Sacrifice
 		if (settings.talents.demonicSacrifice === 1 && settings.simSettings.sacrificePet == 'yes') {
-			if (settings.simSettings.petChoice == Pets.IMP) {
+			if (settings.simSettings.petChoice == PetName.IMP) {
 				this.stats.fireModifier *= 1.15;
-			} else if (settings.simSettings.petChoice == Pets.SUCCUBUS) {
+			} else if (settings.simSettings.petChoice == PetName.SUCCUBUS) {
 				this.stats.shadowModifier *= 1.15;
-			} else if (settings.simSettings.petChoice == Pets.FELGUARD) {
+			} else if (settings.simSettings.petChoice == PetName.FELGUARD) {
 				this.stats.shadowModifier *= 1.1;
 				//todo add aura to regen mana and add Felhunter sacrifice
 			}
@@ -149,10 +149,10 @@ class Player {
 				this.stats.fireModifier *= 1.05;
 			}
 			if (settings.talents.masterDemonologist > 0) {
-				if ( settings.simSettings.petChoice == Pets.SUCCUBUS) {
+				if ( settings.simSettings.petChoice == PetName.SUCCUBUS) {
 					this.stats.shadowModifier *= 1.1;
 					this.stats.fireModifier *= 1.1;
-				} else if (settings.simSettings.petChoice == Pets.FELGUARD) {
+				} else if (settings.simSettings.petChoice == PetName.FELGUARD) {
 					this.stats.shadowModifier *= 1.05;
 					this.stats.fireModifier *= 1.05;
 				}
@@ -219,11 +219,11 @@ class Player {
 		this.demonicKnowledgeSp = 0; // Spell Power from the Demonic Knowledge talent
 		if (settings.simSettings.sacrificePet == 'no' || settings.talents.demonicSacrifice == 0) {
 			let selectedPet = settings.simSettings.petChoice;
-			if (selectedPet == Pets.IMP) this.pet = new Imp(this, settings);
-			else if (selectedPet == Pets.VOIDWALKER) this.pet = new Voidwalker(this, settings);
-			else if (selectedPet == Pets.SUCCUBUS) this.pet = new Succubus(this, settings);
-			else if (selectedPet == Pets.FELHUNTER) this.pet = new Felhunter(this, settings);
-			else if (selectedPet == Pets.FELGUARD && settings.talents.summonFelguard > 0) this.pet = new Felguard(this, settings);
+			if (selectedPet == PetName.IMP) this.pet = new Imp(this, settings);
+			else if (selectedPet == PetName.VOIDWALKER) this.pet = new Voidwalker(this, settings);
+			else if (selectedPet == PetName.SUCCUBUS) this.pet = new Succubus(this, settings);
+			else if (selectedPet == PetName.FELHUNTER) this.pet = new Felhunter(this, settings);
+			else if (selectedPet == PetName.FELGUARD && settings.talents.summonFelguard > 0) this.pet = new Felguard(this, settings);
 			if (this.pet) {
 				this.pet.initialize();
 			}
@@ -260,7 +260,7 @@ class Player {
 			console.log("Spell Crit Chance: " + this.pet.stats.spellCritChance + "%");
 			console.log("Damage Modifier: " + Math.round(this.pet.stats.damageModifier * 100) + "%");
 			if (this.pet.spells.lashOfPain) console.log("Lash of Pain modifier: " + Math.round(this.pet.spells.lashOfPain.modifier * 100) + "% (in addition to the normal pet damage % modifier)");
-			if (this.pet.type == PetTypes.MELEE) console.log("Enemy Armor: " + Math.round(this.enemy.armor) + " = " + Math.round((1 - this.pet.armorMultiplier) * 100) + "% physical damage reduction");
+			if (this.pet.type == PetType.MELEE) console.log("Enemy Armor: " + Math.round(this.enemy.armor) + " = " + Math.round((1 - this.pet.armorMultiplier) * 100) + "% physical damage reduction");
 		}
 	}
 

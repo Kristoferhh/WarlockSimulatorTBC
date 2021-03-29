@@ -26,19 +26,19 @@ class Simulation {
 			if (this.player.pet.spiritTickTimerRemaining < time) time = this.player.pet.spiritTickTimerRemaining;
 
 			// Pet's attacks/abilities and such
-			if (this.player.pet.mode == PetModes.AGGRESSIVE) {
+			if (this.player.pet.mode == PetMode.AGGRESSIVE) {
 				if (this.player.pet.spells.melee && this.player.pet.spells.melee.cooldownRemaining < time) time = this.player.pet.spells.melee.cooldownRemaining;
-				//else if (this.player.pet.type == PetTypes.RANGED && this.player.pet.castTimeRemaining > 0 && this.player.pet.castTimeRemaining < time) time = this.player.pet.castTimeRemaining;
+				//else if (this.player.pet.type == PetType.RANGED && this.player.pet.castTimeRemaining > 0 && this.player.pet.castTimeRemaining < time) time = this.player.pet.castTimeRemaining;
 
-				if (this.player.pet.pet == Pets.IMP) {
+				if (this.player.pet.pet == PetName.IMP) {
 
-				} else if (this.player.pet.pet == Pets.VOIDWALKER) {
+				} else if (this.player.pet.pet == PetName.VOIDWALKER) {
 
-				} else if (this.player.pet.pet == Pets.SUCCUBUS) {
+				} else if (this.player.pet.pet == PetName.SUCCUBUS) {
 					if (this.player.pet.spells.lashOfPain.cooldownRemaining > 0 && this.player.pet.spells.lashOfPain.cooldownRemaining < time) time = this.player.pet.spells.lashOfPain.cooldownRemaining;
-				} else if (this.player.pet.pet == Pets.FELHUNTER) {
+				} else if (this.player.pet.pet == PetName.FELHUNTER) {
 					
-				} else if (this.player.pet.pet == Pets.FELGUARD) {
+				} else if (this.player.pet.pet == PetName.FELGUARD) {
 					if (this.player.pet.spells.cleave.cooldownRemaining > 0 && this.player.pet.spells.cleave.cooldownRemaining < time) time = this.player.pet.spells.cleave.cooldownRemaining;
 				}
 			}
@@ -174,8 +174,8 @@ class Simulation {
 
 			while(this.player.fightTime < fightLength) {
 				// Pet
-				if (this.player.pet && this.player.pet.mode == PetModes.AGGRESSIVE) {
-					if (this.player.pet.type == PetTypes.MELEE) {
+				if (this.player.pet && this.player.pet.mode == PetMode.AGGRESSIVE) {
+					if (this.player.pet.type == PetType.MELEE) {
 						if (this.player.pet.spells.melee.ready()) {
 							this.player.pet.cast("melee");
 						}
@@ -185,7 +185,7 @@ class Simulation {
 						if (this.player.pet.spells.lashOfPain && this.player.pet.spells.lashOfPain.ready() && (!this.player.auras.improvedShadowBolt || this.player.simSettings.lashOfPainUsage === 'onCooldown' || (this.player.simSettings.lashOfPainUsage == 'noISB' && !this.player.auras.improvedShadowBolt.active))) {
 							this.player.pet.cast("lashOfPain");
 						}
-					} else if (this.player.pet.type == PetTypes.RANGED) {
+					} else if (this.player.pet.type == PetType.RANGED) {
 
 					}
 				}

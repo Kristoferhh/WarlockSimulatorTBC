@@ -1003,7 +1003,7 @@ const items = {
 			"critRating": 16,
 			"id": 30079,
 			"source": "Serpentshrine Cavern",
-			"phase": 1
+			"phase": 2
 		},
 		"voidheartMantle": {
 			"name": "Voidheart Mantle",

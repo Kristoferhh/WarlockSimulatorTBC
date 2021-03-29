@@ -91,7 +91,7 @@ class PetSpell {
 		else this.pet.player.combatLog(this.pet.name + " " + this.name + " " + Math.round(dmg));
 		this.pet.player.damageBreakdown[this.varName].damage = this.pet.player.damageBreakdown[this.varName].damage + dmg || dmg;
 
-		if (this.pet.pet == Pets.FELGUARD) {
+		if (this.pet.pet == PetName.FELGUARD) {
 			this.pet.auras.demonicFrenzy.apply();
 		}
 	}
@@ -110,7 +110,7 @@ class Melee extends PetSpell {
 
 	calculateDamage() {
 		let ap = this.pet.stats.ap * this.pet.stats.apModifier;
-		if (this.pet.pet == Pets.FELGUARD) {
+		if (this.pet.pet == PetName.FELGUARD) {
 			ap *= (1 + 0.05 * this.pet.auras.demonicFrenzy.stacks);
 		}
 		return this.pet.dmg + (ap / 7);

@@ -101,24 +101,24 @@ function refreshCharacterStats() {
 	// Add stats from pets/pet-related talents
 	if (talents.demonicSacrifice === 1 && $("select[name='sacrificePet']").val() === 'yes') {
 		let pet = $("select[name='petChoice']").val();
-		if (pet == Pets.IMP) {
+		if (pet == PetName.IMP) {
 			fireModifier *= 1.15;
-		} else if (pet == Pets.SUCCUBUS) {
+		} else if (pet == PetName.SUCCUBUS) {
 			shadowModifier *= 1.15;
-		} else if (pet == Pets.FELGUARD) {
+		} else if (pet == PetName.FELGUARD) {
 			shadowModifier *= 1.1;
 		}
 	} else {
 		// Blood Pact
-		if ($("select[name='petChoice']").val() === Pets.IMP) {
+		if ($("select[name='petChoice']").val() === PetName.IMP) {
 			stamina += 70 * (1 + 0.1 * talents.improvedImp);
 		}
 		// Master Demonologist
 		if (talents.masterDemonologist > 0) {
-			if ($("select[name='petChoice']").val() == Pets.SUCCUBUS) {
+			if ($("select[name='petChoice']").val() == PetName.SUCCUBUS) {
 				shadowModifier *= 1.1;
 				fireModifier *= 1.1;
-			} else if ($("select[name='petChoice']").val() == Pets.FELGUARD) {
+			} else if ($("select[name='petChoice']").val() == PetName.FELGUARD) {
 				shadowModifier *= 1.05;
 				fireModifier *= 1.05;
 			}

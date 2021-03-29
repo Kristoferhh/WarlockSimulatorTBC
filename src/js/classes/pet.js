@@ -1,4 +1,4 @@
-const Pets = Object.freeze({
+const PetName = Object.freeze({
 	IMP: 0,
 	VOIDWALKER: 1,
 	SUCCUBUS: 2,
@@ -6,12 +6,12 @@ const Pets = Object.freeze({
 	FELGUARD: 4
 });
 
-const PetTypes = Object.freeze({
+const PetType = Object.freeze({
 	MELEE: 0,
 	RANGED: 1
 });
 
-const PetModes = Object.freeze({
+const PetMode = Object.freeze({
 	PASSIVE: 0,
 	AGGRESSIVE: 1
 });
@@ -48,7 +48,7 @@ class Pet {
 	}
 
 	initialize() {
-		if (this.type == PetTypes.MELEE) {
+		if (this.type == PetType.MELEE) {
 			this.spells.melee = new Melee(this);
 		}
 	}
@@ -138,7 +138,7 @@ class Pet {
 
 
 		// Calculate armor
-		if (this.type == PetTypes.MELEE) {
+		if (this.type == PetType.MELEE) {
 			// Formula from https://wowpedia.fandom.com/wiki/Armor
 			if (this.player.level >= 60 && this.player.level <= 79) {
 				this.armorMultiplier = 1 - this.player.enemy.armor / (this.player.enemy.armor + 400 + 85 * (this.player.level + 4.5 * (this.player.level - 59)));
@@ -172,15 +172,15 @@ class Pet {
 		this.stats.currentMana = this.stats.maxMana;
 		this.fiveSecondRuleTimerRemaining = 5; // If higher than 0 then the pet can't gain mana from Spirit regen
 		this.spiritTickTimerRemaining = 2; // Unsure what the initial value should be since the Felguard isnt supposed to gain a Spirit regen tick between every Cleave (confirm)
-		if (this.type == PetTypes.MELEE) {
+		if (this.type == PetType.MELEE) {
 			this.spells.melee.cooldownRemaining = 0;
 		}
 	}
 
 	tick(t) {
-		if (this.type == PetTypes.MELEE) {
+		if (this.type == PetType.MELEE) {
 			this.spells.melee.tick(t);
-		} /*else if (this.type == PetTypes.RANGED) {
+		} /*else if (this.type == PetType.RANGED) {
 			this.castTimeRemaining = Math.max(0, this.castTimeRemaining - t);
 		}*/
 
@@ -202,11 +202,11 @@ class Imp extends Pet {
 	constructor(player, settings) {
 		super(player, settings);
 		this.name = "Imp";
-		this.type = PetTypes.RANGED;
+		this.type = PetType.RANGED;
 		this.stats.stamina = 114;
 		this.stats.intellect = 327;
 		this.stats.mana = 849;
-		this.pet = Pets.IMP;
+		this.pet = PetName.IMP;
 		this.setup();
 	}
 }
@@ -215,8 +215,8 @@ class Voidwalker extends Pet {
 	constructor(player, settings) {
 		super(player, settings);
 		this.name = "Voidwalker";
-		this.type = PetTypes.MELEE;
-		this.pet = Pets.VOIDWALKER;
+		this.type = PetType.MELEE;
+		this.pet = PetName.VOIDWALKER;
 	}
 }
 
@@ -224,8 +224,8 @@ class Succubus extends Pet {
 	constructor(player, settings) {
 		super(player, settings);
 		this.name = "Succubus";
-		this.pet = Pets.SUCCUBUS;
-		this.type = PetTypes.MELEE;
+		this.pet = PetName.SUCCUBUS;
+		this.type = PetType.MELEE;
 		this.stats.stamina = 114;
 		this.stats.intellect = 133;
 		this.stats.mana = 1109;
@@ -256,8 +256,8 @@ class Felhunter extends Pet {
 	constructor(player, settings) {
 		super(player, settings);
 		this.name = "Felhunter";
-		this.type = PetTypes.MELEE;
-		this.pet = Pets.FELHUNTER;
+		this.type = PetType.MELEE;
+		this.pet = PetName.FELHUNTER;
 	}
 }
 
@@ -265,8 +265,8 @@ class Felguard extends Pet {
 	constructor(player, settings) {
 		super(player, settings);
 		this.name = "Felguard";
-		this.type = PetTypes.MELEE;
-		this.pet = Pets.FELGUARD;
+		this.type = PetType.MELEE;
+		this.pet = PetName.FELGUARD;
 		this.stats.stamina = 322;
 		this.stats.ap = 286;
 		this.stats.intellect = 152;

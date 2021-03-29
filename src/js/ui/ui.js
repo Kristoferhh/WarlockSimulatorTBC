@@ -1006,7 +1006,7 @@ function updateSimulationSettingsVisibility() {
 	if ($("#sacrificePet").children('select').val() == 'no') {
 		$("#petBuffs-heading").show();
 		$(".petBuffs").show();
-		if ($("#petMode").children('select').val() == PetModes.AGGRESSIVE) {
+		if ($("#petMode").children('select').val() == PetMode.AGGRESSIVE) {
 			$("#enemyArmor").show();
 			$("#enemy-armor-val").closest('li').show();
 			$(".petDebuff").show();
