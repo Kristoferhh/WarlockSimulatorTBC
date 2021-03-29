@@ -1053,7 +1053,7 @@ function updateSetBonuses() {
 			}
 			for (let item in items[itemSlot]) {
 				if (items[itemSlot][item].id === itemID) {
-					let setID = items[itemSlot][item].setID;
+					let setID = items[itemSlot][item].setId;
 					if (setID) {
 						setBonusCounter[setID] = setBonusCounter[setID] + 1 || 1;
 						break;
@@ -1068,7 +1068,7 @@ function updateSetBonuses() {
 		if (sets[set]) {
 			for (let i = sets[set].bonuses.length-1; i >= 0; i--) {
 				if (sets[set].bonuses[i] <= setBonusCounter[set]) {
-					$("#sidebar-sets").append("<li class='sidebar-set-bonus'><a href='https://tbc.wowhead.com/item-set=" + set + "'>" + sets[set].name + " (" + sets[set].bonuses[i] + ")</a></li>")
+					$("#sidebar-sets").append("<li class='sidebar-set-bonus'><a href='https://tbc.wowhead.com/item-set=" + set + "'>" + sets[set].name + " (" + setBonusCounter[set] + ")</a></li>")
 					break;
 				}
 			}

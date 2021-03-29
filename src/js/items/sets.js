@@ -4,7 +4,12 @@ const sets = {
 		"name": "Plagueheart Raiment",
 		"bonuses": [2,4,6,8]
 	},
-	// Spellstrike
+	// Spellfire (Tailoring)
+	"552": {
+		"name": "Wrath of Spellfire",
+		"bonuses": [3]
+	},
+	// Spellstrike (Tailoring)
 	"559": {
 		"name": "Spellstrike Infusion",
 		"bonuses": [2]

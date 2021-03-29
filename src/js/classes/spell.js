@@ -104,6 +104,10 @@ class Spell {
 		if (this.varName == "incinerate" && this.player.auras.immolate && this.player.auras.immolate.active) {
 			dmg += this.bonusDamageFromImmolate;
 		}
+		// Spellfire 3-set bonus. Add spell power equal to 7% of the player's intellect
+		if (this.player.sets['552'] >= 3) {
+			spellPower += (this.player.stats.intellect * this.player.stats.intellectModifier * 0.07);
+		}
 		if (this.school == "shadow") dmg += ((spellPower + shadowPower) * this.coefficient);
 		else if (this.school == "fire") dmg += ((spellPower + firePower) * this.coefficient);
 		dmg *= this.player.stats[this.school + "Modifier"];
