@@ -406,6 +406,13 @@ ul {
 
 #source-filters {
 	margin-left: auto;
+	line-height: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+#source-filters ul {
+	padding: 0px;
 }
 
 #source-filters ul li {

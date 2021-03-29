@@ -341,17 +341,19 @@
 	<table id="gem-selection-table" cellspacing="0" data-color='none' style="visibility: hidden;"></table>
 
 	<div id="item-selection-container">
-		<div style="display: flex; align-items: center; height: 20px">
-			<div id="preset-item-sets">
+		<div style="padding: 15px 0px 15px 0px; display: flex; align-items: center; height: 20px">
+			<fieldset id="preset-item-sets">
+				<legend>Preset item sets (approximates)</legend>
 				<button class="preset-item-set" data-name='prebis'>Pre-Raid BiS</button>
 				<button class="preset-item-set" data-name='phase1bis'>Phase 1 BiS</button>
 				<button class="preset-item-set" data-name='phase2bis'>Phase 2 BiS</button>
 				<button class="preset-item-set" data-name='phase3bis'>Phase 3 BiS</button>
 				<button class="preset-item-set" data-name='phase4bis'>Phase 4 BiS</button>
 				<button class="preset-item-set" data-name='phase5bis'>Phase 5 BiS</button>
-			</div>
+			</fieldset>
 
-			<div id="source-filters">
+			<fieldset id="source-filters">
+				<legend>Sources</legend>
 				<ul>
 					<li data-checked='false' data-source='phase' data-value='0'>Classic</li>
 					<li data-checked='false' data-source='phase' data-value='1'>P1</li>
@@ -360,7 +362,7 @@
 					<li data-checked='false' data-source='phase' data-value='4'>P4</li>
 					<li data-checked='false' data-source='phase' data-value='5'>P5</li>
 				</ul>
-			</div>
+			</fieldset>
 		</div>
 
 		<ul id="item-slot-selection-list">
