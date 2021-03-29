@@ -49,8 +49,8 @@ class Player {
 							this.stats[stat] -= items[customItemSlot][item][stat];
 						}
 					}
-					if (items[customItemSlot][item].hasOwnProperty("setID")) {
-						this.sets[items[customItemSlot][item].setID]--;
+					if (items[customItemSlot][item].hasOwnProperty("setId")) {
+						this.sets[items[customItemSlot][item].setId]--;
 					}
 					// If the item we're unequipping is a trinket we have equipped, then set its ID to null in the trinketIds array
 					if (this.trinketIds.includes(items[customItemSlot][item].id)) {
@@ -85,8 +85,8 @@ class Player {
 							this.stats[stat] += items[customItemSlot][item][stat];
 						}
 					}
-					if (items[customItemSlot][item].hasOwnProperty("setID")) {
-						this.sets[items[customItemSlot][item].setID]++;
+					if (items[customItemSlot][item].hasOwnProperty("setId")) {
+						this.sets[items[customItemSlot][item].setId]++;
 					}
 					// Add stats from any gems equipped in the custom item
 					if (settings.gems[customItemSlot] && settings.gems[customItemSlot][customItemID]) {
