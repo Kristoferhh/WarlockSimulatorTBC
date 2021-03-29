@@ -400,35 +400,46 @@ ul {
 	color: white;
 }
 
-#preset-item-sets, #source-filters {
+#profiles-and-sources {
 	display: flex;
+	align-items: center;
+}
+
+#profiles-and-sources fieldset ul {
+	margin: 0px;
+	padding: 0px;
+}
+
+#profiles-and-sources ul li {
+	display: inline-block;
+	border: 1px solid white;
+	padding: 5px;
+	border-radius: 3px;
+}
+
+/*#settings-fieldset {
+	min-width: 213px;
+}*/
+
+.saved-profile:nth-child(1) {
+	margin-left: 0px;
+}
+
+.saved-profile {
+	margin-left: 5px;
 }
 
 #source-filters {
 	margin-left: auto;
-	line-height: 0px;
-	padding-top: 0px;
-	padding-bottom: 0px;
+	min-width: 250px;
 }
 
-#source-filters ul {
-	padding: 0px;
-}
-
-#source-filters ul li {
-	border: 1px solid white;
-	border-radius: 3px;
-	padding: 5px;
-	display: inline-block;
-	line-height: 17px;
-}
-
-#source-filters ul li[data-checked='true'] {
+#profiles-and-sources ul li[data-checked='true'] {
 	color: black;
 	background-color: white;
 }
 
-#source-filters ul li:hover {
+#profiles-and-sources ul li:hover {
 	color: black;
 	background-color: white;
 	opacity: 50%;

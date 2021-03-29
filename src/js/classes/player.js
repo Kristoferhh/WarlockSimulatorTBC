@@ -201,6 +201,9 @@ class Player {
 				break;
 			}
 		}
+		if (this.filler == null) {
+			this.filler = "shadowBolt";
+		}
 
 		// Assign the curse (if selected)
 		this.curse = null;
@@ -268,7 +271,7 @@ class Player {
 		this.spells = {
 			"lifeTap": new LifeTap(this)
 		}
-		if (this.rotation.filler.shadowBolt) this.spells.shadowBolt = new ShadowBolt(this);
+		if (this.rotation.filler.shadowBolt || this.filler == "shadowBolt") this.spells.shadowBolt = new ShadowBolt(this);
 		else if (this.rotation.filler.searingPain) this.spells.searingPain = new SearingPain(this);
 		else if (this.rotation.filler.incinerate) this.spells.incinerate = new Incinerate(this);
 		if (this.rotation.dot.corruption) this.spells.corruption = new Corruption(this);

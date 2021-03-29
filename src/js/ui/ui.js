@@ -11,9 +11,10 @@ var auras = localStorage['auras'] ? JSON.parse(localStorage['auras']) : {};
 var rotation = localStorage['rotation'] ? JSON.parse(localStorage['rotation']) : {};
 var selectedEnchants = localStorage['selectedEnchants'] ? JSON.parse(localStorage['selectedEnchants']) : {};
 // Key: Item ID. Value: Item's saved DPS from previous simulations.
-var savedItemDPS = localStorage['savedItemDPS'] ? JSON.parse(localStorage['savedItemDPS']) : {};
+var savedItemDps = localStorage['savedItemDps'] ? JSON.parse(localStorage['savedItemDps']) : {};
 var settings = localStorage.settings ? JSON.parse(localStorage.settings) : {};
 var sources = localStorage.sources ? JSON.parse(localStorage.sources) : {"phase": {"1": true}};
+var profiles = localStorage.profiles ? JSON.parse(localStorage.profiles) : {};
 
 // Buffs, debuffs, consumables, and pet buffs
 for (let auraType in _auras) {
@@ -201,6 +202,81 @@ $(document).on('click', function(e) {
 	if (e.target.id !== "gem-selection-table") {
 		$("#gem-selection-table").css('visibility', 'hidden');
 	}
+});
+
+// User clicks on the "Save New Profile" button
+$("#save-profile-button").click(function() {
+	let profileName = $("input[name='profileName']").val();
+	// Make sure the name field isn't empty
+	if (profileName.length <= 0) {
+		alert("Missing profile name");
+	} else if (profiles[profileName]) {
+		alert('The profile "' + profileName + '" already exists');
+	} else {
+		saveProfile(profileName);
+		localStorage.selectedProfile = profileName;
+		$("input[name='profileName']").val('');
+		updateProfileSelection(profileName);
+		drawProfileButtons();
+	}
+});
+
+// User clicks on the "Save" profile button
+$(document).on('click', '#save-profile-button', function() {
+	saveProfile(localStorage.selectedProfile);
+});
+
+// User clicks on the "Delete" profile button
+$("#delete-profile-button").click(function() {
+	if (confirm('Are you sure you want to delete "' + localStorage.selectedProfile + "'?")) {
+		delete profiles[localStorage.selectedProfile];
+		localStorage.removeItem('selectedProfile');
+		localStorage.profiles = JSON.stringify(profiles);
+		drawProfileButtons();
+		$("#update-profile-div").hide();
+		if ($(".saved-profile").length == 0) {
+			$("#saved-profiles").hide();
+		}
+	}
+});
+
+// User clicks on the "Rename" profile button
+$("#rename-profile-button").click(function() {
+	let newName = prompt('Enter the new name for profile "' + localStorage.selectedProfile + "'");
+	if (newName !== null && newName.length > 0) {
+		// Create a copy of the profile with the new name
+		profiles[newName] = profiles[localStorage.selectedProfile];
+		// Delete the old profile
+		delete profiles[localStorage.selectedProfile];
+		// Update localStorage
+		localStorage.selectedProfile = newName;
+		localStorage.profiles = JSON.stringify(profiles);
+		drawProfileButtons();
+	}
+});
+
+// User clicks on one of their saved profiles
+$(document).on('click', '.saved-profile', function() {
+	let profileName = $(this).attr('data-name');
+	updateProfileSelection(profileName);
+	// Show the buttons to save, delete, and rename the profile
+	$("#update-profile-div").show();
+	// Load settings from the profile
+	auras = profiles[profileName].auras;
+	localStorage.auras = JSON.stringify(auras);
+	rotation = profiles[profileName].rotation;
+	localStorage.rotation = JSON.stringify(rotation);
+	settings = profiles[profileName].simSettings;
+	localStorage.settings = JSON.stringify(settings);
+	talents = profiles[profileName].talents;
+	localStorage.talents = JSON.stringify(talents);
+	selectedItems = profiles[profileName].items;
+	localStorage.selectedItems = JSON.stringify(selectedItems);
+	selectedGems = profiles[profileName].gems;
+	localStorage.selectedGems = JSON.stringify(selectedGems);
+	selectedEnchants = profiles[profileName].enchants;
+	localStorage.selectedEnchants = JSON.stringify(selectedEnchants);
+	location.reload();
 });
 
 // User clicks on a gem row in the gem selection table
@@ -653,7 +729,7 @@ function loadItemsBySlot(itemSlot, subSlot) {
 	$(newItemSlotSelector).attr('data-selected', 'true');
 	localStorage['selectedItemSlot'] = itemSlot;
 	localStorage['selectedItemSubSlot'] = (subSlot || "");
-	savedItemDPS[itemSlot + subSlot] = savedItemDPS[itemSlot + subSlot] || {};
+	savedItemDps[itemSlot + subSlot] = savedItemDps[itemSlot + subSlot] || {};
 
 	// Removes all current item rows
 	$(".item-row").remove(); 
@@ -698,7 +774,7 @@ function loadItemsBySlot(itemSlot, subSlot) {
 
 		}
 
-		tableBody.append("<tr data-subslot='" + localStorage['selectedItemSubSlot'] + "' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage['selectedItemSubSlot']] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td><div>" + sockets.join('') + "</div></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (Math.round(i.hasteRating + (i.onUseHasteRating * i.duration / i.cooldown)) || i.hasteRating || Math.round(i.onUseHasteRating * i.duration / i.cooldown) || '') + "</td><td class='item-dps'>" + (savedItemDPS[itemSlot + subSlot][i.id] || '') + "</td></tr>").trigger("update");
+		tableBody.append("<tr data-subslot='" + localStorage['selectedItemSubSlot'] + "' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage['selectedItemSubSlot']] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td><div>" + sockets.join('') + "</div></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (Math.round(i.spellPower + (i.onUseSpellPower * i.duration / i.cooldown)) || i.spellPower || Math.round(i.onUseSpellPower * i.duration / i.cooldown) || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (Math.round(i.hasteRating + (i.onUseHasteRating * i.duration / i.cooldown)) || i.hasteRating || Math.round(i.onUseHasteRating * i.duration / i.cooldown) || '') + "</td><td class='item-dps'>" + (savedItemDps[itemSlot + subSlot][i.id] || '') + "</td></tr>").trigger("update");
 	}
 
 	loadEnchantsBySlot(itemSlot, subSlot);
@@ -851,9 +927,9 @@ function simDPS(items) {
 				} else if (simulationsFinished == itemAmount) {
 					$("#sim-all-items").text("Simulate All Items");
 				}
-				savedItemDPS[itemSlot + itemSubSlot] = savedItemDPS[itemSlot + itemSubSlot] || {};
-				savedItemDPS[itemSlot + itemSubSlot][simulationEnd.itemID] = avgDps;
-				localStorage.savedItemDPS = JSON.stringify(savedItemDPS);
+				savedItemDps[itemSlot + itemSubSlot] = savedItemDps[itemSlot + itemSubSlot] || {};
+				savedItemDps[itemSlot + itemSubSlot][simulationEnd.itemID] = avgDps;
+				localStorage.savedItemDps = JSON.stringify(savedItemDps);
 
 				if (simulationsFinished === itemAmount) {
 					// Remove the background coloring (progress bar)
@@ -1000,6 +1076,41 @@ function updateSetBonuses() {
 	}
 
 	localStorage.setBonuses = JSON.stringify(setBonusCounter);
+}
+
+function drawProfileButtons() {
+	$(".saved-profile").remove();
+	for (let profile in profiles) {
+		$("#saved-profiles ul").append("<li class='saved-profile' data-checked='" + (localStorage.selectedProfile == profile || false) + "' data-name='" + profile + "'>" + profile + "</li>");
+	}
+	// Show the profile fieldset if there are any profiles
+	if ($(".saved-profile").length > 0) {
+		$("#saved-profiles").show();
+	}
+}
+
+function saveProfile(profileName) {
+	profiles[profileName] = {
+		"auras": auras,
+		"rotation": rotation,
+		"simSettings": settings,
+		"talents": talents,
+		"items": selectedItems,
+		"gems": selectedGems, // unsure if gems should be saved but it could be useful in case the different profiles want to use different gems
+		"enchants": selectedEnchants
+	}
+	localStorage.profiles = JSON.stringify(profiles);
+}
+
+// Called when the user creates a new profile or clicks on an existing one. It updates the 'selected' attribute for the profiles and displays the profile update buttons
+function updateProfileSelection(profileName) {
+	// De-select the previous profile
+	if (localStorage.selectedProfile) {
+		$(".saved-profile[data-name='" + localStorage.selectedProfile + "']").attr('data-checked', false);
+	}
+	localStorage.selectedProfile = profileName;
+	$(".saved-profile[data-name='" + profileName + "']").attr('data-selected', true);
+	$("#update-profile-div").show();
 }
 
 function updateSimulationSettingsVisibility() {

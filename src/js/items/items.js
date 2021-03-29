@@ -2761,8 +2761,8 @@ const items = {
 			"source": "Karazhan",
 			"phase": 1
 		},
-		"spellstrikeBelt": {
-			"name": "Spellstrike Belt",
+		"spellfireBelt": {
+			"name": "Spellfire Belt",
 			"intellect": 18,
 			"yellow": 1,
 			"blue": 1,

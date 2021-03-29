@@ -81,6 +81,12 @@ if (localStorage['simulationDuration']) {
 	$("#sim-length-result").text(localStorage['simulationDuration'] + "s");
 }
 
+// Add buttons for the saved settings selection
+drawProfileButtons();
+// Show the Save/Delete/Rename buttons if a profile is selected
+if (localStorage.selectedProfile) {
+	$("#update-profile-div").show();
+}
 
 $("#race-dropdown-list").data("currentRace", currentRace); // Store the currently selected race to know the user's previous race when changing in the dropdown list.
 $("#race").text($("#race-dropdown-list").children("option:selected").text()); // Set the player's race at the top of the sidebar (just a visual description)
