@@ -96,6 +96,11 @@ class Spell {
 		if (this.player.auras.quagmirransEye && this.player.auras.quagmirransEye.hiddenCooldownRemaining <= 0 && random(1,100) <= this.player.auras.quagmirransEye.procChance) {
 			this.player.auras.quagmirransEye.apply();
 		}
+
+		// Mana-Etched Regalia 4-set (2% proc chance)
+		if (this.player.sets['658'] >= 4 && random(1,100) <= this.player.auras.manaEtched4Set.procChance) {
+			this.player.auras.manaEtched4Set.apply();
+		}
 	}
 
 	damage(isCrit, spellPower = this.player.stats.spellPower + this.player.demonicKnowledgeSp, shadowPower = this.player.stats.shadowPower, firePower = this.player.stats.firePower) {

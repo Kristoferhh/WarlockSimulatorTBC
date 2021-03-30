@@ -391,6 +391,7 @@ const items = {
 			},
 			"spellPower": 34,
 			"spellPen": 15,
+			"setId": 658,
 			"id": 28193,
 			"source": "Black Morass",
 			"phase": 1
@@ -1127,6 +1128,7 @@ const items = {
 			},
 			"spellPower": 20,
 			"critRating": 16,
+			"setId": 658,
 			"id": 27796,
 			"source": "Heroic Slave Pens",
 			"phase": 1
@@ -1786,6 +1788,7 @@ const items = {
 			},
 			"spellPower": 29,
 			"critRating": 17,
+			"setId": 658,
 			"id": 28191,
 			"source": "Heroic Old Hillsbrad Foothills",
 			"phase": 1
@@ -2508,6 +2511,7 @@ const items = {
 			},
 			"spellPower": 20,
 			"critRating": 16,
+			"setId": 658,
 			"id": 27465,
 			"source": "Heroic Hellfire Ramparts",
 			"phase": 1
@@ -3291,6 +3295,7 @@ const items = {
 			"spellPower": 33,
 			"critRating": 21,
 			"spellPen": 18,
+			"setId": 658,
 			"id": 27907,
 			"source": "Heroic Underbog",
 			"phase": 1

@@ -91,7 +91,10 @@ function refreshCharacterStats() {
 	critChance = critChance.toFixed(2);
 
 	// Hit
-	let hitChance = Math.round((characterStats.hitRating / hitRatingPerPercent) * 100) / 100;
+	let hitRating = JSON.parse(JSON.stringify(characterStats.hitRating));
+	// Mana-Etched Regalia 2-set
+	if (JSON.parse(localStorage.setBonuses)['658'] >= 2) hitRating += 35;
+	let hitChance = Math.round((hitRating / hitRatingPerPercent) * 100) / 100;
 	if (auras.inspiringPresence) hitChance += 1;
 	hitChance = hitChance.toFixed(2);
 
@@ -165,7 +168,7 @@ function refreshCharacterStats() {
 	$("#character-shadow-power-val").text(characterStats.shadowPower + " (" + (characterStats.shadowPower + spellPower) + ")");
 	$("#character-fire-power-val").text(characterStats.firePower + " (" + (characterStats.firePower + spellPower) + ")");
 	$("#character-crit-val").text(Math.round(critRating) + " (" + critChance + "%)");
-	$("#character-hit-val").text(Math.round(characterStats.hitRating) + " (" + hitChance + "%)");
+	$("#character-hit-val").text(Math.round(hitRating) + " (" + hitChance + "%)");
 	$("#character-haste-val").text(Math.round(characterStats.hasteRating) + " (" + (Math.round((characterStats.hasteRating/hasteRatingPerPercent) * 100) / 100) + "%)");
 	$("#character-shadow-damage-modifier-val").text(Math.round((shadowModifier * (1 + (0.02 * talents.shadowMastery))) * 100) + "%");
 	$("#character-fire-damage-modifier-val").text(Math.round(fireModifier * 100) + "%");

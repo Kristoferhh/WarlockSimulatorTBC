@@ -334,3 +334,26 @@ class ShiffarsNexusHorn extends Aura {
 		super.tick(t);
 	}
 }
+
+class ManaEtched4Set extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Mana-Etched 4-Set Bonus";
+		this.durationTotal = 15;
+		this.procChance = 2;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.stats.spellPower += 110;
+		}
+		super.apply();
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active) {
+			this.player.stats.spellPower -= 110;
+		}
+		super.fade(endOfIteration);
+	}
+}

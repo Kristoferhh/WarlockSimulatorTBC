@@ -14,7 +14,7 @@ const sets = {
 		"name": "Spellstrike Infusion",
 		"bonuses": [2]
 	},
-	// Dungeon Set 3
+	// Dungeon Set
 	"644": {
 		"name": "Oblivion Raiment",
 		"bonuses": [2,4]
@@ -27,6 +27,11 @@ const sets = {
 	// T5
 	"646": {
 		"name": "Corruptor Raiment",
+		"bonuses": [2,4]
+	},
+	// Dungeon Set
+	"658": {
+		"name": "Mana-Etched Regalia",
 		"bonuses": [2,4]
 	},
 	// T6

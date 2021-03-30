@@ -128,6 +128,7 @@ class Player {
 
 		// Hit chance
 		this.stats.hitChanceMultiplier = 1000;
+		if (settings.sets['658'] >= 2) this.stats.hitRating += 35; // Mana-Etched Regalia 2-set bonus (35 hit rating)
 		this.stats.extraHitChance = this.stats.hitRating / hitRatingPerPercent; // hit percent from hit rating
 		if (settings.auras.inspiringPresence === true) this.stats.extraHitChance += 1;
 		this.stats.hitChance = Math.round(this.getHitChance(this.stats.extraHitChance) * this.stats.hitChanceMultiplier); // The player's chance of hitting the enemy, between 61% and 99%
@@ -306,6 +307,7 @@ class Player {
 			this.auras.shadowFlamefire = new ShadowFlameFire(this);
 		}
 		if (this.sets['559'] == 2) this.auras.spellstrikeProc = new SpellstrikeProc(this);
+		if (this.sets['658'] >= 4) this.auras.manaEtched4Set = new ManaEtched4Set(this);
 	}
 
 	reset() {

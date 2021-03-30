@@ -75,6 +75,7 @@ class Simulation {
 			if (this.player.auras.shiffarsNexusHorn.active && this.player.auras.shiffarsNexusHorn.durationRemaining < time) time = this.player.auras.shiffarsNexusHorn.durationRemaining;
 			if (this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining > 0 && this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining < time) time = this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining;
 		}
+		if (this.player.auras.manaEtched4Set && this.player.auras.manaEtched4Set.active && this.player.auras.manaEtched4Set.durationRemaining < time) time = this.player.auras.manaEtched4Set.durationRemaining;
 	
 		if (this.player.mp5Timer < time) time = this.player.mp5Timer;
 		for (let i = 0; i < 2; i++) {
@@ -121,6 +122,7 @@ class Simulation {
 		if (this.player.auras.sextantOfUnstableCurrents && (this.player.auras.sextantOfUnstableCurrents.active || this.player.auras.sextantOfUnstableCurrents.hiddenCooldownRemaining > 0)) this.player.auras.sextantOfUnstableCurrents.tick(time);
 		if (this.player.auras.quagmirransEye && (this.player.auras.quagmirransEye.active || this.player.auras.quagmirransEye.hiddenCooldownRemaining > 0)) this.player.auras.quagmirransEye.tick(time);
 		if (this.player.auras.shiffarsNexusHorn && (this.player.auras.shiffarsNexusHorn.active || this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining > 0)) this.player.auras.shiffarsNexusHorn.tick(time);
+		if (this.player.auras.manaEtched4Set && this.player.auras.manaEtched4Set.active) this.player.auras.manaEtched4Set.tick(time);
 
 		// Trinkets
 		if (this.player.trinkets[0]) this.player.trinkets[0].tick(time);
@@ -294,6 +296,7 @@ class Simulation {
 			if (this.player.auras.sextantOfUnstableCurrents && this.player.auras.sextantOfUnstableCurrents.active) this.player.auras.sextantOfUnstableCurrents.fade(true);
 			if (this.player.auras.quagmirransEye && this.player.auras.quagmirransEye.active) this.player.auras.quagmirransEye.fade(true);
 			if (this.player.auras.shiffarsNexusHorn && this.player.auras.shiffarsNexusHorn.active) this.player.auras.shiffarsNexusHorn.fade(true);
+			if (this.player.auras.manaEtched4Set && this.player.auras.manaEtched4Set.active) this.player.auras.manaEtched4Set.fade(true);
 			for (let i = 0; i < 2; i++) {
 				if (this.player.trinkets[i]) {
 					this.player.trinkets[i].fade(true);
