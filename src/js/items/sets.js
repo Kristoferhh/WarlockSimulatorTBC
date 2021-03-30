@@ -9,6 +9,11 @@ const sets = {
 		"name": "Wrath of Spellfire",
 		"bonuses": [3]
 	},
+	// Frozen Shadoweave (Tailoring)
+	"553": {
+		"name": "Shadow's Embrace",
+		"bonuses": [3]
+	},
 	// Spellstrike (Tailoring)
 	"559": {
 		"name": "Spellstrike Infusion",

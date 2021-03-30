@@ -4,7 +4,7 @@ const enchants = {
 			"name": "Glyph of Power",
 			"spellPower": 22,
 			"hitRating": 14,
-			"id": 29191,
+			"id": 35447,
 			"source": "The Sha'tar - Revered",
 			"phase": 1
 		},
@@ -12,52 +12,63 @@ const enchants = {
 			"name": "Glyph of Renewal",
 			"spellPower": 12,
 			"mp5": 7,
-			"id": 29189,
+			"id": 35445,
 			"source": "Honor Hold/Thrallmar - Revered",
 			"phase": 1
 		},
-		"arcanumOfFireWarding": {
-			"name": "Arcanum of Fire Warding",
+		"glyphOfFireWarding": {
+			"name": "Glyph of Fire Warding",
 			"fireResist": 20,
-			"id": 29196,
+			"id": 35456,
 			"source": "Honor Hold/Thrallmar - Honored",
 			"phase": 1
 		},
-		"arcanumOfShadowWarding": {
-			"name": "Arcanum of Shadow Warding",
+		"glyphOfShadowWarding": {
+			"name": "Glyph of Shadow Warding",
 			"shadowResist": 20,
-			"id": 29199,
+			"id": 35458,
 			"source": "Lower City - Honored",
 			"phase": 1
 		},
-		"arcanumOfArcaneWarding": {
-			"name": "Arcanum of Arcane Warding",
+		"glyphOfArcaneWarding": {
+			"name": "Glyph of Arcane Warding",
 			"arcaneResist": 20,
-			"id": 29195,
+			"id": 35455,
 			"source": "The Sha'tar - Honored",
 			"phase": 1
 		},
-		"arcanumOfNatureWarding": {
-			"name": "Arcanum of Nature Warding",
+		"glyphOfNatureWarding": {
+			"name": "Glyph of Nature Warding",
 			"natureResist": 20,
-			"id": 29194,
+			"id": 35454,
 			"source": "Cenarion Expedition - Honored",
 			"phase": 1
 		},
-		"arcanumOfFrostWarding": {
-			"name": "Arcanum of Frost Warding",
+		"glyphOfFrostWarding": {
+			"name": "Glyph of Frost Warding",
 			"frostResist": 20,
-			"id": 29198,
-			"source": "The Keepers of Time - Honored",
+			"id": 35457,
+			"source": "Keepers of Time - Honored",
 			"phase": 1
 		},
+		"glyphOfChromaticWarding": {
+			"name": "Glyph of Chromatic Warding",
+			"arcaneResist": 8,
+			"fireResist": 8,
+			"natureResist": 8,
+			"shadowResist": 8,
+			"frostResist": 8,
+			"id": 37889,
+			"source": "Lower City - Honored",
+			"phase": 1
+		}
 	},
 	"shoulders": {
 		"greaterInscriptionOfDiscipline": {
 			"name": "Greater Inscription of Discipline",
 			"spellPower": 18,
 			"critRating": 10,
-			"id": 28886,
+			"id": 35406,
 			"source": "The Aldor - Exalted",
 			"phase": 1
 		},
@@ -65,7 +76,7 @@ const enchants = {
 			"name": "Greater Inscription of the Orb",
 			"spellPower": 12,
 			"critRating": 15,
-			"id": 28909,
+			"id": 35437,
 			"source": "The Scryers - Exalted",
 			"phase": 1
 		},
@@ -73,7 +84,7 @@ const enchants = {
 			"name": "Power of the Scourge",
 			"spellPower": 15,
 			"critRating": 14,
-			"id": 23545,
+			"id": 29467,
 			"source": "Naxxramas",
 			"phase": 0
 		},
@@ -84,7 +95,7 @@ const enchants = {
 			"arcaneResist": 7,
 			"natureResist": 7,
 			"frostResist": 7,
-			"id": 29187,
+			"id": 35441,
 			"source": "The Violet Eye - Honored",
 			"phase": 1
 		}
@@ -161,38 +172,45 @@ const enchants = {
 			"source": "Enchanting",
 			"phase": 1
 		},
-		"arcaneArmorKit": {
-			"name": "Arcane Armor Kit",
-			"arcaneResist": 8,
-			"id": 29488,
+		"magistersArmorKit": {
+			"name": "Magister's Armor Kit",
+			"mp5": 3,
+			"id": 32399,
 			"source": "Leatherworking",
 			"phase": 1
 		},
-		"fireArmorKit": {
-			"name": "Fire Armor Kit",
+		"arcaneArmorKit": {
+			"name": "Arcane Armor Kit",
+			"arcaneResist": 8,
+			"id": 35420,
+			"source": "Leatherworking",
+			"phase": 1
+		},
+		"flameArmorKit": {
+			"name": "Flame Armor Kit",
 			"fireResist": 8,
-			"id": 29485,
+			"id": 35416,
 			"source": "Leatherworking",
 			"phase": 1
 		},
 		"shadowArmorKit": {
 			"name": "Shadow Armor Kit",
 			"shadowResist": 8,
-			"id": 29483,
+			"id": 35415,
 			"source": "Leatherworking",
 			"phase": 1
 		},
 		"natureArmorKit": {
 			"name": "Nature Armor Kit",
 			"natureResist": 8,
-			"id": 29487,
+			"id": 35419,
 			"source": "Leatherworking",
 			"phase": 1
 		},
 		"frostArmorKit": {
 			"name": "Frost Armor Kit",
 			"frostResist": 8,
-			"id": 29486,
+			"id": 35418,
 			"source": "Leatherworking",
 			"phase": 1
 		}
@@ -244,38 +262,38 @@ const enchants = {
 			"source": "Enchanting",
 			"phase": 1
 		},
-		"minorHaste": {
-			"name": "Minor Haste",
-			"hasteRating": 10,
-			"id": 13948,
-			"source": "Enchanting",
+		"magistersArmorKit": {
+			"name": "Magister's Armor Kit",
+			"mp5": 3,
+			"id": 32399,
+			"source": "Leatherworking",
 			"phase": 1
 		},
 		"arcaneArmorKit": {
 			"name": "Arcane Armor Kit",
 			"arcaneResist": 8,
-			"id": 29488,
+			"id": 35420,
 			"source": "Leatherworking",
 			"phase": 1
 		},
-		"fireArmorKit": {
-			"name": "Fire Armor Kit",
+		"flameArmorKit": {
+			"name": "Flame Armor Kit",
 			"fireResist": 8,
-			"id": 29485,
+			"id": 35416,
 			"source": "Leatherworking",
 			"phase": 1
 		},
 		"shadowArmorKit": {
 			"name": "Shadow Armor Kit",
 			"shadowResist": 8,
-			"id": 29483,
+			"id": 35415,
 			"source": "Leatherworking",
 			"phase": 1
 		},
 		"natureArmorKit": {
 			"name": "Nature Armor Kit",
 			"natureResist": 8,
-			"id": 29487,
+			"id": 35419,
 			"source": "Leatherworking",
 			"phase": 1
 		},
@@ -292,43 +310,50 @@ const enchants = {
 			"name": "Runic Spellthread",
 			"stamina": 20,
 			"spellPower": 35,
-			"id": 24274,
-			"source": "The Scryers - Exalted",
+			"id": 31372,
+			"source": "Tailoring",
 			"phase": 1
 		},
 		"mysticSpellthread": {
 			"name": "Mystic Spellthread",
 			"stamina": 15,
 			"spellPower": 25,
-			"id": 24273,
-			"source": "The Scryers - Honored",
+			"id": 31371,
+			"source": "Tailoring",
+			"phase": 1
+		},
+		"magistersArmorKit": {
+			"name": "Magister's Armor Kit",
+			"mp5": 3,
+			"id": 32399,
+			"source": "Leatherworking",
 			"phase": 1
 		},
 		"arcaneArmorKit": {
 			"name": "Arcane Armor Kit",
 			"arcaneResist": 8,
-			"id": 29488,
+			"id": 35420,
 			"source": "Leatherworking",
 			"phase": 1
 		},
-		"fireArmorKit": {
-			"name": "Fire Armor Kit",
+		"flameArmorKit": {
+			"name": "Flame Armor Kit",
 			"fireResist": 8,
-			"id": 29485,
+			"id": 35416,
 			"source": "Leatherworking",
 			"phase": 1
 		},
 		"shadowArmorKit": {
 			"name": "Shadow Armor Kit",
 			"shadowResist": 8,
-			"id": 29483,
+			"id": 35415,
 			"source": "Leatherworking",
 			"phase": 1
 		},
 		"natureArmorKit": {
 			"name": "Nature Armor Kit",
 			"natureResist": 8,
-			"id": 29487,
+			"id": 35419,
 			"source": "Leatherworking",
 			"phase": 1
 		},
@@ -341,45 +366,45 @@ const enchants = {
 		}
 	},
 	"boots": {
-		"surefooted": {
-			"name": "Surefooted",
-			"critRating": 10,
-			"id": 27954,
-			"source": "Enchanting",
-			"phase": 1
-		},
 		"fortitude": {
 			"name": "Fortitude",
 			"stamina": 12,
-			"id": 29750,
+			"id": 46490,
 			"source": "Enchanting",
+			"phase": 1
+		},
+		"magistersArmorKit": {
+			"name": "Magister's Armor Kit",
+			"mp5": 3,
+			"id": 32399,
+			"source": "Leatherworking",
 			"phase": 1
 		},
 		"arcaneArmorKit": {
 			"name": "Arcane Armor Kit",
 			"arcaneResist": 8,
-			"id": 29488,
+			"id": 35420,
 			"source": "Leatherworking",
 			"phase": 1
 		},
-		"fireArmorKit": {
-			"name": "Fire Armor Kit",
+		"flameArmorKit": {
+			"name": "Flame Armor Kit",
 			"fireResist": 8,
-			"id": 29485,
+			"id": 35416,
 			"source": "Leatherworking",
 			"phase": 1
 		},
 		"shadowArmorKit": {
 			"name": "Shadow Armor Kit",
 			"shadowResist": 8,
-			"id": 29483,
+			"id": 35415,
 			"source": "Leatherworking",
 			"phase": 1
 		},
 		"natureArmorKit": {
 			"name": "Nature Armor Kit",
 			"natureResist": 8,
-			"id": 29487,
+			"id": 35419,
 			"source": "Leatherworking",
 			"phase": 1
 		},

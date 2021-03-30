@@ -34,7 +34,8 @@ const items = {
 		},
 		"annihilatorHologogs": {
 			"name": "Annihilator Holo-gogs",
-			"stamina": 81,
+			"stamina": 41,
+			"intellect": 37,
 			"critRating": 42,
 			"meta": 1,
 			"blue": 1,
@@ -323,7 +324,7 @@ const items = {
 			"socketBonus": {
 				"stamina": 6
 			},
-			"spellPower": 47,
+			"spellPower": 46,
 			"critRating": 24,
 			"hitRating": 16,
 			"setId": 559,
@@ -405,8 +406,8 @@ const items = {
 			"socketBonus": {
 				"spellPower": 5
 			},
-			"spellPower": 41,
-			"setId": 1, // fix
+			"spellPower": 40,
+			"setId": 644,
 			"id": 28415,
 			"source": "Arcatraz",
 			"phase": 1
@@ -431,7 +432,7 @@ const items = {
 			"socketBonus": {
 				"spellPower": 5
 			},
-			"spellPower": 36,
+			"spellPower": 35,
 			"critRating": 24,
 			"id": 31104,
 			"source": "Shadowmoon Valley Quest",
@@ -497,7 +498,7 @@ const items = {
 			"spellPower": 34,
 			"critRating": 25,
 			"hasteRating": 25,
-			"id": 0,
+			"id": 34359,
 			"source": "Jewelcrafting",
 			"phase": 5
 		},
@@ -666,7 +667,7 @@ const items = {
 			"name": "Hydra-fang Necklace",
 			"stamina": 17,
 			"intellect": 16,
-			"spellPower": 20,
+			"spellPower": 19,
 			"hitRating": 16,
 			"id": 27758,
 			"source": "Heroic Underbog",
@@ -676,10 +677,10 @@ const items = {
 			"name": "Brooch of Heightened Potential",
 			"stamina": 15,
 			"intellect": 14,
-			"spellPower": 23,
+			"spellPower": 22,
 			"critRating": 14,
 			"hitRating": 9,
-			"id": 21625,
+			"id": 28134,
 			"source": "Shadow Labyrinth",
 			"phase": 1,
 		},
@@ -726,7 +727,7 @@ const items = {
 		"natashasEmberNecklace": {
 			"name": "Natasha's Ember Necklace",
 			"intellect": 15,
-			"spellPower": 30,
+			"spellPower": 29,
 			"critRating": 10,
 			"id": 31692,
 			"source": "Blade's Edge Mountains Quest",
@@ -740,16 +741,6 @@ const items = {
 			"id": 29333,
 			"source": "Sethekk Halls Quest",
 			"phase": 1,
-		},
-		"diamondPrismOfRecurrence": {
-			"name": "Diamond Prism of Recurrence",
-			"stamina": 12,
-			"intellect": 18,
-			"spirit": 20,
-			"spellPower": 9,
-			"id": 27440,
-			"source": "Old Hillsbrad Foothills",
-			"phase": 1
 		},
 		"necklaceOfResplendentHope": {
 			"name": "Necklace of Resplendent Hope",
@@ -795,17 +786,6 @@ const items = {
 			"mp5": 8,
 			"id": 28822,
 			"source": "Gruul's Lair",
-			"phase": 1
-		},
-		"heartbloodPrayerBeads": {
-			"name": "Heartblood Prayer Beads",
-			"stamina": 15,
-			"intellect": 15,
-			"spellPower": 11,
-			"mp5": 4,
-			"healingItem": true,
-			"id": 24096,
-			"source": "Hellfire Ramparts",
 			"phase": 1
 		},
 		"amuletOfVeknilash": {
@@ -908,7 +888,7 @@ const items = {
 			"intellect": 26,
 			"spellPower": 44,
 			"hasteRating": 38,
-			"id": 0,
+			"id": 32587,
 			"source": "Tailoring",
 			"phase": 3
 		},
@@ -1032,8 +1012,8 @@ const items = {
 			"socketBonus": {
 				"hitRating": 3
 			},
-			"shadowPower": 51,
-			"setId": 1, // fix
+			"shadowPower": 50,
+			"setId": 553,
 			"id": 21869,
 			"source": "Tailoring",
 			"phase": 1
@@ -1144,6 +1124,7 @@ const items = {
 				"hitRating": 3
 			},
 			"spellPower": 29,
+			"setId": 644,
 			"id": 27778,
 			"source": "Shadow Labyrinth",
 			"phase": 1,
@@ -1162,7 +1143,7 @@ const items = {
 			"name": "Mantle of Three Terrors",
 			"stamina": 29,
 			"intellect": 25,
-			"spellPower": 30,
+			"spellPower": 29,
 			"hitRating": 12,
 			"id": 27994,
 			"source": "Black Morass",
@@ -1280,6 +1261,7 @@ const items = {
 			"phase": 3
 		},
 		"shroudOfTheHighborne": {
+			"name": "Shroud of the Highborne",
 			"stamina": 24,
 			"intellect": 23,
 			"spellPower": 23,
@@ -1331,7 +1313,7 @@ const items = {
 			"name": "Sethekk Oracle Cloak",
 			"stamina": 18,
 			"intellect": 18,
-			"spellPower": 23,
+			"spellPower": 22,
 			"hitRating": 12,
 			"id": 27981,
 			"source": "Sethekk Halls",
@@ -1350,7 +1332,7 @@ const items = {
 		"cloakOfEntropy": {
 			"name": "Cloak of Entropy",
 			"intellect": 11,
-			"spellPower": 26,
+			"spellPower": 25,
 			"hitRating": 10,
 			"id": 31140,
 			"source": "BoE World Drop",
@@ -1369,7 +1351,7 @@ const items = {
 		"cloakOfTheBlackVoid": {
 			"name": "Cloak of the Black Void",
 			"intellect": 11,
-			"spellPower": 36,
+			"spellPower": 35,
 			"id": 24252,
 			"source": "Tailoring",
 			"phase": 1,
@@ -1432,16 +1414,6 @@ const items = {
 			"source": "Heroic Blood Furnace",
 			"phase": 1
 		},
-		"cloakOfHealingRays": {
-			"name": "Cloak of Healing Rays",
-			"stamina": 12,
-			"intellect": 13,
-			"spirit": 15,
-			"spellPower": 11,
-			"id": 24459,
-			"source": "The Underbog",
-			"phase": 1
-		},
 		"cloakOfWhisperingShells": {
 			"name": "Cloak of Whispering Shells",
 			"stamina": 15,
@@ -1484,7 +1456,7 @@ const items = {
 			"spellPower": 71,
 			"critRating": 40,
 			"hasteRating": 40,
-			"id": 0,
+			"id": 34364,
 			"source": "Tailoring",
 			"phase": 5
 		},
@@ -1651,6 +1623,8 @@ const items = {
 			"socketBonus": {
 				"stamina": 6
 			},
+			"spellPower": 42,
+			"hitRating": 13,
 			"setId": 645,
 			"id": 28964,
 			"source": "Magtheridon's Lair",
@@ -1665,7 +1639,8 @@ const items = {
 			"socketBonus": {
 				"hitRating": 3
 			},
-			"shadowPower": 73,
+			"shadowPower": 72,
+			"setId": 553,
 			"id": 21871,
 			"source": "Tailoring",
 			"phase": 1
@@ -1797,7 +1772,7 @@ const items = {
 		"robeOfTheCrimsonOrder": {
 			"name": "Robe of the Crimson Order",
 			"intellect": 23,
-			"spellPower": 51,
+			"spellPower": 50,
 			"hitRating": 30,
 			"id": 31297,
 			"source": "BoE World Drop",
@@ -1849,7 +1824,7 @@ const items = {
 			"socketBonus": {
 				"critRating": 4
 			},
-			"spellPower": 29,
+			"spellPower": 28,
 			"hitRating": 23,
 			"id": 29341,
 			"source": "Auchenai Crypts Quest",
@@ -1866,6 +1841,7 @@ const items = {
 				"stamina": 6
 			},
 			"spellPower": 40,
+			"setId": 644,
 			"id": 28232,
 			"source": "Shadow Labyrinth",
 			"phase": 1
@@ -1972,7 +1948,7 @@ const items = {
 		},
 		"vindicatorsDreadweaveCuffs": {
 			"name": "Vindicator's Dreadweave Cuffs",
-			"stamina": 37,
+			"stamina": 34,
 			"intellect": 20,
 			"spellPower": 29,
 			"yellow": 1,
@@ -2018,7 +1994,7 @@ const items = {
 			"intellect": 20,
 			"spellPower": 34,
 			"hasteRating": 28,
-			"id": 0,
+			"id": 32586,
 			"source": "Tailoring BoE",
 			"phase": 3
 		},
@@ -2095,7 +2071,7 @@ const items = {
 			"name": "Crimson Bracers of Gloom",
 			"stamina": 18,
 			"intellect": 18,
-			"spellPower": 23,
+			"spellPower": 22,
 			"hitRating": 12,
 			"id": 27462,
 			"source": "Heroic Hellfire Ramparts",
@@ -2194,7 +2170,7 @@ const items = {
 			"socketBonus": {
 				"critRating": 2
 			},
-			"spellPower": 31,
+			"spellPower": 30,
 			"id": 24250,
 			"source": "Tailoring",
 			"phase": 1,
@@ -2279,7 +2255,7 @@ const items = {
 			"intellect": 30,
 			"spellPower": 53,
 			"critRating": 37,
-			"id": 0,
+			"id": 34366,
 			"source": "Tailoring BoE",
 			"phase": 5
 		},
@@ -2443,7 +2419,7 @@ const items = {
 			"name": "Gloves of the Deadwatcher",
 			"stamina": 24,
 			"intellect": 24,
-			"spellPower": 30,
+			"spellPower": 29,
 			"hitRating": 18,
 			"id": 27493,
 			"source": "Heroic Auchenai Crypts",
@@ -2521,8 +2497,9 @@ const items = {
 			"name": "Gloves of Oblivion",
 			"stamina": 33,
 			"intellect": 21,
-			"spellPower": 27,
+			"spellPower": 26,
 			"hitRating": 20,
+			"setId": 644,
 			"id": 27537,
 			"source": "Shattered Halls",
 			"phase": 1,
@@ -2536,7 +2513,7 @@ const items = {
 			"socketBonus": {
 				"critRating": 3
 			},
-			"spellPower": 28,
+			"spellPower": 27,
 			"spellPen": 9,
 			"id": 29317,
 			"source": "Caverns of Time Quest",
@@ -2613,7 +2590,7 @@ const items = {
 			"stamina": 25,
 			"intellect": 17,
 			"spellPower": 26,
-			"intellect": 14,
+			"critRating": 14,
 			"setId": 529,
 			"id": 22509,
 			"source": "Naxxramas",
@@ -2712,6 +2689,7 @@ const items = {
 			},
 			"spellPower": 50,
 			"hitRating": 24,
+			"id": 30064,
 			"source": "Serpentshrine Cavern",
 			"phase": 2
 		},
@@ -2792,7 +2770,7 @@ const items = {
 			"socketBonus": {
 				"stamina": 4
 			},
-			"spellPower": 40,
+			"spellPower": 39,
 			"critRating": 20,
 			"id": 24256,
 			"source": "Tailoring",
@@ -2853,7 +2831,7 @@ const items = {
 			"name": "Belt of Depravity",
 			"stamina": 31,
 			"intellect": 27,
-			"spellPower": 35,
+			"spellPower": 34,
 			"hitRating": 17,
 			"id": 29241,
 			"source": "Heroic Arcatraz",
@@ -2877,7 +2855,7 @@ const items = {
 			"socketBonus": {
 				"spellPower": 4
 			},
-			"spellPower": 31,
+			"spellPower": 30,
 			"critRating": 9,
 			"id": 27843,
 			"source": "Heroic Mana-Tombs",
@@ -3119,7 +3097,7 @@ const items = {
 			"socketBonus": {
 				"stamina": 6,
 			},
-			"spellPower": 47,
+			"spellPower": 46,
 			"critRating": 26,
 			"hitRating": 22,
 			"setId": 559,
@@ -3238,7 +3216,7 @@ const items = {
 			"socketBonus": {
 				"spellPower": 5
 			},
-			"spellPower": 37,
+			"spellPower": 36,
 			"critRating": 23,
 			"id": 30531,
 			"source": "Heroic Black Morass",
@@ -3261,6 +3239,7 @@ const items = {
 			"intellect": 33,
 			"spellPower": 39,
 			"hitRating": 12,
+			"setId": 644,
 			"id": 27948,
 			"source": "Sethekk Halls",
 			"phase": 1
@@ -3284,7 +3263,7 @@ const items = {
 			"socketBonus": {
 				"spellPower": 5
 			},
-			"spellPower": 37,
+			"spellPower": 36,
 			"id": 28185,
 			"source": "Black Morass",
 			"phase": 1,
@@ -3545,7 +3524,7 @@ const items = {
 			"spellPower": 39,
 			"hitRating": 18,
 			"critRating": 25,
-			"id": 0,
+			"id": 30037,
 			"source": "Tailoring",
 			"phase": 2
 		},
@@ -3558,7 +3537,8 @@ const items = {
 			"socketBonus": {
 				"hitRating": 3
 			},
-			"shadowPower": 58,
+			"shadowPower": 57,
+			"setId": 553,
 			"id": 21870,
 			"source": "Tailoring",
 			"phase": 1,
@@ -3658,7 +3638,7 @@ const items = {
 			"socketBonus": {
 				"intellect": 3
 			},
-			"spellPower": 30,
+			"spellPower": 29,
 			"id": 28179,
 			"source": "Auchindon Quest",
 			"phase": 1,
@@ -3701,7 +3681,7 @@ const items = {
 			"name": "Extravagant Boots of Malice",
 			"stamina": 27,
 			"intellect": 24,
-			"spellPower": 31,
+			"spellPower": 30,
 			"hitRating": 14,
 			"id": 27821,
 			"source": "Heroic Mana-Tombs",
@@ -3784,7 +3764,7 @@ const items = {
 			"hitRating": 19,
 			"hasteRating": 30,
 			"unique": true,
-			"id": 0,
+			"id": 34362,
 			"source": "Jewelcrafting BoE",
 			"phase": 5
 		},
@@ -4131,7 +4111,7 @@ const items = {
 		"ashyensGift": {
 			"name": "Ashyen's Gift",
 			"stamina": 30,
-			"spellPower": 24,
+			"spellPower": 23,
 			"hitRating": 21,
 			"unique": true,
 			"id": 29172,
@@ -4142,7 +4122,7 @@ const items = {
 			"name": "Sparking Arcanite Ring",
 			"stamina": 13,
 			"intellect": 14,
-			"spellPower": 23,
+			"spellPower": 22,
 			"critRating": 14,
 			"hitRating": 10,
 			"unique": true,
@@ -4424,7 +4404,7 @@ const items = {
 		},
 		"quagmirransEye": {
 			"name": "Quagmirran's Eye",
-			"spellPower": 38,
+			"spellPower": 37,
 			"unique": true,
 			"id": 27683,
 			"source": "Heroic Slave Pens",
@@ -4461,7 +4441,7 @@ const items = {
 		},
 		"oculusOfTheHiddenEye": {
 			"name": "Oculus of the Hidden Eye",
-			"spellPower": 34,
+			"spellPower": 33,
 			"unique": true,
 			"id": 26055,
 			"source": "Auchenai Crypts",
@@ -4469,7 +4449,7 @@ const items = {
 		},
 		"markOfDefiance": {
 			"name": "Mark of Defiance",
-			"spellPower": 33,
+			"spellPower": 32,
 			"unique": true,
 			"id": 27922,
 			"source": "30 Mark of Honor Hold / Thrallmar",
@@ -4519,7 +4499,7 @@ const items = {
 		},
 		"ancientCrystalTalisman": {
 			"name": "Ancient Crystal Talisman",
-			"spellPower": 27,
+			"spellPower": 26,
 			"onUseSpellPower": 105,
 			"duration": 20,
 			"cooldown": 120,
@@ -4711,7 +4691,7 @@ const items = {
 			"name": "Blade of the Archmage",
 			"stamina": 13,
 			"intellect": 11,
-			"spellPower": 160,
+			"spellPower": 159,
 			"critRating": 21,
 			"id": 29153,
 			"source": "Honor Hold/Thrallmar - Exalted",
@@ -4719,7 +4699,7 @@ const items = {
 		},
 		"bladeOfWizardry": {
 			"name": "Blade of Wizardry",
-			"spellPower": 160,
+			"spellPower": 159,
 			"id": 31336,
 			"source": "World Drop",
 			"phase": 1
@@ -4737,7 +4717,7 @@ const items = {
 			"name": "Greatsword of Horrid Dreams",
 			"stamina": 15,
 			"intellect": 14,
-			"spellPower": 131,
+			"spellPower": 130,
 			"hitRating": 14,
 			"id": 27905,
 			"source": "Shadow Labyrinth",
@@ -4900,7 +4880,7 @@ const items = {
 		"orbOfTheSoulEater": {
 			"name": "Orb of the Soul-Eater",
 			"stamina": 18,
-			"shadowPower": 52,
+			"shadowPower": 51,
 			"id": 29272,
 			"source": "25 Badge of Justice - G'eras",
 			"phase": 1,
@@ -4963,7 +4943,7 @@ const items = {
 			"name": "Lamp of Peaceful Radiance",
 			"stamina": 13,
 			"intellect": 14,
-			"spellPower": 22,
+			"spellPower": 21,
 			"critRating": 13,
 			"hitRating": 12,
 			"id": 28412,
@@ -4974,7 +4954,7 @@ const items = {
 			"name": "Star-Heart Lamp",
 			"stamina": 17,
 			"intellect": 18,
-			"spellPower": 23,
+			"spellPower": 22,
 			"hitRating": 12,
 			"id": 28187,
 			"source": "Black Morass",
@@ -5134,7 +5114,7 @@ const items = {
 			"name": "Terokk's Shadowstaff",
 			"stamina": 40,
 			"intellect": 42,
-			"spellPower": 169,
+			"spellPower": 168,
 			"critRating": 37,
 			"id": 29355,
 			"source": "Heroic Sethekk Halls",
@@ -5143,7 +5123,7 @@ const items = {
 		"auchenaiStaff": {
 			"name": "Auchenai Staff",
 			"intellect": 46,
-			"spellPower": 122,
+			"spellPower": 121,
 			"hitRating": 19,
 			"critRating": 26,
 			"id": 29130,
@@ -5153,7 +5133,7 @@ const items = {
 		"staffOfInfiniteMysteries": {
 			"name": "Staff of Infinite Mysteries",
 			"stamina": 61,
-			"intellect": 55,
+			"intellect": 51,
 			"spellPower": 185,
 			"hitRating": 23,
 			"id": 28633,
@@ -5199,36 +5179,6 @@ const items = {
 			"hitRating": 28,
 			"id": 25950,
 			"source": "Mana-Tombs",
-			"phase": 1
-		},
-		"epochMender": {
-			"name": "Epoch-Mender",
-			"stamina": 37,
-			"intellect": 35,
-			"spellPower": 76,
-			"mp5": 12,
-			"id": 28033,
-			"source": "Black Morass",
-			"phase": 1
-		},
-		"serpentcrestLifeStaff": {
-			"name": "Serpentcrest Life-Staff",
-			"stamina": 27,
-			"intellect": 27,
-			"spirit": 46,
-			"spellPower": 76,
-			"id": 27791,
-			"source": "The Steamvaults",
-			"phase": 1
-		},
-		"crystalfireStaff": {
-			"name": "Crystalfire Staff",
-			"stamina": 34,
-			"intellect": 34,
-			"spellPower": 46,
-			"critRating": 16,
-			"id": 24069,
-			"source": "Hellfire Ramparts",
 			"phase": 1
 		},
 		"atieshGreatstaffOfTheGuardian": {
@@ -5313,8 +5263,8 @@ const items = {
 		},
 		"luminescentRodOfTheNaaru": {
 			"name": "Luminescent Rod of the Naaru",
-			"intellect": 13,
-			"spellPower": 11,
+			"intellect": 14,
+			"spellPower": 12,
 			"mp5": 5,
 			"id": 30080,
 			"source": "Serpentshrine Cavern",
@@ -5356,7 +5306,7 @@ const items = {
 			"speed": 1.8,
 			"stamina": 9,
 			"intellect": 10,
-			"spellPower": 14,
+			"spellPower": 13,
 			"hitRating": 8,
 			"id": 28386,
 			"source": "Arcatraz",
@@ -5382,7 +5332,7 @@ const items = {
 			"socketBonus": {
 				"spellPower": 2
 			},
-			"spellPower": 14,
+			"spellPower": 13,
 			"id": 32872,
 			"source": "Shadowmoon Valley Quest",
 			"phase": 1
@@ -5403,7 +5353,7 @@ const items = {
 			"speed": 1.9,
 			"stamina": 9,
 			"intellect": 9,
-			"spellPower": 12,
+			"spellPower": 11,
 			"hitRating": 7,
 			"id": 25939,
 			"source": "Mana-Tombs",

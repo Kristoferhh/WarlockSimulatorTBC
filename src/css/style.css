@@ -491,6 +491,7 @@ img[data-color='meta'] {
 
 #enchant-selection-table {
 	margin-top: 60px;
+	padding-bottom: 100px;
 }
 
 #item-selection-table th:nth-child(1), #enchant-selection-table th:nth-child(1) {
