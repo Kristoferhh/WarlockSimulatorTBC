@@ -127,14 +127,13 @@ class Player {
 		if (settings.auras.moonkinAura) this.stats.critChance += 5;
 		if (settings.auras.judgementOfTheCrusader) this.stats.critChance += 3;
 		if (settings.auras.totemOfWrath) this.stats.critChance += 3;
-		this.stats.critChance = Math.round(this.stats.critChance * this.stats.critChanceMultiplier); // Multiply the crit chance in order to use a whole number for RNG calculations.
 
 		// Hit chance
 		this.stats.hitChanceMultiplier = 1000;
 		if (settings.sets['658'] >= 2) this.stats.hitRating += 35; // Mana-Etched Regalia 2-set bonus (35 hit rating)
 		this.stats.extraHitChance = this.stats.hitRating / hitRatingPerPercent; // hit percent from hit rating
 		if (settings.auras.inspiringPresence === true) this.stats.extraHitChance += 1;
-		this.stats.hitChance = Math.round(this.getHitChance(this.stats.extraHitChance) * this.stats.hitChanceMultiplier); // The player's chance of hitting the enemy, between 61% and 99%
+		this.stats.hitChance = Math.round(this.getHitChance()); // The player's chance of hitting the enemy, between 61% and 99%
 
 		// Add bonus damage % from Demonic Sacrifice
 		if (settings.talents.demonicSacrifice === 1 && settings.simSettings.sacrificePet == 'yes') {
@@ -328,9 +327,9 @@ class Player {
 	isHit(isAfflictionSpell) {
 		let hit;
 		if (isAfflictionSpell) {
-			hit = (random(1,100 * this.stats.hitChanceMultiplier) <= (Math.min(99 * this.stats.hitChanceMultiplier,this.stats.hitChance + this.talents.suppression * 2 * this.stats.hitChanceMultiplier)));
+			hit = (random(1,100 * this.stats.hitChanceMultiplier) <= (Math.min(99 * this.stats.hitChanceMultiplier,(this.stats.hitChance + this.stats.extraHitChance + this.talents.suppression * 2) * this.stats.hitChanceMultiplier)));
 		} else {
-			hit = (random(1,100 * this.stats.hitChanceMultiplier) <= Math.min(99 * this.stats.hitChanceMultiplier,this.stats.hitChance));
+			hit = (random(1,100 * this.stats.hitChanceMultiplier) <= Math.min(99 * this.stats.hitChanceMultiplier,(this.stats.hitChance + this.stats.extraHitChance) * this.stats.hitChanceMultiplier));
 		}
 
 		// Eye of Magtheridon
@@ -342,19 +341,19 @@ class Player {
 	}
 
 	isCrit(extraCrit = 0) {
-		return (random(1,(100 * this.stats.critChanceMultiplier)) <= (this.stats.critChance + extraCrit * this.stats.critChanceMultiplier));
+		return (random(1,(100 * this.stats.critChanceMultiplier)) <= ((this.stats.critChance + extraCrit) * this.stats.critChanceMultiplier));
 	}
 
 	// formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/
-	getHitChance(extraHitChance) {
+	getHitChance() {
 		if ((parseInt(this.enemy.level) - this.level) <= 2) {
-			return Math.min(99, 100 - (parseInt(this.enemy.level) - this.level) - 4 + extraHitChance);
+			return Math.min(99, 100 - (parseInt(this.enemy.level) - this.level) - 4);
 		} else if ((parseInt(this.enemy.level) - this.level) == 3) { // target 3 levels above
-			return Math.min(99, 83 + extraHitChance);
+			return Math.min(99, 83);
 		} else if ((parseInt(this.enemy.level) - this.level) == 4) { // target 4 levels above
-			return Math.min(99, 72 + extraHitChance);
+			return Math.min(99, 72);
 		} else { // target 5+ levels above
-			return Math.min(99, 61 + extraHitChance);
+			return Math.min(99, 61);
 		}
 	}
 
