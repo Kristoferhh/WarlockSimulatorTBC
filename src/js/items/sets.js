@@ -34,6 +34,11 @@ const sets = {
 		"name": "Mana-Etched Regalia",
 		"bonuses": [2,4]
 	},
+	// The Twin Stars
+	"667": {
+		"name": "The Twin Stars",
+		"bonuses": [2]
+	},
 	// T6
 	"670": {
 		"name": "Malefic Raiment",

@@ -141,7 +141,8 @@ function refreshCharacterStats() {
 	}
 
 	// Spell Power
-	let spellPower = characterStats.spellPower;
+	let spellPower = JSON.parse(JSON.stringify(characterStats.spellPower));
+	if (JSON.parse(localStorage.setBonuses)['667'] == 2) spellPower += 15; // The Twin Stars 2-set bonus (15 spellpower)
 	if (auras.felArmor) spellPower += 100 * (1 + 0.1 * talents.demonicAegis);
 	if (auras.prayerOfSpirit) spellPower += (characterStats.spirit * spiritModifier * (0.1 * $("select[name='improvedDivineSpirit']").val())); 
 	spellPower = Math.round(spellPower);

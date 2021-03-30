@@ -718,6 +718,7 @@ const items = {
 			"intellect": 19,
 			"spirit": 14,
 			"spellPower": 23,
+			"setId": 667,
 			"id": 31338,
 			"source": "World Drop",
 			"phase": 1
@@ -4122,6 +4123,7 @@ const items = {
 			"intellect": 14,
 			"spirit": 13,
 			"spellPower": 29,
+			"setId": 667,
 			"id": 31339,
 			"source": "World Drop",
 			"phase": 1

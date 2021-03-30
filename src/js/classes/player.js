@@ -118,6 +118,9 @@ class Player {
 		this.stats.shadowModifier *= (1 + (0.02 * settings.talents.shadowMastery));
 		this.spellTravelTime = 1;
 
+		// The Twin Stars 2-set bonus
+		if (this.sets['667'] == 2) this.stats.spellPower += 15;
+
 		// Crit chance
 		this.stats.critChanceMultiplier = 1000;
 		this.stats.critChance = baseCritChancePercent + ((this.stats.critRating + ((this.stats.intellect * this.stats.intellectModifier) * critPerInt)) / critRatingPerPercent) + settings.talents.devastation + settings.talents.backlash + settings.talents.demonicTactics;
