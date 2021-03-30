@@ -29,6 +29,10 @@ class DamageOverTime {
 		this.active = true;
 		this.tickTimerRemaining = this.tickTimerTotal;
 		this.ticksRemaining = this.ticksTotal;
+		// Spellfire 3-set bonus
+		if (this.player.sets['552'] >= 3) {
+			spellPower += (this.player.stats.intellect * this.player.stats.intellectModifier * 0.07);
+		}
 		this.spellPower = spellPower;
 	}
 
