@@ -344,16 +344,15 @@ class Player {
 		return (random(1,(100 * this.stats.critChanceMultiplier)) <= ((this.stats.critChance + extraCrit) * this.stats.critChanceMultiplier));
 	}
 
-	// formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/
+	// formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/ && https://royalgiraffe.github.io/resist-guide
 	getHitChance() {
-		if ((parseInt(this.enemy.level) - this.level) <= 2) {
-			return Math.min(99, 100 - (parseInt(this.enemy.level) - this.level) - 4);
-		} else if ((parseInt(this.enemy.level) - this.level) == 3) { // target 3 levels above
-			return Math.min(99, 83);
-		} else if ((parseInt(this.enemy.level) - this.level) == 4) { // target 4 levels above
-			return Math.min(99, 72);
-		} else { // target 5+ levels above
-			return Math.min(99, 61);
+		let levelDifference = parseInt(this.enemy.level) - this.level;
+		if (levelDifference <= 2) {
+			return Math.min(99, 100 - levelDifference - 4);
+		} else if (levelDifference == 3) { // target 3 levels above
+			return 83;
+		} else if (levelDifference >= 4) { // target 4 or more levels above
+			return 83 - 11 * levelDifference;
 		}
 	}
 
