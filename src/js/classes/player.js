@@ -261,7 +261,7 @@ class Player {
 			this.combatlog.push("Mana: " + Math.round(this.pet.stats.maxMana));
 			this.combatlog.push("MP5: " + Math.round(this.pet.stats.mp5));
 			this.combatlog.push("Hit Chance: " + this.pet.stats.hitChance + "%");
-			this.combatlog.push("Crit Chance: " + this.pet.stats.critChance + "%");
+			this.combatlog.push("Crit Chance: " + Math.round(this.pet.stats.critChance) + "%");
 			this.combatlog.push("Spell Hit Chance: " + this.pet.stats.spellHitChance + "%");
 			this.combatlog.push("Spell Crit Chance: " + this.pet.stats.spellCritChance + "%");
 			this.combatlog.push("Damage Modifier: " + Math.round(this.pet.stats.damageModifier * 100) + "%");
