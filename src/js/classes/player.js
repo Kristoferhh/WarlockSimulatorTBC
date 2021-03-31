@@ -21,7 +21,6 @@ class Player {
 	}
 
 	constructor(settings, customItemSlot = null, customItemSubSlot = "", customItemID = null) {
-		console.clear();
 		this.stats = JSON.parse(JSON.stringify(settings.stats)); // Create a deep-copy of the character's stats since we need to modify the values.
 		this.stats.manaCostModifier = 1;
 		this.enemy = settings.enemy;
@@ -235,38 +234,39 @@ class Player {
 			}
 		}
 
-		console.log("Health: " + Math.round(this.stats.health));
-		console.log("Mana: " + Math.round(this.stats.maxMana));
-		console.log("Stamina: " + Math.round(this.stats.stamina * this.stats.staminaModifier));
-		console.log("Intellect: " + Math.round(this.stats.intellect * this.stats.intellectModifier));
-		console.log("Spell Power: " + Math.round(this.stats.spellPower) + " + " + Math.round(this.demonicKnowledgeSp) + " from Demonic Knowledge");
-		console.log("Shadow Power: " + this.stats.shadowPower);
-		console.log("Fire Power: " + this.stats.firePower);
-		console.log("Crit Chance: " + Math.round((this.stats.critChance / this.stats.critChanceMultiplier) * 100) / 100 + "%");
-		console.log("Hit Chance: " + Math.round((this.stats.extraHitChance) * 100) / 100 + "%");
-		console.log("Haste: " + Math.round((this.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + "%");
-		console.log("Shadow Modifier: " + Math.round(this.stats.shadowModifier * 100) + "%");
-		console.log("Fire Modifier: " + Math.round(this.stats.fireModifier * 100) + "%");
-		console.log("MP5: " + this.stats.mp5);
-		console.log("Spell Penetration: " + this.stats.spellPen);
+		this.combatlog.push('---------------- Player stats ----------------');
+		this.combatlog.push("Health: " + Math.round(this.stats.health));
+		this.combatlog.push("Mana: " + Math.round(this.stats.maxMana));
+		this.combatlog.push("Stamina: " + Math.round(this.stats.stamina * this.stats.staminaModifier));
+		this.combatlog.push("Intellect: " + Math.round(this.stats.intellect * this.stats.intellectModifier));
+		this.combatlog.push("Spell Power: " + Math.round(this.stats.spellPower) + " + " + Math.round(this.demonicKnowledgeSp) + " from Demonic Knowledge");
+		this.combatlog.push("Shadow Power: " + this.stats.shadowPower);
+		this.combatlog.push("Fire Power: " + this.stats.firePower);
+		this.combatlog.push("Crit Chance: " + Math.round(this.stats.critChance * 100) / 100 + "%");
+		this.combatlog.push("Hit Chance: " + Math.round((this.stats.extraHitChance) * 100) / 100 + "%");
+		this.combatlog.push("Haste: " + Math.round((this.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + "%");
+		this.combatlog.push("Shadow Modifier: " + Math.round(this.stats.shadowModifier * 100) + "%");
+		this.combatlog.push("Fire Modifier: " + Math.round(this.stats.fireModifier * 100) + "%");
+		this.combatlog.push("MP5: " + this.stats.mp5);
+		this.combatlog.push("Spell Penetration: " + this.stats.spellPen);
 		if (this.pet) {
-			console.log('---------------- Pet ----------------');
-			console.log("Stamina: " + Math.round(this.pet.stats.stamina * this.pet.stats.staminaModifier));
-			console.log("Intellect: " + Math.round(this.pet.stats.intellect * this.pet.stats.intellectModifier));
-			console.log("Strength: " + Math.round(this.pet.stats.strength * this.pet.stats.strengthModifier));
-			console.log("Agility: " + Math.round(this.pet.stats.agility * this.pet.stats.agilityModifier));
-			console.log("Spirit: " + Math.round(this.pet.stats.spirit * this.pet.stats.spiritModifier));
-			console.log("Attack Power: " + Math.round(this.pet.stats.ap * this.pet.stats.apModifier));
-			console.log("Spell Power: " + Math.round(this.pet.stats.spellPower));
-			console.log("Mana: " + Math.round(this.pet.stats.maxMana));
-			console.log("MP5: " + Math.round(this.pet.stats.mp5));
-			console.log("Hit Chance: " + this.pet.stats.hitChance + "%");
-			console.log("Crit Chance: " + this.pet.stats.critChance + "%");
-			console.log("Spell Hit Chance: " + this.pet.stats.spellHitChance + "%");
-			console.log("Spell Crit Chance: " + this.pet.stats.spellCritChance + "%");
-			console.log("Damage Modifier: " + Math.round(this.pet.stats.damageModifier * 100) + "%");
-			if (this.pet.spells.lashOfPain) console.log("Lash of Pain modifier: " + Math.round(this.pet.spells.lashOfPain.modifier * 100) + "% (in addition to the normal pet damage % modifier)");
-			if (this.pet.type == PetType.MELEE) console.log("Enemy Armor: " + Math.round(this.enemy.armor) + " = " + Math.round((1 - this.pet.armorMultiplier) * 100) + "% physical damage reduction");
+			this.combatlog.push('---------------- Pet stats ----------------');
+			this.combatlog.push("Stamina: " + Math.round(this.pet.stats.stamina * this.pet.stats.staminaModifier));
+			this.combatlog.push("Intellect: " + Math.round(this.pet.stats.intellect * this.pet.stats.intellectModifier));
+			this.combatlog.push("Strength: " + Math.round((this.pet.stats.baseStats.strength + this.pet.stats.buffs.strength) * this.pet.stats.strengthModifier));
+			this.combatlog.push("Agility: " + Math.round(this.pet.stats.agility * this.pet.stats.agilityModifier));
+			this.combatlog.push("Spirit: " + Math.round(this.pet.stats.spirit * this.pet.stats.spiritModifier));
+			this.combatlog.push("Attack Power: " + Math.round(this.pet.stats.ap * this.pet.stats.apModifier));
+			this.combatlog.push("Spell Power: " + Math.round(this.pet.stats.spellPower));
+			this.combatlog.push("Mana: " + Math.round(this.pet.stats.maxMana));
+			this.combatlog.push("MP5: " + Math.round(this.pet.stats.mp5));
+			this.combatlog.push("Hit Chance: " + this.pet.stats.hitChance + "%");
+			this.combatlog.push("Crit Chance: " + this.pet.stats.critChance + "%");
+			this.combatlog.push("Spell Hit Chance: " + this.pet.stats.spellHitChance + "%");
+			this.combatlog.push("Spell Crit Chance: " + this.pet.stats.spellCritChance + "%");
+			this.combatlog.push("Damage Modifier: " + Math.round(this.pet.stats.damageModifier * 100) + "%");
+			if (this.pet.spells.lashOfPain) this.combatlog.push("Lash of Pain modifier: " + Math.round(this.pet.spells.lashOfPain.modifier * 100) + "% (in addition to the normal pet damage % modifier)");
+			if (this.pet.type == PetType.MELEE) this.combatlog.push("Enemy Armor: " + Math.round(this.enemy.armor) + " = " + Math.round((1 - this.pet.armorMultiplier) * 100) + "% physical damage reduction");
 		}
 	}
 

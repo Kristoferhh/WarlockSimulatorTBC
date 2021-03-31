@@ -137,8 +137,8 @@ class Simulation {
 				this.player.combatLog("Player gains " + Math.round(this.player.stats.mp5) + " mana from MP5. Player mana: " + Math.round(this.player.mana) + "/" + Math.round(this.player.stats.maxMana));
 			}
 			if (this.player.pet && this.player.pet.stats.mp5 > 0) {
-				this.player.pet.stats.currentMana = Math.min(this.player.pet.stats.maxMana, this.player.pet.stats.currentMana + this.player.pet.stats.mp5);
-				this.player.combatLog(this.player.pet.name + " gains " + this.player.pet.stats.mp5 + " mana from MP5. Pet mana: " + Math.round(this.player.pet.stats.currentMana) + "/" + Math.round(this.player.pet.stats.maxMana));
+				this.player.pet.stats.mana = Math.min(this.player.pet.stats.maxMana, this.player.pet.stats.mana + this.player.pet.stats.mp5);
+				this.player.combatLog(this.player.pet.name + " gains " + this.player.pet.stats.mp5 + " mana from MP5. Pet mana: " + Math.round(this.player.pet.stats.mana) + "/" + Math.round(this.player.pet.stats.maxMana));
 			}
 		}
 
@@ -166,8 +166,8 @@ class Simulation {
 			if (this.player.spells.shadowburn) this.player.spells.shadowburn.reset();
 			if (this.player.spells.deathCoil) this.player.spells.deathCoil.reset();
 			if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.reset();
-			if (this.player.pet) this.player.pet.reset();
 			this.player.reset(); // Resets mana, global cooldown etc.
+			if (this.player.pet) this.player.pet.reset();
 
 			this.player.iterationDamage = 0;
 			this.player.fightTime = 0;

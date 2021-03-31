@@ -16,7 +16,7 @@ class PetSpell {
 	}
 
 	ready() {
-		return this.cooldownRemaining <= 0 && this.pet.stats.currentMana >= this.manaCost;
+		return this.cooldownRemaining <= 0 && this.pet.stats.mana >= this.manaCost;
 	}
 
 	tick(t) {
@@ -43,8 +43,8 @@ class PetSpell {
 		if (this.castTime > 0) combatLogEntry += " finished casting " + this.name;
 		else combatLogEntry += " casts " + this.name;
 		if (this.manaCost > 0) {
-			this.pet.stats.currentMana = Math.max(0, this.pet.stats.currentMana - this.manaCost);
-			combatLogEntry += ". Pet mana: " + Math.round(this.pet.stats.currentMana) + "/" + Math.round(this.pet.stats.maxMana);
+			this.pet.stats.mana = Math.max(0, this.pet.stats.mana - this.manaCost);
+			combatLogEntry += ". Pet mana: " + Math.round(this.pet.stats.mana) + "/" + Math.round(this.pet.stats.maxMana);
 		}
 		this.pet.player.combatLog(combatLogEntry);
 		this.pet.player.damageBreakdown[this.varName].casts = this.pet.player.damageBreakdown[this.varName].casts + 1 || 1;

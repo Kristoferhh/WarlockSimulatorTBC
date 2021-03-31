@@ -29,6 +29,14 @@ class Pet {
 		this.spells = {};
 		this.auras = {};
 		this.stats = {
+			// stamina, intellect, spellpower, attack power, and strength from buffs goes in here so we can re-calculate the pet's stats in calculateStatsFromPlayer().
+			"buffs": {
+				"stamina": 0,
+				"intellect": 0,
+				"strength": 0,
+				"spellPower": 0,
+				"ap": 0
+			},
 			"mp5": 0,
 			"ap": 0,
 			"strength": 0,
@@ -89,15 +97,15 @@ class Pet {
 		}
 		if (this.playerAuras.blessingOfWisdom) this.stats.mp5 += 41;
 		if (this.playerAuras.manaSpringTotem) this.stats.mp5 += 50;
-		if (this.playerAuras.wrathOfAirTotem) this.stats.spellPower += 101;
+		if (this.playerAuras.wrathOfAirTotem) this.stats.buffs.spellPower += 101;
 		if (this.playerAuras.totemOfWrath) this.stats.spellCritChance += 3 * parseInt(this.simSettings.totemOfWrathAmount);
 		// todo implement improved motw
 		if (this.playerAuras.markOfTheWild) {
-			this.stats.stamina += 14;
-			this.stats.intellect += 14;
+			this.stats.buffsstamina += 14;
+			this.stats.buffs.intellect += 14;
 			this.stats.spirit += 14;
 		}
-		if (this.playerAuras.arcaneIntellect) this.stats.intellect += 40;
+		if (this.playerAuras.arcaneIntellect) this.stats.buffs.intellect += 40;
 		if (this.playerAuras.prayerOfSpirit) {
 			let multiplier = parseInt(this.simSettings.improvedDivineSpirit);
 			this.stats.spirit += 50 * (1 + (0.1 * multiplier));
@@ -121,18 +129,18 @@ class Pet {
 			this.player.enemy.armor = Math.max(0, this.player.enemy.armor - 2600);
 		}
 		if (this.playerAuras.curseOfRecklessness) this.player.enemy.armor = Math.max(0, this.player.enemy.armor - 800);
-		if (this.playerAuras.exposeWeakness) this.stats.ap += (this.simSettings.survivalHunterAgility * 0.25 * (this.simSettings.exposeWeaknessUptime / 100)) || 0;
+		if (this.playerAuras.exposeWeakness) this.stats.buffs.ap += (this.simSettings.survivalHunterAgility * 0.25 * (this.simSettings.exposeWeaknessUptime / 100)) || 0;
 		if (this.playerAuras.heroicPresence) this.stats.hitChance++;
-		if (this.playerAuras.blessingOfMight) this.stats.ap += 220;
-		if (this.playerAuras.strengthOfEarthTotem) this.stats.strength += 86; // need to find out how much AP demons get from Strength
+		if (this.playerAuras.blessingOfMight) this.stats.buffs.ap += 220;
+		if (this.playerAuras.strengthOfEarthTotem) this.stats.buffs.strength += 86; // need to find out how much AP demons get from Strength
 		if (this.playerAuras.graceOfAirTotem) this.stats.agility += 67;
-		if (this.playerAuras.battleShout) this.stats.ap += 306;
-		if (this.playerAuras.trueshotAura) this.stats.ap += 300;
+		if (this.playerAuras.battleShout) this.stats.buffs.ap += 306;
+		if (this.playerAuras.trueshotAura) this.stats.buffs.ap += 300;
 		if (this.playerAuras.leaderOfThePack) this.stats.critChance += 5;
 		if (this.playerAuras.unleashedRage) this.stats.apModifier *= 1.1;
-		if (this.playerAuras.scrollOfStaminaV) this.stats.stamina += 20;
-		if (this.playerAuras.scrollOfIntellectV) this.stats.intellect += 20;
-		if (this.playerAuras.scrollOfStrengthV) this.stats.strength += 20;
+		if (this.playerAuras.scrollOfStaminaV) this.stats.buffs.stamina += 20;
+		if (this.playerAuras.scrollOfIntellectV) this.stats.buffs.intellect += 20;
+		if (this.playerAuras.scrollOfStrengthV) this.stats.buffs.strength += 20;
 		if (this.playerAuras.scrollOfAgilityV) this.stats.agility += 20;
 		if (this.playerAuras.scrollOfSpiritV) this.stats.spirit += 20;
 
@@ -150,13 +158,18 @@ class Pet {
 		}
 	}
 
-	calculateStatsFromPlayer() {
-		this.stats.stamina += 0.3 * (this.player.stats.stamina * this.player.stats.staminaModifier);
-		this.stats.intellect += 0.3 * (this.player.stats.intellect * this.player.stats.intellectModifier);
-		this.player.demonicKnowledgeSp = ((this.stats.stamina * this.stats.staminaModifier) + (this.stats.intellect * this.stats.intellectModifier)) * (0.04 * this.player.talents.demonicKnowledge);
-		this.stats.ap = this.stats.ap + (this.player.stats.spellPower + Math.max(this.player.stats.shadowPower,this.player.stats.firePower)) * 0.57;
-		this.stats.spellPower = (this.player.stats.spellPower + this.player.demonicKnowledgeSp + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15;
-		this.stats.maxMana = this.stats.mana + this.stats.intellect * 4.7 * this.stats.intellectModifier; // confirm
+	// Player -> Pet stat scaling info taken from https://wowwiki-archive.fandom.com/wiki/Warlock?oldid=1618728
+	calculateStatsFromPlayer(stat = "stamina") {
+		if (stat == "stamina" || stat == "intellect" || stat == "spellPower" || stat == "shadowPower" || stat == "firePower") {
+			this.stats.stamina = this.stats.baseStats.stamina + this.stats.buffs.stamina + 0.3 * (this.player.stats.stamina * this.player.stats.staminaModifier);
+			this.stats.intellect = this.stats.baseStats.intellect + this.stats.buffs.intellect + 0.3 * (this.player.stats.intellect * this.player.stats.intellectModifier);
+			this.player.demonicKnowledgeSp = ((this.stats.stamina * this.stats.staminaModifier) + (this.stats.intellect * this.stats.intellectModifier)) * (0.04 * this.player.talents.demonicKnowledge);
+			// Need confirmation that 1 strength = 1.869 ap
+			this.stats.ap = this.stats.buffs.ap + (this.stats.baseStats.strength + this.stats.buffs.strength) * 1.869 + (this.player.stats.spellPower + this.player.demonicKnowledgeSp + Math.max(this.player.stats.shadowPower,this.player.stats.firePower)) * 0.57;
+			this.stats.spellPower = this.stats.buffs.spellPower + (this.player.stats.spellPower + this.player.demonicKnowledgeSp + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15;
+			this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * 4.7 * this.stats.intellectModifier; // confirm
+			this.player.combatLog("Calculated pet's stats from player's current stats");
+		}
 	}
 
 	setup() {
@@ -169,12 +182,13 @@ class Pet {
 	}
 
 	reset() {
-		this.stats.currentMana = this.stats.maxMana;
+		this.stats.mana = this.stats.maxMana;
 		this.fiveSecondRuleTimerRemaining = 5; // If higher than 0 then the pet can't gain mana from Spirit regen
 		this.spiritTickTimerRemaining = 2; // Unsure what the initial value should be since the Felguard isnt supposed to gain a Spirit regen tick between every Cleave (confirm)
 		if (this.type == PetType.MELEE) {
 			this.spells.melee.cooldownRemaining = 0;
 		}
+		this.calculateStatsFromPlayer();
 	}
 
 	tick(t) {
@@ -191,8 +205,8 @@ class Pet {
 			if (this.fiveSecondRuleTimerRemaining <= 0) {
 				// Fromula from https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1601392
 				let manaGain = (5 * Math.sqrt(this.stats.intellect * this.stats.intellectModifier) * (this.stats.spirit * this.stats.spiritModifier) * 0.009327) / 2.5; // Divide by 2.5 since it calculates mana per five seconds but the tick is every 2 seconds
-				this.stats.currentMana = Math.min(this.stats.maxMana, this.stats.currentMana + manaGain);
-				this.player.combatLog(this.name + " gains " + Math.round(manaGain) + " mana from Spirit regeneration. Pet mana: " + Math.round(this.stats.currentMana) + "/" + Math.round(this.stats.maxMana));
+				this.stats.mana = Math.min(this.stats.maxMana, this.stats.mana + manaGain);
+				this.player.combatLog(this.name + " gains " + Math.round(manaGain) + " mana from Spirit regeneration. Pet mana: " + Math.round(this.stats.mana) + "/" + Math.round(this.stats.maxMana));
 			}
 		}
 	}
@@ -203,9 +217,12 @@ class Imp extends Pet {
 		super(player, settings);
 		this.name = "Imp";
 		this.type = PetType.RANGED;
-		this.stats.stamina = 114;
-		this.stats.intellect = 327;
-		this.stats.mana = 849;
+		this.stats.baseStats = {
+			"stamina": 114,
+			"intellect": 327,
+			"strength": 0,
+			"mana": 849
+		};
 		this.pet = PetName.IMP;
 		this.setup();
 	}
@@ -226,10 +243,13 @@ class Succubus extends Pet {
 		this.name = "Succubus";
 		this.pet = PetName.SUCCUBUS;
 		this.type = PetType.MELEE;
-		this.stats.stamina = 114;
-		this.stats.intellect = 133;
-		this.stats.mana = 1109;
-		this.stats.ap = 286;
+		this.stats.baseStats = {
+			"stamina": 114,
+			"intellect": 133,
+			"mana": 1109,
+			"spirit": 122,
+			"strength": 153,
+		};
 		this.dmg = 105;
 		this.healthPerStamina = 7;
 		this.stats.damageModifier *= 1 + (0.02 * player.talents.masterDemonologist);
@@ -267,11 +287,13 @@ class Felguard extends Pet {
 		this.name = "Felguard";
 		this.type = PetType.MELEE;
 		this.pet = PetName.FELGUARD;
-		this.stats.stamina = 322;
-		this.stats.ap = 286;
-		this.stats.intellect = 152;
-		this.stats.spirit = 122; // confirm
-		this.stats.mana = 849;
+		this.stats.baseStats = {
+			"stamina": 322,
+			"strength": 153,
+			"intellect": 152,
+			"spirit": 122,  // confirm
+			"mana": 849
+		};
 		this.dmg = 206; // base melee damage
 		this.stats.damageModifier *= 1 + (0.01 * player.talents.masterDemonologist);
 		this.player.damageBreakdown.melee = {"name": "Melee (Felguard)"};

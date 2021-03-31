@@ -120,6 +120,7 @@ class ShadowFlameShadow extends Aura {
 	apply() {
 		if (!this.active) {
 			this.player.stats.shadowPower += 135;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 			super.apply();
 		}
 	}
@@ -127,6 +128,7 @@ class ShadowFlameShadow extends Aura {
 	fade(endOfIteration = false) {
 		if (this.active) {
 			this.player.stats.shadowPower -= 135;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 
 		super.fade(endOfIteration);
@@ -144,6 +146,7 @@ class ShadowFlameFire extends Aura {
 	apply() {
 		if (!this.active) {
 			this.player.stats.firePower += 135;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 			super.apply();
 		}
 	}
@@ -151,6 +154,7 @@ class ShadowFlameFire extends Aura {
 	fade(endOfIteration = false) {
 		if (this.active) {
 			this.player.stats.firePower -= 135;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.fade(endOfIteration);
 	}
@@ -166,6 +170,7 @@ class SpellstrikeProc extends Aura {
 	apply() {
 		if (!this.active) {
 			this.player.stats.spellPower += 92;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 			super.apply();
 		}
 	}
@@ -173,6 +178,7 @@ class SpellstrikeProc extends Aura {
 	fade(endOfIteration = false) {
 		if (this.active) {
 			this.player.stats.spellPower -= 92;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.fade(endOfIteration);
 	}
@@ -230,6 +236,7 @@ class EyeOfMagtheridon extends Aura {
 	apply() {
 		if (!this.active) {
 			this.player.stats.spellPower += 170;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.apply();
 	}
@@ -237,6 +244,7 @@ class EyeOfMagtheridon extends Aura {
 	fade(endOfIteration = false) {
 		if (this.active) {
 			this.player.stats.spellPower -= 170;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.fade(endOfIteration);
 	}
@@ -255,6 +263,7 @@ class SextantOfUnstableCurrents extends Aura {
 	apply() {
 		if (!this.active && this.hiddenCooldownRemaining == 0) {
 			this.player.stats.spellPower += 190;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 			this.hiddenCooldownRemaining = this.hiddenCooldown;
 			super.apply();
 		}
@@ -263,6 +272,7 @@ class SextantOfUnstableCurrents extends Aura {
 	fade(endOfIteration = false) {
 		if (this.active) {
 			this.player.stats.spellPower -= 190;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.fade(endOfIteration);
 	}
@@ -317,6 +327,7 @@ class ShiffarsNexusHorn extends Aura {
 	apply() {
 		if (!this.active) {
 			this.player.stats.spellPower += 225;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 			this.hiddenCooldownRemaining = this.hiddenCooldown;
 			super.apply();
 		}
@@ -325,6 +336,7 @@ class ShiffarsNexusHorn extends Aura {
 	fade(endOfIteration = false) {
 		if (this.active) {
 			this.player.stats.spellPower -= 225;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.fade(endOfIteration);
 	}
@@ -346,6 +358,7 @@ class ManaEtched4Set extends Aura {
 	apply() {
 		if (!this.active) {
 			this.player.stats.spellPower += 110;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.apply();
 	}
@@ -353,6 +366,7 @@ class ManaEtched4Set extends Aura {
 	fade(endOfIteration = false) {
 		if (this.active) {
 			this.player.stats.spellPower -= 110;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.fade(endOfIteration);
 	}

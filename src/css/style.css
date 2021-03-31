@@ -414,6 +414,10 @@ img[data-color='meta'] {
 	border: 1px solid white;
 }
 
+#profile-fieldset {
+	min-width: 275px;
+}
+
 #profiles-and-sources {
 	display: flex;
 	align-items: center;
