@@ -80,7 +80,11 @@ class PetSpell {
 		if (this.varName == "lashOfPain" && this.pet.player.auras.improvedShadowBolt && this.pet.player.auras.improvedShadowBolt.active) {
 			dmg *= this.pet.player.auras.improvedShadowBolt.modifier;
 			this.pet.player.auras.improvedShadowBolt.decrementStacks();
-		} 
+		}
+		// Add damage from Blood Frenzy debuff
+		if (this.pet.playerAuras.bloodFrenzy) {
+			dmg *= 1.04;
+		}
 		// Armor damage reduction if physical
 		if (this.type == SpellTypes.PHYSICAL) {
 			dmg *= this.pet.armorMultiplier;
