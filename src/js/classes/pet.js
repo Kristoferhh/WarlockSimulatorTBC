@@ -165,7 +165,7 @@ class Pet {
 			this.stats.intellect = this.stats.baseStats.intellect + this.stats.buffs.intellect + 0.3 * (this.player.stats.intellect * this.player.stats.intellectModifier);
 			this.player.demonicKnowledgeSp = ((this.stats.stamina * this.stats.staminaModifier) + (this.stats.intellect * this.stats.intellectModifier)) * (0.04 * this.player.talents.demonicKnowledge);
 			// Need confirmation that 1 strength = 1.869 ap
-			this.stats.ap = this.stats.buffs.ap + (this.stats.baseStats.strength + this.stats.buffs.strength) * 1.869 + (this.player.stats.spellPower + this.player.demonicKnowledgeSp + Math.max(this.player.stats.shadowPower,this.player.stats.firePower)) * 0.57;
+			this.stats.ap = this.stats.baseStats.ap + this.stats.buffs.ap + (this.stats.baseStats.strength + this.stats.buffs.strength) * 1.869 + (this.player.stats.spellPower + this.player.demonicKnowledgeSp + Math.max(this.player.stats.shadowPower,this.player.stats.firePower)) * 0.57;
 			this.stats.spellPower = this.stats.buffs.spellPower + (this.player.stats.spellPower + this.player.demonicKnowledgeSp + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15;
 			this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * 4.7 * this.stats.intellectModifier; // confirm
 			this.player.combatLog("Calculated pet's stats from player's current stats");
@@ -221,7 +221,8 @@ class Imp extends Pet {
 			"stamina": 114,
 			"intellect": 327,
 			"strength": 0,
-			"mana": 849
+			"mana": 849,
+			"ap": 0
 		};
 		this.pet = PetName.IMP;
 		this.setup();
@@ -249,6 +250,7 @@ class Succubus extends Pet {
 			"mana": 1109,
 			"spirit": 122,
 			"strength": 153,
+			"ap": 104.5 // needs confirmation
 		};
 		this.dmg = 105;
 		this.healthPerStamina = 7;
@@ -292,7 +294,8 @@ class Felguard extends Pet {
 			"strength": 153,
 			"intellect": 152,
 			"spirit": 122,  // confirm
-			"mana": 849
+			"mana": 849,
+			"ap": 104.5 // needs confirmation
 		};
 		this.dmg = 206; // base melee damage
 		this.stats.damageModifier *= 1 + (0.01 * player.talents.masterDemonologist);
