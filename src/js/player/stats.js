@@ -38,7 +38,7 @@ var characterStats = {
 	"arcaneResist": 0
 }
 
-var raceStats = {
+const raceStats = {
 	"gnome": {
 		"stamina": 75,
 		"intellect": 136,

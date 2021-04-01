@@ -15,6 +15,7 @@ var savedItemDps = localStorage['savedItemDps'] ? JSON.parse(localStorage['saved
 var settings = localStorage.settings ? JSON.parse(localStorage.settings) : {};
 var sources = localStorage.sources ? JSON.parse(localStorage.sources) : {"phase": {"1": true}};
 var profiles = localStorage.profiles ? JSON.parse(localStorage.profiles) : {};
+var gemPreferences = localStorage.gemPreferences ? JSON.parse(localStorage.gemPreferences) : {"hidden": [], "favorites": []};
 
 // Buffs, debuffs, consumables, and pet buffs
 for (let auraType in _auras) {
@@ -199,7 +200,7 @@ $("#show-combat-log").click(function() {
 // When the user clicks anywhere on the webpage
 $(document).on('click', function(e) {
 	// Hide the gem selection table if the user clicks outside of it.
-	if (e.target.id !== "gem-selection-table") {
+	if (e.target.id !== "gem-selection-table" && !e.target.className.split(' ').includes('gem-info')) {
 		$("#gem-selection-table").css('visibility', 'hidden');
 	}
 });
@@ -207,7 +208,6 @@ $(document).on('click', function(e) {
 // User clicks on the "Save New Profile" button
 $("#save-profile-button").click(function() {
 	let profileName = $("input[name='profileName']").val();
-	// Make sure the name field isn't empty
 	if (profileName.length <= 0) {
 		alert("Missing profile name");
 	} else if (profiles[profileName]) {
@@ -279,12 +279,70 @@ $(document).on('click', '.saved-profile', function() {
 	location.reload();
 });
 
-// User clicks on a gem row in the gem selection table
-$("#gem-selection-table").on('click', 'tr', function() {
+// User clicks on a star next to a gem to favorite it
+$(document).on('click', '.gem-favorite-star', function() {
+	let favorited = $(this).attr('data-favorited') == 'true';
+	let gemId = parseInt($(this).closest('tr').attr('data-id'));
+	let favoritesArrayIndex = gemPreferences.favorites.indexOf(gemId);
+	// Toggle the favorited data value
+	$(this).attr('data-favorited', !favorited);
+
+	// Remove or add the gem to the favorite gem array
+	if (favorited && favoritesArrayIndex > -1) {
+		gemPreferences.favorites.splice(favoritesArrayIndex, 1);
+	} else if (!favorited && favoritesArrayIndex < 0) {
+		gemPreferences.favorites.push(gemId);
+	} 
+	localStorage.gemPreferences = JSON.stringify(gemPreferences);
+});
+
+// User clicks on the X next to a gem to hide it
+$(document).on('click', '.gem-hide', function() {
+	let hidden = $(this).attr('data-hidden') == 'true';
+	let gemId = parseInt($(this).closest('tr').attr('data-id'));
+	let hiddenArrayIndex = gemPreferences.hidden.indexOf(gemId);
+	$(this).attr('data-hidden', !hidden);
+
+	if (hidden && hiddenArrayIndex > -1) {
+		gemPreferences.hidden.splice(hiddenArrayIndex, 1);
+		$(this).closest('tr').attr('data-hidden', 'false');
+		if (gemPreferences.hidden.length == 0) {
+			$("#show-hidden-gems-button").closest('tr').hide();
+			$("#show-hidden-gems-button").attr('data-enabled', 'false');
+		}
+	} else if (!hidden && hiddenArrayIndex < 0) {
+		gemPreferences.hidden.push(gemId);
+		$(this).closest('tr').attr('data-hidden', 'true');
+		if ($("#show-hidden-gems-button").attr('data-enabled') == 'false') {
+			$(this).closest('tr').hide();
+		}
+		if (gemPreferences.hidden.length > 0) {
+			$("#show-hidden-gems-button").closest('tr').show();
+		}
+	}
+	localStorage.gemPreferences = JSON.stringify(gemPreferences);
+});
+
+// User clicks on the "Show/Hide Hidden Gems" button in the gem selection table
+$(document).on('click', '#show-hidden-gems-button', function(e) {
+	let enabled = $(this).attr('data-enabled') == 'true';
+	$(this).attr('data-enabled', !enabled);
+
+	if (enabled) {
+		$(".gem-row[data-hidden='true']").hide();
+	} else {
+		$(".gem-row[data-hidden='true']").show();
+	}
+
+	e.stopPropagation();
+});
+
+// User clicks on a gem in the gem selection table
+$("#gem-selection-table").on('click', '.gem-name', function() {
 	let itemID = $("#gem-selection-table").data('itemID');
 	let itemSlot = $('tr[data-wowhead-id="' + itemID + '"]').data('slot');
-	let gemName = $(this).data('name');
-	let gemColor = $(this).data('color');
+	let gemName = $(this).closest('tr').data('name');
+	let gemColor = $(this).closest('tr').data('color');
 	let gemIconName = href = null;
 	let gemID = null;
 	let socket = $('tr[data-wowhead-id="' + itemID + '"]').find('.gem').eq($("#gem-selection-table").data('socketSlot'));
@@ -320,7 +378,9 @@ $("#gem-selection-table").on('click', 'tr', function() {
 				}
 			}
 		}
-		modifyStatsFromGem(gemID, 'add'); // Add stats from new gem
+		// Add stats from new gem
+		if (gemID) modifyStatsFromGem(gemID, 'add');
+		refreshCharacterStats();
 	}
 
 	socket.attr('src', 'img/' + gemIconName);
@@ -331,7 +391,7 @@ $("#gem-selection-table").on('click', 'tr', function() {
 	return false;
 });
 
-// Tracks right clicks on item sockets
+// Remove gem from item socket if user right clicks on the socket
 $("#item-selection-table tbody").on('contextmenu', '.gem', function(event) {
 	// Check whether there is a gem in the socket or not
 	if ($(this).closest('a').attr('href') !== "") {
@@ -352,21 +412,30 @@ $("#item-selection-table tbody").on('contextmenu', '.gem', function(event) {
 
 // User left-clicks on one of the item's gem sockets
 $("#item-selection-table tbody").on('click', '.gem', function(event) {
-	// Check if the socket color that was clicked is a different color, otherwise there's no reason to delete and insert new rows.
-	if ($("#gem-selection-table").data('color') !== $(this).data('color')) {
-		let socketColor = $(this).attr('data-color');
-		$(".gem-row").remove();
-		$("#gem-selection-table").append('<tr data-color="' + socketColor + '" data-name="none" class="gem-row"><td></td><td>None</td></tr>');
+	let socketColor = $(this).attr('data-color');
+	$("#gem-selection-table").empty();
 
-		for (let color in gems) {
-			for (let gem in gems[color]) {
-				// Show all gems for normal slots (except for Meta gems) and only show Meta gems for Meta gem slots
-				if ((socketColor === "meta" && color == "meta") || (socketColor !== "meta" && color !== "meta")) {
-					let g = gems[color][gem];
-					$("#gem-selection-table").append("<tr data-color='" + color + "' data-name='" + gem + "' class='gem-row'><td><img width='20' height='20' src='img/" + g.iconName + ".jpg'></td><td><a href='https://tbc.wowhead.com/item=" + g.id + "'>" + g.name + "</a></td></tr>");
+	for (let color in gems) {
+		for (let gem in gems[color]) {
+			// Show all gems for normal slots (except for Meta gems) and only show Meta gems for Meta gem slots
+			if ((socketColor === "meta" && color == "meta") || (socketColor !== "meta" && color !== "meta")) {
+				let g = gems[color][gem];
+				let gemRowInfo = "<tr data-hidden='" + (gemPreferences.hidden.indexOf(g.id) > -1) + "' data-color='" + color + "' data-name='" + gem + "' data-id='" + g.id + "' class='gem-row'><td title='" + (gemPreferences.favorites.indexOf(g.id) > -1 ? 'Remove gem from favorites' : 'Favorite gem') + "' data-favorited='" + (gemPreferences.favorites.indexOf(g.id) > -1) + "' class='gem-favorite-star gem-info'>★</td><td class='gem-name gem-info'><img width='20' height='20' src='img/" + g.iconName + ".jpg'><a href='https://tbc.wowhead.com/item=" + g.id + "'>" + g.name + "</a></td><td title='" + (gemPreferences.hidden.indexOf(g.id) > -1 ? 'Restore ' : 'Hide ') + " Gem' data-hidden='" + (gemPreferences.hidden.indexOf(g.id) > -1) + "' class='gem-hide gem-info'>❌</td></tr>";
+				if (gemPreferences.favorites.indexOf(g.id) > -1) {
+					$("#gem-selection-table").prepend(gemRowInfo);
+				} else {
+					$("#gem-selection-table").append(gemRowInfo);
+				} 
+				if (gemPreferences.hidden.indexOf(g.id) > -1) {
+					$('.gem-row[data-id="' + g.id + '"]').hide();
 				}
 			}
 		}
+	}
+	$("#gem-selection-table").prepend('<tr data-color="' + socketColor + '" data-name="none" class="gem-row"><td class="gem-info"></td><td class="gem-name gem-info">Remove Gem</td></tr>');
+	$("#gem-selection-table").prepend('<tr><td></td><td data-enabled="false" id="show-hidden-gems-button">Toggle Hidden Gems</td></tr>');
+	if (gemPreferences.hidden.length == 0) {
+		$("#show-hidden-gems-button").closest('tr').hide();
 	}
 
 	$("#gem-selection-table").css('top', event.pageY - ($("#gem-selection-table").height()) / 2);

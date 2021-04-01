@@ -502,9 +502,38 @@ img[data-color='meta'] {
 	text-align: left;
 }
 
-.item-row:hover, .enchant-row:hover, .gem-row:hover {
+.item-row:hover, .enchant-row:hover, .gem-name:hover {
 	cursor: pointer;
 	background-color: rgba(104, 105, 163, 0.3);
+}
+
+#show-hidden-gems-button {
+	padding: 5px 0px 5px 0px;
+	border: 1px solid white;
+	border-radius: 3px;
+	text-align: center;
+}
+
+#show-hidden-gems-button:hover {
+	background-color: white;
+	color: black;
+	cursor: pointer;
+}
+
+.gem-name img {
+	margin-right: 10px;
+}
+
+.gem-favorite-star:hover, .gem-hide:hover {
+	cursor: pointer;
+}
+
+.gem-favorite-star[data-favorited='true'] {
+	color: yellow;
+}
+
+.gem-hide[data-hidden='true'] {
+	filter: grayscale(100%);
 }
 
 #item-selection-table td, #enchant-selection-table td {

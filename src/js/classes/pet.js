@@ -255,7 +255,7 @@ class Succubus extends Pet {
 		this.stats.baseStats.mana = 1109;
 		this.stats.baseStats.spirit = 122;
 		this.stats.baseStats.strength = 153;
-		this.stats.baseStats.agility = 108;
+		this.stats.baseStats.agility = 109;
 		this.stats.baseStats.ap = 104.5; // needs confirmation
 		this.dmg = 105;
 		this.healthPerStamina = 7;
@@ -296,7 +296,7 @@ class Felguard extends Pet {
 		this.pet = PetName.FELGUARD;
 		this.stats.baseStats.stamina = 322;
 		this.stats.baseStats.strength = 153;
-		this.stats.baseStats.agility = 108;
+		this.stats.baseStats.agility = 109;
 		this.stats.baseStats.intellect = 152;
 		this.stats.baseStats.spirit = 122;
 		this.stats.baseStats.mana = 849;
