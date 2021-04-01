@@ -461,7 +461,7 @@ class CurseOfDoom extends Spell {
 		this.cooldown = 60;
 		this.school = "shadow";
 		this.type = "affliction";
-		this.isAura = true;
+		this.isDot = true;
 		this.setup();
 	}
 }
