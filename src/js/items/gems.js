@@ -19,214 +19,394 @@ const socketInfo = {
 //todo add 'phase' to gems
 const gems = {
 	"meta": {
-		"chaoticSkyfireDiamond": {
+		"35503": {
+			"name": "Ember Skyfire Diamond",
+			"spellPower": 14,
+			"intellectModifier": 1.02, // confirm that this is how the gem works
+			"iconName": "inv_misc_gem_diamond_07",
+			"phase": 5
+		},
+		"34220": {
 			"name": "Chaotic Skyfire Diamond",
 			"critRating": 12,
-			"id": 34220,
-			"iconName": "inv_misc_gem_diamond_07"
+			"iconName": "inv_misc_gem_diamond_07",
+			"phase": 4 // confirm
+		},
+		"32641": {
+			"name": "Imbued Unstable Diamond",
+			"spellPower": 14,
+			"iconName": "inv_misc_gem_diamond_06",
+			"phase": 2
+		},
+		"25901": {
+			"name": "Insightful Earthstorm Diamond",
+			"intellect": 12,
+			"iconName": "inv_misc_gem_diamond_06",
+			"phase": 1
+		},
+		"25893": {
+			"name": "Mystical Skyfire Diamond",
+			"iconName": "inv_misc_gem_diamond_07",
+			"phase": 1
 		}
 	},
 	"red": {
-		"teardropCrimsonSpinel": {
-			"name": "Teardrop Crimson Spinel",
+		"35488": {
+			"name": "Runed Crimson Spinel",
 			"spellPower": 12,
-			'iconName': "inv_jewelcrafting_crimsonspinel_02",
-			"id": 32195
+			"iconName": "inv_jewelcrafting_crimsonspinel_02",
+			"phase": 3
 		},
-		"runedLivingRuby": {
-			"name": "Runed Living Ruby",
-			"spellPower": 9,
-			"iconName": "inv_jewelcrafting_livingruby_03",
-			"id": 24030
+		"33133": {
+			"name": "Don Julio's Heart",
+			"spellPower": 14,
+			"iconName": "inv_jewelcrafting_crimsonspinel_02",
+			"phase": 3
 		},
-		"starkBloodGarnet": {
+		"27777": {
 			"name": "Stark Blood Garnet",
 			"spellPower": 8,
 			"iconName": "inv_misc_gem_ruby_01",
-			"id": 27777
+			"phase": 1
 		},
-		"runedBloodGarnate": {
+		"24030": {
+			"name": "Runed Living Ruby",
+			"spellPower": 9,
+			"iconName": "inv_jewelcrafting_livingruby_03",
+			"phase": 2
+		},
+		"23096": {
 			"name": "Runed Blood Garnet",
 			"spellPower": 7,
 			"iconName": "inv_misc_gem_bloodgem_02",
-			"id": 23096
-		},
-		"runedTourmaline": {
-			"name": "Runed Tourmaline",
-			"spellPower": 5,
-			"iconName": "inv_misc_gem_ruby_03",
-			"id": 28461
+			"phase": 1
 		}
 	},
 	"yellow": {
-		"rigidLionseye": {
-			"name": "Rigid Lionseye",
-			"hitRating": 10,
-			"iconName": "inv_jewelcrafting_lionseye_02",
-			"id": 32206
-		},
-		"smoothLionseye": {
-			"name": "Smooth Lionseye",
-			"critRating": 10,
-			"iconName": "inv_jewelcrafting_lionseye_02",
-			"id": 32291
-		},
-		"quickLionseye": {
+		"35761": {
 			"name": "Quick Lionseye",
 			"hasteRating": 10,
 			"iconName": "inv_jewelcrafting_lionseye_02",
-			"id": 35761
+			"phase": 5
 		},
-		"brilliantLionseye": {
+		"35315": {
+			"name": "Quick Dawnstone",
+			"hasteRating": 8,
+			"iconName": "inv_jewelcrafting_dawnstone_03",
+			"phase": 5
+		},
+		"33141": {
+			"name": "Great Bladestone",
+			"hitRating": 12,
+			"iconName": "inv_jewelcrafting_lionseye_02",
+			"phase": 3
+		},
+		"33140": {
+			"name": "Blood of Amber",
+			"critRating": 12,
+			"iconName": "inv_jewelcrafting_lionseye_02",
+			"phase": 3
+		},
+		"32210": {
+			"name": "Great Lionseye",
+			"hitRating": 10,
+			"iconName": "inv_jewelcrafting_lionseye_02",
+			"phase": 3
+		},
+		"32207": {
+			"name": "Gleaming Lionseye",
+			"critRating": 10,
+			"iconName": "inv_jewelcrafting_lionseye_02",
+			"phase": 3
+		},
+		"32204": {
 			"name": "Brilliant Lionseye",
 			"intellect": 10,
 			"iconName": "inv_jewelcrafting_lionseye_02",
-			"id": 32204
+			"phase": 3
+		},
+		"31861": {
+			"name": "Great Dawnstone",
+			"hitRating": 8,
+			"iconName": "inv_jewelcrafting_dawnstone_03",
+			"phase": 2
+		},
+		"31860": {
+			"name": "Great Golden Draenite",
+			"hitRating": 6,
+			"iconName": "inv_misc_gem_goldendraenite_02",
+			"phase": 2
+		},
+		"24050": {
+			"name": "Gleaming Dawnstone",
+			"critRating": 8,
+			"iconName": "inv_jewelcrafting_dawnstone_03",
+			"phase": 2
+		},
+		"24047": {
+			"name": "Brilliant Dawnstone",
+			"intellect": 8,
+			"iconName": "inv_jewelcrafting_dawnstone_03",
+			"phase": 2
+		},
+		"23114": {
+			"name": "Gleaming Golden Draenite",
+			"critRating": 6,
+			"iconName": "inv_misc_gem_goldendraenite_02",
+			"phase": 1
+		},
+		"23113": {
+			"name": "Brilliant Golden Draenite",
+			"intellect": 6,
+			"iconName": "inv_misc_gem_goldendraenite_02",
+			"phase": 1
 		}
 	},
 	"blue": {
-		"lustruousEmpyreanSapphire": {
-			"name": "Lustruous Empyrean Sapphire",
-			"mp5": 4,
-			"iconName": "inv_jewelcrafting_empyreansapphire_02",
-			"id": 32202
-		},
-		"sparklingEmpyreanSapphire": {
-			"name": "Sparkling Empyrean Sapphire",
-			"spirit": 10,
-			"iconName": "inv_jewelcrafting_empyreansapphire_02",
-			"id": 32201
-		},
-		"stormyEmpyreanSapphire": {
+		"32203": {
 			"name": "Stormy Empyrean Sapphire",
 			"spellPen": 13,
 			"iconName": "inv_jewelcrafting_empyreansapphire_02",
-			"id": 32203
+			"phase": 3
+		},
+		"24039": {
+			"name": "Stormy Star of Elune",
+			"spellPen": 10,
+			"iconName": "inv_jewelcrafting_starofelune_03",
+			"phase": 2
+		},
+		"23120": {
+			"name": "Stormy Azure Moonstone",
+			"spellPen": 8,
+			"iconName": "inv_misc_gem_azuredraenite_02",
+			"phase": 1
 		}
 	},
 	"orange": {
-		"potentOrnateTopaz": {
-			"name": "Potent Ornate Topaz",
+		"35760": {
+			"name": "Reckless Pyrestone",
 			"spellPower": 6,
-			"critRating": 5,
-			"iconName": "inv_misc_gem_opal_02",
-			"id": 28123
+			"hasteRating": 5,
+			"iconName": "inv_jewelcrafting_pyrestone_02",
+			"phase": 5
 		},
-		"veiledPyrestone": {
+		"35316": {
+			"name": "Reckless Noble Topaz",
+			"spellPower": 5,
+			"hasteRating": 4,
+			"iconName": "inv_jewelcrafting_nobletopaz_03",
+			"phase": 5
+		},
+		"32638": {
+			"name": "Unstable Topaz",
+			"spellPower": 5,
+			"intellect": 4,
+			"iconName": "inv_jewelcrafting_nobletopaz_02",
+			"phase": 2
+		},
+		"32221": {
 			"name": "Veiled Pyrestone",
 			"spellPower": 6,
 			"hitRating": 5,
 			"iconName": "inv_jewelcrafting_pyrestone_02",
-			"id": 32221
+			"phase": 3
 		},
-		"potentPyrestone": {
+		"32218": {
 			"name": "Potent Pyrestone",
 			"spellPower": 6,
 			"critRating": 5,
 			"iconName": "inv_jewelcrafting_pyrestone_02",
-			"id": 32304
+			"phase": 3
 		},
-		"iridescentFireOpal": {
-			"name": "Iridescent Fire Opal",
+		"31867": {
+			"name": "Veiled Noble Topaz",
+			"spellPower": 5,
+			"hitRating": 4,
+			"iconName": "inv_jewelcrafting_nobletopaz_03",
+			"phase": 2
+		},
+		"31866": {
+			"name": "Veiled Flame Spessarite",
+			"spellPower": 4,
+			"hitRating": 3,
+			"iconName": "inv_misc_gem_flamespessarite_02",
+			"phase": 2
+		},
+		"30588": {
+			"name": "Potent Fire Opal",
 			"spellPower": 6,
 			"critRating": 4,
 			"iconName": "inv_jewelcrafting_nobletopaz_03",
-			"id": 30593
+			"phase": 1
 		},
-		"recklessPyrestone": {
-			"name": "Reckless Pyrestone",
+		"30564": {
+			"name": "Shining Fire Opal",
 			"spellPower": 6,
-			"hasteRating": 5,
-			"id": 35760,
-			"iconName": "inv_jewelcrafting_pyrestone_02",
+			"hitRating": 5,
+			"iconName": "inv_jewelcrafting_nobletopaz_03",
+			"phase": 1
 		},
-		"luminousPyrestone": {
-			"name": "Luminous Pyrestone",
-			"spellPower": 6,
-			"intellect": 5,
-			"id": 32219,
-			"iconName": "inv_jewelcrafting_pyrestone_02"
-		},
-		"infusedFireOpal": {
-			"name": "Infused Fire Opal",
-			"spellPower": 6,
-			"intellect": 4,
-			"id": 30551,
-			"iconName": "inv_jewelcrafting_nobletopaz_03"
-		},
-		"mysteriousFireOpal": {
+		"30573": {
 			"name": "Mysterious Fire Opal",
 			"spellPower": 6,
 			"spellPen": 5,
-			"id": 30573,
-			"iconName": "inv_jewelcrafting_nobletopaz_03"
+			"iconName": "inv_jewelcrafting_nobletopaz_03",
+			"phase": 1
+		},
+		"30551": {
+			"name": "Infused Fire Opal",
+			"spellPower": 6,
+			"intellect": 4,
+			"iconName": "inv_jewelcrafting_nobletopaz_03",
+			"phase": 1
+		},
+		"28123": {
+			"name": "Potent Ornate Topaz",
+			"spellPower": 6,
+			"critRating": 5,
+			"iconName": "inv_misc_gem_opal_02",
+			"phase": 1
+		},
+		"24059": {
+			"name": "Potent Noble Topaz",
+			"critRating": 4,
+			"spellPower": 5,
+			"iconName": "inv_jewelcrafting_nobletopaz_03",
+			"phase": 2
+		},
+		"23101": {
+			"name": "Potent Flame Spessarite",
+			"spellPower": 4,
+			"critRating": 3,
+			"iconName": "inv_misc_gem_flamespessarite_02",
+			"phase": 1
 		}
 	},
 	"green": {
-		"lambentChrysoprase": {
-			"name": "Lambent Chrysoprase",
-			"hitRating": 5,
-			"mp5": 2,
-			"id": 30606,
-			"iconName": "inv_jewelcrafting_talasite_03"
+		"35759": {
+			"name": "Forceful Seaspray Emerald",
+			"stamina": 7,
+			"hasteRating": 5,
+			"iconName": "inv_jewelcrafting_seasprayemerald_02",
+			"phase": 5
 		},
-		"runeCoveredChrysoprase": {
-			"name": "Rune Covered Chrysoprase",
-			"critRating": 5,
-			"mp5": 2,
-			"id": 30560,
-			"iconName": "inv_jewelcrafting_talasite_03"
+		"35318": {
+			"name": "Forceful Talasite",
+			"stamina": 6,
+			"hasteRating": 4,
+			"iconName": "inv_jewelcrafting_talasite_03",
+			"phase": 5
 		},
-		"radiantSeasprayEmerald": {
-			"name": "Radiant Seaspray Emerald",
-			"critRating": 5,
-			"spellPen": 6,
-			"id": 32224,
-			"iconName": "inv_jewelcrafting_seasprayemerald_02"
+		"32639": {
+			"name": "Unstable Talasite",
+			"stamina": 4,
+			"critRating": 4,
+			"iconName": "inv_jewelcrafting_talasite_01",
+			"phase": 2
 		},
-		"dazzlingSeasprayEmerald": {
+		"32225": {
 			"name": "Dazzling Seaspray Emerald",
 			"intellect": 5,
 			"mp5": 2,
-			"id": 32225,
 			"iconName": "inv_jewelcrafting_seasprayemerald_02"
+		},
+		"32224": {
+			"name": "Radiant Seaspray Emerald",
+			"critRating": 5,
+			"spellPen": 6,
+			"iconName": "inv_jewelcrafting_seasprayemerald_02",
+			"phase": 3
+		},
+		"30608": {
+			"name": "Radiant Chrysoprase",
+			"critRating": 5,
+			"spellPen": 5,
+			"iconName": "inv_jewelcrafting_talasite_03",
+			"phase": 1
+		},
+		"30606": {
+			"name": "Lambent Chrysoprase",
+			"hitRating": 5,
+			"mp5": 2,
+			"iconName": "inv_jewelcrafting_talasite_03"
+		},
+		"30605": {
+			"name": "Vivid Chrysoprase",
+			"stamina": 6,
+			"hitRating": 5,
+			"iconName": "inv_jewelcrafting_talasite_03",
+			"phase": 1
+		},
+		"30560": {
+			"name": "Rune Covered Chrysoprase",
+			"critRating": 5,
+			"mp5": 2,
+			"iconName": "inv_jewelcrafting_talasite_03"
+		},
+		"30548": {
+			"name": "Polished Chrysoprase",
+			"stamina": 6,
+			"critRating": 5,
+			"iconName": "inv_jewelcrafting_talasite_03",
+			"phase": 1
+		},
+		"27785": {
+			"name": "Notched Deep Peridot",
+			"stamina": 3,
+			"critRating": 4,
+			"iconName": "inv_misc_gem_deepperidot_03",
+			"phase": 1
+		},
+		"24066": {
+			"name": "Radiant Talasite",
+			"critRating": 4,
+			"spellPen": 5,
+			"iconName": "inv_jewelcrafting_talasite_03",
+			"phase": 2
+		},
+		"23103": {
+			"name": "Radiant Deep Peridot",
+			"critRating": 3,
+			"spellPen": 4,
+			"iconName": "inv_misc_gem_deepperidot_02",
+			"phase": 1
 		}
 	},
 	"purple": {
-		"glowingTanzanite": {
+		"32215": {
+			"name": "Glowing Shadowsong Amethyst",
+			"stamina": 7,
+			"spellPower": 6,
+			"iconName": "inv_jewelcrafting_shadowsongamethyst_02",
+			"phase": 3
+		},
+		"30600": {
+			"name": "Fluorescent Tanzanite",
+			"spellPower": 6,
+			"spirit": 4,
+			"iconName": "inv_jewelcrafting_nightseye_03",
+			"phase": 1
+		},
+		"30555": {
 			"name": "Glowing Tanzanite",
 			"stamina": 6,
 			"spellPower": 6,
 			"iconName": "inv_jewelcrafting_nightseye_03",
-			"id": 30555
+			"phase": 1
 		},
-		"glowingNightseye": {
+		"24056": {
 			"name": "Glowing Nightseye",
 			"stamina": 6,
 			"spellPower": 5,
 			"iconName": "inv_jewelcrafting_nightseye_03",
-			"id": 24056
+			"phase": 2
 		},
-		"royalShadowsongAmethyst": {
-			"name": "Royal Shadowsong Amethyst",
-			"spellPower": 6,
-			"mp5": 2,
-			"id": 32216,
-			"iconName": "inv_jewelcrafting_shadowsongamethyst_02"
-		},
-		"purifiedShadowsongAmethyst": {
-			"name": "Purified Shadowsong Amethyst",
-			"spellPower": 6,
-			"spirit": 5,
-			"id": 37503,
-			"iconName": "inv_jewelcrafting_shadowsongamethyst_02"
-		},
-		"fluorescentTanzanite": {
-			"name": "Fluorescent Tanzanite",
-			"spellPower": 6,
-			"spirit": 4,
-			"id": 30600,
-			"iconName": "inv_jewelcrafting_nightseye_03"
+		"23108": {
+			"name": "Glowing Shadow Draenite",
+			"stamina": 4,
+			"spellPen": 4,
+			"iconName": "inv_misc_gem_ebondraenite_02",
+			"phase": 1
 		}
 	}
 }

@@ -323,7 +323,7 @@ $(document).on('click', '.gem-hide', function() {
 	localStorage.gemPreferences = JSON.stringify(gemPreferences);
 });
 
-// User clicks on the "Show/Hide Hidden Gems" button in the gem selection table
+// User clicks on the "Toggle Hidden Gems" button in the gem selection table
 $(document).on('click', '#show-hidden-gems-button', function(e) {
 	let enabled = $(this).attr('data-enabled') == 'true';
 	$(this).attr('data-enabled', !enabled);
@@ -339,53 +339,46 @@ $(document).on('click', '#show-hidden-gems-button', function(e) {
 
 // User clicks on a gem in the gem selection table
 $("#gem-selection-table").on('click', '.gem-name', function() {
-	let itemID = $("#gem-selection-table").data('itemID');
-	let itemSlot = $('tr[data-wowhead-id="' + itemID + '"]').data('slot');
-	let gemName = $(this).closest('tr').data('name');
+	let itemId = $("#gem-selection-table").data('itemId');
+	let itemSlot = $('tr[data-wowhead-id="' + itemId + '"]').data('slot');
 	let gemColor = $(this).closest('tr').data('color');
 	let gemIconName = href = null;
-	let gemID = null;
-	let socket = $('tr[data-wowhead-id="' + itemID + '"]').find('.gem').eq($("#gem-selection-table").data('socketSlot'));
+	let gemId = $(this).closest('tr').data('id');
+	let socket = $('tr[data-wowhead-id="' + itemId + '"]').find('.gem').eq($("#gem-selection-table").data('socketSlot'));
 	let socketSlot = $("#gem-selection-table").data('socketSlot');
 	selectedGems[itemSlot] = selectedGems[itemSlot] || {};
 
-	if (!selectedGems[itemSlot][itemID]) {
-		let socketAmount = $('tr[data-wowhead-id="' + itemID + '"]').find('.gem').last().data('order') + 1; // The amount of sockets in the item
+	if (!selectedGems[itemSlot][itemId]) {
+		let socketAmount = $('tr[data-wowhead-id="' + itemId + '"]').find('.gem').last().data('order') + 1; // The amount of sockets in the item
 
-		selectedGems[itemSlot][itemID] = Array(socketAmount).fill(null);
+		selectedGems[itemSlot][itemId] = Array(socketAmount).fill(null);
 	}
 
 	// Check whether the user chose a gem or the option to remove the current gem
-	if (gemName === "none") {
+	if (gemId == '0') {
 		gemIconName = socketInfo[gemColor].iconName + ".jpg";
 		href = '';
 	} else {
-		gemIconName = gems[gemColor][gemName].iconName + ".jpg";
-		gemID = gems[gemColor][gemName].id;
-		href = 'https://tbc.wowhead.com/item=' + gems[gemColor][gemName].id
+		gemIconName = gems[gemColor][gemId].iconName + ".jpg";
+		href = 'https://tbc.wowhead.com/item=' + gemId;
 	}
 
 	// Check if the socket that was changed was on an equipped item
 	if (socket.closest('tr').data('wowhead-id') == selectedItems[itemSlot]) {
 		// Remove stats from old gem if equipped
-		if (selectedGems[itemSlot][itemID][socketSlot]) {
-			for (let color in gems) {
-				for (let gem in gems[color]) {
-					if (gems[color][gem].id == selectedGems[itemSlot][itemID][socketSlot]) {
-						modifyStatsFromGem(gems[color][gem].id, 'remove');
-						break
-					} 
-				}
-			}
+		if (selectedGems[itemSlot][itemId][socketSlot]) {
+			modifyStatsFromGem(selectedGems[itemSlot][itemId][socketSlot], 'remove');
 		}
 		// Add stats from new gem
-		if (gemID) modifyStatsFromGem(gemID, 'add');
+		if (gemId) {
+			modifyStatsFromGem(gemId, 'add');
+		}
 		refreshCharacterStats();
 	}
 
 	socket.attr('src', 'img/' + gemIconName);
 	socket.closest('a').attr('href', href);
-	selectedGems[itemSlot][itemID][socketSlot] = gemID;
+	selectedGems[itemSlot][itemId][socketSlot] = gemId;
 	localStorage.selectedGems = JSON.stringify(selectedGems);
 	$("#gem-selection-table").css('visibility', 'hidden');
 	return false;
@@ -397,14 +390,15 @@ $("#item-selection-table tbody").on('contextmenu', '.gem', function(event) {
 	if ($(this).closest('a').attr('href') !== "") {
 		let socketColor = $(this).data('color');
 		let itemSlot = $(this).closest('tr').data('slot');
-		let itemID = $(this).closest('tr').data('wowhead-id');
+		let itemId = $(this).closest('tr').data('wowhead-id');
 		let socketOrder = $(this).data('order');
 	
 		$(this).attr('src', 'img/' + socketInfo[socketColor].iconName + '.jpg');
 		$(this).closest('a').attr('href', '');
-		modifyStatsFromGem(selectedGems[itemSlot][itemID][socketOrder], 'remove');
-		selectedGems[itemSlot][itemID][socketOrder] = null;
+		modifyStatsFromGem(selectedGems[itemSlot][itemId][socketOrder], 'remove');
+		selectedGems[itemSlot][itemId][socketOrder] = null;
 		localStorage.selectedGems = JSON.stringify(selectedGems);
+		refreshCharacterStats();
 	}
 
 	return false;
@@ -420,29 +414,29 @@ $("#item-selection-table tbody").on('click', '.gem', function(event) {
 			// Show all gems for normal slots (except for Meta gems) and only show Meta gems for Meta gem slots
 			if ((socketColor === "meta" && color == "meta") || (socketColor !== "meta" && color !== "meta")) {
 				let g = gems[color][gem];
-				let gemRowInfo = "<tr data-hidden='" + (gemPreferences.hidden.indexOf(g.id) > -1) + "' data-color='" + color + "' data-name='" + gem + "' data-id='" + g.id + "' class='gem-row'><td title='" + (gemPreferences.favorites.indexOf(g.id) > -1 ? 'Remove gem from favorites' : 'Favorite gem') + "' data-favorited='" + (gemPreferences.favorites.indexOf(g.id) > -1) + "' class='gem-favorite-star gem-info'>★</td><td class='gem-name gem-info'><img width='20' height='20' src='img/" + g.iconName + ".jpg'><a href='https://tbc.wowhead.com/item=" + g.id + "'>" + g.name + "</a></td><td title='" + (gemPreferences.hidden.indexOf(g.id) > -1 ? 'Restore ' : 'Hide ') + " Gem' data-hidden='" + (gemPreferences.hidden.indexOf(g.id) > -1) + "' class='gem-hide gem-info'>❌</td></tr>";
-				if (gemPreferences.favorites.indexOf(g.id) > -1) {
+				let gemRowInfo = "<tr data-hidden='" + (gemPreferences.hidden.indexOf(parseInt(gem)) > -1) + "' data-color='" + color + "' data-id='" + gem + "' class='gem-row'><td title='" + (gemPreferences.favorites.indexOf(parseInt(gem)) > -1 ? 'Remove gem from favorites' : 'Favorite gem') + "' data-favorited='" + (gemPreferences.favorites.indexOf(parseInt(gem)) > -1) + "' class='gem-favorite-star gem-info'>★</td><td class='gem-name gem-info'><img width='20' height='20' src='img/" + g.iconName + ".jpg'><a href='https://tbc.wowhead.com/item=" + gem + "'>" + g.name + "</a></td><td title='" + (gemPreferences.hidden.indexOf(parseInt(gem)) > -1 ? 'Restore ' : 'Hide ') + " Gem' data-hidden='" + (gemPreferences.hidden.indexOf(parseInt(gem)) > -1) + "' class='gem-hide gem-info'>❌</td></tr>";
+				if (gemPreferences.favorites.indexOf(parseInt(gem)) > -1) {
 					$("#gem-selection-table").prepend(gemRowInfo);
 				} else {
 					$("#gem-selection-table").append(gemRowInfo);
 				} 
-				if (gemPreferences.hidden.indexOf(g.id) > -1) {
-					$('.gem-row[data-id="' + g.id + '"]').hide();
+				if (gemPreferences.hidden.indexOf(parseInt(gem)) > -1) {
+					$('.gem-row[data-id="' + gem + '"]').hide();
 				}
 			}
 		}
 	}
-	$("#gem-selection-table").prepend('<tr data-color="' + socketColor + '" data-name="none" class="gem-row"><td class="gem-info"></td><td class="gem-name gem-info">Remove Gem</td></tr>');
+	$("#gem-selection-table").prepend('<tr data-color="' + socketColor + '" data-id="0" class="gem-row"><td class="gem-info"></td><td class="gem-name gem-info">Remove Gem</td></tr>');
 	$("#gem-selection-table").prepend('<tr><td></td><td data-enabled="false" id="show-hidden-gems-button">Toggle Hidden Gems</td></tr>');
 	if (gemPreferences.hidden.length == 0) {
 		$("#show-hidden-gems-button").closest('tr').hide();
 	}
 
-	$("#gem-selection-table").css('top', event.pageY - ($("#gem-selection-table").height()) / 2);
+	$("#gem-selection-table").css('top', event.pageY - $("#gem-selection-table").height() / 5);
 	$("#gem-selection-table").css('left', event.pageX + 50);
 	$("#gem-selection-table").css('visibility', 'visible');
 	$("#gem-selection-table").data('color', $(this).data('color'));
-	$("#gem-selection-table").data('itemID', $(this).closest('tr').data('wowhead-id'));
+	$("#gem-selection-table").data('itemId', $(this).closest('tr').data('wowhead-id'));
 	$("#gem-selection-table").data('socketSlot', $(this).data('order'));
 
 	// Stop the click from being registered by the .item-row listener as well.
@@ -454,11 +448,11 @@ $("#item-selection-table tbody").on('click', '.gem', function(event) {
 $("#item-selection-table tbody").on('click', 'tr', function() {
 	let itemSlot = $(this).attr('data-slot');
 	let itemName = $(this).attr('data-name');
-	let itemID = $(this).closest('tr').data('wowhead-id');
+	let itemId = $(this).closest('tr').data('wowhead-id');
 	let subSlot = localStorage['selectedItemSubSlot'] || $(this).data('subslot') || ""; // Workaround for having two selections for rings and trinkets but only one selection for the other slots.
 
 	// Toggle the item's data-selected boolean.
-	let equipped = $(this).attr('data-selected') == 'true' && selectedItems[itemSlot + subSlot] && selectedItems[itemSlot + subSlot] == itemID;
+	let equipped = $(this).attr('data-selected') == 'true' && selectedItems[itemSlot + subSlot] && selectedItems[itemSlot + subSlot] == itemId;
 	$(this).attr('data-selected', !equipped);
 
 	// Check if the user already has an item equipped in this slot and unequip it if so
@@ -474,9 +468,9 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 
 					// Remove stats from gems equipped in the item
 					if (selectedGems[slot] && selectedGems[slot][selectedItems[itemSlot + subSlot]]) {
-						for (gemID of selectedGems[slot][selectedItems[itemSlot + subSlot]]) {
-							if (gemID !== null) {
-								modifyStatsFromGem(gemID, 'remove');
+						for (gemId of selectedGems[slot][selectedItems[itemSlot + subSlot]]) {
+							if (gemId !== null) {
+								modifyStatsFromGem(gemId, 'remove');
 							}
 						}
 					}
@@ -495,9 +489,9 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 
 		// Add stats from the item's equipped gems
 		if (selectedGems[itemSlot + subSlot] && selectedGems[itemSlot + subSlot][items[itemSlot][itemName].id]) {
-			for (gemID of selectedGems[itemSlot + subSlot][items[itemSlot][itemName].id]) {
-				if (gemID !== null) {
-					modifyStatsFromGem(gemID, 'add');
+			for (gemId of selectedGems[itemSlot + subSlot][items[itemSlot][itemName].id]) {
+				if (gemId !== null) {
+					modifyStatsFromGem(gemId, 'add');
 				}
 			}
 		}
@@ -828,11 +822,10 @@ function loadItemsBySlot(itemSlot, subSlot) {
 
 					if (selectedGems[itemSlot] && selectedGems[itemSlot][i.id]) {
 						for (let color in gems) {
-							for (let gem in gems[color]) {
-								if (gems[color][gem].id == selectedGems[itemSlot][i.id][counter]) {
-									gemIcon = gems[color][gem].iconName;
-									gemHref = 'https://tbc.wowhead.com/item=' + gems[color][gem].id;
-								}
+							let gemId = selectedGems[itemSlot][i.id][counter];
+							if (gems[color][gemId]) {
+								gemIcon = gems[color][gemId].iconName;
+								gemHref = 'https://tbc.wowhead.com/item=' + gemId;
 							}
 						}
 					}
@@ -918,21 +911,19 @@ function modifyStatsFromEnchant(enchantID, action) {
 	}
 }
 
-function modifyStatsFromGem(gemID, action) {
+function modifyStatsFromGem(gemId, action) {
 	for (let color in gems) {
-		for (let gem in gems[color]) {
-			if (gems[color][gem].id == gemID) {
-				for (let property in gems[color][gem]) {
-					if (characterStats.hasOwnProperty(property)) {
-						if (action == 'add') {
-							characterStats[property] += gems[color][gem][property];
-						} else if (action == 'remove') {
-							characterStats[property] -= gems[color][gem][property];
-						}
+		if (gems[color][gemId]) {
+			for (let property in gems[color][gemId]) {
+				if (characterStats.hasOwnProperty(property)) {
+					if (action == 'add') {
+						characterStats[property] += gems[color][gemId][property];
+					} else if (action == 'remove') {
+						characterStats[property] -= gems[color][gemId][property];
 					}
 				}
-				return;
 			}
+			return;
 		}
 	}
 }
@@ -997,7 +988,7 @@ function simDPS(items) {
 					$("#sim-all-items").text("Simulate All Items");
 				}
 				savedItemDps[itemSlot + itemSubSlot] = savedItemDps[itemSlot + itemSubSlot] || {};
-				savedItemDps[itemSlot + itemSubSlot][simulationEnd.itemID] = avgDps;
+				savedItemDps[itemSlot + itemSubSlot][simulationEnd.itemId] = avgDps;
 				localStorage.savedItemDps = JSON.stringify(savedItemDps);
 
 				if (simulationsFinished === itemAmount) {
@@ -1031,7 +1022,7 @@ function simDPS(items) {
 					// multiSimInfo tracks the % progress of each simulation and the least progressed simulation's % is used for the multi simulation button/progress bar
 					let smallestValue = 100;
 					for(let i = 0; i < multiSimInfo.length; i++) {
-						if (multiSimInfo[i][0] == simulationUpdate.itemID) {
+						if (multiSimInfo[i][0] == simulationUpdate.itemId) {
 							multiSimInfo[i][1] = simulationUpdate.percent;
 						}
 						if (multiSimInfo[i][1] < smallestValue) smallestValue = multiSimInfo[i][1];
@@ -1041,7 +1032,7 @@ function simDPS(items) {
 					$("#sim-all-items").text(smallestValue + "%");
 				}
 				// Set the DPS value on the item in the item selection list
-				$(".item-row[data-wowhead-id='" + simulationUpdate.itemID + "']").find('.item-dps').text(simulationUpdate.averageDamage);
+				$(".item-row[data-wowhead-id='" + simulationUpdate.itemId + "']").find('.item-dps').text(simulationUpdate.averageDamage);
 				$("#item-selection-table").trigger("update");
 			},
 			{
@@ -1049,7 +1040,7 @@ function simDPS(items) {
 				"simulation": Simulation.getSettings(),
 				"itemSlot": itemSlot,
 				"itemSubSlot": itemSubSlot,
-				"itemID": items[i],
+				"itemId": items[i],
 				"itemAmount": itemAmount
 			}
 		));
@@ -1115,13 +1106,13 @@ function updateSetBonuses() {
 	let setBonusCounter = {};
 
 	for (let itemSlot in selectedItems) {
-		let itemID = selectedItems[itemSlot];
-		if (itemID) {
+		let itemId = selectedItems[itemSlot];
+		if (itemId) {
 			if (itemSlot == "ring1" || itemSlot == "ring2" || itemSlot == "trinket1" || itemSlot == "trinket2") {
 				itemSlot = itemSlot.substring(0,itemSlot.length-1);
 			}
 			for (let item in items[itemSlot]) {
-				if (items[itemSlot][item].id === itemID) {
+				if (items[itemSlot][item].id === itemId) {
 					let setID = items[itemSlot][item].setId;
 					if (setID) {
 						setBonusCounter[setID] = setBonusCounter[setID] + 1 || 1;
