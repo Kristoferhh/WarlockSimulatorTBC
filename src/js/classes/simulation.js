@@ -199,10 +199,7 @@ class Simulation {
 						let timeRemaining = fightLength - this.player.fightTime;
 						// Not enough time left to cast another filler spell.
 						if ((this.player.rotation.finisher.deathCoil || this.player.rotation.finisher.shadowburn) && timeRemaining <= (this.player.spells[this.player.filler].castTime + this.player.spells[this.player.filler].travelTime)) {
-							// Use Power Infusion
-							if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.ready()) {
-								this.player.auras.powerInfusion.apply();
-							}
+							this.player.useCooldownsIfAvailable();
 							// Cast Death Coil if there's time to cast both Death Coil and Shadowburn (need to cast Death Coil first because of the travel time). Otherwise only cast Shadowburn
 							if (this.player.rotation.finisher.deathCoil && this.player.spells.deathCoil.ready() && (timeRemaining - this.player.gcdValue > this.player.spells.deathCoil.travelTime)) {
 								this.player.cast("deathCoil");
@@ -214,8 +211,8 @@ class Simulation {
 						} else {
 							// If a curse if active but no curse is up (if Curse of Doom is selected then it checks if both CoD and Curse of Agony are not up since CoA is used when theres <60 sec left of the fight)
 							// If the curse is CoD then it checks if there's more than 60 seconds left of the fight or it checks if a CoA cast would be up for at least an x amount of seconds (minimum uptime for it to be worth casting although this depends on how much damage the player would do with their filler so this value might need to be changed)
-							if (this.player.curse && !this.player.auras[this.player.curse].active && ((this.player.auras.curseOfAgony && !this.player.auras.curseOfAgony.active) || !this.player.auras.curseOfAgony) && (this.player.spells[this.player.curse].ready() || this.player.spells.curseOfAgony.ready()) && (((this.player.curse == "curseOfDoom" && timeRemaining > 60) || this.player.curse !== "curseOfDoom") || timeRemaining >= this.player.auras.curseOfAgony.minimumDuration)) {
-								if ((this.player.curse == "curseOfDoom" && timeRemaining > 60) || this.player.curse !== "curseOfDoom") {
+							if (this.player.curse && !this.player.auras[this.player.curse].active && ((this.player.auras.curseOfAgony && !this.player.auras.curseOfAgony.active) || !this.player.auras.curseOfAgony) && (this.player.spells[this.player.curse].ready() || this.player.spells.curseOfAgony.ready()) && (((this.player.curse == "curseOfDoom" && timeRemaining > 60 && this.player.spells.curseOfDoom.ready()) || this.player.curse !== "curseOfDoom") || timeRemaining >= this.player.auras.curseOfAgony.minimumDuration)) {
+								if ((this.player.curse == "curseOfDoom" && timeRemaining > 60 && this.player.spells.curseOfDoom.ready()) || this.player.curse !== "curseOfDoom") {
 									this.player.cast(this.player.curse);
 								} else if (timeRemaining >= this.player.auras.curseOfAgony.minimumDuration) {
 									this.player.cast("curseOfAgony");
@@ -232,21 +229,7 @@ class Simulation {
 								} else if (this.player.rotation.dot.immolate && !this.player.auras.immolate.active && this.player.spells.immolate.ready()  && (timeRemaining - this.player.spells.immolate.castTime) >= this.player.auras.immolate.minimumDuration) {
 									this.player.cast("immolate");
 								} else if (this.player.spells[this.player.filler].ready()) {
-									// Use Power Infusion
-									if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.ready()) {
-										this.player.auras.powerInfusion.apply();
-									}
-									// Use on-use trinkets
-									for (let i = 0; i < 2; i++) {
-										if (this.player.trinkets[i] && this.player.trinkets[i].ready()) {
-											this.player.trinkets[i].use();
-											// Set the other on-use trinket (if another is equipped) on cooldown for the duration of the trinket just used
-											let otherTrinketSlot = i == 1 ? 2 : 1;
-											if (this.player.trinkets[otherTrinketSlot] && this.player.trinkets[otherTrinketSlot].ready()) {
-												this.player.trinkets[otherTrinketSlot].cooldownRemaining = this.player.trinkets[i].duration;
-											}
-										}
-									}
+									this.player.useCooldownsIfAvailable();
 									this.player.cast(this.player.filler);
 								} else {
 									this.player.cast("lifeTap");

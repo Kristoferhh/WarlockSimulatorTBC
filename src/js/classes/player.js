@@ -132,7 +132,7 @@ class Player {
 		if (settings.sets['658'] >= 2) this.stats.hitRating += 35; // Mana-Etched Regalia 2-set bonus (35 hit rating)
 		this.stats.extraHitChance = this.stats.hitRating / hitRatingPerPercent; // hit percent from hit rating
 		if (settings.auras.inspiringPresence === true) this.stats.extraHitChance += 1;
-		this.stats.hitChance = Math.round(this.getHitChance()); // The player's chance of hitting the enemy, between 61% and 99%
+		this.stats.hitChance = Math.round(this.getHitChance()); // The player's chance of hitting the enemy, usually between 83% and 99%
 
 		// Add bonus damage % from Demonic Sacrifice
 		if (settings.talents.demonicSacrifice === 1 && settings.simSettings.sacrificePet == 'yes') {
@@ -265,7 +265,7 @@ class Player {
 			this.combatlog.push("Spell Hit Chance: " + this.pet.stats.spellHitChance + "%");
 			this.combatlog.push("Spell Crit Chance: " + this.pet.stats.spellCritChance + "%");
 			this.combatlog.push("Damage Modifier: " + Math.round(this.pet.stats.damageModifier * 100) + "%");
-			if (this.pet.spells.lashOfPain) this.combatlog.push("Lash of Pain modifier: " + Math.round(this.pet.spells.lashOfPain.modifier * 100) + "% (in addition to the normal pet damage % modifier)");
+			if (this.pet.spells.lashOfPain) this.combatlog.push("Lash of Pain modifier: " + Math.round(this.pet.spells.lashOfPain.modifier * 100) + "% (as well as the normal pet damage % modifier)");
 			if (this.pet.type == PetType.MELEE) this.combatlog.push("Enemy Armor: " + Math.round(this.enemy.armor) + " = " + Math.round((1 - this.pet.armorMultiplier) * 100) + "% physical damage reduction");
 		}
 	}
@@ -322,6 +322,24 @@ class Player {
 
 	cast(spell) {
 		this.spells[spell].startCast();
+	}
+
+	useCooldownsIfAvailable() {
+		// Use Power Infusion
+		if (this.auras.powerInfusion && this.auras.powerInfusion.ready()) {
+			this.auras.powerInfusion.apply();
+		}
+		// Use on-use trinkets
+		for (let i = 0; i < 2; i++) {
+			if (this.trinkets[i] && this.trinkets[i].ready()) {
+				this.trinkets[i].use();
+				// Set the other on-use trinket (if another is equipped) on cooldown for the duration of the trinket just used
+				let otherTrinketSlot = i == 1 ? 2 : 1;
+				if (this.trinkets[otherTrinketSlot] && this.trinkets[otherTrinketSlot].ready()) {
+					this.trinkets[otherTrinketSlot].cooldownRemaining = this.trinkets[i].duration;
+				}
+			}
+		}
 	}
 
 	isHit(isAfflictionSpell) {
