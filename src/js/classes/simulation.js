@@ -209,10 +209,11 @@ class Simulation {
 								this.player.cast('lifeTap');
 							}
 						} else {
-							// If a curse if active but no curse is up (if Curse of Doom is selected then it checks if both CoD and Curse of Agony are not up since CoA is used when theres <60 sec left of the fight)
-							// If the curse is CoD then it checks if there's more than 60 seconds left of the fight or it checks if a CoA cast would be up for at least an x amount of seconds (minimum uptime for it to be worth casting although this depends on how much damage the player would do with their filler so this value might need to be changed)
-							if (this.player.curse && !this.player.auras[this.player.curse].active && ((this.player.auras.curseOfAgony && !this.player.auras.curseOfAgony.active) || !this.player.auras.curseOfAgony) && (this.player.spells[this.player.curse].ready() || this.player.spells.curseOfAgony.ready()) && (((this.player.curse == "curseOfDoom" && timeRemaining > 60 && this.player.spells.curseOfDoom.ready()) || this.player.curse !== "curseOfDoom") || timeRemaining >= this.player.auras.curseOfAgony.minimumDuration)) {
-								if ((this.player.curse == "curseOfDoom" && timeRemaining > 60 && this.player.spells.curseOfDoom.ready()) || this.player.curse !== "curseOfDoom") {
+							// Checks if a curse if assigned and if the curse is not up.
+							// If the curse is not up, it checks if the curse is Curse of Doom. If the curse if Curse of Doom then it checks if Curse of Agony is not up as well (used when there's <60sec left of the fight).
+							// If the curse is not Curse of Doom or the curse is Curse of Doom *and* both CoD and CoA are down (and if there's enough time left for them to do enough damage to warrant casting them) then it casts the curse.
+							if (this.player.curse && !this.player.auras[this.player.curse].active && (this.player.curse !== "curseOfDoom" || (this.player.curse == "curseOfDoom" && !this.player.auras.curseOfAgony.active && (timeRemaining > 60 || timeRemaining >= this.player.auras.curseOfAgony.minimumDuration)))) {
+								if (this.player.curse !== "curseOfDoom" || (this.player.curse == "curseOfDoom" && timeRemaining > 60 && this.player.spells.curseOfDoom.ready())) {
 									this.player.cast(this.player.curse);
 								} else if (timeRemaining >= this.player.auras.curseOfAgony.minimumDuration) {
 									this.player.cast("curseOfAgony");

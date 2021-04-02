@@ -79,28 +79,6 @@ class CurseOfRecklessnessAura extends Aura {
 	}
 }
 
-class CurseOfDoomAura extends Aura {
-	constructor(player) {
-		super(player);
-		this.name = "Curse of Doom";
-		this.durationTotal = 60;
-		this.dmg = 4200;
-		this.coefficient = 2;
-	}
-
-	apply() {
-		this.spellPower = this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats.shadowPower;
-		super.apply();
-	}
-
-	fade(endOfIteration = false) {
-		if (this.active && !endOfIteration) {
-			this.player.spells.curseOfDoom.damage(false);
-		}
-		super.fade(endOfIteration);
-	}
-}
-
 class ShadowTrance extends Aura {
 	constructor(player) {
 		super(player);

@@ -17,7 +17,7 @@ class DamageOverTime {
 	}
 
 	setup() {
-		this.ticksTotal = this.durationTotal / this.tickTimerTotal;
+		this.ticksTotal = Math.round(this.durationTotal / this.tickTimerTotal);
 		this.originalDurationTotal = this.durationTotal;
 		this.varName = camelCase(this.name);
 		this.player.damageBreakdown[this.varName] = this.player.damageBreakdown[this.varName] || {"name": this.name};
@@ -75,6 +75,7 @@ class DamageOverTime {
 
 				if (this.ticksRemaining <= 0) {
 					this.active = false;
+					this.player.combatLog(this.name + " faded");
 				}
 			}
 		}
@@ -176,6 +177,19 @@ class CurseOfAgonyDot extends DamageOverTime {
 		this.name = "Curse of Agony";
 		this.coefficient = 1.2;
 		this.minimumDuration = 15;
+		this.setup();
+	}
+}
+
+class CurseOfDoomDot extends DamageOverTime {
+	constructor(player) {
+		super(player);
+		this.durationTotal = 60;
+		this.tickTimerTotal = 60;
+		this.dmg = 4200;
+		this.school = "shadow";
+		this.name = "Curse of Doom";
+		this.coefficient = 2;
 		this.setup();
 	}
 }
