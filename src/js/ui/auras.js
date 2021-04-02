@@ -62,6 +62,12 @@ const _auras = {
 				"iconName": "spell_holy_arcaneintellect",
 				"id": 27127,
 			},
+			"prayerOfFortitude": {
+				"name": "Prayer of Fortitude",
+				"stamina": 79,
+				"iconName": "spell_holy_prayeroffortitude",
+				"id": 25392
+			},
 			"prayerOfSpirit": {
 				"name": "Prayer of Spirit",
 				"spirit": 50,

@@ -113,6 +113,7 @@ class Pet {
 			this.stats.spirit += 14;
 		}
 		if (this.playerAuras.arcaneIntellect) this.stats.buffs.intellect += 40;
+		if (this.playerAuras.prayerOfFortitude) this.stats.buffs.stamina += 79;
 		if (this.playerAuras.prayerOfSpirit) {
 			let multiplier = parseInt(this.simSettings.improvedDivineSpirit);
 			this.stats.spirit += 50 * (1 + (0.1 * multiplier));
