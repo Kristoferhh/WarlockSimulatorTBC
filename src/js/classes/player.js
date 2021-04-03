@@ -123,6 +123,7 @@ class Player {
 
 		// Crit chance
 		this.stats.critChanceMultiplier = 1000;
+		if (settings.auras.powerOfTheGuardianMage) this.stats.critRating += 28 * this.simSettings.mageAtieshAmount;
 		this.stats.critChance = baseCritChancePercent + ((this.stats.critRating + ((this.stats.intellect * this.stats.intellectModifier) * critPerInt)) / critRatingPerPercent) + settings.talents.devastation + settings.talents.backlash + settings.talents.demonicTactics;
 		if (settings.auras.moonkinAura) this.stats.critChance += 5;
 		if (settings.auras.judgementOfTheCrusader) this.stats.critChance += 3;
@@ -179,6 +180,9 @@ class Player {
 		// Add mp5 from Vampiric Touch
 		if (settings.auras.vampiricTouch) {
 			this.stats.mp5 += settings.simSettings.shadowPriestDps * 0.05;
+		}
+		if (settings.auras.powerOfTheGuardianWarlock) {
+			this.stats.spellPower += 33 * settings.simSettings.warlockAtieshAmount;
 		}
 
 		// Trinkets

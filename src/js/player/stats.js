@@ -84,6 +84,7 @@ function refreshCharacterStats() {
 
 	// Crit
 	let critRating = characterStats.critRating + ((characterStats.intellect * characterStats.intellectModifier) * critPerInt);
+	if (auras.powerOfTheGuardianMage) critRating += 28 * $("select[name='mageAtieshAmount']").val();
 	let critChance = Math.round((critRating / critRatingPerPercent + baseCritChancePercent) * 100) / 100 + talents.devastation + talents.backlash + talents.demonicTactics;
 	if (auras.moonkinAura) critChance += 5;
 	if (auras.judgementOfTheCrusader) critChance += 3;
@@ -145,6 +146,7 @@ function refreshCharacterStats() {
 	if (JSON.parse(localStorage.setBonuses)['667'] == 2) spellPower += 15; // The Twin Stars 2-set bonus (15 spellpower)
 	if (auras.felArmor) spellPower += 100 * (1 + 0.1 * talents.demonicAegis);
 	if (auras.prayerOfSpirit) spellPower += (characterStats.spirit * spiritModifier * (0.1 * $("select[name='improvedDivineSpirit']").val())); 
+	if (auras.powerOfTheGuardianWarlock) spellPower += 33 * $("select[name='warlockAtieshAmount']").val();
 	spellPower = Math.round(spellPower);
 
 	// MP5

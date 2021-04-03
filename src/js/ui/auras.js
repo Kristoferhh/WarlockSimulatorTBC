@@ -91,13 +91,11 @@ const _auras = {
 			},
 			"powerOfTheGuardianWarlock": {
 				"name": "Power of the Guardian",
-				"spellPower": 33,
 				"iconName": "spell_nature_moonglow",
 				"id": 28143
 			},
 			"powerOfTheGuardianMage": {
 				"name": "Power of the Guardian",
-				"critRating": 28,
 				"iconName": "spell_nature_moonglow",
 				"id": 28142
 			},
