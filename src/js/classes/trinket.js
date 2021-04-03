@@ -27,6 +27,8 @@ class Trinket {
 					if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 				}
 			}
+			this.player.importantAuraCounter++;
+			this.player.combatLog(this.player.importantAuraCounter + " important auras active");
 			this.active = true;
 			this.durationRemaining = this.duration;
 			this.cooldownRemaining = this.cooldown;
@@ -44,6 +46,8 @@ class Trinket {
 					if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 				}
 			}
+			this.player.importantAuraCounter--;
+			this.player.combatLog(this.player.importantAuraCounter + " important auras active");
 			this.active = false;
 		}
 	}

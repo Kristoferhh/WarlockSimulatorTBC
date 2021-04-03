@@ -20,7 +20,7 @@ class Player {
 		}
 	}
 
-	constructor(settings, customItemSlot = null, customItemSubSlot = "", customItemID = null) {
+	constructor(settings, customItemSlot = null, customItemSubSlot = "", customItemId = null) {
 		this.stats = JSON.parse(JSON.stringify(settings.stats)); // Create a deep-copy of the character's stats since we need to modify the values.
 		this.stats.manaCostModifier = 1;
 		this.enemy = settings.enemy;
@@ -28,16 +28,17 @@ class Player {
 		this.talents = settings.talents;
 		this.simSettings = settings.simSettings;
 		this.level = 70;
-		this.itemID = customItemID || settings.items[settings.selectedItemSlot] || 0;
+		this.itemId = customItemId || settings.items[settings.selectedItemSlot] || 0;
 		this.sets = settings.sets;
 		this.selectedAuras = settings.auras;
 		this.enemy.shadowResist = Math.max(this.enemy.shadowResist, (this.enemy.level - this.level) * 8, 0);
 		this.enemy.fireResist = Math.max(this.enemy.fireResist, (this.enemy.level - this.level) * 8, 0);
 		this.trinketIds = [settings.items['trinket1'],settings.items['trinket2']];
 		this.combatlog = [];
+		this.importantAuraCounter = 0; // counts the amount of active "important" auras such as trinket procs, on-use trinket uses, power infusion etc.
 
 		// If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
-		if (customItemSlot && customItemID && customItemID !== settings.items[customItemSlot + customItemSubSlot]) {
+		if (customItemSlot && customItemId && customItemId !== settings.items[customItemSlot + customItemSubSlot]) {
 			// Loop through all items in the custom item slot
 			for (let item in items[customItemSlot]) {
 				// Check if this is the currently equipped item
@@ -77,7 +78,7 @@ class Player {
 					}
 				}
 				// Check if this is the custom item
-				else if (items[customItemSlot][item].id == customItemID) {
+				else if (items[customItemSlot][item].id == customItemId) {
 					// Add stats from the item
 					for (let stat in items[customItemSlot][item]) {
 						if (this.stats.hasOwnProperty(stat)) {
@@ -88,11 +89,11 @@ class Player {
 						this.sets[items[customItemSlot][item].setId]++;
 					}
 					// Add stats from any gems equipped in the custom item
-					if (settings.gems[customItemSlot] && settings.gems[customItemSlot][customItemID]) {
-						for (let socket in settings.gems[customItemSlot][customItemID]) {
+					if (settings.gems[customItemSlot] && settings.gems[customItemSlot][customItemId]) {
+						for (let socket in settings.gems[customItemSlot][customItemId]) {
 							for (let socketColor in gems) {
 								for (let gem in gems[socketColor]) {
-									if (gems[socketColor][gem].id == settings.gems[customItemSlot][customItemID][socket]) {
+									if (gems[socketColor][gem].id == settings.gems[customItemSlot][customItemId][socket]) {
 										for (let stat in gems[socketColor][gem]) {
 											if (this.stats.hasOwnProperty(stat)) {
 												this.stats[stat] += gems[socketColor][gem][stat];
@@ -109,7 +110,7 @@ class Player {
 		
 		// If neither of the trinkets' ids are null then either the test item is not a trinket or it's the item we already have equipped
 		if (this.trinketIds.indexOf(null) !== -1) {
-			this.trinketIds[this.trinketIds.indexOf(null)] = customItemID;
+			this.trinketIds[this.trinketIds.indexOf(null)] = customItemId;
 		}
 
 		this.stats.health = (this.stats.health + (this.stats.stamina * this.stats.staminaModifier) * healthPerStamina) * (1 + (0.01 * settings.talents.felStamina));
@@ -287,6 +288,10 @@ class Player {
 		if (this.rotation.curse.curseOfDoom) this.spells.curseOfDoom = new CurseOfDoom(this);
 		if (this.rotation.finisher.shadowburn) this.spells.shadowburn = new Shadowburn(this);
 		if (this.rotation.finisher.deathCoil) this.spells.deathCoil = new DeathCoil(this);
+		if (this.selectedAuras.destructionPotion) this.spells.destructionPotion = new DestructionPotion(this);
+		if (this.selectedAuras.superManaPotion) this.spells.superManaPotion = new SuperManaPotion(this);
+		if (this.selectedAuras.demonicRune) this.spells.demonicRune = new DemonicRune(this);
+		if (this.selectedAuras.flameCap) this.spells.flameCap = new FlameCap(this);
 
 		this.auras = {};
 		if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusion(this);
@@ -300,6 +305,8 @@ class Player {
 		if (this.rotation.curse.curseOfRecklessness) this.auras.curseOfRecklessness = new CurseOfRecklessnessAura(this);
 		if (this.rotation.curse.curseOfDoom) this.auras.curseOfDoom = new CurseOfDoomDot(this);
 		if (this.talents.nightfall > 0) this.auras.shadowTrance = new ShadowTrance(this);
+		if (this.selectedAuras.destructionPotion) this.auras.destructionPotion = new DestructionPotionAura(this);
+		if (this.selectedAuras.flameCap) this.auras.flameCap = new FlameCapAura(this);
 		if (this.trinketIds.includes(28789)) this.auras.eyeOfMagtheridon = new EyeOfMagtheridon(this);
 		if (this.trinketIds.includes(30626)) this.auras.sextantOfUnstableCurrents = new SextantOfUnstableCurrents(this);
 		if (this.trinketIds.includes(27683)) this.auras.quagmirransEye = new QuagmirransEye(this);
@@ -324,19 +331,33 @@ class Player {
 		this.spells[spell].startCast();
 	}
 
+	areAnyCooldownsReady() {
+		if (this.auras.powerInfusion && this.auras.powerInfusion.ready()) return true;
+		if (this.spells.destructionPotion && this.spells.destructionPotion.ready()) return true;
+		for (let i = 0; i < this.trinkets.length; i++) {
+			if (this.trinkets[i].ready()) return true;
+		}
+
+		return false;
+	}
+
 	useCooldownsIfAvailable() {
-		// Use Power Infusion
 		if (this.auras.powerInfusion && this.auras.powerInfusion.ready()) {
 			this.auras.powerInfusion.apply();
 		}
-		// Use on-use trinkets
-		for (let i = 0; i < 2; i++) {
+		if (this.spells.destructionPotion && this.spells.destructionPotion.ready()) {
+			this.cast("destructionPotion");
+		}
+		if (this.spells.flameCap && this.spells.flameCap.ready()) {
+			this.cast("flameCap");
+		}
+		for (let i = 0; i < this.trinkets.length; i++) {
 			if (this.trinkets[i] && this.trinkets[i].ready()) {
 				this.trinkets[i].use();
 				// Set the other on-use trinket (if another is equipped) on cooldown for the duration of the trinket just used
 				let otherTrinketSlot = i == 1 ? 2 : 1;
-				if (this.trinkets[otherTrinketSlot] && this.trinkets[otherTrinketSlot].ready()) {
-					this.trinkets[otherTrinketSlot].cooldownRemaining = this.trinkets[i].duration;
+				if (this.trinkets[otherTrinketSlot]) {
+					this.trinkets[otherTrinketSlot].cooldownRemaining = Math.max(this.trinkets[otherTrinketSlot].cooldownRemaining,this.trinkets[i].duration);
 				}
 			}
 		}

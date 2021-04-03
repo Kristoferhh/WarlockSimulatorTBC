@@ -15,7 +15,7 @@ importScripts(
 );
 
 onmessage = function(e) {
-	var player = new Player(e.data.player, e.data.itemSlot || null, e.data.itemSubSlot || "", e.data.itemID || null);
+	var player = new Player(e.data.player, e.data.itemSlot || null, e.data.itemSubSlot || "", e.data.itemId || null);
 	var simulation = new Simulation(player, e.data.simulation,
 		(simulationEnd) => {
 			this.postMessage({

@@ -16,6 +16,8 @@ class Spell {
 		this.bonusCrit = 0;
 		this.cooldownRemaining = 0;
 		this.casting = false;
+		this.isItem = false;
+		this.onGcd = true;
 	}
 
 	reset() {
@@ -29,12 +31,14 @@ class Spell {
 	}
 
 	ready() {
-		return this.player.gcdRemaining <= 0 && this.player.castTimeRemaining <= 0 && this.manaCost <= this.player.mana && this.cooldownRemaining <= 0;
+		return (!this.onGcd || this.player.gcdRemaining <= 0) && this.player.castTimeRemaining <= 0 && this.manaCost <= this.player.mana && this.cooldownRemaining <= 0;
 	}
 
 	startCast() {
-		// 1 second is the minimum for global cooldown?
-		this.player.gcdRemaining = Math.max(1,Math.round((this.player.gcdValue / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000);
+		if (this.onGcd) {
+			// 1 second is the minimum for global cooldown?
+			this.player.gcdRemaining = Math.max(1,Math.round((this.player.gcdValue / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000);
+		}
 
 		if (this.castTime > 0) {
 			this.casting = true;
@@ -65,7 +69,7 @@ class Spell {
 		}
 
 		// Check if the spell hits or misses
-		if (!this.player.isHit(this.type === "affliction")) {
+		if (!this.isItem && !this.player.isHit(this.type === "affliction")) {
 			this.player.combatLog(this.name + " *resist*");
 			this.player.damageBreakdown[this.varName].misses = this.player.damageBreakdown[this.varName].misses + 1 || 1;
 			return;
@@ -86,10 +90,15 @@ class Spell {
 			this.damage(isCrit);
 		}
 
+		// If it's an item such as mana potion, demonic rune, destruction potion etc. then jump out of the method
+		if (this.isItem) {
+			return;
+		}
+
 		// T4 2pc
 		// 10% proc rate on all shadow or fire spells (including when dots applied) (needs confirmation)
 		if (this.player.sets['645'] >= 2 && ['shadow','fire'].includes(this.school) && random(1,100) <= this.player.auras['shadowFlame' + this.school].procChance) {
-			this.player.auras['shadowFlame' + this.school].apply();	
+			this.player.auras['shadowFlame' + this.school].apply();
 		}
 
 		// Quagmirran's Eye
@@ -326,13 +335,25 @@ class LifeTap extends Spell {
 		this.manaReturn = 582;
 		this.coefficient = 0.8;
 		this.modifier = 1 + (0.1 * this.player.talents.improvedLifeTap);
+		this.setup();
+	}
+
+	manaGain() {
+		return (this.manaReturn + ((this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats.shadowPower) * this.coefficient)) * this.modifier;
 	}
 
 	cast() {
-		this.casting = false;
-		let manaGain = (this.manaReturn + ((this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats.shadowPower) * this.coefficient)) * this.modifier;
+		this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1;
+		let manaGain = this.manaGain();
 		this.player.combatLog(this.name + " " + Math.round(manaGain));
-		if (this.player.mana + manaGain > this.player.stats.maxMana) this.player.combatLog("Life Tap used at too high mana (mana wasted)"); // Warning for if the simulation ever decides to use life tap when it would overcap the player on mana.
+		// Warning for if Life Tap is used while there are important auras active
+		if (this.player.importantAuraCounter > 0) {
+			this.player.combatLog("Life Tap used while there are cooldowns active");
+		}
+		// Warning for if the simulation ever decides to use life tap when it would overcap the player on mana.
+		if (this.player.mana + manaGain > this.player.stats.maxMana) {
+			this.player.combatLog("Life Tap used at too high mana (mana wasted)");
+		}
 		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain);
 		if (this.player.pet && this.player.talents.manaFeed > 0) {
 			let petManaGain = manaGain * (this.player.talents.manaFeed / 3);
@@ -462,6 +483,72 @@ class CurseOfDoom extends Spell {
 		this.school = "shadow";
 		this.type = "affliction";
 		this.isDot = true;
+		this.setup();
+	}
+}
+
+class DestructionPotion extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Destruction Potion";
+		this.cooldown = 120;
+		this.isItem = true;
+		this.onGcd = false;
+		this.setup();
+	}
+
+	cast() {
+		super.cast();
+		this.player.auras.destructionPotion.apply();
+	}
+}
+
+class SuperManaPotion extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Super Mana Potion";
+		this.cooldown = 120;
+		this.isItem = true;
+		this.avgManaValue = 2400;
+		this.onGcd = false;
+		this.setup();
+	}
+
+	cast() {
+		super.cast();
+		let currentPlayerMana = this.player.mana;
+		this.player.mana = Math.min(this.player.stats.maxMana, currentPlayerMana + this.avgManaValue);
+		this.player.combatLog("Player gains " + Math.round(this.player.mana - currentPlayerMana) + " mana from Super Mana Potion (" + Math.round(currentPlayerMana) + " -> " + Math.round(this.player.mana) + ")");
+	}
+}
+
+class DemonicRune extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Demonic Rune";
+		this.cooldown = 120;
+		this.isItem = true;
+		this.avgManaValue = 1200;
+		this.onGcd = false;
+		this.setup();
+	}
+
+	cast() {
+		super.cast();
+		let currentPlayerMana = this.player.mana;
+		this.player.mana = Math.min(this.player.stats.maxMana, currentPlayerMana + this.avgManaValue);
+		this.player.combatLog("Player gains " + Math.round(this.player.mana - currentPlayerMana) + " mana from Demonic Rune (" + Math.round(currentPlayerMana) + " -> " + Math.round(this.player.mana) + ")");
+	}
+}
+
+class FlameCap extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Flame Cap";
+		this.cooldown = 180;
+		this.isItem = true;
+		this.isAura = true;
+		this.onGcd = false;
 		this.setup();
 	}
 }

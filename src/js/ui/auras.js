@@ -303,6 +303,24 @@ const _auras = {
 				"iconName": "inv_potion_26",
 				"id": 23123,
 				"weaponOil": true,
+			},
+			"demonicRune": {
+				"name": "Demonic Rune",
+				"iconName": "inv_misc_rune_04",
+				"id": 12662,
+				"demonicRune": true
+			},
+			"flameCap": {
+				"name": "Flame Cap",
+				"iconName": "inv_misc_herb_flamecap",
+				"id": 22788,
+				"demonicRune": true
+			},
+			"veryBerryCream": {
+				"name": "Very Berry Cream",
+				"spellPower": 23,
+				"iconName": "inv_valentineschocolate02",
+				"id": 22238
 			}
 		}
 	},

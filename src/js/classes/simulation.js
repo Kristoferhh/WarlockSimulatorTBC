@@ -16,7 +16,8 @@ class Simulation {
 		this.simulationUpdate = simulationUpdate;
 	}
 
-	// IMPORTANT: The reason this function contains a lot of hardcoded auras and spells instead of using loops is because using loops takes ~4-5 times longer than this method.
+	// >> IMPORTANT <<: The reason this function contains a lot of hardcoded auras and spells instead of using loops is because using loops takes ~4-5 times longer than this method.
+	// That's not to say that this can't be improved, but the improvement won't be a regular loop through the spell/aura objects.
 	passTime() {
 		let time = this.player.castTimeRemaining;
 		if (time == 0 || (this.player.gcdRemaining > 0 && this.player.gcdRemaining < time)) time = this.player.gcdRemaining
@@ -56,6 +57,16 @@ class Simulation {
 			if (this.player.auras.curseOfDoom.active && this.player.auras.curseOfDoom.durationRemaining < time) time = this.player.auras.curseOfDoom.durationRemaining; 
 			if (this.player.spells.curseOfDoom.cooldownRemaining > 0 && this.player.spells.curseOfDoom.cooldownRemaining < time) time = this.player.spells.curseOfDoom.cooldownRemaining;
 		}
+		if (this.player.auras.destructionPotion) {
+			if (this.player.spells.destructionPotion.cooldownRemaining > 0 && this.player.spells.destructionPotion.cooldownRemaining < time) time = this.player.spells.destructionPotion.cooldownRemaining;
+			if (this.player.auras.destructionPotion.active && this.player.auras.destructionPotion.durationRemaining < time) time = this.player.auras.destructionPotion.durationRemaining;
+		}
+		if (this.player.spells.flameCap) {
+			if (this.player.spells.flameCap.cooldownRemaining > 0 && this.player.spells.flameCap.cooldownRemaining < time) time = this.player.spells.flameCap.cooldownRemaining;
+			if (this.player.auras.flameCap.active && this.player.auras.flameCap.durationRemaining < time) time = this.player.auras.flameCap.durationRemaining;
+		}
+		if (this.player.spells.demonicRune && this.player.spells.demonicRune.cooldownRemaining > 0 && this.player.spells.demonicRune.cooldownRemaining < time) time = this.player.spells.demonicRune.cooldownRemaining;
+		if (this.player.spells.superManaPotion && this.player.spells.superManaPotion.cooldownRemaining > 0 && this.player.spells.superManaPotion.cooldownRemaining < time) time = this.player.spells.superManaPotion.cooldownRemaining;
 		if (this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.shadowTrance.durationRemaining < time) time = this.player.auras.shadowTrance.durationRemaining;
 		if (this.player.auras.shadowFlameshadow && this.player.auras.shadowFlameshadow.active && this.player.auras.shadowFlameshadow.durationRemaining < time) time = this.player.auras.shadowFlameshadow.durationRemaining;
 		if (this.player.auras.shadowFlamefire && this.player.auras.shadowFlamefire.active && this.player.auras.shadowFlamefire.durationRemaining < time) time = this.player.auras.shadowFlamefire.durationRemaining;
@@ -103,6 +114,10 @@ class Simulation {
 		if (this.player.spells.curseOfDoom && this.player.spells.curseOfDoom.cooldownRemaining > 0) this.player.spells.curseOfDoom.tick(time);
 		if (this.player.spells.deathCoil && this.player.spells.deathCoil.cooldownRemaining > 0) this.player.spells.deathCoil.tick(time);
 		if (this.player.spells.shadowburn && this.player.spells.shadowburn.cooldownRemaining > 0) this.player.spells.shadowburn.tick(time);
+		if (this.player.spells.destructionPotion && this.player.spells.destructionPotion.cooldownRemaining > 0) this.player.spells.destructionPotion.tick(time);
+		if (this.player.spells.superManaPotion && this.player.spells.superManaPotion.cooldownRemaining > 0) this.player.spells.superManaPotion.tick(time);
+		if (this.player.spells.demonicRune && this.player.spells.demonicRune.cooldownRemaining > 0) this.player.spells.demonicRune.tick(time);
+		if (this.player.spells.flameCap && this.player.spells.flameCap.cooldownRemaining > 0) this.player.spells.flameCap.tick(time);
 
 		// Auras
 		if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.tick(time);
@@ -115,6 +130,8 @@ class Simulation {
 		if (this.player.auras.curseOfTheElements && this.player.auras.curseOfTheElements.active) this.player.auras.curseOfTheElements.tick(time);
 		if (this.player.auras.curseOfRecklessness && this.player.auras.curseOfRecklessness.active) this.player.auras.curseOfRecklessness.tick(time);
 		if (this.player.auras.curseOfDoom && (this.player.auras.curseOfDoom.active || this.player.auras.curseOfDoom.cooldownRemaining > 0)) this.player.auras.curseOfDoom.tick(time);
+		if (this.player.auras.destructionPotion && this.player.auras.destructionPotion.active) this.player.auras.destructionPotion.tick(time);
+		if (this.player.auras.flameCap && this.player.auras.flameCap.active) this.player.auras.flameCap.tick(time);
 		if (this.player.auras.shadowFlameshadow && this.player.auras.shadowFlameshadow.active) this.player.auras.shadowFlameshadow.tick(time);
 		if (this.player.auras.shadowFlamefire && this.player.auras.shadowFlamefire.active) this.player.auras.shadowFlamefire.tick(time);
 		if (this.player.auras.spellstrikeProc && this.player.auras.spellstrikeProc.active) this.player.auras.spellstrikeProc.tick(time);
@@ -166,6 +183,10 @@ class Simulation {
 			if (this.player.spells.shadowburn) this.player.spells.shadowburn.reset();
 			if (this.player.spells.deathCoil) this.player.spells.deathCoil.reset();
 			if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.reset();
+			if (this.player.spells.destructionPotion) this.player.spells.destructionPotion.reset();
+			if (this.player.spells.superManaPotion) this.player.spells.superManaPotion.reset();
+			if (this.player.spells.demonicRune) this.player.spells.demonicRune.reset();
+			if (this.player.spells.flameCap) this.player.spells.flameCap.reset();
 			this.player.reset(); // Resets mana, global cooldown etc.
 			if (this.player.pet) this.player.pet.reset();
 
@@ -187,13 +208,21 @@ class Simulation {
 						if (this.player.pet.spells.lashOfPain && this.player.pet.spells.lashOfPain.ready() && (!this.player.auras.improvedShadowBolt || this.player.simSettings.lashOfPainUsage === 'onCooldown' || (this.player.simSettings.lashOfPainUsage == 'noISB' && !this.player.auras.improvedShadowBolt.active))) {
 							this.player.pet.cast("lashOfPain");
 						}
-					} else if (this.player.pet.type == PetType.RANGED) {
+					} /*else if (this.player.pet.type == PetType.RANGED) {
 
-					}
+					}*/
 				}
-
 				// Player
 				if (this.player.castTimeRemaining <= 0) {
+					// Spells not on the global cooldown
+					// Demonic Rune
+					if (this.player.spells.demonicRune && (this.player.stats.maxMana - this.player.mana) > this.player.spells.demonicRune.avgManaValue && this.player.spells.demonicRune.ready()) {
+						this.player.cast("demonicRune");
+					}
+					// Super Mana Potion
+					if (this.player.spells.superManaPotion && (this.player.stats.maxMana - this.player.mana) > this.player.spells.superManaPotion.avgManaValue && this.player.spells.superManaPotion.ready()) {
+						this.player.cast("superManaPotion");
+					}
 					// Spells on the global cooldown
 					if (this.player.gcdRemaining <= 0) {
 						let timeRemaining = fightLength - this.player.fightTime;
@@ -209,7 +238,7 @@ class Simulation {
 								this.player.cast('lifeTap');
 							}
 						} else {
-							// Checks if a curse if assigned and if the curse is not up.
+							// Checks if a curse is assigned and if the curse is not up.
 							// If the curse is not up, it checks if the curse is Curse of Doom. If the curse if Curse of Doom then it checks if Curse of Agony is not up as well (used when there's <60sec left of the fight).
 							// If the curse is not Curse of Doom or the curse is Curse of Doom *and* both CoD and CoA are down (and if there's enough time left for them to do enough damage to warrant casting them) then it casts the curse.
 							if (this.player.curse && !this.player.auras[this.player.curse].active && (this.player.curse !== "curseOfDoom" || (this.player.curse == "curseOfDoom" && !this.player.auras.curseOfAgony.active && (timeRemaining > 60 || timeRemaining >= this.player.auras.curseOfAgony.minimumDuration)))) {
@@ -219,7 +248,10 @@ class Simulation {
 									this.player.cast("curseOfAgony");
 								}
 							} else {
-								if (this.player.rotation.curse.curseOfAgony && !this.player.auras.curseOfAgony.active && this.player.spells.curseOfAgony.ready() && timeRemaining >= this.player.auras.curseOfAgony.minimumDuration) {
+								// If a Nightfall proc is active and Corruption is active as well then prio Shadow Bolt over re-applying dots to avoid missing a free Shadow Bolt
+								if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.corruption.active) {
+									this.player.cast("shadowBolt");
+								} else if (this.player.rotation.curse.curseOfAgony && !this.player.auras.curseOfAgony.active && this.player.spells.curseOfAgony.ready() && timeRemaining >= this.player.auras.curseOfAgony.minimumDuration) {
 									this.player.cast("curseOfAgony");
 								} else if (this.player.rotation.dot.unstableAffliction && !this.player.auras.unstableAffliction.active && this.player.spells.unstableAffliction.ready() && (timeRemaining - this.player.spells.unstableAffliction.castTime) >= this.player.auras.unstableAffliction.minimumDuration) {
 									this.player.cast("unstableAffliction");
@@ -229,6 +261,12 @@ class Simulation {
 									this.player.cast("corruption");
 								} else if (this.player.rotation.dot.immolate && !this.player.auras.immolate.active && this.player.spells.immolate.ready()  && (timeRemaining - this.player.spells.immolate.castTime) >= this.player.auras.immolate.minimumDuration) {
 									this.player.cast("immolate");
+								}
+								// Use Life Tap instead of the filler spell even if the player is at high mana to avoid having to Life Tap when the player is out of mana and a cooldown is active such as a trinket proc or Power Infusion
+								// It uses Life Tap if Life Tap would not over cap the player on mana, there's more than 20 seconds left of the fight, and the player's mana percentage is less than the amount of time left in the fight (as a percentage) e.g. if the player is at 50% mana but there's 70% left of the fight.
+								// This can be improved further but I think this is a good method of making sure the player doesn't have to Life Tap while important cooldowns are active.
+								else if (this.player.importantAuraCounter == 0 && timeRemaining > 20 && (timeRemaining / fightLength) > (this.player.mana / this.player.stats.maxMana) && !this.player.areAnyCooldownsReady() && (this.player.spells.lifeTap.manaGain() + this.player.mana < this.player.stats.maxMana)) {
+									this.player.cast("lifeTap");
 								} else if (this.player.spells[this.player.filler].ready()) {
 									this.player.useCooldownsIfAvailable();
 									this.player.cast(this.player.filler);
@@ -258,7 +296,7 @@ class Simulation {
 				this.simulationUpdate({
 					"averageDamage": Math.round((totalDamage / totalDuration) * 100) / 100,
 					"percent": Math.round((this.player.iteration / this.iterations) * 100),
-					"itemID": this.player.itemID
+					"itemId": this.player.itemId
 				});
 			}
 
@@ -273,6 +311,7 @@ class Simulation {
 			if (this.player.auras.curseOfTheElements && this.player.auras.curseOfTheElements.active) this.player.auras.curseOfTheElements.fade(true);
 			if (this.player.auras.curseOfRecklessness && this.player.auras.curseOfRecklessness.active) this.player.auras.curseOfRecklessness.fade(true);
 			if (this.player.auras.curseOfDoom && this.player.auras.curseOfDoom.active) this.player.auras.curseOfDoom.fade(true);
+			if (this.player.auras.shadowTrance && this.player.auras.shadowTrance.active) this.player.auras.shadowTrance.fade(true);
 			if (this.player.auras.shadowFlameshadow && this.player.auras.shadowFlameshadow.active) this.player.auras.shadowFlameshadow.fade(true);
 			if (this.player.auras.shadowFlamefire && this.player.auras.shadowFlamefire.active) this.player.auras.shadowFlamefire.fade(true);
 			if (this.player.auras.spellstrikeProc && this.player.auras.spellstrikeProc.active) this.player.auras.spellstrikeProc.fade(true);
@@ -281,7 +320,9 @@ class Simulation {
 			if (this.player.auras.quagmirransEye && this.player.auras.quagmirransEye.active) this.player.auras.quagmirransEye.fade(true);
 			if (this.player.auras.shiffarsNexusHorn && this.player.auras.shiffarsNexusHorn.active) this.player.auras.shiffarsNexusHorn.fade(true);
 			if (this.player.auras.manaEtched4Set && this.player.auras.manaEtched4Set.active) this.player.auras.manaEtched4Set.fade(true);
-			for (let i = 0; i < 2; i++) {
+			if (this.player.auras.destructionPotion && this.player.auras.destructionPotion.active) this.player.auras.destructionPotion.fade(true);
+			if (this.player.auras.flameCap && this.player.auras.flameCap.active) this.player.auras.flameCap.fade(true);
+			for (let i = 0; i < this.player.trinkets.length; i++) {
 				if (this.player.trinkets[i]) {
 					this.player.trinkets[i].fade(true);
 					this.player.trinkets[i].reset();
@@ -300,7 +341,7 @@ class Simulation {
 			"iterations": this.iterations,
 			"totalDamage": totalDamage,
 			"totalDuration": totalDuration,
-			"itemID": this.player.itemID
+			"itemId": this.player.itemId
 		});
 	}
 }

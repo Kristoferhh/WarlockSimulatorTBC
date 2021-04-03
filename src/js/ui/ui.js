@@ -23,7 +23,7 @@ for (let auraType in _auras) {
 	$("#buffs-and-debuffs-section").append("<h3 id='" + auraType + "-heading'>" + _auras[auraType].heading + "</h3><ul id='" + lowerAuraType + "-list'></ul>");
 	for (let aura in _auras[auraType].auras) {
 		let a = _auras[auraType].auras[aura];
-		$("#" + lowerAuraType + "-list").append("<li data-aura-type='" + auraType + "' data-checked='" + (auras[aura] || false) + "' name='" + aura + "' id='" + aura + "' class='" + (a.stats ? "stats " : "") + (a.potion ? "potion " : "") + (a.battleElixir ? "battle-elixir " : "") + (a.guardianElixir ? "guardian-elixir " : "") + (a.weaponOil ? "weapon-oil " : "") + (a.foodBuff ? "food-buff " : "") + (a.petOnly ? "petBuff " : "") + (a.forPet ? "petDebuff " : "") + auraType + " aura'><a href='https://tbc.wowhead.com/" + _auras[auraType].type + "=" + a.id + "'><img alt='" + a.name + "' src='img/" + a.iconName + ".jpg'></a></li>");
+		$("#" + lowerAuraType + "-list").append("<li data-aura-type='" + auraType + "' data-checked='" + (auras[aura] || false) + "' name='" + aura + "' id='" + aura + "' class='" + (a.stats ? "stats " : "") + (a.potion ? "potion " : "") + (a.battleElixir ? "battle-elixir " : "") + (a.guardianElixir ? "guardian-elixir " : "") + (a.weaponOil ? "weapon-oil " : "") + (a.foodBuff ? "food-buff " : "") + (a.demonicRune ? "demonic-rune " : "") + (a.petOnly ? "petBuff " : "") + (a.forPet ? "petDebuff " : "") + auraType + " aura'><a href='https://tbc.wowhead.com/" + _auras[auraType].type + "=" + a.id + "'><img alt='" + a.name + "' src='img/" + a.iconName + ".jpg'></a></li>");
 	}
 }
 
@@ -112,7 +112,7 @@ $(".aura").click(function() {
 });
 
 // Array of consumables whose clicks we want to track.
-let consumableTypesToTrack = ['.weapon-oil', '.battle-elixir', '.guardian-elixir', '.food-buff', '.potion'];
+let consumableTypesToTrack = ['.weapon-oil', '.battle-elixir', '.guardian-elixir', '.food-buff', '.potion', '.demonic-rune'];
 // When a consumable is clicked, uncheck all other types of that consumable since we can only have one at a time (e.g. disable all other weapon oils if a weapon oil is clicked).
 $(consumableTypesToTrack.join(',')).click(function(event) {
 	let clickedConsumableName = $(this).attr("name");
@@ -426,7 +426,7 @@ $("#item-selection-table tbody").on('click', '.gem', function(event) {
 			}
 		}
 	}
-	$("#gem-selection-table").prepend('<tr data-color="' + socketColor + '" data-id="0" class="gem-row"><td class="gem-info"></td><td class="gem-name gem-info">Remove Gem</td></tr>');
+	$("#gem-selection-table").prepend('<tr data-color="' + socketColor + '" data-id="0" class="gem-row"><td class="gem-info"></td><td class="gem-name gem-info">Remove Gem From Socket</td></tr>');
 	$("#gem-selection-table").prepend('<tr><td></td><td data-enabled="false" id="show-hidden-gems-button">Toggle Hidden Gems</td></tr>');
 	if (gemPreferences.hidden.length == 0) {
 		$("#show-hidden-gems-button").closest('tr').hide();
