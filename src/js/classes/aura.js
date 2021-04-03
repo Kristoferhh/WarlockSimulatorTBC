@@ -405,6 +405,7 @@ class FlameCapAura extends Aura {
 		super(player);
 		this.name = "Flame Cap";
 		this.durationTotal = 60;
+		this.isImportant = true;
 	}
 
 	apply() {

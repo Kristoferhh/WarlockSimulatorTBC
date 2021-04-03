@@ -274,14 +274,6 @@ const _auras = {
 				"id": 22839,
 				"potion": true,
 			},
-			"blackenedBasilisk": {
-				"name": "Blackened Basilisk",
-				"spellPower": 23,
-				"spirit": 20,
-				"iconName": "inv_misc_food_86_basilisk",
-				"id": 27657,
-				"foodBuff": true,
-			},
 			"brilliantWizardOil": {
 				"name": "Brilliant Wizard Oil",
 				"spellPower": 36,
@@ -315,6 +307,45 @@ const _auras = {
 				"iconName": "inv_misc_herb_flamecap",
 				"id": 22788,
 				"demonicRune": true
+			},
+			"rumseyRumBlackLabel": {
+				"name": "Rumsey Rum Black Label",
+				"stamina": 15,
+				"iconName": "inv_drink_04",
+				"id": 21151,
+				"alcohol": true
+			},
+			"kreegsStoutBeatdown": {
+				"name": "Kreeg's Stout Beatdown",
+				"spirit": 25,
+				"intellect": -5,
+				"iconName": "inv_drink_05",
+				"id": 18284,
+				"alcohol": true
+			},
+			"blackenedBasilisk": {
+				"name": "Blackened Basilisk",
+				"spellPower": 23,
+				"spirit": 20,
+				"iconName": "inv_misc_food_86_basilisk",
+				"id": 27657,
+				"foodBuff": true,
+			},
+			"skullfishSoup": {
+				"name": "Skullfish Soup",
+				"critRating": 20,
+				"spirit": 20,
+				"iconName": "inv_misc_food_63",
+				"id": 33825,
+				"foodBuff": true
+			},
+			"spicyCrawdad": {
+				"name": "Spicy Crawdad",
+				"stamina": 30,
+				"spirit": 20,
+				"iconName": "inv_misc_fish_16",
+				"id": 27667,
+				"foodBuff": true
 			},
 			"veryBerryCream": {
 				"name": "Very Berry Cream",
