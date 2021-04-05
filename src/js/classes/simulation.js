@@ -24,7 +24,7 @@ class Simulation {
 
 		// Look for the shortest time until an action needs to be done
 		if (this.player.pet) {
-			if (this.player.pet.spiritTickTimerRemaining < time) time = this.player.pet.spiritTickTimerRemaining;
+			if ((this.player.talents.darkPact > 0 || this.player.pet.mode == PetMode.AGGRESSIVE) && this.player.pet.spiritTickTimerRemaining < time) time = this.player.pet.spiritTickTimerRemaining;
 
 			// Pet's attacks/abilities and such
 			if (this.player.pet.mode == PetMode.AGGRESSIVE) {
@@ -154,8 +154,10 @@ class Simulation {
 				this.player.combatLog("Player gains " + Math.round(this.player.stats.mp5) + " mana from MP5. Player mana: " + Math.round(this.player.mana) + "/" + Math.round(this.player.stats.maxMana));
 			}
 			if (this.player.pet && this.player.pet.stats.mp5 > 0) {
+				if (this.player.pet.stats.mana < this.player.pet.stats.maxMana) {
+					this.player.combatLog(this.player.pet.name + " gains " + this.player.pet.stats.mp5 + " mana from MP5. Pet mana: " + Math.round(this.player.pet.stats.mana) + "/" + Math.round(this.player.pet.stats.maxMana));
+				}
 				this.player.pet.stats.mana = Math.min(this.player.pet.stats.maxMana, this.player.pet.stats.mana + this.player.pet.stats.mp5);
-				this.player.combatLog(this.player.pet.name + " gains " + this.player.pet.stats.mp5 + " mana from MP5. Pet mana: " + Math.round(this.player.pet.stats.mana) + "/" + Math.round(this.player.pet.stats.maxMana));
 			}
 		}
 

@@ -216,8 +216,10 @@ class Pet {
 			if (this.fiveSecondRuleTimerRemaining <= 0) {
 				// Fromula from https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1601392
 				let manaGain = (5 * Math.sqrt(this.stats.intellect * this.stats.intellectModifier) * (this.stats.spirit * this.stats.spiritModifier) * 0.009327) / 2.5; // Divide by 2.5 since it calculates mana per five seconds but the tick is every 2 seconds
+				if (this.stats.mana < this.stats.maxMana) {
+					this.player.combatLog(this.name + " gains " + Math.round(manaGain) + " mana from Spirit regeneration. Pet mana: " + Math.round(this.stats.mana) + "/" + Math.round(this.stats.maxMana));
+				}
 				this.stats.mana = Math.min(this.stats.maxMana, this.stats.mana + manaGain);
-				this.player.combatLog(this.name + " gains " + Math.round(manaGain) + " mana from Spirit regeneration. Pet mana: " + Math.round(this.stats.mana) + "/" + Math.round(this.stats.maxMana));
 			}
 		}
 	}

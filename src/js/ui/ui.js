@@ -272,8 +272,8 @@ $(document).on('click', '.saved-profile', function() {
 	localStorage.talents = JSON.stringify(talents);
 	selectedItems = profiles[profileName].items;
 	localStorage.selectedItems = JSON.stringify(selectedItems);
-	selectedGems = profiles[profileName].gems;
-	localStorage.selectedGems = JSON.stringify(selectedGems);
+	//selectedGems = profiles[profileName].gems;
+	//localStorage.selectedGems = JSON.stringify(selectedGems);
 	selectedEnchants = profiles[profileName].enchants;
 	localStorage.selectedEnchants = JSON.stringify(selectedEnchants);
 	location.reload();
@@ -345,12 +345,13 @@ $("#gem-selection-table").on('click', '.gem-name', function() {
 	let gemIconName = href = null;
 	let gemId = $(this).closest('tr').data('id');
 	let socket = $('tr[data-wowhead-id="' + itemId + '"]').find('.gem').eq($("#gem-selection-table").data('socketSlot'));
+	let socketColor = $(this).closest('#gem-selection-table').data('color');
 	let socketSlot = $("#gem-selection-table").data('socketSlot');
 	selectedGems[itemSlot] = selectedGems[itemSlot] || {};
 
 	if (!selectedGems[itemSlot][itemId]) {
-		let socketAmount = $('tr[data-wowhead-id="' + itemId + '"]').find('.gem').last().data('order') + 1; // The amount of sockets in the item
-
+		// The amount of sockets in the item
+		let socketAmount = $('tr[data-wowhead-id="' + itemId + '"]').find('.gem').last().data('order') + 1;
 		selectedGems[itemSlot][itemId] = Array(socketAmount).fill(null);
 	}
 
@@ -367,20 +368,38 @@ $("#gem-selection-table").on('click', '.gem-name', function() {
 	if (socket.closest('tr').data('wowhead-id') == selectedItems[itemSlot]) {
 		// Remove stats from old gem if equipped
 		if (selectedGems[itemSlot][itemId][socketSlot]) {
-			modifyStatsFromGem(selectedGems[itemSlot][itemId][socketSlot], 'remove');
+			modifyStatsFromGem(selectedGems[itemSlot][itemId][socketSlot][1], 'remove');
+			if ($(".item-row[data-wowhead-id='" + itemId + "']").attr("data-socket-bonus-active") == 'true') {
+				modifyStatsFromItemSocketBonus(itemId, 'remove');
+			}
 		}
 		// Add stats from new gem
 		if (gemId) {
 			modifyStatsFromGem(gemId, 'add');
 		}
-		refreshCharacterStats();
 	}
 
+	if ($(".item-row[data-wowhead-id='" + itemId + "']").attr('data-socket-bonus-active') == 'true') {
+		$(".item-row[data-wowhead-id='" + itemId + "']").attr('data-socket-bonus-active', 'false');
+	}
+
+	if (gemId == 0) {
+		selectedGems[itemSlot][itemId][socketSlot] = null;
+	} else {
+		selectedGems[itemSlot][itemId][socketSlot] = [socketColor, gemId];
+	}
+	if (itemMeetsSocketRequirements(itemId)) {
+		// Only add the socket bonus if the player has the item equipped
+		if (socket.closest('tr').data('wowhead-id') == selectedItems[itemSlot]) {
+			modifyStatsFromItemSocketBonus(itemId, 'add');
+		}
+		$(".item-row[data-wowhead-id='" + itemId + "']").attr('data-socket-bonus-active', 'true');
+	}
 	socket.attr('src', 'img/' + gemIconName);
 	socket.closest('a').attr('href', href);
-	selectedGems[itemSlot][itemId][socketSlot] = gemId;
 	localStorage.selectedGems = JSON.stringify(selectedGems);
 	$("#gem-selection-table").css('visibility', 'hidden');
+	refreshCharacterStats();
 	return false;
 });
 
@@ -392,10 +411,19 @@ $("#item-selection-table tbody").on('contextmenu', '.gem', function(event) {
 		let itemSlot = $(this).closest('tr').data('slot');
 		let itemId = $(this).closest('tr').data('wowhead-id');
 		let socketOrder = $(this).data('order');
-	
+		
+		if ($(".item-row[data-wowhead-id='" + itemId + "']").attr("data-socket-bonus-active") == 'true') {
+			if (selectedItems[itemSlot] == itemId) {
+				modifyStatsFromItemSocketBonus(itemId, 'remove');
+			}
+			$(".item-row[data-wowhead-id='" + itemId + "']").attr("data-socket-bonus-active", 'false');
+		}
+
+		if (selectedItems[itemSlot] == itemId) {
+			modifyStatsFromGem(selectedGems[itemSlot][itemId][socketOrder][1], 'remove');
+		}
 		$(this).attr('src', 'img/' + socketInfo[socketColor].iconName + '.jpg');
 		$(this).closest('a').attr('href', '');
-		modifyStatsFromGem(selectedGems[itemSlot][itemId][socketOrder], 'remove');
 		selectedGems[itemSlot][itemId][socketOrder] = null;
 		localStorage.selectedGems = JSON.stringify(selectedGems);
 		refreshCharacterStats();
@@ -465,12 +493,16 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 				if (items[slot][item].id == selectedItems[itemSlot + subSlot]) {
 					// Remove the stats from the item
 					modifyStatsFromItem(items[slot][item], 'remove');
+					// Remove socket bonus if active
+					if ($(".item-row[data-wowhead-id='" + items[slot][item].id + "']").attr('data-socket-bonus-active') == 'true') {
+						modifyStatsFromItemSocketBonus(itemId, 'remove');
+					}
 
 					// Remove stats from gems equipped in the item
 					if (selectedGems[slot] && selectedGems[slot][selectedItems[itemSlot + subSlot]]) {
-						for (gemId of selectedGems[slot][selectedItems[itemSlot + subSlot]]) {
-							if (gemId !== null) {
-								modifyStatsFromGem(gemId, 'remove');
+						for (gemArray of selectedGems[slot][selectedItems[itemSlot + subSlot]]) {
+							if (gemArray) {
+								modifyStatsFromGem(gemArray[1], 'remove');
 							}
 						}
 					}
@@ -486,12 +518,15 @@ $("#item-selection-table tbody").on('click', 'tr', function() {
 	if (!equipped) {
 		modifyStatsFromItem(items[itemSlot][itemName], 'add');
 		selectedItems[itemSlot + subSlot] = items[itemSlot][itemName].id;
+		if ($(this).attr('data-socket-bonus-active') == 'true') {
+			modifyStatsFromItemSocketBonus(itemId, 'add');
+		}
 
 		// Add stats from the item's equipped gems
 		if (selectedGems[itemSlot + subSlot] && selectedGems[itemSlot + subSlot][items[itemSlot][itemName].id]) {
-			for (gemId of selectedGems[itemSlot + subSlot][items[itemSlot][itemName].id]) {
-				if (gemId !== null) {
-					modifyStatsFromGem(gemId, 'add');
+			for (gemArray of selectedGems[itemSlot + subSlot][items[itemSlot][itemName].id]) {
+				if (gemArray) {
+					modifyStatsFromGem(gemArray[1], 'add');
 				}
 			}
 		}
@@ -822,10 +857,12 @@ function loadItemsBySlot(itemSlot, subSlot) {
 
 					if (selectedGems[itemSlot] && selectedGems[itemSlot][i.id]) {
 						for (let color in gems) {
-							let gemId = selectedGems[itemSlot][i.id][counter];
-							if (gems[color][gemId]) {
-								gemIcon = gems[color][gemId].iconName;
-								gemHref = 'https://tbc.wowhead.com/item=' + gemId;
+							if (selectedGems[itemSlot][i.id][counter]) {
+								let gemId = selectedGems[itemSlot][i.id][counter][1];
+								if (gems[color][gemId]) {
+									gemIcon = gems[color][gemId].iconName;
+									gemHref = 'https://tbc.wowhead.com/item=' + gemId;
+								}
 							}
 						}
 					}
@@ -836,7 +873,10 @@ function loadItemsBySlot(itemSlot, subSlot) {
 
 		}
 
-		tableBody.append("<tr data-subslot='" + localStorage['selectedItemSubSlot'] + "' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage['selectedItemSubSlot']] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td><div>" + sockets.join('') + "</div></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (i.spellPower || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (i.hasteRating || '') + "</td><td class='item-dps'>" + (savedItemDps[itemSlot + subSlot][i.id] || '') + "</td></tr>").trigger("update");
+		tableBody.append("<tr data-subslot='" + localStorage['selectedItemSubSlot'] + "' data-socket-bonus-active='false' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage['selectedItemSubSlot']] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + i.id + "'>" + i.name + "</a></td><td><div>" + sockets.join('') + "</div></td><td>" + i.source + "</td><td>" + (i.stamina || '') + "</td><td>" + (i.intellect || '') + "</td><td>" + (i.spellPower || '') + "</td><td>" + (i.shadowPower || '') + "</td><td>" + (i.firePower || '') + "</td><td>" + (i.critRating || '') + "</td><td>" + (i.hitRating || '') + "</td><td>" + (i.hasteRating || '') + "</td><td class='item-dps'>" + (savedItemDps[itemSlot + subSlot][i.id] || '') + "</td></tr>").trigger("update");
+		if (itemMeetsSocketRequirements(i.id)) {
+			$(".item-row[data-wowhead-id='" + i.id + "']").attr('data-socket-bonus-active', 'true');
+		}
 	}
 
 	loadEnchantsBySlot(itemSlot, subSlot);
@@ -924,6 +964,24 @@ function modifyStatsFromGem(gemId, action) {
 				}
 			}
 			return;
+		}
+	}
+}
+
+function modifyStatsFromItemSocketBonus(itemId, action) {
+	for (let itemSlot in items) {
+		for (let item in items[itemSlot]) {
+			if (items[itemSlot][item].id == itemId) {
+				for (let stat in items[itemSlot][item].socketBonus) {
+					if (characterStats.hasOwnProperty(stat)) {
+						if (action == 'add') {
+							characterStats[stat] += items[itemSlot][item].socketBonus[stat];
+						} else if (action == 'remove') {
+							characterStats[stat] -= items[itemSlot][item].socketBonus[stat];
+						}
+					}
+				}
+			}
 		}
 	}
 }
@@ -1171,6 +1229,35 @@ function updateProfileSelection(profileName) {
 	localStorage.selectedProfile = profileName;
 	$(".saved-profile[data-name='" + profileName + "']").attr('data-selected', true);
 	$("#update-profile-div").show();
+}
+
+// Returns true/false depending on if the gems in the item match the sockets' colors
+function itemMeetsSocketRequirements(itemId) {
+	// Look through the item slots and see if it includes the item we're looking for
+	for (let itemSlot in selectedGems) {
+		if (selectedGems[itemSlot][itemId]) {
+			// Loop through the sockets in the item and return false if any of them contain a gem that doesn't fit that socket's color
+			for (let socket in selectedGems[itemSlot][itemId]) {
+				// Loop through the gem colors that fit into this socket (e.g. blue, green, and purple if it's a blue socket) and return false if the gem isn't found under any of those colors
+				let gemFound = false;
+				let equippedGemArray = selectedGems[itemSlot][itemId][parseInt(socket)];
+				if (equippedGemArray && socketInfo[equippedGemArray[0]]) {
+					// Array index 0 is the item socket's color and index 1 is the equipped gem's ID
+					for (let gemColor in socketInfo[equippedGemArray[0]].gems) {
+						if (gems[socketInfo[equippedGemArray[0]].gems[gemColor]][equippedGemArray[1]]) {
+							gemFound = true;
+							break;
+						}
+					}
+				}
+				if (!gemFound) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+	return false;
 }
 
 function updateSimulationSettingsVisibility() {

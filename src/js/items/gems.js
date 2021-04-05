@@ -16,7 +16,7 @@ const socketInfo = {
 		"gems": ['blue','green','purple']
 	}
 }
-//todo add 'phase' to gems
+
 const gems = {
 	"meta": {
 		"35503": {

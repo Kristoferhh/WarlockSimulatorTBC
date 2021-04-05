@@ -27,7 +27,7 @@ for (let itemSlot in selectedItems) {
 	}
 }
 
-// Same as above but for enchants\
+// Same as above but for enchants
 for (let itemSlot in selectedEnchants) {
 	for (let slot in enchants) {
 		for (let enchant in enchants[slot]) {
@@ -41,12 +41,17 @@ for (let itemSlot in selectedEnchants) {
 
 // Add stats from gems in equipped items
 for (itemSlot in selectedItems) {
-	let itemID = selectedItems[itemSlot];
-	if (selectedGems[itemSlot] && selectedGems[itemSlot][itemID]) {
-		for (gemID of selectedGems[itemSlot][itemID]) {
-			if (gemID !== null) {
-				modifyStatsFromGem(gemID, 'add');
+	let itemId = selectedItems[itemSlot];
+	if (selectedGems[itemSlot] && selectedGems[itemSlot][itemId]) {
+		for (gem in selectedGems[itemSlot][itemId]) {
+			let gemArray = selectedGems[itemSlot][itemId][gem];
+			if (gemArray) {
+				modifyStatsFromGem(gemArray[1], 'add');
 			}
+		}
+		// Add stats from the socket bonus if the gem colors match the socket colors
+		if (itemMeetsSocketRequirements(itemId)) {
+			modifyStatsFromItemSocketBonus(itemId, 'add');
 		}
 	}
 }

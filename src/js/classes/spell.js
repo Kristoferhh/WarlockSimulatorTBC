@@ -169,6 +169,9 @@ class Spell {
 	}
 
 	tick(t) {
+		if (this.cooldownRemaining > 0 && this.cooldownRemaining - t <= 0) {
+			this.player.combatLog(this.name + " is off cooldown");
+		}
 		this.cooldownRemaining = Math.max(0, this.cooldownRemaining - t);
 
 		if (this.casting && this.player.castTimeRemaining <= 0) {
