@@ -566,3 +566,14 @@ class BloodFury extends Spell {
 		this.setup();
 	}
 }
+
+class Bloodlust extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Bloodlust";
+		this.cooldown = 300;
+		this.isAura = true;
+		this.onGcd = false;
+		this.setup();
+	}
+}

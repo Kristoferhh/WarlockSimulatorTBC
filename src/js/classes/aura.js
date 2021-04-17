@@ -453,3 +453,31 @@ class BloodFuryAura extends Aura {
 		super.fade(endOfIteration);
 	}
 }
+
+// todo add haste to pet and maybe make a separate variable for haste % instead of converting it to haste rating.
+class BloodlustAura extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Bloodlust";
+		this.durationTotal = 40;
+		this.isImportant = true;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.combatLog("Haste + 30% (" + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + "% -> " + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) + 30) * 100) / 100 + "%)");
+			this.player.stats.hasteRating += 30 * hasteRatingPerPercent;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.apply();
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active) {
+			this.player.combatLog("Haste - 30% (" + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + "% -> " + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) - 30) * 100) / 100 + "%)");
+			this.player.stats.hasteRating -= 30 * hasteRatingPerPercent;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.fade(endOfIteration);
+	}
+}

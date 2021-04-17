@@ -44,7 +44,7 @@ class Simulation {
 				}
 			}
 		}
-
+		
 		if (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.auras.improvedShadowBolt.durationRemaining < time) time = this.player.auras.improvedShadowBolt.durationRemaining;
 		if (this.player.auras.corruption && this.player.auras.corruption.active && this.player.auras.corruption.tickTimerRemaining < time) time = this.player.auras.corruption.tickTimerRemaining; 
 		if (this.player.auras.unstableAffliction && this.player.auras.unstableAffliction.active && this.player.auras.unstableAffliction.tickTimerRemaining < time) time = this.player.auras.unstableAffliction.tickTimerRemaining;
@@ -71,6 +71,10 @@ class Simulation {
 		}
 		if (this.player.spells.demonicRune && this.player.spells.demonicRune.cooldownRemaining > 0 && this.player.spells.demonicRune.cooldownRemaining < time) time = this.player.spells.demonicRune.cooldownRemaining;
 		if (this.player.spells.superManaPotion && this.player.spells.superManaPotion.cooldownRemaining > 0 && this.player.spells.superManaPotion.cooldownRemaining < time) time = this.player.spells.superManaPotion.cooldownRemaining;
+		if (this.player.spells.bloodlust) {
+			if (this.player.spells.bloodlust.cooldownRemaining > 0 && this.player.spells.bloodlust.cooldownRemaining < time) time = this.player.spells.bloodlust.cooldownRemaining;
+			if (this.player.auras.bloodlust.active && this.player.auras.bloodlust.durationRemaining < time) time = this.player.auras.bloodlust.durationRemaining;
+		}
 		if (this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.shadowTrance.durationRemaining < time) time = this.player.auras.shadowTrance.durationRemaining;
 		if (this.player.auras.shadowFlameshadow && this.player.auras.shadowFlameshadow.active && this.player.auras.shadowFlameshadow.durationRemaining < time) time = this.player.auras.shadowFlameshadow.durationRemaining;
 		if (this.player.auras.shadowFlamefire && this.player.auras.shadowFlamefire.active && this.player.auras.shadowFlamefire.durationRemaining < time) time = this.player.auras.shadowFlamefire.durationRemaining;
@@ -123,6 +127,7 @@ class Simulation {
 		if (this.player.spells.demonicRune && this.player.spells.demonicRune.cooldownRemaining > 0) this.player.spells.demonicRune.tick(time);
 		if (this.player.spells.flameCap && this.player.spells.flameCap.cooldownRemaining > 0) this.player.spells.flameCap.tick(time);
 		if (this.player.spells.bloodFury && this.player.spells.bloodFury.cooldownRemaining > 0) this.player.spells.bloodFury.tick(time);
+		if (this.player.spells.bloodlust && this.player.spells.bloodlust.cooldownRemaining > 0) this.player.spells.bloodlust.tick(time);
 
 		// Auras
 		if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.tick(time);
@@ -146,6 +151,7 @@ class Simulation {
 		if (this.player.auras.shiffarsNexusHorn && (this.player.auras.shiffarsNexusHorn.active || this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining > 0)) this.player.auras.shiffarsNexusHorn.tick(time);
 		if (this.player.auras.manaEtched4Set && this.player.auras.manaEtched4Set.active) this.player.auras.manaEtched4Set.tick(time);
 		if (this.player.auras.bloodFury && this.player.auras.bloodFury.active) this.player.auras.bloodFury.tick(time);
+		if (this.player.auras.bloodlust && this.player.auras.bloodlust.active) this.player.auras.bloodlust.tick(time);
 
 		// Trinkets
 		if (this.player.trinkets[0]) this.player.trinkets[0].tick(time);
@@ -196,6 +202,7 @@ class Simulation {
 			if (this.player.spells.demonicRune) this.player.spells.demonicRune.reset();
 			if (this.player.spells.flameCap) this.player.spells.flameCap.reset();
 			if (this.player.spells.bloodFury) this.player.spells.bloodFury.reset();
+			if (this.player.spells.bloodlust) this.player.spells.bloodlust.reset();
 			this.player.reset(); // Resets mana, global cooldown etc.
 			if (this.player.pet) this.player.pet.reset();
 
@@ -332,6 +339,7 @@ class Simulation {
 			if (this.player.auras.destructionPotion && this.player.auras.destructionPotion.active) this.player.auras.destructionPotion.fade(true);
 			if (this.player.auras.flameCap && this.player.auras.flameCap.active) this.player.auras.flameCap.fade(true);
 			if (this.player.auras.bloodFury && this.player.auras.bloodFury.active) this.player.auras.bloodFury.fade(true);
+			if (this.player.auras.bloodlust && this.player.auras.bloodlust.active) this.player.auras.bloodlust.fade(true);
 			for (let i = 0; i < this.player.trinkets.length; i++) {
 				if (this.player.trinkets[i]) {
 					this.player.trinkets[i].fade(true);

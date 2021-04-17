@@ -297,6 +297,7 @@ class Player {
 		if (this.selectedAuras.demonicRune) this.spells.demonicRune = new DemonicRune(this);
 		if (this.selectedAuras.flameCap) this.spells.flameCap = new FlameCap(this);
 		if (this.simSettings.race == "orc") this.spells.bloodFury = new BloodFury(this);
+		if (this.selectedAuras.bloodlust) this.spells.bloodlust = new Bloodlust(this);
 
 		this.auras = {};
 		if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusion(this);
@@ -313,6 +314,7 @@ class Player {
 		if (this.talents.nightfall > 0) this.auras.shadowTrance = new ShadowTrance(this);
 		if (this.selectedAuras.destructionPotion) this.auras.destructionPotion = new DestructionPotionAura(this);
 		if (this.selectedAuras.flameCap) this.auras.flameCap = new FlameCapAura(this);
+		if (this.selectedAuras.bloodlust) this.auras.bloodlust = new BloodlustAura(this);
 		if (this.trinketIds.includes(28789)) this.auras.eyeOfMagtheridon = new EyeOfMagtheridon(this);
 		if (this.trinketIds.includes(30626)) this.auras.sextantOfUnstableCurrents = new SextantOfUnstableCurrents(this);
 		if (this.trinketIds.includes(27683)) this.auras.quagmirransEye = new QuagmirransEye(this);
@@ -338,6 +340,7 @@ class Player {
 	}
 
 	areAnyCooldownsReady() {
+		if (this.spells.bloodlust && this.spells.bloodlust.ready()) return true;
 		if (this.auras.powerInfusion && this.auras.powerInfusion.ready()) return true;
 		if (this.spells.destructionPotion && this.spells.destructionPotion.ready()) return true;
 		for (let i = 0; i < this.trinkets.length; i++) {
@@ -349,6 +352,9 @@ class Player {
 	}
 
 	useCooldownsIfAvailable() {
+		if (this.spells.bloodlust && this.spells.bloodlust.ready()) {
+			this.cast("bloodlust");
+		}
 		if (this.auras.powerInfusion && this.auras.powerInfusion.ready()) {
 			this.auras.powerInfusion.apply();
 		}
