@@ -555,3 +555,14 @@ class FlameCap extends Spell {
 		this.setup();
 	}
 }
+
+class BloodFury extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Blood Fury";
+		this.cooldown = 120;
+		this.isAura = true;
+		this.onGcd = false;
+		this.setup();
+	}
+}

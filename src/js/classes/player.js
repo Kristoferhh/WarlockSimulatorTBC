@@ -296,9 +296,11 @@ class Player {
 		if (this.selectedAuras.superManaPotion) this.spells.superManaPotion = new SuperManaPotion(this);
 		if (this.selectedAuras.demonicRune) this.spells.demonicRune = new DemonicRune(this);
 		if (this.selectedAuras.flameCap) this.spells.flameCap = new FlameCap(this);
+		if (this.simSettings.race == "orc") this.spells.bloodFury = new BloodFury(this);
 
 		this.auras = {};
 		if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusion(this);
+		if (this.simSettings.race == "orc") this.auras.bloodFury = new BloodFuryAura(this);
 		if (this.talents.improvedShadowBolt > 0) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this);
 		if (this.rotation.dot.corruption) this.auras.corruption = new CorruptionDot(this);
 		if (this.rotation.dot.unstableAffliction) this.auras.unstableAffliction = new UnstableAfflictionDot(this);
@@ -341,6 +343,7 @@ class Player {
 		for (let i = 0; i < this.trinkets.length; i++) {
 			if (this.trinkets[i].ready()) return true;
 		}
+		if (this.spells.bloodFury && this.spells.bloodFury.ready()) return true;
 
 		return false;
 	}
@@ -354,6 +357,9 @@ class Player {
 		}
 		if (this.spells.flameCap && this.spells.flameCap.ready()) {
 			this.cast("flameCap");
+		}
+		if (this.spells.bloodFury && this.spells.bloodFury.ready()) {
+			this.cast("bloodFury");
 		}
 		for (let i = 0; i < this.trinkets.length; i++) {
 			if (this.trinkets[i] && this.trinkets[i].ready()) {

@@ -426,3 +426,30 @@ class FlameCapAura extends Aura {
 		super.fade(endOfIteration);
 	}
 }
+
+class BloodFuryAura extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Blood Fury";
+		this.durationTotal = 15;
+		this.isImportant = true;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.combatLog("Spell Power + 140 (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + 140) + ")");
+			this.player.stats.spellPower += 140;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.apply();
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active) {
+			this.player.combatLog("Spell Power - 80 (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - 140) + ")");
+			this.player.stats.spellPower -= 140;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.fade(endOfIteration);
+	}
+}
