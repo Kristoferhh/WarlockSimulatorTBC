@@ -298,6 +298,14 @@ class Player {
 		if (this.selectedAuras.flameCap) this.spells.flameCap = new FlameCap(this);
 		if (this.simSettings.race == "orc") this.spells.bloodFury = new BloodFury(this);
 		if (this.selectedAuras.bloodlust) this.spells.bloodlust = new Bloodlust(this);
+		this.spells.drumsOfBattle = [];
+		this.spells.drumsOfWar = [];
+		this.spells.drumsOfRestoration = [];
+		for (let i = 0; i < 5; i++) {
+			if (this.selectedAuras.drumsOfBattle && i < this.simSettings.drumsOfBattleAmount) this.spells.drumsOfBattle.append(new DrumsOfBattle(this));
+			if (this.selectedAuras.drumsOfWar && i < this.simSettings.drumsOfWarAmount) this.spells.drumsOfWar.append(new DrumsOfWar(this));
+			if (this.selectedAuras.drumsOfRestoration && i < this.simSettings.drumsOfRestorationAmount) this.spells.drumsOfRestoration.append(new DrumsOfRestoration(this));
+		}
 
 		this.auras = {};
 		if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusion(this);
@@ -315,6 +323,9 @@ class Player {
 		if (this.selectedAuras.destructionPotion) this.auras.destructionPotion = new DestructionPotionAura(this);
 		if (this.selectedAuras.flameCap) this.auras.flameCap = new FlameCapAura(this);
 		if (this.selectedAuras.bloodlust) this.auras.bloodlust = new BloodlustAura(this);
+		if (this.selectedAuras.drumsOfBattle) this.auras.drumsOfBattle = new DrumsOfBattleAura(this);
+		if (this.selectedAuras.drumsOfWar) this.auras.drumsOfWar = new DrumsOfWarAura(this);
+		if (this.selectedAuras.drumsOfRestoration) this.auras.drumsOfRestoration = new DrumsOfRestorationAura(this);
 		if (this.trinketIds.includes(28789)) this.auras.eyeOfMagtheridon = new EyeOfMagtheridon(this);
 		if (this.trinketIds.includes(30626)) this.auras.sextantOfUnstableCurrents = new SextantOfUnstableCurrents(this);
 		if (this.trinketIds.includes(27683)) this.auras.quagmirransEye = new QuagmirransEye(this);

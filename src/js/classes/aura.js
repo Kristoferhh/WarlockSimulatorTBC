@@ -467,7 +467,7 @@ class BloodlustAura extends Aura {
 		if (!this.active) {
 			this.player.combatLog("Haste + 30% (" + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + "% -> " + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) + 30) * 100) / 100 + "%)");
 			this.player.stats.hasteRating += 30 * hasteRatingPerPercent;
-			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+			//if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.apply();
 	}
@@ -476,8 +476,84 @@ class BloodlustAura extends Aura {
 		if (this.active) {
 			this.player.combatLog("Haste - 30% (" + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + "% -> " + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) - 30) * 100) / 100 + "%)");
 			this.player.stats.hasteRating -= 30 * hasteRatingPerPercent;
-			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+			//if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.fade(endOfIteration);
+	}
+}
+
+class DrumsOfBattleAura extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Drums of Battle";
+		this.durationTotal = 30;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.combatLog("Haste rating + 80 (" + (Math.round((this.player.stats.hasteRating) / hasteRatingPerPercent) * 100) / 100 + "% -> " + (Math.round((this.player.stats.hasteRating + 80) / hasteRatingPerPercent) * 100) / 100 + "%)");
+			this.player.stats.hasteRating += 80;
+		}
+		super.apply();
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active) {
+			this.player.combatLog("Haste rating - 80 (" + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + "% -> " + (Math.round((this.player.stats.hasteRating - 80) / hasteRatingPerPercent) * 100) / 100 + "%)");
+			this.player.stats.hasteRating -= 80;
+		}
+		super.fade(endOfIteration);
+	}
+}
+
+class DrumsOfWarAura extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Drums of War";
+		this.durationTotal = 30;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.combatLog("Spell Power + 30 (" + this.player.stats.spellPower + " -> " + (this.player.stats.spellPower + 30) + ")");
+			this.player.stats.spellPower += 30;
+		}
+		super.apply();
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active) {
+			this.player.combatLog("Spell Power - 30 (" + this.player.stats.spellPower + " -> " + (this.player.stats.spellPower - 30) + ")");
+			this.player.stats.spellPower -= 30;
+		}
+		super.fade(endOfIteration);
+	}
+}
+
+class DrumsOfRestorationAura extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Drums of Restoration";
+		this.durationTotal = 15;
+		this.tickTimerTotal = 3;
+		this.tickTimerRemaining = 0;
+		this.ticksRemaining = 0;
+		this.ticksTotal = Math.round(this.durationTotal / this.tickTimerTotal);
+	}
+
+	apply() {
+		this.active = true;
+		this.tickTimerRemaining = this.tickTimerTotal;
+		this.ticksRemaining = this.ticksTotal;
+	}
+
+	tick(t) {
+		if (this.active) {
+			this.tickTimerRemaining = Math.max(0, this.tickTimerRemaining - t);
+
+			if (this.tickTimerRemaining == 0) {
+				this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + 150)
+			}
+		}
 	}
 }

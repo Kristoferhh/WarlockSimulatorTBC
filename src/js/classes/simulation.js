@@ -44,7 +44,7 @@ class Simulation {
 				}
 			}
 		}
-		
+
 		if (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.auras.improvedShadowBolt.durationRemaining < time) time = this.player.auras.improvedShadowBolt.durationRemaining;
 		if (this.player.auras.corruption && this.player.auras.corruption.active && this.player.auras.corruption.tickTimerRemaining < time) time = this.player.auras.corruption.tickTimerRemaining; 
 		if (this.player.auras.unstableAffliction && this.player.auras.unstableAffliction.active && this.player.auras.unstableAffliction.tickTimerRemaining < time) time = this.player.auras.unstableAffliction.tickTimerRemaining;
@@ -212,6 +212,31 @@ class Simulation {
 			this.player.combatLog("Fight length: " + fightLength + " seconds");
 
 			while(this.player.fightTime < fightLength) {
+				// Use Drums of Battle
+				if (this.player.auras.drumsOfBattle && !this.player.auras.drumsOfBattle.active) {
+					for (let i = 0; i < this.player.spells.drumsOfBattle.length; i++) {
+						if (this.player.spells.drumsOfBattle[i].ready()) {
+							this.player.spells.drumsOfBattle[i].cast();
+						}
+					}
+				}
+				// Use Drums of War
+				if (this.player.auras.drumsOfWar && !this.player.auras.drumsOfWar.active) {
+					for (let i = 0; i < this.player.spells.drumsOfWar.length; i++) {
+						if (this.player.spells.drumsOfWar[i].ready()) {
+							this.player.spells.drumsOfWar[i].cast();
+						}
+					}
+				}
+				// Use Drums of Restoration
+				if (this.player.auras.drumsOfRestoration && !this.player.auras.drumsOfRestoration.active) {
+					for (let i = 0; i < this.player.spells.drumsOfRestoration.length; i++) {
+						if (this.player.spells.drumsOfRestoration[i].ready()) {
+							this.player.spells.drumsOfRestoration[i].cast();
+						}
+					}
+				}
+
 				// Pet
 				if (this.player.pet && this.player.pet.mode == PetMode.AGGRESSIVE) {
 					if (this.player.pet.type == PetType.MELEE) {

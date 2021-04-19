@@ -577,3 +577,36 @@ class Bloodlust extends Spell {
 		this.setup();
 	}
 }
+
+class DrumsOfBattle extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Drums of Battle";
+		this.cooldown = 120;
+		this.isAura = true;
+		this.onGcd = false;
+		this.setup();
+	}
+}
+
+class DrumsOfWar extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Drums of War";
+		this.cooldown = 120;
+		this.isAura = true;
+		this.onGcd = false;
+		this.setup();
+	}
+}
+
+class DrumsOfRestoration extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Drums of Restoration";
+		this.cooldown = 120;
+		this.isAura = true;
+		this.onGcd = false;
+		this.setup();
+	}
+}
