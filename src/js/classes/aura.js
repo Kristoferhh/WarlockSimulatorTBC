@@ -482,6 +482,7 @@ class BloodlustAura extends Aura {
 	}
 }
 
+//todo add effects to pet
 class DrumsOfBattleAura extends Aura {
 	constructor(player) {
 		super(player);
@@ -539,6 +540,7 @@ class DrumsOfRestorationAura extends Aura {
 		this.tickTimerRemaining = 0;
 		this.ticksRemaining = 0;
 		this.ticksTotal = Math.round(this.durationTotal / this.tickTimerTotal);
+		this.manaGain = 600 / (this.durationTotal / this.tickTimerTotal);
 	}
 
 	apply() {
@@ -552,7 +554,14 @@ class DrumsOfRestorationAura extends Aura {
 			this.tickTimerRemaining = Math.max(0, this.tickTimerRemaining - t);
 
 			if (this.tickTimerRemaining == 0) {
-				this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + 150)
+				this.player.combatLog("Player gains " + this.manaGain + " mana from Drums of Restoration (" + Math.round(this.player.mana) + " -> " + Math.round(this.player.mana + this.manaGain) + ")");
+				this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.manaGain);
+				this.ticksRemaining--;
+				this.tickTimerRemaining = this.tickTimerTotal;
+
+				if (this.ticksRemaining <= 0) {
+					super.fade();
+				}
 			}
 		}
 	}

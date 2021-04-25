@@ -75,6 +75,14 @@ class Simulation {
 			if (this.player.spells.bloodlust.cooldownRemaining > 0 && this.player.spells.bloodlust.cooldownRemaining < time) time = this.player.spells.bloodlust.cooldownRemaining;
 			if (this.player.auras.bloodlust.active && this.player.auras.bloodlust.durationRemaining < time) time = this.player.auras.bloodlust.durationRemaining;
 		}
+		for (let i = 0; i < 5; i++) {
+			if (this.player.spells.drumsOfBattle[i] && this.player.spells.drumsOfBattle[i].cooldownRemaining > 0 && this.player.spells.drumsOfBattle[i].cooldownRemaining < time) time = this.player.spells.drumsOfBattle[i].cooldownRemaining;
+			if (this.player.spells.drumsOfWar[i] && this.player.spells.drumsOfWar[i].cooldownRemaining > 0 && this.player.spells.drumsOfWar[i].cooldownRemaining < time) time = this.player.spells.drumsOfWar[i].cooldownRemaining;
+			if (this.player.spells.drumsOfRestoration[i] && this.player.spells.drumsOfRestoration[i].cooldownRemaining > 0 && this.player.spells.drumsOfRestoration[i].cooldownRemaining < time) time = this.player.spells.drumsOfRestoration[i].cooldownRemaining;
+		}
+		if (this.player.auras.drumsOfBattle && this.player.auras.drumsOfBattle.active && this.player.auras.drumsOfBattle.durationRemaining < time) time = this.player.auras.drumsOfBattle.durationRemaining;
+		if (this.player.auras.drumsOfWar && this.player.auras.drumsOfWar.active && this.player.auras.drumsOfWar.durationRemaining < time) time = this.player.auras.drumsOfWar.durationRemaining;
+		if (this.player.auras.drumsOfRestoration && this.player.auras.drumsOfRestoration.active && this.player.auras.drumsOfRestoration.tickTimerRemaining < time) time = this.player.auras.drumsOfRestoration.tickTimerRemaining;
 		if (this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.shadowTrance.durationRemaining < time) time = this.player.auras.shadowTrance.durationRemaining;
 		if (this.player.auras.shadowFlameshadow && this.player.auras.shadowFlameshadow.active && this.player.auras.shadowFlameshadow.durationRemaining < time) time = this.player.auras.shadowFlameshadow.durationRemaining;
 		if (this.player.auras.shadowFlamefire && this.player.auras.shadowFlamefire.active && this.player.auras.shadowFlamefire.durationRemaining < time) time = this.player.auras.shadowFlamefire.durationRemaining;
@@ -128,6 +136,11 @@ class Simulation {
 		if (this.player.spells.flameCap && this.player.spells.flameCap.cooldownRemaining > 0) this.player.spells.flameCap.tick(time);
 		if (this.player.spells.bloodFury && this.player.spells.bloodFury.cooldownRemaining > 0) this.player.spells.bloodFury.tick(time);
 		if (this.player.spells.bloodlust && this.player.spells.bloodlust.cooldownRemaining > 0) this.player.spells.bloodlust.tick(time);
+		for (let i = 0; i < 5; i++) {
+			if (this.player.spells.drumsOfBattle[i] && this.player.spells.drumsOfBattle[i].cooldownRemaining > 0) this.player.spells.drumsOfBattle[i].tick(time);
+			if (this.player.spells.drumsOfWar[i] && this.player.spells.drumsOfWar[i].cooldownRemaining > 0) this.player.spells.drumsOfWar[i].tick(time);
+			if (this.player.spells.drumsOfRestoration[i] && this.player.spells.drumsOfRestoration[i].cooldownRemaining > 0) this.player.spells.drumsOfRestoration[i].tick(time);
+		}
 
 		// Auras
 		if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.tick(time);
@@ -152,6 +165,9 @@ class Simulation {
 		if (this.player.auras.manaEtched4Set && this.player.auras.manaEtched4Set.active) this.player.auras.manaEtched4Set.tick(time);
 		if (this.player.auras.bloodFury && this.player.auras.bloodFury.active) this.player.auras.bloodFury.tick(time);
 		if (this.player.auras.bloodlust && this.player.auras.bloodlust.active) this.player.auras.bloodlust.tick(time);
+		if (this.player.auras.drumsOfBattle && this.player.auras.drumsOfBattle.active) this.player.auras.drumsOfBattle.tick(time);
+		if (this.player.auras.drumsOfWar && this.player.auras.drumsOfWar.active) this.player.auras.drumsOfWar.tick(time);
+		if (this.player.auras.drumsOfRestoration && this.player.auras.drumsOfRestoration.active) this.player.auras.drumsOfRestoration.tick(time);
 
 		// Trinkets
 		if (this.player.trinkets[0]) this.player.trinkets[0].tick(time);
@@ -203,6 +219,11 @@ class Simulation {
 			if (this.player.spells.flameCap) this.player.spells.flameCap.reset();
 			if (this.player.spells.bloodFury) this.player.spells.bloodFury.reset();
 			if (this.player.spells.bloodlust) this.player.spells.bloodlust.reset();
+			for (let i = 0; i < 5; i++) {
+				if (this.player.spells.drumsOfBattle[i]) this.player.spells.drumsOfBattle[i].reset();
+				if (this.player.spells.drumsOfWar[i]) this.player.spells.drumsOfWar[i].reset();
+				if (this.player.spells.drumsOfRestoration[i]) this.player.spells.drumsOfRestoration[i].reset();
+			}
 			this.player.reset(); // Resets mana, global cooldown etc.
 			if (this.player.pet) this.player.pet.reset();
 
@@ -215,24 +236,27 @@ class Simulation {
 				// Use Drums of Battle
 				if (this.player.auras.drumsOfBattle && !this.player.auras.drumsOfBattle.active) {
 					for (let i = 0; i < this.player.spells.drumsOfBattle.length; i++) {
-						if (this.player.spells.drumsOfBattle[i].ready()) {
-							this.player.spells.drumsOfBattle[i].cast();
+						if (this.player.spells.drumsOfBattle[i].cooldownRemaining <= 0) {
+							this.player.spells.drumsOfBattle[i].startCast();
+							break;
 						}
 					}
 				}
 				// Use Drums of War
 				if (this.player.auras.drumsOfWar && !this.player.auras.drumsOfWar.active) {
 					for (let i = 0; i < this.player.spells.drumsOfWar.length; i++) {
-						if (this.player.spells.drumsOfWar[i].ready()) {
-							this.player.spells.drumsOfWar[i].cast();
+						if (this.player.spells.drumsOfWar[i].cooldownRemaining <= 0) {
+							this.player.spells.drumsOfWar[i].startCast();
+							break;
 						}
 					}
 				}
 				// Use Drums of Restoration
 				if (this.player.auras.drumsOfRestoration && !this.player.auras.drumsOfRestoration.active) {
 					for (let i = 0; i < this.player.spells.drumsOfRestoration.length; i++) {
-						if (this.player.spells.drumsOfRestoration[i].ready()) {
-							this.player.spells.drumsOfRestoration[i].cast();
+						if (this.player.spells.drumsOfRestoration[i].cooldownRemaining <= 0) {
+							this.player.spells.drumsOfRestoration[i].startCast();
+							break;
 						}
 					}
 				}
@@ -365,6 +389,9 @@ class Simulation {
 			if (this.player.auras.flameCap && this.player.auras.flameCap.active) this.player.auras.flameCap.fade(true);
 			if (this.player.auras.bloodFury && this.player.auras.bloodFury.active) this.player.auras.bloodFury.fade(true);
 			if (this.player.auras.bloodlust && this.player.auras.bloodlust.active) this.player.auras.bloodlust.fade(true);
+			if (this.player.auras.drumsOfBattle && this.player.auras.drumsOfBattle.active) this.player.auras.drumsOfBattle.fade(true);
+			if (this.player.auras.drumsOfWar && this.player.auras.drumsOfWar.active) this.player.auras.drumsOfWar.fade(true);
+			if (this.player.auras.drumsOfRestoration && this.player.auras.drumsOfRestoration.active) this.player.auras.drumsOfRestoration.fade(true);
 			for (let i = 0; i < this.player.trinkets.length; i++) {
 				if (this.player.trinkets[i]) {
 					this.player.trinkets[i].fade(true);

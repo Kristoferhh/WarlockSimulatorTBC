@@ -302,9 +302,9 @@ class Player {
 		this.spells.drumsOfWar = [];
 		this.spells.drumsOfRestoration = [];
 		for (let i = 0; i < 5; i++) {
-			if (this.selectedAuras.drumsOfBattle && i < this.simSettings.drumsOfBattleAmount) this.spells.drumsOfBattle.append(new DrumsOfBattle(this));
-			if (this.selectedAuras.drumsOfWar && i < this.simSettings.drumsOfWarAmount) this.spells.drumsOfWar.append(new DrumsOfWar(this));
-			if (this.selectedAuras.drumsOfRestoration && i < this.simSettings.drumsOfRestorationAmount) this.spells.drumsOfRestoration.append(new DrumsOfRestoration(this));
+			if (this.selectedAuras.drumsOfBattle && i < this.simSettings.drumsOfBattleAmount) this.spells.drumsOfBattle.push(new DrumsOfBattle(this));
+			if (this.selectedAuras.drumsOfWar && i < this.simSettings.drumsOfWarAmount) this.spells.drumsOfWar.push(new DrumsOfWar(this));
+			if (this.selectedAuras.drumsOfRestoration && i < this.simSettings.drumsOfRestorationAmount) this.spells.drumsOfRestoration.push(new DrumsOfRestoration(this));
 		}
 
 		this.auras = {};

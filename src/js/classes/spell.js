@@ -585,6 +585,7 @@ class DrumsOfBattle extends Spell {
 		this.cooldown = 120;
 		this.isAura = true;
 		this.onGcd = false;
+		this.isItem = true;
 		this.setup();
 	}
 }
@@ -596,6 +597,7 @@ class DrumsOfWar extends Spell {
 		this.cooldown = 120;
 		this.isAura = true;
 		this.onGcd = false;
+		this.isItem = true;
 		this.setup();
 	}
 }
@@ -607,6 +609,7 @@ class DrumsOfRestoration extends Spell {
 		this.cooldown = 120;
 		this.isAura = true;
 		this.onGcd = false;
+		this.isItem = true;
 		this.setup();
 	}
 }
