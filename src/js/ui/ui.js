@@ -606,7 +606,7 @@ $("#enchant-selection-table tbody").on('click', 'tr', function(event) {
 });
 
 $(".preset-talent-button").click(function() {
-	talents = presetTalents[$(this).data('name')];
+	talents = JSON.parse(JSON.stringify(presetTalents[$(this).data('name')]));
 	talentPointsRemaining = totalTalentPoints;
 
 	$(".talent-tree-table").each(function() {

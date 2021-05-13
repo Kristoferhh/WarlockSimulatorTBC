@@ -16,7 +16,7 @@ class Simulation {
 		this.simulationUpdate = simulationUpdate;
 	}
 
-	// >> IMPORTANT <<: The reason this function contains a lot of hardcoded auras and spells instead of using loops is because using loops takes ~4-5 times longer than this method.
+	// >> IMPORTANT <<: The reason this function is so horribly hardcoded instead of using loops is because using loops made the simulation ~4-5 times slower.
 	// That's not to say that this can't be improved, but the improvement won't be a regular loop through the spell/aura objects.
 	passTime() {
 		let time = this.player.castTimeRemaining;
