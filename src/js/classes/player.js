@@ -298,14 +298,9 @@ class Player {
 		if (this.selectedAuras.flameCap) this.spells.flameCap = new FlameCap(this);
 		if (this.simSettings.race == "orc") this.spells.bloodFury = new BloodFury(this);
 		if (this.selectedAuras.bloodlust) this.spells.bloodlust = new Bloodlust(this);
-		this.spells.drumsOfBattle = [];
-		this.spells.drumsOfWar = [];
-		this.spells.drumsOfRestoration = [];
-		for (let i = 0; i < 5; i++) {
-			if (this.selectedAuras.drumsOfBattle && i < this.simSettings.drumsOfBattleAmount) this.spells.drumsOfBattle.push(new DrumsOfBattle(this));
-			if (this.selectedAuras.drumsOfWar && i < this.simSettings.drumsOfWarAmount) this.spells.drumsOfWar.push(new DrumsOfWar(this));
-			if (this.selectedAuras.drumsOfRestoration && i < this.simSettings.drumsOfRestorationAmount) this.spells.drumsOfRestoration.push(new DrumsOfRestoration(this));
-		}
+		if (this.selectedAuras.drumsOfBattle) this.spells.drumsOfBattle = new DrumsOfBattle(this);
+		if (this.selectedAuras.drumsOfWar) this.spells.drumsOfWar = new DrumsOfWar(this);
+		if (this.selectedAuras.drumsOfRestoration) this.spells.drumsOfRestoration = new DrumsOfRestoration(this);
 
 		this.auras = {};
 		if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusion(this);

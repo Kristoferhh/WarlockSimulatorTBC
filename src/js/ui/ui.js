@@ -1317,24 +1317,6 @@ function updateSimulationSettingsVisibility() {
 		$("#warlockAtieshAmount").hide();
 	}
 
-	if (auras.drumsOfBattle) {
-		$("#drumsOfBattleAmount").show();
-	} else {
-		$("#drumsOfBattleAmount").hide();
-	}
-
-	if (auras.drumsOfWar) {
-		$("#drumsOfWarAmount").show();
-	} else {
-		$("#drumsOfWarAmount").hide();
-	}
-
-	if (auras.drumsOfRestoration) {
-		$("#drumsOfRestorationAmount").show();
-	} else {
-		$("#drumsOfRestorationAmount").hide();
-	}
-
 	if (auras.bloodlust) {
 		$("#bloodlustAmount").show();
 	} else {

@@ -588,6 +588,10 @@ class DrumsOfBattle extends Spell {
 		this.isItem = true;
 		this.setup();
 	}
+
+	ready() {
+		return this.cooldownRemaining <= 0;
+	}
 }
 
 class DrumsOfWar extends Spell {
@@ -600,6 +604,10 @@ class DrumsOfWar extends Spell {
 		this.isItem = true;
 		this.setup();
 	}
+
+	ready() {
+		return this.cooldownRemaining <= 0;
+	}
 }
 
 class DrumsOfRestoration extends Spell {
@@ -611,5 +619,9 @@ class DrumsOfRestoration extends Spell {
 		this.onGcd = false;
 		this.isItem = true;
 		this.setup();
+	}
+
+	ready() {
+		return this.cooldownRemaining <= 0;
 	}
 }
