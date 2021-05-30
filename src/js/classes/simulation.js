@@ -173,6 +173,7 @@ class Simulation {
 		if (this.player.auras.drumsOfWar && this.player.auras.drumsOfWar.active) this.player.auras.drumsOfWar.tick(time);
 		if (this.player.auras.drumsOfRestoration && this.player.auras.drumsOfRestoration.active) this.player.auras.drumsOfRestoration.tick(time);
 		if (this.player.auras.ashtongueTalismanOfShadows && this.player.auras.ashtongueTalismanOfShadows.active) this.player.auras.ashtongueTalismanOfShadows.tick(time);
+		if (this.player.auras.darkmoonCardCrusade && this.player.auras.darkmoonCardCrusade.active) this.player.auras.darkmoonCardCrusade.tick(time);
 
 		// Trinkets
 		if (this.player.trinkets[0]) this.player.trinkets[0].tick(time);
