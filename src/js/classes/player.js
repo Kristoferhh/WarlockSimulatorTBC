@@ -304,6 +304,7 @@ class Player {
 		if (this.selectedAuras.bloodlust) this.spells.bloodlust = new Bloodlust(this);
 		if (this.selectedAuras.drumsOfBattle) this.spells.drumsOfBattle = new DrumsOfBattle(this);
 		if (this.selectedAuras.drumsOfWar) this.spells.drumsOfWar = new DrumsOfWar(this);
+		if (this.items.mainhand == 31336) this.spells.bladeOfWizardry = new BladeOfWizardry(this);
 		if (this.selectedAuras.drumsOfRestoration) this.spells.drumsOfRestoration = new DrumsOfRestoration(this);
 		if (this.trinketIds.includes(34470)) this.spells.timbalsFocusingCrystal = new TimbalsFocusingCrystal(this);
 		if (this.trinketIds.includes(27922)) this.spells.markOfDefiance = new MarkOfDefiance(this);
@@ -329,6 +330,7 @@ class Player {
 		if (this.selectedAuras.drumsOfWar) this.auras.drumsOfWar = new DrumsOfWarAura(this);
 		if (this.selectedAuras.drumsOfRestoration) this.auras.drumsOfRestoration = new DrumsOfRestorationAura(this);
 		if ([this.items.ring1,this.items.ring2].includes(29305)) this.auras.bandOfTheEternalSage = new BandOfTheEternalSageAura(this);
+		if (this.items.mainhand == 31336) this.auras.bladeOfWizardry = new BladeOfWizardryAura(this);
 		if (this.trinketIds.includes(28789)) this.auras.eyeOfMagtheridon = new EyeOfMagtheridon(this);
 		if (this.trinketIds.includes(30626)) this.auras.sextantOfUnstableCurrents = new SextantOfUnstableCurrents(this);
 		if (this.trinketIds.includes(27683)) this.auras.quagmirransEye = new QuagmirransEye(this);

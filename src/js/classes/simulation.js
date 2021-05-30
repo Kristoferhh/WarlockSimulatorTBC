@@ -102,6 +102,10 @@ class Simulation {
 			if (this.player.auras.shiffarsNexusHorn.active && this.player.auras.shiffarsNexusHorn.durationRemaining < time) time = this.player.auras.shiffarsNexusHorn.durationRemaining;
 			if (this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining > 0 && this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining < time) time = this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining;
 		}
+		if (this.player.spells.bladeOfWizardry) {
+			if (this.player.spells.bladeOfWizardry.cooldownRemaining > 0 && this.player.spells.bladeOfWizardry.cooldownRemaining < time) time = this.player.spells.bladeOfWizardry.cooldownRemaining;
+			if (this.player.auras.bladeOfWizardry.active && this.player.auras.bladeOfWizardry.durationRemaining < time) time = this.player.auras.bladeOfWizardry.durationRemaining;
+		}
 		if (this.player.auras.ashtongueTalismanOfShadows && this.player.auras.ashtongueTalismanOfShadows.active && this.player.auras.ashtongueTalismanOfShadows.durationRemaining < time) time = this.player.auras.ashtongueTalismanOfShadows.durationRemaining;
 		if (this.player.auras.darkmoonCardCrusade && this.player.auras.darkmoonCardCrusade.active && this.player.auras.darkmoonCardCrusade.durationRemaining < time) time = this.player.auras.darkmoonCardCrusade.durationRemaining;
 		if (this.player.auras.manaEtched4Set && this.player.auras.manaEtched4Set.active && this.player.auras.manaEtched4Set.durationRemaining < time) time = this.player.auras.manaEtched4Set.durationRemaining;
@@ -146,6 +150,7 @@ class Simulation {
 		if (this.player.spells.timbalsFocusingCrystal && this.player.spells.timbalsFocusingCrystal.cooldownRemaining > 0) this.player.spells.timbalsFocusingCrystal.tick(time);
 		if (this.player.spells.markOfDefiance && this.player.spells.markOfDefiance.cooldownRemaining > 0) this.player.spells.markOfDefiance.tick(time);
 		if (this.player.spells.theLightningCapacitor && this.player.spells.theLightningCapacitor.cooldownRemaining > 0) this.player.spells.theLightningCapacitor.tick(time);
+		if (this.player.spells.bladeOfWizardry && this.player.spells.bladeOfWizardry.cooldownRemaining > 0) this.player.spells.bladeOfWizardry.tick(time);
 
 		// Auras
 		if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.tick(time);
@@ -176,6 +181,7 @@ class Simulation {
 		if (this.player.auras.ashtongueTalismanOfShadows && this.player.auras.ashtongueTalismanOfShadows.active) this.player.auras.ashtongueTalismanOfShadows.tick(time);
 		if (this.player.auras.darkmoonCardCrusade && this.player.auras.darkmoonCardCrusade.active) this.player.auras.darkmoonCardCrusade.tick(time);
 		if (this.player.auras.bandOfTheEternalSage && this.player.auras.bandOfTheEternalSage.active) this.player.auras.bandOfTheEternalSage.tick(time);
+		if (this.player.auras.bladeOfWizardry && this.player.auras.bladeOfWizardry.active) this.player.auras.bladeOfWizardry.tick(time);
 
 		// Trinkets
 		if (this.player.trinkets[0]) this.player.trinkets[0].tick(time);
@@ -233,6 +239,7 @@ class Simulation {
 			if (this.player.spells.drumsOfRestoration) this.player.spells.drumsOfRestoration.reset();
 			if (this.player.spells.markOfDefiance) this.player.spells.markOfDefiance.reset();
 			if (this.player.spells.theLightningCapacitor) this.player.spells.theLightningCapacitor.reset();
+			if (this.player.spells.bladeOfWizardry) this.player.spells.bladeOfWizardry.reset();
 			this.player.reset(); // Resets mana, global cooldown etc.
 			if (this.player.pet) this.player.pet.reset();
 
@@ -382,6 +389,7 @@ class Simulation {
 			if (this.player.auras.darkmoonCardCrusade && this.player.auras.darkmoonCardCrusade.active) this.player.auras.darkmoonCardCrusade.fade(true);
 			if (this.player.auras.theLightningCapacitor && this.player.auras.theLightningCapacitor.active) this.player.auras.theLightningCapacitor.fade(true);
 			if (this.player.auras.bandOfTheEternalSage && this.player.auras.bandOfTheEternalSage.active) this.player.auras.bandOfTheEternalSage.fade(true);
+			if (this.player.auras.bladeOfWizardry && this.player.auras.bladeOfWizardry.active) this.player.auras.bladeOfWizardry.fade(true);
 			for (let i = 0; i < this.player.trinkets.length; i++) {
 				if (this.player.trinkets[i]) {
 					this.player.trinkets[i].fade(true);

@@ -18,6 +18,7 @@ class Spell {
 		this.casting = false;
 		this.isItem = false;
 		this.onGcd = true;
+		this.isProc = false;
 	}
 
 	reset() {
@@ -43,9 +44,9 @@ class Spell {
 		if (this.castTime > 0) {
 			this.casting = true;
 			this.player.castTimeRemaining = Math.round((this.castTime / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000;
-			this.player.combatLog("Started casting " + this.name + ". Cast time: " + this.player.castTimeRemaining + " (" + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + "% haste at a base cast speed of " + this.castTime + "). Global cooldown: " + this.player.gcdRemaining);
+			if (!this.isProc) this.player.combatLog("Started casting " + this.name + ". Cast time: " + this.player.castTimeRemaining + " (" + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + "% haste at a base cast speed of " + this.castTime + "). Global cooldown: " + this.player.gcdRemaining);
 		} else {
-			this.player.combatLog("Cast " + this.name);
+			if (!this.isProc) this.player.combatLog("Cast " + this.name);
 			this.cast();
 		}
 	}
@@ -75,26 +76,9 @@ class Spell {
 			return;
 		}
 
-		if (!this.isItem) {
-			// Mark of Defiance
-			if (this.player.spells.markOfDefiance && random(1,100) <= this.player.spells.markOfDefiance.procChance) {
-				this.player.spells.markOfDefiance.cast();
-			}
-
-			// Darkmoon Card: Crusade
-			if (this.player.auras.darkmoonCardCrusade) {
-				this.player.auras.darkmoonCardCrusade.apply();
-			}
-
-			// Band of the Eternal Sage
-			if (this.player.auras.bandOfTheEternalSage && random(1,100) <= this.player.auras.bandOfTheEternalSage.procChance) {
-				this.player.auras.bandOfTheEternalSage.apply();
-			}
-		}
-
 		if (isCrit && this.canCrit) {
 			if (this.player.trinketIds.includes(30626) && random(1,100) <= this.player.auras.sextantOfUnstableCurrents.procChance) this.player.auras.sextantOfUnstableCurrents.apply(); // Sextant of Unstable Currents
-			if (this.player.trinketIds.includes(28418) && random(1,100) <= this.player.auras.shiffarsNexusHorn.procChance) this.player.auras.shiffarsNexusHorn.apply(); // Shiffar's Nexus-Horn
+			if (this.player.trinketIds.includes(28418) && random(1,100) <= this.player.auras.shiffarsNexusHorn.procChance) this.player.auras.shiffarsNexusHorn.apply(); 				// Shiffar's Nexus-Horn
 		}
 
 		if (this.isDot) {
@@ -126,6 +110,26 @@ class Spell {
 		// Mana-Etched Regalia 4-set (2% proc chance)
 		if (this.player.sets['658'] >= 4 && random(1,100) <= this.player.auras.manaEtched4Set.procChance) {
 			this.player.auras.manaEtched4Set.apply();
+		}
+
+		// Mark of Defiance
+		if (this.player.spells.markOfDefiance && random(1,100) <= this.player.spells.markOfDefiance.procChance) {
+			this.player.spells.markOfDefiance.cast();
+		}
+
+		// Darkmoon Card: Crusade
+		if (this.player.auras.darkmoonCardCrusade) {
+			this.player.auras.darkmoonCardCrusade.apply();
+		}
+
+		// Band of the Eternal Sage
+		if (this.player.auras.bandOfTheEternalSage && random(1,100) <= this.player.auras.bandOfTheEternalSage.procChance) {
+			this.player.auras.bandOfTheEternalSage.apply();
+		}
+
+		// Blade of Wizardry
+		if (this.player.spells.bladeOfWizardry && this.player.spells.bladeOfWizardry.cooldownRemaining <= 0 && random(1,100) <= this.player.auras.bladeOfWizardry.procChance) {
+			this.player.spells.bladeOfWizardry.startCast();
 		}
 	}
 
@@ -705,6 +709,25 @@ class TheLightningCapacitor extends Spell {
 				super.startCast();
 			}
 			this.cooldownRemaining = this.cooldown;
+		}
+	}
+}
+
+class BladeOfWizardry extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Blade of Wizardry";
+		this.cooldown = 50;
+		this.onGcd = false;
+		this.isItem = true;
+		this.isProc = true;
+		this.setup();
+	}
+
+	startCast() {
+		if (this.cooldownRemaining <= 0) {
+			this.player.auras.bladeOfWizardry.apply();
+			super.startCast();
 		}
 	}
 }

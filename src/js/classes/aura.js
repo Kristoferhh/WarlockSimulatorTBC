@@ -655,13 +655,13 @@ class BandOfTheEternalSageAura extends Aura {
 		this.name = "Band of the Eternal Sage";
 		this.durationTotal = 10;
 		this.procChance = 10;
-		this.spellPowerAmount = 95;
+		this.spellPower = 95;
 	}
 
 	apply() {
 		if (!this.active) {
-			this.player.combatLog("Spell Power + " + this.spellPowerAmount + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.spellPowerAmount) + ")");
-			this.player.stats.spellPower += this.spellPowerAmount;
+			this.player.combatLog("Spell Power + " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.spellPower) + ")");
+			this.player.stats.spellPower += this.spellPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.apply();
@@ -669,8 +669,37 @@ class BandOfTheEternalSageAura extends Aura {
 
 	fade(endOfIteration) {
 		if (this.active) {
-			this.player.combatLog("Spell Power - " + this.spellPowerAmount + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spellPowerAmount) + ")");
-			this.player.stats.spellPower -= this.spellPowerAmount;
+			this.player.combatLog("Spell Power - " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spellPower) + ")");
+			this.player.stats.spellPower -= this.spellPower;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.fade(endOfIteration);
+	}
+}
+
+class BladeOfWizardryAura extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Blade of Wizardry";
+		this.hasteRating = 280;
+		this.durationTotal = 6;
+		this.procChance = 15;
+		this.isImportant = true;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.combatLog("Haste Rating + " + this.hasteRating + " (" + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + "% -> " + Math.round(((this.player.stats.hasteRating + this.hasteRating) / hasteRatingPerPercent) * 100) / 100 + "%)");
+			this.player.stats.hasteRating += this.hasteRating;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.apply();
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active) {
+			this.player.combatLog("Haste Rating - " + this.hasteRating + " (" + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + "% -> " + Math.round(((this.player.stats.hasteRating - this.hasteRating) / hasteRatingPerPercent) * 100) / 100 + "%)");
+			this.player.stats.hasteRating -= this.hasteRating;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.fade(endOfIteration);
