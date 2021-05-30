@@ -182,6 +182,8 @@ class PowerInfusion extends Aura {
 		this.durationTotal = 15;
 		this.cooldown = 180;
 		this.cooldownRemaining = 0;
+		this.hasteModifier = 20;
+		this.manaModifier = 0.8;
 		this.isImportant = true;
 	}
 
@@ -191,9 +193,8 @@ class PowerInfusion extends Aura {
 
 	apply() {
 		if (!this.active) {
-			this.player.stats.shadowModifier *= 1.2;
-			this.player.stats.fireModifier *= 1.2;
-			this.player.stats.manaCostModifier *= 0.8;
+			this.player.stats.hasteRating += hasteRatingPerPercent * this.hasteModifier;
+			this.player.stats.manaCostModifier *= this.manaModifier;
 		}
 		this.cooldownRemaining = this.cooldown;
 		super.apply();
@@ -201,9 +202,8 @@ class PowerInfusion extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.stats.shadowModifier /= 1.2;
-			this.player.stats.fireModifier /= 1.2;
-			this.player.stats.manaCostModifier /= 0.8;
+			this.player.stats.hasteRating -= hasteRatingPerPercent * this.hasteModifier;
+			this.player.stats.manaCostModifier /= this.manaModifier;
 		}
 		super.fade(endOfIteration);
 	}
