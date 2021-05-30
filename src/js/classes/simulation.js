@@ -106,7 +106,8 @@ class Simulation {
 		if (this.player.auras.darkmoonCardCrusade && this.player.auras.darkmoonCardCrusade.active && this.player.auras.darkmoonCardCrusade.durationRemaining < time) time = this.player.auras.darkmoonCardCrusade.durationRemaining;
 		if (this.player.auras.manaEtched4Set && this.player.auras.manaEtched4Set.active && this.player.auras.manaEtched4Set.durationRemaining < time) time = this.player.auras.manaEtched4Set.durationRemaining;
 		if (this.player.spells.theLightningCapacitor && this.player.spells.theLightningCapacitor.cooldownRemaining > 0 && this.player.spells.theLightningCapacitor.cooldownRemaining < time) time = this.player.spells.theLightningCapacitor.cooldownRemaining;
-	
+		if (this.player.auras.bandOfTheEternalSage && this.player.auras.bandOfTheEternalSage.active && this.player.auras.bandOfTheEternalSage.durationRemaining < time) time = this.player.auras.bandOfTheEternalSage.durationRemaining;
+
 		if (this.player.mp5Timer < time) time = this.player.mp5Timer;
 		for (let i = 0; i < 2; i++) {
 			if (this.player.trinkets[i]) {
@@ -174,6 +175,7 @@ class Simulation {
 		if (this.player.auras.drumsOfRestoration && this.player.auras.drumsOfRestoration.active) this.player.auras.drumsOfRestoration.tick(time);
 		if (this.player.auras.ashtongueTalismanOfShadows && this.player.auras.ashtongueTalismanOfShadows.active) this.player.auras.ashtongueTalismanOfShadows.tick(time);
 		if (this.player.auras.darkmoonCardCrusade && this.player.auras.darkmoonCardCrusade.active) this.player.auras.darkmoonCardCrusade.tick(time);
+		if (this.player.auras.bandOfTheEternalSage && this.player.auras.bandOfTheEternalSage.active) this.player.auras.bandOfTheEternalSage.tick(time);
 
 		// Trinkets
 		if (this.player.trinkets[0]) this.player.trinkets[0].tick(time);
@@ -379,6 +381,7 @@ class Simulation {
 			if (this.player.auras.ashtongueTalismanOfShadows && this.player.auras.ashtongueTalismanOfShadows.active) this.player.auras.ashtongueTalismanOfShadows.fade(true);
 			if (this.player.auras.darkmoonCardCrusade && this.player.auras.darkmoonCardCrusade.active) this.player.auras.darkmoonCardCrusade.fade(true);
 			if (this.player.auras.theLightningCapacitor && this.player.auras.theLightningCapacitor.active) this.player.auras.theLightningCapacitor.fade(true);
+			if (this.player.auras.bandOfTheEternalSage && this.player.auras.bandOfTheEternalSage.active) this.player.auras.bandOfTheEternalSage.fade(true);
 			for (let i = 0; i < this.player.trinkets.length; i++) {
 				if (this.player.trinkets[i]) {
 					this.player.trinkets[i].fade(true);

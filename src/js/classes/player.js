@@ -23,6 +23,7 @@ class Player {
 	constructor(settings, customItemSlot = null, customItemSubSlot = "", customItemId = null) {
 		this.stats = JSON.parse(JSON.stringify(settings.stats)); // Create a deep-copy of the character's stats since we need to modify the values.
 		this.stats.manaCostModifier = 1;
+		this.items = settings.items;
 		this.enemy = settings.enemy;
 		this.rotation = settings.rotation;
 		this.talents = settings.talents;
@@ -327,6 +328,7 @@ class Player {
 		if (this.selectedAuras.drumsOfBattle) this.auras.drumsOfBattle = new DrumsOfBattleAura(this);
 		if (this.selectedAuras.drumsOfWar) this.auras.drumsOfWar = new DrumsOfWarAura(this);
 		if (this.selectedAuras.drumsOfRestoration) this.auras.drumsOfRestoration = new DrumsOfRestorationAura(this);
+		if ([this.items.ring1,this.items.ring2].includes(29305)) this.auras.bandOfTheEternalSage = new BandOfTheEternalSageAura(this);
 		if (this.trinketIds.includes(28789)) this.auras.eyeOfMagtheridon = new EyeOfMagtheridon(this);
 		if (this.trinketIds.includes(30626)) this.auras.sextantOfUnstableCurrents = new SextantOfUnstableCurrents(this);
 		if (this.trinketIds.includes(27683)) this.auras.quagmirransEye = new QuagmirransEye(this);

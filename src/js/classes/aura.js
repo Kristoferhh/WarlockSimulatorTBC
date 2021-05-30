@@ -648,3 +648,31 @@ class TheLightningCapacitorAura extends Aura {
 		super.fade(endOfIteration);
 	}
 }
+
+class BandOfTheEternalSageAura extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Band of the Eternal Sage";
+		this.durationTotal = 10;
+		this.procChance = 10;
+		this.spellPowerAmount = 95;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.combatLog("Spell Power + " + this.spellPowerAmount + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.spellPowerAmount) + ")");
+			this.player.stats.spellPower += this.spellPowerAmount;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.apply();
+	}
+
+	fade(endOfIteration) {
+		if (this.active) {
+			this.player.combatLog("Spell Power - " + this.spellPowerAmount + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spellPowerAmount) + ")");
+			this.player.stats.spellPower -= this.spellPowerAmount;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.fade(endOfIteration);
+	}
+}

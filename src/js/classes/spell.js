@@ -75,14 +75,21 @@ class Spell {
 			return;
 		}
 
-		// Mark of Defiance
-		if (this.player.spells.markOfDefiance && random(1,100) <= this.player.spells.markOfDefiance.procChance) {
-			this.player.spells.markOfDefiance.cast();
-		}
+		if (!this.isItem) {
+			// Mark of Defiance
+			if (this.player.spells.markOfDefiance && random(1,100) <= this.player.spells.markOfDefiance.procChance) {
+				this.player.spells.markOfDefiance.cast();
+			}
 
-		// Darkmoon Card: Crusade
-		if (this.player.auras.darkmoonCardCrusade) {
-			this.player.auras.darkmoonCardCrusade.apply();
+			// Darkmoon Card: Crusade
+			if (this.player.auras.darkmoonCardCrusade) {
+				this.player.auras.darkmoonCardCrusade.apply();
+			}
+
+			// Band of the Eternal Sage
+			if (this.player.auras.bandOfTheEternalSage && random(1,100) <= this.player.auras.bandOfTheEternalSage.procChance) {
+				this.player.auras.bandOfTheEternalSage.apply();
+			}
 		}
 
 		if (isCrit && this.canCrit) {
