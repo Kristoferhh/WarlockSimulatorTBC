@@ -80,6 +80,11 @@ class Spell {
 			this.player.spells.markOfDefiance.cast();
 		}
 
+		// Darkmoon Card: Crusade
+		if (this.player.auras.darkmoonCardCrusade) {
+			this.player.auras.darkmoonCardCrusade.apply();
+		}
+
 		if (isCrit && this.canCrit) {
 			if (this.player.trinketIds.includes(30626) && random(1,100) <= this.player.auras.sextantOfUnstableCurrents.procChance) this.player.auras.sextantOfUnstableCurrents.apply(); // Sextant of Unstable Currents
 			if (this.player.trinketIds.includes(28418) && random(1,100) <= this.player.auras.shiffarsNexusHorn.procChance) this.player.auras.shiffarsNexusHorn.apply(); // Shiffar's Nexus-Horn

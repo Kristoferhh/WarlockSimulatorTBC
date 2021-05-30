@@ -594,3 +594,33 @@ class AshtongueTalismanOfShadows extends Aura {
 		super.fade(endOfIteration);
 	}
 }
+
+class DarkmoonCardCrusadeAura extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Darkmoon Card: Crusade";
+		this.durationTotal = 10;
+		this.maxStacks = 10;
+		this.stacks = 0;
+		this.spPerStack = 8;
+	}
+
+	apply() {
+		if (this.stacks < this.maxStacks) {
+			this.player.combatLog("Spell Power + " + this.spPerStack + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.spPerStack) + ")");
+			this.player.stats.spellPower += this.spPerStack;
+			this.stacks++;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.apply();
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active) {
+			this.player.combatLog("Spell Power - " + (this.spPerStack * this.stacks) + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spPerStack * this.stacks) + ")");
+			this.player.stats.spellPower -= this.spPerStack * this.stacks;
+			this.stacks = 0;
+		}
+		super.fade(endOfIteration);
+	}
+}
