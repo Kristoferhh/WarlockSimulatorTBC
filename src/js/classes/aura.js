@@ -566,3 +566,31 @@ class DrumsOfRestorationAura extends Aura {
 		}
 	}
 }
+
+class AshtongueTalismanOfShadows extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Ashtongue Talisman of Shadows";
+		this.durationTotal = 5;
+		this.procChance = 20;
+		this.isImportant = true;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.combatLog("Spell Power + 220 (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + 220) + ")");
+			this.player.stats.spellPower += 220;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.apply();
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active) {
+			this.player.combatLog("Spell Power - 80 (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - 220) + ")");
+			this.player.stats.spellPower -= 220;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.fade(endOfIteration);
+	}
+}

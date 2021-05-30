@@ -326,6 +326,7 @@ class Player {
 		if (this.trinketIds.includes(30626)) this.auras.sextantOfUnstableCurrents = new SextantOfUnstableCurrents(this);
 		if (this.trinketIds.includes(27683)) this.auras.quagmirransEye = new QuagmirransEye(this);
 		if (this.trinketIds.includes(28418)) this.auras.shiffarsNexusHorn = new ShiffarsNexusHorn(this);
+		if (this.trinketIds.includes(32493)) this.auras.ashtongueTalismanOfShadows = new AshtongueTalismanOfShadows(this);
 		if (this.sets['645'] >= 2) {
 			this.auras.shadowFlameshadow = new ShadowFlameShadow(this);
 			this.auras.shadowFlamefire = new ShadowFlameFire(this);

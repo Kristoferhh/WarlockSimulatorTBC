@@ -101,6 +101,7 @@ class Simulation {
 			if (this.player.auras.shiffarsNexusHorn.active && this.player.auras.shiffarsNexusHorn.durationRemaining < time) time = this.player.auras.shiffarsNexusHorn.durationRemaining;
 			if (this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining > 0 && this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining < time) time = this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining;
 		}
+		if (this.player.auras.ashtongueTalismanOfShadows && this.player.auras.ashtongueTalismanOfShadows.active && this.player.auras.ashtongueTalismanOfShadows.durationRemaining < time) time = this.player.auras.ashtongueTalismanOfShadows.durationRemaining;
 		if (this.player.auras.manaEtched4Set && this.player.auras.manaEtched4Set.active && this.player.auras.manaEtched4Set.durationRemaining < time) time = this.player.auras.manaEtched4Set.durationRemaining;
 	
 		if (this.player.mp5Timer < time) time = this.player.mp5Timer;
@@ -166,6 +167,7 @@ class Simulation {
 		if (this.player.auras.drumsOfBattle && this.player.auras.drumsOfBattle.active) this.player.auras.drumsOfBattle.tick(time);
 		if (this.player.auras.drumsOfWar && this.player.auras.drumsOfWar.active) this.player.auras.drumsOfWar.tick(time);
 		if (this.player.auras.drumsOfRestoration && this.player.auras.drumsOfRestoration.active) this.player.auras.drumsOfRestoration.tick(time);
+		if (this.player.auras.ashtongueTalismanOfShadows && this.player.auras.ashtongueTalismanOfShadows.active) this.player.auras.ashtongueTalismanOfShadows.tick(time);
 
 		// Trinkets
 		if (this.player.trinkets[0]) this.player.trinkets[0].tick(time);
@@ -366,6 +368,7 @@ class Simulation {
 			if (this.player.auras.drumsOfBattle && this.player.auras.drumsOfBattle.active) this.player.auras.drumsOfBattle.fade(true);
 			if (this.player.auras.drumsOfWar && this.player.auras.drumsOfWar.active) this.player.auras.drumsOfWar.fade(true);
 			if (this.player.auras.drumsOfRestoration && this.player.auras.drumsOfRestoration.active) this.player.auras.drumsOfRestoration.fade(true);
+			if (this.player.auras.ashtongueTalismanOfShadows && this.player.auras.ashtongueTalismanOfShadows.active) this.player.auras.ashtongueTalismanOfShadows.fade(true);
 			for (let i = 0; i < this.player.trinkets.length; i++) {
 				if (this.player.trinkets[i]) {
 					this.player.trinkets[i].fade(true);

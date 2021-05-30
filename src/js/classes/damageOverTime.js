@@ -73,6 +73,11 @@ class DamageOverTime {
 				this.ticksRemaining--;
 				this.tickTimerRemaining = this.tickTimerTotal;
 
+				// Ashtongue Talisman of Shadows
+				if (this.varName == "corruption" && this.player.auras.ashtongueTalismanOfShadows && random(1,100) <= this.player.auras.ashtongueTalismanOfShadows.procChance) {
+					this.player.auras.ashtongueTalismanOfShadows.apply();
+				}
+
 				// Timbal's Focusing Crystal
 				if (this.player.spells.timbalsFocusingCrystal && this.player.spells.timbalsFocusingCrystal.cooldownRemaining <= 0 && random(1,100) <= this.player.spells.timbalsFocusingCrystal.procChance) {
 					this.player.spells.timbalsFocusingCrystal.startCast();
