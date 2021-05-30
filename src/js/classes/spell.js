@@ -75,6 +75,11 @@ class Spell {
 			return;
 		}
 
+		// Mark of Defiance
+		if (this.player.spells.markOfDefiance && random(1,100) <= this.player.spells.markOfDefiance.procChance) {
+			this.player.spells.markOfDefiance.cast();
+		}
+
 		if (isCrit && this.canCrit) {
 			if (this.player.trinketIds.includes(30626) && random(1,100) <= this.player.auras.sextantOfUnstableCurrents.procChance) this.player.auras.sextantOfUnstableCurrents.apply(); // Sextant of Unstable Currents
 			if (this.player.trinketIds.includes(28418) && random(1,100) <= this.player.auras.shiffarsNexusHorn.procChance) this.player.auras.shiffarsNexusHorn.apply(); // Shiffar's Nexus-Horn
@@ -639,5 +644,24 @@ class TimbalsFocusingCrystal extends Spell {
 		this.school = "shadow";
 		this.canCrit = true;
 		this.setup();
+	}
+}
+
+class MarkOfDefiance extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Mark of Defiance";
+		this.cooldown = 17;
+		this.procChance = 15;
+		this.onGcd = false;
+		this.manaGain = 150;
+		this.setup();
+	}
+
+	cast() {
+		this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1;
+		this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + this.manaGain || this.manaGain;
+		this.player.combatLog(this.name + " +" + this.manaGain + " mana");
+		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.manaGain);
 	}
 }
