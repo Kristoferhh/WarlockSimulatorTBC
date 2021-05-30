@@ -4345,14 +4345,6 @@ const items = {
 			"source": "Black Temple",
 			"phase": 3, // confirm
 		},
-		"mementoOfTyrande": {
-			"name": "Memento of Tyrande",
-			"spellPower": 37,
-			"unique": true,
-			"id": 32496,
-			"source": "Black Temple",
-			"phase": 3
-		},
 		"ashtongueTalismanOfShadows": {
 			"name": "Ashtongue Talisman of Shadows",
 			"unique": true,
