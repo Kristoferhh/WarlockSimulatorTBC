@@ -625,3 +625,19 @@ class DrumsOfRestoration extends Spell {
 		return this.cooldownRemaining <= 0;
 	}
 }
+
+class TimbalsFocusingCrystal extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Timbal's Focusing Crystal";
+		this.cooldown = 15;
+		this.onGcd = false;
+		this.procChance = 10;
+		this.dmg = 380;
+		this.doesDamage = true;
+		this.coefficient = 0;
+		this.school = "shadow";
+		this.canCrit = true;
+		this.setup();
+	}
+}

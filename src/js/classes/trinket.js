@@ -20,17 +20,19 @@ class Trinket {
 	use() {
 		if (!this.active) {
 			this.player.combatLog(this.name + " used");
-			for (let stat in this.stats) {
-				if (this.player.stats.hasOwnProperty(stat)) {
-					this.player.combatLog(stat + " + " + this.stats[stat] + " (" + Math.round(this.player.stats[stat]) + " -> " + Math.round(this.player.stats[stat] + this.stats[stat]) + ")");
-					this.player.stats[stat] += this.stats[stat];
-					if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+			if (this.duration > 0) {
+				for (let stat in this.stats) {
+					if (this.player.stats.hasOwnProperty(stat)) {
+						this.player.combatLog(stat + " + " + this.stats[stat] + " (" + Math.round(this.player.stats[stat]) + " -> " + Math.round(this.player.stats[stat] + this.stats[stat]) + ")");
+						this.player.stats[stat] += this.stats[stat];
+						if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+					}
 				}
+				this.player.importantAuraCounter++;
+				this.player.combatLog(this.player.importantAuraCounter + " important auras active");
+				this.active = true;
+				this.durationRemaining = this.duration;
 			}
-			this.player.importantAuraCounter++;
-			this.player.combatLog(this.player.importantAuraCounter + " important auras active");
-			this.active = true;
-			this.durationRemaining = this.duration;
 			this.cooldownRemaining = this.cooldown;
 		}
 	}

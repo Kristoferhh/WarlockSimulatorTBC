@@ -73,6 +73,11 @@ class DamageOverTime {
 				this.ticksRemaining--;
 				this.tickTimerRemaining = this.tickTimerTotal;
 
+				// Timbal's Focusing Crystal
+				if (this.player.spells.timbalsFocusingCrystal && this.player.spells.timbalsFocusingCrystal.cooldownRemaining <= 0 && random(1,100) <= this.player.spells.timbalsFocusingCrystal.procChance) {
+					this.player.spells.timbalsFocusingCrystal.startCast();
+				}
+
 				if (this.ticksRemaining <= 0) {
 					this.active = false;
 					this.player.combatLog(this.name + " faded");

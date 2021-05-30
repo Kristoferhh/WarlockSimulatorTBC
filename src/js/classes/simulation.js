@@ -75,6 +75,7 @@ class Simulation {
 			if (this.player.spells.bloodlust.cooldownRemaining > 0 && this.player.spells.bloodlust.cooldownRemaining < time) time = this.player.spells.bloodlust.cooldownRemaining;
 			if (this.player.auras.bloodlust.active && this.player.auras.bloodlust.durationRemaining < time) time = this.player.auras.bloodlust.durationRemaining;
 		}
+		if (this.player.spells.timbalsFocusingCrystal && this.player.spells.timbalsFocusingCrystal.cooldownRemaining > 0 && this.player.spells.timbalsFocusingCrystal.cooldownRemaining < time) time = this.player.spells.timbalsFocusingCrystal.cooldownRemaining;
 		if (this.player.spells.drumsOfBattle && this.player.spells.drumsOfBattle.cooldownRemaining > 0 && this.player.spells.drumsOfBattle.cooldownRemaining < time) time = this.player.spells.drumsOfBattle.cooldownRemaining;
 		if (this.player.spells.drumsOfWar && this.player.spells.drumsOfWar.cooldownRemaining > 0 && this.player.spells.drumsOfWar.cooldownRemaining < time) time = this.player.spells.drumsOfWar.cooldownRemaining;
 		if (this.player.spells.drumsOfRestoration && this.player.spells.drumsOfRestoration.cooldownRemaining > 0 && this.player.spells.drumsOfRestoration.cooldownRemaining < time) time = this.player.spells.drumsOfRestoration.cooldownRemaining;
@@ -137,6 +138,7 @@ class Simulation {
 		if (this.player.spells.drumsOfBattle && this.player.spells.drumsOfBattle.cooldownRemaining > 0) this.player.spells.drumsOfBattle.tick(time);
 		if (this.player.spells.drumsOfWar && this.player.spells.drumsOfWar.cooldownRemaining > 0) this.player.spells.drumsOfWar.tick(time);
 		if (this.player.spells.drumsOfRestoration && this.player.spells.drumsOfRestoration.cooldownRemaining > 0) this.player.spells.drumsOfRestoration.tick(time);
+		if (this.player.spells.timbalsFocusingCrystal && this.player.spells.timbalsFocusingCrystal.cooldownRemaining > 0) this.player.spells.timbalsFocusingCrystal.tick(time);
 
 		// Auras
 		if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.tick(time);
@@ -215,6 +217,7 @@ class Simulation {
 			if (this.player.spells.flameCap) this.player.spells.flameCap.reset();
 			if (this.player.spells.bloodFury) this.player.spells.bloodFury.reset();
 			if (this.player.spells.bloodlust) this.player.spells.bloodlust.reset();
+			if (this.player.spells.timbalsFocusingCrystal) this.player.spells.timbalsFocusingCrystal.reset();
 			if (this.player.spells.drumsOfBattle) this.player.spells.drumsOfBattle.reset();
 			if (this.player.spells.drumsOfWar) this.player.spells.drumsOfWar.reset();
 			if (this.player.spells.drumsOfRestoration) this.player.spells.drumsOfRestoration.reset();

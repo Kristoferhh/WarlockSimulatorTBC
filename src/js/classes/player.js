@@ -301,6 +301,7 @@ class Player {
 		if (this.selectedAuras.drumsOfBattle) this.spells.drumsOfBattle = new DrumsOfBattle(this);
 		if (this.selectedAuras.drumsOfWar) this.spells.drumsOfWar = new DrumsOfWar(this);
 		if (this.selectedAuras.drumsOfRestoration) this.spells.drumsOfRestoration = new DrumsOfRestoration(this);
+		if (this.trinketIds.includes(34470)) this.spells.timbalsFocusingCrystal = new TimbalsFocusingCrystal(this);
 
 		this.auras = {};
 		if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusion(this);
