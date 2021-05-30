@@ -5,13 +5,16 @@ class Aura {
 		this.player = player;
 		this.active = false;
 		this.isImportant = false;
+		this.hasDuration = true;
 	}
 
 	tick(t) {
-		this.durationRemaining = Math.max(0, this.durationRemaining - t);
+		if (this.hasDuration) {
+			this.durationRemaining = Math.max(0, this.durationRemaining - t);
 
-		if (this.durationRemaining == 0) {
-			this.fade();
+			if (this.durationRemaining == 0) {
+				this.fade();
+			}
 		}
 	}
 
@@ -621,6 +624,27 @@ class DarkmoonCardCrusadeAura extends Aura {
 			this.player.stats.spellPower -= this.spPerStack * this.stacks;
 			this.stacks = 0;
 		}
+		super.fade(endOfIteration);
+	}
+}
+
+class TheLightningCapacitorAura extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "The Lightning Capacitor";
+		this.hasDuration = false;
+		this.stacks = 0;
+		this.maxStacks = 3;
+	}
+
+	apply() {
+		if (this.stacks < this.maxStacks) this.stacks++;
+		this.active = true;
+		this.player.combatLog("The Lightning Capacitor + 1 stack (" + this.stacks + ")");
+	}
+
+	fade(endOfIteration = false) {
+		this.stacks = 0;
 		super.fade(endOfIteration);
 	}
 }

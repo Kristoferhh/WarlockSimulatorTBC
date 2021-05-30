@@ -105,6 +105,7 @@ class Simulation {
 		if (this.player.auras.ashtongueTalismanOfShadows && this.player.auras.ashtongueTalismanOfShadows.active && this.player.auras.ashtongueTalismanOfShadows.durationRemaining < time) time = this.player.auras.ashtongueTalismanOfShadows.durationRemaining;
 		if (this.player.auras.darkmoonCardCrusade && this.player.auras.darkmoonCardCrusade.active && this.player.auras.darkmoonCardCrusade.durationRemaining < time) time = this.player.auras.darkmoonCardCrusade.durationRemaining;
 		if (this.player.auras.manaEtched4Set && this.player.auras.manaEtched4Set.active && this.player.auras.manaEtched4Set.durationRemaining < time) time = this.player.auras.manaEtched4Set.durationRemaining;
+		if (this.player.spells.theLightningCapacitor && this.player.spells.theLightningCapacitor.cooldownRemaining > 0 && this.player.spells.theLightningCapacitor.cooldownRemaining < time) time = this.player.spells.theLightningCapacitor.cooldownRemaining;
 	
 		if (this.player.mp5Timer < time) time = this.player.mp5Timer;
 		for (let i = 0; i < 2; i++) {
@@ -143,6 +144,7 @@ class Simulation {
 		if (this.player.spells.drumsOfRestoration && this.player.spells.drumsOfRestoration.cooldownRemaining > 0) this.player.spells.drumsOfRestoration.tick(time);
 		if (this.player.spells.timbalsFocusingCrystal && this.player.spells.timbalsFocusingCrystal.cooldownRemaining > 0) this.player.spells.timbalsFocusingCrystal.tick(time);
 		if (this.player.spells.markOfDefiance && this.player.spells.markOfDefiance.cooldownRemaining > 0) this.player.spells.markOfDefiance.tick(time);
+		if (this.player.spells.theLightningCapacitor && this.player.spells.theLightningCapacitor.cooldownRemaining > 0) this.player.spells.theLightningCapacitor.tick(time);
 
 		// Auras
 		if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.tick(time);
@@ -227,6 +229,7 @@ class Simulation {
 			if (this.player.spells.drumsOfWar) this.player.spells.drumsOfWar.reset();
 			if (this.player.spells.drumsOfRestoration) this.player.spells.drumsOfRestoration.reset();
 			if (this.player.spells.markOfDefiance) this.player.spells.markOfDefiance.reset();
+			if (this.player.spells.theLightningCapacitor) this.player.spells.theLightningCapacitor.reset();
 			this.player.reset(); // Resets mana, global cooldown etc.
 			if (this.player.pet) this.player.pet.reset();
 
@@ -374,6 +377,7 @@ class Simulation {
 			if (this.player.auras.drumsOfRestoration && this.player.auras.drumsOfRestoration.active) this.player.auras.drumsOfRestoration.fade(true);
 			if (this.player.auras.ashtongueTalismanOfShadows && this.player.auras.ashtongueTalismanOfShadows.active) this.player.auras.ashtongueTalismanOfShadows.fade(true);
 			if (this.player.auras.darkmoonCardCrusade && this.player.auras.darkmoonCardCrusade.active) this.player.auras.darkmoonCardCrusade.fade(true);
+			if (this.player.auras.theLightningCapacitor && this.player.auras.theLightningCapacitor.active) this.player.auras.theLightningCapacitor.fade(true);
 			for (let i = 0; i < this.player.trinkets.length; i++) {
 				if (this.player.trinkets[i]) {
 					this.player.trinkets[i].fade(true);

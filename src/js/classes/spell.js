@@ -153,6 +153,11 @@ class Spell {
 			if (this.varName == "shadowBolt" && this.player.talents.improvedShadowBolt > 0) {
 				this.player.auras.improvedShadowBolt.apply();
 			}
+
+			// The Lightning Capacitor
+			if (this.player.spells.theLightningCapacitor) {
+				this.player.spells.theLightningCapacitor.startCast();
+			}
 		}
 		dmg = ~~(dmg *  (1 - 0.0025 * this.player.enemy[this.school + "Resist"]));
 		if (isCrit) this.player.combatLog(this.name + " *" + dmg + "*");
@@ -668,5 +673,31 @@ class MarkOfDefiance extends Spell {
 		this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + this.manaGain || this.manaGain;
 		this.player.combatLog(this.name + " +" + this.manaGain + " mana");
 		this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.manaGain);
+	}
+}
+
+class TheLightningCapacitor extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "The Lightning Capacitor";
+		this.cooldown = 2.5;
+		this.onGcd = false;
+		this.dmg = 750;
+		this.doesDamage = true;
+		this.coefficient = 0;
+		this.canCrit = true;
+		this.school = "nature"; // confirm
+		this.setup();
+	}
+
+	startCast() {
+		if (this.cooldownRemaining <= 0) {
+			this.player.auras.theLightningCapacitor.apply();
+			if (this.player.auras.theLightningCapacitor.stacks == 3) {
+				this.player.auras.theLightningCapacitor.fade();
+				super.startCast();
+			}
+			this.cooldownRemaining = this.cooldown;
+		}
 	}
 }

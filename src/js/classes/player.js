@@ -33,6 +33,9 @@ class Player {
 		this.selectedAuras = settings.auras;
 		this.enemy.shadowResist = Math.max(this.enemy.shadowResist, (this.enemy.level - this.level) * 8, 0);
 		this.enemy.fireResist = Math.max(this.enemy.fireResist, (this.enemy.level - this.level) * 8, 0);
+		this.enemy.natureResist = 0;
+		this.enemy.arcaneResist = 0;
+		this.enemy.frostResist = 0;
 		this.trinketIds = [settings.items['trinket1'],settings.items['trinket2']];
 		this.combatlog = [];
 		this.importantAuraCounter = 0; // counts the amount of active "important" auras such as trinket procs, on-use trinket uses, power infusion etc.
@@ -302,6 +305,8 @@ class Player {
 		if (this.selectedAuras.drumsOfWar) this.spells.drumsOfWar = new DrumsOfWar(this);
 		if (this.selectedAuras.drumsOfRestoration) this.spells.drumsOfRestoration = new DrumsOfRestoration(this);
 		if (this.trinketIds.includes(34470)) this.spells.timbalsFocusingCrystal = new TimbalsFocusingCrystal(this);
+		if (this.trinketIds.includes(27922)) this.spells.markOfDefiance = new MarkOfDefiance(this);
+		if (this.trinketIds.includes(28785)) this.spells.theLightningCapacitor = new TheLightningCapacitor(this);
 
 		this.auras = {};
 		if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusion(this);
@@ -327,8 +332,8 @@ class Player {
 		if (this.trinketIds.includes(27683)) this.auras.quagmirransEye = new QuagmirransEye(this);
 		if (this.trinketIds.includes(28418)) this.auras.shiffarsNexusHorn = new ShiffarsNexusHorn(this);
 		if (this.trinketIds.includes(32493)) this.auras.ashtongueTalismanOfShadows = new AshtongueTalismanOfShadows(this);
-		if (this.trinketIds.includes(27922)) this.spells.markOfDefiance = new MarkOfDefiance(this);
 		if (this.trinketIds.includes(31856)) this.auras.darkmoonCardCrusade = new DarkmoonCardCrusadeAura(this);
+		if (this.trinketIds.includes(28785)) this.auras.theLightningCapacitor = new TheLightningCapacitorAura(this);
 		if (this.sets['645'] >= 2) {
 			this.auras.shadowFlameshadow = new ShadowFlameShadow(this);
 			this.auras.shadowFlamefire = new ShadowFlameFire(this);
