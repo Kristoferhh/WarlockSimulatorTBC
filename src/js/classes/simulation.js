@@ -106,6 +106,10 @@ class Simulation {
 			if (this.player.spells.bladeOfWizardry.cooldownRemaining > 0 && this.player.spells.bladeOfWizardry.cooldownRemaining < time) time = this.player.spells.bladeOfWizardry.cooldownRemaining;
 			if (this.player.auras.bladeOfWizardry.active && this.player.auras.bladeOfWizardry.durationRemaining < time) time = this.player.auras.bladeOfWizardry.durationRemaining;
 		}
+		if (this.player.spells.robeOfTheElderScribes) {
+			if (this.player.spells.robeOfTheElderScribes.cooldownRemaining > 0 && this.player.spells.robeOfTheElderScribes.cooldownRemaining < time) time = this.player.spells.robeOfTheElderScribes.cooldownRemaining;
+			if (this.player.auras.robeOfTheElderScribes.active && this.player.auras.robeOfTheElderScribes.durationRemaining < time) time = this.player.auras.robeOfTheElderScribes.durationRemaining;
+		}
 		if (this.player.auras.ashtongueTalismanOfShadows && this.player.auras.ashtongueTalismanOfShadows.active && this.player.auras.ashtongueTalismanOfShadows.durationRemaining < time) time = this.player.auras.ashtongueTalismanOfShadows.durationRemaining;
 		if (this.player.auras.darkmoonCardCrusade && this.player.auras.darkmoonCardCrusade.active && this.player.auras.darkmoonCardCrusade.durationRemaining < time) time = this.player.auras.darkmoonCardCrusade.durationRemaining;
 		if (this.player.auras.manaEtched4Set && this.player.auras.manaEtched4Set.active && this.player.auras.manaEtched4Set.durationRemaining < time) time = this.player.auras.manaEtched4Set.durationRemaining;
@@ -156,6 +160,7 @@ class Simulation {
 		if (this.player.spells.theLightningCapacitor && this.player.spells.theLightningCapacitor.cooldownRemaining > 0) this.player.spells.theLightningCapacitor.tick(time);
 		if (this.player.spells.bladeOfWizardry && this.player.spells.bladeOfWizardry.cooldownRemaining > 0) this.player.spells.bladeOfWizardry.tick(time);
 		if (this.player.spells.shatteredSunPendantOfAcumen && this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining > 0) this.player.spells.shatteredSunPendantOfAcumen.tick(time);
+		if (this.player.spells.robeOfTheElderScribes && this.player.spells.robeOfTheElderScribes.cooldownRemaining > 0) this.player.spells.robeOfTheElderScribes.tick(time);
 
 		// Auras
 		if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.tick(time);
@@ -188,6 +193,7 @@ class Simulation {
 		if (this.player.auras.bandOfTheEternalSage && this.player.auras.bandOfTheEternalSage.active) this.player.auras.bandOfTheEternalSage.tick(time);
 		if (this.player.auras.bladeOfWizardry && this.player.auras.bladeOfWizardry.active) this.player.auras.bladeOfWizardry.tick(time);
 		if (this.player.auras.shatteredSunPendantOfAcumen && this.player.auras.shatteredSunPendantOfAcumen.active) this.player.auras.shatteredSunPendantOfAcumen.tick(time);
+		if (this.player.auras.robeOfTheElderScribes && this.player.auras.robeOfTheElderScribes.active) this.player.auras.robeOfTheElderScribes.tick(time);
 
 		// Trinkets
 		if (this.player.trinkets[0]) this.player.trinkets[0].tick(time);
@@ -247,6 +253,7 @@ class Simulation {
 			if (this.player.spells.theLightningCapacitor) this.player.spells.theLightningCapacitor.reset();
 			if (this.player.spells.bladeOfWizardry) this.player.spells.bladeOfWizardry.reset();
 			if (this.player.spells.shatteredSunPendantOfAcumen) this.player.spells.shatteredSunPendantOfAcumen.reset();
+			if (this.player.spells.robeOfTheElderScribes) this.player.spells.robeOfTheElderScribes.reset();
 			this.player.reset(); // Resets mana, global cooldown etc.
 			if (this.player.pet) this.player.pet.reset();
 
@@ -398,6 +405,7 @@ class Simulation {
 			if (this.player.auras.bandOfTheEternalSage && this.player.auras.bandOfTheEternalSage.active) this.player.auras.bandOfTheEternalSage.fade(true);
 			if (this.player.auras.bladeOfWizardry && this.player.auras.bladeOfWizardry.active) this.player.auras.bladeOfWizardry.fade(true);
 			if (this.player.auras.shatteredSunPendantOfAcumen && this.player.auras.shatteredSunPendantOfAcumen.active) this.player.auras.shatteredSunPendantOfAcumen.fade(true);
+			if (this.player.auras.robeOfTheElderScribes && this.player.auras.robeOfTheElderScribes.active) this.player.auras.robeOfTheElderScribes.fade(true);
 			for (let i = 0; i < this.player.trinkets.length; i++) {
 				if (this.player.trinkets[i]) {
 					this.player.trinkets[i].fade(true);

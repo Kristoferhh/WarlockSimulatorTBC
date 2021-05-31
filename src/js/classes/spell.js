@@ -94,6 +94,11 @@ class Spell {
 			if (this.player.exaltedWithShattrathFaction && this.player.spells.shatteredSunPendantOfAcumen && this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining <= 0 && random(1,100) <= this.player.spells.shatteredSunPendantOfAcumen.procChance) {
 				this.player.spells.shatteredSunPendantOfAcumen.startCast();
 			}
+
+			// Robe of the Elder Scribes
+			if (this.player.spells.robeOfTheElderScribes && this.player.spells.robeOfTheElderScribes.cooldownRemaining <= 0 && random(1,100) <= this.player.spells.robeOfTheElderScribes.procChance) {
+				this.player.spells.robeOfTheElderScribes.startCast();
+			}
 		}
 
 		// If it's an item such as mana potion, demonic rune, destruction potion etc. then jump out of the method
@@ -762,6 +767,26 @@ class ShatteredSunPendantOfAcumen extends Spell {
 			if (this.player.shattrathFaction == "Aldor") {
 				this.player.auras.shatteredSunPendantOfAcumen.apply();
 			}
+			super.startCast();
+		}
+	}
+}
+
+class RobeOfTheElderScribes extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Robe of the Elder Scribes";
+		this.cooldown = 50;
+		this.procChance = 20;
+		this.onGcd = false;
+		this.isItem = true;
+		this.isProc = true;
+		this.setup();
+	}
+
+	startCast() {
+		if (this.cooldownRemaining <= 0) {
+			this.player.auras.robeOfTheElderScribes.apply();
 			super.startCast();
 		}
 	}

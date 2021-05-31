@@ -762,4 +762,32 @@ class ShatteredSunPendantOfAcumenAura extends Aura {
 		}
 		super.fade(endOfIteration);
 	}
-} 
+}
+
+class RobeOfTheElderScribesAura extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Robe of the Elder Scribes";
+		this.spellPower = 130;
+		this.durationTotal = 10;
+		this.isImportant = true;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.combatLog("Spell Power + " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.spellPower) + ")");
+			this.player.stats.spellPower += this.spellPower;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.apply();
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active) {
+			if (!endOfIteration) this.player.combatLog("Spell Power - " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spellPower) + ")");
+			this.player.stats.spellPower -= this.spellPower;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.fade(endOfIteration);
+	}
+}
