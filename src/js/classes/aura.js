@@ -107,11 +107,13 @@ class ShadowFlameShadow extends Aura {
 		this.durationTotal = 15;
 		this.procChance = 10;
 		this.isImportant = true;
+		this.shadowPower = 135;
 	}
 
 	apply() {
 		if (!this.active) {
-			this.player.stats.shadowPower += 135;
+			if (!endOfIteration) this.player.combatLog("Shadow Power + " + this.shadowPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.shadowPower) + ")");
+			this.player.stats.shadowPower += this.shadowPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 			super.apply();
 		}
@@ -119,7 +121,8 @@ class ShadowFlameShadow extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.stats.shadowPower -= 135;
+			if (!endOfIteration) this.player.combatLog("Shadow Power - " + this.shadowPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.shadowPower) + ")");
+			this.player.stats.shadowPower -= this.shadowPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 
@@ -134,10 +137,12 @@ class ShadowFlameFire extends Aura {
 		this.durationTotal = 15;
 		this.procChance = 10;
 		this.isImportant = true;
+		this.firePower = 135;
 	}
 
 	apply() {
 		if (!this.active) {
+			this.player.combatLog("Fire Power + " + this.firePower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.firePower) + ")");
 			this.player.stats.firePower += 135;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 			super.apply();
@@ -146,6 +151,7 @@ class ShadowFlameFire extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
+			if (!endOfIteration) this.player.combatLog("Fire Power - " + this.firePower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.firePower) + ")");
 			this.player.stats.firePower -= 135;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
@@ -159,11 +165,13 @@ class SpellstrikeProc extends Aura {
 		this.name = "Spellstrike Proc";
 		this.durationTotal = 10;
 		this.isImportant = true;
+		this.spellPower = 92;
 	}
 
 	apply() {
 		if (!this.active) {
-			this.player.stats.spellPower += 92;
+			this.player.combatLog("Spell Power + " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.spellPower) + ")");
+			this.player.stats.spellPower += this.spellPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 			super.apply();
 		}
@@ -171,7 +179,8 @@ class SpellstrikeProc extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.stats.spellPower -= 92;
+			if (!endOfIteration) this.player.combatLog("Spell Power - " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spellPower) + ")");
+			this.player.stats.spellPower -= this.spellPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.fade(endOfIteration);
@@ -196,6 +205,7 @@ class PowerInfusion extends Aura {
 
 	apply() {
 		if (!this.active) {
+			this.player.combatLog("Haste % + " + this.hasteModifier + " (" + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + "% -> " + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + this.hasteModifier + "%)");
 			this.player.stats.hasteRating += hasteRatingPerPercent * this.hasteModifier;
 			this.player.stats.manaCostModifier *= this.manaModifier;
 		}
@@ -205,6 +215,7 @@ class PowerInfusion extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
+			if (!endOfIteration) this.player.combatLog("Haste % + " + this.hasteModifier + " (" + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + "% -> " + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 - this.hasteModifier + "%)");
 			this.player.stats.hasteRating -= hasteRatingPerPercent * this.hasteModifier;
 			this.player.stats.manaCostModifier /= this.manaModifier;
 		}
@@ -227,11 +238,13 @@ class EyeOfMagtheridon extends Aura {
 		this.name = "Eye of Magtheridon";
 		this.durationTotal = 10;
 		this.isImportant = true;
+		this.spellPower = 170;
 	}
 
 	apply() {
 		if (!this.active) {
-			this.player.stats.spellPower += 170;
+			this.player.combatLog("Spell Power + " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.spellPower) + ")");
+			this.player.stats.spellPower += this.spellPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.apply();
@@ -239,7 +252,8 @@ class EyeOfMagtheridon extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.stats.spellPower -= 170;
+			if (!endOfIteration) this.player.combatLog("Spell Power - " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spellPower) + ")");
+			this.player.stats.spellPower -= this.spellPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.fade(endOfIteration);
@@ -255,11 +269,13 @@ class SextantOfUnstableCurrents extends Aura {
 		this.hiddenCooldownRemaining = 0;
 		this.procChance = 20;
 		this.isImportant = true;
+		this.spellPower = 190;
 	}
 
 	apply() {
 		if (!this.active && this.hiddenCooldownRemaining == 0) {
-			this.player.stats.spellPower += 190;
+			this.player.combatLog("Spell Power + " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.spellPower) + ")");
+			this.player.stats.spellPower += this.spellPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 			this.hiddenCooldownRemaining = this.hiddenCooldown;
 			super.apply();
@@ -268,7 +284,8 @@ class SextantOfUnstableCurrents extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.stats.spellPower -= 190;
+			if (!endOfIteration) this.player.combatLog("Spell Power - " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spellPower) + ")");
+			this.player.stats.spellPower -= this.spellPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.fade(endOfIteration);
@@ -289,11 +306,13 @@ class QuagmirransEye extends Aura {
 		this.durationTotal = 6;
 		this.procChance = 10;
 		this.isImportant = true;
+		this.hasteRating = 320;
 	}
 
 	apply() {
 		if (!this.active) {
-			this.player.stats.hasteRating += 320;
+			this.player.combatLog("Haste Rating + " + this.hasteRating + " (" + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + "% -> " + Math.round(((this.player.stats.hasteRating + this.hasteRating) / hasteRatingPerPercent) * 100) / 100 + "%)");
+			this.player.stats.hasteRating += this.hasteRating;
 			this.hiddenCooldownRemaining = this.hiddenCooldown;
 			super.apply();
 		}
@@ -301,7 +320,8 @@ class QuagmirransEye extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.stats.hasteRating -= 320;
+			if (!endOfIteration) this.player.combatLog("Haste Rating - " + this.hasteRating + " (" + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + "% -> " + Math.round(((this.player.stats.hasteRating - this.hasteRating) / hasteRatingPerPercent) * 100) / 100 + "%)");
+			this.player.stats.hasteRating -= this.hasteRating;
 		}
 		super.fade(endOfIteration);
 	}
@@ -321,11 +341,13 @@ class ShiffarsNexusHorn extends Aura {
 		this.durationTotal = 10;
 		this.procChance = 20;
 		this.isImportant = true;
+		this.spellPower = 225;
 	}
 
 	apply() {
 		if (!this.active) {
-			this.player.stats.spellPower += 225;
+			this.player.combatLog("Spell Power + " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.spellPower) + ")");
+			this.player.stats.spellPower += this.spellPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 			this.hiddenCooldownRemaining = this.hiddenCooldown;
 			super.apply();
@@ -334,7 +356,8 @@ class ShiffarsNexusHorn extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.stats.spellPower -= 225;
+			if (!endOfIteration) this.player.combatLog("Spell Power - " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spellPower) + ")");
+			this.player.stats.spellPower -= this.spellPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.fade(endOfIteration);
@@ -353,11 +376,13 @@ class ManaEtched4Set extends Aura {
 		this.durationTotal = 15;
 		this.procChance = 2;
 		this.isImportant = true;
+		this.spellPower = 110;
 	}
 
 	apply() {
 		if (!this.active) {
-			this.player.stats.spellPower += 110;
+			this.player.combatLog("Spell Power + " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.spellPower) + ")");
+			this.player.stats.spellPower += this.spellPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.apply();
@@ -365,7 +390,8 @@ class ManaEtched4Set extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.stats.spellPower -= 110;
+			if (!endOfIteration) this.player.combatLog("Spell Power - " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spellPower) + ")");
+			this.player.stats.spellPower -= this.spellPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.fade(endOfIteration);
@@ -382,8 +408,10 @@ class DestructionPotionAura extends Aura {
 
 	apply() {
 		if (!this.active) {
-			this.player.combatLog("Spell Power + 120 (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + 120) + ")");
-			this.player.combatLog("Crit Chance + 2% (" + Math.round(this.player.stats.critChance * 100) / 100 + "% -> " + Math.round((this.player.stats.critChance + 2) * 100) / 100 + "%)");
+			if (!endOfIteration) {
+				this.player.combatLog("Spell Power + 120 (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + 120) + ")");
+				this.player.combatLog("Crit Chance + 2% (" + Math.round(this.player.stats.critChance * 100) / 100 + "% -> " + Math.round((this.player.stats.critChance + 2) * 100) / 100 + "%)");
+			}
 			this.player.stats.spellPower += 120;
 			this.player.stats.critChance += 2;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
@@ -393,8 +421,10 @@ class DestructionPotionAura extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.combatLog("Spell Power - 120 (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - 120) + ")");
-			this.player.combatLog("Crit Chance - 2% (" + Math.round(this.player.stats.critChance * 100) / 100 + "% -> " + Math.round((this.player.stats.critChance - 2) * 100) / 100 + "%)");
+			if (!endOfIteration) {
+				this.player.combatLog("Spell Power - 120 (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - 120) + ")");
+				this.player.combatLog("Crit Chance - 2% (" + Math.round(this.player.stats.critChance * 100) / 100 + "% -> " + Math.round((this.player.stats.critChance - 2) * 100) / 100 + "%)");
+			}
 			this.player.stats.spellPower -= 120;
 			this.player.stats.critChance -= 2;
 			if (!endOfIteration && this.player.pet) this.player.pet.calculateStatsFromPlayer();
@@ -422,7 +452,7 @@ class FlameCapAura extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.combatLog("Fire Power - 80 (" + Math.round(this.player.stats.firePower) + " -> " + Math.round(this.player.stats.firePower - 80) + ")");
+			if (!endOfIteration) this.player.combatLog("Fire Power - 80 (" + Math.round(this.player.stats.firePower) + " -> " + Math.round(this.player.stats.firePower - 80) + ")");
 			this.player.stats.firePower -= 80;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
@@ -449,7 +479,7 @@ class BloodFuryAura extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.combatLog("Spell Power - 80 (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - 140) + ")");
+			if (!endOfIteration) this.player.combatLog("Spell Power - 80 (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - 140) + ")");
 			this.player.stats.spellPower -= 140;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
@@ -477,7 +507,7 @@ class BloodlustAura extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.combatLog("Haste - 30% (" + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + "% -> " + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) - 30) * 100) / 100 + "%)");
+			if (!endOfIteration) this.player.combatLog("Haste - 30% (" + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + "% -> " + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) - 30) * 100) / 100 + "%)");
 			this.player.stats.hasteRating -= 30 * hasteRatingPerPercent;
 			//if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
@@ -503,7 +533,7 @@ class DrumsOfBattleAura extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.combatLog("Haste rating - 80 (" + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + "% -> " + (Math.round((this.player.stats.hasteRating - 80) / hasteRatingPerPercent) * 100) / 100 + "%)");
+			if (!endOfIteration) this.player.combatLog("Haste rating - 80 (" + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + "% -> " + (Math.round((this.player.stats.hasteRating - 80) / hasteRatingPerPercent) * 100) / 100 + "%)");
 			this.player.stats.hasteRating -= 80;
 		}
 		super.fade(endOfIteration);
@@ -527,7 +557,7 @@ class DrumsOfWarAura extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.combatLog("Spell Power - 30 (" + this.player.stats.spellPower + " -> " + (this.player.stats.spellPower - 30) + ")");
+			if (!endOfIteration) this.player.combatLog("Spell Power - 30 (" + this.player.stats.spellPower + " -> " + (this.player.stats.spellPower - 30) + ")");
 			this.player.stats.spellPower -= 30;
 		}
 		super.fade(endOfIteration);
@@ -590,7 +620,7 @@ class AshtongueTalismanOfShadows extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.combatLog("Spell Power - 80 (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - 220) + ")");
+			if (!endOfIteration) this.player.combatLog("Spell Power - 80 (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - 220) + ")");
 			this.player.stats.spellPower -= 220;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
@@ -620,7 +650,7 @@ class DarkmoonCardCrusadeAura extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.combatLog("Spell Power - " + (this.spPerStack * this.stacks) + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spPerStack * this.stacks) + ")");
+			if (!endOfIteration) this.player.combatLog("Spell Power - " + (this.spPerStack * this.stacks) + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spPerStack * this.stacks) + ")");
 			this.player.stats.spellPower -= this.spPerStack * this.stacks;
 			this.stacks = 0;
 		}
@@ -669,7 +699,7 @@ class BandOfTheEternalSageAura extends Aura {
 
 	fade(endOfIteration) {
 		if (this.active) {
-			this.player.combatLog("Spell Power - " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spellPower) + ")");
+			if (!endOfIteration) this.player.combatLog("Spell Power - " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spellPower) + ")");
 			this.player.stats.spellPower -= this.spellPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
@@ -698,10 +728,38 @@ class BladeOfWizardryAura extends Aura {
 
 	fade(endOfIteration = false) {
 		if (this.active) {
-			this.player.combatLog("Haste Rating - " + this.hasteRating + " (" + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + "% -> " + Math.round(((this.player.stats.hasteRating - this.hasteRating) / hasteRatingPerPercent) * 100) / 100 + "%)");
+			if (!endOfIteration) this.player.combatLog("Haste Rating - " + this.hasteRating + " (" + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + "% -> " + Math.round(((this.player.stats.hasteRating - this.hasteRating) / hasteRatingPerPercent) * 100) / 100 + "%)");
 			this.player.stats.hasteRating -= this.hasteRating;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 		}
 		super.fade(endOfIteration);
 	}
 }
+
+class ShatteredSunPendantOfAcumenAura extends Aura {
+	constructor(player) {
+		super(player);
+		this.name = "Shattered Sun Pendant of Acumen (Aldor)";
+		this.spellPower = 120;
+		this.durationTotal = 10;
+		this.isImportant = true;
+	}
+
+	apply() {
+		if (!this.active) {
+			this.player.combatLog("Spell Power + " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.spellPower) + ")");
+			this.player.stats.spellPower += this.spellPower;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.apply();
+	}
+
+	fade(endOfIteration = false) {
+		if (this.active) {
+			if (!endOfIteration) this.player.combatLog("Spell Power - " + this.spellPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower - this.spellPower) + ")");
+			this.player.stats.spellPower -= this.spellPower;
+			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+		}
+		super.fade(endOfIteration);
+	}
+} 

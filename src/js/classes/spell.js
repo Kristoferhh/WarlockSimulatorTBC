@@ -70,7 +70,7 @@ class Spell {
 		}
 
 		// Check if the spell hits or misses
-		if (!this.isItem && !this.player.isHit(this.type === "affliction")) {
+		if ((!this.isItem || this.doesDamage) && !this.player.isHit(this.type === "affliction")) {
 			this.player.combatLog(this.name + " *resist*");
 			this.player.damageBreakdown[this.varName].misses = this.player.damageBreakdown[this.varName].misses + 1 || 1;
 			return;
@@ -89,6 +89,11 @@ class Spell {
 
 		if (this.doesDamage) {
 			this.damage(isCrit);
+
+			// Shattered Sun Pendant of Acumen
+			if (this.player.exaltedWithShattrathFaction && this.player.spells.shatteredSunPendantOfAcumen && this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining <= 0 && random(1,100) <= this.player.spells.shatteredSunPendantOfAcumen.procChance) {
+				this.player.spells.shatteredSunPendantOfAcumen.startCast();
+			}
 		}
 
 		// If it's an item such as mana potion, demonic rune, destruction potion etc. then jump out of the method
@@ -727,6 +732,36 @@ class BladeOfWizardry extends Spell {
 	startCast() {
 		if (this.cooldownRemaining <= 0) {
 			this.player.auras.bladeOfWizardry.apply();
+			super.startCast();
+		}
+	}
+}
+
+class ShatteredSunPendantOfAcumen extends Spell {
+	constructor(player) {
+		super(player);
+		this.name = "Shattered Sun Pendant of Acumen (" + this.player.shattrathFaction + ")";
+		this.cooldown = 45;
+		this.procChance = 15;
+		this.onGcd = false;
+		this.isItem = true;
+		if (this.player.shattrathFaction == "Aldor") {
+			this.isProc = true;
+		} else if (this.player.shattrathFaction == "Scryers") {
+			this.doesDamage = true;
+			this.canCrit = true;
+			this.coefficient = 0;
+			this.dmg = 333; // confirm
+			this.school = "arcane";
+		}
+		this.setup();
+	}
+
+	startCast() {
+		if (this.cooldownRemaining <= 0) {
+			if (this.player.shattrathFaction == "Aldor") {
+				this.player.auras.shatteredSunPendantOfAcumen.apply();
+			}
 			super.startCast();
 		}
 	}

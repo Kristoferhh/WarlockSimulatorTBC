@@ -29,6 +29,8 @@ class Player {
 		this.talents = settings.talents;
 		this.simSettings = settings.simSettings;
 		this.level = 70;
+		this.shattrathFaction = settings.simSettings.shattrathFaction; // Aldor or Scryers
+		this.exaltedWithShattrathFaction = settings.simSettings.shattrathFactionReputation == "yes";
 		this.itemId = customItemId || settings.items[settings.selectedItemSlot] || 0;
 		this.sets = settings.sets;
 		this.selectedAuras = settings.auras;
@@ -305,6 +307,7 @@ class Player {
 		if (this.selectedAuras.drumsOfBattle) this.spells.drumsOfBattle = new DrumsOfBattle(this);
 		if (this.selectedAuras.drumsOfWar) this.spells.drumsOfWar = new DrumsOfWar(this);
 		if (this.items.mainhand == 31336) this.spells.bladeOfWizardry = new BladeOfWizardry(this);
+		if (this.items.neck == 34678) this.spells.shatteredSunPendantOfAcumen = new ShatteredSunPendantOfAcumen(this);
 		if (this.selectedAuras.drumsOfRestoration) this.spells.drumsOfRestoration = new DrumsOfRestoration(this);
 		if (this.trinketIds.includes(34470)) this.spells.timbalsFocusingCrystal = new TimbalsFocusingCrystal(this);
 		if (this.trinketIds.includes(27922)) this.spells.markOfDefiance = new MarkOfDefiance(this);
@@ -331,6 +334,7 @@ class Player {
 		if (this.selectedAuras.drumsOfRestoration) this.auras.drumsOfRestoration = new DrumsOfRestorationAura(this);
 		if ([this.items.ring1,this.items.ring2].includes(29305)) this.auras.bandOfTheEternalSage = new BandOfTheEternalSageAura(this);
 		if (this.items.mainhand == 31336) this.auras.bladeOfWizardry = new BladeOfWizardryAura(this);
+		if (this.items.neck == 34678 && this.shattrathFaction == "Aldor") this.auras.shatteredSunPendantOfAcumen = new ShatteredSunPendantOfAcumenAura(this);
 		if (this.trinketIds.includes(28789)) this.auras.eyeOfMagtheridon = new EyeOfMagtheridon(this);
 		if (this.trinketIds.includes(30626)) this.auras.sextantOfUnstableCurrents = new SextantOfUnstableCurrents(this);
 		if (this.trinketIds.includes(27683)) this.auras.quagmirransEye = new QuagmirransEye(this);

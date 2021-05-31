@@ -528,8 +528,8 @@ const items = {
 			"source": "Sunwell Plateau",
 			"phase": 5
 		},
-		"shatteredSunPendantOfAcument": {
-			"name": "Shattered Sun Pendant of Acument",
+		"shatteredSunPendantOfAcumen": {
+			"name": "Shattered Sun Pendant of Acumen",
 			"stamina": 19,
 			"intellect": 18,
 			"spellPower": 37,

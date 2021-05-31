@@ -1,7 +1,7 @@
 // Convertion calculations
 const hitRatingPerPercent = 12.6;
 const critRatingPerPercent = 22.08;
-const hasteRatingPerPercent = 15.77;
+const hasteRatingPerPercent = 15.77; // confirm, maybe 15.7?
 const manaPerInt = 15;
 const healthPerStamina = 10;
 const critPerInt = 1 / 81.95;
