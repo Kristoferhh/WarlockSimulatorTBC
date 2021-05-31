@@ -112,7 +112,7 @@ class ShadowFlameShadow extends Aura {
 
 	apply() {
 		if (!this.active) {
-			if (!endOfIteration) this.player.combatLog("Shadow Power + " + this.shadowPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.shadowPower) + ")");
+			this.player.combatLog("Shadow Power + " + this.shadowPower + " (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + this.shadowPower) + ")");
 			this.player.stats.shadowPower += this.shadowPower;
 			if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
 			super.apply();
@@ -408,7 +408,7 @@ class DestructionPotionAura extends Aura {
 
 	apply() {
 		if (!this.active) {
-			if (!endOfIteration) {
+			{
 				this.player.combatLog("Spell Power + 120 (" + Math.round(this.player.stats.spellPower) + " -> " + Math.round(this.player.stats.spellPower + 120) + ")");
 				this.player.combatLog("Crit Chance + 2% (" + Math.round(this.player.stats.critChance * 100) / 100 + "% -> " + Math.round((this.player.stats.critChance + 2) * 100) / 100 + "%)");
 			}
