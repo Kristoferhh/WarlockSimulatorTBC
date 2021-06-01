@@ -32,7 +32,7 @@ class Player {
 		this.shattrathFaction = settings.simSettings.shattrathFaction; // Aldor or Scryers
 		this.exaltedWithShattrathFaction = settings.simSettings.shattrathFactionReputation == "yes";
 		this.itemId = customItemId || settings.items[settings.selectedItemSlot] || 0;
-		this.sets = settings.sets;
+		this.sets = JSON.parse(JSON.stringify(settings.sets));
 		this.selectedAuras = settings.auras;
 		this.enemy.shadowResist = Math.max(this.enemy.shadowResist, (this.enemy.level - this.level) * 8, 0);
 		this.enemy.fireResist = Math.max(this.enemy.fireResist, (this.enemy.level - this.level) * 8, 0);
@@ -55,6 +55,7 @@ class Player {
 							this.stats[stat] -= items[customItemSlot][item][stat];
 						}
 					}
+					// Decrement the counter for the set id if it is part of a set
 					if (items[customItemSlot][item].hasOwnProperty("setId")) {
 						this.sets[items[customItemSlot][item].setId]--;
 					}
@@ -66,17 +67,18 @@ class Player {
 					if (settings.gems[customItemSlot] && settings.gems[customItemSlot][settings.items[customItemSlot + customItemSubSlot]]) {
 						// Loop through each socket in the equipped item
 						for (let socket in settings.gems[customItemSlot][settings.items[customItemSlot + customItemSubSlot]]) {
-							// Find the gem that is equipped in the socket by looking for its ID
-							for (let socketColor in gems) {
-								for (let gem in gems[socketColor]) {
-									// Check if the ID matches
-									if (gems[socketColor][gem].id == settings.gems[customItemSlot][settings.items[customItemSlot + customItemSubSlot]][socket]) {
+							if (settings.gems[customItemSlot][settings.items[customItemSlot + customItemSubSlot]][socket]) {
+								let gemId = settings.gems[customItemSlot][settings.items[customItemSlot + customItemSubSlot]][socket][1];
+								// Find the gem's color since the socket and gem colors might not match
+								for (let gemColor in gems) {
+									if (gems[gemColor][gemId]) {
 										// Loop through the gem's stats and remove them from the player
-										for (let stat in gems[socketColor][gem]) {
+										for (let stat in gems[gemColor][gemId]) {
 											if (this.stats.hasOwnProperty(stat)) {
-												this.stats[stat] -= gems[socketColor][gem][stat];
+												this.stats[stat] -= gems[gemColor][gemId][stat];
 											}
 										}
+										//console.log("removed gems from " + items[customItemSlot][item].id);
 									}
 								}
 							}
@@ -91,18 +93,22 @@ class Player {
 							this.stats[stat] += items[customItemSlot][item][stat];
 						}
 					}
+					// Increment the counter for the set id if it is part of a set
 					if (items[customItemSlot][item].hasOwnProperty("setId")) {
-						this.sets[items[customItemSlot][item].setId]++;
+						this.sets[items[customItemSlot][item].setId] = this.sets[items[customItemSlot][item].setId] + 1 || 1; // Have a default value of '1' in case the set id is undefined in the sets array
 					}
 					// Add stats from any gems equipped in the custom item
 					if (settings.gems[customItemSlot] && settings.gems[customItemSlot][customItemId]) {
 						for (let socket in settings.gems[customItemSlot][customItemId]) {
-							for (let socketColor in gems) {
-								for (let gem in gems[socketColor]) {
-									if (gems[socketColor][gem].id == settings.gems[customItemSlot][customItemId][socket]) {
-										for (let stat in gems[socketColor][gem]) {
+							if (settings.gems[customItemSlot][customItemId][socket]) {
+								let gemId = settings.gems[customItemSlot][customItemId][socket][1];
+								// Find the gem's color since it might not match the socket color
+								for (let gemColor in gems) {
+									if (gems[gemColor][gemId]) {
+										// Add stats from the gem equipped in this socket
+										for (let stat in gems[gemColor][gemId]) {
 											if (this.stats.hasOwnProperty(stat)) {
-												this.stats[stat] += gems[socketColor][gem][stat];
+												this.stats[stat] += gems[gemColor][gemId][stat];
 											}
 										}
 									}
