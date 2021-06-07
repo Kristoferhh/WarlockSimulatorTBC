@@ -43,6 +43,11 @@ class Player {
 		this.combatlog = [];
 		this.importantAuraCounter = 0; // counts the amount of active "important" auras such as trinket procs, on-use trinket uses, power infusion etc.
 
+		// Get the meta gem ID
+		for (let gemSocket in settings.gems.head[settings.items.head]) {
+			console.log(gemSocket);
+		}
+
 		// If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
 		if (customItemSlot && customItemId && customItemId !== settings.items[customItemSlot + customItemSubSlot]) {
 			// Loop through all items in the custom item slot
@@ -105,6 +110,10 @@ class Player {
 								// Find the gem's color since it might not match the socket color
 								for (let gemColor in gems) {
 									if (gems[gemColor][gemId]) {
+										// Check for meta gem
+										if (customItemSlot == "head" && gemColor == "meta") {
+											this.metaGem = gem;
+										}
 										// Add stats from the gem equipped in this socket
 										for (let stat in gems[gemColor][gemId]) {
 											if (this.stats.hasOwnProperty(stat)) {
