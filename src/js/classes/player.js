@@ -43,9 +43,13 @@ class Player {
 		this.combatlog = [];
 		this.importantAuraCounter = 0; // counts the amount of active "important" auras such as trinket procs, on-use trinket uses, power infusion etc.
 
+		this.metaGemId = 0;
 		// Get the meta gem ID
 		for (let gemSocket in settings.gems.head[settings.items.head]) {
-			console.log(gemSocket);
+			const gemId = settings.gems.head[settings.items.head][gemSocket][1];
+			if (gems.meta[gemId]) {
+				this.metaGemId = gemId;
+			}
 		}
 
 		// If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
@@ -104,18 +108,19 @@ class Player {
 					}
 					// Add stats from any gems equipped in the custom item
 					if (settings.gems[customItemSlot] && settings.gems[customItemSlot][customItemId]) {
-						for (let socket in settings.gems[customItemSlot][customItemId]) {
+						for (const socket in settings.gems[customItemSlot][customItemId]) {
 							if (settings.gems[customItemSlot][customItemId][socket]) {
-								let gemId = settings.gems[customItemSlot][customItemId][socket][1];
+								const gemId = settings.gems[customItemSlot][customItemId][socket][1];
+								// Check for meta gem
+								if (customItemSlot == "head" && gems.meta[gemId]) {
+									this.metaGemId = gemId;
+									console.log("yep " + gemId);
+								}
 								// Find the gem's color since it might not match the socket color
-								for (let gemColor in gems) {
+								for (const gemColor in gems) {
 									if (gems[gemColor][gemId]) {
-										// Check for meta gem
-										if (customItemSlot == "head" && gemColor == "meta") {
-											this.metaGem = gem;
-										}
 										// Add stats from the gem equipped in this socket
-										for (let stat in gems[gemColor][gemId]) {
+										for (const stat in gems[gemColor][gemId]) {
 											if (this.stats.hasOwnProperty(stat)) {
 												this.stats[stat] += gems[gemColor][gemId][stat];
 											}

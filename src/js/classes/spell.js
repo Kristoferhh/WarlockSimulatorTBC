@@ -168,6 +168,12 @@ class Spell {
 			if (this.type == "destruction" && this.player.talents.ruin > 0) {
 				critMultiplier += 0.5;
 			}
+
+			// Chaotic Skyfire Diamond meta gem
+			if (this.player.metaGemId == "34220") {
+				critMultiplier *= 1.03; // confirm whether it's additive or multiplicative
+			}
+
 			dmg *= critMultiplier;
 
 			// Apply ISB debuff if casting Shadow Bolt
