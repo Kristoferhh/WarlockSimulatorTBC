@@ -1,5 +1,5 @@
 const totalTalentPoints = 61
-const talentPointsRemaining = totalTalentPoints
+var talentPointsRemaining = totalTalentPoints
 const _talents = {
   affliction: {
     suppression: {
