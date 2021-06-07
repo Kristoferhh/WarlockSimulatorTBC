@@ -5389,6 +5389,15 @@ const items = {
 			"source": "Slave Pens",
 			"phase": 1
 		},
+		"nethekursesRodOfTorment": {
+			"name": "Nethekurse's Rod of Torment",
+			"intellect": 10,
+			"spellPower": 11,
+			"critRating": 10,
+			"id": 25806,
+			"source": "Shattered Halls Quest",
+			"phase": 1
+		},
 		"wandOfFates": {
 			"name": "Wand of Fates",
 			"stamina": 7,
