@@ -613,6 +613,7 @@ class Bloodlust extends Spell {
     super(player)
     this.name = 'Bloodlust'
     this.cooldown = 300
+	this.isItem = true;
     this.isAura = true
     this.onGcd = false
     this.setup()
