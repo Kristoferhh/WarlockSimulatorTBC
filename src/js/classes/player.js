@@ -46,10 +46,12 @@ class Player {
     this.metaGemId = 0
     // Get the meta gem ID
     for (const gemSocket in settings.gems.head[settings.items.head]) {
-      const gemId = settings.gems.head[settings.items.head][gemSocket][1]
-      if (gems.meta[gemId]) {
-        this.metaGemId = gemId
-      }
+	  if (settings.gems.head[settings.items.head][gemSocket]) {
+		const gemId = settings.gems.head[settings.items.head][gemSocket][1]
+		if (gems.meta[gemId]) {
+		  this.metaGemId = gemId
+		} 
+	  }
     }
 
     // If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
