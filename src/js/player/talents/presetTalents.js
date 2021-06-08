@@ -2,8 +2,8 @@ const presetTalents = {
   affliction: {
     suppression: 5,
     improvedCorruption: 5,
+    improvedDrainSoul: 2,
     improvedLifeTap: 2,
-    improvedCurseOfAgony: 2,
     amplifyCurse: 1,
     grimReach: 1,
     nightfall: 2,
@@ -24,12 +24,12 @@ const presetTalents = {
   destructionShadow: {
     improvedHealthstone: 2,
     demonicEmbrace: 5,
+    improvedVoidwalker: 1,
     felIntellect: 3,
     felDomination: 1,
     felStamina: 3,
     demonicAegis: 3,
     masterSummoner: 2,
-    unholyPower: 1,
     demonicSacrifice: 1,
     improvedShadowBolt: 5,
     bane: 5,
@@ -39,21 +39,20 @@ const presetTalents = {
     destructiveReach: 2,
     improvedImmolate: 5,
     ruin: 1,
-    netherProtection: 3,
-    emberstorm: 1,
+    emberstorm: 5,
     backlash: 3,
-    soulLeech: 2,
+    conflagrate: 1,
     shadowAndFlame: 5
   },
-  destructionFire: {
+  /*destructionFire: {
     improvedHealthstone: 2,
     demonicEmbrace: 5,
+    improvedVoidwalker: 1,
     felIntellect: 3,
     felDomination: 1,
     felStamina: 3,
     demonicAegis: 3,
     masterSummoner: 2,
-    unholyPower: 1,
     demonicSacrifice: 1,
     cataclysm: 5,
     bane: 5,
@@ -63,11 +62,11 @@ const presetTalents = {
     destructiveReach: 2,
     improvedImmolate: 5,
     ruin: 1,
-    netherProtection: 1,
     emberstorm: 5,
     backlash: 3,
+    conflagrate: 1,
     shadowAndFlame: 5
-  },
+  },*/
   demonology: {
     improvedCorruption: 1,
     improvedHealthstone: 2,
@@ -81,7 +80,6 @@ const presetTalents = {
     demonicSacrifice: 1,
     manaFeed: 1,
     masterDemonologist: 5,
-    demonicResilience: 3,
     soulLink: 1,
     demonicKnowledge: 3,
     demonicTactics: 5,
@@ -89,7 +87,9 @@ const presetTalents = {
     improvedShadowBolt: 5,
     bane: 5,
     devastation: 5,
-    shadowburn: 1
+    shadowburn: 1,
+    intensity: 1,
+    destructiveReach: 2
   },
   demonologyNoFelguard: {
     improvedCorruption: 1,
