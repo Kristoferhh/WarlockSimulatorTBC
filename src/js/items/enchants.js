@@ -445,7 +445,7 @@ const enchants = {
     majorSpellpower: {
       name: 'Major Spellpower',
       spellPower: 40,
-      id: 29795,
+      id: 27975,
       source: 'Enchanting',
       phase: 1
     },
@@ -462,6 +462,13 @@ const enchants = {
       id: 27968,
       source: 'Enchanting',
       phase: 1
+    },
+    spellPower: {
+      name: 'Spell Power',
+      spellPower: 30,
+      id: 22749,
+      source: 'Enchanting',
+      phase: 0
     }
   }
 }
