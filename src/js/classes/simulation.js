@@ -323,14 +323,14 @@ class Simulation {
                 // If a Nightfall proc is active and Corruption is active as well then prio Shadow Bolt over re-applying dots to avoid missing a free Shadow Bolt
                 if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.corruption.active) {
                   this.player.cast('shadowBolt')
+                } else if (this.player.rotation.dot.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready() && (timeRemaining - this.player.spells.corruption.castTime) >= this.player.auras.corruption.minimumDuration) {
+                  this.player.cast('corruption')
                 } else if (this.player.rotation.curse.curseOfAgony && !this.player.auras.curseOfAgony.active && this.player.spells.curseOfAgony.ready() && timeRemaining >= this.player.auras.curseOfAgony.minimumDuration) {
                   this.player.cast('curseOfAgony')
                 } else if (this.player.rotation.dot.unstableAffliction && !this.player.auras.unstableAffliction.active && this.player.spells.unstableAffliction.ready() && (timeRemaining - this.player.spells.unstableAffliction.castTime) >= this.player.auras.unstableAffliction.minimumDuration) {
                   this.player.cast('unstableAffliction')
                 } else if (this.player.rotation.dot.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.ready() && /*(!this.player.auras.improvedShadowBolt || this.player.auras.improvedShadowBolt.active) &&*/ timeRemaining >= this.player.auras.siphonLife.minimumDuration) {
                   this.player.cast('siphonLife')
-                } else if (this.player.rotation.dot.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready() && (timeRemaining - this.player.spells.corruption.castTime) >= this.player.auras.corruption.minimumDuration) {
-                  this.player.cast('corruption')
                 } else if (this.player.rotation.dot.immolate && !this.player.auras.immolate.active && this.player.spells.immolate.ready() && (timeRemaining - this.player.spells.immolate.castTime) >= this.player.auras.immolate.minimumDuration) {
                   this.player.cast('immolate')
                 }
