@@ -1017,6 +1017,10 @@ function simDPS (items) {
   const simulations = []
   let simIndex = 0
 
+  if (items.length > 1) {
+    $(".item-dps").text('')
+  }
+
   for (let i = 0; i < items.length; i++) {
     multiSimInfo.push([items[i], 0])
 
