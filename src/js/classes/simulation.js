@@ -327,7 +327,7 @@ class Simulation {
                   this.player.cast('curseOfAgony')
                 } else if (this.player.rotation.dot.unstableAffliction && !this.player.auras.unstableAffliction.active && this.player.spells.unstableAffliction.ready() && (timeRemaining - this.player.spells.unstableAffliction.castTime) >= this.player.auras.unstableAffliction.minimumDuration) {
                   this.player.cast('unstableAffliction')
-                } else if (this.player.rotation.dot.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.ready() && timeRemaining >= this.player.auras.siphonLife.minimumDuration) {
+                } else if (this.player.rotation.dot.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.ready() && /*(!this.player.auras.improvedShadowBolt || this.player.auras.improvedShadowBolt.active) &&*/ timeRemaining >= this.player.auras.siphonLife.minimumDuration) {
                   this.player.cast('siphonLife')
                 } else if (this.player.rotation.dot.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready() && (timeRemaining - this.player.spells.corruption.castTime) >= this.player.auras.corruption.minimumDuration) {
                   this.player.cast('corruption')
@@ -414,7 +414,7 @@ class Simulation {
       }
     }
     if (this.timeTotal > 0) console.log(this.timeTotal)
-    if (this.player.pet) console.log(JSON.stringify(this.player.pet.damageBreakdown))
+    if (this.player.pet && this.player.pet.mode == PetMode.AGGRESSIVE) console.log(JSON.stringify(this.player.pet.damageBreakdown))
 
     this.simulationEnd({
       minDps: Math.round(minDps * 100) / 100,

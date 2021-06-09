@@ -34,6 +34,11 @@ class DamageOverTime {
       spellPower += (this.player.stats.intellect * this.player.stats.intellectModifier * 0.07)
     }
     this.spellPower = spellPower
+
+    // Siphon Life snapshots the presence of ISB. So if ISB isn't up when it's cast, it doesn't get the benefit even if it comes up later during the duration.
+    if (this.varName == "siphonLife") {
+      this.isbActive = (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active)
+    }
   }
 
   fade () {

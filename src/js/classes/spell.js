@@ -78,7 +78,7 @@ class Spell {
 
     if (isCrit && this.canCrit) {
       if (this.player.trinketIds.includes(30626) && random(1, 100) <= this.player.auras.sextantOfUnstableCurrents.procChance) this.player.auras.sextantOfUnstableCurrents.apply() // Sextant of Unstable Currents
-      if (this.player.trinketIds.includes(28418) && random(1, 100) <= this.player.auras.shiffarsNexusHorn.procChance) this.player.auras.shiffarsNexusHorn.apply() 				// Shiffar's Nexus-Horn
+      if (this.player.trinketIds.includes(28418) && random(1, 100) <= this.player.auras.shiffarsNexusHorn.procChance) this.player.auras.shiffarsNexusHorn.apply() 				        // Shiffar's Nexus-Horn
     }
 
     if (this.isDot) {
@@ -160,7 +160,7 @@ class Spell {
     dmg *= this.modifier
 
     // Improved Shadow Bolt
-    if (this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active) {
+    if ((this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.varName != "siphonLife") || (this.varName == "siphonLife" && this.player.auras.siphonLife.isbActive)) {
       dmg *= this.player.auras.improvedShadowBolt.modifier
       if (!this.isDot) this.player.auras.improvedShadowBolt.decrementStacks()
     }
