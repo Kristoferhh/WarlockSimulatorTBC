@@ -1,17 +1,17 @@
 class SimWorker {
-	constructor(simulationEnd, simulationUpdate, workerParams) {
-		this.worker = new Worker('./src/js/web_worker.js');
-		this.workerParams = workerParams;
-		this.worker.onmessage = function(e) {
-			if (e.data.event == "end") {
-				simulationEnd(e.data.data);
-			} else if (e.data.event == "update") {
-				simulationUpdate(e.data.data);
-			}
-		}
-	}
+  constructor (simulationEnd, simulationUpdate, workerParams) {
+    this.worker = new Worker('./src/js/web_worker.js')
+    this.workerParams = workerParams
+    this.worker.onmessage = function (e) {
+      if (e.data.event == 'end') {
+        simulationEnd(e.data.data)
+      } else if (e.data.event == 'update') {
+        simulationUpdate(e.data.data)
+      }
+    }
+  }
 
-	start() {
-		this.worker.postMessage(this.workerParams);
-	}
+  start () {
+    this.worker.postMessage(this.workerParams)
+  }
 }
