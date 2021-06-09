@@ -100,10 +100,10 @@ class ShadowTrance extends Aura {
   }
 }
 
-class ShadowFlameShadow extends Aura {
+class Flameshadow extends Aura {
   constructor (player) {
     super(player)
-    this.name = 'Shadow Flame (shadow) (T4 2pc bonus)'
+    this.name = 'Flameshadow (T4 2pc bonus)'
     this.durationTotal = 15
     this.procChance = 10
     this.isImportant = true
@@ -130,10 +130,10 @@ class ShadowFlameShadow extends Aura {
   }
 }
 
-class ShadowFlameFire extends Aura {
+class Shadowflame extends Aura {
   constructor (player) {
     super(player)
-    this.name = 'Shadow Flame (fire) (T4 2pc bonus)'
+    this.name = 'Shadowflame (T4 2pc bonus)'
     this.durationTotal = 15
     this.procChance = 10
     this.isImportant = true
