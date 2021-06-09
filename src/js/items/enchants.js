@@ -61,6 +61,13 @@ const enchants = {
       id: 37889,
       source: 'Lower City - Honored',
       phase: 1
+    }, hoodooHex: {
+      name: 'Hoodoo Hex',
+      stamina: 10,
+      spellPower: 18,
+      id: 19788,
+      source: "Zul'Gurub",
+      phase: 0
     }
   },
   shoulders: {
@@ -213,6 +220,15 @@ const enchants = {
       id: 35418,
       source: 'Leatherworking',
       phase: 1
+    },
+    greaterStats: {
+      name: 'Greater Stats',
+      stamina: 4,
+      intellect: 4,
+      spirit: 4,
+      id: 20025,
+      source: 'Enchanting',
+      phase: 0
     }
   },
   bracer: {
@@ -363,6 +379,14 @@ const enchants = {
       id: 29486,
       source: 'Leatherworking',
       phase: 1
+    },
+    hoodooHex: {
+      name: 'Hoodoo Hex',
+      stamina: 10,
+      spellPower: 18,
+      id: 19788,
+      source: "Zul'Gurub",
+      phase: 0
     }
   },
   boots: {
