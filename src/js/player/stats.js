@@ -100,6 +100,7 @@ function refreshCharacterStats () {
   if (JSON.parse(localStorage.setBonuses)['658'] >= 2) hitRating += 35
   let hitChance = Math.round((hitRating / hitRatingPerPercent) * 100) / 100
   if (auras.inspiringPresence) hitChance += 1
+  if (auras.totemOfWrath) hitChance += 3 * $("select[name='totemOfWrathAmount']").val()
   hitChance = hitChance.toFixed(2)
 
   // Shadow/Fire damage % modifiers
