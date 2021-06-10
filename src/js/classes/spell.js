@@ -146,6 +146,8 @@ class Spell {
 
   damage (isCrit, spellPower = this.player.stats.spellPower + this.player.demonicKnowledgeSp, shadowPower = this.player.stats.shadowPower, firePower = this.player.stats.firePower) {
     let dmg = this.dmg
+    let critMultiplier = 1.5
+
     // If casting Incinerate and Immolate is up, add the bonus damage.
     if (this.varName == 'incinerate' && this.player.auras.immolate && this.player.auras.immolate.active) {
       dmg += this.bonusDamageFromImmolate
@@ -165,14 +167,15 @@ class Spell {
       if (!this.isDot) this.player.auras.improvedShadowBolt.decrementStacks()
     }
     if (isCrit) {
-      let critMultiplier = 1.5
-      if (this.type == 'destruction' && this.player.talents.ruin > 0) {
-        critMultiplier += 0.5
-      }
-
       // Chaotic Skyfire Diamond meta gem
       if (this.player.metaGemId == '34220') {
-        critMultiplier *= 1.03 // confirm whether it's additive or multiplicative
+        critMultiplier *= 1.03
+      }
+      // Ruin
+      if (this.type == 'destruction' && this.player.talents.ruin > 0) {
+        critMultiplier -= 1
+        critMultiplier *= 2
+        critMultiplier += 1
       }
 
       dmg *= critMultiplier
@@ -188,7 +191,7 @@ class Spell {
       }
     }
     dmg = ~~(dmg * (1 - 0.0025 * this.player.enemy[this.school + 'Resist']))
-    if (isCrit) this.player.combatLog(this.name + ' *' + dmg + '*')
+    if (isCrit) this.player.combatLog(this.name + ' *' + dmg + '* (Crit Multiplier: ' + critMultiplier + ')')
     else this.player.combatLog(this.name + ' ' + dmg)
     this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg
     this.player.iterationDamage += dmg
