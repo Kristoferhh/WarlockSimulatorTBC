@@ -72,6 +72,8 @@ class DamageOverTime {
           }
         }
 
+        // Partial resist damage reduction
+        dmg = ~~(dmg * (1 - 0.0025 * this.player.enemy[this.school + 'Resist']))
         this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg
         this.player.iterationDamage += dmg
         this.player.combatLog(this.name + ' ' + Math.round(dmg))
