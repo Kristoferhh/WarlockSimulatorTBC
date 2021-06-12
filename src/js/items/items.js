@@ -173,7 +173,7 @@ const items = {
       critRating: 15,
       id: 32089,
       source: "50 Badge of Justice - G'eras",
-      phase: 3 // confirm
+      phase: 1
     },
     destructionHologogs: {
       name: 'Destruction Holo-gogs',
