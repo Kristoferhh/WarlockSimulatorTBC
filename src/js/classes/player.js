@@ -119,7 +119,6 @@ class Player {
                 // Check for meta gem
                 if (customItemSlot == 'head' && gems.meta[gemId]) {
                   this.metaGemId = gemId
-                  console.log('yep ' + gemId)
                 }
                 // Find the gem's color since it might not match the socket color
                 for (const gemColor in gems) {
@@ -164,6 +163,7 @@ class Player {
     this.stats.hitChanceMultiplier = 1000
     if (settings.sets['658'] >= 2) this.stats.hitRating += 35 // Mana-Etched Regalia 2-set bonus (35 hit rating)
     this.stats.extraHitChance = this.stats.hitRating / hitRatingPerPercent // hit percent from hit rating
+    if (settings.auras.totemOfWrath) this.stats.extraHitChance += 3
     if (settings.auras.inspiringPresence === true) this.stats.extraHitChance += 1
     this.stats.hitChance = Math.round(this.getHitChance()) // The player's chance of hitting the enemy, usually between 83% and 99%
 
