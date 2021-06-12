@@ -106,6 +106,13 @@ class Spell {
       return
     }
 
+    // Judgement of Wisdom (50% proc rate)
+    if (this.player.selectedAuras.judgementOfWisdom && random(1,100) <= 50) {
+      const currentMana = this.player.mana
+      this.player.mana = Math.min(this.player.stats.maxMana, currentMana + 74)
+      this.player.combatLog("Player gains " + (this.player.mana - currentMana) + " mana from Judgement of Wisdom")
+    }
+
     // T4 2pc
     // 10% proc rate on all shadow or fire spells (including when dots applied) (needs confirmation)
     if (this.player.sets['645'] >= 2 && ['shadow', 'fire'].includes(this.school) && random(1, 100) <= this.player.auras.shadowflame.procChance) {
