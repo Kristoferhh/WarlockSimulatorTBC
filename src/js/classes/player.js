@@ -46,12 +46,12 @@ class Player {
     this.metaGemId = 0
     // Get the meta gem ID
     for (const gemSocket in settings.gems.head[settings.items.head]) {
-	  if (settings.gems.head[settings.items.head][gemSocket]) {
-		const gemId = settings.gems.head[settings.items.head][gemSocket][1]
-		if (gems.meta[gemId]) {
-		  this.metaGemId = gemId
-		} 
-	  }
+      if (settings.gems.head[settings.items.head][gemSocket]) {
+        const gemId = settings.gems.head[settings.items.head][gemSocket][1]
+        if (gems.meta[gemId]) {
+          this.metaGemId = gemId
+        } 
+      }
     }
 
     // If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
@@ -83,6 +83,9 @@ class Player {
                 // Find the gem's color since the socket and gem colors might not match
                 for (const gemColor in gems) {
                   if (gems[gemColor][gemId]) {
+                    if (gemColor == 'meta') {
+                      this.metaGemId = 0
+                    }
                     // Loop through the gem's stats and remove them from the player
                     for (const stat in gems[gemColor][gemId]) {
                       if (this.stats.hasOwnProperty(stat)) {
