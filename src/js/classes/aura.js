@@ -28,7 +28,6 @@ class Aura {
       this.player.combatLog(this.name + ' refreshed')
     } else {
       // Keep a timestamp of when the aura was applied so we can calculate the uptime when it fades
-      if (!this.player.auraBreakdown[this.varName]) console.log(this.varName + " not in table")
       this.player.auraBreakdown[this.varName].appliedAt = this.player.fightTime
       this.player.combatLog(this.name + ' applied')
     }
@@ -57,7 +56,6 @@ class Aura {
   }
 }
 
-// todo: Set isImportant to true
 class ImprovedShadowBolt extends Aura {
   constructor (player) {
     super(player)
