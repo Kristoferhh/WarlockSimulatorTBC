@@ -104,7 +104,7 @@ class CorruptionDot extends DamageOverTime {
     super(player)
     this.durationTotal = 18
     this.tickTimerTotal = 3
-    this.dmg = 1035
+    this.dmg = 900
     this.modifier = 1 + (0.01 * this.player.talents.contagion)
     this.school = 'shadow'
     this.name = 'Corruption'
@@ -133,7 +133,7 @@ class UnstableAfflictionDot extends DamageOverTime {
     super(player)
     this.durationTotal = 18
     this.tickTimerTotal = 3
-    this.dmg = 1155
+    this.dmg = 1050
     this.school = 'shadow'
     this.name = 'Unstable Affliction'
     this.coefficient = 1.2
@@ -147,7 +147,7 @@ class SiphonLifeDot extends DamageOverTime {
     super(player)
     this.durationTotal = 30
     this.tickTimerTotal = 3
-    this.dmg = 695
+    this.dmg = 630
     this.school = 'shadow'
     this.name = 'Siphon Life'
     this.coefficient = 1
@@ -187,7 +187,7 @@ class CurseOfAgonyDot extends DamageOverTime {
     super(player)
     this.durationTotal = 24
     this.tickTimerTotal = 3
-    this.dmg = 1698 * (1 + 0.05 * player.talents.improvedCurseOfAgony)
+    this.dmg = 1356 * (1 + 0.05 * player.talents.improvedCurseOfAgony)
     this.modifier = 1 + (0.01 * player.talents.contagion)
     this.school = 'shadow'
     this.name = 'Curse of Agony'

@@ -244,7 +244,7 @@ class ShadowBolt extends Spell {
     this.castTime = this.calculateCastTime()
     this.manaCost = 420 * (1 - 0.01 * player.talents.cataclysm)
     this.coefficient = (3 / 3.5) + (0.04 * player.talents.shadowAndFlame)
-    this.dmg = 633 // Average rank 11 Shadow Bolt base damage
+    this.dmg = 575 // Average rank 11 Shadow Bolt base damage
     this.name = 'Shadow Bolt'
     this.doesDamage = true
     this.canCrit = true
@@ -331,8 +331,8 @@ class Shadowburn extends Spell {
     super(player)
     this.cooldown = 15
     this.manaCost = 515 * (1 - 0.01 * player.talents.cataclysm)
-    this.coefficient = 0.4286
-    this.dmg = 694
+    this.coefficient = 0.22
+    this.dmg = 634
     this.name = 'Shadowburn'
     this.doesDamage = true
     this.canCrit = true
@@ -347,8 +347,8 @@ class DeathCoil extends Spell {
     super(player)
     this.cooldown = 120
     this.manaCost = 600
-    this.coefficient = 0.22
-    this.dmg = 578.5
+    this.coefficient = 0.4286
+    this.dmg = 526
     this.name = 'Death Coil'
     this.doesDamage = true
     this.canCrit = false // confirm
