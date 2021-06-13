@@ -19,6 +19,7 @@ class Spell {
     this.isItem = false
     this.onGcd = true
     this.isProc = false
+    this.breakdownTable = 'damage'
   }
 
   reset () {
@@ -28,7 +29,7 @@ class Spell {
 
   setup () {
     this.varName = camelCase(this.name)
-    this.player.damageBreakdown[this.varName] = this.player.damageBreakdown[this.varName] || { name: this.name }
+    this.player[this.breakdownTable + 'Breakdown'][this.varName] = this.player[this.breakdownTable + 'Breakdown'][this.varName] || { name: this.name }
   }
 
   ready () {
@@ -53,7 +54,7 @@ class Spell {
 
   // Called when a spell finishes casting or immediately called if the spell has no cast time.
   cast () {
-    this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1
+    if (!this.isAura) this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
     this.player.mana -= (this.manaCost * this.player.stats.manaCostModifier)
     this.cooldownRemaining = this.cooldown
     this.casting = false
@@ -65,14 +66,14 @@ class Spell {
       isCrit = this.player.isCrit(this.bonusCrit)
       if (isCrit) {
         // Increment the crit counter whether the spell hits or not so that the crit % on the damage breakdown is correct. Otherwise the crit % will be lower due to lost crits when the spell misses.
-        this.player.damageBreakdown[this.varName].crits = this.player.damageBreakdown[this.varName].crits + 1 || 1
+        this.player[this.breakdownTable + 'Breakdown'][this.varName].crits = this.player[this.breakdownTable + 'Breakdown'][this.varName].crits + 1 || 1
       }
     }
 
     // Check if the spell hits or misses
     if ((!this.isItem || this.doesDamage) && !this.player.isHit(this.type === 'affliction')) {
       this.player.combatLog(this.name + ' *resist*')
-      this.player.damageBreakdown[this.varName].misses = this.player.damageBreakdown[this.varName].misses + 1 || 1
+      this.player[this.breakdownTable + 'Breakdown'][this.varName].misses = this.player[this.breakdownTable + 'Breakdown'][this.varName].misses + 1 || 1
       return
     }
 
@@ -108,8 +109,12 @@ class Spell {
 
     // Judgement of Wisdom (50% proc rate)
     if (this.player.selectedAuras.judgementOfWisdom && random(1,100) <= 50) {
+      const manaGain = 74
       const currentMana = this.player.mana
-      this.player.mana = Math.min(this.player.stats.maxMana, currentMana + 74)
+      this.player.manaGainBreakdown.judgementOfWisdom.casts = this.player.manaGainBreakdown.judgementOfWisdom.casts + 1 || 1
+      this.player.manaGainBreakdown.judgementOfWisdom.manaGain = this.player.manaGainBreakdown.judgementOfWisdom.manaGain + manaGain || manaGain
+      this.player.totalManaRegenerated += manaGain
+      this.player.mana = Math.min(this.player.stats.maxMana, currentMana + manaGain)
       this.player.combatLog("Player gains " + (this.player.mana - currentMana) + " mana from Judgement of Wisdom")
     }
 
@@ -200,7 +205,7 @@ class Spell {
     dmg = ~~(dmg * (1 - 0.0025 * this.player.enemy[this.school + 'Resist']))
     if (isCrit) this.player.combatLog(this.name + ' *' + dmg + '* (Crit Multiplier: ' + critMultiplier + ')')
     else this.player.combatLog(this.name + ' ' + dmg)
-    this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].damage = this.player[this.breakdownTable + 'Breakdown'][this.varName].damage + dmg || dmg
     this.player.iterationDamage += dmg
 
     // Check for Spellstrike proc
@@ -391,6 +396,7 @@ class LifeTap extends Spell {
     this.manaReturn = 582
     this.coefficient = 0.8
     this.modifier = 1 + (0.1 * this.player.talents.improvedLifeTap)
+    this.breakdownTable = 'manaGain'
     this.setup()
   }
 
@@ -399,9 +405,11 @@ class LifeTap extends Spell {
   }
 
   cast () {
-    this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
     const manaGain = this.manaGain()
     this.player.combatLog(this.name + ' ' + Math.round(manaGain))
+    this.player.totalManaRegenerated += manaGain
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + manaGain || manaGain
     // Warning for if Life Tap is used while there are important auras active
     if (this.player.importantAuraCounter > 0) {
       this.player.combatLog('Life Tap used while there are cooldowns active')
@@ -425,11 +433,16 @@ class DarkPact extends Spell {
     this.name = 'Dark Pact'
     this.manaReturn = 700
     this.coefficient = 0.96
+    this.breakdownTable = 'manaGain'
+    this.setup()
   }
 
   cast () {
     this.casting = false
     const manaGain = this.manaReturn + (this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats.shadowPower) * this.coefficient
+    this.player.totalManaRegenerated += manaGain
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + manaGain || manaGain
     this.player.combatLog(this.name + ' ' + Math.round(manaGain))
     if (this.player.mana + manaGain > this.player.stats.maxMana) console.log('Dark Pact used at too high mana (mana wasted)')
     this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain)
@@ -566,12 +579,15 @@ class SuperManaPotion extends Spell {
     this.isItem = true
     this.avgManaValue = 2400
     this.onGcd = false
+    this.breakdownTable = 'manaGain'
     this.setup()
   }
 
   cast () {
     super.cast()
     const currentPlayerMana = this.player.mana
+    this.player.totalManaRegenerated += this.avgManaValue
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + this.avgManaValue || this.avgManaValue
     this.player.mana = Math.min(this.player.stats.maxMana, currentPlayerMana + this.avgManaValue)
     this.player.combatLog('Player gains ' + Math.round(this.player.mana - currentPlayerMana) + ' mana from Super Mana Potion (' + Math.round(currentPlayerMana) + ' -> ' + Math.round(this.player.mana) + ')')
   }
@@ -585,12 +601,15 @@ class DemonicRune extends Spell {
     this.isItem = true
     this.avgManaValue = 1200
     this.onGcd = false
+    this.breakdownTable = 'manaGain'
     this.setup()
   }
 
   cast () {
     super.cast()
     const currentPlayerMana = this.player.mana
+    this.player.totalManaRegenerated += this.avgManaValue
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + this.avgManaValue || this.avgManaValue
     this.player.mana = Math.min(this.player.stats.maxMana, currentPlayerMana + this.avgManaValue)
     this.player.combatLog('Player gains ' + Math.round(this.player.mana - currentPlayerMana) + ' mana from Demonic Rune (' + Math.round(currentPlayerMana) + ' -> ' + Math.round(this.player.mana) + ')')
   }
@@ -703,12 +722,14 @@ class MarkOfDefiance extends Spell {
     this.procChance = 15
     this.onGcd = false
     this.manaGain = 150
+    this.breakdownTable = 'manaGain'
     this.setup()
   }
 
   cast () {
-    this.player.damageBreakdown[this.varName].casts = this.player.damageBreakdown[this.varName].casts + 1 || 1
-    this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + this.manaGain || this.manaGain
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + this.manaGain || this.manaGain
+    this.player.totalManaRegenerated += this.manaGain
     this.player.combatLog(this.name + ' +' + this.manaGain + ' mana')
     this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.manaGain)
   }

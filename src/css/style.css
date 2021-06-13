@@ -213,33 +213,33 @@ ul {
 	text-align: center;
 }
 
-#damage-breakdown-section {
+.breakdown-section {
 	display: none;
 	vertical-align: top;
 }
 
-#damage-breakdown-table {
+.breakdown-table {
 	margin-left: 8px;
 	padding: 10px;
 	display: inline-block;
 	border-spacing: 0;
 }
 
-#damage-breakdown-table .number {
+.breakdown-table .number {
 	text-align: right;
 }
 
-#damage-breakdown-table td/*:nth-child(1)*/ {
+.breakdown-table td/*:nth-child(1)*/ {
 	text-align: left;
 }
 
-#damage-breakdown-table td, #damage-breakdown-table th {
+.breakdown-table td, .breakdown-table th {
 	padding: 10px;
 	border: 1px solid black;
 	border-collapse: collapse;
 }
 
-#damage-breakdown-table tr {
+.breakdown-table tr {
 	line-height: 20px;
 }
 

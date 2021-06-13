@@ -8,6 +8,11 @@ class Aura {
     this.hasDuration = true
   }
 
+  setup () {
+    this.varName = camelCase(this.name)
+    this.player.auraBreakdown[this.varName] = this.player.auraBreakdown[this.varName] || { name: this.name }
+  }
+
   tick (t) {
     if (this.hasDuration) {
       this.durationRemaining = Math.max(0, this.durationRemaining - t)
@@ -18,6 +23,24 @@ class Aura {
     }
   }
 
+  apply () {
+    if (this.active) {
+      this.player.combatLog(this.name + ' refreshed')
+    } else {
+      // Keep a timestamp of when the aura was applied so we can calculate the uptime when it fades
+      if (!this.player.auraBreakdown[this.varName]) console.log(this.varName + " not in table")
+      this.player.auraBreakdown[this.varName].appliedAt = this.player.fightTime
+      this.player.combatLog(this.name + ' applied')
+    }
+    this.player.auraBreakdown[this.varName].count = this.player.auraBreakdown[this.varName].count + 1 || 1
+    this.durationRemaining = this.durationTotal
+    if (this.isImportant) {
+      this.player.importantAuraCounter++
+      this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
+    }
+    this.active = true
+  }
+
   fade (endOfIteration = false) {
     if (this.active) {
       this.active = false
@@ -26,23 +49,15 @@ class Aura {
       }
       if (this.isImportant) {
         this.player.importantAuraCounter--
-        this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
+        if (!endOfIteration) this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
       }
-    }
-  }
-
-  apply () {
-    if (this.active) this.player.combatLog(this.name + ' refreshed')
-    else this.player.combatLog(this.name + ' applied')
-    this.durationRemaining = this.durationTotal
-    this.active = true
-    if (this.isImportant) {
-      this.player.importantAuraCounter++
-      this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
+      const auraUptime = this.player.fightTime - this.player.auraBreakdown[this.varName].appliedAt
+      this.player.auraBreakdown[this.varName].uptime = this.player.auraBreakdown[this.varName].uptime + auraUptime || auraUptime
     }
   }
 }
 
+// todo: Set isImportant to true
 class ImprovedShadowBolt extends Aura {
   constructor (player) {
     super(player)
@@ -51,6 +66,7 @@ class ImprovedShadowBolt extends Aura {
     this.stacks = 0
     this.maxStacks = 4
     this.modifier = 1 + (this.player.talents.improvedShadowBolt * 0.04)
+    this.setup()
   }
 
   apply () {
@@ -80,6 +96,7 @@ class CurseOfTheElementsAura extends Aura {
     super(player)
     this.name = 'Curse of the Elements'
     this.durationTotal = 300
+    this.setup()
   }
 }
 
@@ -88,6 +105,7 @@ class CurseOfRecklessnessAura extends Aura {
     super(player)
     this.name = 'Curse of Recklessness'
     this.durationTotal = 120
+    this.setup()
   }
 }
 
@@ -97,6 +115,7 @@ class ShadowTrance extends Aura {
     this.name = 'Shadow Trance (Nightfall)'
     this.durationTotal = 10
     this.isImportant = true
+    this.setup()
   }
 }
 
@@ -108,6 +127,7 @@ class Flameshadow extends Aura {
     this.procChance = 10
     this.isImportant = true
     this.shadowPower = 135
+    this.setup()
   }
 
   apply () {
@@ -138,6 +158,7 @@ class Shadowflame extends Aura {
     this.procChance = 10
     this.isImportant = true
     this.firePower = 135
+    this.setup()
   }
 
   apply () {
@@ -166,6 +187,7 @@ class SpellstrikeProc extends Aura {
     this.durationTotal = 10
     this.isImportant = true
     this.spellPower = 92
+    this.setup()
   }
 
   apply () {
@@ -197,6 +219,7 @@ class PowerInfusion extends Aura {
     this.hasteModifier = 20
     this.manaModifier = 0.8
     this.isImportant = true
+    this.setup()
   }
 
   reset () {
@@ -239,6 +262,7 @@ class EyeOfMagtheridon extends Aura {
     this.durationTotal = 10
     this.isImportant = true
     this.spellPower = 170
+    this.setup()
   }
 
   apply () {
@@ -270,6 +294,7 @@ class SextantOfUnstableCurrents extends Aura {
     this.procChance = 20
     this.isImportant = true
     this.spellPower = 190
+    this.setup()
   }
 
   apply () {
@@ -307,6 +332,7 @@ class QuagmirransEye extends Aura {
     this.procChance = 10
     this.isImportant = true
     this.hasteRating = 320
+    this.setup()
   }
 
   apply () {
@@ -342,6 +368,7 @@ class ShiffarsNexusHorn extends Aura {
     this.procChance = 20
     this.isImportant = true
     this.spellPower = 225
+    this.setup()
   }
 
   apply () {
@@ -377,6 +404,7 @@ class ManaEtched4Set extends Aura {
     this.procChance = 2
     this.isImportant = true
     this.spellPower = 110
+    this.setup()
   }
 
   apply () {
@@ -404,6 +432,7 @@ class DestructionPotionAura extends Aura {
     this.name = 'Destruction Potion'
     this.durationTotal = 15
     this.isImportant = true
+    this.setup()
   }
 
   apply () {
@@ -439,6 +468,7 @@ class FlameCapAura extends Aura {
     this.name = 'Flame Cap'
     this.durationTotal = 60
     this.isImportant = true
+    this.setup()
   }
 
   apply () {
@@ -466,6 +496,7 @@ class BloodFuryAura extends Aura {
     this.name = 'Blood Fury'
     this.durationTotal = 15
     this.isImportant = true
+    this.setup()
   }
 
   apply () {
@@ -494,6 +525,7 @@ class BloodlustAura extends Aura {
     this.name = 'Bloodlust'
     this.durationTotal = 40
     this.isImportant = true
+    this.setup()
   }
 
   apply () {
@@ -521,6 +553,7 @@ class DrumsOfBattleAura extends Aura {
     super(player)
     this.name = 'Drums of Battle'
     this.durationTotal = 30
+    this.setup()
   }
 
   apply () {
@@ -545,6 +578,7 @@ class DrumsOfWarAura extends Aura {
     super(player)
     this.name = 'Drums of War'
     this.durationTotal = 30
+    this.setup()
   }
 
   apply () {
@@ -574,6 +608,7 @@ class DrumsOfRestorationAura extends Aura {
     this.ticksRemaining = 0
     this.ticksTotal = Math.round(this.durationTotal / this.tickTimerTotal)
     this.manaGain = 600 / (this.durationTotal / this.tickTimerTotal)
+    this.setup()
   }
 
   apply () {
@@ -607,6 +642,7 @@ class AshtongueTalismanOfShadows extends Aura {
     this.durationTotal = 5
     this.procChance = 20
     this.isImportant = true
+    this.setup()
   }
 
   apply () {
@@ -636,6 +672,7 @@ class DarkmoonCardCrusadeAura extends Aura {
     this.maxStacks = 10
     this.stacks = 0
     this.spPerStack = 8
+    this.setup()
   }
 
   apply () {
@@ -665,6 +702,7 @@ class TheLightningCapacitorAura extends Aura {
     this.hasDuration = false
     this.stacks = 0
     this.maxStacks = 3
+    this.setup()
   }
 
   apply () {
@@ -686,6 +724,7 @@ class BandOfTheEternalSageAura extends Aura {
     this.durationTotal = 10
     this.procChance = 10
     this.spellPower = 95
+    this.setup()
   }
 
   apply () {
@@ -715,6 +754,7 @@ class BladeOfWizardryAura extends Aura {
     this.durationTotal = 6
     this.procChance = 15
     this.isImportant = true
+    this.setup()
   }
 
   apply () {
@@ -743,6 +783,7 @@ class ShatteredSunPendantOfAcumenAura extends Aura {
     this.spellPower = 120
     this.durationTotal = 10
     this.isImportant = true
+    this.setup()
   }
 
   apply () {
@@ -771,6 +812,7 @@ class RobeOfTheElderScribesAura extends Aura {
     this.spellPower = 130
     this.durationTotal = 10
     this.isImportant = true
+    this.setup()
   }
 
   apply () {

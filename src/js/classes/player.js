@@ -42,6 +42,7 @@ class Player {
     this.trinketIds = [settings.items.trinket1, settings.items.trinket2]
     this.combatlog = []
     this.importantAuraCounter = 0 // counts the amount of active "important" auras such as trinket procs, on-use trinket uses, power infusion etc.
+    this.totalManaRegenerated = 0
 
     this.metaGemId = 0
     // Get the meta gem ID
@@ -255,6 +256,11 @@ class Player {
 
     // Records all information about damage done for each spell such as crit %, miss %, average damage per cast etc.
     this.damageBreakdown = {}
+    // Records all information about auras such as how often it was applied and the uptime %.
+    this.auraBreakdown = {}
+    // Records all information about mana gain abilities like Life Tap, Mana Pots, and Demonic Runes
+    this.manaGainBreakdown = {mp5: {name: "Mp5"}}
+    if (this.selectedAuras.judgementOfWisdom) this.manaGainBreakdown.judgementOfWisdom = {name: "Judgement of Wisdom"}
 
     // Pet
     this.demonicKnowledgeSp = 0 // Spell Power from the Demonic Knowledge talent

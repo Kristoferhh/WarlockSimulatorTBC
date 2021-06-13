@@ -204,6 +204,9 @@ class Simulation {
     if (this.player.mp5Timer == 0) {
       this.player.mp5Timer = 5
       if (this.player.stats.mp5 > 0) {
+        this.player.totalManaRegenerated += this.player.stats.mp5
+        this.player.manaGainBreakdown.mp5.casts = this.player.manaGainBreakdown.mp5.casts + 1 || 1
+        this.player.manaGainBreakdown.mp5.manaGain = this.player.manaGainBreakdown.mp5.manaGain + this.player.stats.mp5 || this.player.stats.mp5
         this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.player.stats.mp5)
         this.player.combatLog('Player gains ' + Math.round(this.player.stats.mp5) + ' mana from MP5. Player mana: ' + Math.round(this.player.mana) + '/' + Math.round(this.player.stats.maxMana))
       }
@@ -421,10 +424,13 @@ class Simulation {
       maxDps: Math.round(maxDps * 100) / 100,
       length: (performance.now() - startTime) / 1000,
       damageBreakdown: this.player.damageBreakdown,
+      auraBreakdown: this.player.auraBreakdown,
+      manaGainBreakdown: this.player.manaGainBreakdown,
       combatlog: this.player.combatlog,
       iterations: this.iterations,
       totalDamage: totalDamage,
       totalDuration: totalDuration,
+      totalManaRegenerated: this.player.totalManaRegenerated,
       itemId: this.player.itemId
     })
   }
