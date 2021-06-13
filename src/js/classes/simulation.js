@@ -333,6 +333,7 @@ class Simulation {
                   this.player.cast('curseOfAgony')
                 }
               } else {
+                this.player.useCooldownsIfAvailable()
                 // If a Nightfall proc is active and Corruption is active as well then prio Shadow Bolt over re-applying dots to avoid missing a free Shadow Bolt
                 if (this.player.rotation.dot.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready() && (timeRemaining - this.player.spells.corruption.castTime) >= this.player.auras.corruption.minimumDuration) {
                   this.player.cast('corruption')
@@ -353,7 +354,6 @@ class Simulation {
                 else if (this.player.importantAuraCounter == 0 && timeRemaining > 20 && (timeRemaining / fightLength) > (this.player.mana / this.player.stats.maxMana) && !this.player.areAnyCooldownsReady() && (this.player.spells.lifeTap.manaGain() + this.player.mana < this.player.stats.maxMana)) {
                   this.player.cast('lifeTap')
                 } else if (this.player.spells[this.player.filler].ready()) {
-                  this.player.useCooldownsIfAvailable()
                   this.player.cast(this.player.filler)
                 } else {
                   this.player.cast('lifeTap')
