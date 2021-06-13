@@ -72,7 +72,9 @@ class Simulation {
     if (this.player.spells.demonicRune && this.player.spells.demonicRune.cooldownRemaining > 0 && this.player.spells.demonicRune.cooldownRemaining < time) time = this.player.spells.demonicRune.cooldownRemaining
     if (this.player.spells.superManaPotion && this.player.spells.superManaPotion.cooldownRemaining > 0 && this.player.spells.superManaPotion.cooldownRemaining < time) time = this.player.spells.superManaPotion.cooldownRemaining
     if (this.player.spells.bloodlust) {
-      if (this.player.spells.bloodlust.cooldownRemaining > 0 && this.player.spells.bloodlust.cooldownRemaining < time) time = this.player.spells.bloodlust.cooldownRemaining
+      for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
+        if (this.player.spells.bloodlust[i].cooldownRemaining > 0 && this.player.spells.bloodlust[i].cooldownRemaining < time) time = this.player.spells.bloodlust[i].cooldownRemaining
+      }
       if (this.player.auras.bloodlust.active && this.player.auras.bloodlust.durationRemaining < time) time = this.player.auras.bloodlust.durationRemaining
     }
     if (this.player.spells.timbalsFocusingCrystal && this.player.spells.timbalsFocusingCrystal.cooldownRemaining > 0 && this.player.spells.timbalsFocusingCrystal.cooldownRemaining < time) time = this.player.spells.timbalsFocusingCrystal.cooldownRemaining
@@ -151,7 +153,11 @@ class Simulation {
     if (this.player.spells.demonicRune && this.player.spells.demonicRune.cooldownRemaining > 0) this.player.spells.demonicRune.tick(time)
     if (this.player.spells.flameCap && this.player.spells.flameCap.cooldownRemaining > 0) this.player.spells.flameCap.tick(time)
     if (this.player.spells.bloodFury && this.player.spells.bloodFury.cooldownRemaining > 0) this.player.spells.bloodFury.tick(time)
-    if (this.player.spells.bloodlust && this.player.spells.bloodlust.cooldownRemaining > 0) this.player.spells.bloodlust.tick(time)
+    if (this.player.spells.bloodlust) {
+      for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
+        if (this.player.spells.bloodlust[i].cooldownRemaining > 0) this.player.spells.bloodlust[i].tick(time)
+      }
+    }
     if (this.player.spells.drumsOfBattle && this.player.spells.drumsOfBattle.cooldownRemaining > 0) this.player.spells.drumsOfBattle.tick(time)
     if (this.player.spells.drumsOfWar && this.player.spells.drumsOfWar.cooldownRemaining > 0) this.player.spells.drumsOfWar.tick(time)
     if (this.player.spells.drumsOfRestoration && this.player.spells.drumsOfRestoration.cooldownRemaining > 0) this.player.spells.drumsOfRestoration.tick(time)
@@ -247,7 +253,6 @@ class Simulation {
       if (this.player.spells.demonicRune) this.player.spells.demonicRune.reset()
       if (this.player.spells.flameCap) this.player.spells.flameCap.reset()
       if (this.player.spells.bloodFury) this.player.spells.bloodFury.reset()
-      if (this.player.spells.bloodlust) this.player.spells.bloodlust.reset()
       if (this.player.spells.timbalsFocusingCrystal) this.player.spells.timbalsFocusingCrystal.reset()
       if (this.player.spells.drumsOfBattle) this.player.spells.drumsOfBattle.reset()
       if (this.player.spells.drumsOfWar) this.player.spells.drumsOfWar.reset()
@@ -257,6 +262,11 @@ class Simulation {
       if (this.player.spells.bladeOfWizardry) this.player.spells.bladeOfWizardry.reset()
       if (this.player.spells.shatteredSunPendantOfAcumen) this.player.spells.shatteredSunPendantOfAcumen.reset()
       if (this.player.spells.robeOfTheElderScribes) this.player.spells.robeOfTheElderScribes.reset()
+      if (this.player.spells.bloodlust) {
+        for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
+          this.player.spells.bloodlust[i].reset()
+        }
+      }
       this.player.reset() // Resets mana, global cooldown etc.
       if (this.player.pet) this.player.pet.reset()
 

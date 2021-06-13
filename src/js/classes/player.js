@@ -334,7 +334,6 @@ class Player {
     if (this.selectedAuras.demonicRune) this.spells.demonicRune = new DemonicRune(this)
     if (this.selectedAuras.flameCap) this.spells.flameCap = new FlameCap(this)
     if (this.simSettings.race == 'orc') this.spells.bloodFury = new BloodFury(this)
-    if (this.selectedAuras.bloodlust) this.spells.bloodlust = new Bloodlust(this)
     if (this.selectedAuras.drumsOfBattle) this.spells.drumsOfBattle = new DrumsOfBattle(this)
     if (this.selectedAuras.drumsOfWar) this.spells.drumsOfWar = new DrumsOfWar(this)
     if (this.items.mainhand == 31336) this.spells.bladeOfWizardry = new BladeOfWizardry(this)
@@ -344,6 +343,12 @@ class Player {
     if (this.trinketIds.includes(34470)) this.spells.timbalsFocusingCrystal = new TimbalsFocusingCrystal(this)
     if (this.trinketIds.includes(27922)) this.spells.markOfDefiance = new MarkOfDefiance(this)
     if (this.trinketIds.includes(28785)) this.spells.theLightningCapacitor = new TheLightningCapacitor(this)
+    if (this.selectedAuras.bloodlust) {
+      this.spells.bloodlust = []
+      for (let i = 0; i < this.simSettings.bloodlustAmount; i++) {
+        this.spells.bloodlust.push(new Bloodlust(this))
+      }
+    }
 
     this.auras = {}
     if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusion(this)
@@ -396,7 +401,11 @@ class Player {
   }
 
   areAnyCooldownsReady () {
-    if (this.spells.bloodlust && this.spells.bloodlust.ready()) return true
+    if (this.spells.bloodlust && !this.auras.bloodlust.active) {
+      for (let i = 0; i < this.spells.bloodlust.length; i++) {
+        if (this.spells.bloodlust[i].ready()) return true
+      }
+    }
     if (this.auras.powerInfusion && this.auras.powerInfusion.ready()) return true
     if (this.spells.destructionPotion && this.spells.destructionPotion.ready()) return true
     for (let i = 0; i < this.trinkets.length; i++) {
@@ -408,8 +417,13 @@ class Player {
   }
 
   useCooldownsIfAvailable () {
-    if (this.spells.bloodlust && this.spells.bloodlust.ready()) {
-      this.cast('bloodlust')
+    if (this.spells.bloodlust && !this.auras.bloodlust.active) {
+      for (let i = 0; i < this.spells.bloodlust.length; i++) {
+        if (this.spells.bloodlust[i].ready()) {
+          this.spells.bloodlust[i].startCast()
+          break
+        }
+      }
     }
     if (this.auras.powerInfusion && this.auras.powerInfusion.ready()) {
       this.auras.powerInfusion.apply()
