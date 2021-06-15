@@ -174,7 +174,7 @@ class Spell {
     dmg *= this.modifier
 
     // Improved Shadow Bolt
-    if ((this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.varName != "siphonLife") || (this.varName == "siphonLife" && this.player.auras.siphonLife.isbActive)) {
+    if (this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active) {
       dmg *= this.player.auras.improvedShadowBolt.modifier
       if (!this.isDot) this.player.auras.improvedShadowBolt.decrementStacks()
     }

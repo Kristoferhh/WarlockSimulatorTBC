@@ -62,7 +62,7 @@ class DamageOverTime {
 
         let dmg = ((this.dmg + sp * this.coefficient) * (this.multiplicativeModifier * this.player.stats[this.school + 'Modifier'] + this.additiveModifier)) / (this.originalDurationTotal / this.tickTimerTotal)
         // Add bonus from ISB (without removing ISB stacks since it's a dot)
-        if (this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active) {
+        if ((this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.varName != "siphonLife") || (this.varName == "siphonLife" && this.isbActive)) {
           dmg *= this.player.auras.improvedShadowBolt.modifier
         }
 
