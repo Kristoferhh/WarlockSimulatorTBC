@@ -9,7 +9,8 @@ class DamageOverTime {
     this.snapshots = true
     this.dmg = 0
     this.spellPower = 0
-    this.modifier = 1
+    this.multiplicativeModifier = 1
+    this.additiveModifier = 0
     this.active = false
     this.school = null
     this.name = null
@@ -59,7 +60,7 @@ class DamageOverTime {
           sp = this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats[this.school + 'Power']
         }
 
-        let dmg = ((this.dmg + sp * this.coefficient) * this.modifier * this.player.stats[this.school + 'Modifier']) / (this.originalDurationTotal / this.tickTimerTotal)
+        let dmg = ((this.dmg + sp * this.coefficient) * (this.multiplicativeModifier * this.player.stats[this.school + 'Modifier'] + this.additiveModifier)) / (this.originalDurationTotal / this.tickTimerTotal)
         // Add bonus from ISB (without removing ISB stacks since it's a dot)
         if (this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active) {
           dmg *= this.player.auras.improvedShadowBolt.modifier
@@ -105,7 +106,7 @@ class CorruptionDot extends DamageOverTime {
     this.durationTotal = 18
     this.tickTimerTotal = 3
     this.dmg = 900
-    this.modifier = 1 + (0.01 * this.player.talents.contagion)
+    this.additiveModifier = 0.01 * this.player.talents.contagion
     this.school = 'shadow'
     this.name = 'Corruption'
     this.coefficient = 0.936 + (0.12 * player.talents.empoweredCorruption)
@@ -113,7 +114,7 @@ class CorruptionDot extends DamageOverTime {
     this.boosted = false // Track whether the corruption's dmg has been boosted by T5 4pc or not
     this.setup()
 
-    if (player.sets['529'] >= 4) this.modifier *= 1.12		// T3 4pc
+    if (player.sets['529'] >= 4) this.multiplicativeModifier *= 1.12		// T3 4pc
     if (player.sets['645'] >= 4) this.durationTotal += 3	// T4 4pc
     if (player.sets['646'] >= 4) { this.ticksTotal = this.durationTotal / this.tickTimerTotal }
   }
