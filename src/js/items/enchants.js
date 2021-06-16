@@ -475,7 +475,7 @@ const enchants = {
     },
     sunfire: {
       name: 'Sunfire',
-      firePower: 54,
+      firePower: 50,
       id: 27981,
       source: 'Enchanting',
       phase: 1
