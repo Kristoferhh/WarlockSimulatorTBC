@@ -254,6 +254,13 @@ const enchants = {
       id: 27905,
       source: 'Enchanting',
       phase: 1
+    },
+    healingPower: {
+      name: 'Healing Power',
+      spellPower: 8,
+      id: 23802,
+      source: 'Enchanting',
+      phase: 0
     }
   },
   gloves: {
