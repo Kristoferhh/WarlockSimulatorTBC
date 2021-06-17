@@ -109,17 +109,17 @@ class Spell {
 
     // Judgement of Wisdom (50% proc rate)
     if (this.player.selectedAuras.judgementOfWisdom && random(1,100) <= 50) {
-      const manaGain = 74
+      const manaVal = 74
       const currentMana = this.player.mana
+      const manaGained = Math.min(this.player.stats.maxMana - currentMana, manaVal)
       this.player.manaGainBreakdown.judgementOfWisdom.casts = this.player.manaGainBreakdown.judgementOfWisdom.casts + 1 || 1
-      this.player.manaGainBreakdown.judgementOfWisdom.manaGain = this.player.manaGainBreakdown.judgementOfWisdom.manaGain + manaGain || manaGain
-      this.player.totalManaRegenerated += manaGain
-      this.player.mana = Math.min(this.player.stats.maxMana, currentMana + manaGain)
-      this.player.combatLog("Player gains " + (this.player.mana - currentMana) + " mana from Judgement of Wisdom")
+      this.player.manaGainBreakdown.judgementOfWisdom.manaGain = this.player.manaGainBreakdown.judgementOfWisdom.manaGain + manaGained || manaGained
+      this.player.totalManaRegenerated += manaGained
+      this.player.mana = Math.min(this.player.stats.maxMana, currentMana + manaGained)
+      this.player.combatLog("Player gains " + manaGained + " mana from Judgement of Wisdom (" + Math.round(currentMana) + " -> " + Math.round(this.player.mana) + ")")
     }
 
     // T4 2pc
-    // 10% proc rate on all shadow or fire spells (including when dots applied) (needs confirmation)
     if (this.player.sets['645'] >= 2 && ['shadow', 'fire'].includes(this.school) && random(1, 100) <= this.player.auras.shadowflame.procChance) {
       if (this.school == "shadow") this.player.auras.flameshadow.apply()
       else if (this.school == "fire") this.player.auras.shadowflame.apply()
@@ -156,9 +156,13 @@ class Spell {
     }
   }
 
-  damage (isCrit, spellPower = this.player.stats.spellPower + this.player.demonicKnowledgeSp, shadowPower = this.player.stats.shadowPower, firePower = this.player.stats.firePower) {
+  damage (isCrit) {
     let dmg = this.dmg
     let critMultiplier = 1.5
+    let spellPower = this.player.stats.spellPower + this.player.demonicKnowledgeSp
+    let shadowPower = this.player.stats.shadowPower
+    let firePower = this.player.stats.firePower
+    let modifier = this.player.stats[this.school + 'Modifier'] * this.modifier
 
     // If casting Incinerate and Immolate is up, add the bonus damage.
     if (this.varName == 'incinerate' && this.player.auras.immolate && this.player.auras.immolate.active) {
@@ -168,16 +172,18 @@ class Spell {
     if (this.player.sets['552'] >= 3) {
       spellPower += (this.player.stats.intellect * this.player.stats.intellectModifier * 0.07)
     }
-    if (this.school == 'shadow') dmg += ((spellPower + shadowPower) * this.coefficient)
-    else if (this.school == 'fire') dmg += ((spellPower + firePower) * this.coefficient)
-    dmg *= this.player.stats[this.school + 'Modifier']
-    dmg *= this.modifier
+    // Damage from spell power * coefficient
+    let sp = spellPower + (this.school == 'shadow' ? shadowPower : this.school == 'fire' ? firePower : 0)
+    dmg += sp * this.coefficient
 
     // Improved Shadow Bolt
     if (this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active) {
-      dmg *= this.player.auras.improvedShadowBolt.modifier
+      modifier *= this.player.auras.improvedShadowBolt.modifier
       if (!this.isDot) this.player.auras.improvedShadowBolt.decrementStacks()
     }
+
+    dmg *= modifier
+
     if (isCrit) {
       // Chaotic Skyfire Diamond meta gem
       if (this.player.metaGemId == '34220') {
@@ -203,13 +209,13 @@ class Spell {
       }
     }
     dmg = ~~(dmg * (1 - 0.0025 * this.player.enemy[this.school + 'Resist']))
-    if (isCrit) this.player.combatLog(this.name + ' *' + dmg + '* (Crit Multiplier: ' + critMultiplier + ')')
-    else this.player.combatLog(this.name + ' ' + dmg)
+    if (isCrit) this.player.combatLog(this.name + ' *' + dmg + '* (' + critMultiplier.toFixed(2) + '% Crit Multiplier - ' + sp + ' Spell Power - ' + Math.round(modifier * 10000) / 100 + '% Damage Modifier)')
+    else this.player.combatLog(this.name + ' ' + dmg + ' (' + sp + ' Spell Power - ' + Math.round(modifier * 10000) / 100 + '% Damage Modifier)')
     this.player[this.breakdownTable + 'Breakdown'][this.varName].damage = this.player[this.breakdownTable + 'Breakdown'][this.varName].damage + dmg || dmg
     this.player.iterationDamage += dmg
 
     // Check for Spellstrike proc
-    if (this.player.sets['559'] == 2 && random(1, 100) <= 5) {
+    if (this.player.sets['559'] == 2 && random(1, 100) <= this.player.auras.spellstrikeProc.procChance) {
       this.player.auras.spellstrikeProc.apply()
     }
 

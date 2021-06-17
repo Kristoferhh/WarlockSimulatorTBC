@@ -25,8 +25,8 @@ class DamageOverTime {
   }
 
   apply (spellPower) {
-    if (this.active) this.player.combatLog(this.name + ' refreshed')
-    else this.player.combatLog(this.name + ' applied')
+    let refreshedOrApplied = this.active ? 'refreshed' : 'applied'
+    this.player.combatLog(this.name + ' ' + refreshedOrApplied + ' (' + spellPower + ' Spell Power)')
     this.active = true
     this.tickTimerRemaining = this.tickTimerTotal
     this.ticksRemaining = this.ticksTotal
@@ -53,18 +53,14 @@ class DamageOverTime {
       this.tickTimerRemaining = Math.max(0, this.tickTimerRemaining - t)
 
       if (this.tickTimerRemaining == 0) {
-        let sp = 0
-        if (this.snapshots) {
-          sp = this.spellPower
-        } else {
-          sp = this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats[this.school + 'Power']
-        }
-
-        let dmg = ((this.dmg + sp * this.coefficient) * (this.multiplicativeModifier * this.player.stats[this.school + 'Modifier'] + this.additiveModifier)) / (this.originalDurationTotal / this.tickTimerTotal)
+        let sp = this.snapshots ? this.spellPower : this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats[this.school + 'Power']
+        let modifier = (this.multiplicativeModifier * this.player.stats[this.school + 'Modifier'] + this.additiveModifier)
+        
         // Add bonus from ISB (without removing ISB stacks since it's a dot)
         if ((this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.varName != "siphonLife") || (this.varName == "siphonLife" && this.isbActive)) {
-          dmg *= this.player.auras.improvedShadowBolt.modifier
+          modifier *= this.player.auras.improvedShadowBolt.modifier
         }
+        let dmg = ((this.dmg + sp * this.coefficient) * modifier) / (this.originalDurationTotal / this.tickTimerTotal)
 
         // Check for Nightfall proc
         if (this.varName == 'corruption' && this.player.talents.nightfall > 0) {
@@ -77,7 +73,7 @@ class DamageOverTime {
         dmg = ~~(dmg * (1 - 0.0025 * this.player.enemy[this.school + 'Resist']))
         this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg
         this.player.iterationDamage += dmg
-        this.player.combatLog(this.name + ' ' + Math.round(dmg))
+        this.player.combatLog(this.name + ' Tick ' + Math.round(dmg) + " (" + sp + " Spell Power - " + Math.round(modifier * 10000) / 100 + "% Damage Modifier)")
         this.ticksRemaining--
         this.tickTimerRemaining = this.tickTimerTotal
 
