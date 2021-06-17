@@ -122,7 +122,7 @@ class Flameshadow extends Aura {
     super(player)
     this.name = 'Flameshadow (T4 2pc bonus)'
     this.durationTotal = 15
-    this.procChance = 10
+    this.procChance = 5
     this.isImportant = true
     this.shadowPower = 135
     this.setup()
@@ -153,7 +153,7 @@ class Shadowflame extends Aura {
     super(player)
     this.name = 'Shadowflame (T4 2pc bonus)'
     this.durationTotal = 15
-    this.procChance = 10
+    this.procChance = 5
     this.isImportant = true
     this.firePower = 135
     this.setup()
@@ -183,6 +183,7 @@ class SpellstrikeProc extends Aura {
     super(player)
     this.name = 'Spellstrike Proc'
     this.durationTotal = 10
+    this.procChance = 5
     this.isImportant = true
     this.spellPower = 92
     this.setup()
