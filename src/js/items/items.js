@@ -190,21 +190,6 @@ const items = {
       source: 'Engineering',
       phase: 3
     },
-    cowlOfBenevolence: {
-      name: 'Cowl of Benevolence',
-      stamina: 39,
-      intellect: 27,
-      spirit: 42,
-      meta: 1,
-      blue: 1,
-      socketBonus: {
-        spellPower: 3
-      },
-      spellPower: 37,
-      id: 32329,
-      source: 'Black Temple',
-      phase: 3
-    },
     hoodOfTheCorruptor: {
       name: 'Hood of the Corruptor',
       stamina: 57,
@@ -2075,6 +2060,13 @@ const items = {
       hitRating: 12,
       id: 27462,
       source: 'Heroic Hellfire Ramparts',
+      phase: 1
+    },
+    ravagersCuffsOfShadowWrath: {
+      name: "Ravager's Cuffs of Shadow Wrath",
+      shadowPower: 52,
+      id: 30684,
+      source: 'Karazhan',
       phase: 1
     },
     veteransSilkCuffs: {
