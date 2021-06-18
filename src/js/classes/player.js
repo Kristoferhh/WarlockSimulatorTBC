@@ -23,7 +23,7 @@ class Player {
   constructor (settings, customItemSlot = null, customItemSubSlot = '', customItemId = null) {
     this.stats = JSON.parse(JSON.stringify(settings.stats)) // Create a deep-copy of the character's stats since we need to modify the values.
     this.stats.manaCostModifier = 1
-    this.items = settings.items
+    this.items = JSON.parse(JSON.stringify(settings.items))
     this.enemy = settings.enemy
     this.rotation = settings.rotation
     this.talents = settings.talents
@@ -39,7 +39,6 @@ class Player {
     this.enemy.natureResist = 0
     this.enemy.arcaneResist = 0
     this.enemy.frostResist = 0
-    this.trinketIds = [settings.items.trinket1, settings.items.trinket2]
     this.combatlog = []
     this.importantAuraCounter = 0 // counts the amount of active "important" auras such as trinket procs, on-use trinket uses, power infusion etc.
     this.totalManaRegenerated = 0
@@ -70,10 +69,6 @@ class Player {
           // Decrement the counter for the set id if it is part of a set
           if (items[customItemSlot][item].hasOwnProperty('setId')) {
             this.sets[items[customItemSlot][item].setId]--
-          }
-          // If the item we're unequipping is a trinket we have equipped, then set its ID to null in the trinketIds array
-          if (this.trinketIds.includes(items[customItemSlot][item].id)) {
-            this.trinketIds[this.trinketIds.indexOf(items[customItemSlot][item].id)] = null
           }
           // Remove stats from gems in the equipped item if there are any
           if (settings.gems[customItemSlot] && settings.gems[customItemSlot][settings.items[customItemSlot + customItemSubSlot]]) {
@@ -112,6 +107,9 @@ class Player {
           if (items[customItemSlot][item].hasOwnProperty('setId')) {
             this.sets[items[customItemSlot][item].setId] = this.sets[items[customItemSlot][item].setId] + 1 || 1 // Have a default value of '1' in case the set id is undefined in the sets array
           }
+          // Add the item's id to its slot in this.items
+          // This is required for items that are on-use or have a proc such as Band of the Eternal Sage since they check if the item's ID is equipped.
+          this.items[customItemSlot + customItemSubSlot] = customItemId
           // Add stats from any gems equipped in the custom item
           if (settings.gems[customItemSlot] && settings.gems[customItemSlot][customItemId]) {
             for (const socket in settings.gems[customItemSlot][customItemId]) {
@@ -137,11 +135,6 @@ class Player {
           }
         }
       }
-    }
-
-    // If neither of the trinkets' ids are null then either the test item is not a trinket or it's the item we already have equipped
-    if (this.trinketIds.indexOf(null) !== -1) {
-      this.trinketIds[this.trinketIds.indexOf(null)] = customItemId
     }
 
     this.stats.health = (this.stats.health + (this.stats.stamina * this.stats.staminaModifier) * healthPerStamina) * (1 + (0.01 * settings.talents.felStamina))
@@ -219,6 +212,7 @@ class Player {
 
     // Trinkets
     this.trinkets = []
+    this.trinketIds = [this.items.trinket1, this.items.trinket2]
     if (this.trinketIds.includes(32483)) this.trinkets.push(new SkullOfGuldan(this))
     if (this.trinketIds.includes(34429)) this.trinkets.push(new ShiftingNaaruSliver(this))
     if (this.trinketIds.includes(33829)) this.trinkets.push(new HexShrunkenHead(this))
