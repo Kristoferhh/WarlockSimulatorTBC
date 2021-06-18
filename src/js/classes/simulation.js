@@ -116,7 +116,10 @@ class Simulation {
     if (this.player.auras.darkmoonCardCrusade && this.player.auras.darkmoonCardCrusade.active && this.player.auras.darkmoonCardCrusade.durationRemaining < time) time = this.player.auras.darkmoonCardCrusade.durationRemaining
     if (this.player.auras.manaEtched4Set && this.player.auras.manaEtched4Set.active && this.player.auras.manaEtched4Set.durationRemaining < time) time = this.player.auras.manaEtched4Set.durationRemaining
     if (this.player.spells.theLightningCapacitor && this.player.spells.theLightningCapacitor.cooldownRemaining > 0 && this.player.spells.theLightningCapacitor.cooldownRemaining < time) time = this.player.spells.theLightningCapacitor.cooldownRemaining
-    if (this.player.auras.bandOfTheEternalSage && this.player.auras.bandOfTheEternalSage.active && this.player.auras.bandOfTheEternalSage.durationRemaining < time) time = this.player.auras.bandOfTheEternalSage.durationRemaining
+    if (this.player.auras.bandOfTheEternalSage) {
+      if (this.player.auras.bandOfTheEternalSage.active && this.player.auras.bandOfTheEternalSage.durationRemaining < time) time = this.player.auras.bandOfTheEternalSage.durationRemaining
+      if (this.player.auras.bandOfTheEternalSage.hiddenCooldownRemaining > 0 && this.player.auras.hiddenCooldownRemaining < time) time = this.player.auras.bandOfTheEternalSage.hiddenCooldownRemaining
+    }
     if (this.player.spells.shatteredSunPendantOfAcumen) {
       if (this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining > 0 && this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining < time) time = this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining
       if (this.player.auras.shatteredSunPendantOfAcumen && this.player.auras.shatteredSunPendantOfAcumen.active && this.player.auras.shatteredSunPendantOfAcumen.durationRemaining < time) time = this.player.auras.shatteredSunPendantOfAcumen.durationRemaining
@@ -196,10 +199,10 @@ class Simulation {
     if (this.player.auras.drumsOfRestoration && this.player.auras.drumsOfRestoration.active) this.player.auras.drumsOfRestoration.tick(time)
     if (this.player.auras.ashtongueTalismanOfShadows && this.player.auras.ashtongueTalismanOfShadows.active) this.player.auras.ashtongueTalismanOfShadows.tick(time)
     if (this.player.auras.darkmoonCardCrusade && this.player.auras.darkmoonCardCrusade.active) this.player.auras.darkmoonCardCrusade.tick(time)
-    if (this.player.auras.bandOfTheEternalSage && this.player.auras.bandOfTheEternalSage.active) this.player.auras.bandOfTheEternalSage.tick(time)
     if (this.player.auras.bladeOfWizardry && this.player.auras.bladeOfWizardry.active) this.player.auras.bladeOfWizardry.tick(time)
     if (this.player.auras.shatteredSunPendantOfAcumen && this.player.auras.shatteredSunPendantOfAcumen.active) this.player.auras.shatteredSunPendantOfAcumen.tick(time)
     if (this.player.auras.robeOfTheElderScribes && this.player.auras.robeOfTheElderScribes.active) this.player.auras.robeOfTheElderScribes.tick(time)
+    if (this.player.auras.bandOfTheEternalSage && (this.player.auras.bandOfTheEternalSage.active || this.player.auras.bandOfTheEternalSage.hiddenCooldownRemaining > 0)) this.player.auras.bandOfTheEternalSage.tick(time)
 
     // Trinkets
     if (this.player.trinkets[0]) this.player.trinkets[0].tick(time)
@@ -365,7 +368,7 @@ class Simulation {
 
         // If passTime() returns 0 then the simulation somehow got stuck in an endless loop. This should never happen, so the best solution is to fix the reason it returned 0 rather than setting a minimum value for it to return.
         if (this.passTime() == 0) {
-          throw "Simulation got stuck in an endless loop. If you'd like to help with fixing this bug then mention which spells you had selected and which trinkets you had selected"
+          throw "The simulation got stuck in an endless loop. If you'd like to help with fixing this bug then please mention which spells you had selected and which gear you had equipped."
         }
       }
 

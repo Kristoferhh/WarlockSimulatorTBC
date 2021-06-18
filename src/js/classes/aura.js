@@ -2,6 +2,7 @@ class Aura {
   constructor (player) {
     this.durationTotal = 0
     this.durationRemaining = 0
+    this.hiddenCooldown = 0
     this.player = player
     this.active = false
     this.isImportant = false
@@ -41,6 +42,9 @@ class Aura {
   }
 
   fade (endOfIteration = false) {
+    if (endOfIteration) {
+      this.hiddenCooldownRemaining = 0
+    }
     if (this.active) {
       this.active = false
       if (!endOfIteration) {
@@ -721,18 +725,21 @@ class BandOfTheEternalSageAura extends Aura {
     super(player)
     this.name = 'Band of the Eternal Sage'
     this.durationTotal = 10
+    this.hiddenCooldown = 60
+    this.hiddenCooldownRemaining = 0
     this.procChance = 10
     this.spellPower = 95
     this.setup()
   }
 
   apply () {
-    if (!this.active) {
+    if (!this.active && this.hiddenCooldownRemaining <= 0) {
       this.player.combatLog('Spell Power + ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + this.spellPower) + ')')
       this.player.stats.spellPower += this.spellPower
+      this.hiddenCooldownRemaining = this.hiddenCooldown
       if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
+      super.apply()
     }
-    super.apply()
   }
 
   fade (endOfIteration) {
@@ -742,6 +749,12 @@ class BandOfTheEternalSageAura extends Aura {
       if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
     }
     super.fade(endOfIteration)
+  }
+
+  tick (t) {
+    if (this.hiddenCooldownRemaining > 0 && t >= this.hiddenCooldownRemaining) this.player.combatLog(this.name + " off cooldown")
+    this.hiddenCooldownRemaining = Math.max(0, this.hiddenCooldownRemaining - t)
+    super.tick(t)
   }
 }
 
