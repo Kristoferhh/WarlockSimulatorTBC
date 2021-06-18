@@ -74,7 +74,7 @@ ul {
 }
 
 #sidebar-sets {
-	min-height: 220px;
+	min-height: 200px;
 }
 
 #item-section {
@@ -375,6 +375,14 @@ ul {
 #sim-length-result {
 	margin-top: 15px;
 	font-weight: bold;
+}
+
+#guybrush-note {
+	font-size: 12px;
+}
+
+#guybrush-note a:visited {
+	color: #fff;
 }
 
 #sidebar-simulation-selection {
