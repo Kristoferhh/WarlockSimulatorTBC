@@ -733,11 +733,14 @@ class MarkOfDefiance extends Spell {
   }
 
   cast () {
-    this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
-    this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + this.manaGain || this.manaGain
-    this.player.totalManaRegenerated += this.manaGain
-    this.player.combatLog(this.name + ' +' + this.manaGain + ' mana')
-    this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.manaGain)
+    if (this.cooldownRemaining <= 0) {
+      this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
+      this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + this.manaGain || this.manaGain
+      this.player.totalManaRegenerated += this.manaGain
+      this.player.combatLog(this.name + ' +' + this.manaGain + ' mana')
+      this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.manaGain)
+      this.cooldownRemaining = this.cooldown
+    }
   }
 }
 
