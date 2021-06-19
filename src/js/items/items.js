@@ -727,24 +727,6 @@ const items = {
       source: 'Sethekk Halls Quest',
       phase: 1
     },
-    necklaceOfResplendentHope: {
-      name: 'Necklace of Resplendent Hope',
-      spellPower: 18,
-      mp5: 9,
-      id: 28233,
-      source: 'Heroic Old Hillsbrad Foothills',
-      phase: 1
-    },
-    swampstoneNecklace: {
-      name: 'Swampstone Necklace',
-      stamina: 14,
-      intellect: 15,
-      spirit: 18,
-      spellPower: 14,
-      id: 27766,
-      source: 'Heroic Underbog',
-      phase: 1
-    },
     omorsUnyieldingWill: {
       name: "Omor's Unyielding Will",
       intellect: 19,
@@ -761,16 +743,6 @@ const items = {
       spellPower: 23,
       id: 29347,
       source: 'Heroic Blood Furnace',
-      phase: 1
-    },
-    teethOfGruul: {
-      name: 'Teeth of Gruul',
-      intellect: 21,
-      spirit: 19,
-      spellPower: 16,
-      mp5: 8,
-      id: 28822,
-      source: "Gruul's Lair",
       phase: 1
     },
     amuletOfVeknilash: {
@@ -918,16 +890,6 @@ const items = {
       critRating: 25,
       hitRating: 18,
       id: 32338,
-      source: 'Black Temple',
-      phase: 3
-    },
-    amiceOfBrilliantLight: {
-      name: 'Amice of Brilliant Light',
-      stamina: 38,
-      intellect: 27,
-      spirit: 37,
-      spellPower: 28,
-      id: 32273,
       source: 'Black Temple',
       phase: 3
     },
@@ -1144,36 +1106,6 @@ const items = {
       source: 'Heroic Mana-Tombs',
       phase: 1
     },
-    hallowedPauldrons: {
-      name: 'Hallowed Pauldrons',
-      stamina: 10,
-      intellect: 17,
-      spirit: 20,
-      red: 1,
-      blue: 1,
-      socketBonus: {
-        intellect: 3
-      },
-      spellPower: 14,
-      id: 27775,
-      source: 'Shadow Labyrinth',
-      phase: 1
-    },
-    pauldronsOfSufferance: {
-      name: 'Pauldrons of Sufferance',
-      stamina: 18,
-      intellect: 13,
-      spirit: 19,
-      yellow: 1,
-      blue: 1,
-      socketBonus: {
-        resilienceRating: 3
-      },
-      spellPower: 12,
-      id: 27433,
-      source: 'Old Hillsbrad Foothills',
-      phase: 1
-    },
     plagueheartShoulderpads: {
       name: 'Plagueheart Shoulderpads',
       stamina: 22,
@@ -1252,26 +1184,6 @@ const items = {
       spellPower: 23,
       hasteRating: 32,
       id: 32524,
-      source: 'Black Temple',
-      phase: 3
-    },
-    shroudOfForgiveness: {
-      name: 'Shroud of Forgiveness',
-      stamina: 27,
-      intellect: 19,
-      spirit: 20,
-      spellPower: 27,
-      id: 32337,
-      source: 'Black Temple',
-      phase: 3
-    },
-    shroudOfTheFinalStand: {
-      name: 'Shroud of the Final Stand',
-      stamina: 24,
-      intellect: 22,
-      spellPower: 22,
-      mp5: 11,
-      id: 34012,
       source: 'Black Temple',
       phase: 3
     },
@@ -1399,24 +1311,6 @@ const items = {
       source: 'Heroic Blood Furnace',
       phase: 1
     },
-    cloakOfWhisperingShells: {
-      name: 'Cloak of Whispering Shells',
-      stamina: 15,
-      intellect: 16,
-      spellPower: 14,
-      mp5: 4,
-      id: 27789,
-      source: 'The Steamvault',
-      phase: 1
-    },
-    cloakOfTheEverliving: {
-      name: 'Cloak of the Everliving',
-      spellPower: 18,
-      mp5: 9,
-      id: 27448,
-      source: 'Heroic Hellfire Ramparts',
-      phase: 1
-    },
     cloakOfTheNecropolis: {
       name: 'Cloak of the Necropolis',
       stamina: 12,
@@ -1529,16 +1423,6 @@ const items = {
       hitRating: 28,
       setId: 670,
       id: 31052,
-      source: 'Black Temple',
-      phase: 3
-    },
-    garmentsOfTemperance: {
-      name: 'Garments of Temperance',
-      stamina: 51,
-      intellect: 34,
-      spellPower: 37,
-      mp5: 20,
-      id: 32340,
       source: 'Black Temple',
       phase: 3
     },
@@ -1856,51 +1740,6 @@ const items = {
       source: 'Heroic Mana-Tombs',
       phase: 1
     },
-    raimentsOfDivineAuthority: {
-      name: 'Raiments of Divine Authority',
-      stamina: 16,
-      intellect: 21,
-      spirit: 18,
-      red: 1,
-      blue: 1,
-      yellow: 1,
-      socketBonus: {
-        stamina: 6
-      },
-      spellPower: 16,
-      healingItem: true,
-      id: 24397,
-      source: 'The Blood Furnace',
-      phase: 1
-    },
-    hallowedGarments: {
-      name: 'Hallowed Garments',
-      stamina: 12,
-      intellect: 26,
-      spirit: 26,
-      red: 1,
-      blue: 1,
-      yellow: 1,
-      socketBonus: {
-        stamina: 6
-      },
-      spellPower: 19,
-      id: 28230,
-      source: 'Shadow Labyrinth',
-      phase: 1
-    },
-    robeOfEffervescentLight: {
-      name: 'Robe of Effervescent Light',
-      stamina: 25,
-      intellect: 33,
-      spirit: 18,
-      spellPower: 25,
-      mp5: 7,
-      healingItem: true,
-      id: 27506,
-      source: 'Heroic Blood Furnace',
-      phase: 1
-    },
     plagueheartRobe: {
       name: 'Plagueheart Robe',
       stamina: 27,
@@ -2008,16 +1847,6 @@ const items = {
       source: 'Hyjal Summit',
       phase: 3
     },
-    wristbandsOfDivineInfluence: {
-      name: 'Wristbands of Divine Influence',
-      stamina: 24,
-      intellect: 21,
-      spirit: 28,
-      spellPower: 21,
-      id: 32513,
-      source: 'Black Temple',
-      phase: 3
-    },
     bracersOfMartyrdom: {
       name: 'Bracers of Martyrdom',
       stamina: 15,
@@ -2031,16 +1860,6 @@ const items = {
       id: 30871,
       source: 'Hyjal Summit',
       phase: 3
-    },
-    wrapsOfPurification: {
-      name: 'Wraps of Purification',
-      stamina: 24,
-      intellect: 25,
-      spellPower: 18,
-      mp5: 7,
-      id: 32516,
-      source: 'Serpentshrine Cavern',
-      phase: 2
     },
     mindstormWristbands: {
       name: 'Mindstorm Wristbands',
@@ -2209,17 +2028,6 @@ const items = {
       source: 'Heroic Mana-Tombs',
       phase: 1
     },
-    lightScribeBands: {
-      name: 'Light Scribe Bands',
-      stamina: 12,
-      intellect: 15,
-      spirit: 22,
-      spellPower: 10,
-      healingItem: true,
-      id: 27452,
-      source: 'Heroic Hellfire Ramparts',
-      phase: 1
-    },
     rockfuryBracers: {
       name: 'Rockfury Bracers',
       stamina: 7,
@@ -2312,21 +2120,6 @@ const items = {
       setId: 670,
       id: 31050,
       source: 'Hyjal Summit',
-      phase: 3
-    },
-    glovesOfUnfailingFaith: {
-      name: 'Gloves of Unfailing Faith',
-      stamina: 25,
-      intellect: 33,
-      red: 1,
-      blue: 1,
-      socketBonus: {
-        mp5: 1
-      },
-      spellPower: 25,
-      mp5: 11,
-      id: 32353,
-      source: 'Black Temple',
       phase: 3
     },
     glovesOfTheCorruptor: {
@@ -2551,22 +2344,6 @@ const items = {
       source: 'Heroic Underbog',
       phase: 1
     },
-    bloodySurgeonsMitts: {
-      name: "Bloody Surgeon's Mitts",
-      stamina: 10,
-      intellect: 20,
-      spirit: 12,
-      red: 1,
-      blue: 1,
-      socketBonus: {
-        spirit: 3
-      },
-      spellPower: 11,
-      healingItem: true,
-      id: 24393,
-      source: 'The Blood Furnace',
-      phase: 1
-    },
     darkStormGauntlets: {
       name: 'Dark Storm Gauntlets',
       stamina: 19,
@@ -2629,21 +2406,6 @@ const items = {
       spellPower: 56,
       hasteRating: 32,
       id: 32256,
-      source: 'Black Temple',
-      phase: 3
-    },
-    beltOfDivineGuidance: {
-      name: 'Belt of Divine Guidance',
-      stamina: 35,
-      intellect: 24,
-      spirit: 35,
-      yellow: 1,
-      blue: 1,
-      socketBonus: {
-        spellPower: 3
-      },
-      spellPower: 25,
-      id: 32519,
       source: 'Black Temple',
       phase: 3
     },
@@ -2899,26 +2661,6 @@ const items = {
       source: 'Heroic Auchenai Crypts',
       phase: 1
     },
-    cordOfSanctification: {
-      name: 'Cord of Sanctification',
-      stamina: 25,
-      intellect: 24,
-      spellPower: 21,
-      mp5: 7,
-      id: 29250,
-      source: 'Heroic Old Hillsbrad Foothills',
-      phase: 1
-    },
-    cordOfBelief: {
-      name: 'Cord of Belief',
-      intellect: 23,
-      spirit: 20,
-      spellPower: 16,
-      mp5: 8,
-      id: 27542,
-      source: 'Heroic Slave Pens',
-      phase: 1
-    },
     eyestalkWaistCord: {
       name: 'Eyestalk Waist Cord',
       stamina: 10,
@@ -3020,20 +2762,6 @@ const items = {
       setId: 670,
       id: 31053,
       source: 'Black Temple',
-      phase: 3
-    },
-    leggingsOfEternity: {
-      name: 'Leggings of Eternity',
-      stamina: 45,
-      intellect: 38,
-      blue: 3,
-      socketBonus: {
-        spellPower: 3
-      },
-      spellPower: 41,
-      mp5: 16,
-      id: 30912,
-      source: 'Hyjal Summit',
       phase: 3
     },
     leggingsOfTheCorruptor: {
@@ -3310,52 +3038,6 @@ const items = {
       source: 'The Blood Furnace Quest',
       phase: 1
     },
-    pontifexKilt: {
-      name: 'Pontifex Kilt',
-      stamina: 25,
-      intellect: 29,
-      spirit: 27,
-      red: 1,
-      yellow: 1,
-      blue: 1,
-      socketBonus: {
-        spellPower: 3
-      },
-      spellPower: 22,
-      id: 30543,
-      source: 'The Steamvaults',
-      phase: 1
-    },
-    lifegiverBritches: {
-      name: 'Lifegiver Britches',
-      stamina: 25,
-      intellect: 17,
-      red: 1,
-      blue: 2,
-      socketBonus: {
-        mp5: 2
-      },
-      spellPower: 15,
-      healingItem: true,
-      id: 24083,
-      source: 'Hellfire Ramparts',
-      phase: 1
-    },
-    pontiffsPantaloonsOfProphecy: {
-      name: "Pontiff's Pantaloons of Prophecy",
-      stamina: 12,
-      intellect: 27,
-      spirit: 24,
-      red: 1,
-      blue: 2,
-      socketBonus: {
-        stamina: 6
-      },
-      spellPower: 19,
-      id: 28218,
-      source: 'Heroic Old Hillsbrad Foothills',
-      phase: 1
-    },
     leggingsOfPolarity: {
       name: 'Leggings of Polarity',
       stamina: 20,
@@ -3407,21 +3089,6 @@ const items = {
       source: "Zul'Aman",
       phase: 4
     },
-    twoToedSandals: {
-      name: 'Two-toed Sandals',
-      stamina: 33,
-      intellect: 30,
-      red: 1,
-      blue: 1,
-      socketBonus: {
-        spellPower: 3
-      },
-      spellPower: 22,
-      mp5: 9,
-      id: 33471,
-      source: "Zul'Aman",
-      phase: 4
-    },
     blueSuedeShoes: {
       name: 'Blue Suede Shoes',
       stamina: 37,
@@ -3448,31 +3115,6 @@ const items = {
       source: 'Black Temple',
       phase: 3
     },
-    bootsOfTheDivineLight: {
-      name: 'Boots of the Divine Light',
-      stamina: 47,
-      intellect: 24,
-      spirit: 24,
-      blue: 1,
-      yellow: 1,
-      socketBonus: {
-        spellPower: 3
-      },
-      spellPower: 25,
-      id: 32609,
-      source: 'Hyjal Summit & Black Temple',
-      phase: 3
-    },
-    archbishopsSlippers: {
-      name: "Archbishop's Slippers",
-      stamina: 29,
-      intellect: 30,
-      spirit: 37,
-      spellPower: 28,
-      id: 30885,
-      source: 'Hyjal Summit',
-      phase: 3
-    },
     bootsOfTheShiftingNightmare: {
       name: 'Boots of the Shifting Nightmare',
       stamina: 41,
@@ -3491,21 +3133,6 @@ const items = {
       spellPower: 49,
       critRating: 24,
       id: 30067,
-      source: 'Serpentshrine Cavern',
-      phase: 2
-    },
-    soulStriderBoots: {
-      name: 'Soul-Strider Boots',
-      stamina: 20,
-      intellect: 19,
-      spirit: 33,
-      red: 1,
-      blue: 1,
-      socketBonus: {
-        spellPower: 3
-      },
-      spellPower: 22,
-      id: 30100,
       source: 'Serpentshrine Cavern',
       phase: 2
     },
@@ -3699,17 +3326,6 @@ const items = {
       source: 'Mana-Tombs',
       phase: 1
     },
-    jeweledBootsOfSanctification: {
-      name: 'Jeweled Boots of Sanctification',
-      stamina: 22,
-      intellect: 25,
-      spellPower: 19,
-      mp5: 6,
-      healingItem: true,
-      id: 27525,
-      source: 'The Shattered Halls',
-      phase: 1
-    },
     silentSlippersOfMeditation: {
       name: 'Silent Slippers of Meditation',
       stamina: 24,
@@ -3854,15 +3470,48 @@ const items = {
       source: 'Black Temple',
       phase: 3
     },
-    ringOfCalmingWaves: {
-      name: 'Ring of Calming Waves',
-      stamina: 19,
-      intellect: 27,
-      spellPower: 22,
+    bandOfTheEternalSage: {
+      name: 'Band of the Eternal Sage',
+      stamina: 28,
+      intellect: 25,
+      spellPower: 34,
       critRating: 24,
       unique: true,
-      id: 32238,
-      source: 'Black Temple',
+      id: 29305,
+      source: 'The Scale of the Sands - Exalted',
+      phase: 3
+    },
+    bandOfEternityRevered: {
+      name: 'Band of Eternity (Revered)',
+      stamina: 28,
+      intellect: 25,
+      spellPower: 34,
+      critRating: 24,
+      unique: true,
+      id: 29304,
+      source: 'The Scale of the Sands - Revered',
+      phase: 3
+    },
+    bandOfEternityHonored: {
+      name: 'Band of Eternity (Honored)',
+      stamina: 25,
+      intellect: 23,
+      spellPower: 32,
+      critRating: 22,
+      unique: true,
+      id: 29303,
+      source: 'The Scale of the Sands - Honored',
+      phase: 3
+    },
+    bandOfEternityFriendly: {
+      name: 'Band of Eternity (Friendly)',
+      stamina: 24,
+      intellect: 22,
+      spellPower: 29,
+      critRating: 21,
+      unique: true,
+      id: 29302,
+      source: 'The Scale of the Sands - Friendly',
       phase: 3
     },
     ringOfEndlessCoils: {
@@ -3875,28 +3524,6 @@ const items = {
       source: 'Serpentshrine Cavern',
       phase: 2
     },
-    bandOfTheVigilant: {
-      name: 'Band of the Vigilant',
-      stamina: 33,
-      spellPower: 16,
-      critRating: 21,
-      resilienceRating: 21,
-      unique: true,
-      id: 33058,
-      source: 'Serpentshrine Cavern',
-      phase: 2
-    },
-    coralBandOfTheRevived: {
-      name: 'Coral Band of the Revived',
-      stamina: 21,
-      intellect: 14,
-      spirit: 27,
-      spellPower: 25,
-      unique: true,
-      id: 30110,
-      source: 'Serpentshrine Cavern',
-      phase: 2
-    },
     bandOfAlar: {
       name: "Band of Al'ar",
       stamina: 24,
@@ -3905,50 +3532,6 @@ const items = {
       unique: true,
       id: 29922,
       source: 'The Eye',
-      phase: 2
-    },
-    bandOfTheEternalSage: {
-      name: 'Band of the Eternal Sage',
-      stamina: 28,
-      intellect: 25,
-      spellPower: 34,
-      critRating: 24,
-      unique: true,
-      id: 29305,
-      source: 'The Scale of the Sands - Exalted',
-      phase: 2
-    },
-    bandOfEternityFriendly: {
-      name: 'Band of Eternity (Friendly)',
-      stamina: 24,
-      intellect: 22,
-      spellPower: 29,
-      critRating: 21,
-      unique: true,
-      id: 29302,
-      source: 'The Scale of the Sands - Friendly',
-      phase: 2
-    },
-    bandOfEternityHonored: {
-      name: 'Band of Eternity (Honored)',
-      stamina: 25,
-      intellect: 23,
-      spellPower: 32,
-      critRating: 22,
-      unique: true,
-      id: 29303,
-      source: 'The Scale of the Sands - Honored',
-      phase: 2
-    },
-    bandOfEternityRevered: {
-      name: 'Band of Eternity (Revered)',
-      stamina: 28,
-      intellect: 25,
-      spellPower: 34,
-      critRating: 24,
-      unique: true,
-      id: 29304,
-      source: 'The Scale of the Sands - Revered',
       phase: 2
     },
     ringOfRecurrence: {
@@ -4212,43 +3795,12 @@ const items = {
       source: 'Mana-Tombs',
       phase: 1
     },
-    ringOfFabledHope: {
-      name: 'Ring of Fabled Hope',
-      intellect: 12,
-      spirit: 11,
-      spellPower: 20,
-      id: 27780,
-      source: 'Heroic Underbog',
-      phase: 1
-    },
     witchingBand: {
       name: 'Witching Band',
       stamina: 16,
       intellect: 14,
       spellPower: 21,
       id: 24154,
-      source: 'Hellfire Ramparts',
-      phase: 1
-    },
-    signetOfRepose: {
-      name: 'Signet of Repose',
-      stamina: 17,
-      intellect: 18,
-      spirit: 20,
-      spellPower: 9,
-      healingItem: true,
-      id: 27491,
-      source: 'Heroic Blood Furnace',
-      phase: 1
-    },
-    bandOfRenewal: {
-      name: 'Band of Renewal',
-      stamina: 13,
-      intellect: 14,
-      spirit: 12,
-      spellPower: 10,
-      healingItem: true,
-      id: 24045,
       source: 'Hellfire Ramparts',
       phase: 1
     },
@@ -4972,15 +4524,6 @@ const items = {
       source: 'Heroic Slave Pens',
       phase: 1
     },
-    faolsSignetOfCleansing: {
-      name: "Faol's Signet of Cleansing",
-      spellPower: 20,
-      mp5: 7,
-      healingItem: true,
-      id: 27477,
-      source: 'Heroic Hellfire Ramparts',
-      phase: 1
-    },
     sapphironsLeftEye: {
       name: "Sapphiron's Left Eye",
       stamina: 12,
@@ -5235,25 +4778,6 @@ const items = {
       source: 'Black Temple',
       phase: 3
     },
-    naaruBlessedLifeRod: {
-      name: 'Naaru-Blessed Life Rod',
-      stamina: 12,
-      intellect: 12,
-      spirit: 16,
-      spellPower: 13,
-      id: 32363,
-      source: 'Black Temple',
-      phase: 3
-    },
-    luminescentRodOfTheNaaru: {
-      name: 'Luminescent Rod of the Naaru',
-      intellect: 14,
-      spellPower: 12,
-      mp5: 5,
-      id: 30080,
-      source: 'Serpentshrine Cavern',
-      phase: 2
-    },
     wandOfTheForgottenStar: {
       name: 'Wand of the Forgotten Star',
       spellPower: 23,
@@ -5370,15 +4894,6 @@ const items = {
       spellPower: 16,
       id: 27890,
       source: 'Shadow Labyrinth',
-      phase: 1
-    },
-    calmingSporeReed: {
-      name: 'Calming Spore Reed',
-      intellect: 8,
-      spirit: 9,
-      spellPower: 7,
-      id: 24380,
-      source: 'Slave Pens',
       phase: 1
     },
     nethekursesRodOfTorment: {
