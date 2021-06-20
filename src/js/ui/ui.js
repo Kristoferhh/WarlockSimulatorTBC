@@ -352,7 +352,9 @@ $('#gem-selection-table').on('click', '.gem-name', function () {
   if (!selectedGems[itemSlot][itemId]) {
     // The amount of sockets in the item
     const socketAmount = $('tr[data-wowhead-id="' + itemId + '"]').find('.gem').last().data('order') + 1
-    selectedGems[itemSlot][itemId] = Array(socketAmount).fill(null)
+    if (socketAmount > 0) {
+      selectedGems[itemSlot][itemId] = Array(socketAmount).fill(null)
+    }
   }
 
   // Check whether the user chose a gem or the option to remove the current gem
@@ -1016,6 +1018,7 @@ function simDPS (items) {
   const multiSimInfo = []
   const simulations = []
   let simIndex = 0
+  console.log(items)
 
   if (items.length > 1) {
     $(".item-dps").text('')
