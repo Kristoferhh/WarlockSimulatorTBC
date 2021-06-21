@@ -77,11 +77,6 @@ class Spell {
       return
     }
 
-    if (isCrit && this.canCrit) {
-      if (this.player.trinketIds.includes(30626) && random(1, 100) <= this.player.auras.sextantOfUnstableCurrents.procChance) this.player.auras.sextantOfUnstableCurrents.apply() // Sextant of Unstable Currents
-      if (this.player.trinketIds.includes(28418) && random(1, 100) <= this.player.auras.shiffarsNexusHorn.procChance) this.player.auras.shiffarsNexusHorn.apply() 				        // Shiffar's Nexus-Horn
-    }
-
     if (this.isDot) {
       this.player.auras[this.varName].apply(this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats[this.school + 'Power'])
     } else if (this.isAura) {
@@ -90,6 +85,11 @@ class Spell {
 
     if (this.doesDamage) {
       this.damage(isCrit)
+
+      if (isCrit && this.canCrit) {
+        if (this.player.trinketIds.includes(30626) && random(1, 100) <= this.player.auras.sextantOfUnstableCurrents.procChance) this.player.auras.sextantOfUnstableCurrents.apply() // Sextant of Unstable Currents
+        if (this.player.trinketIds.includes(28418) && random(1, 100) <= this.player.auras.shiffarsNexusHorn.procChance) this.player.auras.shiffarsNexusHorn.apply() 				        // Shiffar's Nexus-Horn
+      }
 
       // Shattered Sun Pendant of Acumen
       if (this.player.exaltedWithShattrathFaction && this.player.spells.shatteredSunPendantOfAcumen && this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining <= 0 && random(1, 100) <= this.player.spells.shatteredSunPendantOfAcumen.procChance) {
