@@ -1871,6 +1871,21 @@ const items = {
       source: 'The Eye',
       phase: 2
     },
+    veteransSilkCuffs: {
+      name: "Veteran's Silk Cuffs",
+      stamina: 25,
+      intellect: 18,
+      yellow: 1,
+      socketBonus: {
+        spellPower: 2
+      },
+      spellPower: 22,
+      critRating: 14,
+      resilienceRating: 13,
+      id: 32820,
+      source: 'PVP',
+      phase: 2
+    },
     crimsonBracersOfGloom: {
       name: 'Crimson Bracers of Gloom',
       stamina: 18,
@@ -1886,21 +1901,6 @@ const items = {
       shadowPower: 52,
       id: 30684,
       source: 'Karazhan',
-      phase: 1
-    },
-    veteransSilkCuffs: {
-      name: "Veteran's Silk Cuffs",
-      stamina: 25,
-      intellect: 18,
-      yellow: 1,
-      socketBonus: {
-        spellPower: 2
-      },
-      spellPower: 22,
-      critRating: 14,
-      resilienceRating: 13,
-      id: 32820,
-      source: 'PVP',
       phase: 1
     },
     veteransDreadweaveCuffs: {
