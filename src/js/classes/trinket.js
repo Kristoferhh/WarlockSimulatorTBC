@@ -39,15 +39,16 @@ class Trinket {
 
   fade (endOfIteration = false) {
     if (this.active) {
-      const recalculatePetStats = false
+      let recalculatePetStats = false
       if (!endOfIteration) this.player.combatLog(this.name + ' faded')
       for (const stat in this.stats) {
         if (this.player.stats.hasOwnProperty(stat)) {
           this.player.combatLog(stat + ' - ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] - this.stats[stat]) + ')')
           this.player.stats[stat] -= this.stats[stat]
-          if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
+          if (this.player.pet) recalculatePetStats = true
         }
       }
+      if (recalculatePetStats) this.player.pet.calculateStatsFromPlayer()
       this.player.importantAuraCounter--
       this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
       this.active = false
