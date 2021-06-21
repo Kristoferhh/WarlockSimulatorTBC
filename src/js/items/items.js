@@ -681,7 +681,6 @@ const items = {
     },
     eyeOfTheNight: {
       name: 'Eye of the Night',
-      spellPower: 34,
       critRating: 26,
       hitRating: 16,
       spellPen: 15,
