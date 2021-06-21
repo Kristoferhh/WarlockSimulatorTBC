@@ -94,15 +94,15 @@ class Simulation {
     if (this.player.auras.eyeOfMagtheridon && this.player.auras.eyeOfMagtheridon.active && this.player.auras.eyeOfMagtheridon.durationRemaining < time) time = this.player.auras.eyeOfMagtheridon.durationRemaining
     if (this.player.auras.sextantOfUnstableCurrents) {
       if (this.player.auras.sextantOfUnstableCurrents.active && this.player.auras.sextantOfUnstableCurrents.durationRemaining < time) time = this.player.auras.sextantOfUnstableCurrents.durationRemaining
-      if (this.player.auras.sextantOfUnstableCurrents.hiddenCooldownRemaining > 0 && this.player.auras.sextantOfUnstableCurrents.hiddenCooldownRemaining < time) time = this.player.auras.sextantOfUnstableCurrents.hiddenCooldownRemaining
+      if (this.player.spells.sextantOfUnstableCurrents.cooldownRemaining > 0 && this.player.spells.sextantOfUnstableCurrents.cooldownRemaining < time) time = this.player.spells.sextantOfUnstableCurrents.cooldownRemaining
     }
     if (this.player.auras.quagmirransEye) {
       if (this.player.auras.quagmirransEye.active && this.player.auras.quagmirransEye.durationRemaining < time) time = this.player.auras.quagmirransEye.durationRemaining
-      if (this.player.auras.quagmirransEye.hiddenCooldownRemaining > 0 && this.player.auras.quagmirransEye.hiddenCooldownRemaining < time) time = this.player.auras.quagmirransEye.hiddenCooldownRemaining
+      if (this.player.spells.quagmirransEye.cooldownRemaining > 0 && this.player.spells.quagmirransEye.cooldownRemaining < time) time = this.player.spells.quagmirransEye.cooldownRemaining
     }
     if (this.player.auras.shiffarsNexusHorn) {
       if (this.player.auras.shiffarsNexusHorn.active && this.player.auras.shiffarsNexusHorn.durationRemaining < time) time = this.player.auras.shiffarsNexusHorn.durationRemaining
-      if (this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining > 0 && this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining < time) time = this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining
+      if (this.player.spells.shiffarsNexusHorn.cooldownRemaining > 0 && this.player.spells.shiffarsNexusHorn.cooldownRemaining < time) time = this.player.spells.shiffarsNexusHorn.cooldownRemaining
     }
     if (this.player.spells.bladeOfWizardry) {
       if (this.player.spells.bladeOfWizardry.cooldownRemaining > 0 && this.player.spells.bladeOfWizardry.cooldownRemaining < time) time = this.player.spells.bladeOfWizardry.cooldownRemaining
@@ -118,7 +118,7 @@ class Simulation {
     if (this.player.spells.theLightningCapacitor && this.player.spells.theLightningCapacitor.cooldownRemaining > 0 && this.player.spells.theLightningCapacitor.cooldownRemaining < time) time = this.player.spells.theLightningCapacitor.cooldownRemaining
     if (this.player.auras.bandOfTheEternalSage) {
       if (this.player.auras.bandOfTheEternalSage.active && this.player.auras.bandOfTheEternalSage.durationRemaining < time) time = this.player.auras.bandOfTheEternalSage.durationRemaining
-      if (this.player.auras.bandOfTheEternalSage.hiddenCooldownRemaining > 0 && this.player.auras.hiddenCooldownRemaining < time) time = this.player.auras.bandOfTheEternalSage.hiddenCooldownRemaining
+      if (this.player.spells.bandOfTheEternalSage.cooldownRemaining > 0 && this.player.spells.bandOfTheEternalSage.cooldownRemaining < time) time = this.player.spells.bandOfTheEternalSage.cooldownRemaining
     }
     if (this.player.spells.shatteredSunPendantOfAcumen) {
       if (this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining > 0 && this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining < time) time = this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining
@@ -170,6 +170,10 @@ class Simulation {
     if (this.player.spells.bladeOfWizardry && this.player.spells.bladeOfWizardry.cooldownRemaining > 0) this.player.spells.bladeOfWizardry.tick(time)
     if (this.player.spells.shatteredSunPendantOfAcumen && this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining > 0) this.player.spells.shatteredSunPendantOfAcumen.tick(time)
     if (this.player.spells.robeOfTheElderScribes && this.player.spells.robeOfTheElderScribes.cooldownRemaining > 0) this.player.spells.robeOfTheElderScribes.tick(time)
+    if (this.player.spells.quagmirransEye && this.player.spells.quagmirransEye.cooldownRemaining > 0) this.player.spells.quagmirransEye.tick(time)
+    if (this.player.spells.shiffarsNexusHorn && this.player.spells.shiffarsNexusHorn.cooldownRemaining > 0) this.player.spells.shiffarsNexusHorn.tick(time)
+    if (this.player.spells.sextantOfUnstableCurrents && this.player.spells.sextantOfUnstableCurrents.cooldownRemaining > 0) this.player.spells.sextantOfUnstableCurrents.tick(time)
+    if (this.player.spells.bandOfTheEternalSage && this.player.spells.bandOfTheEternalSage.cooldownRemaining > 0) this.player.spells.bandOfTheEternalSage.tick(time)
 
     // Auras
     if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.tick(time)
@@ -190,7 +194,7 @@ class Simulation {
     if (this.player.auras.eyeOfMagtheridon && this.player.auras.eyeOfMagtheridon.active) this.player.auras.eyeOfMagtheridon.tick(time)
     if (this.player.auras.sextantOfUnstableCurrents && (this.player.auras.sextantOfUnstableCurrents.active || this.player.auras.sextantOfUnstableCurrents.hiddenCooldownRemaining > 0)) this.player.auras.sextantOfUnstableCurrents.tick(time)
     if (this.player.auras.quagmirransEye && (this.player.auras.quagmirransEye.active || this.player.auras.quagmirransEye.hiddenCooldownRemaining > 0)) this.player.auras.quagmirransEye.tick(time)
-    if (this.player.auras.shiffarsNexusHorn && (this.player.auras.shiffarsNexusHorn.active || this.player.auras.shiffarsNexusHorn.hiddenCooldownRemaining > 0)) this.player.auras.shiffarsNexusHorn.tick(time)
+    if (this.player.auras.shiffarsNexusHorn && this.player.auras.shiffarsNexusHorn.active) this.player.auras.shiffarsNexusHorn.tick(time)
     if (this.player.auras.manaEtched4Set && this.player.auras.manaEtched4Set.active) this.player.auras.manaEtched4Set.tick(time)
     if (this.player.auras.bloodFury && this.player.auras.bloodFury.active) this.player.auras.bloodFury.tick(time)
     if (this.player.auras.bloodlust && this.player.auras.bloodlust.active) this.player.auras.bloodlust.tick(time)
@@ -202,7 +206,7 @@ class Simulation {
     if (this.player.auras.bladeOfWizardry && this.player.auras.bladeOfWizardry.active) this.player.auras.bladeOfWizardry.tick(time)
     if (this.player.auras.shatteredSunPendantOfAcumen && this.player.auras.shatteredSunPendantOfAcumen.active) this.player.auras.shatteredSunPendantOfAcumen.tick(time)
     if (this.player.auras.robeOfTheElderScribes && this.player.auras.robeOfTheElderScribes.active) this.player.auras.robeOfTheElderScribes.tick(time)
-    if (this.player.auras.bandOfTheEternalSage && (this.player.auras.bandOfTheEternalSage.active || this.player.auras.bandOfTheEternalSage.hiddenCooldownRemaining > 0)) this.player.auras.bandOfTheEternalSage.tick(time)
+    if (this.player.auras.bandOfTheEternalSage && this.player.auras.bandOfTheEternalSage.active) this.player.auras.bandOfTheEternalSage.tick(time)
 
     // Trinkets
     if (this.player.trinkets[0]) this.player.trinkets[0].tick(time)
@@ -265,6 +269,10 @@ class Simulation {
       if (this.player.spells.bladeOfWizardry) this.player.spells.bladeOfWizardry.reset()
       if (this.player.spells.shatteredSunPendantOfAcumen) this.player.spells.shatteredSunPendantOfAcumen.reset()
       if (this.player.spells.robeOfTheElderScribes) this.player.spells.robeOfTheElderScribes.reset()
+      if (this.player.spells.quagmirransEye) this.player.spells.quagmirransEye.reset()
+      if (this.player.spells.shiffarsNexusHorn) this.player.spells.shiffarsNexusHorn.reset()
+      if (this.player.spells.sextantOfUnstableCurrents) this.player.spells.sextantOfUnstableCurrents.reset()
+      if (this.player.spells.bandOfTheEternalSage) this.player.spells.bandOfTheEternalSage.reset()
       if (this.player.spells.bloodlust) {
         for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
           this.player.spells.bloodlust[i].reset()

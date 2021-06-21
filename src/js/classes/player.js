@@ -337,6 +337,10 @@ class Player {
     if (this.trinketIds.includes(34470)) this.spells.timbalsFocusingCrystal = new TimbalsFocusingCrystal(this)
     if (this.trinketIds.includes(27922)) this.spells.markOfDefiance = new MarkOfDefiance(this)
     if (this.trinketIds.includes(28785)) this.spells.theLightningCapacitor = new TheLightningCapacitor(this)
+    if (this.trinketIds.includes(27683)) this.spells.quagmirransEye = new QuagmirransEye(this)
+    if (this.trinketIds.includes(28418)) this.spells.shiffarsNexusHorn = new ShiffarsNexusHorn(this)
+    if (this.trinketIds.includes(30626)) this.spells.sextantOfUnstableCurrents = new SextantOfUnstableCurrents(this)
+    if ([this.items.ring1, this.items.ring2].includes(29305)) this.spells.bandOfTheEternalSage = new BandOfTheEternalSage(this)
     if (this.selectedAuras.bloodlust) {
       this.spells.bloodlust = []
       for (let i = 0; i < this.simSettings.bloodlustAmount; i++) {
@@ -368,9 +372,9 @@ class Player {
     if (this.items.neck == 34678 && this.shattrathFaction == 'Aldor') this.auras.shatteredSunPendantOfAcumen = new ShatteredSunPendantOfAcumenAura(this)
     if (this.items.chest == 28602) this.auras.robeOfTheElderScribes = new RobeOfTheElderScribesAura(this)
     if (this.trinketIds.includes(28789)) this.auras.eyeOfMagtheridon = new EyeOfMagtheridon(this)
-    if (this.trinketIds.includes(30626)) this.auras.sextantOfUnstableCurrents = new SextantOfUnstableCurrents(this)
-    if (this.trinketIds.includes(27683)) this.auras.quagmirransEye = new QuagmirransEye(this)
-    if (this.trinketIds.includes(28418)) this.auras.shiffarsNexusHorn = new ShiffarsNexusHorn(this)
+    if (this.trinketIds.includes(30626)) this.auras.sextantOfUnstableCurrents = new SextantOfUnstableCurrentsAura(this)
+    if (this.trinketIds.includes(27683)) this.auras.quagmirransEye = new QuagmirransEyeAura(this)
+    if (this.trinketIds.includes(28418)) this.auras.shiffarsNexusHorn = new ShiffarsNexusHornAura(this)
     if (this.trinketIds.includes(32493)) this.auras.ashtongueTalismanOfShadows = new AshtongueTalismanOfShadows(this)
     if (this.trinketIds.includes(31856)) this.auras.darkmoonCardCrusade = new DarkmoonCardCrusadeAura(this)
     if (this.trinketIds.includes(28785)) this.auras.theLightningCapacitor = new TheLightningCapacitorAura(this)

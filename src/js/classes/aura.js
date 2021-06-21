@@ -7,6 +7,7 @@ class Aura {
     this.active = false
     this.isImportant = false
     this.hasDuration = true
+    this.stats = {}
   }
 
   setup () {
@@ -28,8 +29,18 @@ class Aura {
     if (this.active) {
       this.player.combatLog(this.name + ' refreshed')
     } else {
+      let recalculatePetStats = false
       // Keep a timestamp of when the aura was applied so we can calculate the uptime when it fades
       this.player.auraBreakdown[this.varName].appliedAt = this.player.fightTime
+      // Add stats from the aura if it has any
+      for (const stat in this.stats) {
+        if (this.player.stats.hasOwnProperty(stat)) {
+          this.player.combatLog(stat + ' + ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] + this.stats[stat]) + ')')
+          this.player.stats[stat] += this.stats[stat]
+          if (this.player.pet) recalculatePetStats = true
+        }
+      }
+      if (recalculatePetStats) this.player.pet.calculateStatsFromPlayer()
       this.player.combatLog(this.name + ' applied')
     }
     this.player.auraBreakdown[this.varName].count = this.player.auraBreakdown[this.varName].count + 1 || 1
@@ -46,9 +57,23 @@ class Aura {
       this.hiddenCooldownRemaining = 0
     }
     if (this.active) {
+      // Remove the aura's stats
+      let recalculatePetStats = false
+      for (const stat in this.stats) {
+        if (this.player.stats.hasOwnProperty(stat)) {
+          this.player.combatLog(stat + ' - ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] - this.stats[stat]) + ')')
+          this.player.stats[stat] -= this.stats[stat]
+          if (this.player.pet) {
+            recalculatePetStats = true
+          }
+        }
+      }
       this.active = false
       if (!endOfIteration) {
         this.player.combatLog(this.name + ' faded')
+        if (recalculatePetStats) {
+          this.player.pet.calculateStatsFromPlayer()
+        }
       }
       if (this.isImportant) {
         this.player.importantAuraCounter--
@@ -128,27 +153,10 @@ class Flameshadow extends Aura {
     this.durationTotal = 15
     this.procChance = 5
     this.isImportant = true
-    this.shadowPower = 135
+    this.stats = {
+      shadowPower: 135
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Shadow Power + ' + this.shadowPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + this.shadowPower) + ')')
-      this.player.stats.shadowPower += this.shadowPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-      super.apply()
-    }
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Shadow Power - ' + this.shadowPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - this.shadowPower) + ')')
-      this.player.stats.shadowPower -= this.shadowPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-
-    super.fade(endOfIteration)
   }
 }
 
@@ -159,26 +167,10 @@ class Shadowflame extends Aura {
     this.durationTotal = 15
     this.procChance = 5
     this.isImportant = true
-    this.firePower = 135
+    this.stats = {
+      firePower: 135
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Fire Power + ' + this.firePower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + this.firePower) + ')')
-      this.player.stats.firePower += 135
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-      super.apply()
-    }
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Fire Power - ' + this.firePower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - this.firePower) + ')')
-      this.player.stats.firePower -= 135
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.fade(endOfIteration)
   }
 }
 
@@ -189,26 +181,10 @@ class SpellstrikeProc extends Aura {
     this.durationTotal = 10
     this.procChance = 5
     this.isImportant = true
-    this.spellPower = 92
+    this.stats = {
+      spellPower: 92
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Spell Power + ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + this.spellPower) + ')')
-      this.player.stats.spellPower += this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-      super.apply()
-    }
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Spell Power - ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - this.spellPower) + ')')
-      this.player.stats.spellPower -= this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.fade(endOfIteration)
   }
 }
 
@@ -264,138 +240,49 @@ class EyeOfMagtheridon extends Aura {
     this.name = 'Eye of Magtheridon'
     this.durationTotal = 10
     this.isImportant = true
-    this.spellPower = 170
+    this.stats = {
+      spellPower: 170
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Spell Power + ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + this.spellPower) + ')')
-      this.player.stats.spellPower += this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.apply()
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Spell Power - ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - this.spellPower) + ')')
-      this.player.stats.spellPower -= this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.fade(endOfIteration)
   }
 }
 
-class SextantOfUnstableCurrents extends Aura {
+class SextantOfUnstableCurrentsAura extends Aura {
   constructor (player) {
     super(player)
     this.name = 'Sextant of Unstable Currents'
     this.durationTotal = 15
-    this.hiddenCooldown = 45
-    this.hiddenCooldownRemaining = 0
-    this.procChance = 20
     this.isImportant = true
-    this.spellPower = 190
+    this.stats = {
+      spellPower: 190
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active && this.hiddenCooldownRemaining == 0) {
-      this.player.combatLog('Spell Power + ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + this.spellPower) + ')')
-      this.player.stats.spellPower += this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-      this.hiddenCooldownRemaining = this.hiddenCooldown
-      super.apply()
-    }
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Spell Power - ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - this.spellPower) + ')')
-      this.player.stats.spellPower -= this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.fade(endOfIteration)
-  }
-
-  tick (t) {
-    this.hiddenCooldownRemaining = Math.max(0, this.hiddenCooldownRemaining - t)
-    super.tick(t)
   }
 }
 
-class QuagmirransEye extends Aura {
+class QuagmirransEyeAura extends Aura {
   constructor (player) {
     super(player)
     this.name = "Quagmirran's Eye"
-    this.hiddenCooldown = 45
-    this.hiddenCooldownRemaining = 0
     this.durationTotal = 6
-    this.procChance = 10
     this.isImportant = true
-    this.hasteRating = 320
+    this.stats = {
+      hasteRating: 320
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Haste Rating + ' + this.hasteRating + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + '% -> ' + Math.round(((this.player.stats.hasteRating + this.hasteRating) / hasteRatingPerPercent) * 100) / 100 + '%)')
-      this.player.stats.hasteRating += this.hasteRating
-      this.hiddenCooldownRemaining = this.hiddenCooldown
-      super.apply()
-    }
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Haste Rating - ' + this.hasteRating + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + '% -> ' + Math.round(((this.player.stats.hasteRating - this.hasteRating) / hasteRatingPerPercent) * 100) / 100 + '%)')
-      this.player.stats.hasteRating -= this.hasteRating
-    }
-    super.fade(endOfIteration)
-  }
-
-  tick (t) {
-    this.hiddenCooldownRemaining = Math.max(0, this.hiddenCooldownRemaining - t)
-    super.tick(t)
   }
 }
 
-class ShiffarsNexusHorn extends Aura {
+class ShiffarsNexusHornAura extends Aura {
   constructor (player) {
     super(player)
     this.name = "Shiffar's Nexus-Horn"
-    this.hiddenCooldown = 45
-    this.hiddenCooldownRemaining = 0
     this.durationTotal = 10
-    this.procChance = 20
     this.isImportant = true
-    this.spellPower = 225
+    this.stats = {
+      spellPower: 225
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Spell Power + ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + this.spellPower) + ')')
-      this.player.stats.spellPower += this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-      this.hiddenCooldownRemaining = this.hiddenCooldown
-      super.apply()
-    }
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Spell Power - ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - this.spellPower) + ')')
-      this.player.stats.spellPower -= this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.fade(endOfIteration)
-  }
-
-  tick (t) {
-    this.hiddenCooldownRemaining = Math.max(0, this.hiddenCooldownRemaining - t)
-    super.tick(t)
   }
 }
 
@@ -406,26 +293,10 @@ class ManaEtched4Set extends Aura {
     this.durationTotal = 15
     this.procChance = 2
     this.isImportant = true
-    this.spellPower = 110
+    this.stats = {
+      spellPower: 110
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Spell Power + ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + this.spellPower) + ')')
-      this.player.stats.spellPower += this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.apply()
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Spell Power - ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - this.spellPower) + ')')
-      this.player.stats.spellPower -= this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.fade(endOfIteration)
   }
 }
 
@@ -471,25 +342,10 @@ class FlameCapAura extends Aura {
     this.name = 'Flame Cap'
     this.durationTotal = 60
     this.isImportant = true
+    this.stats = {
+      firePower: 80
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Fire Power + 80 (' + Math.round(this.player.stats.firePower) + ' -> ' + Math.round(this.player.stats.firePower + 80) + ')')
-      this.player.stats.firePower += 80
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.apply()
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Fire Power - 80 (' + Math.round(this.player.stats.firePower) + ' -> ' + Math.round(this.player.stats.firePower - 80) + ')')
-      this.player.stats.firePower -= 80
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.fade(endOfIteration)
   }
 }
 
@@ -499,25 +355,10 @@ class BloodFuryAura extends Aura {
     this.name = 'Blood Fury'
     this.durationTotal = 15
     this.isImportant = true
+    this.stats = {
+      spellPower: 140
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Spell Power + 140 (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + 140) + ')')
-      this.player.stats.spellPower += 140
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.apply()
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Spell Power - 80 (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - 140) + ')')
-      this.player.stats.spellPower -= 140
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.fade(endOfIteration)
   }
 }
 
@@ -556,23 +397,10 @@ class DrumsOfBattleAura extends Aura {
     super(player)
     this.name = 'Drums of Battle'
     this.durationTotal = 30
+    this.stats = {
+      hasteRating: 80
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Haste rating + 80 (' + (Math.round((this.player.stats.hasteRating) / hasteRatingPerPercent) * 100) / 100 + '% -> ' + (Math.round((this.player.stats.hasteRating + 80) / hasteRatingPerPercent) * 100) / 100 + '%)')
-      this.player.stats.hasteRating += 80
-    }
-    super.apply()
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Haste rating - 80 (' + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + '% -> ' + (Math.round((this.player.stats.hasteRating - 80) / hasteRatingPerPercent) * 100) / 100 + '%)')
-      this.player.stats.hasteRating -= 80
-    }
-    super.fade(endOfIteration)
   }
 }
 
@@ -581,23 +409,10 @@ class DrumsOfWarAura extends Aura {
     super(player)
     this.name = 'Drums of War'
     this.durationTotal = 30
+    this.stats = {
+      spellPower: 30
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Spell Power + 30 (' + this.player.stats.spellPower + ' -> ' + (this.player.stats.spellPower + 30) + ')')
-      this.player.stats.spellPower += 30
-    }
-    super.apply()
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Spell Power - 30 (' + this.player.stats.spellPower + ' -> ' + (this.player.stats.spellPower - 30) + ')')
-      this.player.stats.spellPower -= 30
-    }
-    super.fade(endOfIteration)
   }
 }
 
@@ -645,25 +460,10 @@ class AshtongueTalismanOfShadows extends Aura {
     this.durationTotal = 5
     this.procChance = 20
     this.isImportant = true
+    this.stats = {
+      spellPower: 220
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Spell Power + 220 (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + 220) + ')')
-      this.player.stats.spellPower += 220
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.apply()
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Spell Power - 80 (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - 220) + ')')
-      this.player.stats.spellPower -= 220
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.fade(endOfIteration)
   }
 }
 
@@ -725,36 +525,10 @@ class BandOfTheEternalSageAura extends Aura {
     super(player)
     this.name = 'Band of the Eternal Sage'
     this.durationTotal = 10
-    this.hiddenCooldown = 60
-    this.hiddenCooldownRemaining = 0
-    this.procChance = 10
-    this.spellPower = 95
+    this.stats = {
+      spellPower: 95
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active && this.hiddenCooldownRemaining <= 0) {
-      this.player.combatLog('Spell Power + ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + this.spellPower) + ')')
-      this.player.stats.spellPower += this.spellPower
-      this.hiddenCooldownRemaining = this.hiddenCooldown
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-      super.apply()
-    }
-  }
-
-  fade (endOfIteration) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Spell Power - ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - this.spellPower) + ')')
-      this.player.stats.spellPower -= this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.fade(endOfIteration)
-  }
-
-  tick (t) {
-    if (this.hiddenCooldownRemaining > 0 && t >= this.hiddenCooldownRemaining) this.player.combatLog(this.name + " off cooldown")
-    this.hiddenCooldownRemaining = Math.max(0, this.hiddenCooldownRemaining - t)
-    super.tick(t)
   }
 }
 
@@ -762,29 +536,13 @@ class BladeOfWizardryAura extends Aura {
   constructor (player) {
     super(player)
     this.name = 'Blade of Wizardry'
-    this.hasteRating = 280
     this.durationTotal = 6
     this.procChance = 15
     this.isImportant = true
+    this.stats = {
+      hasteRating: 280
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Haste Rating + ' + this.hasteRating + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + '% -> ' + Math.round(((this.player.stats.hasteRating + this.hasteRating) / hasteRatingPerPercent) * 100) / 100 + '%)')
-      this.player.stats.hasteRating += this.hasteRating
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.apply()
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Haste Rating - ' + this.hasteRating + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + '% -> ' + Math.round(((this.player.stats.hasteRating - this.hasteRating) / hasteRatingPerPercent) * 100) / 100 + '%)')
-      this.player.stats.hasteRating -= this.hasteRating
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.fade(endOfIteration)
   }
 }
 
@@ -792,28 +550,12 @@ class ShatteredSunPendantOfAcumenAura extends Aura {
   constructor (player) {
     super(player)
     this.name = 'Shattered Sun Pendant of Acumen (Aldor)'
-    this.spellPower = 120
     this.durationTotal = 10
     this.isImportant = true
+    this.stats = {
+      spellPower: 120
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Spell Power + ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + this.spellPower) + ')')
-      this.player.stats.spellPower += this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.apply()
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Spell Power - ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - this.spellPower) + ')')
-      this.player.stats.spellPower -= this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.fade(endOfIteration)
   }
 }
 
@@ -821,27 +563,11 @@ class RobeOfTheElderScribesAura extends Aura {
   constructor (player) {
     super(player)
     this.name = 'Robe of the Elder Scribes'
-    this.spellPower = 130
     this.durationTotal = 10
     this.isImportant = true
+    this.stats = {
+      spellPower: 130
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Spell Power + ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + this.spellPower) + ')')
-      this.player.stats.spellPower += this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.apply()
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Spell Power - ' + this.spellPower + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - this.spellPower) + ')')
-      this.player.stats.spellPower -= this.spellPower
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
-    }
-    super.fade(endOfIteration)
   }
 }

@@ -87,18 +87,20 @@ class Spell {
       this.damage(isCrit)
 
       if (isCrit && this.canCrit) {
-        if (this.player.trinketIds.includes(30626) && random(1, 100) <= this.player.auras.sextantOfUnstableCurrents.procChance) this.player.auras.sextantOfUnstableCurrents.apply() // Sextant of Unstable Currents
-        if (this.player.trinketIds.includes(28418) && random(1, 100) <= this.player.auras.shiffarsNexusHorn.procChance) this.player.auras.shiffarsNexusHorn.apply() 				        // Shiffar's Nexus-Horn
+        // Sextant of Unstable Currents
+        if (this.player.trinketIds.includes(30626) && this.player.spells.sextantOfUnstableCurrents.ready() && random(1, 100) <= this.player.spells.sextantOfUnstableCurrents.procChance) this.player.spells.sextantOfUnstableCurrents.cast()
+        // Shiffar's Nexus-Horn
+        if (this.player.trinketIds.includes(28418) && this.player.spells.shiffarsNexusHorn.ready() && random(1, 100) <= this.player.spells.shiffarsNexusHorn.procChance) this.player.spells.shiffarsNexusHorn.cast()
       }
 
       // Shattered Sun Pendant of Acumen
       if (this.player.exaltedWithShattrathFaction && this.player.spells.shatteredSunPendantOfAcumen && this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining <= 0 && random(1, 100) <= this.player.spells.shatteredSunPendantOfAcumen.procChance) {
-        this.player.spells.shatteredSunPendantOfAcumen.startCast()
+        this.player.spells.shatteredSunPendantOfAcumen.cast()
       }
 
       // Robe of the Elder Scribes
-      if (this.player.spells.robeOfTheElderScribes && this.player.spells.robeOfTheElderScribes.cooldownRemaining <= 0 && random(1, 100) <= this.player.spells.robeOfTheElderScribes.procChance) {
-        this.player.spells.robeOfTheElderScribes.startCast()
+      if (this.player.spells.robeOfTheElderScribes && this.player.spells.robeOfTheElderScribes.ready() && random(1, 100) <= this.player.spells.robeOfTheElderScribes.procChance) {
+        this.player.spells.robeOfTheElderScribes.cast()
       }
     }
 
@@ -126,8 +128,8 @@ class Spell {
     }
 
     // Quagmirran's Eye
-    if (this.player.auras.quagmirransEye && this.player.auras.quagmirransEye.hiddenCooldownRemaining <= 0 && random(1, 100) <= this.player.auras.quagmirransEye.procChance) {
-      this.player.auras.quagmirransEye.apply()
+    if (this.player.spells.quagmirransEye && this.player.spells.quagmirransEye.ready() && random(1, 100) <= this.player.spells.quagmirransEye.procChance) {
+      this.player.spells.quagmirransEye.cast()
     }
 
     // Mana-Etched Regalia 4-set (2% proc chance)
@@ -146,13 +148,13 @@ class Spell {
     }
 
     // Band of the Eternal Sage
-    if (this.player.auras.bandOfTheEternalSage && random(1, 100) <= this.player.auras.bandOfTheEternalSage.procChance) {
-      this.player.auras.bandOfTheEternalSage.apply()
+    if (this.player.spells.bandOfTheEternalSage && this.player.spells.bandOfTheEternalSage.ready() && random(1, 100) <= this.player.spells.bandOfTheEternalSage.procChance) {
+      this.player.spells.bandOfTheEternalSage.cast()
     }
 
     // Blade of Wizardry
-    if (this.player.spells.bladeOfWizardry && this.player.spells.bladeOfWizardry.cooldownRemaining <= 0 && random(1, 100) <= this.player.auras.bladeOfWizardry.procChance) {
-      this.player.spells.bladeOfWizardry.startCast()
+    if (this.player.spells.bladeOfWizardry && this.player.spells.bladeOfWizardry.ready() && random(1, 100) <= this.player.auras.bladeOfWizardry.procChance) {
+      this.player.spells.bladeOfWizardry.cast()
     }
   }
 
@@ -778,13 +780,14 @@ class BladeOfWizardry extends Spell {
     this.onGcd = false
     this.isItem = true
     this.isProc = true
+    this.breakdownTable = 'aura'
     this.setup()
   }
 
-  startCast () {
+  cast () {
     if (this.cooldownRemaining <= 0) {
       this.player.auras.bladeOfWizardry.apply()
-      super.startCast()
+      super.cast()
     }
   }
 }
@@ -799,6 +802,7 @@ class ShatteredSunPendantOfAcumen extends Spell {
     this.isItem = true
     if (this.player.shattrathFaction == 'Aldor') {
       this.isProc = true
+      this.breakdownTable = 'aura'
     } else if (this.player.shattrathFaction == 'Scryers') {
       this.doesDamage = true
       this.canCrit = true
@@ -809,12 +813,12 @@ class ShatteredSunPendantOfAcumen extends Spell {
     this.setup()
   }
 
-  startCast () {
+  cast () {
     if (this.cooldownRemaining <= 0) {
       if (this.player.shattrathFaction == 'Aldor') {
         this.player.auras.shatteredSunPendantOfAcumen.apply()
       }
-      super.startCast()
+      super.cast()
     }
   }
 }
@@ -835,6 +839,86 @@ class RobeOfTheElderScribes extends Spell {
     if (this.cooldownRemaining <= 0) {
       this.player.auras.robeOfTheElderScribes.apply()
       super.startCast()
+    }
+  }
+}
+
+class QuagmirransEye extends Spell {
+  constructor(player) {
+    super(player)
+    this.name = "Quagmirran's Eye"
+    this.cooldown = 45
+    this.procChance = 10
+    this.onGcd = false
+    this.isItem = true
+    this.breakdownTable = 'aura'
+    this.setup()
+  }
+
+  cast() {
+    if (this.cooldownRemaining <= 0) {
+      this.player.auras.quagmirransEye.apply()
+      super.cast()
+    }
+  }
+}
+
+class ShiffarsNexusHorn extends Spell {
+  constructor(player) {
+    super(player)
+    this.name = "Shiffar's Nexus-Horn"
+    this.cooldown = 45
+    this.procChance = 20
+    this.onGcd = false
+    this.isItem = true
+    this.breakdownTable = 'aura'
+    this.setup()
+  }
+
+  cast() {
+    if (this.cooldownRemaining <= 0) {
+      this.player.auras.shiffarsNexusHorn.apply()
+      super.cast()
+    }
+  }
+}
+
+class SextantOfUnstableCurrents extends Spell {
+  constructor(player) {
+    super(player)
+    this.name = 'Sextant of Unstable Currents'
+    this.cooldown = 45
+    this.procChance = 20
+    this.onGcd = false
+    this.isItem = true
+    this.breakdownTable = 'aura'
+    this.setup()
+  }
+
+  cast() {
+    if (this.cooldownRemaining <= 0) {
+      this.player.auras.sextantOfUnstableCurrents.apply()
+      super.cast()
+    }
+  }
+}
+
+class BandOfTheEternalSage extends Spell {
+  constructor(player) {
+    super(player)
+    this.name = 'Band of the Eternal Sage'
+    this.cooldown = 60
+    this.procChance = 10
+    this.onGcd = false
+    this.isItem = true
+    this.breakdownTable = 'aura'
+    this.setup()
+  }
+
+  cast() {
+    if (this.cooldownRemaining <= 0) {
+      this.player.auras.bandOfTheEternalSage.apply()
+      super.cast()
     }
   }
 }
