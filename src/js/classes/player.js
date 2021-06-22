@@ -43,13 +43,13 @@ class Player {
     this.importantAuraCounter = 0 // counts the amount of active "important" auras such as trinket procs, on-use trinket uses, power infusion etc.
     this.totalManaRegenerated = 0
 
-    this.metaGemId = 0
+    this.metaGemIds = []
     // Get the meta gem ID
     for (const gemSocket in settings.gems.head[settings.items.head]) {
       if (settings.gems.head[settings.items.head][gemSocket]) {
         const gemId = settings.gems.head[settings.items.head][gemSocket][1]
         if (gems.meta[gemId]) {
-          this.metaGemId = gemId
+          this.metaGemIds.push(gemId)
         } 
       }
     }
@@ -80,7 +80,9 @@ class Player {
                 for (const gemColor in gems) {
                   if (gems[gemColor][gemId]) {
                     if (gemColor == 'meta') {
-                      this.metaGemId = 0
+                      if (this.metaGemIds.includes(gemId)) {
+                        this.metaGemIds.splice(this.metaGemIds.indexOf(gemId),1)
+                      }
                     }
                     // Loop through the gem's stats and remove them from the player
                     for (const stat in gems[gemColor][gemId]) {
@@ -88,7 +90,6 @@ class Player {
                         this.stats[stat] -= gems[gemColor][gemId][stat]
                       }
                     }
-                    // console.log("removed gems from " + items[customItemSlot][item].id);
                   }
                 }
               }
@@ -117,7 +118,7 @@ class Player {
                 const gemId = settings.gems[customItemSlot][customItemId][socket][1]
                 // Check for meta gem
                 if (customItemSlot == 'head' && gems.meta[gemId]) {
-                  this.metaGemId = gemId
+                  this.metaGemIds.push(gemId)
                 }
                 // Find the gem's color since it might not match the socket color
                 for (const gemColor in gems) {
@@ -134,6 +135,9 @@ class Player {
             }
           }
         }
+      }
+      if (this.metaGemIds.length > 1) {
+        console.log(this.metaGemIds.length + " meta gems equipped, somehow.")
       }
     }
 

@@ -188,7 +188,7 @@ class Spell {
 
     if (isCrit) {
       // Chaotic Skyfire Diamond meta gem
-      if (this.player.metaGemId == '34220') {
+      if (this.player.metaGemIds.includes(34220)) {
         critMultiplier *= 1.03
       }
       // Ruin
