@@ -1379,12 +1379,29 @@ function itemMeetsSocketRequirements (itemId) {
 }
 
 function updateSimulationSettingsVisibility () {
-  if ($('#sacrificePet').children('select').val() == 'no') {
+  if (talents.demonicSacrifice === 0) {
+    $("#sacrificePet").hide()
+  } else {
+    $("#sacrificePet").show()
+  }
+
+  if ($("#sacrificePet").is(":visible") && $("#sacrificePet").children("select").val() == "yes") {
+    $("#petMode").hide()
+  } else {
+    $("#petMode").show()
+  }
+
+  if ($('#sacrificePet').children('select').val() == 'no' || !$("#sacrificePet").is(":visible")) {
     $('#petBuffs-heading').show()
     $('.petBuffs').show()
     if ($('#petMode').children('select').val() == PetMode.AGGRESSIVE) {
-      $('#enemyArmor').show()
-      $('#enemy-armor-val').closest('li').show()
+      if ($("#petChoice").children("select").val() != PetName.IMP) {
+        $('#enemyArmor').show()
+        $('#enemy-armor-val').closest('li').show()
+      } else {
+        $('#enemyArmor').hide()
+        $('#enemy-armor-val').closest('li').hide()
+      }
       $('.petDebuff').show()
     } else {
       $('#enemyArmor').hide()
@@ -1397,6 +1414,12 @@ function updateSimulationSettingsVisibility () {
     $('#enemyArmor').hide()
     $('#enemy-armor-val').closest('li').hide()
     $('.petDebuff').hide()
+  }
+
+  if ($("#petChoice").children("select").val() == PetName.SUCCUBUS && $("#petMode").children("select").val() == PetMode.AGGRESSIVE) {
+    $("#lashOfPainUsage").show()
+  } else {
+    $("#lashOfPainUsage").hide()
   }
 
   if (talents.summonFelguard === 0) {
