@@ -1102,17 +1102,18 @@ function simDPS (items) {
           $('#sim-dps').css('background', 'linear-gradient(to right, #9482C9 ' + simulationUpdate.percent + '%, transparent ' + simulationUpdate.percent + '%)')
           $('#sim-dps').text(Math.round(simulationUpdate.percent) + '%')
         } else {
-          // multiSimInfo tracks the % progress of each simulation and the least progressed simulation's % is used for the multi simulation button/progress bar
-          let smallestValue = 100
+          // multiSimInfo tracks the % progress of each simulation and the average simulation progress % is used for the multi-item simulation progress bar
+          let totalProgress = 0
           for (let i = 0; i < multiSimInfo.length; i++) {
             if (multiSimInfo[i][0] == simulationUpdate.itemId) {
               multiSimInfo[i][1] = simulationUpdate.percent
             }
-            if (multiSimInfo[i][1] < smallestValue) smallestValue = multiSimInfo[i][1]
+            totalProgress += multiSimInfo[i][1]
           }
 
-          $('#sim-all-items').css('background', 'linear-gradient(to right, #9482C9 ' + smallestValue + '%, transparent ' + smallestValue + '%)')
-          $('#sim-all-items').text(smallestValue + '%')
+          const averageProgress = ~~(totalProgress / simulations.length)
+          $('#sim-all-items').css('background', 'linear-gradient(to right, #9482C9 ' + averageProgress + '%, transparent ' + averageProgress + '%)')
+          $('#sim-all-items').text(averageProgress + '%')
         }
         // Set the DPS value on the item in the item selection list
         $(".item-row[data-wowhead-id='" + simulationUpdate.itemId + "']").find('.item-dps').text(simulationUpdate.avgDps)
