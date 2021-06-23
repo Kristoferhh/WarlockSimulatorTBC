@@ -20,7 +20,7 @@ class Player {
     }
   }
 
-  constructor (settings, customItemSlot = null, customItemSubSlot = '', customItemId = null) {
+  constructor (settings, customItemSlot, customItemSubSlot, customItemId, customStat, customStatValue) {
     this.stats = JSON.parse(JSON.stringify(settings.stats)) // Create a deep-copy of the character's stats since we need to modify the values.
     this.stats.manaCostModifier = 1
     this.items = JSON.parse(JSON.stringify(settings.items))
@@ -36,12 +36,21 @@ class Player {
     this.selectedAuras = settings.auras
     this.enemy.shadowResist = Math.max(this.enemy.shadowResist, (this.enemy.level - this.level) * 8, 0)
     this.enemy.fireResist = Math.max(this.enemy.fireResist, (this.enemy.level - this.level) * 8, 0)
-    this.enemy.natureResist = 0
-    this.enemy.arcaneResist = 0
-    this.enemy.frostResist = 0
+    this.enemy.natureResist = Math.max((this.enemy.level - this.level) * 8, 0)
+    this.enemy.arcaneResist = Math.max((this.enemy.level - this.level) * 8, 0)
+    this.enemy.frostResist = Math.max((this.enemy.level - this.level) * 8, 0)
     this.combatlog = []
     this.importantAuraCounter = 0 // counts the amount of active "important" auras such as trinket procs, on-use trinket uses, power infusion etc.
     this.totalManaRegenerated = 0
+    this.customStat = {
+      stat: customStat,
+      value: customStatValue
+    }
+
+    // Check if we're finding stat weights
+    if (this.customStat.stat && this.stats.hasOwnProperty(this.customStat.stat)) {
+      this.stats[this.customStat.stat] += this.customStat.value
+    }
 
     this.metaGemIds = []
     // Get the meta gem ID

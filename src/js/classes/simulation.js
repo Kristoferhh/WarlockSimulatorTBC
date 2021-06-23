@@ -14,6 +14,9 @@ class Simulation {
     this.maxTime = settings.maxTime
     this.simulationEnd = simulationEnd
     this.simulationUpdate = simulationUpdate
+    if (player.customStat.value > 0) {
+      this.iterations *= 1.5
+    }
   }
 
   // >> IMPORTANT <<: The reason this function is so horribly hardcoded instead of using loops is because using loops made the simulation ~4-5 times slower.
@@ -345,7 +348,6 @@ class Simulation {
                 }
               } else {
                 this.player.useCooldownsIfAvailable()
-                // If a Nightfall proc is active and Corruption is active as well then prio Shadow Bolt over re-applying dots to avoid missing a free Shadow Bolt
                 if (this.player.spells.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready() && (timeRemaining - this.player.spells.corruption.castTime) >= this.player.auras.corruption.minimumDuration) {
                   this.player.cast('corruption')
                 } else if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.corruption.active) {
@@ -376,7 +378,7 @@ class Simulation {
 
         // If passTime() returns 0 then the simulation somehow got stuck in an endless loop. This should never happen, so the best solution is to fix the reason it returned 0 rather than setting a minimum value for it to return.
         if (this.passTime() == 0) {
-          throw "The simulation got stuck in an endless loop. If you'd like to help with fixing this bug then please mention which spells you had selected and which gear you had equipped."
+          throw "The simulation got stuck in an endless loop. If you'd like to help with fixing this bug then please mention which spells you had selected and which gear you had equipped to Kristofer#8003 on Discord."
         }
       }
 
@@ -390,9 +392,10 @@ class Simulation {
       // Send an update to the sim worker for every 1% of progress
       if (this.player.iteration % ~~(this.iterations / 100) == 0) {
         this.simulationUpdate({
-          averageDamage: Math.round((totalDamage / totalDuration) * 100) / 100,
+          avgDps: Math.round((totalDamage / totalDuration) * 100) / 100,
           percent: Math.round((this.player.iteration / this.iterations) * 100),
-          itemId: this.player.itemId
+          itemId: this.player.itemId,
+          customStat: this.player.customStat
         })
       }
 
@@ -451,8 +454,10 @@ class Simulation {
       iterations: this.iterations,
       totalDamage: totalDamage,
       totalDuration: totalDuration,
+      avgDps: Math.round((totalDamage / totalDuration) * 100) / 100,
       totalManaRegenerated: this.player.totalManaRegenerated,
-      itemId: this.player.itemId
+      itemId: this.player.itemId,
+      customStat: this.player.customStat
     })
   }
 }

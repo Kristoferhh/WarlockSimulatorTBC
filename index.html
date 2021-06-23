@@ -20,7 +20,7 @@
 		<p id="character-race"><span id="race"></span> Warlock</p>
 		<p id="character-level">Level 70</p>
 
-		<ul id="character-stats">
+		<ul class="character-stats">
 			<li>
 				<p class="character-stat">Health</p>
 				<p class="character-stat-val" id="character-health-val"></p>
@@ -95,6 +95,7 @@
 			</div>
 			<div class='btn' id='sim-dps'>Simulate</div>
 			<div class='btn' id='sim-all-items'>Simulate All Items</div>
+			<div class='btn' id='sim-stat-weights'>Stat Weights</div>
 			<div class='btn' id='show-combat-log'>Show Combat Log</div>
 			<p id="sim-length-result"></p>
 			<p id="guybrush-note">This sim was heavily inspired by <a target="_blank" href='https://guybrushgit.github.io/WarriorSim/'>Guybrush's 1.13 Warrior Simulator</a></p>
@@ -300,6 +301,48 @@
 			</div>
 			<section id="talents-section"></section>
 		</div>
+
+		<!-- STAT WEIGHTS -->
+		<section id="stat-weights-section" style="display: none;">
+			<h2>Stat Weights</h2>
+			<ul class="character-stats" id="stat-weights">
+				<li>
+					<p class="character-stat">Intellect</p>
+					<p id="stat-weight-intellect" class="character-stat-val">0</p>
+				</li>
+				<li>
+					<p class="character-stat">Spell Power</p>
+					<p id="stat-weight-spellPower" class="character-stat-val">0</p>
+				</li>
+				<li>
+					<p class="character-stat">Shadow Power</p>
+					<p id="stat-weight-shadowPower" class="character-stat-val">0</p>
+				</li>
+				<li>
+					<p class="character-stat">Fire Power</p>
+					<p id="stat-weight-firePower" class="character-stat-val">0</p>
+				</li>
+				<li>
+					<p class="character-stat">Hit Rating</p>
+					<p id="stat-weight-hitRating" class="character-stat-val">0</p>
+				</li>
+				<li>
+					<p class="character-stat">Crit Rating</p>
+					<p id="stat-weight-critRating" class="character-stat-val">0</p>
+				</li>
+				<li>
+					<p class="character-stat">Haste Rating</p>
+					<p id="stat-weight-hasteRating" class="character-stat-val">0</p>
+				</li>
+				<li>
+					<p class="character-stat">Mp5</p>
+					<p id="stat-weight-mp5" class="character-stat-val">0</p>
+				</li>
+				<li id="pawn-import-string">
+					<p></p>
+				</li>
+			</ul>
+		</section>
 
 		<!-- SIM RESULTS -->
 		<!-- Damage Breakdown Table -->

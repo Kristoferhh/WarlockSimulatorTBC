@@ -25,17 +25,17 @@ ul {
 	line-height: 10px;
 }
 
-#character-stats {
+.character-stats {
 	padding-bottom: 15px;
 	border-bottom: 1px solid gray;
 }
 
-#character-stats li {
+.character-stats li {
 	margin-right: 40px;
 	line-height: 12px;
 }
 
-#character-stats li p {
+.character-stats li p {
 	margin-bottom: -8px;
 	padding-bottom: 5px;
 }
@@ -48,6 +48,31 @@ ul {
 .character-stat-val {
 	float: right;
 	text-align: right;
+}
+
+#stat-weights {
+	width: 300px;
+	border-bottom: none;
+}
+
+#stat-weights-section {
+	border: 1px solid gray;
+	width: 340px;
+	margin-left: 10px;
+}
+
+#stat-weights-section h2 {
+	padding-left: 35px;
+}
+
+#pawn-import-string {
+	white-space: nowrap;
+	overflow: hidden;
+	padding-bottom: 10px;
+}
+
+#pawn-import-string:hover {
+	overflow: visible;
 }
 
 #shadow-resist-info {

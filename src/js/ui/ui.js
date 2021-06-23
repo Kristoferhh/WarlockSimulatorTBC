@@ -772,6 +772,10 @@ $('#sim-all-items').click(function () {
   return false
 })
 
+$("#sim-stat-weights").click(function() {
+  simStatWeights()
+})
+
 $('.btn').hover(function () {
   $(this).find('a').css('color', '#1a1a1a')
 })
@@ -1031,13 +1035,12 @@ function simDPS (items) {
       (simulationEnd) => {
         simulationsFinished++
         // DPS information on the sidebar
-        const avgDps = Math.round((simulationEnd.totalDamage / simulationEnd.totalDuration) * 100) / 100
         if (itemAmount === 1) {
-          localStorage.avgDps = avgDps
+          localStorage.avgDps = simulationEnd.avgDps
           localStorage.minDps = simulationEnd.minDps
           localStorage.maxDps = simulationEnd.maxDps
           localStorage.simulationDuration = simulationEnd.length
-          $('#avg-dps').text(avgDps)
+          $('#avg-dps').text(simulationEnd.avgDps)
           $('#min-dps').text(simulationEnd.minDps)
           $('#max-dps').text(simulationEnd.maxDps)
           $('#sim-length-result').text(simulationEnd.length + 's')
@@ -1052,7 +1055,7 @@ function simDPS (items) {
           $('#sim-all-items').text('Simulate All Items')
         }
         savedItemDps[itemSlot + itemSubSlot] = savedItemDps[itemSlot + itemSubSlot] || {}
-        savedItemDps[itemSlot + itemSubSlot][simulationEnd.itemId] = avgDps
+        savedItemDps[itemSlot + itemSubSlot][simulationEnd.itemId] = simulationEnd.avgDps
         localStorage.savedItemDps = JSON.stringify(savedItemDps)
 
         if (simulationsFinished === itemAmount) {
@@ -1094,7 +1097,7 @@ function simDPS (items) {
       },
       (simulationUpdate) => {
         if (itemAmount === 1) {
-          $('#avg-dps').text(simulationUpdate.averageDamage)
+          $('#avg-dps').text(simulationUpdate.avgDps)
           // Uses the sim button as a progress bar by coloring it based on how many iterations are done with
           $('#sim-dps').css('background', 'linear-gradient(to right, #9482C9 ' + simulationUpdate.percent + '%, transparent ' + simulationUpdate.percent + '%)')
           $('#sim-dps').text(Math.round(simulationUpdate.percent) + '%')
@@ -1112,7 +1115,7 @@ function simDPS (items) {
           $('#sim-all-items').text(smallestValue + '%')
         }
         // Set the DPS value on the item in the item selection list
-        $(".item-row[data-wowhead-id='" + simulationUpdate.itemId + "']").find('.item-dps').text(simulationUpdate.averageDamage)
+        $(".item-row[data-wowhead-id='" + simulationUpdate.itemId + "']").find('.item-dps').text(simulationUpdate.avgDps)
         $('#item-selection-table').trigger('update')
       },
       {
@@ -1131,6 +1134,99 @@ function simDPS (items) {
     simulations[simIndex++].start()
     simulationsRunning++
   }
+}
+
+function updateStatWeight(stat, value) {
+  $("#stat-weight-" + stat).text(Math.max(0,value))
+}
+
+function simStatWeights() {
+  const stats = {
+    normal: 0,
+    intellect: 100,
+    spellPower: 100,
+    shadowPower: 100,
+    firePower: 100,
+    critRating: 100,
+    hasteRating: 100,
+    mp5: 100
+  }
+  // Filthy way of getting the current hit % from the sidebar hit % value.
+  // The idea of these hit rating calculations is to put the player at hit cap to get the value of hit rather than just giving a static value like with other stats since they don't have a cap.
+  const missingHitChance = 16 - $("#character-hit-val").text().split("(")[1].split("%")[0]
+  const missingHitRating = Math.floor(missingHitChance * hitRatingPerPercent)
+  stats.hitRating = Math.max(missingHitRating,1)
+  let sims = []
+  let simInfo = []
+  let normalSimAvgDps = 0
+  let simsFinished = 0
+
+  const simStart = performance.now()
+  sims.push(new SimWorker(
+    (simulationEnd) => {
+      simsFinished++
+      normalSimAvgDps = simulationEnd.avgDps
+      $('#avg-dps').text(simulationEnd.avgDps)
+    },
+    (simulationUpdate) => {
+      normalSimAvgDps = simulationUpdate.avgDps
+      $('#avg-dps').text(simulationUpdate.avgDps)
+    },
+    {
+      player: Player.getSettings(),
+      simulation: Simulation.getSettings(),
+    }
+  ).start())
+
+  for (const stat in stats) {
+    sims.push(new SimWorker(
+      (simulationEnd) => {
+        // Round to 3 decimals
+        const statValue = Math.round((((simulationEnd.avgDps - normalSimAvgDps) / stats[simulationEnd.customStat.stat]) * 1000)) / 1000
+        updateStatWeight(simulationEnd.customStat.stat, statValue)
+        simsFinished++
+
+        if (simsFinished == sims.length) {
+          let pawnString = '( Pawn: v1: "' + (localStorage.selectedProfile || "Warlock") + '": Class=Warlock, Spec=Affliction, Intellect=' + $("#stat-weight-intellect").text()
+          + ', SpellCritRating=' + $("#stat-weight-critRating").text()
+          + ', SpellHitRating=' + $("#stat-weight-hitRating").text()
+          + ', FireSpellDamage=' + $("#stat-weight-firePower").text()
+          + ', ShadowSpellDamage=' + $("#stat-weight-shadowPower").text()
+          + ', SpellDamage=' + $("#stat-weight-spellPower").text()
+          + ', Mp5=' + $("#stat-weight-mp5").text()
+          + ', SpellHasteRating=' + $("#stat-weight-hasteRating").text() + ')'
+          $("#pawn-import-string p").text(pawnString)
+          $("#sim-length-result").text((performance.now() - simStart) / 1000 + "s")
+          $("#sim-stat-weights").text("Stat Weights")
+          $('.btn').css('background', '')
+        }
+      },
+      (simulationUpdate) => {
+        const statValue = Math.round((((simulationUpdate.avgDps - normalSimAvgDps) / stats[simulationUpdate.customStat.stat]) * 1000)) / 1000
+        updateStatWeight(simulationUpdate.customStat.stat, statValue)
+
+        let smallestValue = 100
+        for (let i = 0; i < simInfo.length; i++) {
+          if (simInfo[i][0] == simulationUpdate.customStat.stat) {
+            simInfo[i][1] = simulationUpdate.percent
+          }
+          if (simInfo[i][1] < smallestValue) smallestValue = simInfo[i][1]
+        }
+
+          $('#sim-stat-weights').css('background', 'linear-gradient(to right, #9482C9 ' + smallestValue + '%, transparent ' + smallestValue + '%)')
+          $('#sim-stat-weights').text(smallestValue + '%')
+      },
+      {
+        player: Player.getSettings(),
+        simulation: Simulation.getSettings(),
+        customStat: stat,
+        customStatValue: stats[stat]
+      }
+    ).start())
+    simInfo.push([stat,0])
+  }
+
+  $("#stat-weights-section").show()
 }
 
 function updateTalentTreeNames () {
