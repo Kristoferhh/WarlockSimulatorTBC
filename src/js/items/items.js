@@ -532,6 +532,35 @@ const items = {
       source: "Zul'Aman",
       phase: 4
     },
+    veteransPendantOfConquest: {
+      name: "Veteran's Pendant of Conquest",
+      stamina: 27,
+      intellect: 12,
+      yellow: 1,
+      socketBonus: {
+        stamina: 3
+      },
+      spellPower: 21,
+      critRating: 18,
+      resilienceRating: 18,
+      id: 33067,
+      source: 'PVP',
+      phase: 2
+    },
+    veteransPendantOfDominance: {
+      name: "Veteran's Pendant of Dominance",
+      stamina: 31,
+      intellect: 16,
+      yellow: 1,
+      socketBonus: {
+        stamina: 3
+      },
+      spellPower: 26,
+      resilienceRating: 18,
+      id: 33065,
+      source: 'PVP',
+      phase: 2
+    },
     translucentSpellthreadNecklace: {
       name: 'Translucent Spellthread Necklace',
       spellPower: 46,
@@ -588,7 +617,7 @@ const items = {
       shadowPower: 51,
       id: 30666,
       source: 'Karazhan',
-      phase: 1 // maybe 2? Wowhead says added in 2.1
+      phase: 1
     },
     manasurgePendant: {
       name: 'Manasurge Pendant',
@@ -617,35 +646,6 @@ const items = {
       critRating: 16,
       id: 28254,
       source: 'The Mechanar',
-      phase: 1
-    },
-    veteransPendantOfConquest: {
-      name: "Veteran's Pendant of Conquest",
-      stamina: 27,
-      intellect: 12,
-      yellow: 1,
-      socketBonus: {
-        stamina: 3
-      },
-      spellPower: 21,
-      critRating: 18,
-      resilienceRating: 18,
-      id: 33067,
-      source: 'PVP',
-      phase: 1
-    },
-    veteransPendantOfDominance: {
-      name: "Veteran's Pendant of Dominance",
-      stamina: 31,
-      intellect: 16,
-      yellow: 1,
-      socketBonus: {
-        stamina: 3
-      },
-      spellPower: 26,
-      resilienceRating: 18,
-      id: 33065,
-      source: 'PVP',
       phase: 1
     },
     hydraFangNecklace: {
@@ -1779,7 +1779,7 @@ const items = {
         spellPower: 2
       },
       id: 33883,
-      source: 'Sunwell Plateau',
+      source: 'PVP',
       phase: 5
     },
     bindingsOfRagingFire: {
@@ -1885,6 +1885,20 @@ const items = {
       source: 'PVP',
       phase: 2
     },
+    veteransDreadweaveCuffs: {
+      name: "Veteran's Dreadweave Cuffs",
+      stamina: 31,
+      intellect: 16,
+      yellow: 1,
+      socketBonus: {
+        spellPower: 2
+      },
+      spellPower: 25,
+      resilienceRating: 17,
+      id: 32811,
+      source: 'PVP',
+      phase: 2
+    },
     crimsonBracersOfGloom: {
       name: 'Crimson Bracers of Gloom',
       stamina: 18,
@@ -1902,18 +1916,13 @@ const items = {
       source: 'Karazhan',
       phase: 1
     },
-    veteransDreadweaveCuffs: {
-      name: "Veteran's Dreadweave Cuffs",
-      stamina: 31,
-      intellect: 16,
-      yellow: 1,
-      socketBonus: {
-        spellPower: 2
-      },
-      spellPower: 25,
-      resilienceRating: 17,
-      id: 32811,
-      source: 'PVP',
+    illidariBracers: {
+      name: 'Illidari Bracers of the Invoker',
+      intellect: 17,
+      spellPower: 20,
+      critRating: 17,
+      id: 31224,
+      source: 'Ambassador Jerrikar - SMV Rare',
       phase: 1
     },
     marshalsSilkCuffs: {
@@ -2418,6 +2427,27 @@ const items = {
       source: 'Hyjal Summit',
       phase: 3
     },
+    veteransSilkBelt: {
+      name: "Veteran's Silk Belt",
+      stamina: 39,
+      intellect: 27,
+      spellPower: 32,
+      resilienceRating: 26,
+      critRating: 27,
+      id: 32807,
+      source: 'PVP',
+      phase: 2
+    },
+    veteransDreadweaveBelt: {
+      name: "Veteran's Dreadweave Belt",
+      stamina: 45,
+      intellect: 30,
+      spellPower: 36,
+      resilienceRating: 31,
+      id: 32799,
+      source: 'PVP',
+      phase: 2
+    },
     beltOfBlasting: {
       name: 'Belt of Blasting',
       spellPower: 50,
@@ -2537,27 +2567,6 @@ const items = {
       hitRating: 17,
       id: 27795,
       source: 'Steamvaults'
-    },
-    veteransSilkBelt: {
-      name: "Veteran's Silk Belt",
-      stamina: 39,
-      intellect: 27,
-      spellPower: 32,
-      resilienceRating: 26,
-      critRating: 27,
-      id: 32807,
-      source: 'PVP',
-      phase: 1
-    },
-    veteransDreadweaveBelt: {
-      name: "Veteran's Dreadweave Belt",
-      stamina: 45,
-      intellect: 30,
-      spellPower: 36,
-      resilienceRating: 31,
-      id: 32799,
-      source: 'PVP',
-      phase: 1
     },
     marshalsSilkBelt: {
       name: "Marshal's Silk Belt",
@@ -3114,6 +3123,27 @@ const items = {
       source: 'Black Temple',
       phase: 3
     },
+    veteransSilkFootguards: {
+      name: "Veteran's Silk Footguards",
+      stamina: 39,
+      intellect: 27,
+      spellPower: 32,
+      resilienceRating: 26,
+      critRating: 27,
+      id: 32795,
+      source: 'PVP',
+      phase: 2
+    },
+    veteransDreadweaveStalkers: {
+      name: "Veteran's Dreadweave Stalkers",
+      stamina: 45,
+      intellect: 30,
+      spellPower: 36,
+      resilienceRating: 31,
+      id: 32787,
+      source: 'PVP',
+      phase: 2
+    },
     bootsOfTheShiftingNightmare: {
       name: 'Boots of the Shifting Nightmare',
       stamina: 41,
@@ -3183,27 +3213,6 @@ const items = {
       critRating: 19,
       id: 28517,
       source: 'Karazhan',
-      phase: 1
-    },
-    veteransSilkFootguards: {
-      name: "Veteran's Silk Footguards",
-      stamina: 39,
-      intellect: 27,
-      spellPower: 32,
-      resilienceRating: 26,
-      critRating: 27,
-      id: 32795,
-      source: 'PVP',
-      phase: 1
-    },
-    veteransDreadweaveStalkers: {
-      name: "Veteran's Dreadweave Stalkers",
-      stamina: 45,
-      intellect: 30,
-      spellPower: 36,
-      resilienceRating: 31,
-      id: 32787,
-      source: 'PVP',
       phase: 1
     },
     bootsOfTheInfernalCoven: {
@@ -3513,6 +3522,27 @@ const items = {
       source: 'The Scale of the Sands - Friendly',
       phase: 3
     },
+    veteransBandOfDominance: {
+      name: "Veteran's Band of Dominance",
+      stamina: 27,
+      intellect: 12,
+      spellPower: 29,
+      resilienceRating: 22,
+      spellPen: 10,
+      unique: true,
+      id: 33056,
+      source: 'PVP',
+      phase: 2
+    },
+    theSealOfDanzalar: {
+      name: 'The Seal of Danzalar',
+      stamina: 33,
+      spellPower: 25,
+      resilienceRating: 21,
+      id: 33054,
+      source: 'Serpentshrine Cavern',
+      phase: 2
+    },
     ringOfEndlessCoils: {
       name: 'Ring of Endless Coils',
       stamina: 31,
@@ -3542,15 +3572,6 @@ const items = {
       unique: true,
       id: 28753,
       source: 'Karazhan',
-      phase: 1
-    },
-    theSealOfDanzalar: {
-      name: 'The Seal of Danzalar',
-      stamina: 33,
-      spellPower: 25,
-      resilienceRating: 21,
-      id: 33054,
-      source: 'Serpentshrine Cavern',
       phase: 1
     },
     bandOfCrimsonFury: {
@@ -3603,18 +3624,6 @@ const items = {
       critRating: 14,
       id: 28394,
       source: 'The Arcatraz',
-      phase: 1
-    },
-    veteransBandOfDominance: {
-      name: "Veteran's Band of Dominance",
-      stamina: 27,
-      intellect: 12,
-      spellPower: 29,
-      resilienceRating: 22,
-      spellPen: 10,
-      unique: true,
-      id: 33056,
-      source: 'PVP',
       phase: 1
     },
     arcaneNetherband: {
