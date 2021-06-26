@@ -348,7 +348,7 @@ class Simulation {
                 }
               } else {
                 this.player.useCooldownsIfAvailable()
-                if (this.player.spells.corruption && !this.player.auras.corruption.active && this.player.spells.corruption.ready() && (timeRemaining - this.player.spells.corruption.castTime) >= this.player.auras.corruption.minimumDuration) {
+                if (this.player.spells.corruption && (!this.player.auras.corruption.active || (this.player.auras.corruption.ticksRemaining == 1 && this.player.auras.corruption.tickTimerRemaining < this.player.spells.corruption.castTime)) && this.player.spells.corruption.ready() && (timeRemaining - this.player.spells.corruption.castTime) >= this.player.auras.corruption.minimumDuration) {
                   this.player.cast('corruption')
                 } else if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.corruption.active) {
                   this.player.cast('shadowBolt')
