@@ -42,6 +42,15 @@ class Player {
     this.combatlog = []
     this.importantAuraCounter = 0 // counts the amount of active "important" auras such as trinket procs, on-use trinket uses, power infusion etc.
     this.totalManaRegenerated = 0
+    // The amount to increase spell cast times by.
+    // This will not have any actual effect on the dps result because of how small the value is, but it will make things a lot more realistic
+    // because cast times, dot ticks, and such will fall out of sync with each other (which is what happens when a real player is playing)
+    // and it will make it easier to, for example, pre-cast Immolate to reapply it right after it expires.
+    // If Immolate has 1.5 seconds remaining, the sim won't start casting immolate because it would refresh before it expires
+    // so Immolate would need to have ~1.49999s left of its duration for it to start casting.
+    // But with this delay, Immolate's cast time would be ~1.500001 which would allow it to reapply Immolate when it has 1.5 seconds left
+    // This should solve that problem, except if I'm not thinking of this the right way.
+    this.spellDelay = 0.0001
     this.customStat = {
       stat: customStat,
       value: customStatValue

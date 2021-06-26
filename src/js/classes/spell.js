@@ -37,7 +37,7 @@ class Spell {
   }
 
   getCastTime() {
-    return Math.round((this.castTime / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000
+    return Math.round((this.castTime / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000 + this.player.spellDelay
   }
 
   startCast () {
@@ -49,7 +49,7 @@ class Spell {
     if (this.castTime > 0) {
       this.casting = true
       this.player.castTimeRemaining = this.getCastTime()
-      if (!this.isProc) this.player.combatLog('Started casting ' + this.name + '. Cast time: ' + this.player.castTimeRemaining + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base cast speed of ' + this.castTime + '). Global cooldown: ' + this.player.gcdRemaining)
+      if (!this.isProc) this.player.combatLog('Started casting ' + this.name + '. Cast time: ' + (this.player.castTimeRemaining - this.player.spellDelay) + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base cast speed of ' + this.castTime + '). Global cooldown: ' + this.player.gcdRemaining)
     } else {
       if (!this.isProc) this.player.combatLog('Cast ' + this.name)
       this.cast()
