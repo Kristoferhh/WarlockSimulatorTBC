@@ -178,7 +178,7 @@ class Pet {
       this.stats.spellCritChance = 5 + this.player.talents.demonicTactics + this.stats.buffs.spellCritChance
       this.stats.spellPower = this.stats.buffs.spellPower + (this.player.stats.spellPower + this.player.demonicKnowledgeSp + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15
       this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * 4.7 * this.stats.intellectModifier // confirm
-      this.player.combatLog("Calculated pet's stats from player's current stats")
+      this.player.combatLog("Recalculated pet's stats")
     }
   }
 

@@ -287,6 +287,17 @@
 					<label class="settings-left" for="exposeWeaknessUptime">Expose Weakness Uptime %</label>
 					<input class='settings-right' value="70" type="number" min='0' name="exposeWeaknessUptime">
 				</li>
+                <li id="customIsbUptime">
+					<label class="settings-left" for="customIsbUptime">Use custom ISB uptime %?</label>
+					<select class="settings-right" name="customIsbUptime">
+						<option value="no">No</option>
+						<option value="yes">Yes</option>
+					</select>
+				</li>
+                <li id="custom-isb-uptime-value">
+					<span class="settings-left">Custom ISB Uptime %</span>
+					<input id="customIsbUptimeValue" value="0" type="number" name="customIsbUptimeValue" class="settings-right">
+				</li>
 			</ul>
 		</section>
 
@@ -406,7 +417,7 @@
 			</fieldset>
 
 			<fieldset id="saved-profiles" style="display: none;">
-				<legend>Saved Profiles (experimental)</legend>
+				<legend>Saved Profiles</legend>
 				<ul></ul>
 			</fieldset>
 

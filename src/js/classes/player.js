@@ -49,7 +49,7 @@ class Player {
     // If Immolate has 1.5 seconds remaining, the sim won't start casting immolate because it would refresh before it expires
     // so Immolate would need to have ~1.49999s left of its duration for it to start casting.
     // But with this delay, Immolate's cast time would be ~1.500001 which would allow it to reapply Immolate when it has 1.5 seconds left
-    // This should solve that problem, except if I'm not thinking of this the right way.
+    // This should solve that problem if I'm thinking through this correctly.
     this.spellDelay = 0.0001
     this.customStat = {
       stat: customStat,
@@ -219,6 +219,12 @@ class Player {
     // Add spell power from Fel Armor
     if (settings.auras.felArmor) {
       this.stats.spellPower += (100 * (1 + 0.1 * this.talents.demonicAegis))
+    }
+    // If using a custom isb uptime % then just add to the shadow modifier % (this assumes 5/5 ISB giving 20% shadow damage)
+    if (settings.simSettings.customIsbUptime == 'yes') {
+        console.log(this.stats.shadowModifier)
+        this.stats.shadowModifier *= (1 + 0.2 * (settings.simSettings.customIsbUptimeValue / 100))
+        console.log(this.stats.shadowModifier)
     }
     // Add spell power from Improved Divine Spirit
     this.stats.spiritModifier *= (1 - (0.01 * settings.talents.demonicEmbrace))

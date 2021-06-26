@@ -1496,4 +1496,10 @@ function updateSimulationSettingsVisibility () {
     $('#survivalHunterAgility').hide()
     $('#exposeWeaknessUptime').hide()
   }
+
+  if ($("#customIsbUptime").children("select").val() == "yes") {
+      $("#custom-isb-uptime-value").show()
+  } else {
+      $("#custom-isb-uptime-value").hide()
+  }
 }

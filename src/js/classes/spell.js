@@ -127,8 +127,11 @@ class Spell {
 
     // T4 2pc
     if (this.player.sets['645'] >= 2 && ['shadow', 'fire'].includes(this.school) && random(1, 100) <= this.player.auras.shadowflame.procChance) {
-      if (this.school == "shadow") this.player.auras.flameshadow.apply()
-      else if (this.school == "fire") this.player.auras.shadowflame.apply()
+      if (this.school == "shadow") {
+        this.player.auras.flameshadow.apply()
+      } else if (this.school == "fire") {
+        this.player.auras.shadowflame.apply()
+      }
     }
 
     // Quagmirran's Eye
@@ -187,9 +190,11 @@ class Spell {
     dmg += sp * this.coefficient
 
     // Improved Shadow Bolt
-    if (this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active) {
+    if (this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.simSettings.customIsbUptime == 'no') {
       modifier *= this.player.auras.improvedShadowBolt.modifier
-      if (!this.isDot) this.player.auras.improvedShadowBolt.decrementStacks()
+      if (!this.isDot) {
+        this.player.auras.improvedShadowBolt.decrementStacks()
+      }
     }
 
     dmg *= modifier
@@ -209,7 +214,7 @@ class Spell {
       dmg *= critMultiplier
 
       // Apply ISB debuff if casting Shadow Bolt
-      if (this.varName == 'shadowBolt' && this.player.talents.improvedShadowBolt > 0) {
+      if (this.player.simSettings.customIsbUptime == "no" && this.varName == 'shadowBolt' && this.player.talents.improvedShadowBolt > 0) {
         this.player.auras.improvedShadowBolt.apply()
       }
 
