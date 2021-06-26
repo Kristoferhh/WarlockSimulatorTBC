@@ -158,13 +158,17 @@ class Spell {
     }
   }
 
+  getModifier() {
+    return this.player.stats[this.school + 'Modifier'] * this.modifier
+  }
+
   damage (isCrit) {
     let dmg = this.dmg
     let critMultiplier = 1.5
     let spellPower = this.player.stats.spellPower + this.player.demonicKnowledgeSp
     let shadowPower = this.player.stats.shadowPower
     let firePower = this.player.stats.firePower
-    let modifier = this.player.stats[this.school + 'Modifier'] * this.modifier
+    let modifier = this.getModifier()
 
     // If casting Incinerate and Immolate is up, add the bonus damage.
     if (this.varName == 'incinerate' && this.player.auras.immolate && this.player.auras.immolate.active) {
@@ -305,7 +309,7 @@ class SearingPain extends Spell {
     super(player)
     this.castTime = 1.5
     this.manaCost = 205 * (1 - 0.01 * player.talents.cataclysm)
-    this.coefficient = 0.4286
+    this.coefficient = 1.5/3.5
     this.dmg = 295
     this.name = 'Searing Pain'
     this.doesDamage = true
@@ -340,7 +344,7 @@ class Shadowburn extends Spell {
     this.cooldown = 15
     this.manaCost = 515 * (1 - 0.01 * player.talents.cataclysm)
     this.coefficient = 0.22
-    this.dmg = 634
+    this.dmg = 631
     this.name = 'Shadowburn'
     this.doesDamage = true
     this.canCrit = true
@@ -403,7 +407,7 @@ class LifeTap extends Spell {
     this.name = 'Life Tap'
     this.manaReturn = 582
     this.coefficient = 0.8
-    this.modifier = 1 + (0.1 * this.player.talents.improvedLifeTap)
+    this.modifier = 1 * (1 + 0.1 * this.player.talents.improvedLifeTap) * (1 + 0.02 * this.player.talents.shadowMastery)
     this.breakdownTable = 'manaGain'
     this.setup()
   }
@@ -415,7 +419,7 @@ class LifeTap extends Spell {
   cast () {
     this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
     const manaGain = this.manaGain()
-    this.player.combatLog(this.name + ' ' + Math.round(manaGain))
+    this.player.combatLog(this.name + ' ' + Math.round(manaGain) + ' (' + (this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats.shadowPower) + ' Spell Power - ' + Math.round(this.modifier * 10000) / 100 + '% Mana Gain Modifier)')
     this.player.totalManaRegenerated += manaGain
     this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + manaGain || manaGain
     // Warning for if Life Tap is used while there are important auras active
@@ -488,7 +492,6 @@ class SiphonLife extends Spell {
     super(player)
     this.name = 'Siphon Life'
     this.manaCost = 410
-    this.castTime = 0
     this.isDot = true
     this.school = 'shadow'
     this.type = 'affliction'
@@ -500,17 +503,25 @@ class Immolate extends Spell {
   constructor (player) {
     super(player)
     this.name = 'Immolate'
-    this.manaCost = 445
+    this.manaCost = 445 * (1 - 0.01 * player.talents.cataclysm)
     this.castTime = 2 - (0.1 * player.talents.bane)
     this.isDot = true
     this.doesDamage = true
     this.canCrit = true
     this.dmg = 331.5
     this.coefficient = 0.2
-    this.modifier = 1 + 0.05 * player.talents.improvedImmolate
     this.school = 'fire'
     this.type = 'destruction'
     this.setup()
+  }
+
+  getModifier() {
+    let modifier = super.getModifier()
+    if (this.player.talents.emberstorm > 0) {
+      modifier /= (1 + 0.02 * this.player.talents.emberstorm)
+    }
+    modifier *= (1 + (0.02 * this.player.talents.emberstorm + 0.05 * this.player.talents.improvedImmolate))
+    return modifier
   }
 }
 
@@ -553,8 +564,6 @@ class CurseOfDoom extends Spell {
     super(player)
     this.name = 'Curse of Doom'
     this.manaCost = 380
-    this.dmg = 4200
-    this.coefficient = 2
     this.cooldown = 60
     this.school = 'shadow'
     this.type = 'affliction'

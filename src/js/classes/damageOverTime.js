@@ -2,15 +2,14 @@
 class DamageOverTime {
   constructor (player) {
     this.player = player
-    this.durationTotal = 0
-    this.tickTimerTotal = 3
-    this.tickTimerRemaining = 0
-    this.ticksRemaining = 0
+    this.durationTotal = 0 // Total duration of the dot
+    this.tickTimerTotal = 3 // Total duration of each tick (default is 3 seconds between ticks)
+    this.tickTimerRemaining = 0 // Time until next tick
+    this.ticksRemaining = 0 // Amount of ticks remaining before the dot expires
     this.snapshots = true
     this.dmg = 0
-    this.spellPower = 0
-    this.multiplicativeModifier = 1
-    this.additiveModifier = 0
+    this.spellPower = 0 // Amount of Spell Power (plus Shadow or Fire Power) when the dot was applied
+    this.modifier = 1
     this.active = false
     this.school = null
     this.name = null
@@ -18,13 +17,24 @@ class DamageOverTime {
   }
 
   setup () {
-    this.ticksTotal = Math.round(this.durationTotal / this.tickTimerTotal)
-    this.originalDurationTotal = this.durationTotal
     this.varName = camelCase(this.name)
+    this.originalDurationTotal = this.durationTotal
+    // T4 4pc
+    if ((this.varName == "immolate" || this.varName == "corruption") && this.player.sets['645'] >= 4) {
+      this.durationTotal += 3
+    }
+    this.ticksTotal = Math.round(this.durationTotal / this.tickTimerTotal)
     this.player.damageBreakdown[this.varName] = this.player.damageBreakdown[this.varName] || { name: this.name }
+    this.player.auraBreakdown[this.varName] = this.player.auraBreakdown[this.varName] || { name: this.name }
   }
 
   apply (spellPower) {
+    if (this.active) {
+      this.player.combatLog(this.name + " refreshed before letting it expire")
+    }
+    // Keep a timestamp of when the aura was applied so we can calculate the uptime when it fades
+    this.player.auraBreakdown[this.varName].appliedAt = this.player.fightTime
+    this.player.auraBreakdown[this.varName].count = this.player.auraBreakdown[this.varName].count + 1 || 1
     let refreshedOrApplied = this.active ? 'refreshed' : 'applied'
     this.player.combatLog(this.name + ' ' + refreshedOrApplied + ' (' + spellPower + ' Spell Power)')
     this.active = true
@@ -42,10 +52,19 @@ class DamageOverTime {
     }
   }
 
-  fade () {
+  fade (endOfIteration = false) {
     this.active = false
     this.tickTimerRemaining = 0
     this.ticksRemaining = 0
+    const auraUptime = this.player.fightTime - this.player.auraBreakdown[this.varName].appliedAt
+    this.player.auraBreakdown[this.varName].uptime = this.player.auraBreakdown[this.varName].uptime + auraUptime || auraUptime
+    if (!endOfIteration) {
+      this.player.combatLog(this.name + ' faded')
+    }
+  }
+
+  getModifier() {
+    return this.modifier * this.player.stats[this.school + 'Modifier']
   }
 
   tick (t) {
@@ -54,7 +73,7 @@ class DamageOverTime {
 
       if (this.tickTimerRemaining == 0) {
         let sp = this.snapshots ? this.spellPower : this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats[this.school + 'Power']
-        let modifier = (this.multiplicativeModifier * this.player.stats[this.school + 'Modifier'] + this.additiveModifier)
+        let modifier = this.getModifier()
         
         // Add bonus from ISB (without removing ISB stacks since it's a dot)
         if ((this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.varName != "siphonLife") || (this.varName == "siphonLife" && this.isbActive)) {
@@ -88,8 +107,7 @@ class DamageOverTime {
         }
 
         if (this.ticksRemaining <= 0) {
-          this.active = false
-          this.player.combatLog(this.name + ' faded')
+          this.fade()
         }
       }
     }
@@ -102,7 +120,6 @@ class CorruptionDot extends DamageOverTime {
     this.durationTotal = 18
     this.tickTimerTotal = 3
     this.dmg = 900
-    this.additiveModifier = 0.01 * this.player.talents.contagion
     this.school = 'shadow'
     this.name = 'Corruption'
     this.coefficient = 0.936 + (0.12 * player.talents.empoweredCorruption)
@@ -110,9 +127,18 @@ class CorruptionDot extends DamageOverTime {
     this.boosted = false // Track whether the corruption's dmg has been boosted by T5 4pc or not
     this.setup()
 
-    if (player.sets['529'] >= 4) this.multiplicativeModifier *= 1.12		// T3 4pc
-    if (player.sets['645'] >= 4) this.durationTotal += 3	// T4 4pc
-    if (player.sets['646'] >= 4) { this.ticksTotal = this.durationTotal / this.tickTimerTotal }
+    if (player.sets['529'] >= 4) this.modifier *= 1.12		// T3 4pc
+  }
+
+  getModifier() {
+    let modifier = super.getModifier()
+    if (this.player.talents.shadowMastery > 0 && this.player.talents.contagion > 0) {
+      // Divine away the bonus from Shadow Mastery
+      modifier /= (1 + (this.player.talents.shadowMastery * 0.02))
+      // Multiply the modifier with the bonus from Shadow Mastery + Contagion
+      modifier *= (1 * (1 + ((this.player.talents.shadowMastery * 0.02) + (this.player.talents.contagion / 100))))
+    }
+    return modifier
   }
 
   apply (spellPower) {
@@ -165,9 +191,6 @@ class ImmolateDot extends DamageOverTime {
     this.minimumDuration = 12
     this.boosted = false // Track whether the Immolate's dmg has been boosted by T5 4pc or not
     this.setup()
-
-    if (player.sets['645'] >= 4) this.durationTotal += 3	// T4 4pc
-    this.ticksTotal = this.durationTotal / this.tickTimerTotal
   }
 
   apply (spellPower) {
@@ -184,13 +207,20 @@ class CurseOfAgonyDot extends DamageOverTime {
     super(player)
     this.durationTotal = 24
     this.tickTimerTotal = 3
-    this.dmg = 1356 * (1 + 0.05 * player.talents.improvedCurseOfAgony)
-    this.modifier = 1 + (0.01 * player.talents.contagion)
+    this.dmg = 1356
     this.school = 'shadow'
     this.name = 'Curse of Agony'
     this.coefficient = 1.2
     this.minimumDuration = 15
     this.setup()
+  }
+
+  getModifier() {
+    let modifier = super.getModifier()
+    // Remove bonus from Shadow Mastery and add bonus from Shadow Mastery + Contagion + Improved Curse of Agony
+    modifier /= (1 + (this.player.talents.shadowMastery * 0.02))
+    modifier *= (1 * (1 + ((this.player.talents.shadowMastery * 0.02) + (this.player.talents.contagion / 100) + (this.player.talents.improvedCurseOfAgony * 0.05))))
+    return modifier
   }
 }
 
