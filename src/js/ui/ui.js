@@ -1086,7 +1086,9 @@ function simDPS (items) {
                 $("#mana-gain-breakdown-table tbody").append("<tr class='spell-damage-information'><td>" + e.name +"</td><td><meter value='" + percentOfGain + "' min='0' max='100'></meter> " + percentOfGain + "</td><td>" + Math.ceil(e.casts / simulationEnd.iterations) + "</td><td>" + ~~(e.manaGain / e.casts) + "</td<</tr>")
               }
             }
-            $(".breakdown-section").css("display", "inline-block")
+            if ($("#automatically-open-sim-details").is(":checked")) {
+              $(".breakdown-section").css("display", "inline-block")
+            }
           }
         }
 
