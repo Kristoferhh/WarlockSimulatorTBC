@@ -63,12 +63,14 @@ class Player {
 
     this.metaGemIds = []
     // Get the meta gem ID
-    for (const gemSocket in settings.gems.head[settings.items.head]) {
-      if (settings.gems.head[settings.items.head][gemSocket]) {
-        const gemId = settings.gems.head[settings.items.head][gemSocket][1]
-        if (gems.meta[gemId]) {
-          this.metaGemIds.push(gemId)
-        } 
+    if (settings.gems && settings.gems.head && settings.items.head) {
+      for (const gemSocket in settings.gems.head[settings.items.head]) {
+        if (settings.gems.head[settings.items.head][gemSocket]) {
+          const gemId = settings.gems.head[settings.items.head][gemSocket][1]
+          if (gems.meta[gemId]) {
+            this.metaGemIds.push(gemId)
+          } 
+        }
       }
     }
 
