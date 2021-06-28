@@ -125,13 +125,18 @@ class Spell {
       this.player.combatLog("Player gains " + manaGained + " mana from Judgement of Wisdom (" + Math.round(currentMana) + " -> " + Math.round(this.player.mana) + ")")
     }
 
-    // T4 2pc
+    // T4 2-set
     if (this.player.sets['645'] >= 2 && ['shadow', 'fire'].includes(this.school) && random(1, 100) <= this.player.auras.shadowflame.procChance) {
       if (this.school == "shadow") {
         this.player.auras.flameshadow.apply()
       } else if (this.school == "fire") {
         this.player.auras.shadowflame.apply()
       }
+    }
+
+    // Spellstrike 2-set
+    if (this.player.sets['559'] == 2 && random(1, 100) <= this.player.auras.spellstrikeProc.procChance) {
+      this.player.auras.spellstrikeProc.apply()
     }
 
     // Quagmirran's Eye
@@ -237,11 +242,6 @@ class Spell {
     this.player.combatLog(combatLogMsg)
     this.player[this.breakdownTable + 'Breakdown'][this.varName].damage = this.player[this.breakdownTable + 'Breakdown'][this.varName].damage + dmg || dmg
     this.player.iterationDamage += dmg
-
-    // Check for Spellstrike proc
-    if (this.player.sets['559'] == 2 && random(1, 100) <= this.player.auras.spellstrikeProc.procChance) {
-      this.player.auras.spellstrikeProc.apply()
-    }
 
     // T5 4pc. Increase Corruption & Immolate dmg when Shadow Bolt/Incinerate hits
     // The way it's set up to work is that when Corruption or Immolate is applied, its modifier is 100% (or whatever its default modifier is), then after it's applied, if a Shadow Bolt/Incinerate hits, it increases the damage of *that* Corruption/Immolate aura by 10%. If it's re-applied, the 10% dmg is gone until a new Shadow Bolt/Incinerate hits. Please correct if this is not the way it works.
