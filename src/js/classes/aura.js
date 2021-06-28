@@ -61,7 +61,9 @@ class Aura {
       let recalculatePetStats = false
       for (const stat in this.stats) {
         if (this.player.stats.hasOwnProperty(stat)) {
-          this.player.combatLog(stat + ' - ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] - this.stats[stat]) + ')')
+          if (!endOfIteration) {
+            this.player.combatLog(stat + ' - ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] - this.stats[stat]) + ')')
+          }
           this.player.stats[stat] -= this.stats[stat]
           if (this.player.pet) {
             recalculatePetStats = true
