@@ -65,7 +65,7 @@ const enchants = {
       name: 'Hoodoo Hex',
       stamina: 10,
       spellPower: 18,
-      id: 19788,
+      id: 24165,
       source: "Zul'Gurub",
       phase: 0
     }
@@ -391,7 +391,7 @@ const enchants = {
       name: 'Hoodoo Hex',
       stamina: 10,
       spellPower: 18,
-      id: 19788,
+      id: 24165,
       source: "Zul'Gurub",
       phase: 0
     }
