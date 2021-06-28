@@ -352,7 +352,7 @@ class Simulation {
                   this.player.cast('corruption')
                 } else if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.corruption.active) {
                   this.player.cast('shadowBolt')
-                } else if (this.player.spells.curseOfAgony && !this.player.auras.curseOfAgony.active && this.player.spells.curseOfAgony.ready() && timeRemaining >= this.player.auras.curseOfAgony.minimumDuration) {
+                } else if (this.player.spells.curseOfAgony && !this.player.auras.curseOfAgony.active && (!this.player.spells.curseOfDoom || !this.player.auras.curseOfDoom.active) && this.player.spells.curseOfAgony.ready() && timeRemaining >= this.player.auras.curseOfAgony.minimumDuration) {
                   this.player.cast('curseOfAgony')
                 } else if (this.player.spells.unstableAffliction && (!this.player.auras.unstableAffliction.active || (this.player.auras.unstableAffliction.ticksRemaining == 1 && this.player.auras.unstableAffliction.tickTimerRemaining < this.player.spells.unstableAffliction.getCastTime())) && this.player.spells.unstableAffliction.ready() && (timeRemaining - this.player.spells.unstableAffliction.castTime) >= this.player.auras.unstableAffliction.minimumDuration) {
                   this.player.cast('unstableAffliction')
