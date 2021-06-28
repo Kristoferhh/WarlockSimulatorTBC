@@ -750,7 +750,11 @@ $('#rotation-list div li').click(function () {
 })
 
 $('#sim-settings select, #sim-settings input').change(function () {
-  settings[$(this).attr('name')] = $(this).val()
+  if ($(this).is(":checkbox")) {
+    settings[$(this).attr('name')] = $(this).is(":checked")
+  } else {
+    settings[$(this).attr('name')] = $(this).val()
+  }
   localStorage.settings = JSON.stringify(settings)
   refreshCharacterStats()
   updateSimulationSettingsVisibility()

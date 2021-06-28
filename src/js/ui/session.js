@@ -1,7 +1,11 @@
 // Load saved simulation settings
 $('#sim-settings select, #sim-settings input').each(function () {
   if (settings[$(this).attr('name')]) {
-    $(this).val(settings[$(this).attr('name')])
+    if ($(this).is(":checkbox")) {
+      $(this).attr('checked', settings[$(this).attr('name')])
+    } else {
+      $(this).val(settings[$(this).attr('name')])
+    }
   } else {
     // If the setting is not initialized in the settings object then set it to its default value
     settings[$(this).attr('name')] = $(this).val()
