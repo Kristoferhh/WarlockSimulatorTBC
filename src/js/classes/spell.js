@@ -181,6 +181,8 @@ class Spell {
     if (this.varName == 'incinerate' && this.player.auras.immolate && this.player.auras.immolate.active) {
       dmg += this.bonusDamageFromImmolate
     }
+    // Make a variable for the base damage to output into the combat log
+    const baseDamage = dmg
     // Spellfire 3-set bonus. Add spell power equal to 7% of the player's intellect
     if (this.player.sets['552'] >= 3) {
       spellPower += (this.player.stats.intellect * this.player.stats.intellectModifier * 0.07)
@@ -223,9 +225,16 @@ class Spell {
         this.player.spells.theLightningCapacitor.startCast()
       }
     }
-    dmg = ~~(dmg * (1 - 0.0025 * this.player.enemy[this.school + 'Resist']))
-    if (isCrit) this.player.combatLog(this.name + ' *' + dmg + '* (' + critMultiplier.toFixed(2) + '% Crit Multiplier - ' + sp + ' Spell Power - ' + Math.round(modifier * 10000) / 100 + '% Damage Modifier)')
-    else this.player.combatLog(this.name + ' ' + dmg + ' (' + sp + ' Spell Power - ' + Math.round(modifier * 10000) / 100 + '% Damage Modifier)')
+    const partialResistMultiplier = 1 - 0.0025 * this.player.enemy[this.school + 'Resist']
+    dmg = Math.round(dmg * partialResistMultiplier)
+    let combatLogMsg = this.name + ' '
+    if (isCrit) combatLogMsg += '*'
+    combatLogMsg += dmg
+    if (isCrit) combatLogMsg += '*'
+    combatLogMsg +=  ' (' + baseDamage + ' Base Damage - ' + Math.round(this.coefficient * 1000) / 1000 + ' Coefficient - ' + sp + ' Spell Power - '
+    if (isCrit) combatLogMsg += critMultiplier.toFixed(2) + '% Crit Multiplier - '
+    combatLogMsg += Math.round(modifier * 10000) / 100 + '% Damage Modifier - ' + Math.round(partialResistMultiplier * 1000) / 1000 + '% Partial Resist Multiplier)'
+    this.player.combatLog(combatLogMsg)
     this.player[this.breakdownTable + 'Breakdown'][this.varName].damage = this.player[this.breakdownTable + 'Breakdown'][this.varName].damage + dmg || dmg
     this.player.iterationDamage += dmg
 
@@ -298,7 +307,7 @@ class Incinerate extends Spell {
     super(player)
     this.castTime = Math.round((2.5 * (1 - 0.02 * player.talents.emberstorm)) * 100) / 100
     this.manaCost = 355 * (1 - 0.01 * player.talents.cataclysm)
-    this.coefficient = 0.7143 + (0.04 * player.talents.shadowAndFlame)
+    this.coefficient = (2.5/3.5) + (0.04 * player.talents.shadowAndFlame)
     this.dmg = 479
     this.bonusDamageFromImmolate = 120 // The bonus damage gained when Immolate is up on the target
     this.name = 'Incinerate'
