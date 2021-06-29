@@ -327,7 +327,7 @@ class Simulation {
             const timeRemaining = fightLength - this.player.fightTime
             // Not enough time left to cast another filler spell.
             if ((this.player.rotation.finisher.deathCoil || this.player.rotation.finisher.shadowburn) && timeRemaining <= (this.player.spells[this.player.filler].castTime + this.player.spells[this.player.filler].travelTime)) {
-              this.player.useCooldownsIfAvailable()
+              this.player.useCooldowns()
               // Cast Death Coil if there's time to cast both Death Coil and Shadowburn (need to cast Death Coil first because of the travel time). Otherwise only cast Shadowburn
               if (this.player.rotation.finisher.deathCoil && this.player.spells.deathCoil.ready() && (timeRemaining - this.player.gcdValue > this.player.spells.deathCoil.travelTime)) {
                 this.player.cast('deathCoil')
@@ -347,7 +347,7 @@ class Simulation {
                   this.player.cast('curseOfAgony')
                 }
               } else {
-                this.player.useCooldownsIfAvailable()
+                this.player.useCooldowns()
                 if (this.player.spells.corruption && (!this.player.auras.corruption.active || (this.player.auras.corruption.ticksRemaining == 1 && this.player.auras.corruption.tickTimerRemaining < this.player.spells.corruption.getCastTime())) && this.player.spells.corruption.ready() && (timeRemaining - this.player.spells.corruption.castTime) >= this.player.auras.corruption.minimumDuration) {
                   this.player.cast('corruption')
                 } else if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.corruption.active) {

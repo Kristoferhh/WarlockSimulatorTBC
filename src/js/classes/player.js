@@ -444,7 +444,7 @@ class Player {
     return false
   }
 
-  useCooldownsIfAvailable () {
+  useCooldowns () {
     if (this.spells.bloodlust && !this.auras.bloodlust.active) {
       for (let i = 0; i < this.spells.bloodlust.length; i++) {
         if (this.spells.bloodlust[i].ready()) {
