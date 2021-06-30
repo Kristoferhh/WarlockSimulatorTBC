@@ -172,7 +172,7 @@ class Player {
     // Crit chance
     this.stats.critChanceMultiplier = 1000
     if (settings.auras.powerOfTheGuardianMage) this.stats.critRating += 28 * this.simSettings.mageAtieshAmount
-    this.stats.critChance = baseCritChancePercent + ((this.stats.critRating + ((this.stats.intellect * this.stats.intellectModifier) * critPerInt)) / critRatingPerPercent) + settings.talents.devastation + settings.talents.backlash + settings.talents.demonicTactics
+    this.stats.critChance = baseCritChancePercent + (this.stats.critRating / critRatingPerPercent) + settings.talents.devastation + settings.talents.backlash + settings.talents.demonicTactics
     if (settings.auras.moonkinAura) this.stats.critChance += 5
     if (settings.auras.judgementOfTheCrusader) this.stats.critChance += 3
     if (settings.auras.totemOfWrath) this.stats.critChance += (3 * settings.simSettings.totemOfWrathAmount)
@@ -224,9 +224,7 @@ class Player {
     }
     // If using a custom isb uptime % then just add to the shadow modifier % (this assumes 5/5 ISB giving 20% shadow damage)
     if (settings.simSettings.customIsbUptime == 'yes') {
-        console.log(this.stats.shadowModifier)
         this.stats.shadowModifier *= (1 + 0.2 * (settings.simSettings.customIsbUptimeValue / 100))
-        console.log(this.stats.shadowModifier)
     }
     // Add spell power from Improved Divine Spirit
     this.stats.spiritModifier *= (1 - (0.01 * settings.talents.demonicEmbrace))
@@ -308,7 +306,7 @@ class Player {
     this.combatlog.push('Spell Power: ' + Math.round(this.stats.spellPower) + ' + ' + Math.round(this.demonicKnowledgeSp) + ' from Demonic Knowledge')
     this.combatlog.push('Shadow Power: ' + this.stats.shadowPower)
     this.combatlog.push('Fire Power: ' + this.stats.firePower)
-    this.combatlog.push('Crit Chance: ' + Math.round(this.stats.critChance * 100) / 100 + '%')
+    this.combatlog.push('Crit Chance: ' + Math.round(this.getCritChance() * 100) / 100 + '%')
     this.combatlog.push('Hit Chance: ' + Math.round((this.stats.extraHitChance) * 100) / 100 + '%')
     this.combatlog.push('Haste: ' + Math.round((this.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + '%')
     this.combatlog.push('Shadow Modifier: ' + Math.round(this.stats.shadowModifier * 100) + '%')
@@ -493,8 +491,12 @@ class Player {
     return hit
   }
 
+  getCritChance() {
+    return this.stats.critChance + ((this.stats.intellect * this.stats.intellectModifier) * critPerInt)
+  }
+
   isCrit (extraCrit = 0) {
-    return (random(1, (100 * this.stats.critChanceMultiplier)) <= ((this.stats.critChance + extraCrit) * this.stats.critChanceMultiplier))
+    return (random(1, (100 * this.stats.critChanceMultiplier)) <= ((this.getCritChance() + extraCrit) * this.stats.critChanceMultiplier))
   }
 
   // formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/ && https://royalgiraffe.github.io/resist-guide

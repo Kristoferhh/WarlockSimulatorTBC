@@ -4,7 +4,7 @@ const critRatingPerPercent = 22.08
 const hasteRatingPerPercent = 15.77 // confirm, maybe 15.7?
 const manaPerInt = 15
 const healthPerStamina = 10
-const critPerInt = 1 / 81.95
+const critPerInt = 1 / 81.95 // Crit % per point of intellect
 const baseCritChancePercent = 1.701
 
 const characterStats = {
@@ -86,9 +86,9 @@ function refreshCharacterStats () {
   let stamina = characterStats.stamina
 
   // Crit
-  let critRating = characterStats.critRating + ((characterStats.intellect * characterStats.intellectModifier) * critPerInt)
+  let critRating = characterStats.critRating
   if (auras.powerOfTheGuardianMage) critRating += 28 * $("select[name='mageAtieshAmount']").val()
-  let critChance = Math.round((critRating / critRatingPerPercent + baseCritChancePercent) * 100) / 100 + talents.devastation + talents.backlash + talents.demonicTactics
+  let critChance = Math.round((critRating / critRatingPerPercent + baseCritChancePercent) * 100) / 100 + talents.devastation + talents.backlash + talents.demonicTactics + ((characterStats.intellect * characterStats.intellectModifier) * critPerInt)
   if (auras.moonkinAura) critChance += 5
   if (auras.judgementOfTheCrusader) critChance += 3
   if (auras.totemOfWrath) critChance += 3 * $("select[name='totemOfWrathAmount']").val()
