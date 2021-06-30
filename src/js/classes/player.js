@@ -491,6 +491,8 @@ class Player {
     return hit
   }
 
+  // Returns the crit percentage of the player.
+  // Since crit gains a bonus from intellect, and intellect could fluctuate during the fight (through procs and such), it's better to calculate it by calling a function like this.
   getCritChance() {
     return this.stats.critChance + ((this.stats.intellect * this.stats.intellectModifier) * critPerInt)
   }
