@@ -1911,7 +1911,7 @@ const items = {
     },
     ravagersCuffsOfShadowWrath: {
       name: "Ravager's Cuffs of Shadow Wrath",
-      shadowPower: 52,
+      shadowPower: 58,
       id: 30684,
       source: 'Karazhan',
       phase: 1
