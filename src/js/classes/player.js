@@ -175,13 +175,13 @@ class Player {
     this.stats.critChance = baseCritChancePercent + ((this.stats.critRating + ((this.stats.intellect * this.stats.intellectModifier) * critPerInt)) / critRatingPerPercent) + settings.talents.devastation + settings.talents.backlash + settings.talents.demonicTactics
     if (settings.auras.moonkinAura) this.stats.critChance += 5
     if (settings.auras.judgementOfTheCrusader) this.stats.critChance += 3
-    if (settings.auras.totemOfWrath) this.stats.critChance += 3
+    if (settings.auras.totemOfWrath) this.stats.critChance += (3 * settings.simSettings.totemOfWrathAmount)
 
     // Hit chance
     this.stats.hitChanceMultiplier = 1000
     if (settings.sets['658'] >= 2) this.stats.hitRating += 35 // Mana-Etched Regalia 2-set bonus (35 hit rating)
     this.stats.extraHitChance = this.stats.hitRating / hitRatingPerPercent // hit percent from hit rating
-    if (settings.auras.totemOfWrath) this.stats.extraHitChance += 3
+    if (settings.auras.totemOfWrath) this.stats.extraHitChance += (3 * settings.simSettings.totemOfWrathAmount)
     if (settings.auras.inspiringPresence === true) this.stats.extraHitChance += 1
     this.stats.hitChance = Math.round(this.getHitChance()) // The player's chance of hitting the enemy, usually between 83% and 99%
 
