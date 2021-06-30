@@ -34,11 +34,13 @@ class Player {
     this.itemId = customItemId || settings.items[settings.selectedItemSlot] || 0
     this.sets = JSON.parse(JSON.stringify(settings.sets))
     this.selectedAuras = settings.auras
-    this.enemy.shadowResist = Math.max(this.enemy.shadowResist, (this.enemy.level - this.level) * 8, 0)
-    this.enemy.fireResist = Math.max(this.enemy.fireResist, (this.enemy.level - this.level) * 8, 0)
-    this.enemy.natureResist = Math.max((this.enemy.level - this.level) * 8, 0)
-    this.enemy.arcaneResist = Math.max((this.enemy.level - this.level) * 8, 0)
-    this.enemy.frostResist = Math.max((this.enemy.level - this.level) * 8, 0)
+    // I don't know if this formula only works for bosses or not, so for the moment I'm only using it for lvl >=73 targets.
+    const enemyBaseResistance = settings.enemy.level >= 73 ? (6 * this.level * 5) / 75 : 0
+    this.enemy.shadowResist = Math.max(this.enemy.shadowResist, enemyBaseResistance, 0)
+    this.enemy.fireResist = Math.max(this.enemy.fireResist, enemyBaseResistance, 0)
+    this.enemy.natureResist = Math.max(enemyBaseResistance, 0)
+    this.enemy.arcaneResist = Math.max(enemyBaseResistance, 0)
+    this.enemy.frostResist = Math.max(enemyBaseResistance, 0)
     this.combatlog = []
     this.importantAuraCounter = 0 // counts the amount of active "important" auras such as trinket procs, on-use trinket uses, power infusion etc.
     this.totalManaRegenerated = 0
@@ -499,6 +501,11 @@ class Player {
 
   isCrit (extraCrit = 0) {
     return (random(1, (100 * this.stats.critChanceMultiplier)) <= ((this.getCritChance() + extraCrit) * this.stats.critChanceMultiplier))
+  }
+
+  // The formula is (75 * resistance) / (playerLevel * 5) which gives the number to multiply the damage with (between 0 and 1) to simulate the average partial resist mitigation.
+  getPartialResistMultiplier(resist) {
+    return 1 - ((75 * resist) / (this.level * 5)) / 100
   }
 
   // formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/ && https://royalgiraffe.github.io/resist-guide

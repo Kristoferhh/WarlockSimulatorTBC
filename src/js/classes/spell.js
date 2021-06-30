@@ -230,7 +230,7 @@ class Spell {
         this.player.spells.theLightningCapacitor.startCast()
       }
     }
-    const partialResistMultiplier = 1 - 0.0025 * this.player.enemy[this.school + 'Resist']
+    const partialResistMultiplier = this.player.getPartialResistMultiplier(this.player.enemy[this.school + 'Resist'])
     dmg = Math.round(dmg * partialResistMultiplier)
     let combatLogMsg = this.name + ' '
     if (isCrit) combatLogMsg += '*'
@@ -238,7 +238,7 @@ class Spell {
     if (isCrit) combatLogMsg += '*'
     combatLogMsg +=  ' (' + baseDamage + ' Base Damage - ' + Math.round(this.coefficient * 1000) / 1000 + ' Coefficient - ' + sp + ' Spell Power - '
     if (isCrit) combatLogMsg += critMultiplier.toFixed(2) + '% Crit Multiplier - '
-    combatLogMsg += Math.round(modifier * 10000) / 100 + '% Damage Modifier - ' + Math.round(partialResistMultiplier * 1000) / 1000 + '% Partial Resist Multiplier)'
+    combatLogMsg += Math.round(modifier * 10000) / 100 + '% Damage Modifier - ' + Math.round(partialResistMultiplier * 1000) / 10 + '% Partial Resist Multiplier)'
     this.player.combatLog(combatLogMsg)
     this.player[this.breakdownTable + 'Breakdown'][this.varName].damage = this.player[this.breakdownTable + 'Breakdown'][this.varName].damage + dmg || dmg
     this.player.iterationDamage += dmg

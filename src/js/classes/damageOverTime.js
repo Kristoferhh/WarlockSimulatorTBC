@@ -89,7 +89,7 @@ class DamageOverTime {
         }
 
         // Partial resist damage reduction
-        const partialResistMultiplier = 1 - 0.0025 * this.player.enemy[this.school + 'Resist']
+        const partialResistMultiplier = this.player.getPartialResistMultiplier(this.player.enemy[this.school + 'Resist'])
         dmg = Math.round(dmg * partialResistMultiplier)
         this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg
         this.player.iterationDamage += dmg
