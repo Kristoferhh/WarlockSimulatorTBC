@@ -12,11 +12,13 @@ class PetSpell {
     this.cooldownRemaining = 0
     this.castTime = 0
     this.manaCost = 0
+    this.modifier = 1
+    this.cooldown = 0
     this.resetsFiveSecondRule = true // true if it's a spell that resets the five second rule for mana regen from spirit (true for everything but melee attacks)
   }
 
   ready () {
-    return this.cooldownRemaining <= 0 && this.pet.stats.mana >= this.manaCost
+    return this.cooldownRemaining <= 0 && this.pet.stats.mana >= this.manaCost && this.pet.castTimeRemaining <= 0
   }
 
   tick (t) {
@@ -24,7 +26,9 @@ class PetSpell {
       this.casting = false
       this.cast()
     }
-    if (this.cooldownRemaining > 0) this.cooldownRemaining = Math.max(0, this.cooldownRemaining - t)
+    if (this.cooldownRemaining > 0) {
+      this.cooldownRemaining = Math.max(0, this.cooldownRemaining - t)
+    }
   }
 
   startCast () {
@@ -37,8 +41,10 @@ class PetSpell {
   }
 
   cast () {
+    if (this.resetsFiveSecondRule) {
+      this.pet.fiveSecondRuleTimerRemaining = 5
+    }
     this.cooldownRemaining = this.cooldown
-    if (this.resetsFiveSecondRule) this.pet.fiveSecondRuleTimerRemaining = 5
     let combatLogEntry = this.pet.name
     if (this.castTime > 0) combatLogEntry += ' finished casting ' + this.name
     else combatLogEntry += ' casts ' + this.name
@@ -50,10 +56,12 @@ class PetSpell {
     this.pet.player.damageBreakdown[this.varName].casts = this.pet.player.damageBreakdown[this.varName].casts + 1 || 1
 
     // Check for crit
-    // todo fix so it uses spell crit for spells and melee hit for melee hits
-    const isCrit = this.canCrit && ((this.type == SpellTypes.PHYSICAL && random(1, 100) * this.pet.player.stats.critChanceMultiplier <= this.pet.stats.critChance * this.pet.player.stats.critChanceMultiplier) || (this.type == SpellTypes.MAGICAL && random(1, 100) * this.pet.player.stats.critChanceMultiplier <= this.pet.stats.spellCritChance * this.pet.player.stats.critChanceMultiplier))
-    if (isCrit) {
-      this.pet.player.damageBreakdown[this.varName].crits = this.pet.player.damageBreakdown[this.varName].crits + 1 || 1
+    let isCrit = false
+    if (this.canCrit) {
+      isCrit = this.pet.isCrit(this.type)
+      if (isCrit) {
+        this.pet.player.damageBreakdown[this.varName].crits = this.pet.player.damageBreakdown[this.varName].crits + 1 || 1
+      }
     }
     // Check for miss
     // todo change for spell hit
@@ -74,7 +82,7 @@ class PetSpell {
     // Calculate damage
     let dmg = this.calculateDamage() * this.pet.stats.damageModifier
     if (isCrit) {
-      dmg *= 1.5 // pets use different multiplier maybe?
+      dmg *= 1.5
     }
     // Add damage from ISB if it's Lash of Pain
     if (this.varName == 'lashOfPain' && this.pet.player.auras.improvedShadowBolt && this.pet.player.auras.improvedShadowBolt.active) {
@@ -98,6 +106,25 @@ class PetSpell {
     if (this.pet.pet == PetName.FELGUARD) {
       this.pet.auras.demonicFrenzy.apply()
     }
+  }
+}
+
+//todo fix so that debuffs on boss increase damage of pet abilities, such as shadow weaving and improved scorch
+class Firebolt extends PetSpell {
+  constructor(pet) {
+    super(pet)
+    this.name = 'Firebolt'
+    this.castTime = 1.5 - (0.25 * pet.player.talents.improvedFirebolt)
+    this.manaCost = 145
+    this.damage = 119.5
+    this.coefficient = 1 // confirm
+    this.varName = 'firebolt'
+    this.pet.player.damageBreakdown[this.varName] = { name: 'Firebolt (Imp)' }
+    this.type = SpellTypes.MAGICAL
+  }
+
+  calculateDamage() {
+    return this.damage + (this.pet.stats.spellPower * this.coefficient) * this.modifier
   }
 }
 

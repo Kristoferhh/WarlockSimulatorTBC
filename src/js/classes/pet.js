@@ -105,7 +105,11 @@ class Pet {
     if (this.playerAuras.blessingOfWisdom) this.stats.mp5 += 41
     if (this.playerAuras.manaSpringTotem) this.stats.mp5 += 50
     if (this.playerAuras.wrathOfAirTotem) this.stats.buffs.spellPower += 101
-    if (this.playerAuras.totemOfWrath) this.stats.buffs.spellCritChance += 3 * parseInt(this.simSettings.totemOfWrathAmount)
+    if (this.playerAuras.totemOfWrath) {
+      const hitAndCritAmount = 3 * parseInt(this.simSettings.totemOfWrathAmount)
+      this.stats.buffs.spellCritChance += hitAndCritAmount
+      this.stats.spellHitChance = Math.min(99, this.stats.spellHitChance + hitAndCritAmount)
+    }
     // todo implement improved motw
     if (this.playerAuras.markOfTheWild) {
       this.stats.buffsstamina += 14
@@ -121,7 +125,10 @@ class Pet {
     if (this.playerAuras.inspiringPresence) this.stats.spellHitChance = Math.min(99, this.stats.spellHitChance + 1)
     if (this.playerAuras.moonkinAura) this.stats.buffs.spellCritChance += 5
     // todo add atiesh auras
-    if (this.playerAuras.judgementOfTheCrusader) this.stats.buffs.critChance += 3 // add spell crit too?
+    if (this.playerAuras.judgementOfTheCrusader) {
+      this.stats.buffs.critChance += 3
+      this.stats.buffs.spellCritChance += 3
+    }
     if (this.playerAuras.vampiricTouch) this.stats.mp5 += this.simSettings.shadowPriestDps * 0.05
     if (this.playerAuras.faerieFire) {
       const improved = this.simSettings.improvedFaerieFire == 'yes'
@@ -193,20 +200,52 @@ class Pet {
 
   reset () {
     this.stats.mana = this.stats.maxMana
-    this.fiveSecondRuleTimerRemaining = 5 // If higher than 0 then the pet can't gain mana from Spirit regen
-    this.spiritTickTimerRemaining = 2 // Unsure what the initial value should be since the Felguard isnt supposed to gain a Spirit regen tick between every Cleave (confirm)
+    this.fiveSecondRuleTimerRemaining = 5 // If higher than 0 then the pet can't gain mana from Spirit regen (July 2021 update: I have no idea what this comment means)
+    this.spiritTickTimerRemaining = 2
     if (this.type == PetType.MELEE) {
       this.spells.melee.cooldownRemaining = 0
     }
     this.calculateStatsFromPlayer()
   }
 
+  getMeleeCritChance() {
+    return this.stats.critChance
+  }
+
+  getSpellCritChance() {
+    return this.stats.spellCritChance
+  }
+
+  isCrit(spellType) {
+    if (spellType == SpellTypes.PHYSICAL) {
+      return random(1, 100 * this.player.stats.critChanceMultiplier) <= (this.getMeleeCritChance() * this.player.stats.critChanceMultiplier)
+    } else if (spellType == SpellTypes.MAGICAL) {
+      return random(1, 100 * this.player.stats.critChanceMultiplier) <= (this.getSpellCritChance() * this.player.stats.critChanceMultiplier)
+    }
+  }
+
+  getMeleeHitChance() {
+    return this.stats.hitChance
+  }
+
+  getSpellHitChance() {
+    return this.stats.spellHitChance
+  }
+
+  isHit(spellType) {
+    if (spellType == SpellTypes.PHYSICAL) {
+      return random(1, 100 * this.player.stats.hitChanceMultiplier) <= (this.stats.hitChance * this.player.stats.hitChanceMultiplier)
+    } else if (spellType == SpellTypes.MAGICAL) {
+      return random(1, 100 * this.player.stats.hitChanceMultiplier) <= (Math.min(99 * this.player.stats.hitChanceMultiplier, this.stats.spellHitChance * this.player.stats.hitChanceMultiplier))
+    }
+  }
+
   tick (t) {
     if (this.type == PetType.MELEE) {
       this.spells.melee.tick(t)
-    } /* else if (this.type == PetType.RANGED) {
+    } else if (this.type == PetType.RANGED) {
 			this.castTimeRemaining = Math.max(0, this.castTimeRemaining - t);
-		} */
+		} 
 
     this.fiveSecondRuleTimerRemaining = Math.max(0, this.fiveSecondRuleTimerRemaining - t)
     this.spiritTickTimerRemaining = Math.max(0, this.spiritTickTimerRemaining - t)
@@ -214,7 +253,8 @@ class Pet {
       this.spiritTickTimerRemaining = 2
       if (this.fiveSecondRuleTimerRemaining <= 0) {
         // Fromula from https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1601392
-        const manaGain = (5 * Math.sqrt(this.stats.intellect * this.stats.intellectModifier) * (this.stats.spirit * this.stats.spiritModifier) * 0.009327) / 2.5 // Divide by 2.5 since it calculates mana per five seconds but the tick is every 2 seconds
+        // Divide by 2.5 since it calculates mana per five seconds but the tick is every 2 seconds
+        const manaGain = (5 * Math.sqrt(this.stats.intellect * this.stats.intellectModifier) * (this.stats.spirit * this.stats.spiritModifier) * 0.009327) / 2.5
         if (this.stats.mana < this.stats.maxMana) {
           this.player.combatLog(this.name + ' gains ' + Math.round(manaGain) + ' mana from Spirit regeneration. Pet mana: ' + Math.round(this.stats.mana) + '/' + Math.round(this.stats.maxMana))
         }
@@ -234,6 +274,15 @@ class Imp extends Pet {
     this.stats.baseStats.mana = 849
     this.pet = PetName.IMP
     this.setup()
+  }
+
+  initialize() {
+    this.spells.firebolt = new Firebolt(this)
+    super.initialize()
+  }
+
+  tick(t) {
+    this.spells.firebolt.tick(t)
   }
 }
 
