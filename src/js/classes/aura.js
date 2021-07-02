@@ -38,7 +38,11 @@ class Aura {
         if (this.player.stats.hasOwnProperty(stat)) {
           this.player.combatLog(stat + ' + ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] + this.stats[stat]) + ')')
           this.player.stats[stat] += this.stats[stat]
+          // Add stats to pet
           if (this.player.pet) {
+            if (this.player.pet.stats.hasOwnProperty(stat)) {
+              this.player.pet.stats[stat] += this.stats[stat]
+            }
             recalculatePetStats = true
           }
         }
@@ -70,8 +74,14 @@ class Aura {
             this.player.combatLog(stat + ' - ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] - this.stats[stat]) + ')')
           }
           this.player.stats[stat] -= this.stats[stat]
-          if (this.player.pet && !endOfIteration) {
-            recalculatePetStats = true
+          // Remove stats from pet
+          if (this.player.pet) {
+            if (this.player.pet.stats.hasOwnProperty(stat)) {
+              this.player.pet.stats[stat] -= this.stats[stat]
+            }
+            if (!endOfIteration) {
+              recalculatePetStats = true
+            }
           }
         }
       }
