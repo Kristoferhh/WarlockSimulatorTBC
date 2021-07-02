@@ -93,7 +93,7 @@ class DamageOverTime {
         dmg = Math.round(dmg * partialResistMultiplier)
         this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg
         this.player.iterationDamage += dmg
-        this.player.combatLog(this.name + ' Tick ' + Math.round(dmg) + ' (' + this.dmg + ' Base Damage - ' + sp + ' Spell Power - ' + Math.round(modifier * 10000) / 100 + '% Damage Modifier ' + Math.round(partialResistMultiplier * 1000) / 1000 + '% Partial Resist Multiplier)')
+        this.player.combatLog(this.name + ' Tick ' + Math.round(dmg) + ' (' + this.dmg + ' Base Damage - ' + Math.round(sp) + ' Spell Power - ' + Math.round(modifier * 10000) / 100 + '% Damage Modifier ' + Math.round(partialResistMultiplier * 1000) / 1000 + '% Partial Resist Multiplier)')
         this.ticksRemaining--
         this.tickTimerRemaining = this.tickTimerTotal
 

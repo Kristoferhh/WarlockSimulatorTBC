@@ -157,6 +157,9 @@ class PetSpell {
       // Armor damage reduction
       dmg *= this.pet.armorMultiplier
     }
+    // Pet damage modifier (from Unholy Power, Master Demonologist, and such)
+    modifier *= this.pet.stats.damageModifier
+    
     dmg *= modifier
 
     // Partial resist reduction
