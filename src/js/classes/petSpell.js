@@ -13,12 +13,17 @@ class PetSpell {
     this.castTime = 0
     this.manaCost = 0
     this.modifier = 1
+    this.school = null
     this.cooldown = 0
     this.resetsFiveSecondRule = true // true if it's a spell that resets the five second rule for mana regen from spirit (true for everything but melee attacks)
   }
 
   ready () {
     return this.cooldownRemaining <= 0 && this.pet.stats.mana >= this.manaCost && this.pet.castTimeRemaining <= 0
+  }
+
+  getBaseDamage() {
+    return this.dmg
   }
 
   tick (t) {
@@ -45,9 +50,13 @@ class PetSpell {
       this.pet.fiveSecondRuleTimerRemaining = 5
     }
     this.cooldownRemaining = this.cooldown
+    // Combat log entry about the cast
     let combatLogEntry = this.pet.name
-    if (this.castTime > 0) combatLogEntry += ' finished casting ' + this.name
-    else combatLogEntry += ' casts ' + this.name
+    if (this.castTime > 0) {
+      combatLogEntry += ' finished casting ' + this.name
+    } else {
+      combatLogEntry += ' casts ' + this.name
+    }
     if (this.manaCost > 0) {
       this.pet.stats.mana = Math.max(0, this.pet.stats.mana - this.manaCost)
       combatLogEntry += '. Pet mana: ' + Math.round(this.pet.stats.mana) + '/' + Math.round(this.pet.stats.maxMana)
@@ -64,11 +73,10 @@ class PetSpell {
       }
     }
     // Check for miss
-    // todo change for spell hit
-    const isMiss = (this.type == SpellTypes.PHYSICAL && random(1, 100) > this.pet.stats.hitChance) || (this.type == SpellTypes.MAGICAL && random(1, 100) > this.pet.stats.spellHitChance)
+    const isMiss = !this.pet.isHit(this.type)
     if (isMiss) {
       this.pet.player.damageBreakdown[this.varName].misses = this.pet.player.damageBreakdown[this.varName].misses + 1 || 1
-      this.pet.player.combatLog(this.pet.name + ' ' + this.name + ' *miss*')
+      this.pet.player.combatLog(this.pet.name + ' ' + this.name + ' ' + (this.type == SpellTypes.MAGICAL ? '*resist*' : '*miss*'))
     }
     // Check for dodge if melee
     const isDodge = this.type == SpellTypes.PHYSICAL && random(1, 100) <= this.pet.enemyDodgeChance
@@ -77,31 +85,107 @@ class PetSpell {
       if (!isMiss) this.pet.player.combatLog(this.pet.name + ' ' + this.name + ' *dodge*')
     }
 
-    if (isMiss || isDodge) return
+    if (!isMiss && !isDodge) {
+      this.damage(isCrit)
+    }
+  }
 
-    // Calculate damage
-    let dmg = this.calculateDamage() * this.pet.stats.damageModifier
+  damage (isCrit) {
+    const baseDamage = this.getBaseDamage()
+    let dmg = baseDamage
+    let modifier = this.modifier
+    
+    // Add damage from Spell Power
+    if (this.type == SpellTypes.MAGICAL) {
+      dmg += (this.pet.stats.spellPower * this.coefficient)
+    }
+    // Add damage from Attack Power
+    else if (this.type == SpellTypes.PHYSICAL) {
+      let ap = this.pet.stats.ap * this.pet.stats.apModifier
+      if (this.pet.pet == PetName.FELGUARD) {
+        ap *= (1 + 0.05 * this.pet.auras.demonicFrenzy.stacks)
+      }
+      dmg += ap / 7
+    }
+    // Multiply if it's a crit
     if (isCrit) {
-      dmg *= 1.5
+      dmg *= this.pet.critMultiplier
     }
-    // Add damage from ISB if it's Lash of Pain
-    if (this.varName == 'lashOfPain' && this.pet.player.auras.improvedShadowBolt && this.pet.player.auras.improvedShadowBolt.active) {
-      dmg *= this.pet.player.auras.improvedShadowBolt.modifier
-      this.pet.player.auras.improvedShadowBolt.decrementStacks()
+    // Magic damage multipliers
+    if (this.type == SpellTypes.MAGICAL) {
+      // Curse of the Elements
+      if (this.pet.playerAuras.curseOfTheElements && ['shadow','fire','frost','arcane'].includes(this.school)) {
+        modifier *= (1.1 + 0.01 * this.pet.simSettings.improvedCurseOfTheElements)
+      }
+      // Misery
+      if (this.pet.playerAuras.misery) {
+        modifier *= 1.05
+      }
+      // Shadow damage multipliers
+      if (this.school == 'shadow') {
+        // Shadow Weaving
+        if (this.pet.playerAuras.shadowWeaving) {
+          modifier *= 1.1 
+        }
+        // ISB
+        if ((this.pet.player.auras.improvedShadowBolt && this.pet.player.auras.improvedShadowBolt.active) || this.pet.player.simSettings.customIsbUptime == 'yes') {
+          // Custom ISB Uptime
+          if (this.pet.player.simSettings.customIsbUptime == 'yes') {
+            modifier *= (1 + 0.2 * (this.pet.player.simSettings.customIsbUptimeValue / 100))
+          } 
+          // Normal ISB
+          else {
+            modifier *= this.pet.player.auras.improvedShadowBolt.modifier
+            this.pet.player.auras.improvedShadowBolt.decrementStacks()
+          }
+        }
+      }
+      // Fire damage multipliers
+      else if (this.school == 'fire') {
+        // Improved Scorch
+        if (this.pet.playerAuras.improvedScorch) {
+          modifier *= 1.15
+        }
+      }
     }
-    // Add damage from Blood Frenzy debuff
-    if (this.pet.playerAuras.bloodFrenzy) {
-      dmg *= 1.04
-    }
-    // Armor damage reduction if physical
-    if (this.type == SpellTypes.PHYSICAL) {
+    // Physical damage multipliers
+    else if (this.type == SpellTypes.PHYSICAL) {
+      // Add damage from the Blood Frenzy debuff
+      if (this.pet.playerAuras.bloodFrenzy) {
+        modifier *= 1.04
+      }
+      // Armor damage reduction
       dmg *= this.pet.armorMultiplier
     }
+    dmg *= modifier
 
-    this.pet.player.iterationDamage += dmg
-    if (isCrit) this.pet.player.combatLog(this.pet.name + ' ' + this.name + ' *' + Math.round(dmg) + '*')
-    else this.pet.player.combatLog(this.pet.name + ' ' + this.name + ' ' + Math.round(dmg))
+    // Partial resist reduction
+    const partialResistMultiplier = this.pet.player.getPartialResistMultiplier(this.pet.player.enemy[this.school + 'Resist'])
+    if (this.type == SpellTypes.MAGICAL) {
+      dmg *= partialResistMultiplier
+    }
+
+    // Combat log message
+    dmg = Math.round(dmg)
+    let combatLogMsg = this.pet.name + ' ' + this.name + ' '
+    if (isCrit) combatLogMsg += '*'
+    combatLogMsg += dmg
+    if (isCrit) combatLogMsg += '*'
+    combatLogMsg += ' (' + baseDamage + ' Base Damage'
+    if (this.type == SpellTypes.MAGICAL) {
+      combatLogMsg += ' - ' + Math.round(this.coefficient * 1000) / 1000 + ' Coefficient'
+      combatLogMsg += ' - ' + Math.round(this.pet.stats.spellPower) + ' Spell Power'
+      combatLogMsg += ' - ' + Math.round(partialResistMultiplier * 1000) / 10 + '% Partial Resist Multiplier'
+    } else if (this.type == SpellTypes.PHYSICAL) {
+      combatLogMsg += ' - ' + Math.round(this.pet.stats.ap) + ' Attack Power'
+      combatLogMsg += ' - ' + (Math.round(this.pet.armorMultiplier * 10000) / 100) + '% Armor Reduction'
+    }
+    if (isCrit) combatLogMsg += ' - ' + (this.pet.critMultiplier * 100) + '% Crit Multiplier'
+    combatLogMsg += ' - ' + Math.round(modifier * 10000) / 100 + '% Damage Modifier'
+    combatLogMsg += ')'
+    this.pet.player.combatLog(combatLogMsg)
     this.pet.player.damageBreakdown[this.varName].damage = this.pet.player.damageBreakdown[this.varName].damage + dmg || dmg
+    this.pet.player.iterationDamage += dmg
 
     if (this.pet.pet == PetName.FELGUARD) {
       this.pet.auras.demonicFrenzy.apply()
@@ -110,21 +194,22 @@ class PetSpell {
 }
 
 // todo fix so that debuffs on boss increase damage of pet abilities, such as shadow weaving and improved scorch
-class Firebolt extends PetSpell {
+class ImpFirebolt extends PetSpell {
   constructor (pet) {
     super(pet)
     this.name = 'Firebolt'
     this.castTime = 1.5 - (0.25 * pet.player.talents.improvedFirebolt)
     this.manaCost = 145
-    this.damage = 119.5
+    this.dmg = 119.5
     this.coefficient = 2 / 3.5
     this.varName = 'firebolt'
+    this.school = 'fire'
     this.pet.player.damageBreakdown[this.varName] = { name: 'Firebolt (Imp)' }
     this.type = SpellTypes.MAGICAL
   }
 
   calculateDamage () {
-    return this.damage + (this.pet.stats.spellPower * this.coefficient) * this.modifier
+    return this.getBaseDamage() + (this.pet.stats.spellPower * this.coefficient) * this.modifier
   }
 }
 
@@ -134,17 +219,10 @@ class Melee extends PetSpell {
     this.cooldown = 2
     this.name = 'Melee'
     this.varName = 'melee'
+    this.dmg = pet.dmg
     this.pet.player.damageBreakdown[this.varName] = { name: 'Melee (' + this.pet.name + ')' }
     this.resetsFiveSecondRule = false
     this.type = SpellTypes.PHYSICAL
-  }
-
-  calculateDamage () {
-    let ap = this.pet.stats.ap * this.pet.stats.apModifier
-    if (this.pet.pet == PetName.FELGUARD) {
-      ap *= (1 + 0.05 * this.pet.auras.demonicFrenzy.stacks)
-    }
-    return this.pet.dmg + (ap / 7)
   }
 }
 
@@ -159,8 +237,8 @@ class FelguardCleave extends PetSpell {
     this.type = SpellTypes.PHYSICAL
   }
 
-  calculateDamage () {
-    return this.pet.spells.melee.calculateDamage() + 78
+  getBaseDamage () {
+    return this.pet.spells.melee.getBaseDamage() + 78
   }
 }
 
@@ -172,18 +250,11 @@ class SuccubusLashOfPain extends PetSpell {
     this.name = 'Lash of Pain'
     this.varName = 'lashOfPain'
     this.dmg = 123
+    this.school = 'shadow'
     this.coefficient = 0.429
     this.pet.player.damageBreakdown[this.varName] = { name: 'Lash of Pain (Succubus)' }
     this.type = SpellTypes.MAGICAL
+    this.resetsFiveSecondRule = true
     this.modifier = 1
-
-    // Check for shadow damage modifying debuffs on the boss
-    if (this.pet.playerAuras.curseOfTheElements) this.modifier *= (1.1 + 0.01 * this.pet.simSettings.improvedCurseOfTheElements)
-    if (this.pet.playerAuras.shadowWeaving) this.modifier *= 1.1
-    if (this.pet.playerAuras.misery) this.modifier *= 1.05
-  }
-
-  calculateDamage () {
-    return (this.dmg + this.pet.stats.spellPower * this.coefficient) * this.modifier
   }
 }

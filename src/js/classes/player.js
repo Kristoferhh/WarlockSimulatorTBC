@@ -331,8 +331,6 @@ class Player {
       this.combatlog.push('Spell Hit Chance: ' + Math.round(this.pet.getSpellHitChance() * 100) / 100 + '%')
       this.combatlog.push('Spell Crit Chance: ' + Math.round(this.pet.getSpellCritChance() * 100) / 100 + '%')
       this.combatlog.push('Damage Modifier: ' + Math.round(this.pet.stats.damageModifier * 100) + '%')
-      if (this.pet.spells.lashOfPain) this.combatlog.push('Lash of Pain modifier: ' + Math.round(this.pet.spells.lashOfPain.modifier * 100) + '% (as well as the normal pet damage % modifier)')
-      if (this.pet.type == PetType.MELEE) this.combatlog.push('Enemy Armor: ' + Math.round(this.enemy.armor) + ' = ' + Math.round((1 - this.pet.armorMultiplier) * 100) + '% physical damage reduction')
     }
   }
 

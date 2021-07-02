@@ -26,6 +26,7 @@ class Pet {
     this.fiveSecondRuleTimerRemaining = 5
     this.spiritTickTimerRemaining = 2
     this.mode = this.simSettings.petMode
+    this.critMultiplier = 1.5
     this.spells = {}
     this.auras = {}
     this.stats = {
@@ -277,7 +278,7 @@ class Imp extends Pet {
   }
 
   initialize () {
-    this.spells.firebolt = new Firebolt(this)
+    this.spells.firebolt = new ImpFirebolt(this)
     super.initialize()
   }
 
