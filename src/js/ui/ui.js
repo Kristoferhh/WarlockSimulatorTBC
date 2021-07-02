@@ -627,7 +627,7 @@ $('.preset-talent-button').click(function () {
   })
 
   // Disable spells that aren't available anymore with the new talents
-  if (talents.siphonLife == 0) {
+  /*if (talents.siphonLife == 0) {
     rotation.dot.siphonLife = false
     $('#dot-siphonLife').attr('data-checked', 'false')
   }
@@ -638,7 +638,7 @@ $('.preset-talent-button').click(function () {
   if (talents.shadowburn == 0) {
     rotation.finisher.shadowburn = false
     $('#finisher-shadowburn').attr('data-checked', 'false')
-  }
+  }*/
 
   localStorage.rotation = JSON.stringify(rotation)
   localStorage.talents = JSON.stringify(talents)

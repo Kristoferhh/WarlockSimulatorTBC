@@ -328,9 +328,9 @@ class Simulation {
             if ((this.player.rotation.finisher.deathCoil || this.player.rotation.finisher.shadowburn) && timeRemaining <= (this.player.spells[this.player.filler].castTime + this.player.spells[this.player.filler].travelTime)) {
               this.player.useCooldowns()
               // Cast Death Coil if there's time to cast both Death Coil and Shadowburn (need to cast Death Coil first because of the travel time). Otherwise only cast Shadowburn
-              if (this.player.rotation.finisher.deathCoil && this.player.spells.deathCoil.ready() && (timeRemaining - this.player.gcdValue > this.player.spells.deathCoil.travelTime)) {
+              if (this.player.spells.deathCoil && this.player.spells.deathCoil.ready() && (timeRemaining - this.player.gcdValue > this.player.spells.deathCoil.travelTime)) {
                 this.player.cast('deathCoil')
-              } else if (this.player.rotation.finisher.shadowburn && this.player.spells.shadowburn.ready()) {
+              } else if (this.player.spells.shadowburn && this.player.spells.shadowburn.ready()) {
                 this.player.cast('shadowburn')
               } else {
                 this.player.cast('lifeTap')
