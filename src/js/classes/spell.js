@@ -236,7 +236,7 @@ class Spell {
     if (isCrit) combatLogMsg += '*'
     combatLogMsg += dmg
     if (isCrit) combatLogMsg += '*'
-    combatLogMsg +=  ' (' + baseDamage + ' Base Damage - ' + Math.round(this.coefficient * 1000) / 1000 + ' Coefficient - ' + sp + ' Spell Power - '
+    combatLogMsg +=  ' (' + baseDamage + ' Base Damage - ' + Math.round(this.coefficient * 1000) / 1000 + ' Coefficient - ' + Math.round(sp) + ' Spell Power - '
     if (isCrit) combatLogMsg += critMultiplier.toFixed(2) + '% Crit Multiplier - '
     combatLogMsg += Math.round(modifier * 10000) / 100 + '% Damage Modifier - ' + Math.round(partialResistMultiplier * 1000) / 10 + '% Partial Resist Multiplier)'
     this.player.combatLog(combatLogMsg)
