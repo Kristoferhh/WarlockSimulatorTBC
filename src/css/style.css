@@ -244,10 +244,10 @@ ul {
 }
 
 .breakdown-table {
-	margin-left: 8px;
-	padding: 10px;
+	padding-left: 10px;
 	display: inline-block;
 	border-spacing: 0;
+	font-size: 0.8em;
 }
 
 .breakdown-table .number {
