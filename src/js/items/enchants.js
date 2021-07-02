@@ -412,6 +412,13 @@ const enchants = {
       source: 'Enchanting',
       phase: 1
     },
+    boarsSpeed: {
+      name: "Boar's Speed",
+      stamina: 9,
+      id: 34008,
+      source: 'Enchanting',
+      phase: 1
+    },
     magistersArmorKit: {
       name: "Magister's Armor Kit",
       mp5: 3,
