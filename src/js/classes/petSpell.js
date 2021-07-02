@@ -31,6 +31,10 @@ class PetSpell {
     return Math.round((this.castTime / (1 + ((this.pet.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000
   }
 
+  getCooldown() {
+    return this.cooldown
+  }
+
   tick (t) {
     if (this.casting && this.pet.castTimeRemaining <= 0) {
       this.casting = false
@@ -55,13 +59,16 @@ class PetSpell {
     if (this.resetsFiveSecondRule) {
       this.pet.fiveSecondRuleTimerRemaining = 5
     }
-    this.cooldownRemaining = this.cooldown
+    this.cooldownRemaining = this.getCooldown()
     // Combat log entry about the cast
     let combatLogEntry = this.pet.name
     if (this.castTime > 0) {
       combatLogEntry += ' finished casting ' + this.name
     } else {
       combatLogEntry += ' casts ' + this.name
+      if (this.varName === 'melee') {
+        combatLogEntry += '. Attack Speed: ' + this.pet.spells.melee.getCooldown() + ' (' + Math.round((this.pet.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base attack speed of ' + this.pet.spells.melee.cooldown.toFixed(2) + ')'
+      }
     }
     if (this.manaCost > 0) {
       this.pet.stats.mana = Math.max(0, this.pet.stats.mana - this.manaCost)
@@ -198,7 +205,6 @@ class PetSpell {
   }
 }
 
-// todo fix so that debuffs on boss increase damage of pet abilities, such as shadow weaving and improved scorch
 class ImpFirebolt extends PetSpell {
   constructor (pet) {
     super(pet)
@@ -224,6 +230,10 @@ class Melee extends PetSpell {
     this.pet.player.damageBreakdown[this.varName] = { name: 'Melee (' + this.pet.name + ')' }
     this.resetsFiveSecondRule = false
     this.type = SpellTypes.PHYSICAL
+  }
+
+  getCooldown() {
+    return Math.round((this.cooldown / (1 + ((this.pet.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000
   }
 }
 

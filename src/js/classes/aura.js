@@ -43,7 +43,9 @@ class Aura {
             if (this.player.pet.stats.hasOwnProperty(stat)) {
               this.player.pet.stats[stat] += this.stats[stat]
             }
-            recalculatePetStats = true
+            if (this.player.pet.stats.buffs.hasOwnProperty(stat)) {
+              recalculatePetStats = true
+            }
           }
         }
       }
@@ -79,7 +81,7 @@ class Aura {
             if (this.player.pet.stats.hasOwnProperty(stat)) {
               this.player.pet.stats[stat] -= this.stats[stat]
             }
-            if (!endOfIteration) {
+            if (!endOfIteration && this.player.pet.stats.buffs.hasOwnProperty(stat)) {
               recalculatePetStats = true
             }
           }
