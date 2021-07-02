@@ -323,6 +323,11 @@ $(document).on('click', '.gem-hide', function () {
   localStorage.gemPreferences = JSON.stringify(gemPreferences)
 })
 
+// User clicks on the X on a section to hide it
+$(document).on('click', '.close', function () {
+  $(this).closest('section').css('display', 'none')
+})
+
 // User clicks on the "Toggle Hidden Gems" button in the gem selection table
 $(document).on('click', '#show-hidden-gems-button', function (e) {
   const enabled = $(this).attr('data-enabled') == 'true'
