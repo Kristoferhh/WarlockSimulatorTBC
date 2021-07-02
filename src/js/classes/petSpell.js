@@ -26,6 +26,11 @@ class PetSpell {
     return this.dmg
   }
 
+  getCastTime() {
+    // todo: figure out how much haste % pets get from each haste rating point
+    return Math.round((this.castTime / (1 + ((this.pet.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000
+  }
+
   tick (t) {
     if (this.casting && this.pet.castTimeRemaining <= 0) {
       this.casting = false
@@ -39,7 +44,8 @@ class PetSpell {
   startCast () {
     if (this.castTime > 0) {
       this.casting = true
-      this.pet.player.combatLog(this.pet.name + ' started casting ' + this.name)
+      this.castTimeRemaining = this.getCastTime()
+      this.pet.player.combatLog(this.pet.name + ' started casting ' + this.name + '. Cast time: ' + this.castTimeRemaining + ' (' + Math.round((this.pet.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base cast speed of ' + this.castTime + ')')
     } else {
       this.cast()
     }
@@ -101,11 +107,7 @@ class PetSpell {
     }
     // Add damage from Attack Power
     else if (this.type == SpellTypes.PHYSICAL) {
-      let ap = this.pet.stats.ap * this.pet.stats.apModifier
-      if (this.pet.pet == PetName.FELGUARD) {
-        ap *= (1 + 0.05 * this.pet.auras.demonicFrenzy.stacks)
-      }
-      dmg += ap / 7
+      dmg += this.pet.getAttackPower() / 7
     }
     // Multiply if it's a crit
     if (isCrit) {
@@ -180,7 +182,7 @@ class PetSpell {
       combatLogMsg += ' - ' + Math.round(this.pet.stats.spellPower) + ' Spell Power'
       combatLogMsg += ' - ' + Math.round(partialResistMultiplier * 1000) / 10 + '% Partial Resist Multiplier'
     } else if (this.type == SpellTypes.PHYSICAL) {
-      combatLogMsg += ' - ' + Math.round(this.pet.stats.ap) + ' Attack Power'
+      combatLogMsg += ' - ' + Math.round(this.pet.getAttackPower()) + ' Attack Power'
       combatLogMsg += ' - ' + (Math.round(this.pet.armorMultiplier * 10000) / 100) + '% Armor Reduction'
     }
     if (isCrit) combatLogMsg += ' - ' + (this.pet.critMultiplier * 100) + '% Crit Multiplier'
@@ -209,10 +211,6 @@ class ImpFirebolt extends PetSpell {
     this.school = 'fire'
     this.pet.player.damageBreakdown[this.varName] = { name: 'Firebolt (Imp)' }
     this.type = SpellTypes.MAGICAL
-  }
-
-  calculateDamage () {
-    return this.getBaseDamage() + (this.pet.stats.spellPower * this.coefficient) * this.modifier
   }
 }
 

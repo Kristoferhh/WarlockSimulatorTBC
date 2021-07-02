@@ -62,7 +62,9 @@ class Spell {
     this.player.mana -= (this.manaCost * this.player.stats.manaCostModifier)
     this.cooldownRemaining = this.cooldown
     this.casting = false
-    if (this.castTime > 0) this.player.combatLog('Finished casting ' + this.name)
+    if (this.castTime > 0) {
+      this.player.combatLog('Finished casting ' + this.name)
+    }
 
     let isCrit = false
     if (this.canCrit) {
@@ -434,7 +436,7 @@ class LifeTap extends Spell {
   cast () {
     this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
     const manaGain = this.manaGain()
-    this.player.combatLog(this.name + ' ' + Math.round(manaGain) + ' (' + (this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats.shadowPower) + ' Spell Power - ' + Math.round(this.modifier * 10000) / 100 + '% Mana Gain Modifier)')
+    this.player.combatLog(this.name + ' ' + Math.round(manaGain) + ' (' + Math.round(this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats.shadowPower) + ' Spell Power - ' + Math.round(this.modifier * 10000) / 100 + '% Mana Gain Modifier)')
     this.player.totalManaRegenerated += manaGain
     this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + manaGain || manaGain
     // Warning for if Life Tap is used while there are important auras active

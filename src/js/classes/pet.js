@@ -56,6 +56,7 @@ class Pet {
       spirit: 0,
       stamina: 0,
       intellect: 0,
+      hasteRating: 0,
       staminaModifier: 1 + (0.05 * player.talents.felStamina),
       intellectModifier: 1 + (0.05 * player.talents.felIntellect),
       strengthModifier: 1,
@@ -85,13 +86,20 @@ class Pet {
 
     // Calculate spell hit chance
     // Formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/
+    // target 2 or fewer levels above
     if ((parseInt(this.player.enemy.level) - this.player.level) <= 2) {
       this.stats.spellHitChance = Math.min(99, 100 - (parseInt(this.player.enemy.level) - this.player.level) - 4)
-    } else if ((parseInt(this.player.enemy.level) - this.player.level) == 3) { // target 3 levels above
+    }
+    // target 3 levels above
+    else if ((parseInt(this.player.enemy.level) - this.player.level) == 3) {
       this.stats.spellHitChance = 83
-    } else if ((parseInt(this.player.enemy.level) - this.player.level) == 4) { // target 4 levels above
+    }
+    // target 4 levels above
+    else if ((parseInt(this.player.enemy.level) - this.player.level) == 4) {
       this.stats.spellHitChance = 72
-    } else { // target 5+ levels above
+    }
+    // target 5+ levels above
+    else {
       this.stats.spellHitChance = 61
     }
 
@@ -241,13 +249,13 @@ class Pet {
     }
   }
 
-  tick (t) {
-    if (this.type == PetType.MELEE) {
-      this.spells.melee.tick(t)
-    } else if (this.type == PetType.RANGED) {
-      this.castTimeRemaining = Math.max(0, this.castTimeRemaining - t)
-    }
+  getAttackPower () {
+    return this.stats.ap * this.stats.apModifier
+  }
 
+  tick (t) {
+    if (this.spells.melee) this.spells.melee.tick(t)
+    this.castTimeRemaining = Math.max(0, this.castTimeRemaining - t)
     this.fiveSecondRuleTimerRemaining = Math.max(0, this.fiveSecondRuleTimerRemaining - t)
     this.spiritTickTimerRemaining = Math.max(0, this.spiritTickTimerRemaining - t)
     if (this.spiritTickTimerRemaining <= 0) {
@@ -256,10 +264,11 @@ class Pet {
         // Fromula from https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1601392
         // Divide by 2.5 since it calculates mana per five seconds but the tick is every 2 seconds
         const manaGain = (5 * Math.sqrt(this.stats.intellect * this.stats.intellectModifier) * (this.stats.spirit * this.stats.spiritModifier) * 0.009327) / 2.5
-        if (this.stats.mana < this.stats.maxMana) {
-          this.player.combatLog(this.name + ' gains ' + Math.round(manaGain) + ' mana from Spirit regeneration. Pet mana: ' + Math.round(this.stats.mana) + '/' + Math.round(this.stats.maxMana))
-        }
+        const currentMana = this.stats.mana
         this.stats.mana = Math.min(this.stats.maxMana, this.stats.mana + manaGain)
+        if (this.stats.mana > currentMana) {
+          this.player.combatLog(this.name + ' gains ' + Math.round(manaGain) + ' mana from Spirit regeneration (' + Math.round(currentMana) + ' -> ' + Math.round(this.stats.mana) + ')')
+        }
       }
     }
   }
@@ -357,6 +366,14 @@ class Felguard extends Pet {
     this.stats.damageModifier *= 1 + (0.01 * player.talents.masterDemonologist)
     this.player.damageBreakdown.melee = { name: 'Melee (Felguard)' }
     this.setup()
+  }
+
+  getAttackPower () {
+    let attackPower = super.getAttackPower()
+    if (this.pet == PetName.FELGUARD) {
+      attackPower *= (1 + 0.05 * this.auras.demonicFrenzy.stacks)
+    }
+    return attackPower
   }
 
   reset () {

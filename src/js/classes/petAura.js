@@ -39,7 +39,7 @@ class DemonicFrenzy extends PetAura {
   apply () {
     if (this.stacks < this.maxStacks) {
       this.stacks++
-      this.pet.player.combatLog(this.pet.name + ' gains ' + this.name + ' (' + this.stacks + '). Current AP: ' + Math.round(this.pet.stats.ap * (1 + (0.05 * this.stacks))) + ')')
+      this.pet.player.combatLog(this.pet.name + ' gains ' + this.name + ' (' + this.stacks + '). Current AP: ' + Math.round(this.pet.getAttackPower()) + ')')
     }
     super.apply()
   }

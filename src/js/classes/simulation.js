@@ -221,10 +221,11 @@ class Simulation {
         this.player.combatLog('Player gains ' + Math.round(this.player.stats.mp5) + ' mana from MP5. Player mana: ' + Math.round(this.player.mana) + '/' + Math.round(this.player.stats.maxMana))
       }
       if (this.player.pet && this.player.pet.stats.mp5 > 0) {
-        if (this.player.pet.stats.mana < this.player.pet.stats.maxMana) {
-          this.player.combatLog(this.player.pet.name + ' gains ' + this.player.pet.stats.mp5 + ' mana from MP5. Pet mana: ' + Math.round(this.player.pet.stats.mana) + '/' + Math.round(this.player.pet.stats.maxMana))
-        }
+        const currentMana = this.player.pet.stats.mana
         this.player.pet.stats.mana = Math.min(this.player.pet.stats.maxMana, this.player.pet.stats.mana + this.player.pet.stats.mp5)
+        if (this.player.pet.stats.mana > currentMana) {
+          this.player.combatLog(this.player.pet.name + ' gains ' + Math.round(this.player.pet.stats.mana - currentMana) + ' mana from MP5 (' + Math.round(currentMana) + ' -> ' + Math.round(this.player.pet.stats.mana) + ')')
+        }
       }
     }
 
@@ -291,25 +292,6 @@ class Simulation {
         if (this.player.auras.drumsOfWar && !this.player.auras.drumsOfWar.active && this.player.spells.drumsOfWar.ready()) this.player.spells.drumsOfWar.startCast()
         if (this.player.auras.drumsOfRestoration && !this.player.auras.drumsOfRestoration.active && this.player.spells.drumsOfRestoration.ready()) this.player.spells.drumsOfRestoration.startCast()
 
-        // Pet
-        if (this.player.pet && this.player.pet.mode == PetMode.AGGRESSIVE) {
-          if (this.player.pet.type == PetType.MELEE) {
-            if (this.player.pet.spells.melee.ready()) {
-              this.player.pet.cast('melee')
-            }
-            if (this.player.pet.spells.cleave && this.player.pet.spells.cleave.ready()) {
-              this.player.pet.cast('cleave')
-            }
-            if (this.player.pet.spells.lashOfPain && this.player.pet.spells.lashOfPain.ready() && (this.player.simSettings.lashOfPainUsage == 'onCooldown' || (this.player.simSettings.customIsbUptime == 'no' && !this.player.auras.improvedShadowBolt.active))) {
-              this.player.pet.cast('lashOfPain')
-            }
-          } else if (this.player.pet.type == PetType.RANGED) {
-            if (this.player.pet.spells.firebolt && this.player.pet.spells.firebolt.ready()) {
-              this.player.pet.cast('firebolt')
-            }
-          }
-        }
-
         // Player
         if (this.player.castTimeRemaining <= 0) {
           // Spells not on the global cooldown
@@ -371,6 +353,25 @@ class Simulation {
                   this.player.cast('lifeTap')
                 }
               }
+            }
+          }
+        }
+
+        // Pet
+        if (this.player.pet && this.player.pet.mode == PetMode.AGGRESSIVE) {
+          if (this.player.pet.type == PetType.MELEE) {
+            if (this.player.pet.spells.melee.ready()) {
+              this.player.pet.cast('melee')
+            }
+            if (this.player.pet.spells.cleave && this.player.pet.spells.cleave.ready()) {
+              this.player.pet.cast('cleave')
+            }
+            if (this.player.pet.spells.lashOfPain && this.player.pet.spells.lashOfPain.ready() && (this.player.simSettings.lashOfPainUsage == 'onCooldown' || (this.player.simSettings.customIsbUptime == 'no' && !this.player.auras.improvedShadowBolt.active))) {
+              this.player.pet.cast('lashOfPain')
+            }
+          } else if (this.player.pet.type == PetType.RANGED) {
+            if (this.player.pet.spells.firebolt && this.player.pet.spells.firebolt.ready()) {
+              this.player.pet.cast('firebolt')
             }
           }
         }

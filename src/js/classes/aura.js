@@ -7,6 +7,7 @@ class Aura {
     this.active = false
     this.isImportant = false
     this.hasDuration = true
+    this.groupWide = false // true if it's an aura that applies to everyone in the group (will apply to pets as well then)
     this.stats = {}
   }
 
@@ -37,10 +38,14 @@ class Aura {
         if (this.player.stats.hasOwnProperty(stat)) {
           this.player.combatLog(stat + ' + ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] + this.stats[stat]) + ')')
           this.player.stats[stat] += this.stats[stat]
-          if (this.player.pet) recalculatePetStats = true
+          if (this.player.pet) {
+            recalculatePetStats = true
+          }
         }
       }
-      if (recalculatePetStats) this.player.pet.calculateStatsFromPlayer()
+      if (recalculatePetStats) {
+        this.player.pet.calculateStatsFromPlayer()
+      }
       this.player.combatLog(this.name + ' applied')
     }
     this.player.auraBreakdown[this.varName].count = this.player.auraBreakdown[this.varName].count + 1 || 1
@@ -65,7 +70,7 @@ class Aura {
             this.player.combatLog(stat + ' - ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] - this.stats[stat]) + ')')
           }
           this.player.stats[stat] -= this.stats[stat]
-          if (this.player.pet) {
+          if (this.player.pet && !endOfIteration) {
             recalculatePetStats = true
           }
         }
@@ -79,7 +84,9 @@ class Aura {
       }
       if (this.isImportant) {
         this.player.importantAuraCounter--
-        if (!endOfIteration) this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
+        if (!endOfIteration) {
+          this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
+        }
       }
       const auraUptime = this.player.fightTime - this.player.auraBreakdown[this.varName].appliedAt
       this.player.auraBreakdown[this.varName].uptime = this.player.auraBreakdown[this.varName].uptime + auraUptime || auraUptime
@@ -319,7 +326,9 @@ class DestructionPotionAura extends Aura {
       }
       this.player.stats.spellPower += 120
       this.player.stats.critChance += 2
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
+      if (this.player.pet) {
+        this.player.pet.calculateStatsFromPlayer()
+      }
     }
     super.apply()
   }
@@ -332,7 +341,9 @@ class DestructionPotionAura extends Aura {
       }
       this.player.stats.spellPower -= 120
       this.player.stats.critChance -= 2
-      if (!endOfIteration && this.player.pet) this.player.pet.calculateStatsFromPlayer()
+      if (!endOfIteration && this.player.pet) {
+        this.player.pet.calculateStatsFromPlayer()
+      }
     }
     super.fade()
   }
@@ -364,13 +375,13 @@ class BloodFuryAura extends Aura {
   }
 }
 
-// todo add haste to pet and maybe make a separate variable for haste % instead of converting it to haste rating.
 class BloodlustAura extends Aura {
   constructor (player) {
     super(player)
     this.name = 'Bloodlust'
     this.durationTotal = 40
     this.isImportant = true
+    this.groupWide = true
     this.setup()
   }
 
@@ -378,7 +389,9 @@ class BloodlustAura extends Aura {
     if (!this.active) {
       this.player.combatLog('Haste + 30% (' + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + '% -> ' + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) + 30) * 100) / 100 + '%)')
       this.player.stats.hasteRating += 30 * hasteRatingPerPercent
-      // if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+      if (this.player.pet) {
+        this.player.pet.stats.hasteRating += 30 * hasteRatingPerPercent
+      }
     }
     super.apply()
   }
@@ -387,18 +400,20 @@ class BloodlustAura extends Aura {
     if (this.active) {
       if (!endOfIteration) this.player.combatLog('Haste - 30% (' + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + '% -> ' + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) - 30) * 100) / 100 + '%)')
       this.player.stats.hasteRating -= 30 * hasteRatingPerPercent
-      // if (this.player.pet) this.player.pet.calculateStatsFromPlayer();
+      if (this.player.pet) {
+        this.player.pet.stats.hasteRating -= 30 * hasteRatingPerPercent
+      }
     }
     super.fade(endOfIteration)
   }
 }
 
-// todo add effects to pet
 class DrumsOfBattleAura extends Aura {
   constructor (player) {
     super(player)
     this.name = 'Drums of Battle'
     this.durationTotal = 30
+    this.groupWide = true
     this.stats = {
       hasteRating: 80
     }
@@ -411,6 +426,7 @@ class DrumsOfWarAura extends Aura {
     super(player)
     this.name = 'Drums of War'
     this.durationTotal = 30
+    this.groupWide = true
     this.stats = {
       spellPower: 30
     }
@@ -426,6 +442,7 @@ class DrumsOfRestorationAura extends Aura {
     this.tickTimerTotal = 3
     this.tickTimerRemaining = 0
     this.ticksRemaining = 0
+    this.groupWide = true
     this.ticksTotal = Math.round(this.durationTotal / this.tickTimerTotal)
     this.manaGain = 600 / (this.durationTotal / this.tickTimerTotal)
     this.setup()
@@ -442,8 +459,14 @@ class DrumsOfRestorationAura extends Aura {
       this.tickTimerRemaining = Math.max(0, this.tickTimerRemaining - t)
 
       if (this.tickTimerRemaining == 0) {
+        // Player
         this.player.combatLog('Player gains ' + this.manaGain + ' mana from Drums of Restoration (' + Math.round(this.player.mana) + ' -> ' + Math.round(this.player.mana + this.manaGain) + ')')
         this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.manaGain)
+        // Pet
+        if (this.player.pet) {
+          this.player.combatLog(this.player.pet.name + ' gains ' + this.manaGain + ' mana from Drums of Restoration (' + Math.round(this.player.pet.stats.mana) + ' -> ' + Math.round(this.player.pet.stats.mana + this.manaGain) + ')')
+          this.player.pet.stats.mana = Math.min(this.player.pet.stats.maxMana, this.player.pet.stats.mana + this.manaGain)
+        }
         this.ticksRemaining--
         this.tickTimerRemaining = this.tickTimerTotal
 
@@ -485,14 +508,21 @@ class DarkmoonCardCrusadeAura extends Aura {
       this.player.combatLog('Spell Power + ' + this.spPerStack + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + this.spPerStack) + ')')
       this.player.stats.spellPower += this.spPerStack
       this.stacks++
-      if (this.player.pet) this.player.pet.calculateStatsFromPlayer()
+      if (this.player.pet) {
+        this.player.pet.calculateStatsFromPlayer()
+      }
     }
     super.apply()
   }
 
   fade (endOfIteration = false) {
     if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Spell Power - ' + (this.spPerStack * this.stacks) + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - this.spPerStack * this.stacks) + ')')
+      if (!endOfIteration) {
+        this.player.combatLog('Spell Power - ' + (this.spPerStack * this.stacks) + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - this.spPerStack * this.stacks) + ')')
+        if (this.player.pet) {
+          this.player.pet.calculateStatsFromPlayer()
+        }
+      }
       this.player.stats.spellPower -= this.spPerStack * this.stacks
       this.stacks = 0
     }
