@@ -36,7 +36,7 @@ class DamageOverTime {
     this.player.auraBreakdown[this.varName].appliedAt = this.player.fightTime
     this.player.auraBreakdown[this.varName].count = this.player.auraBreakdown[this.varName].count + 1 || 1
     const refreshedOrApplied = this.active ? 'refreshed' : 'applied'
-    this.player.combatLog(this.name + ' ' + refreshedOrApplied + ' (' + spellPower + ' Spell Power)')
+    this.player.combatLog(this.name + ' ' + refreshedOrApplied + ' (' + Math.round(spellPower) + ' Spell Power)')
     this.active = true
     this.tickTimerRemaining = this.tickTimerTotal
     this.ticksRemaining = this.ticksTotal
