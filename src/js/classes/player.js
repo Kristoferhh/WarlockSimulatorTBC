@@ -71,7 +71,7 @@ class Player {
           const gemId = settings.gems.head[settings.items.head][gemSocket][1]
           if (gems.meta[gemId]) {
             this.metaGemIds.push(gemId)
-          } 
+          }
         }
       }
     }
@@ -103,7 +103,7 @@ class Player {
                   if (gems[gemColor][gemId]) {
                     if (gemColor == 'meta') {
                       if (this.metaGemIds.includes(gemId)) {
-                        this.metaGemIds.splice(this.metaGemIds.indexOf(gemId),1)
+                        this.metaGemIds.splice(this.metaGemIds.indexOf(gemId), 1)
                       }
                     }
                     // Loop through the gem's stats and remove them from the player
@@ -159,7 +159,7 @@ class Player {
         }
       }
       if (this.metaGemIds.length > 1) {
-        console.log(this.metaGemIds.length + " meta gems equipped, somehow.")
+        console.log(this.metaGemIds.length + ' meta gems equipped, somehow.')
       }
     }
 
@@ -226,7 +226,7 @@ class Player {
     }
     // If using a custom isb uptime % then just add to the shadow modifier % (this assumes 5/5 ISB giving 20% shadow damage)
     if (settings.simSettings.customIsbUptime == 'yes') {
-        this.stats.shadowModifier *= (1 + 0.2 * (settings.simSettings.customIsbUptimeValue / 100))
+      this.stats.shadowModifier *= (1 + 0.2 * (settings.simSettings.customIsbUptimeValue / 100))
     }
     // Add spell power from Improved Divine Spirit
     this.stats.spiritModifier *= (1 - (0.01 * settings.talents.demonicEmbrace))
@@ -283,8 +283,8 @@ class Player {
     // Records all information about auras such as how often it was applied and the uptime %.
     this.auraBreakdown = {}
     // Records all information about mana gain abilities like Life Tap, Mana Pots, and Demonic Runes
-    this.manaGainBreakdown = {mp5: {name: "Mp5"}}
-    if (this.selectedAuras.judgementOfWisdom) this.manaGainBreakdown.judgementOfWisdom = {name: "Judgement of Wisdom"}
+    this.manaGainBreakdown = { mp5: { name: 'Mp5' } }
+    if (this.selectedAuras.judgementOfWisdom) this.manaGainBreakdown.judgementOfWisdom = { name: 'Judgement of Wisdom' }
 
     // Pet
     this.demonicKnowledgeSp = 0 // Spell Power from the Demonic Knowledge talent
@@ -495,7 +495,7 @@ class Player {
 
   // Returns the crit percentage of the player.
   // Since crit gains a bonus from intellect, and intellect could fluctuate during the fight (through procs and such), it's better to calculate it by calling a function like this.
-  getCritChance() {
+  getCritChance () {
     return this.stats.critChance + ((this.stats.intellect * this.stats.intellectModifier) * critPerInt)
   }
 
@@ -504,7 +504,7 @@ class Player {
   }
 
   // The formula is (75 * resistance) / (playerLevel * 5) which gives the number to multiply the damage with (between 0 and 1) to simulate the average partial resist mitigation.
-  getPartialResistMultiplier(resist) {
+  getPartialResistMultiplier (resist) {
     return 1 - ((75 * resist) / (this.level * 5)) / 100
   }
 

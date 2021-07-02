@@ -44,7 +44,7 @@ const presetTalents = {
     conflagrate: 1,
     shadowAndFlame: 5
   },
-  /*destructionFire: {
+  /* destructionFire: {
     improvedHealthstone: 2,
     demonicEmbrace: 5,
     improvedVoidwalker: 1,
@@ -66,7 +66,7 @@ const presetTalents = {
     backlash: 3,
     conflagrate: 1,
     shadowAndFlame: 5
-  },*/
+  }, */
   demonology: {
     improvedCorruption: 1,
     improvedHealthstone: 2,

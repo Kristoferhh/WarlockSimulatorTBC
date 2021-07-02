@@ -32,7 +32,7 @@ class Simulation {
       // Pet's attacks/abilities and such
       if (this.player.pet.mode == PetMode.AGGRESSIVE) {
         if (this.player.pet.spells.melee && this.player.pet.spells.melee.cooldownRemaining < time) time = this.player.pet.spells.melee.cooldownRemaining
-        else if (this.player.pet.type == PetType.RANGED && this.player.pet.castTimeRemaining > 0 && this.player.pet.castTimeRemaining < time) time = this.player.pet.castTimeRemaining;
+        else if (this.player.pet.type == PetType.RANGED && this.player.pet.castTimeRemaining > 0 && this.player.pet.castTimeRemaining < time) time = this.player.pet.castTimeRemaining
 
         if (this.player.pet.pet == PetName.SUCCUBUS) {
           if (this.player.pet.spells.lashOfPain.cooldownRemaining > 0 && this.player.pet.spells.lashOfPain.cooldownRemaining < time) time = this.player.pet.spells.lashOfPain.cooldownRemaining
@@ -307,9 +307,9 @@ class Simulation {
             if (this.player.pet.spells.firebolt && this.player.pet.spells.firebolt.ready()) {
               this.player.pet.cast('firebolt')
             }
-					} 
+          }
         }
-        
+
         // Player
         if (this.player.castTimeRemaining <= 0) {
           // Spells not on the global cooldown
@@ -355,7 +355,7 @@ class Simulation {
                   this.player.cast('curseOfAgony')
                 } else if (this.player.spells.unstableAffliction && (!this.player.auras.unstableAffliction.active || (this.player.auras.unstableAffliction.ticksRemaining == 1 && this.player.auras.unstableAffliction.tickTimerRemaining < this.player.spells.unstableAffliction.getCastTime())) && this.player.spells.unstableAffliction.ready() && (timeRemaining - this.player.spells.unstableAffliction.castTime) >= this.player.auras.unstableAffliction.minimumDuration) {
                   this.player.cast('unstableAffliction')
-                } else if (this.player.spells.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.ready() && /*(!this.player.auras.improvedShadowBolt || this.player.auras.improvedShadowBolt.active) &&*/ timeRemaining >= this.player.auras.siphonLife.minimumDuration) {
+                } else if (this.player.spells.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.ready() && /* (!this.player.auras.improvedShadowBolt || this.player.auras.improvedShadowBolt.active) && */ timeRemaining >= this.player.auras.siphonLife.minimumDuration) {
                   this.player.cast('siphonLife')
                 } else if (this.player.spells.immolate && (!this.player.auras.immolate.active || (this.player.auras.immolate.ticksRemaining == 1 && this.player.auras.immolate.tickTimerRemaining < this.player.spells.immolate.getCastTime())) && this.player.spells.immolate.ready() && (timeRemaining - this.player.spells.immolate.castTime) >= this.player.auras.immolate.minimumDuration) {
                   this.player.cast('immolate')

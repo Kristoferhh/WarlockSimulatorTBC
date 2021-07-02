@@ -632,7 +632,7 @@ $('.preset-talent-button').click(function () {
   })
 
   // Disable spells that aren't available anymore with the new talents
-  /*if (talents.siphonLife == 0) {
+  /* if (talents.siphonLife == 0) {
     rotation.dot.siphonLife = false
     $('#dot-siphonLife').attr('data-checked', 'false')
   }
@@ -643,7 +643,7 @@ $('.preset-talent-button').click(function () {
   if (talents.shadowburn == 0) {
     rotation.finisher.shadowburn = false
     $('#finisher-shadowburn').attr('data-checked', 'false')
-  }*/
+  } */
 
   localStorage.rotation = JSON.stringify(rotation)
   localStorage.talents = JSON.stringify(talents)
@@ -755,8 +755,8 @@ $('#rotation-list div li').click(function () {
 })
 
 $('#sim-settings select, #sim-settings input').change(function () {
-  if ($(this).is(":checkbox")) {
-    settings[$(this).attr('name')] = $(this).is(":checked")
+  if ($(this).is(':checkbox')) {
+    settings[$(this).attr('name')] = $(this).is(':checked')
   } else {
     settings[$(this).attr('name')] = $(this).val()
   }
@@ -781,7 +781,7 @@ $('#sim-all-items').click(function () {
   return false
 })
 
-$("#sim-stat-weights").click(function() {
+$('#sim-stat-weights').click(function () {
   simStatWeights()
 })
 
@@ -1034,7 +1034,7 @@ function simDPS (items) {
   console.log(items)
 
   if (items.length > 1) {
-    $(".item-dps").text('')
+    $('.item-dps').text('')
   }
 
   for (let i = 0; i < items.length; i++) {
@@ -1084,7 +1084,7 @@ function simDPS (items) {
               const a = simulationEnd.auraBreakdown[aura]
               const percentUptime = (~~((a.uptime / simulationEnd.totalDuration) * 10000) / 100).toFixed(2)
               if (a.count > 0) {
-                $("#aura-breakdown-table tbody").append("<tr class='spell-damage-information'><td>" + a.name + "</td><td>" + Math.ceil(a.count / simulationEnd.iterations) + "</td><td><meter value='" + percentUptime + "' min='0' max='100'></meter> " + percentUptime + "%</td></tr>")
+                $('#aura-breakdown-table tbody').append("<tr class='spell-damage-information'><td>" + a.name + '</td><td>' + Math.ceil(a.count / simulationEnd.iterations) + "</td><td><meter value='" + percentUptime + "' min='0' max='100'></meter> " + percentUptime + '%</td></tr>')
               }
             }
             // Setup the mana gain breakdown table
@@ -1092,11 +1092,11 @@ function simDPS (items) {
               const e = simulationEnd.manaGainBreakdown[element]
               const percentOfGain = (~~((e.manaGain / simulationEnd.totalManaRegenerated) * 10000) / 100).toFixed(2)
               if (e.casts > 0) {
-                $("#mana-gain-breakdown-table tbody").append("<tr class='spell-damage-information'><td>" + e.name +"</td><td><meter value='" + percentOfGain + "' min='0' max='100'></meter> " + percentOfGain + "</td><td>" + Math.ceil(e.casts / simulationEnd.iterations) + "</td><td>" + ~~(e.manaGain / e.casts) + "</td<</tr>")
+                $('#mana-gain-breakdown-table tbody').append("<tr class='spell-damage-information'><td>" + e.name + "</td><td><meter value='" + percentOfGain + "' min='0' max='100'></meter> " + percentOfGain + '</td><td>' + Math.ceil(e.casts / simulationEnd.iterations) + '</td><td>' + ~~(e.manaGain / e.casts) + '</td<</tr>')
               }
             }
-            if ($("#automatically-open-sim-details").is(":checked")) {
-              $(".breakdown-section").css("display", "inline-block")
+            if ($('#automatically-open-sim-details').is(':checked')) {
+              $('.breakdown-section').css('display', 'inline-block')
             }
           }
         }
@@ -1148,11 +1148,11 @@ function simDPS (items) {
   }
 }
 
-function updateStatWeight(stat, value) {
-  $("#stat-weight-" + stat).text(Math.max(0,value))
+function updateStatWeight (stat, value) {
+  $('#stat-weight-' + stat).text(Math.max(0, value))
 }
 
-function simStatWeights() {
+function simStatWeights () {
   const stats = {
     normal: 0,
     intellect: 100,
@@ -1165,11 +1165,11 @@ function simStatWeights() {
   }
   // Filthy way of getting the current hit % from the sidebar hit % value.
   // The idea of these hit rating calculations is to put the player at hit cap to get the value of hit rather than just giving a static value like with other stats since they don't have a cap.
-  const missingHitChance = 16 - $("#character-hit-val").text().split("(")[1].split("%")[0]
+  const missingHitChance = 16 - $('#character-hit-val').text().split('(')[1].split('%')[0]
   const missingHitRating = Math.floor(missingHitChance * hitRatingPerPercent)
-  stats.hitRating = Math.max(missingHitRating,1)
-  let sims = []
-  let simInfo = []
+  stats.hitRating = Math.max(missingHitRating, 1)
+  const sims = []
+  const simInfo = []
   let normalSimAvgDps = 0
   let simsFinished = 0
 
@@ -1186,7 +1186,7 @@ function simStatWeights() {
     },
     {
       player: Player.getSettings(),
-      simulation: Simulation.getSettings(),
+      simulation: Simulation.getSettings()
     }
   ).start())
 
@@ -1199,17 +1199,17 @@ function simStatWeights() {
         simsFinished++
 
         if (simsFinished == sims.length) {
-          let pawnString = '( Pawn: v1: "' + (localStorage.selectedProfile || "Warlock") + '": Class=Warlock, Spec=Affliction, Intellect=' + $("#stat-weight-intellect").text()
-          + ', SpellCritRating=' + $("#stat-weight-critRating").text()
-          + ', SpellHitRating=' + $("#stat-weight-hitRating").text()
-          + ', FireSpellDamage=' + $("#stat-weight-firePower").text()
-          + ', ShadowSpellDamage=' + $("#stat-weight-shadowPower").text()
-          + ', SpellDamage=' + $("#stat-weight-spellPower").text()
-          + ', Mp5=' + $("#stat-weight-mp5").text()
-          + ', SpellHasteRating=' + $("#stat-weight-hasteRating").text() + ')'
-          $("#pawn-import-string p").text(pawnString)
-          $("#sim-length-result").text((performance.now() - simStart) / 1000 + "s")
-          $("#sim-stat-weights").text("Stat Weights")
+          const pawnString = '( Pawn: v1: "' + (localStorage.selectedProfile || 'Warlock') + '": Class=Warlock, Spec=Affliction, Intellect=' + $('#stat-weight-intellect').text() +
+          ', SpellCritRating=' + $('#stat-weight-critRating').text() +
+          ', SpellHitRating=' + $('#stat-weight-hitRating').text() +
+          ', FireSpellDamage=' + $('#stat-weight-firePower').text() +
+          ', ShadowSpellDamage=' + $('#stat-weight-shadowPower').text() +
+          ', SpellDamage=' + $('#stat-weight-spellPower').text() +
+          ', Mp5=' + $('#stat-weight-mp5').text() +
+          ', SpellHasteRating=' + $('#stat-weight-hasteRating').text() + ')'
+          $('#pawn-import-string p').text(pawnString)
+          $('#sim-length-result').text((performance.now() - simStart) / 1000 + 's')
+          $('#sim-stat-weights').text('Stat Weights')
           $('.btn').css('background', '')
         }
       },
@@ -1225,8 +1225,8 @@ function simStatWeights() {
           if (simInfo[i][1] < smallestValue) smallestValue = simInfo[i][1]
         }
 
-          $('#sim-stat-weights').css('background', 'linear-gradient(to right, #9482C9 ' + smallestValue + '%, transparent ' + smallestValue + '%)')
-          $('#sim-stat-weights').text(smallestValue + '%')
+        $('#sim-stat-weights').css('background', 'linear-gradient(to right, #9482C9 ' + smallestValue + '%, transparent ' + smallestValue + '%)')
+        $('#sim-stat-weights').text(smallestValue + '%')
       },
       {
         player: Player.getSettings(),
@@ -1235,10 +1235,10 @@ function simStatWeights() {
         customStatValue: stats[stat]
       }
     ).start())
-    simInfo.push([stat,0])
+    simInfo.push([stat, 0])
   }
 
-  $("#stat-weights-section").show()
+  $('#stat-weights-section').show()
 }
 
 function updateTalentTreeNames () {
@@ -1392,22 +1392,22 @@ function itemMeetsSocketRequirements (itemId) {
 
 function updateSimulationSettingsVisibility () {
   if (talents.demonicSacrifice === 0) {
-    $("#sacrificePet").hide()
+    $('#sacrificePet').hide()
   } else {
-    $("#sacrificePet").show()
+    $('#sacrificePet').show()
   }
 
-  if ($("#sacrificePet").is(":visible") && $("#sacrificePet").children("select").val() == "yes") {
-    $("#petMode").hide()
+  if ($('#sacrificePet').is(':visible') && $('#sacrificePet').children('select').val() == 'yes') {
+    $('#petMode').hide()
   } else {
-    $("#petMode").show()
+    $('#petMode').show()
   }
 
-  if ($('#sacrificePet').children('select').val() == 'no' || !$("#sacrificePet").is(":visible")) {
+  if ($('#sacrificePet').children('select').val() == 'no' || !$('#sacrificePet').is(':visible')) {
     $('#petBuffs-heading').show()
     $('.petBuffs').show()
     if ($('#petMode').children('select').val() == PetMode.AGGRESSIVE) {
-      if ($("#petChoice").children("select").val() != PetName.IMP) {
+      if ($('#petChoice').children('select').val() != PetName.IMP) {
         $('#enemyArmor').show()
         $('#enemy-armor-val').closest('li').show()
       } else {
@@ -1428,10 +1428,10 @@ function updateSimulationSettingsVisibility () {
     $('.petDebuff').hide()
   }
 
-  if ($("#petChoice").children("select").val() == PetName.SUCCUBUS && $("#petMode").children("select").val() == PetMode.AGGRESSIVE) {
-    $("#lashOfPainUsage").show()
+  if ($('#petChoice').children('select').val() == PetName.SUCCUBUS && $('#petMode').children('select').val() == PetMode.AGGRESSIVE) {
+    $('#lashOfPainUsage').show()
   } else {
-    $("#lashOfPainUsage").hide()
+    $('#lashOfPainUsage').hide()
   }
 
   if (talents.summonFelguard === 0) {
@@ -1452,11 +1452,11 @@ function updateSimulationSettingsVisibility () {
     $('#improvedDivineSpirit').hide()
   }
 
-  /*if (talents.conflagrate > 0) {
+  /* if (talents.conflagrate > 0) {
     $('#conflagrateUse').show()
   } else {
     $('#conflagrateUse').hide()
-  }*/
+  } */
 
   if (auras.powerOfTheGuardianMage) {
     $('#mageAtieshAmount').show()
@@ -1508,9 +1508,9 @@ function updateSimulationSettingsVisibility () {
     $('#exposeWeaknessUptime').hide()
   }
 
-  if ($("#customIsbUptime").children("select").val() == "yes") {
-      $("#custom-isb-uptime-value").show()
+  if ($('#customIsbUptime').children('select').val() == 'yes') {
+    $('#custom-isb-uptime-value').show()
   } else {
-      $("#custom-isb-uptime-value").hide()
+    $('#custom-isb-uptime-value').hide()
   }
 }

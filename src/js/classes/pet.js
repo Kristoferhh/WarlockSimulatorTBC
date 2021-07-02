@@ -208,15 +208,15 @@ class Pet {
     this.calculateStatsFromPlayer()
   }
 
-  getMeleeCritChance() {
+  getMeleeCritChance () {
     return this.stats.critChance
   }
 
-  getSpellCritChance() {
+  getSpellCritChance () {
     return this.stats.spellCritChance
   }
 
-  isCrit(spellType) {
+  isCrit (spellType) {
     if (spellType == SpellTypes.PHYSICAL) {
       return random(1, 100 * this.player.stats.critChanceMultiplier) <= (this.getMeleeCritChance() * this.player.stats.critChanceMultiplier)
     } else if (spellType == SpellTypes.MAGICAL) {
@@ -224,15 +224,15 @@ class Pet {
     }
   }
 
-  getMeleeHitChance() {
+  getMeleeHitChance () {
     return this.stats.hitChance
   }
 
-  getSpellHitChance() {
+  getSpellHitChance () {
     return this.stats.spellHitChance
   }
 
-  isHit(spellType) {
+  isHit (spellType) {
     if (spellType == SpellTypes.PHYSICAL) {
       return random(1, 100 * this.player.stats.hitChanceMultiplier) <= (this.stats.hitChance * this.player.stats.hitChanceMultiplier)
     } else if (spellType == SpellTypes.MAGICAL) {
@@ -244,8 +244,8 @@ class Pet {
     if (this.type == PetType.MELEE) {
       this.spells.melee.tick(t)
     } else if (this.type == PetType.RANGED) {
-			this.castTimeRemaining = Math.max(0, this.castTimeRemaining - t);
-		} 
+      this.castTimeRemaining = Math.max(0, this.castTimeRemaining - t)
+    }
 
     this.fiveSecondRuleTimerRemaining = Math.max(0, this.fiveSecondRuleTimerRemaining - t)
     this.spiritTickTimerRemaining = Math.max(0, this.spiritTickTimerRemaining - t)
@@ -276,12 +276,12 @@ class Imp extends Pet {
     this.setup()
   }
 
-  initialize() {
+  initialize () {
     this.spells.firebolt = new Firebolt(this)
     super.initialize()
   }
 
-  tick(t) {
+  tick (t) {
     this.spells.firebolt.tick(t)
   }
 }

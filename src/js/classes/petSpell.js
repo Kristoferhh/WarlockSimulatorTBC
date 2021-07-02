@@ -109,9 +109,9 @@ class PetSpell {
   }
 }
 
-//todo fix so that debuffs on boss increase damage of pet abilities, such as shadow weaving and improved scorch
+// todo fix so that debuffs on boss increase damage of pet abilities, such as shadow weaving and improved scorch
 class Firebolt extends PetSpell {
-  constructor(pet) {
+  constructor (pet) {
     super(pet)
     this.name = 'Firebolt'
     this.castTime = 1.5 - (0.25 * pet.player.talents.improvedFirebolt)
@@ -123,7 +123,7 @@ class Firebolt extends PetSpell {
     this.type = SpellTypes.MAGICAL
   }
 
-  calculateDamage() {
+  calculateDamage () {
     return this.damage + (this.pet.stats.spellPower * this.coefficient) * this.modifier
   }
 }

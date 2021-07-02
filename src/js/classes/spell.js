@@ -36,7 +36,7 @@ class Spell {
     return (!this.onGcd || this.player.gcdRemaining <= 0) && this.player.castTimeRemaining <= 0 && this.manaCost <= this.player.mana && this.cooldownRemaining <= 0
   }
 
-  getCastTime() {
+  getCastTime () {
     return Math.round((this.castTime / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000 + this.player.spellDelay
   }
 
@@ -114,7 +114,7 @@ class Spell {
     }
 
     // Judgement of Wisdom (50% proc rate)
-    if (this.player.selectedAuras.judgementOfWisdom && random(1,100) <= 50) {
+    if (this.player.selectedAuras.judgementOfWisdom && random(1, 100) <= 50) {
       const manaVal = 74
       const currentMana = this.player.mana
       const manaGained = Math.min(this.player.stats.maxMana - currentMana, manaVal)
@@ -122,14 +122,14 @@ class Spell {
       this.player.manaGainBreakdown.judgementOfWisdom.manaGain = this.player.manaGainBreakdown.judgementOfWisdom.manaGain + manaGained || manaGained
       this.player.totalManaRegenerated += manaGained
       this.player.mana = Math.min(this.player.stats.maxMana, currentMana + manaGained)
-      this.player.combatLog("Player gains " + manaGained + " mana from Judgement of Wisdom (" + Math.round(currentMana) + " -> " + Math.round(this.player.mana) + ")")
+      this.player.combatLog('Player gains ' + manaGained + ' mana from Judgement of Wisdom (' + Math.round(currentMana) + ' -> ' + Math.round(this.player.mana) + ')')
     }
 
     // T4 2-set
     if (this.player.sets['645'] >= 2 && ['shadow', 'fire'].includes(this.school) && random(1, 100) <= this.player.auras.shadowflame.procChance) {
-      if (this.school == "shadow") {
+      if (this.school == 'shadow') {
         this.player.auras.flameshadow.apply()
-      } else if (this.school == "fire") {
+      } else if (this.school == 'fire') {
         this.player.auras.shadowflame.apply()
       }
     }
@@ -170,7 +170,7 @@ class Spell {
     }
   }
 
-  getModifier() {
+  getModifier () {
     return this.player.stats[this.school + 'Modifier'] * this.modifier
   }
 
@@ -178,8 +178,8 @@ class Spell {
     let dmg = this.dmg
     let critMultiplier = 1.5
     let spellPower = this.player.stats.spellPower + this.player.demonicKnowledgeSp
-    let shadowPower = this.player.stats.shadowPower
-    let firePower = this.player.stats.firePower
+    const shadowPower = this.player.stats.shadowPower
+    const firePower = this.player.stats.firePower
     let modifier = this.getModifier()
 
     // If casting Incinerate and Immolate is up, add the bonus damage.
@@ -193,7 +193,7 @@ class Spell {
       spellPower += (this.player.stats.intellect * this.player.stats.intellectModifier * 0.07)
     }
     // Damage from spell power * coefficient
-    let sp = spellPower + (this.school == 'shadow' ? shadowPower : this.school == 'fire' ? firePower : 0)
+    const sp = spellPower + (this.school == 'shadow' ? shadowPower : this.school == 'fire' ? firePower : 0)
     dmg += sp * this.coefficient
 
     // Improved Shadow Bolt
@@ -221,7 +221,7 @@ class Spell {
       dmg *= critMultiplier
 
       // Apply ISB debuff if casting Shadow Bolt
-      if (this.player.simSettings.customIsbUptime == "no" && this.varName == 'shadowBolt' && this.player.talents.improvedShadowBolt > 0) {
+      if (this.player.simSettings.customIsbUptime == 'no' && this.varName == 'shadowBolt' && this.player.talents.improvedShadowBolt > 0) {
         this.player.auras.improvedShadowBolt.apply()
       }
 
@@ -236,7 +236,7 @@ class Spell {
     if (isCrit) combatLogMsg += '*'
     combatLogMsg += dmg
     if (isCrit) combatLogMsg += '*'
-    combatLogMsg +=  ' (' + baseDamage + ' Base Damage - ' + Math.round(this.coefficient * 1000) / 1000 + ' Coefficient - ' + Math.round(sp) + ' Spell Power - '
+    combatLogMsg += ' (' + baseDamage + ' Base Damage - ' + Math.round(this.coefficient * 1000) / 1000 + ' Coefficient - ' + Math.round(sp) + ' Spell Power - '
     if (isCrit) combatLogMsg += critMultiplier.toFixed(2) + '% Crit Multiplier - '
     combatLogMsg += Math.round(modifier * 10000) / 100 + '% Damage Modifier - ' + Math.round(partialResistMultiplier * 1000) / 10 + '% Partial Resist Multiplier)'
     this.player.combatLog(combatLogMsg)
@@ -307,7 +307,7 @@ class Incinerate extends Spell {
     super(player)
     this.castTime = Math.round((2.5 * (1 - 0.02 * player.talents.emberstorm)) * 100) / 100
     this.manaCost = 355 * (1 - 0.01 * player.talents.cataclysm)
-    this.coefficient = (2.5/3.5) + (0.04 * player.talents.shadowAndFlame)
+    this.coefficient = (2.5 / 3.5) + (0.04 * player.talents.shadowAndFlame)
     this.dmg = 479
     this.bonusDamageFromImmolate = 120 // The bonus damage gained when Immolate is up on the target
     this.name = 'Incinerate'
@@ -327,7 +327,7 @@ class SearingPain extends Spell {
     super(player)
     this.castTime = 1.5
     this.manaCost = 205 * (1 - 0.01 * player.talents.cataclysm)
-    this.coefficient = 1.5/3.5
+    this.coefficient = 1.5 / 3.5
     this.dmg = 295
     this.name = 'Searing Pain'
     this.doesDamage = true
@@ -533,7 +533,7 @@ class Immolate extends Spell {
     this.setup()
   }
 
-  getModifier() {
+  getModifier () {
     let modifier = super.getModifier()
     if (this.player.talents.emberstorm > 0) {
       modifier /= (1 + 0.02 * this.player.talents.emberstorm)
@@ -678,7 +678,7 @@ class Bloodlust extends Spell {
     super(player)
     this.name = 'Bloodlust'
     this.cooldown = 600
-	  this.isItem = true;
+	  this.isItem = true
     this.isAura = true
     this.onGcd = false
     this.setup()
@@ -871,7 +871,7 @@ class RobeOfTheElderScribes extends Spell {
 }
 
 class QuagmirransEye extends Spell {
-  constructor(player) {
+  constructor (player) {
     super(player)
     this.name = "Quagmirran's Eye"
     this.cooldown = 45
@@ -882,7 +882,7 @@ class QuagmirransEye extends Spell {
     this.setup()
   }
 
-  cast() {
+  cast () {
     if (this.cooldownRemaining <= 0) {
       this.player.auras.quagmirransEye.apply()
       super.cast()
@@ -891,7 +891,7 @@ class QuagmirransEye extends Spell {
 }
 
 class ShiffarsNexusHorn extends Spell {
-  constructor(player) {
+  constructor (player) {
     super(player)
     this.name = "Shiffar's Nexus-Horn"
     this.cooldown = 45
@@ -902,7 +902,7 @@ class ShiffarsNexusHorn extends Spell {
     this.setup()
   }
 
-  cast() {
+  cast () {
     if (this.cooldownRemaining <= 0) {
       this.player.auras.shiffarsNexusHorn.apply()
       super.cast()
@@ -911,7 +911,7 @@ class ShiffarsNexusHorn extends Spell {
 }
 
 class SextantOfUnstableCurrents extends Spell {
-  constructor(player) {
+  constructor (player) {
     super(player)
     this.name = 'Sextant of Unstable Currents'
     this.cooldown = 45
@@ -922,7 +922,7 @@ class SextantOfUnstableCurrents extends Spell {
     this.setup()
   }
 
-  cast() {
+  cast () {
     if (this.cooldownRemaining <= 0) {
       this.player.auras.sextantOfUnstableCurrents.apply()
       super.cast()
@@ -931,7 +931,7 @@ class SextantOfUnstableCurrents extends Spell {
 }
 
 class BandOfTheEternalSage extends Spell {
-  constructor(player) {
+  constructor (player) {
     super(player)
     this.name = 'Band of the Eternal Sage'
     this.cooldown = 60
@@ -942,7 +942,7 @@ class BandOfTheEternalSage extends Spell {
     this.setup()
   }
 
-  cast() {
+  cast () {
     if (this.cooldownRemaining <= 0) {
       this.player.auras.bandOfTheEternalSage.apply()
       super.cast()

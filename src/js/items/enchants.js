@@ -61,7 +61,8 @@ const enchants = {
       id: 37889,
       source: 'Lower City - Honored',
       phase: 1
-    }, hoodooHex: {
+    },
+    hoodooHex: {
       name: 'Hoodoo Hex',
       stamina: 10,
       spellPower: 18,

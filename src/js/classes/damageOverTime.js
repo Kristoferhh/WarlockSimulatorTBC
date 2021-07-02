@@ -20,7 +20,7 @@ class DamageOverTime {
     this.varName = camelCase(this.name)
     this.originalDurationTotal = this.durationTotal
     // T4 4pc
-    if ((this.varName == "immolate" || this.varName == "corruption") && this.player.sets['645'] >= 4) {
+    if ((this.varName == 'immolate' || this.varName == 'corruption') && this.player.sets['645'] >= 4) {
       this.durationTotal += 3
     }
     this.ticksTotal = Math.round(this.durationTotal / this.tickTimerTotal)
@@ -30,12 +30,12 @@ class DamageOverTime {
 
   apply (spellPower) {
     if (this.active) {
-      this.player.combatLog(this.name + " refreshed before letting it expire")
+      this.player.combatLog(this.name + ' refreshed before letting it expire')
     }
     // Keep a timestamp of when the aura was applied so we can calculate the uptime when it fades
     this.player.auraBreakdown[this.varName].appliedAt = this.player.fightTime
     this.player.auraBreakdown[this.varName].count = this.player.auraBreakdown[this.varName].count + 1 || 1
-    let refreshedOrApplied = this.active ? 'refreshed' : 'applied'
+    const refreshedOrApplied = this.active ? 'refreshed' : 'applied'
     this.player.combatLog(this.name + ' ' + refreshedOrApplied + ' (' + spellPower + ' Spell Power)')
     this.active = true
     this.tickTimerRemaining = this.tickTimerTotal
@@ -47,7 +47,7 @@ class DamageOverTime {
     this.spellPower = spellPower
 
     // Siphon Life snapshots the presence of ISB. So if ISB isn't up when it's cast, it doesn't get the benefit even if it comes up later during the duration.
-    if (this.varName == "siphonLife") {
+    if (this.varName == 'siphonLife') {
       this.isbActive = (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active)
     }
   }
@@ -63,7 +63,7 @@ class DamageOverTime {
     }
   }
 
-  getModifier() {
+  getModifier () {
     return this.modifier * this.player.stats[this.school + 'Modifier']
   }
 
@@ -72,11 +72,11 @@ class DamageOverTime {
       this.tickTimerRemaining = Math.max(0, this.tickTimerRemaining - t)
 
       if (this.tickTimerRemaining == 0) {
-        let sp = this.snapshots ? this.spellPower : this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats[this.school + 'Power']
+        const sp = this.snapshots ? this.spellPower : this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats[this.school + 'Power']
         let modifier = this.getModifier()
-        
+
         // Add bonus from ISB (without removing ISB stacks since it's a dot)
-        if ((this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.varName != "siphonLife") || (this.varName == "siphonLife" && this.isbActive)) {
+        if ((this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.varName != 'siphonLife') || (this.varName == 'siphonLife' && this.isbActive)) {
           modifier *= this.player.auras.improvedShadowBolt.modifier
         }
         let dmg = ((this.dmg + sp * this.coefficient) * modifier) / (this.originalDurationTotal / this.tickTimerTotal)
@@ -93,7 +93,7 @@ class DamageOverTime {
         dmg = Math.round(dmg * partialResistMultiplier)
         this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg
         this.player.iterationDamage += dmg
-        this.player.combatLog(this.name + ' Tick ' + Math.round(dmg) + " (" + this.dmg + ' Base Damage - ' + sp + " Spell Power - " + Math.round(modifier * 10000) / 100 + "% Damage Modifier " + Math.round(partialResistMultiplier * 1000) / 1000 + "% Partial Resist Multiplier)")
+        this.player.combatLog(this.name + ' Tick ' + Math.round(dmg) + ' (' + this.dmg + ' Base Damage - ' + sp + ' Spell Power - ' + Math.round(modifier * 10000) / 100 + '% Damage Modifier ' + Math.round(partialResistMultiplier * 1000) / 1000 + '% Partial Resist Multiplier)')
         this.ticksRemaining--
         this.tickTimerRemaining = this.tickTimerTotal
 
@@ -131,7 +131,7 @@ class CorruptionDot extends DamageOverTime {
     if (player.sets['529'] >= 4) this.modifier *= 1.12		// T3 4pc
   }
 
-  getModifier() {
+  getModifier () {
     let modifier = super.getModifier()
     if (this.player.talents.shadowMastery > 0 && this.player.talents.contagion > 0) {
       // Divine away the bonus from Shadow Mastery
@@ -216,7 +216,7 @@ class CurseOfAgonyDot extends DamageOverTime {
     this.setup()
   }
 
-  getModifier() {
+  getModifier () {
     let modifier = super.getModifier()
     // Remove bonus from Shadow Mastery and add bonus from Shadow Mastery + Contagion + Improved Curse of Agony
     modifier /= (1 + (this.player.talents.shadowMastery * 0.02))
