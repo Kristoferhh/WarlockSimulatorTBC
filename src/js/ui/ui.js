@@ -1447,11 +1447,11 @@ function updateSimulationSettingsVisibility () {
     $('#improvedDivineSpirit').hide()
   }
 
-  if (talents.conflagrate > 0) {
+  /*if (talents.conflagrate > 0) {
     $('#conflagrateUse').show()
   } else {
     $('#conflagrateUse').hide()
-  }
+  }*/
 
   if (auras.powerOfTheGuardianMage) {
     $('#mageAtieshAmount').show()
