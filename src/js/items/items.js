@@ -2566,7 +2566,8 @@ const items = {
       spellPower: 25,
       hitRating: 17,
       id: 27795,
-      source: 'Steamvaults'
+      source: 'Steamvaults',
+      phase: 1
     },
     marshalsSilkBelt: {
       name: "Marshal's Silk Belt",
