@@ -117,7 +117,7 @@ class Firebolt extends PetSpell {
     this.castTime = 1.5 - (0.25 * pet.player.talents.improvedFirebolt)
     this.manaCost = 145
     this.damage = 119.5
-    this.coefficient = 1 // confirm
+    this.coefficient = 2 / 3.5
     this.varName = 'firebolt'
     this.pet.player.damageBreakdown[this.varName] = { name: 'Firebolt (Imp)' }
     this.type = SpellTypes.MAGICAL

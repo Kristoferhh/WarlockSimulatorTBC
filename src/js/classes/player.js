@@ -521,7 +521,7 @@ class Player {
   }
 
   combatLog (info) {
-    if (this.iteration == 1) {
+    if (this.iteration == 2) {
       this.combatlog.push('|' + (Math.round(this.fightTime * 10000) / 10000).toFixed(4) + '| ' + info)
     }
   }
