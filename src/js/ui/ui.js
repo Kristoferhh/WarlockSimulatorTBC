@@ -1338,7 +1338,7 @@ function drawProfileButtons () {
 }
 
 function saveProfile (profileName) {
-  profiles[profileName] = {
+  profiles[profileName] = JSON.parse(JSON.stringify({
     auras: auras,
     rotation: rotation,
     simSettings: settings,
@@ -1346,7 +1346,7 @@ function saveProfile (profileName) {
     items: selectedItems,
     gems: selectedGems, // unsure if gems should be saved but it could be useful in case the different profiles want to use different gems
     enchants: selectedEnchants
-  }
+  }))
   localStorage.profiles = JSON.stringify(profiles)
 }
 
