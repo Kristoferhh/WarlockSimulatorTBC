@@ -239,6 +239,13 @@ const enchants = {
       source: 'Enchanting',
       phase: 1
     },
+    superiorHealing: {
+      name: 'Superior Healing',
+      spellPower: 10,
+      id: 22531,
+      source: 'Enchanting',
+      phase: 1
+    },
     majorIntellect: {
       name: 'Major Intellect',
       intellect: 12,
