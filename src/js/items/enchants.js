@@ -242,7 +242,7 @@ const enchants = {
     superiorHealing: {
       name: 'Superior Healing',
       spellPower: 10,
-      id: 22531,
+      id: 27911,
       source: 'Enchanting',
       phase: 1
     },
