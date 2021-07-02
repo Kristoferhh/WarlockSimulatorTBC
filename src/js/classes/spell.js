@@ -243,15 +243,12 @@ class Spell {
     this.player[this.breakdownTable + 'Breakdown'][this.varName].damage = this.player[this.breakdownTable + 'Breakdown'][this.varName].damage + dmg || dmg
     this.player.iterationDamage += dmg
 
-    // T5 4pc. Increase Corruption & Immolate dmg when Shadow Bolt/Incinerate hits
-    // The way it's set up to work is that when Corruption or Immolate is applied, its modifier is 100% (or whatever its default modifier is), then after it's applied, if a Shadow Bolt/Incinerate hits, it increases the damage of *that* Corruption/Immolate aura by 10%. If it's re-applied, the 10% dmg is gone until a new Shadow Bolt/Incinerate hits. Please correct if this is not the way it works.
+    // T5 4pc. Increase Corruption & Immolate DoT dmg when Shadow Bolt/Incinerate hits
     if (this.player.sets['646'] >= 4) {
-      if (this.varName == 'shadowBolt' && this.player.auras.corruption && !this.player.auras.corruption.boosted) {
-        this.player.auras.corruption.boosted = true
-        this.player.auras.corruption.modifier *= 1.1
-      } else if (this.varName == 'incinerate' && this.player.auras.immolate && !this.player.auras.immolate.boosted) {
-        this.player.auras.immolate.boosted = true
-        this.player.auras.immolate.modifier *= 1.1
+      if (this.varName == 'shadowBolt' && this.player.auras.corruption && this.player.auras.corruption.active) {
+        this.player.auras.corruption.t5BonusModifier *= 1.1
+      } else if (this.varName == 'incinerate' && this.player.auras.immolate && this.player.auras.immolate.active) {
+        this.player.auras.immolate.t5BonusModifier *= 1.1
       }
     }
   }

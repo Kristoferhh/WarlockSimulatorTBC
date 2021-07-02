@@ -125,29 +125,28 @@ class CorruptionDot extends DamageOverTime {
     this.name = 'Corruption'
     this.coefficient = 0.936 + (0.12 * player.talents.empoweredCorruption)
     this.minimumDuration = 9
-    this.boosted = false // Track whether the corruption's dmg has been boosted by T5 4pc or not
     this.setup()
 
-    if (player.sets['529'] >= 4) this.modifier *= 1.12		// T3 4pc
+    // T3 4pc
+    if (player.sets['529'] >= 4) this.modifier *= 1.12
   }
 
   getModifier () {
     let modifier = super.getModifier()
     if (this.player.talents.shadowMastery > 0 && this.player.talents.contagion > 0) {
-      // Divine away the bonus from Shadow Mastery
+      // Divide away the bonus from Shadow Mastery
       modifier /= (1 + (this.player.talents.shadowMastery * 0.02))
       // Multiply the modifier with the bonus from Shadow Mastery + Contagion
       modifier *= (1 * (1 + ((this.player.talents.shadowMastery * 0.02) + (this.player.talents.contagion / 100))))
     }
+    // Add the t5 4-set bonus modifier
+    modifier *= this.t5BonusModifier
     return modifier
   }
 
   apply (spellPower) {
-    // T5 4pc
-    if (this.boosted) {
-      this.modifier /= 1.1
-      this.boosted = false
-    }
+    // T5 4-set bonus modifier
+    this.t5BonusModifier = 1
     super.apply(spellPower)
   }
 }
@@ -190,15 +189,16 @@ class ImmolateDot extends DamageOverTime {
     this.name = 'Immolate'
     this.coefficient = 0.65
     this.minimumDuration = 12
-    this.boosted = false // Track whether the Immolate's dmg has been boosted by T5 4pc or not
     this.setup()
   }
 
+  getModifier () {
+    return super.getModifier() * this.t5BonusModifier
+  }
+
   apply (spellPower) {
-    if (this.boosted) {
-      this.modifier /= 1.1
-      this.boosted = false
-    }
+    // T5 4-set bonus modifier
+    this.t5BonusModifier = 1
     super.apply(spellPower)
   }
 }
