@@ -92,6 +92,7 @@ function refreshCharacterStats () {
   if (auras.moonkinAura) critChance += 5
   if (auras.judgementOfTheCrusader) critChance += 3
   if (auras.totemOfWrath) critChance += 3 * $("select[name='totemOfWrathAmount']").val()
+  if (auras.chainOfTheTwilightOwl) critChance += 2
   critChance = critChance.toFixed(2)
 
   // Hit
@@ -151,6 +152,8 @@ function refreshCharacterStats () {
   if (auras.felArmor) spellPower += 100 * (1 + 0.1 * talents.demonicAegis)
   if (auras.prayerOfSpirit) spellPower += (characterStats.spirit * spiritModifier * (0.1 * $("select[name='improvedDivineSpirit']").val()))
   if (auras.powerOfTheGuardianWarlock) spellPower += 33 * $("select[name='warlockAtieshAmount']").val()
+  // Spellfire 3-set bonus
+  if (JSON.parse(localStorage.setBonuses)['552'] >= 3) spellPower += (characterStats.intellect * characterStats.intellectModifier * 0.07)
   spellPower = Math.round(spellPower)
 
   // MP5
