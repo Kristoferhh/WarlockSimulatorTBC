@@ -48,7 +48,7 @@ class DamageOverTime {
 
     // Siphon Life snapshots the presence of ISB. So if ISB isn't up when it's cast, it doesn't get the benefit even if it comes up later during the duration.
     if (this.varName == 'siphonLife') {
-      this.isbActive = (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active)
+      this.isbActive = (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.simSettings.customIsbUptime == 'no')
     }
   }
 
