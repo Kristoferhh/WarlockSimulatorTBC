@@ -5,7 +5,7 @@ function random (min, max) {
 }
 
 function camelCase (string) {
-  let newStr = string.replace(/'/g,'').split(' ')
+  let newStr = string.replace(/'/g,'').replace(/-/g,'').split(' ')
   for (let i = 0; i < newStr.length; i++) {
     newStr[i] = newStr[i].charAt(0).toUpperCase() + newStr[i].substring(1)
   }
