@@ -1053,7 +1053,7 @@ function simDPS (items) {
           $('#avg-dps').text(simulationEnd.avgDps)
           $('#min-dps').text(simulationEnd.minDps)
           $('#max-dps').text(simulationEnd.maxDps)
-          $('#sim-length-result').text(simulationEnd.length + 's')
+          $('#sim-length-result').text(Math.round(simulationEnd.length * 10000) / 10000 + 's')
           $('#sim-dps').text('Simulate')
 
           // Populate the combat log
@@ -1212,7 +1212,7 @@ function simStatWeights () {
           ', Mp5=' + $('#stat-weight-mp5').text() +
           ', SpellHasteRating=' + $('#stat-weight-hasteRating').text() + ')'
           $('#pawn-import-string p').text(pawnString)
-          $('#sim-length-result').text((performance.now() - simStart) / 1000 + 's')
+          $('#sim-length-result').text(Math.round(performance.now() - simStart) / 1000 + 's')
           $('#sim-stat-weights').text('Stat Weights')
           $('.btn').css('background', '')
         }
