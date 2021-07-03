@@ -99,6 +99,29 @@ const _auras = {
         iconName: 'spell_nature_moonglow',
         id: 28142
       },
+      eyeOfNight: {
+        name: 'Eye of Night',
+        spellPower: 34,
+        iconName: 'inv_jewelry_necklace_28',
+        id: 31033
+      },
+      chainOfTheTwilightOwl: {
+        name: 'Chain of the Twilight Owl',
+        iconName: 'inv_jewelry_necklace_ahnqiraj_02',
+        id: 31035
+      },
+      jadePendantOfBlasting: {
+        name: 'Jade Pendant of Blasting',
+        spellPower: 15,
+        iconName: 'inv_jewelry_necklace_01',
+        id: 25607
+      },
+      idolOfTheRavenGoddess: {
+        name: 'Idol of the Raven Goddess',
+        critRating: 20,
+        iconName: 'inv-mount_raven_54',
+        id: 39926
+      },
       drumsOfBattle: {
         name: 'Drums of Battle',
         iconName: 'inv_misc_drum_02',
