@@ -30,10 +30,16 @@ class Spell {
   setup () {
     this.varName = camelCase(this.name)
     this.player[this.breakdownTable + 'Breakdown'][this.varName] = this.player[this.breakdownTable + 'Breakdown'][this.varName] || { name: this.name }
+    if (this.minDmg && this.maxDmg) {
+      this.dmg = (this.minDmg + this.maxDmg) / 2
+    }
+    if (this.minMana && this.maxMana) {
+      this.avgManaValue = (this.minMana + this.maxMana) / 2
+    }
   }
 
   ready () {
-    return (!this.onGcd || this.player.gcdRemaining <= 0) && this.player.castTimeRemaining <= 0 && this.manaCost <= this.player.mana && this.cooldownRemaining <= 0
+    return (!this.onGcd || this.player.gcdRemaining <= 0) && (this.isProc || this.player.castTimeRemaining <= 0) && this.manaCost <= this.player.mana && this.cooldownRemaining <= 0
   }
 
   getCastTime () {
@@ -83,9 +89,7 @@ class Spell {
       return
     }
 
-    if (this.isDot) {
-      this.player.auras[this.varName].apply(this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats[this.school + 'Power'])
-    } else if (this.isAura) {
+    if (this.isDot || this.isAura) {
       this.player.auras[this.varName].apply()
     }
 
@@ -273,7 +277,8 @@ class ShadowBolt extends Spell {
     this.castTime = this.calculateCastTime()
     this.manaCost = 420 * (1 - 0.01 * player.talents.cataclysm)
     this.coefficient = (3 / 3.5) + (0.04 * player.talents.shadowAndFlame)
-    this.dmg = 575 // Average rank 11 Shadow Bolt base damage
+    this.minDmg = 544
+    this.maxDmg = 607
     this.name = 'Shadow Bolt'
     this.doesDamage = true
     this.canCrit = true
@@ -282,7 +287,10 @@ class ShadowBolt extends Spell {
     this.travelTime = player.spellTravelTime
     this.setup()
 
-    if (player.sets['670'] >= 4) this.modifier *= 1.06 // T6 4pc
+     // T6 4pc
+    if (player.sets['670'] >= 4) {
+      this.modifier *= 1.06
+    }
   }
 
   startCast () {
@@ -307,8 +315,11 @@ class Incinerate extends Spell {
     this.castTime = Math.round((2.5 * (1 - 0.02 * player.talents.emberstorm)) * 100) / 100
     this.manaCost = 355 * (1 - 0.01 * player.talents.cataclysm)
     this.coefficient = (2.5 / 3.5) + (0.04 * player.talents.shadowAndFlame)
-    this.dmg = 479
-    this.bonusDamageFromImmolate = 120 // The bonus damage gained when Immolate is up on the target
+    this.minDmg = 444
+    this.maxDmg = 514
+    this.bonusDamageFromImmolateMin = 111
+    this.bonusDamageFromImmolateMax = 128
+    this.bonusDamageFromImmolate = (this.bonusDamageFromImmolateMin + this.bonusDamageFromImmolateMax) / 2 // The bonus damage gained when Immolate is up on the target
     this.name = 'Incinerate'
     this.doesDamage = true
     this.canCrit = true
@@ -317,7 +328,10 @@ class Incinerate extends Spell {
     this.travelTime = player.spellTravelTime
     this.setup()
 
-    if (player.sets['670'] >= 4) this.modifier *= 1.06 // T6 4pc
+    // T6 4pc
+    if (player.sets['670'] >= 4) {
+      this.modifier *= 1.06
+    }
   }
 }
 
@@ -327,7 +341,8 @@ class SearingPain extends Spell {
     this.castTime = 1.5
     this.manaCost = 205 * (1 - 0.01 * player.talents.cataclysm)
     this.coefficient = 1.5 / 3.5
-    this.dmg = 295
+    this.minDmg = 270
+    this.maxDmg = 320
     this.name = 'Searing Pain'
     this.doesDamage = true
     this.canCrit = true
@@ -344,7 +359,8 @@ class SoulFire extends Spell {
     this.castTime = 6 - (0.4 * player.talents.bane)
     this.manaCost = 250 * (1 - 0.01 * player.talents.cataclysm)
     this.coefficient = 1.15
-    this.dmg = 1130
+    this.minDmg = 1003
+    this.maxDmg = 1257
     this.name = 'Soul Fire'
     this.doesDamage = true
     this.canCrit = true
@@ -361,7 +377,8 @@ class Shadowburn extends Spell {
     this.cooldown = 15
     this.manaCost = 515 * (1 - 0.01 * player.talents.cataclysm)
     this.coefficient = 0.22
-    this.dmg = 631
+    this.minDmg = 597
+    this.maxDmg = 665
     this.name = 'Shadowburn'
     this.doesDamage = true
     this.canCrit = true
@@ -392,7 +409,8 @@ class Shadowfury extends Spell {
   constructor (player) {
     super(player)
     this.name = 'Shadowfury'
-    this.dmg = 670.5
+    this.minDmg = 612
+    this.maxDmg = 728
     this.manaCost = 710 * (1 - 0.01 * player.talents.cataclysm)
     this.doesDamage = true
     this.school = 'shadow'
@@ -408,7 +426,8 @@ class SeedOfCorruption extends Spell {
   constructor (player) {
     super(player)
     this.name = 'Seed of Corruption'
-    this.dmg = 1380
+    this.minDmg = 1110
+    this.maxDmg = 1290
     this.manaCost = 882
     this.doesDamage = true
     this.school = 'shadow'
@@ -525,7 +544,7 @@ class Immolate extends Spell {
     this.isDot = true
     this.doesDamage = true
     this.canCrit = true
-    this.dmg = 331.5
+    this.dmg = 331
     this.coefficient = 0.2
     this.school = 'fire'
     this.type = 'destruction'
@@ -595,13 +614,9 @@ class DestructionPotion extends Spell {
     this.name = 'Destruction Potion'
     this.cooldown = 120
     this.isItem = true
+    this.isAura = true
     this.onGcd = false
     this.setup()
-  }
-
-  cast () {
-    super.cast()
-    this.player.auras.destructionPotion.apply()
   }
 }
 
@@ -611,7 +626,8 @@ class SuperManaPotion extends Spell {
     this.name = 'Super Mana Potion'
     this.cooldown = 120
     this.isItem = true
-    this.avgManaValue = 2400
+    this.minMana = 1800
+    this.maxMana = 3000
     this.onGcd = false
     this.breakdownTable = 'manaGain'
     this.setup()
@@ -633,7 +649,8 @@ class DemonicRune extends Spell {
     this.name = 'Demonic Rune'
     this.cooldown = 120
     this.isItem = true
-    this.avgManaValue = 1200
+    this.minMana = 900
+    this.maxMana = 1500
     this.onGcd = false
     this.breakdownTable = 'manaGain'
     this.setup()
@@ -739,7 +756,8 @@ class TimbalsFocusingCrystal extends Spell {
     this.cooldown = 15
     this.onGcd = false
     this.procChance = 10
-    this.dmg = 380
+    this.minDmg = 285
+    this.maxDmg = 475
     this.doesDamage = true
     this.coefficient = 0
     this.school = 'shadow'
@@ -755,7 +773,8 @@ class MarkOfDefiance extends Spell {
     this.cooldown = 17
     this.procChance = 15
     this.onGcd = false
-    this.manaGain = 150
+    this.minMana = 128
+    this.maxMana = 172
     this.breakdownTable = 'manaGain'
     this.setup()
   }
@@ -763,10 +782,10 @@ class MarkOfDefiance extends Spell {
   cast () {
     if (this.cooldownRemaining <= 0) {
       this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
-      this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + this.manaGain || this.manaGain
-      this.player.totalManaRegenerated += this.manaGain
-      this.player.combatLog(this.name + ' +' + this.manaGain + ' mana')
-      this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.manaGain)
+      this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + this.avgManaValue || this.avgManaValue
+      this.player.totalManaRegenerated += this.avgManaValue
+      this.player.combatLog(this.name + ' +' + this.avgManaValue + ' mana')
+      this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.avgManaValue)
       this.cooldownRemaining = this.cooldown
     }
   }
@@ -778,7 +797,8 @@ class TheLightningCapacitor extends Spell {
     this.name = 'The Lightning Capacitor'
     this.cooldown = 2.5
     this.onGcd = false
-    this.dmg = 750
+    this.minDmg = 694
+    this.maxDmg = 806
     this.doesDamage = true
     this.coefficient = 0
     this.canCrit = true
@@ -806,28 +826,23 @@ class BladeOfWizardry extends Spell {
     this.onGcd = false
     this.isItem = true
     this.isProc = true
+    this.isAura = true
     this.breakdownTable = 'aura'
     this.setup()
-  }
-
-  cast () {
-    if (this.cooldownRemaining <= 0) {
-      this.player.auras.bladeOfWizardry.apply()
-      super.cast()
-    }
   }
 }
 
 class ShatteredSunPendantOfAcumen extends Spell {
   constructor (player) {
     super(player)
-    this.name = 'Shattered Sun Pendant of Acumen (' + this.player.shattrathFaction + ')'
+    this.name = 'Shattered Sun Pendant of Acumen'
     this.cooldown = 45
     this.procChance = 15
     this.onGcd = false
     this.isItem = true
     if (this.player.shattrathFaction == 'Aldor') {
       this.isProc = true
+      this.isAura = true
       this.breakdownTable = 'aura'
     } else if (this.player.shattrathFaction == 'Scryers') {
       this.doesDamage = true
@@ -837,15 +852,6 @@ class ShatteredSunPendantOfAcumen extends Spell {
       this.school = 'arcane'
     }
     this.setup()
-  }
-
-  cast () {
-    if (this.cooldownRemaining <= 0) {
-      if (this.player.shattrathFaction == 'Aldor') {
-        this.player.auras.shatteredSunPendantOfAcumen.apply()
-      }
-      super.cast()
-    }
   }
 }
 
@@ -858,14 +864,9 @@ class RobeOfTheElderScribes extends Spell {
     this.onGcd = false
     this.isItem = true
     this.isProc = true
+    this.isAura = true
+    this.breakdownTable = 'aura'
     this.setup()
-  }
-
-  startCast () {
-    if (this.cooldownRemaining <= 0) {
-      this.player.auras.robeOfTheElderScribes.apply()
-      super.startCast()
-    }
   }
 }
 
@@ -877,15 +878,9 @@ class QuagmirransEye extends Spell {
     this.procChance = 10
     this.onGcd = false
     this.isItem = true
+    this.isAura = true
     this.breakdownTable = 'aura'
     this.setup()
-  }
-
-  cast () {
-    if (this.cooldownRemaining <= 0) {
-      this.player.auras.quagmirransEye.apply()
-      super.cast()
-    }
   }
 }
 
@@ -897,15 +892,9 @@ class ShiffarsNexusHorn extends Spell {
     this.procChance = 20
     this.onGcd = false
     this.isItem = true
+    this.isAura = true
     this.breakdownTable = 'aura'
     this.setup()
-  }
-
-  cast () {
-    if (this.cooldownRemaining <= 0) {
-      this.player.auras.shiffarsNexusHorn.apply()
-      super.cast()
-    }
   }
 }
 
@@ -917,15 +906,9 @@ class SextantOfUnstableCurrents extends Spell {
     this.procChance = 20
     this.onGcd = false
     this.isItem = true
+    this.isAura = true
     this.breakdownTable = 'aura'
     this.setup()
-  }
-
-  cast () {
-    if (this.cooldownRemaining <= 0) {
-      this.player.auras.sextantOfUnstableCurrents.apply()
-      super.cast()
-    }
   }
 }
 
@@ -937,14 +920,8 @@ class BandOfTheEternalSage extends Spell {
     this.procChance = 10
     this.onGcd = false
     this.isItem = true
+    this.isAura = true
     this.breakdownTable = 'aura'
     this.setup()
-  }
-
-  cast () {
-    if (this.cooldownRemaining <= 0) {
-      this.player.auras.bandOfTheEternalSage.apply()
-      super.cast()
-    }
   }
 }

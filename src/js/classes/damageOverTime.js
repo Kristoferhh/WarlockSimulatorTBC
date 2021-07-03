@@ -11,7 +11,6 @@ class DamageOverTime {
     this.spellPower = 0 // Amount of Spell Power (plus Shadow or Fire Power) when the dot was applied
     this.modifier = 1
     this.active = false
-    this.school = null
     this.name = null
     this.coefficient = 0
   }
@@ -28,17 +27,19 @@ class DamageOverTime {
     this.player.auraBreakdown[this.varName] = this.player.auraBreakdown[this.varName] || { name: this.name }
   }
 
-  apply (spellPower) {
+  apply () {
     if (this.active) {
       this.player.combatLog(this.name + ' refreshed before letting it expire')
+    } else {
+      // Keep a timestamp of when the aura was applied so we can calculate the uptime when it fades
+      this.player.auraBreakdown[this.varName].appliedAt = this.player.fightTime
     }
-    // Keep a timestamp of when the aura was applied so we can calculate the uptime when it fades
-    this.player.auraBreakdown[this.varName].appliedAt = this.player.fightTime
     this.player.auraBreakdown[this.varName].count = this.player.auraBreakdown[this.varName].count + 1 || 1
     const refreshedOrApplied = this.active ? 'refreshed' : 'applied'
     this.active = true
     this.tickTimerRemaining = this.tickTimerTotal
     this.ticksRemaining = this.ticksTotal
+    let spellPower = this.player.stats.spellPower + this.player.stats[this.school + 'Power'] + this.player.demonicKnowledgeSp
     // Spellfire 3-set bonus
     if (this.player.sets['552'] >= 3) {
       spellPower += (this.player.stats.intellect * this.player.stats.intellectModifier * 0.07)

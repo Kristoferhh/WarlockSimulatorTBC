@@ -386,8 +386,11 @@ class Simulation {
       totalDamage += this.player.iterationDamage
 
       const iterationDps = this.player.iterationDamage / fightLength
-      if (iterationDps > maxDps) maxDps = iterationDps
-      else if (iterationDps < minDps) minDps = iterationDps
+      if (iterationDps > maxDps) {
+        maxDps = iterationDps
+      } else if (iterationDps < minDps) {
+        minDps = iterationDps
+      }
 
       // Send an update to the sim worker for every 1% of progress
       if (this.player.iteration % ~~(this.iterations / 100) == 0) {
@@ -445,8 +448,9 @@ class Simulation {
       if (this.player.spells.siphonLife && this.player.auras.siphonLife.active) this.player.auras.siphonLife.fade(true)
       if (this.player.spells.unstableAffliction && this.player.auras.unstableAffliction.active) this.player.auras.unstableAffliction.fade(true)
     }
-    if (this.timeTotal > 0) console.log(this.timeTotal)
-    if (this.player.pet && this.player.pet.mode == PetMode.AGGRESSIVE) console.log(JSON.stringify(this.player.pet.damageBreakdown))
+    if (this.timeTotal > 0) {
+      console.log(this.timeTotal)
+    }
 
     this.simulationEnd({
       minDps: Math.round(minDps * 100) / 100,
