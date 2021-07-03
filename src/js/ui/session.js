@@ -87,7 +87,7 @@ $('#avg-dps').text(localStorage.avgDps || '')
 $('#min-dps').text(localStorage.minDps || '')
 $('#max-dps').text(localStorage.maxDps || '')
 if (localStorage.simulationDuration) {
-  $('#sim-length-result').text(localStorage.simulationDuration + 's')
+  $('#sim-length-result').text(Math.round(localStorage.simulationDuration * 10000) / 10000 + 's')
 }
 
 // Add buttons for the saved settings selection
