@@ -163,14 +163,12 @@ function simStatWeights () {
     hasteRating: 100,
     mp5: 100
   }
-  // Filthy way of getting the current hit % from the sidebar hit % value.
-  // The idea of these hit rating calculations is to put the player at hit cap to get the value of hit rather than just giving a static value like with other stats since they don't have a cap.
-  const missingHitChance = 16 - $('#character-hit-val').text().split('(')[1].split('%')[0]
-  const missingHitRating = Math.floor(missingHitChance * hitRatingPerPercent)
-  console.log("missing hit chance: " + missingHitChance)
-  console.log("missing hit rating: " + missingHitRating)
-  stats.hitRating = Math.max(missingHitRating, 1)
-  console.log("hit rating being used: " + stats.hitRating)
+  // Only check for the hit rating weight if the player isn't hit capped (this gets the player's crit % from the sidebar since we don't have any variable with crit % included)
+  if ($('#character-hit-val').text().split('(')[1].split('%')[0] < 16) {
+    stats.hitRating = 10
+  } else {
+    updateStatWeight('hitRating', 0)
+  }
   const sims = []
   const simInfo = []
   let normalSimAvgDps = 0
