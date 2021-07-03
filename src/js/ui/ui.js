@@ -13,7 +13,7 @@ let selectedEnchants = localStorage.selectedEnchants ? JSON.parse(localStorage.s
 // Key: Item ID. Value: Item's saved DPS from previous simulations.
 const savedItemDps = localStorage.savedItemDps ? JSON.parse(localStorage.savedItemDps) : {}
 let settings = localStorage.settings ? JSON.parse(localStorage.settings) : {}
-const sources = localStorage.sources ? JSON.parse(localStorage.sources) : { phase: { 1: true } }
+const sources = localStorage.sources ? JSON.parse(localStorage.sources) : { phase: { 0: true, 1: true } }
 const profiles = localStorage.profiles ? JSON.parse(localStorage.profiles) : {}
 const gemPreferences = localStorage.gemPreferences ? JSON.parse(localStorage.gemPreferences) : { hidden: [], favorites: [] }
 
