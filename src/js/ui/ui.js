@@ -1168,7 +1168,10 @@ function simStatWeights () {
   // The idea of these hit rating calculations is to put the player at hit cap to get the value of hit rather than just giving a static value like with other stats since they don't have a cap.
   const missingHitChance = 16 - $('#character-hit-val').text().split('(')[1].split('%')[0]
   const missingHitRating = Math.floor(missingHitChance * hitRatingPerPercent)
+  console.log("missing hit chance: " + missingHitChance)
+  console.log("missing hit rating: " + missingHitRating)
   stats.hitRating = Math.max(missingHitRating, 1)
+  console.log("hit rating being used: " + stats.hitRating)
   const sims = []
   const simInfo = []
   let normalSimAvgDps = 0

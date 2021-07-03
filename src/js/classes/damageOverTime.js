@@ -36,7 +36,6 @@ class DamageOverTime {
     this.player.auraBreakdown[this.varName].appliedAt = this.player.fightTime
     this.player.auraBreakdown[this.varName].count = this.player.auraBreakdown[this.varName].count + 1 || 1
     const refreshedOrApplied = this.active ? 'refreshed' : 'applied'
-    this.player.combatLog(this.name + ' ' + refreshedOrApplied + ' (' + Math.round(spellPower) + ' Spell Power)')
     this.active = true
     this.tickTimerRemaining = this.tickTimerTotal
     this.ticksRemaining = this.ticksTotal
@@ -45,6 +44,7 @@ class DamageOverTime {
       spellPower += (this.player.stats.intellect * this.player.stats.intellectModifier * 0.07)
     }
     this.spellPower = spellPower
+    this.player.combatLog(this.name + ' ' + refreshedOrApplied + ' (' + Math.round(spellPower) + ' Spell Power)')
 
     // Siphon Life snapshots the presence of ISB. So if ISB isn't up when it's cast, it doesn't get the benefit even if it comes up later during the duration.
     if (this.varName == 'siphonLife') {
