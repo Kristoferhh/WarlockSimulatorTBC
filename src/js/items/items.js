@@ -3462,7 +3462,6 @@ const items = {
       intellect: 20,
       spellPower: 39,
       hasteRating: 31,
-      unique: true,
       id: 32527,
       source: 'Black Temple',
       phase: 3
