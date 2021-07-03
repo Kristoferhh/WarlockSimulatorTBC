@@ -316,7 +316,7 @@ class Player {
     this.combatlog.push('Mana: ' + Math.round(this.stats.maxMana))
     this.combatlog.push('Stamina: ' + Math.round(this.stats.stamina * this.stats.staminaModifier))
     this.combatlog.push('Intellect: ' + Math.round(this.stats.intellect * this.stats.intellectModifier))
-    this.combatlog.push('Spell Power: ' + Math.round(this.stats.spellPower) + ' + ' + Math.round(this.demonicKnowledgeSp) + ' from Demonic Knowledge + ' + Math.round(spellfireBonus) + ' from Spellfire 3-set bonus')
+    this.combatlog.push('Spell Power: ' + Math.round(this.stats.spellPower + this.demonicKnowledgeSp + spellfireBonus))
     this.combatlog.push('Shadow Power: ' + this.stats.shadowPower)
     this.combatlog.push('Fire Power: ' + this.stats.firePower)
     this.combatlog.push('Crit Chance: ' + Math.round(this.getCritChance() * 100) / 100 + '%')

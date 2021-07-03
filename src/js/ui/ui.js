@@ -845,7 +845,9 @@ function loadItemsBySlot (itemSlot, subSlot) {
     // If an item is unique and it is already equipped in the other slot then skip it
     if (i.unique && (itemSlot == 'ring' || itemSlot == 'trinket') && subSlot !== null) {
       const otherSlot = subSlot == '1' ? '2' : '1'
-      if (selectedItems[itemSlot + otherSlot] == i.id) continue
+      if (selectedItems[itemSlot + otherSlot] == i.id) {
+        continue 
+      }
     }
 
     // Add the item's gem sockets

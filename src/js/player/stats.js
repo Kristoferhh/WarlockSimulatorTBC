@@ -150,7 +150,7 @@ function refreshCharacterStats () {
   let spellPower = JSON.parse(JSON.stringify(characterStats.spellPower))
   if (localStorage.getItem('setBonuses') && JSON.parse(localStorage.setBonuses)['667'] == 2) spellPower += 15 // The Twin Stars 2-set bonus (15 spellpower)
   if (auras.felArmor) spellPower += 100 * (1 + 0.1 * talents.demonicAegis)
-  if (auras.prayerOfSpirit) spellPower += (characterStats.spirit * spiritModifier * (0.1 * $("select[name='improvedDivineSpirit']").val()))
+  if (auras.prayerOfSpirit) spellPower += (characterStats.spirit * spiritModifier * (0.05 * $("select[name='improvedDivineSpirit']").val()))
   if (auras.powerOfTheGuardianWarlock) spellPower += 33 * $("select[name='warlockAtieshAmount']").val()
   // Spellfire 3-set bonus
   if (localStorage.setBonuses && JSON.parse(localStorage.setBonuses)['552'] >= 3) spellPower += (characterStats.intellect * characterStats.intellectModifier * 0.07)

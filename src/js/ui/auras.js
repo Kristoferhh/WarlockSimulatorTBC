@@ -360,14 +360,6 @@ const _auras = {
         id: 33825,
         foodBuff: true
       },
-      spicyCrawdad: {
-        name: 'Spicy Crawdad',
-        stamina: 30,
-        spirit: 20,
-        iconName: 'inv_misc_fish_16',
-        id: 27667,
-        foodBuff: true
-      },
       veryBerryCream: {
         name: 'Very Berry Cream',
         spellPower: 23,
