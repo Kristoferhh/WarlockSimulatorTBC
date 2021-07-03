@@ -159,9 +159,18 @@ function modifyStatsFromGem (gemId, action) {
       for (const property in gems[color][gemId]) {
         if (characterStats.hasOwnProperty(property)) {
           if (action == 'add') {
-            characterStats[property] += gems[color][gemId][property]
+            // Check whether the stat is a modifier or not. If it's a modifier then multiply/divide rather than add/substract
+            if (property.toLowerCase().search('modifier') !== -1) { 
+              characterStats[property] *= gems[color][gemId][property]
+            } else {
+              characterStats[property] += gems[color][gemId][property]
+            }
           } else if (action == 'remove') {
-            characterStats[property] -= gems[color][gemId][property]
+            if (property.toLowerCase().search('modifier') !== -1) { 
+              characterStats[property] /= gems[color][gemId][property]
+            } else {
+              characterStats[property] -= gems[color][gemId][property]
+            }
           }
         }
       }

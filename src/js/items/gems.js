@@ -30,7 +30,7 @@ const gems = {
       name: 'Chaotic Skyfire Diamond',
       critRating: 12,
       iconName: 'inv_misc_gem_diamond_07',
-      phase: 4 // confirm
+      phase: 1
     },
     32641: {
       name: 'Imbued Unstable Diamond',
