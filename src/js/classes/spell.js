@@ -181,7 +181,7 @@ class Spell {
   }
 
   damage (isCrit) {
-    let dmg = this.dmg
+    let dmg = this.player.simSettings.randomizeValues && this.minDmg && this.maxDmg ? random(this.minDmg, this.maxDmg) : this.dmg
     let critMultiplier = 1.5
     let spellPower = this.player.stats.spellPower + this.player.demonicKnowledgeSp
     const shadowPower = this.player.stats.shadowPower
@@ -190,7 +190,7 @@ class Spell {
 
     // If casting Incinerate and Immolate is up, add the bonus damage.
     if (this.varName == 'incinerate' && this.player.auras.immolate && this.player.auras.immolate.active) {
-      dmg += this.bonusDamageFromImmolate
+      dmg += this.player.simSettings.randomizeValues ? random(this.bonusDamageFromImmolateMin, this.bonusDamageFromImmolateMax) : this.bonusDamageFromImmolate
     }
     // Make a variable for the base damage to output into the combat log
     const baseDamage = dmg
@@ -636,9 +636,10 @@ class SuperManaPotion extends Spell {
   cast () {
     super.cast()
     const currentPlayerMana = this.player.mana
-    this.player.totalManaRegenerated += this.avgManaValue
-    this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + this.avgManaValue || this.avgManaValue
-    this.player.mana = Math.min(this.player.stats.maxMana, currentPlayerMana + this.avgManaValue)
+    const manaGain = this.player.simSettings.randomizeValues ? random(this.minMana, this.maxMana) : this.avgManaValue
+    this.player.totalManaRegenerated += manaGain
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + manaGain || manaGain
+    this.player.mana = Math.min(this.player.stats.maxMana, currentPlayerMana + manaGain)
     this.player.combatLog('Player gains ' + Math.round(this.player.mana - currentPlayerMana) + ' mana from Super Mana Potion (' + Math.round(currentPlayerMana) + ' -> ' + Math.round(this.player.mana) + ')')
   }
 }
@@ -659,9 +660,10 @@ class DemonicRune extends Spell {
   cast () {
     super.cast()
     const currentPlayerMana = this.player.mana
-    this.player.totalManaRegenerated += this.avgManaValue
-    this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + this.avgManaValue || this.avgManaValue
-    this.player.mana = Math.min(this.player.stats.maxMana, currentPlayerMana + this.avgManaValue)
+    const manaGain = this.player.simSettings.randomizeValues ? random(this.minMana, this.maxMana) : this.avgManaValue
+    this.player.totalManaRegenerated += manaGain
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + manaGain || manaGain
+    this.player.mana = Math.min(this.player.stats.maxMana, currentPlayerMana + manaGain)
     this.player.combatLog('Player gains ' + Math.round(this.player.mana - currentPlayerMana) + ' mana from Demonic Rune (' + Math.round(currentPlayerMana) + ' -> ' + Math.round(this.player.mana) + ')')
   }
 }
