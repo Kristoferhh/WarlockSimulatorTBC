@@ -178,6 +178,7 @@ class Player {
     if (settings.auras.moonkinAura) this.stats.critChance += 5
     if (settings.auras.judgementOfTheCrusader) this.stats.critChance += 3
     if (settings.auras.totemOfWrath) this.stats.critChance += (3 * settings.simSettings.totemOfWrathAmount)
+    if (settings.auras.chainOfTheTwilightOwl) this.stats.critChance += 2
 
     // Hit chance
     this.stats.hitChanceMultiplier = 1000
@@ -302,12 +303,20 @@ class Player {
       }
     }
 
+    // Spellfire 3-set bonus. Add spell power equal to 7% of the player's intellect
+    // This is just for the combat log at the start of the simulation.
+    // This needs to calculated with each cast because the player's intellect might fluctuate and the value of the bonus would then change.
+    let spellfireBonus = 0
+    if (settings.sets['552'] >= 3) {
+      spellfireBonus += (this.stats.intellect * this.stats.intellectModifier * 0.07)
+    }
+
     this.combatlog.push('---------------- Player stats ----------------')
     this.combatlog.push('Health: ' + Math.round(this.stats.health))
     this.combatlog.push('Mana: ' + Math.round(this.stats.maxMana))
     this.combatlog.push('Stamina: ' + Math.round(this.stats.stamina * this.stats.staminaModifier))
     this.combatlog.push('Intellect: ' + Math.round(this.stats.intellect * this.stats.intellectModifier))
-    this.combatlog.push('Spell Power: ' + Math.round(this.stats.spellPower) + ' + ' + Math.round(this.demonicKnowledgeSp) + ' from Demonic Knowledge')
+    this.combatlog.push('Spell Power: ' + Math.round(this.stats.spellPower) + ' + ' + Math.round(this.demonicKnowledgeSp) + ' from Demonic Knowledge + ' + Math.round(spellfireBonus) + ' from Spellfire 3-set bonus')
     this.combatlog.push('Shadow Power: ' + this.stats.shadowPower)
     this.combatlog.push('Fire Power: ' + this.stats.firePower)
     this.combatlog.push('Crit Chance: ' + Math.round(this.getCritChance() * 100) / 100 + '%')
