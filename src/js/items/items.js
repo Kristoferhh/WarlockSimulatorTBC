@@ -2229,6 +2229,16 @@ const items = {
       source: 'Heroic Auchenai Crypts',
       phase: 1
     },
+    glovesOfPandemonium: {
+      name: 'Gloves of Pandemonium',
+      intellect: 15,
+      spellPower: 25,
+      critRating: 22,
+      hitRating: 10,
+      id: 31149,
+      source: 'BoE World Drop',
+      phase: 1
+    },
     gladiatorsFelweaveHandguards: {
       name: "Gladiator's Felweave Handguards",
       stamina: 39,
