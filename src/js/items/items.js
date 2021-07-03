@@ -397,6 +397,17 @@ const items = {
       source: 'Arcatraz',
       phase: 1
     },
+    maghariRitualistsHorns: {
+      name: "Mag'hari Ritualist's Horns (Horde only)",
+      stamina: 18,
+      intellect: 16,
+      spellPower: 50,
+      critRating: 15,
+      hitRating: 12,
+      id: 28169,
+      source: 'Nagrand Quest (Horde)',
+      phase: 1
+    },
     mageCollarOfTheFirestorm: {
       name: 'Mage-Collar of the Firestorm',
       stamina: 32,
