@@ -190,7 +190,7 @@ class PetSpell {
       combatLogMsg += ' - ' + Math.round(partialResistMultiplier * 1000) / 10 + '% Partial Resist Multiplier'
     } else if (this.type == SpellTypes.PHYSICAL) {
       combatLogMsg += ' - ' + Math.round(this.pet.getAttackPower()) + ' Attack Power'
-      combatLogMsg += ' - ' + (Math.round(this.pet.armorMultiplier * 10000) / 100) + '% Armor Reduction'
+      combatLogMsg += ' - ' + (Math.round(this.pet.armorMultiplier * 10000) / 100) + '% Damage Modifier (Armor)'
     }
     if (isCrit) combatLogMsg += ' - ' + (this.pet.critMultiplier * 100) + '% Crit Multiplier'
     combatLogMsg += ' - ' + Math.round(modifier * 10000) / 100 + '% Damage Modifier'

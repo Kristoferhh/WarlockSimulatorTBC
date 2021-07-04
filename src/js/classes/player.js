@@ -242,6 +242,14 @@ class Player {
       this.stats.spellPower += 33 * settings.simSettings.warlockAtieshAmount
     }
 
+    // Enemy Armor Reduction
+    if (settings.auras.faerieFire) this.enemy.armor -= 610
+    if ((settings.auras.sunderArmor && settings.auras.exposeArmor && settings.simSettings.improvedExposeArmor == 2) || (settings.auras.exposeArmor && !settings.auras.sunderArmor)) this.enemy.armor -= 2050 * (1 + 0.25 * settings.simSettings.improvedExposeArmor)
+    else if (settings.auras.sunderArmor) this.enemy.armor -= 520 * 5
+    if (settings.auras.curseOfRecklessness) this.enemy.armor -= 800
+    if (settings.auras.annihilator) this.enemy.armor -= 600
+    this.enemy.armor = Math.max(0, this.enemy.armor)
+
     // Trinkets
     this.trinkets = []
     this.trinketIds = [this.items.trinket1, this.items.trinket2]

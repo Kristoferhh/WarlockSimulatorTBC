@@ -227,8 +227,13 @@ const _auras = {
         iconName: 'ability_rogue_findweakness',
         forPet: true,
         id: 34503
+      },
+      annihilator: {
+        name: 'Annihilator',
+        iconName: 'inv_axe_12',
+        forPet: true,
+        id: 16928
       }
-
     }
   },
   consumables: {

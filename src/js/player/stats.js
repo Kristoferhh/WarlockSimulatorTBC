@@ -165,6 +165,7 @@ function refreshCharacterStats () {
   if ((auras.sunderArmor && auras.exposeArmor && settings.improvedExposeArmor == 2) || (auras.exposeArmor && !auras.sunderArmor)) enemyArmor -= 2050 * (1 + 0.25 * settings.improvedExposeArmor)
   else if (auras.sunderArmor) enemyArmor -= 520 * 5
   if (auras.curseOfRecklessness) enemyArmor -= 800
+  if (auras.annihilator) enemyArmor -= 600
 
   $('#character-health-val').text(Math.round((characterStats.health + (stamina * staminaModifier) * healthPerStamina) * (1 + (0.01 * talents.felStamina))))
   $('#character-mana-val').text(Math.round((characterStats.mana + (characterStats.intellect * characterStats.intellectModifier) * manaPerInt) * (1 + (0.01 * talents.felIntellect))))

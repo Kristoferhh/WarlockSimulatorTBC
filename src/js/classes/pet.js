@@ -139,20 +139,7 @@ class Pet {
       this.stats.buffs.spellCritChance += 3
     }
     if (this.playerAuras.vampiricTouch) this.stats.mp5 += this.simSettings.shadowPriestDps * 0.05
-    if (this.playerAuras.faerieFire) {
-      const improved = this.simSettings.improvedFaerieFire == 'yes'
-      if (improved) this.stats.hitChance += 3
-      this.player.enemy.armor = Math.max(0, this.player.enemy.armor - 610)
-    }
-    // Apply Expose Armor if both EA and SA are selected and user selected 2/2 Improved Expose armor, or if Expose Armor is selected but Sunder Armor is not
-    if ((this.playerAuras.sunderArmor && this.playerAuras.exposeArmor && this.simSettings.improvedExposeArmor == 2) || (this.playerAuras.exposeArmor && !this.playerAuras.sunderArmor)) {
-      this.player.enemy.armor = Math.max(0, this.player.enemy.armor - 2050 * (1 + 0.25 * this.simSettings.improvedExposeArmor))
-    }
-    // Else apply Sunder Armor
-    else if (this.playerAuras.sunderArmor) {
-      this.player.enemy.armor = Math.max(0, this.player.enemy.armor - 2600)
-    }
-    if (this.playerAuras.curseOfRecklessness) this.player.enemy.armor = Math.max(0, this.player.enemy.armor - 800)
+
     if (this.playerAuras.exposeWeakness) this.stats.buffs.ap += (this.simSettings.survivalHunterAgility * 0.25 * (this.simSettings.exposeWeaknessUptime / 100)) || 0
     if (this.playerAuras.heroicPresence) this.stats.hitChance++
     if (this.playerAuras.blessingOfMight) this.stats.buffs.ap += 220
@@ -170,15 +157,14 @@ class Pet {
 
     // Calculate armor
     if (this.type == PetType.MELEE) {
-      // Formula from https://wowpedia.fandom.com/wiki/Armor
-      if (this.player.level >= 60 && this.player.level <= 79) {
-        this.armorMultiplier = 1 - this.player.enemy.armor / (this.player.enemy.armor + 400 + 85 * (this.player.level + 4.5 * (this.player.level - 59)))
-      } else if (this.player.level >= 80 && this.player.level <= 84) {
-        this.armorMultiplier = 1 - this.player.enemy.armor / (this.player.enemy.armor + 400 + 85 * this.player.level + (4.5 * (this.player.level - 59)) + (20 * (this.player.level - 80)))
-      } else if (this.player.level >= 85) {
-        this.armorMultiplier = 1 - this.player.enemy.armor / (this.player.enemy.armor + 400 + 85 * this.player.level + (4.5 * (this.player.level - 59)) + (20 * (this.player.level - 80)) + (22 * (this.player.level - 85)))
+      // Formula from https://wowwiki-archive.fandom.com/wiki/Damage_reduction?oldid=807810
+      if (this.player.enemy.level <= 59) {
+        this.armorMultiplier = 1 - this.player.enemy.armor / (this.player.enemy.armor + 400 + 85 * this.player.enemy.level)
+      } else {
+        this.armorMultiplier = 1 - this.player.enemy.armor / (this.player.enemy.armor - 22167.5 + 467.5 * this.player.enemy.level)
       }
     }
+    this.armorMultiplier = Math.max(0.25, this.armorMultiplier)
   }
 
   // Player -> Pet stat scaling info taken from https://wowwiki-archive.fandom.com/wiki/Warlock?oldid=1618728
