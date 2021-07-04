@@ -136,7 +136,7 @@ ul {
 }
 
 #buffs-and-debuffs-section {
-	float: left;
+	display: inline-block;
 	margin-left: 20px;
 	/*border-bottom: 1px solid gray;*/
 	width: 22%;
@@ -477,7 +477,6 @@ img[data-color='meta'] {
 #profiles-and-sources {
 	display: flex;
 	align-items: center;
-	margin-top: 150px;
 }
 
 #profiles-and-sources fieldset ul {
