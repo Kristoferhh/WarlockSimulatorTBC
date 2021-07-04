@@ -98,10 +98,6 @@ ul {
 	margin-top: -21px;
 }
 
-#sidebar-sets {
-	min-height: 180px;
-}
-
 #item-section {
 	width: 30%;
 	display: inline-block;
@@ -140,10 +136,10 @@ ul {
 }
 
 #buffs-and-debuffs-section {
-	display: inline-block;
+	float: left;
 	margin-left: 20px;
 	/*border-bottom: 1px solid gray;*/
-	width: max(332px, 22%);
+	width: 22%;
 	vertical-align: top;
 }
 
@@ -313,7 +309,6 @@ ul {
 }
 
 #talents-container {
-	display: inline-block;
 	float: right;
 }
 
@@ -439,7 +434,8 @@ ul {
 
 #sidebar-simulation-selection {
 	text-align: center;
-	vertical-align: bottom;
+	position: absolute;
+	bottom: 0;
 }
 
 #gem-selection-table {
@@ -640,13 +636,50 @@ body {
 	font-family: Open Sans,sans-serif;
 }
 
-@media (max-width: 933px) {
-	#sidebar {
-		
+@media screen and (max-width: 1830px) {
+	#buffs-and-debuffs-section {
+		width: 18%;
+	}
+
+	#buffs-and-debuffs-section img {
+		width: 35px;
+		height: 35px;
 	}
 }
 
-@media screen and (max-width: 1830px) {
+@media screen and (max-width: 1780px) {
+	.btn {
+		font-size: 0.85em;
+	}
+}
+
+@media screen and (max-width: 1715px) {
+	#buffs-and-debuffs-section {
+		padding-top: 1px;
+		width: 100%;
+		float: none;
+	}
+
+	#buffs-and-debuffs-section img {
+		width: 40px;
+		height: 40px;
+	}
+
+	#rotation-section {
+		width: 15%;
+	}
+
+	#sim-settings {
+		font-size: 1em;
+		width: 30%;
+	}
+
+	#profiles-and-sources {
+		margin-top: 60px;
+	}
+}
+
+@media screen and (max-width: 1530px) {
 	#talents-container {
 		display: block;
 		float: none;
@@ -654,12 +687,61 @@ body {
 	#talents-section {
 		width: 100%;
 		text-align: center;
+	}
 
+	#buffs-and-debuffs-section {
+		display: inline-block;
+		width: 30%;
+	}
+
+	#sim-settings {
+		width: 40%;
+	}
+
+	#profiles-and-sources {
+		margin-top: 0px;
 	}
 }
 
 @media screen and (max-width: 1147px) {
 	#sim-settings {
 		display: block;
+		width: clamp(330px, 90%, 90%);
+	}
+
+	#buffs-and-debuffs-section {
+		width: clamp(100px, 70%, 70%);
+	}
+
+	#rotation-section {
+		min-width: 150px;
+	}
+}
+
+@media screen and (max-height: 850px) {
+	#sidebar {
+		font-size: 0.95em;
+	}
+
+	.character-stats li {
+		line-height: 10px;
+	}
+}
+
+@media screen and (max-height: 800px) {
+	.character-stats li {
+		line-height: 8px;
+	}
+}
+
+@media screen and (max-height: 775px) {
+	.character-stats li {
+		line-height: 6px;
+	}
+}
+
+@media screen and (max-height: 750px) {
+	.character-stats li {
+		line-height: 0px;
 	}
 }
