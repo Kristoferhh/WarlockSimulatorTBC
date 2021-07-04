@@ -350,6 +350,15 @@ class Player {
       this.combatlog.push('Spell Crit Chance: ' + Math.round(this.pet.getSpellCritChance() * 100) / 100 + '%')
       this.combatlog.push('Damage Modifier: ' + Math.round(this.pet.stats.damageModifier * 100) + '%')
     }
+    this.combatlog.push('---------------- Enemy stats ----------------')
+    this.combatlog.push('Level: ' + this.enemy.level)
+    this.combatlog.push('Shadow Resistance: ' + this.enemy.shadowResist)
+    this.combatlog.push('Fire Resistance: ' + this.enemy.fireResist)
+    if (this.pet && this.pet.pet != PetName.IMP) {
+      this.combatlog.push('Armor: ' + this.enemy.armor)
+      this.combatlog.push('Damage Reduction From Armor: ' + Math.round((1 - this.pet.armorMultiplier) * 10000) / 100 + '%')
+    }
+    this.combatlog.push('---------------------------------------------')
   }
 
   initialize () {
