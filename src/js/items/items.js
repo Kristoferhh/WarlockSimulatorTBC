@@ -1331,6 +1331,16 @@ const items = {
       id: 23050,
       source: 'Naxxramas',
       phase: 0
+    },
+    cloakOfTheDevoured: {
+      name: 'Cloak of the Devoured',
+      stamina: 11,
+      intellect: 10,
+      spellPower: 30,
+      hitRating: 8,
+      id: 22731,
+      source: 'AQ40',
+      phase: 0
     }
   },
   chest: {
