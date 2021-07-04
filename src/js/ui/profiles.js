@@ -65,8 +65,8 @@ $(document).on('click', '.saved-profile', function () {
   localStorage.talents = JSON.stringify(talents)
   selectedItems = profiles[profileName].items
   localStorage.selectedItems = JSON.stringify(selectedItems)
-  // selectedGems = profiles[profileName].gems;
-  // localStorage.selectedGems = JSON.stringify(selectedGems);
+  selectedGems = profiles[profileName].gems;
+  localStorage.selectedGems = JSON.stringify(selectedGems);
   selectedEnchants = profiles[profileName].enchants
   localStorage.selectedEnchants = JSON.stringify(selectedEnchants)
   location.reload()
@@ -90,7 +90,7 @@ function saveProfile (profileName) {
     simSettings: settings,
     talents: talents,
     items: selectedItems,
-    gems: selectedGems, // unsure if gems should be saved but it could be useful in case the different profiles want to use different gems
+    gems: selectedGems,
     enchants: selectedEnchants
   }))
   localStorage.profiles = JSON.stringify(profiles)

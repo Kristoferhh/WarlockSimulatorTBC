@@ -1,18 +1,18 @@
 // Maximum amount of web workers that should be run concurrently
 const maxWorkers = navigator.hardwareConcurrency || 8
 // Object with all the gems the user has equipped on any item, including items that are not equipped. Each key is the item's name and the value is an array with the ID of the gems equipped in that item.
-const selectedGems = localStorage.selectedGems ? JSON.parse(localStorage.selectedGems) : {}
+var selectedGems = localStorage.selectedGems ? JSON.parse(localStorage.selectedGems) : {}
 // Key: Item slot. Value: Equipped item's ID
-let selectedItems = localStorage.selectedItems ? JSON.parse(localStorage.selectedItems) : {}
+var selectedItems = localStorage.selectedItems ? JSON.parse(localStorage.selectedItems) : {}
 // Key: Talent's name. Value: Talent's point amount
-let talents = localStorage.talents ? JSON.parse(localStorage.talents) : {}
+var talents = localStorage.talents ? JSON.parse(localStorage.talents) : {}
 // Key: Aura's name. Value: Boolean
-let auras = localStorage.auras ? JSON.parse(localStorage.auras) : {}
-let rotation = localStorage.rotation ? JSON.parse(localStorage.rotation) : {}
-let selectedEnchants = localStorage.selectedEnchants ? JSON.parse(localStorage.selectedEnchants) : {}
+var auras = localStorage.auras ? JSON.parse(localStorage.auras) : {}
+var rotation = localStorage.rotation ? JSON.parse(localStorage.rotation) : {}
+var selectedEnchants = localStorage.selectedEnchants ? JSON.parse(localStorage.selectedEnchants) : {}
 // Key: Item ID. Value: Item's saved DPS from previous simulations.
 const savedItemDps = localStorage.savedItemDps ? JSON.parse(localStorage.savedItemDps) : {}
-let settings = localStorage.settings ? JSON.parse(localStorage.settings) : {}
+var settings = localStorage.settings ? JSON.parse(localStorage.settings) : {}
 const sources = localStorage.sources ? JSON.parse(localStorage.sources) : { phase: { 0: true, 1: true } }
 const profiles = localStorage.profiles ? JSON.parse(localStorage.profiles) : {}
 const gemPreferences = localStorage.gemPreferences ? JSON.parse(localStorage.gemPreferences) : { hidden: [], favorites: [] }
