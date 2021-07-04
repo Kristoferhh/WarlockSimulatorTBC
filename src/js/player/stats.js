@@ -118,10 +118,6 @@ function refreshCharacterStats () {
       shadowModifier *= 1.1
     }
   } else {
-    // Blood Pact
-    if ($("select[name='petChoice']").val() === PetName.IMP) {
-      stamina += 70 * (1 + 0.1 * talents.improvedImp)
-    }
     // Master Demonologist
     if (talents.masterDemonologist > 0) {
       if ($("select[name='petChoice']").val() == PetName.SUCCUBUS) {

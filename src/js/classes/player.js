@@ -234,7 +234,6 @@ class Player {
     if (settings.auras.prayerOfSpirit && settings.simSettings.improvedDivineSpirit) {
       this.stats.spellPower += (this.stats.spirit * this.stats.spiritModifier * (0 + (settings.simSettings.improvedDivineSpirit / 20)))
     }
-    // Add stamina from blood pact (if stamina is ever needed for the sim)
     // Add mp5 from Vampiric Touch
     if (settings.auras.vampiricTouch) {
       this.stats.mp5 += settings.simSettings.shadowPriestDps * 0.05

@@ -74,6 +74,12 @@ const _auras = {
         iconName: 'spell_holy_prayerofspirit',
         id: 32999
       },
+      bloodPact: {
+        name: 'Blood Pact',
+        stamina: 70,
+        iconName: 'spell_shadow_bloodboil',
+        id: 27268
+      },
       inspiringPresence: {
         name: 'Inspiring Presence',
         iconName: 'inv_staff_23',
