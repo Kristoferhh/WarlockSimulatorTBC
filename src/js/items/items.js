@@ -3355,6 +3355,16 @@ const items = {
       source: 'Heroic Blood Furnace',
       phase: 1
     },
+    bootsOfTheNexusWarden: {
+      name: 'Boots of the Nexus Warden',
+      stamina: 27,
+      intellect: 17,
+      spellPower: 21,
+      hitRating: 18,
+      id: 30519,
+      source: 'Netherstorm Quest',
+      phase: 1
+    },
     etherealBootsOfTheSkystrider: {
       name: 'Ethereal Boots of the Skyrider',
       stamina: 19,
