@@ -139,7 +139,8 @@ class Pet {
       this.stats.buffs.spellCritChance += 3
     }
     if (this.playerAuras.vampiricTouch) this.stats.mp5 += this.simSettings.shadowPriestDps * 0.05
-
+    // Improved Faerie Fire
+    if (this.playerAuras.faerieFire && this.simSettings.improvedFaerieFire == 'yes') this.stats.hitChance += 3
     if (this.playerAuras.exposeWeakness) this.stats.buffs.ap += (this.simSettings.survivalHunterAgility * 0.25 * (this.simSettings.exposeWeaknessUptime / 100)) || 0
     if (this.playerAuras.heroicPresence) this.stats.hitChance++
     if (this.playerAuras.blessingOfMight) this.stats.buffs.ap += 220
