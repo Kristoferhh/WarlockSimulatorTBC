@@ -88,14 +88,6 @@ const enchants = {
       source: 'The Scryers - Exalted',
       phase: 1
     },
-    powerOfTheScourge: {
-      name: 'Power of the Scourge',
-      spellPower: 15,
-      critRating: 14,
-      id: 29467,
-      source: 'Naxxramas',
-      phase: 0
-    },
     inscriptionOfEndurance: {
       name: 'Inscription of Endurance',
       fireResist: 7,
@@ -106,6 +98,21 @@ const enchants = {
       id: 35441,
       source: 'The Violet Eye - Honored',
       phase: 1
+    },
+    powerOfTheScourge: {
+      name: 'Power of the Scourge',
+      spellPower: 15,
+      critRating: 14,
+      id: 29467,
+      source: 'Naxxramas',
+      phase: 0
+    },
+    zandalarSignetOfMojo: {
+      name: 'Zandalar SIgnet of Mojo',
+      spellPower: 18,
+      id: 24421,
+      source: 'Zandalar Tribe - Exalted',
+      phase: 0
     }
   },
   back: {
