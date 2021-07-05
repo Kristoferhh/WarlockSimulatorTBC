@@ -615,3 +615,16 @@ class RobeOfTheElderScribesAura extends Aura {
     this.setup()
   }
 }
+
+class MysticalSkyfireDiamondAura extends Aura {
+  constructor (player) {
+    super(player)
+    this.name = 'Mystical Skyfire Diamond',
+    this.durationTotal = 4
+    this.isImportant = true
+    this.stats = {
+      hasteRating: 320
+    }
+    this.setup()
+  }
+}

@@ -74,6 +74,10 @@ class Simulation {
       }
       if (this.player.auras.bloodlust.active && this.player.auras.bloodlust.durationRemaining < time) time = this.player.auras.bloodlust.durationRemaining
     }
+    if (this.player.spells.mysticalSkyfireDiamond) {
+      if (this.player.spells.mysticalSkyfireDiamond.cooldownRemaining > 0 && this.player.spells.mysticalSkyfireDiamond.cooldownRemaining < time) time = this.player.spells.mysticalSkyfireDiamond.cooldownRemaining
+      if (this.player.auras.mysticalSkyfireDiamond.active && this.player.spells.mysticalSkyfireDiamond.durationRemaining < time) time = this.player.auras.mysticalSkyfireDiamond.durationRemaining
+    }
     if (this.player.spells.timbalsFocusingCrystal && this.player.spells.timbalsFocusingCrystal.cooldownRemaining > 0 && this.player.spells.timbalsFocusingCrystal.cooldownRemaining < time) time = this.player.spells.timbalsFocusingCrystal.cooldownRemaining
     if (this.player.spells.markOfDefiance && this.player.spells.markOfDefiance.cooldownRemaining > 0 && this.player.spells.markOfDefiance.cooldownRemaining < time) time = this.player.spells.markOfDefiance.cooldownRemaining
     if (this.player.spells.drumsOfBattle && this.player.spells.drumsOfBattle.cooldownRemaining > 0 && this.player.spells.drumsOfBattle.cooldownRemaining < time) time = this.player.spells.drumsOfBattle.cooldownRemaining
@@ -153,6 +157,7 @@ class Simulation {
     if (this.player.spells.demonicRune && this.player.spells.demonicRune.cooldownRemaining > 0) this.player.spells.demonicRune.tick(time)
     if (this.player.spells.flameCap && this.player.spells.flameCap.cooldownRemaining > 0) this.player.spells.flameCap.tick(time)
     if (this.player.spells.bloodFury && this.player.spells.bloodFury.cooldownRemaining > 0) this.player.spells.bloodFury.tick(time)
+    if (this.player.spells.mysticalSkyfireDiamond && this.player.spells.mysticalSkyfireDiamond.cooldownRemaining > 0) this.player.spells.mysticalSkyfireDiamond.tick(time)
     if (this.player.spells.bloodlust) {
       for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
         if (this.player.spells.bloodlust[i].cooldownRemaining > 0) this.player.spells.bloodlust[i].tick(time)
@@ -204,6 +209,7 @@ class Simulation {
     if (this.player.auras.shatteredSunPendantOfAcumen && this.player.auras.shatteredSunPendantOfAcumen.active) this.player.auras.shatteredSunPendantOfAcumen.tick(time)
     if (this.player.auras.robeOfTheElderScribes && this.player.auras.robeOfTheElderScribes.active) this.player.auras.robeOfTheElderScribes.tick(time)
     if (this.player.auras.bandOfTheEternalSage && this.player.auras.bandOfTheEternalSage.active) this.player.auras.bandOfTheEternalSage.tick(time)
+    if (this.player.auras.mysticalSkyfireDiamond && this.player.auras.mysticalSkyfireDiamond.active) this.player.auras.mysticalSkyfireDiamond.tick(time)
 
     // Trinkets
     if (this.player.trinkets[0]) this.player.trinkets[0].tick(time)
@@ -271,6 +277,7 @@ class Simulation {
       if (this.player.spells.shiffarsNexusHorn) this.player.spells.shiffarsNexusHorn.reset()
       if (this.player.spells.sextantOfUnstableCurrents) this.player.spells.sextantOfUnstableCurrents.reset()
       if (this.player.spells.bandOfTheEternalSage) this.player.spells.bandOfTheEternalSage.reset()
+      if (this.player.spells.mysticalSkyfireDiamond) this.player.spells.mysticalSkyfireDiamond.reset()
       if (this.player.spells.bloodlust) {
         for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
           this.player.spells.bloodlust[i].reset()
@@ -436,6 +443,7 @@ class Simulation {
       if (this.player.auras.bladeOfWizardry && this.player.auras.bladeOfWizardry.active) this.player.auras.bladeOfWizardry.fade(true)
       if (this.player.auras.shatteredSunPendantOfAcumen && this.player.auras.shatteredSunPendantOfAcumen.active) this.player.auras.shatteredSunPendantOfAcumen.fade(true)
       if (this.player.auras.robeOfTheElderScribes && this.player.auras.robeOfTheElderScribes.active) this.player.auras.robeOfTheElderScribes.fade(true)
+      if (this.player.auras.mysticalSkyfireDiamond && this.player.auras.mysticalSkyfireDiamond.active) this.player.auras.mysticalSkyfireDiamond.fade(true)
       for (let i = 0; i < this.player.trinkets.length; i++) {
         if (this.player.trinkets[i]) {
           this.player.trinkets[i].fade(true)

@@ -174,6 +174,11 @@ class Spell {
     if (this.player.spells.bladeOfWizardry && this.player.spells.bladeOfWizardry.ready() && random(1, 100) <= this.player.auras.bladeOfWizardry.procChance) {
       this.player.spells.bladeOfWizardry.cast()
     }
+
+    // Mystical Skyfire Diamond
+    if (this.player.spells.mysticalSkyfireDiamond && this.player.spells.mysticalSkyfireDiamond.ready() && random(1, 100) <= this.player.spells.mysticalSkyfireDiamond.procChance) {
+      this.player.spells.mysticalSkyfireDiamond.cast()
+    }
   }
 
   getModifier () {
@@ -922,6 +927,20 @@ class BandOfTheEternalSage extends Spell {
     this.procChance = 10
     this.onGcd = false
     this.isItem = true
+    this.isAura = true
+    this.breakdownTable = 'aura'
+    this.setup()
+  }
+}
+
+class MysticalSkyfireDiamond extends Spell {
+  constructor (player) {
+    super(player)
+    this.name = 'Mystical Skyfire Diamond'
+    this.cooldown = 35
+    this.procChance = 15
+    this.onGcd = false
+    this.isProc = true
     this.isAura = true
     this.breakdownTable = 'aura'
     this.setup()
