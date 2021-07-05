@@ -4272,8 +4272,8 @@ const items = {
       source: 'PVP',
       phase: 1
     },
-    bladeOfTheArchmage: {
-      name: 'Blade of the Archmage',
+    stormcallerBladeOfTheArchmage: {
+      name: 'Stormcaller/Blade of the Archmage',
       stamina: 13,
       intellect: 11,
       spellPower: 159,
