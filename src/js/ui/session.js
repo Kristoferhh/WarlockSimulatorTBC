@@ -94,7 +94,7 @@ if (localStorage.simulationDuration) {
 drawProfileButtons()
 // Show the Save/Delete/Rename buttons if a profile is selected
 if (localStorage.selectedProfile) {
-  $('#update-profile-div').show()
+  $('#update-profile-div button').show()
 }
 
 $('#race-dropdown-list').data('currentRace', currentRace) // Store the currently selected race to know the user's previous race when changing in the dropdown list.
