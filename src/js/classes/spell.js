@@ -107,11 +107,6 @@ class Spell {
       if (this.player.exaltedWithShattrathFaction && this.player.spells.shatteredSunPendantOfAcumen && this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining <= 0 && random(1, 100) <= this.player.spells.shatteredSunPendantOfAcumen.procChance) {
         this.player.spells.shatteredSunPendantOfAcumen.cast()
       }
-
-      // Robe of the Elder Scribes
-      if (this.player.spells.robeOfTheElderScribes && this.player.spells.robeOfTheElderScribes.ready() && random(1, 100) <= this.player.spells.robeOfTheElderScribes.procChance) {
-        this.player.spells.robeOfTheElderScribes.cast()
-      }
     }
 
     // If it's an item such as mana potion, demonic rune, destruction potion etc. then jump out of the method
@@ -178,6 +173,11 @@ class Spell {
     // Mystical Skyfire Diamond
     if (this.player.spells.mysticalSkyfireDiamond && this.player.spells.mysticalSkyfireDiamond.ready() && random(1, 100) <= this.player.spells.mysticalSkyfireDiamond.procChance) {
       this.player.spells.mysticalSkyfireDiamond.cast()
+    }
+
+    // Robe of the Elder Scribes
+    if (this.player.spells.robeOfTheElderScribes && this.player.spells.robeOfTheElderScribes.ready() && random(1, 100) <= this.player.spells.robeOfTheElderScribes.procChance) {
+      this.player.spells.robeOfTheElderScribes.cast()
     }
   }
 
