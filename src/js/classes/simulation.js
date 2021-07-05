@@ -78,6 +78,7 @@ class Simulation {
       if (this.player.spells.mysticalSkyfireDiamond.cooldownRemaining > 0 && this.player.spells.mysticalSkyfireDiamond.cooldownRemaining < time) time = this.player.spells.mysticalSkyfireDiamond.cooldownRemaining
       if (this.player.auras.mysticalSkyfireDiamond.active && this.player.spells.mysticalSkyfireDiamond.durationRemaining < time) time = this.player.auras.mysticalSkyfireDiamond.durationRemaining
     }
+    if (this.player.spells.insightfulEarthstormDiamond && this.player.spells.insightfulEarthstormDiamond.cooldownRemaining > 0 && this.player.spells.insightfulEarthstormDiamond.cooldownRemaining < time) time = this.player.spells.insightfulEarthstormDiamond.cooldownRemaining
     if (this.player.spells.timbalsFocusingCrystal && this.player.spells.timbalsFocusingCrystal.cooldownRemaining > 0 && this.player.spells.timbalsFocusingCrystal.cooldownRemaining < time) time = this.player.spells.timbalsFocusingCrystal.cooldownRemaining
     if (this.player.spells.markOfDefiance && this.player.spells.markOfDefiance.cooldownRemaining > 0 && this.player.spells.markOfDefiance.cooldownRemaining < time) time = this.player.spells.markOfDefiance.cooldownRemaining
     if (this.player.spells.drumsOfBattle && this.player.spells.drumsOfBattle.cooldownRemaining > 0 && this.player.spells.drumsOfBattle.cooldownRemaining < time) time = this.player.spells.drumsOfBattle.cooldownRemaining
@@ -176,6 +177,7 @@ class Simulation {
     if (this.player.spells.shiffarsNexusHorn && this.player.spells.shiffarsNexusHorn.cooldownRemaining > 0) this.player.spells.shiffarsNexusHorn.tick(time)
     if (this.player.spells.sextantOfUnstableCurrents && this.player.spells.sextantOfUnstableCurrents.cooldownRemaining > 0) this.player.spells.sextantOfUnstableCurrents.tick(time)
     if (this.player.spells.bandOfTheEternalSage && this.player.spells.bandOfTheEternalSage.cooldownRemaining > 0) this.player.spells.bandOfTheEternalSage.tick(time)
+    if (this.player.spells.insightfulEarthstormDiamond && this.player.spells.insightfulEarthstormDiamond.cooldownRemaining > 0) this.player.spells.insightfulEarthstormDiamond.tick(time)
 
     // Auras
     if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.tick(time)
@@ -278,6 +280,7 @@ class Simulation {
       if (this.player.spells.sextantOfUnstableCurrents) this.player.spells.sextantOfUnstableCurrents.reset()
       if (this.player.spells.bandOfTheEternalSage) this.player.spells.bandOfTheEternalSage.reset()
       if (this.player.spells.mysticalSkyfireDiamond) this.player.spells.mysticalSkyfireDiamond.reset()
+      if (this.player.spells.insightfulEarthstormDiamond) this.player.spells.insightfulEarthstormDiamond.reset()
       if (this.player.spells.bloodlust) {
         for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
           this.player.spells.bloodlust[i].reset()

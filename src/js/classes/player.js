@@ -390,6 +390,7 @@ class Player {
     if (this.items.chest == 28602) this.spells.robeOfTheElderScribes = new RobeOfTheElderScribes(this)
     if (this.selectedAuras.drumsOfRestoration) this.spells.drumsOfRestoration = new DrumsOfRestoration(this)
     if (this.metaGemIds.includes(25893)) this.spells.mysticalSkyfireDiamond = new MysticalSkyfireDiamond(this)
+    if (this.metaGemIds.includes(25901)) this.spells.insightfulEarthstormDiamond = new InsightfulEarthstormDiamond(this)
     if (this.trinketIds.includes(34470)) this.spells.timbalsFocusingCrystal = new TimbalsFocusingCrystal(this)
     if (this.trinketIds.includes(27922)) this.spells.markOfDefiance = new MarkOfDefiance(this)
     if (this.trinketIds.includes(28785)) this.spells.theLightningCapacitor = new TheLightningCapacitor(this)

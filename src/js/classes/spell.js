@@ -109,8 +109,8 @@ class Spell {
       }
     }
 
-    // If it's an item such as mana potion, demonic rune, destruction potion etc. then jump out of the method
-    if (this.isItem) {
+    // If it's an item such as mana potion, demonic rune, destruction potion, or if it's a proc with a hidden cooldown like Blade of Wizardry or Robe of the Elder Scribes then jump out of the method
+    if (this.isItem || this.isProc) {
       return
     }
 
@@ -178,6 +178,11 @@ class Spell {
     // Robe of the Elder Scribes
     if (this.player.spells.robeOfTheElderScribes && this.player.spells.robeOfTheElderScribes.ready() && random(1, 100) <= this.player.spells.robeOfTheElderScribes.procChance) {
       this.player.spells.robeOfTheElderScribes.cast()
+    }
+
+    // Insightful Earthstorm Diamond
+    if (this.player.spells.insightfulEarthstormDiamond && this.player.spells.insightfulEarthstormDiamond.ready() && random(1, 100) <= this.player.spells.insightfulEarthstormDiamond.procChance) {
+      this.player.spells.insightfulEarthstormDiamond.cast()
     }
   }
 
@@ -941,8 +946,33 @@ class MysticalSkyfireDiamond extends Spell {
     this.procChance = 15
     this.onGcd = false
     this.isProc = true
+    this.isItem = true
     this.isAura = true
     this.breakdownTable = 'aura'
     this.setup()
+  }
+}
+
+class InsightfulEarthstormDiamond extends Spell {
+  constructor (player) {
+    super(player)
+    this.name = 'Insightful Earthstorm Diamond'
+    this.cooldown = 15
+    this.procChance = 5
+    this.onGcd = false
+    this.isProc = true
+    this.isItem = true
+    this.breakdownTable = 'manaGain'
+    this.manaGain = 300
+    this.setup()
+  }
+
+  cast() {
+    super.cast()
+    const currentPlayerMana = this.player.mana
+    this.player.totalManaRegenerated += this.manaGain
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + this.manaGain || this.manaGain
+    this.player.mana = Math.min(this.player.stats.maxMana, currentPlayerMana + this.manaGain)
+    this.player.combatLog('Player gains ' + Math.round(this.player.mana - currentPlayerMana) + ' mana from ' + this.name + ' (' + Math.round(currentPlayerMana) + ' -> ' + Math.round(this.player.mana) + ')')
   }
 }
