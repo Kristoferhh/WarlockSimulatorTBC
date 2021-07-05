@@ -22,9 +22,9 @@ const gems = {
     35503: {
       name: 'Ember Skyfire Diamond',
       spellPower: 14,
-      intellectModifier: 1.02, // confirm that this is how the gem works
+      intellectModifier: 1.02,
       iconName: 'inv_misc_gem_diamond_07',
-      phase: 5
+      phase: 1
     },
     34220: {
       name: 'Chaotic Skyfire Diamond',
@@ -36,7 +36,13 @@ const gems = {
       name: 'Imbued Unstable Diamond',
       spellPower: 14,
       iconName: 'inv_misc_gem_diamond_06',
-      phase: 2
+      phase: 1
+    },
+    28557: {
+      name: 'Swift Starfire Diamond',
+      spellPower: 12,
+      iconName: 'inv_misc_gem_diamond_07',
+      phase: 1
     },
     25901: {
       name: 'Insightful Earthstorm Diamond',
