@@ -1,5 +1,5 @@
 // User clicks on the "Save New Profile" button
-$('#save-profile-button').click(function () {
+$('#save-new-profile-button').click(function () {
   const profileName = $("input[name='profileName']").val()
   if (profileName.length <= 0) {
     alert('Missing profile name')
@@ -26,7 +26,9 @@ $('#delete-profile-button').click(function () {
     localStorage.removeItem('selectedProfile')
     localStorage.profiles = JSON.stringify(profiles)
     drawProfileButtons()
-    $('#update-profile-div').hide()
+    $('#save-profile-button').hide()
+    $('#delete-profile-button').hide()
+    $('#rename-profile-button').hide()
     if ($('.saved-profile').length == 0) {
       $('#saved-profiles').hide()
     }
