@@ -111,6 +111,7 @@ $('.btn').mouseout(function () {
 
 // "Import/Export" button in the Profile Options fieldset
 $('#import-export-button').click(function () {
+  $('#import-export-window textarea').val('')
   $('#import-export-window').show()
 })
 
@@ -139,7 +140,7 @@ $('#export-button').click(function () {
     selectedEnchants: selectedEnchants,
     settings: settings
   }
-  $('#import-export-window textarea').text(JSON.stringify(data)).select()
+  $('#import-export-window textarea').val(JSON.stringify(data)).select()
 })
 
 function updateSetBonuses () {
