@@ -317,10 +317,10 @@ class Simulation {
           if (this.player.gcdRemaining <= 0) {
             const timeRemaining = fightLength - this.player.fightTime
             // Not enough time left to cast another filler spell.
-            if ((this.player.rotation.finisher.deathCoil || this.player.rotation.finisher.shadowburn) && timeRemaining <= (this.player.spells[this.player.filler].castTime + this.player.spells[this.player.filler].travelTime)) {
+            if (timeRemaining <= this.player.spells[this.player.filler].getCastTime() && (this.player.rotation.finisher.deathCoil || this.player.rotation.finisher.shadowburn)) {
               this.player.useCooldowns()
-              // Cast Death Coil if there's time to cast both Death Coil and Shadowburn (need to cast Death Coil first because of the travel time). Otherwise only cast Shadowburn
-              if (this.player.spells.deathCoil && this.player.spells.deathCoil.ready() && (timeRemaining - this.player.gcdValue > this.player.spells.deathCoil.travelTime)) {
+              // Cast Death Coil if there's time to cast both Death Coil and Shadowburn (if both spells are chosen), otherwise only cast Shadowburn
+              if (this.player.spells.deathCoil && this.player.spells.deathCoil.ready() && (!this.player.spells.shadowburn || (timeRemaining > this.player.getGcdValue() && this.player.mana >= this.player.spells.deathCoil.manaCost + this.player.spells.shadowburn.manaCost))) {
                 this.player.cast('deathCoil')
               } else if (this.player.spells.shadowburn && this.player.spells.shadowburn.ready()) {
                 this.player.cast('shadowburn')
@@ -342,7 +342,7 @@ class Simulation {
                   this.player.cast('curseOfAgony')
                 }
                 // Cast Corruption if Corruption isn't up or if it will expire before the cast finishes (if no instant Corruption)
-                else if (this.player.spells.corruption && (!this.player.auras.corruption.active || (this.player.auras.corruption.ticksRemaining == 1 && this.player.auras.corruption.tickTimerRemaining < this.player.spells.corruption.getCastTime())) && this.player.spells.corruption.ready() && (timeRemaining - this.player.spells.corruption.castTime) >= this.player.auras.corruption.minimumDuration) {
+                else if (this.player.spells.corruption && (!this.player.auras.corruption.active || (this.player.auras.corruption.ticksRemaining == 1 && this.player.auras.corruption.tickTimerRemaining < this.player.spells.corruption.getCastTime())) && this.player.spells.corruption.ready() && (timeRemaining - this.player.spells.corruption.getCastTime()) >= this.player.auras.corruption.minimumDuration) {
                   this.player.cast('corruption')
                 }
                 // Cast Shadow Bolt if Shadow Trance (Nightfall) is active and Corruption is active as well to avoid potentially wasting another Nightfall proc
@@ -350,7 +350,7 @@ class Simulation {
                   this.player.cast('shadowBolt')
                 }
                 // Cast Unstable Affliction if it's not up or if it's about to expire
-                else if (this.player.spells.unstableAffliction && (!this.player.auras.unstableAffliction.active || (this.player.auras.unstableAffliction.ticksRemaining == 1 && this.player.auras.unstableAffliction.tickTimerRemaining < this.player.spells.unstableAffliction.getCastTime())) && this.player.spells.unstableAffliction.ready() && (timeRemaining - this.player.spells.unstableAffliction.castTime) >= this.player.auras.unstableAffliction.minimumDuration) {
+                else if (this.player.spells.unstableAffliction && (!this.player.auras.unstableAffliction.active || (this.player.auras.unstableAffliction.ticksRemaining == 1 && this.player.auras.unstableAffliction.tickTimerRemaining < this.player.spells.unstableAffliction.getCastTime())) && this.player.spells.unstableAffliction.ready() && (timeRemaining - this.player.spells.unstableAffliction.getCastTime()) >= this.player.auras.unstableAffliction.minimumDuration) {
                   this.player.cast('unstableAffliction')
                 }
                 // Cast Siphon Life if it's not up (todo: add option to only cast it while ISB is active if not using custom ISB uptime %)
@@ -358,7 +358,7 @@ class Simulation {
                   this.player.cast('siphonLife')
                 }
                 // Cast Immolate if it's not up or about to expire
-                else if (this.player.spells.immolate && (!this.player.auras.immolate.active || (this.player.auras.immolate.ticksRemaining == 1 && this.player.auras.immolate.tickTimerRemaining < this.player.spells.immolate.getCastTime())) && this.player.spells.immolate.ready() && (timeRemaining - this.player.spells.immolate.castTime) >= this.player.auras.immolate.minimumDuration) {
+                else if (this.player.spells.immolate && (!this.player.auras.immolate.active || (this.player.auras.immolate.ticksRemaining == 1 && this.player.auras.immolate.tickTimerRemaining < this.player.spells.immolate.getCastTime())) && this.player.spells.immolate.ready() && (timeRemaining - this.player.spells.immolate.getCastTime()) >= this.player.auras.immolate.minimumDuration) {
                   this.player.cast('immolate')
                 }
                 // Cast Life Tap if there's more than 30 seconds left of the fight, there are no "important auras" active.
