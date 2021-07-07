@@ -310,6 +310,7 @@ ul {
 
 #talents-container {
 	display: inline-block;
+	vertical-align: top;
 }
 
 #preset-talent-buttons {
