@@ -542,6 +542,10 @@ class Player {
     }
   }
 
+  getGcdValue() {
+    return Math.round((this.gcdValue / (1 + ((this.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000
+  }
+
   isHit (isAfflictionSpell) {
     let hit
     if (isAfflictionSpell) {

@@ -49,7 +49,7 @@ class Spell {
   startCast () {
     if (this.onGcd) {
       // 1 second is the minimum for global cooldown?
-      this.player.gcdRemaining = Math.max(1, Math.round((this.player.gcdValue / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000)
+      this.player.gcdRemaining = Math.max(1, this.player.getGcdValue())
     }
 
     if (this.castTime > 0) {
