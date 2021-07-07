@@ -328,38 +328,50 @@ class Simulation {
                 this.player.cast('lifeTap')
               }
             } else {
-              // Checks if a curse is assigned and if the curse is not up.
-              // If the curse is not up, it checks if the curse is Curse of Doom. If the curse if Curse of Doom then it checks if Curse of Agony is not up as well (used when there's <60sec left of the fight).
-              // If the curse is not Curse of Doom or the curse is Curse of Doom *and* both CoD and CoA are down (and if there's enough time left for them to do enough damage to warrant casting them) then it casts the curse.
-              if (this.player.curse && !this.player.auras[this.player.curse].active && (this.player.curse !== 'curseOfDoom' || (this.player.curse == 'curseOfDoom' && !this.player.auras.curseOfAgony.active && (timeRemaining > 60 || timeRemaining >= this.player.auras.curseOfAgony.minimumDuration)))) {
-                if (this.player.curse !== 'curseOfDoom' || (this.player.curse == 'curseOfDoom' && timeRemaining > 60 && this.player.spells.curseOfDoom.ready())) {
-                  this.player.cast(this.player.curse)
-                } else if (timeRemaining >= this.player.auras.curseOfAgony.minimumDuration) {
-                  this.player.cast('curseOfAgony')
-                }
+              // Cast selected curse if it's either CoR or CoE and it's not up
+              if (this.player.curse && !this.player.auras[this.player.curse].active && (this.player.curse == 'curseOfRecklessness' || this.player.curse == 'curseOfTheElements') && this.player.spells[this.player.curse].ready()) {
+                this.player.cast(this.player.curse)
               } else {
                 this.player.useCooldowns()
-                if (this.player.spells.corruption && (!this.player.auras.corruption.active || (this.player.auras.corruption.ticksRemaining == 1 && this.player.auras.corruption.tickTimerRemaining < this.player.spells.corruption.getCastTime())) && this.player.spells.corruption.ready() && (timeRemaining - this.player.spells.corruption.castTime) >= this.player.auras.corruption.minimumDuration) {
-                  this.player.cast('corruption')
-                } else if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.corruption.active) {
-                  this.player.cast('shadowBolt')
-                } else if (this.player.spells.curseOfAgony && !this.player.auras.curseOfAgony.active && (!this.player.spells.curseOfDoom || !this.player.auras.curseOfDoom.active) && this.player.spells.curseOfAgony.ready() && timeRemaining >= this.player.auras.curseOfAgony.minimumDuration) {
+                // Cast Curse of Doom if there's more than 60 seconds remaining
+                if (this.player.curse && !this.player.auras[this.player.curse].active && this.player.curse == 'curseOfDoom' && timeRemaining > 60) {
+                  this.player.cast('curseOfDoom')
+                }
+                // Cast Curse of Agony if CoA is the selected curse or if Curse of Doom is the selected curse and there's less than 60 seconds remaining of the fight
+                else if (this.player.curse && ((this.player.curse == 'curseOfDoom' && !this.player.auras.curseOfDoom.active) || this.player.curse == 'curseOfAgony') && !this.player.auras.curseOfAgony.active && ((this.player.curse == 'curseOfDoom' && timeRemaining <= 60) || (this.player.curse == 'curseOfAgony' && timeRemaining >= this.player.auras.curseOfAgony.minimumDuration && this.player.spells.curseOfAgony.ready()))) {
                   this.player.cast('curseOfAgony')
-                } else if (this.player.spells.unstableAffliction && (!this.player.auras.unstableAffliction.active || (this.player.auras.unstableAffliction.ticksRemaining == 1 && this.player.auras.unstableAffliction.tickTimerRemaining < this.player.spells.unstableAffliction.getCastTime())) && this.player.spells.unstableAffliction.ready() && (timeRemaining - this.player.spells.unstableAffliction.castTime) >= this.player.auras.unstableAffliction.minimumDuration) {
+                }
+                // Cast Corruption if Corruption isn't up or if it will expire before the cast finishes (if no instant Corruption)
+                else if (this.player.spells.corruption && (!this.player.auras.corruption.active || (this.player.auras.corruption.ticksRemaining == 1 && this.player.auras.corruption.tickTimerRemaining < this.player.spells.corruption.getCastTime())) && this.player.spells.corruption.ready() && (timeRemaining - this.player.spells.corruption.castTime) >= this.player.auras.corruption.minimumDuration) {
+                  this.player.cast('corruption')
+                }
+                // Cast Shadow Bolt if Shadow Trance (Nightfall) is active and Corruption is active as well to avoid potentially wasting another Nightfall proc
+                else if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.corruption.active) {
+                  this.player.cast('shadowBolt')
+                }
+                // Cast Unstable Affliction if it's not up or if it's about to expire
+                else if (this.player.spells.unstableAffliction && (!this.player.auras.unstableAffliction.active || (this.player.auras.unstableAffliction.ticksRemaining == 1 && this.player.auras.unstableAffliction.tickTimerRemaining < this.player.spells.unstableAffliction.getCastTime())) && this.player.spells.unstableAffliction.ready() && (timeRemaining - this.player.spells.unstableAffliction.castTime) >= this.player.auras.unstableAffliction.minimumDuration) {
                   this.player.cast('unstableAffliction')
-                } else if (this.player.spells.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.ready() && /* (!this.player.auras.improvedShadowBolt || this.player.auras.improvedShadowBolt.active) && */ timeRemaining >= this.player.auras.siphonLife.minimumDuration) {
+                }
+                // Cast Siphon Life if it's not up (todo: add option to only cast it while ISB is active if not using custom ISB uptime %)
+                else if (this.player.spells.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.ready() && /* (!this.player.auras.improvedShadowBolt || this.player.auras.improvedShadowBolt.active) && */ timeRemaining >= this.player.auras.siphonLife.minimumDuration) {
                   this.player.cast('siphonLife')
-                } else if (this.player.spells.immolate && (!this.player.auras.immolate.active || (this.player.auras.immolate.ticksRemaining == 1 && this.player.auras.immolate.tickTimerRemaining < this.player.spells.immolate.getCastTime())) && this.player.spells.immolate.ready() && (timeRemaining - this.player.spells.immolate.castTime) >= this.player.auras.immolate.minimumDuration) {
+                }
+                // Cast Immolate if it's not up or about to expire
+                else if (this.player.spells.immolate && (!this.player.auras.immolate.active || (this.player.auras.immolate.ticksRemaining == 1 && this.player.auras.immolate.tickTimerRemaining < this.player.spells.immolate.getCastTime())) && this.player.spells.immolate.ready() && (timeRemaining - this.player.spells.immolate.castTime) >= this.player.auras.immolate.minimumDuration) {
                   this.player.cast('immolate')
                 }
-                // Use Life Tap instead of the filler spell even if the player is at high mana to avoid having to Life Tap when the player is out of mana and a cooldown is active such as a trinket proc or Power Infusion
-                // It uses Life Tap if Life Tap would not over cap the player on mana, there's more than 20 seconds left of the fight, and the player's mana percentage is less than the amount of time left in the fight (as a percentage) e.g. if the player is at 50% mana but there's 70% left of the fight.
-                // This can be improved further but I think this is a good method of making sure the player doesn't have to Life Tap while important cooldowns are active.
+                // Cast Life Tap if there's more than 30 seconds left of the fight, there are no "important auras" active.
+                // This is to try and avoid having to cast Life Tap when you e.g. have a trinket active or Bloodlust 
                 else if (this.player.importantAuraCounter == 0 && timeRemaining > 20 && (timeRemaining / fightLength) > (this.player.mana / this.player.stats.maxMana) && !this.player.areAnyCooldownsReady() && (this.player.spells.lifeTap.manaGain() + this.player.mana < this.player.stats.maxMana)) {
                   this.player.cast('lifeTap')
-                } else if (this.player.spells[this.player.filler].ready()) {
+                } 
+                // Cast filler spell
+                else if (this.player.spells[this.player.filler].ready()) {
                   this.player.cast(this.player.filler)
-                } else {
+                } 
+                // Cast Life Tap if nothing else is possible
+                else {
                   this.player.cast('lifeTap')
                 }
               }

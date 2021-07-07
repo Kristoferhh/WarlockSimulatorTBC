@@ -183,10 +183,6 @@ class Player {
                 socketBonusActive = false
               }
             }
-            if (customItemId == 28183) {
-              if (socketBonusActive) console.log('active')
-              else console.log('not active')
-            }
             // If the socket bonus is active then remove the socket bonus stats
             if (socketBonusActive && items[customItemSlot][item].socketBonus) {
               for (const stat in items[customItemSlot][item].socketBonus) {
@@ -323,8 +319,7 @@ class Player {
     // Assign the curse (if selected)
     this.curse = null
     for (const spell in settings.rotation.curse) {
-      // Ignore the curse if user selected Curse of Agony since this will be the highest cast priority.
-      if (settings.rotation.curse[spell] && spell !== 'curseOfAgony') {
+      if (settings.rotation.curse[spell]) {
         this.curse = spell
         break
       }
