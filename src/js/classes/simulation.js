@@ -361,15 +361,15 @@ class Simulation {
                 else if (this.player.spells.immolate && (!this.player.auras.immolate.active || (this.player.auras.immolate.ticksRemaining == 1 && this.player.auras.immolate.tickTimerRemaining < this.player.spells.immolate.getCastTime())) && this.player.spells.immolate.ready() && (timeRemaining - this.player.spells.immolate.getCastTime()) >= this.player.auras.immolate.minimumDuration) {
                   this.player.cast('immolate')
                 }
-                // Cast Life Tap if there's more than 30 seconds left of the fight, there are no "important auras" active.
+                // Cast Life Tap if there's more than 20 seconds left of the fight, there are no "important auras" active.
                 // This is to try and avoid having to cast Life Tap when you e.g. have a trinket active or Bloodlust 
                 else if (this.player.importantAuraCounter == 0 && timeRemaining > 20 && (timeRemaining / fightLength) > (this.player.mana / this.player.stats.maxMana) && !this.player.areAnyCooldownsReady() && (this.player.spells.lifeTap.manaGain() + this.player.mana < this.player.stats.maxMana)) {
                   this.player.cast('lifeTap')
-                } 
+                }
                 // Cast filler spell
                 else if (this.player.spells[this.player.filler].ready()) {
                   this.player.cast(this.player.filler)
-                } 
+                }
                 // Cast Life Tap if nothing else is possible
                 else {
                   this.player.cast('lifeTap')
