@@ -477,6 +477,7 @@ img[data-color='meta'] {
 #profiles-and-sources {
 	display: flex;
 	align-items: center;
+	width: 100%;
 }
 
 #profiles-and-sources fieldset ul {
