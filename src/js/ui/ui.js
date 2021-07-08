@@ -118,13 +118,13 @@ $('#import-export-button').click(function () {
 // Importing settings
 $('#import-button').click(function () {
   const data = JSON.parse($('#import-export-window textarea').val())
-  localStorage.auras = JSON.stringify(data.auras)
-  localStorage.selectedGems = JSON.stringify(data.selectedGems)
-  localStorage.selectedItems = JSON.stringify(data.selectedItems)
-  localStorage.talents = JSON.stringify(data.talents)
-  localStorage.rotation = JSON.stringify(data.rotation)
-  localStorage.selectedEnchants = JSON.stringify(data.selectedEnchants)
-  localStorage.settings = JSON.stringify(data.settings)
+  if (data.auras) localStorage.auras = JSON.stringify(data.auras)
+  if (data.selectedGems) localStorage.selectedGems = JSON.stringify(data.selectedGems)
+  if (data.selectedItems) localStorage.selectedItems = JSON.stringify(data.selectedItems)
+  if (data.talents) localStorage.talents = JSON.stringify(data.talents)
+  if (data.rotation) localStorage.rotation = JSON.stringify(data.rotation)
+  if (data.selectedEnchants) localStorage.selectedEnchants = JSON.stringify(data.selectedEnchants)
+  if (data.settings) localStorage.settings = JSON.stringify(data.settings)
   location.reload()
 })
 
