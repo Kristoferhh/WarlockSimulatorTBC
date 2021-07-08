@@ -158,7 +158,7 @@ const _auras = {
         name: 'Curse of the Elements',
         spellPen: 88,
         iconName: 'spell_shadow_chilltouch',
-        id: 11722
+        id: 27228
       },
       shadowWeaving: {
         name: 'Shadow Weaving',
