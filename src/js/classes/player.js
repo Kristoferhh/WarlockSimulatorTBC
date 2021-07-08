@@ -348,20 +348,12 @@ class Player {
       }
     }
 
-    // Spellfire 3-set bonus. Add spell power equal to 7% of the player's intellect
-    // This is just for the combat log at the start of the simulation.
-    // This needs to calculated with each cast because the player's intellect might fluctuate and the value of the bonus would then change.
-    let spellfireBonus = 0
-    if (settings.sets['552'] >= 3) {
-      spellfireBonus += (this.stats.intellect * this.stats.intellectModifier * 0.07)
-    }
-
     this.combatlog.push('---------------- Player stats ----------------')
     this.combatlog.push('Health: ' + Math.round(this.stats.health))
     this.combatlog.push('Mana: ' + Math.round(this.stats.maxMana))
     this.combatlog.push('Stamina: ' + Math.round(this.stats.stamina * this.stats.staminaModifier))
     this.combatlog.push('Intellect: ' + Math.round(this.stats.intellect * this.stats.intellectModifier))
-    this.combatlog.push('Spell Power: ' + Math.round(this.stats.spellPower + this.demonicKnowledgeSp + spellfireBonus))
+    this.combatlog.push('Spell Power: ' + this.getSpellPower())
     this.combatlog.push('Shadow Power: ' + this.stats.shadowPower)
     this.combatlog.push('Fire Power: ' + this.stats.firePower)
     this.combatlog.push('Crit Chance: ' + Math.round(this.getCritChance() * 100) / 100 + '%')
@@ -562,6 +554,15 @@ class Player {
     }
 
     return hit
+  }
+
+  getSpellPower() {
+    let spellPower = this.stats.spellPower + this.demonicKnowledgeSp
+    // Spellfire 3-set bonus
+    if (this.sets['552'] == 3) {
+      spellPower += this.stats.intellect * this.stats.intellectModifier * 0.07
+    }
+    return Math.round(spellPower)
   }
 
   // Returns the crit percentage of the player.

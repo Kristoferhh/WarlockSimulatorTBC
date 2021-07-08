@@ -72,7 +72,7 @@ class Spell {
       this.player.combatLog('Finished casting ' + this.name)
     }
 
-    let isCrit = false
+    let isCrit = false  
     if (this.canCrit) {
       // Checks if the spell is a crit.
       isCrit = this.player.isCrit(this.bonusCrit)
@@ -193,7 +193,7 @@ class Spell {
   damage (isCrit) {
     let dmg = this.player.simSettings.randomizeValues && this.minDmg && this.maxDmg ? random(this.minDmg, this.maxDmg) : this.dmg
     let critMultiplier = 1.5
-    let spellPower = this.player.stats.spellPower + this.player.demonicKnowledgeSp
+    let spellPower = this.player.getSpellPower()
     const shadowPower = this.player.stats.shadowPower
     const firePower = this.player.stats.firePower
     let modifier = this.getModifier()
@@ -204,10 +204,6 @@ class Spell {
     }
     // Make a variable for the base damage to output into the combat log
     const baseDamage = dmg
-    // Spellfire 3-set bonus. Add spell power equal to 7% of the player's intellect
-    if (this.player.sets['552'] >= 3) {
-      spellPower += (this.player.stats.intellect * this.player.stats.intellectModifier * 0.07)
-    }
     // Damage from spell power * coefficient
     const sp = spellPower + (this.school == 'shadow' ? shadowPower : this.school == 'fire' ? firePower : 0)
     dmg += sp * this.coefficient
@@ -459,13 +455,13 @@ class LifeTap extends Spell {
   }
 
   manaGain () {
-    return (this.manaReturn + ((this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats.shadowPower) * this.coefficient)) * this.modifier
+    return (this.manaReturn + ((this.player.getSpellPower() + this.player.stats.shadowPower) * this.coefficient)) * this.modifier
   }
 
   cast () {
     this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
     const manaGain = this.manaGain()
-    this.player.combatLog(this.name + ' ' + Math.round(manaGain) + ' (' + Math.round(this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats.shadowPower) + ' Spell Power - ' + Math.round(this.modifier * 10000) / 100 + '% Mana Gain Modifier)')
+    this.player.combatLog(this.name + ' ' + Math.round(manaGain) + ' (' + Math.round(this.player.getSpellPower() + this.player.stats.shadowPower) + ' Spell Power - ' + Math.round(this.modifier * 10000) / 100 + '% Mana Gain Modifier)')
     this.player.totalManaRegenerated += manaGain
     this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + manaGain || manaGain
     // Warning for if Life Tap is used while there are important auras active
@@ -498,7 +494,7 @@ class DarkPact extends Spell {
 
   cast () {
     this.casting = false
-    const manaGain = this.manaReturn + (this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats.shadowPower) * this.coefficient
+    const manaGain = this.manaReturn + (this.player.getSpellPower() + this.player.stats.shadowPower) * this.coefficient
     this.player.totalManaRegenerated += manaGain
     this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
     this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + manaGain || manaGain

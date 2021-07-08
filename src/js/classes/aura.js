@@ -333,7 +333,7 @@ class DestructionPotionAura extends Aura {
   apply () {
     if (!this.active) {
       {
-        this.player.combatLog('Spell Power + 120 (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + 120) + ')')
+        this.player.combatLog('Spell Power + 120 (' + Math.round(this.player.getSpellPower()) + ' -> ' + Math.round(this.player.getSpellPower() + 120) + ')')
         this.player.combatLog('Crit Chance + 2% (' + Math.round(this.player.stats.critChance * 100) / 100 + '% -> ' + Math.round((this.player.stats.critChance + 2) * 100) / 100 + '%)')
       }
       this.player.stats.spellPower += 120
@@ -348,7 +348,7 @@ class DestructionPotionAura extends Aura {
   fade (endOfIteration = false) {
     if (this.active) {
       if (!endOfIteration) {
-        this.player.combatLog('Spell Power - 120 (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - 120) + ')')
+        this.player.combatLog('Spell Power - 120 (' + Math.round(this.player.getSpellPower()) + ' -> ' + Math.round(this.player.getSpellPower() - 120) + ')')
         this.player.combatLog('Crit Chance - 2% (' + Math.round(this.player.stats.critChance * 100) / 100 + '% -> ' + Math.round((this.player.stats.critChance - 2) * 100) / 100 + '%)')
       }
       this.player.stats.spellPower -= 120
@@ -523,7 +523,7 @@ class DarkmoonCardCrusadeAura extends Aura {
 
   apply () {
     if (this.stacks < this.maxStacks) {
-      this.player.combatLog('Spell Power + ' + this.spPerStack + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower + this.spPerStack) + ')')
+      this.player.combatLog('Spell Power + ' + this.spPerStack + ' (' + Math.round(this.player.getSpellPower()) + ' -> ' + Math.round(this.player.getSpellPower() + this.spPerStack) + ')')
       this.player.stats.spellPower += this.spPerStack
       this.stacks++
       if (this.player.pet) {
@@ -536,7 +536,7 @@ class DarkmoonCardCrusadeAura extends Aura {
   fade (endOfIteration = false) {
     if (this.active) {
       if (!endOfIteration) {
-        this.player.combatLog('Spell Power - ' + (this.spPerStack * this.stacks) + ' (' + Math.round(this.player.stats.spellPower) + ' -> ' + Math.round(this.player.stats.spellPower - this.spPerStack * this.stacks) + ')')
+        this.player.combatLog('Spell Power - ' + (this.spPerStack * this.stacks) + ' (' + Math.round(this.player.getSpellPower()) + ' -> ' + Math.round(this.player.getSpellPower() - this.spPerStack * this.stacks) + ')')
         if (this.player.pet) {
           this.player.pet.calculateStatsFromPlayer()
         }

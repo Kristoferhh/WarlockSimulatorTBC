@@ -39,11 +39,7 @@ class DamageOverTime {
     this.active = true
     this.tickTimerRemaining = this.tickTimerTotal
     this.ticksRemaining = this.ticksTotal
-    let spellPower = this.player.stats.spellPower + this.player.stats[this.school + 'Power'] + this.player.demonicKnowledgeSp
-    // Spellfire 3-set bonus
-    if (this.player.sets['552'] >= 3) {
-      spellPower += (this.player.stats.intellect * this.player.stats.intellectModifier * 0.07)
-    }
+    let spellPower = this.player.getSpellPower() + this.player.stats[this.school + 'Power']
     this.spellPower = spellPower
     this.player.combatLog(this.name + ' ' + refreshedOrApplied + ' (' + Math.round(spellPower) + ' Spell Power)')
 
@@ -73,7 +69,7 @@ class DamageOverTime {
       this.tickTimerRemaining = Math.max(0, this.tickTimerRemaining - t)
 
       if (this.tickTimerRemaining == 0) {
-        const sp = this.snapshots ? this.spellPower : this.player.stats.spellPower + this.player.demonicKnowledgeSp + this.player.stats[this.school + 'Power']
+        const sp = this.snapshots ? this.spellPower : this.player.getSpellPower() + this.player.stats[this.school + 'Power']
         let modifier = this.getModifier()
 
         // Add bonus from ISB (without removing ISB stacks since it's a dot)
