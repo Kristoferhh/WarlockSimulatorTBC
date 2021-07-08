@@ -218,11 +218,11 @@ ul {
 
 #sim-settings {
 	display: inline-block;
-	padding: 15px;
+	padding: 5px;	
 	line-height: 25px;
 	font-size: 0.9em;
 	margin: auto;
-	width: 300px;
+	width: 22.5%;
 }
 
 #sim-result-dps-div {
@@ -337,7 +337,8 @@ ul {
 }
 
 #talents-container {
-	float: right;
+	display: inline-block;
+	vertical-align: top;
 }
 
 #preset-talent-buttons {
@@ -399,35 +400,6 @@ ul {
 	cursor: pointer;
 	user-select: none;
 }
-
-/*.talent-arrow {
-	position: absolute;
-	z-index: 100;
-}
-
-.talent-arrow img {
-	width: 15px;
-}
-
-.talent-arrow[data-row='3'] {
-	top: 137px;
-}
-
-.talent-arrow[data-row='5'] {
-	top: 226px;
-}
-
-.talent-arrow[data-row='7'] {
-	top: 328px;
-}
-
-.talent-arrow[data-column='3'] {
-	left: 118.5px;
-}
-
-.talent-arrow[data-column='2'] {
-	left: 69px;
-}*/
 
 .btn {
 	border: 1px solid white;
@@ -505,6 +477,7 @@ img[data-color='meta'] {
 #profiles-and-sources {
 	display: flex;
 	align-items: center;
+	width: 100%;
 }
 
 #profiles-and-sources fieldset ul {

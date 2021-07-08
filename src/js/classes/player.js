@@ -93,14 +93,21 @@ class Player {
             this.sets[items[customItemSlot][item].setId]--
           }
           // Remove stats from gems in the equipped item if there are any
+          // Also check if the item's socket bonus is active and remove the stats from it if so
           if (settings.gems[customItemSlot] && settings.gems[customItemSlot][settings.items[customItemSlot + customItemSubSlot]]) {
+            let socketBonusActive = true
             // Loop through each socket in the equipped item
             for (const socket in settings.gems[customItemSlot][settings.items[customItemSlot + customItemSubSlot]]) {
               if (settings.gems[customItemSlot][settings.items[customItemSlot + customItemSubSlot]][socket]) {
+                const socketColor = settings.gems[customItemSlot][settings.items[customItemSlot + customItemSubSlot]][socket][0]
                 const gemId = settings.gems[customItemSlot][settings.items[customItemSlot + customItemSubSlot]][socket][1]
                 // Find the gem's color since the socket and gem colors might not match
                 for (const gemColor in gems) {
                   if (gems[gemColor][gemId]) {
+                    // Check whether the gem color is in the array of gem colors that are valid for this socket color (e.g. checks whether a 'purple' gem is valid for a 'blue' socket)
+                    if (!socketInfo[socketColor].gems.includes(gemColor)) {
+                      socketBonusActive = false
+                    }
                     if (gemColor == 'meta') {
                       if (this.metaGemIds.includes(gemId)) {
                         this.metaGemIds.splice(this.metaGemIds.indexOf(gemId), 1)
@@ -113,6 +120,18 @@ class Player {
                       }
                     }
                   }
+                }
+              } else { // No gem in this socket
+                socketBonusActive = false
+              }
+            }
+            // If the socket bonus is active then remove the socket bonus stats
+            if (socketBonusActive && items[customItemSlot][item].socketBonus) {
+              for (const stat in items[customItemSlot][item].socketBonus) {
+                if (this.stats.hasOwnProperty(stat)) {
+                  this.stats[stat] -= items[customItemSlot][item].socketBonus[stat]
+                } else {
+                  console.log("Can't remove stat '" + stat + "' from player (trying to remove socket bonus)")
                 }
               }
             }
@@ -135,8 +154,11 @@ class Player {
           this.items[customItemSlot + customItemSubSlot] = customItemId
           // Add stats from any gems equipped in the custom item
           if (settings.gems[customItemSlot] && settings.gems[customItemSlot][customItemId]) {
+            // Boolean to keep track of whether the item's socket bonus is active or not
+            let socketBonusActive = true
             for (const socket in settings.gems[customItemSlot][customItemId]) {
               if (settings.gems[customItemSlot][customItemId][socket]) {
+                const socketColor = settings.gems[customItemSlot][customItemId][socket][0]
                 const gemId = settings.gems[customItemSlot][customItemId][socket][1]
                 // Check for meta gem
                 if (customItemSlot == 'head' && gems.meta[gemId]) {
@@ -145,6 +167,10 @@ class Player {
                 // Find the gem's color since it might not match the socket color
                 for (const gemColor in gems) {
                   if (gems[gemColor][gemId]) {
+                    // Check whether the gem color is in the array of gem colors that are valid for this socket color (e.g. checks whether a 'purple' gem is valid for a 'blue' socket)
+                    if (!socketInfo[socketColor].gems.includes(gemColor)) {
+                      socketBonusActive = false
+                    }
                     // Add stats from the gem equipped in this socket
                     for (const stat in gems[gemColor][gemId]) {
                       if (this.stats.hasOwnProperty(stat)) {
@@ -152,6 +178,18 @@ class Player {
                       }
                     }
                   }
+                }
+              } else { // No gem equipped in this socket
+                socketBonusActive = false
+              }
+            }
+            // If the socket bonus is active then remove the socket bonus stats
+            if (socketBonusActive && items[customItemSlot][item].socketBonus) {
+              for (const stat in items[customItemSlot][item].socketBonus) {
+                if (this.stats.hasOwnProperty(stat)) {
+                  this.stats[stat] += items[customItemSlot][item].socketBonus[stat]
+                } else {
+                  console.log("Can't add stat '" + stat + "' to player (trying to add socket bonus)")
                 }
               }
             }
@@ -281,8 +319,7 @@ class Player {
     // Assign the curse (if selected)
     this.curse = null
     for (const spell in settings.rotation.curse) {
-      // Ignore the curse if user selected Curse of Agony since this will be the highest cast priority.
-      if (settings.rotation.curse[spell] && spell !== 'curseOfAgony') {
+      if (settings.rotation.curse[spell]) {
         this.curse = spell
         break
       }
@@ -503,6 +540,10 @@ class Player {
         }
       }
     }
+  }
+
+  getGcdValue() {
+    return Math.round((this.gcdValue / (1 + ((this.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000
   }
 
   isHit (isAfflictionSpell) {

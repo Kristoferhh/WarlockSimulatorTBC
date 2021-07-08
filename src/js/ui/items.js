@@ -21,7 +21,7 @@ $('#item-selection-table tbody').on('click', 'tr', function () {
           modifyStatsFromItem(items[slot][item], 'remove')
           // Remove socket bonus if active
           if ($(".item-row[data-wowhead-id='" + items[slot][item].id + "']").attr('data-socket-bonus-active') == 'true') {
-            modifyStatsFromItemSocketBonus(itemId, 'remove')
+            modifyStatsFromItemSocketBonus(items[slot][item].id, 'remove')
           }
 
           // Remove stats from gems equipped in the item

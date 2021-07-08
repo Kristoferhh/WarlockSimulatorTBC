@@ -279,6 +279,7 @@ class Imp extends Pet {
   }
 
   tick (t) {
+    super.tick(t)
     this.spells.firebolt.tick(t)
   }
 }
@@ -322,8 +323,8 @@ class Succubus extends Pet {
   }
 
   tick (t) {
-    this.spells.lashOfPain.tick(t)
     super.tick(t)
+    this.spells.lashOfPain.tick(t)
   }
 }
 
@@ -376,7 +377,7 @@ class Felguard extends Pet {
   }
 
   tick (t) {
-    this.spells.cleave.tick(t)
     super.tick(t)
+    this.spells.cleave.tick(t)
   }
 }

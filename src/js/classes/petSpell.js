@@ -7,7 +7,6 @@ class PetSpell {
   constructor (pet) {
     this.pet = pet
     this.casting = false
-    this.casting = false
     this.canCrit = true
     this.cooldownRemaining = 0
     this.castTime = 0
@@ -48,8 +47,8 @@ class PetSpell {
   startCast () {
     if (this.castTime > 0) {
       this.casting = true
-      this.castTimeRemaining = this.getCastTime()
-      this.pet.player.combatLog(this.pet.name + ' started casting ' + this.name + '. Cast time: ' + this.castTimeRemaining + ' (' + Math.round((this.pet.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base cast speed of ' + this.castTime + ')')
+      this.pet.castTimeRemaining = this.getCastTime()
+      this.pet.player.combatLog(this.pet.name + ' started casting ' + this.name + '. Cast time: ' + this.pet.castTimeRemaining + ' (' + Math.round((this.pet.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base cast speed of ' + this.castTime + ')')
     } else {
       this.cast()
     }

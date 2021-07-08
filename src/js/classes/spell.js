@@ -49,7 +49,7 @@ class Spell {
   startCast () {
     if (this.onGcd) {
       // 1 second is the minimum for global cooldown?
-      this.player.gcdRemaining = Math.max(1, Math.round((this.player.gcdValue / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000)
+      this.player.gcdRemaining = Math.max(1, this.player.getGcdValue())
     }
 
     if (this.castTime > 0) {
@@ -479,8 +479,9 @@ class LifeTap extends Spell {
     this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain)
     if (this.player.pet && this.player.talents.manaFeed > 0) {
       const petManaGain = manaGain * (this.player.talents.manaFeed / 3)
-      this.player.pet.stats.currentMana = Math.min(this.player.pet.stats.maxMana, this.player.pet.stats.currentMana + petManaGain)
-      this.player.combatLog(this.player.pet.name + ' gains ' + Math.round(petManaGain) + ' mana from Mana Feed')
+      const currentPetMana = this.player.pet.stats.mana
+      this.player.pet.stats.mana = Math.min(this.player.pet.stats.maxMana, this.player.pet.stats.mana + petManaGain)
+      this.player.combatLog(this.player.pet.name + ' gains ' + Math.round(this.player.pet.stats.mana - currentPetMana) + ' mana from Mana Feed (' + Math.round(currentPetMana) + ' -> ' + Math.round(this.player.pet.stats.mana) + ')')
     }
   }
 }

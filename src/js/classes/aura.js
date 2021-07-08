@@ -458,12 +458,13 @@ class DrumsOfRestorationAura extends Aura {
     this.ticksTotal = Math.round(this.durationTotal / this.tickTimerTotal)
     this.manaGain = 600 / (this.durationTotal / this.tickTimerTotal)
     this.setup()
+    this.player.manaGainBreakdown[this.varName] = this.player.manaGainBreakdown[this.varName] || { name: 'Drums of Restoration' }
   }
 
   apply () {
-    this.active = true
     this.tickTimerRemaining = this.tickTimerTotal
     this.ticksRemaining = this.ticksTotal
+    super.apply()
   }
 
   tick (t) {
@@ -472,12 +473,17 @@ class DrumsOfRestorationAura extends Aura {
 
       if (this.tickTimerRemaining == 0) {
         // Player
-        this.player.combatLog('Player gains ' + this.manaGain + ' mana from Drums of Restoration (' + Math.round(this.player.mana) + ' -> ' + Math.round(this.player.mana + this.manaGain) + ')')
+        const currentMana = this.player.mana
         this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.manaGain)
+        const manaGained = Math.round(this.player.mana - currentMana)
+        this.player.combatLog('Player gains ' + manaGained + ' mana from Drums of Restoration (' + Math.round(currentMana) + ' -> ' + Math.round(this.player.mana) + ')')
+        this.player.manaGainBreakdown[this.varName].casts = this.player.manaGainBreakdown[this.varName].casts + 1 || 1
+        this.player.manaGainBreakdown[this.varName].manaGain = this.player.manaGainBreakdown[this.varName].manaGain + manaGained || manaGained
         // Pet
         if (this.player.pet) {
-          this.player.combatLog(this.player.pet.name + ' gains ' + this.manaGain + ' mana from Drums of Restoration (' + Math.round(this.player.pet.stats.mana) + ' -> ' + Math.round(this.player.pet.stats.mana + this.manaGain) + ')')
+          const currentMana = this.player.pet.stats.mana
           this.player.pet.stats.mana = Math.min(this.player.pet.stats.maxMana, this.player.pet.stats.mana + this.manaGain)
+          this.player.combatLog(this.player.pet.name + ' gains ' + (this.player.pet.stats.mana - currentMana) + ' mana from Drums of Restoration (' + Math.round(currentMana) + ' -> ' + Math.round(this.player.pet.stats.mana) + ')')
         }
         this.ticksRemaining--
         this.tickTimerRemaining = this.tickTimerTotal
