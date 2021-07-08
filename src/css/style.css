@@ -277,13 +277,29 @@ ul {
 	line-height: 5px;
 }
 
+#import-export-window {
+	background-color: black;
+	padding: 50px;
+	width: 70%;
+	height: 70%;
+	top: 0;
+	margin-top: 50px;
+	left: 15%;
+	position: absolute;
+}
+
+#import-export-window textarea {
+	width: 100%;
+	height: 90%;
+	resize: none;
+}
+
 .close {
 	position: absolute;
-	margin-left: 110px;
-	margin-top: 15px;
 	width: 32px;
 	height: 32px;
 	opacity: 0.3;
+	z-index: 500;
 }
 .close:hover {
 	opacity: 1;
@@ -301,6 +317,18 @@ ul {
 }
 .close:after {
 	transform: rotate(-45deg);
+}
+
+#stat-weight-close-button {
+	margin-left: 110px;
+	margin-top: 15px;
+}
+
+#import-export-close-button {
+	top: 0;
+	right: 0;
+	margin-top: 10px;
+	margin-right: 10px;
 }
 
 #avg-dps {

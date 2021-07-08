@@ -95,8 +95,8 @@ $(document).on('click', function (e) {
 })
 
 // User clicks on the X on a section to hide it
-$(document).on('click', '.close', function () {
-  $(this).closest('section').css('display', 'none')
+$(document).on('click', '.close, #export-close-button', function () {
+  $(this).closest('.close-button-target').css('display', 'none')
   return false
 })
 
@@ -107,6 +107,40 @@ $('.btn').hover(function () {
 
 $('.btn').mouseout(function () {
   $(this).find('a').css('color', 'white')
+})
+
+// "Import/Export" button in the Profile Options fieldset
+$('#import-export-button').click(function () {
+  $('#import-export-window textarea').val('')
+  $('#import-export-window').show()
+})
+
+// Importing settings
+$('#import-button').click(function () {
+  const data = JSON.parse($('#import-export-window textarea').val())
+  if (data.auras) localStorage.auras = JSON.stringify(data.auras)
+  if (data.selectedGems) localStorage.selectedGems = JSON.stringify(data.selectedGems)
+  if (data.selectedItems) localStorage.selectedItems = JSON.stringify(data.selectedItems)
+  if (data.talents) localStorage.talents = JSON.stringify(data.talents)
+  if (data.rotation) localStorage.rotation = JSON.stringify(data.rotation)
+  if (data.selectedEnchants) localStorage.selectedEnchants = JSON.stringify(data.selectedEnchants)
+  if (data.settings) localStorage.settings = JSON.stringify(data.settings)
+  location.reload()
+})
+
+// Exporting settings
+$('#export-button').click(function () {
+  const data =
+  {
+    auras: auras,
+    selectedGems: selectedGems,
+    selectedItems: selectedItems,
+    talents: talents,
+    rotation: rotation,
+    selectedEnchants: selectedEnchants,
+    settings: settings
+  }
+  $('#import-export-window textarea').val(JSON.stringify(data)).select()
 })
 
 function updateSetBonuses () {
