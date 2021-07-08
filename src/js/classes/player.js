@@ -413,6 +413,7 @@ class Player {
     if (this.rotation.curse.curseOfTheElements) this.spells.curseOfTheElements = new CurseOfTheElements(this)
     if (this.rotation.curse.curseOfRecklessness) this.spells.curseOfRecklessness = new CurseOfRecklessness(this)
     if (this.rotation.curse.curseOfDoom) this.spells.curseOfDoom = new CurseOfDoom(this)
+    if (this.rotation.finisher.conflagrate) this.spells.conflagrate = new Conflagrate(this)
     if (this.rotation.finisher.shadowburn && this.talents.shadowburn > 0) this.spells.shadowburn = new Shadowburn(this)
     if (this.rotation.finisher.deathCoil) this.spells.deathCoil = new DeathCoil(this)
     if (this.selectedAuras.destructionPotion) this.spells.destructionPotion = new DestructionPotion(this)

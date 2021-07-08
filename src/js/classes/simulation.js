@@ -84,6 +84,7 @@ class Simulation {
     if (this.player.spells.drumsOfBattle && this.player.spells.drumsOfBattle.cooldownRemaining > 0 && this.player.spells.drumsOfBattle.cooldownRemaining < time) time = this.player.spells.drumsOfBattle.cooldownRemaining
     if (this.player.spells.drumsOfWar && this.player.spells.drumsOfWar.cooldownRemaining > 0 && this.player.spells.drumsOfWar.cooldownRemaining < time) time = this.player.spells.drumsOfWar.cooldownRemaining
     if (this.player.spells.drumsOfRestoration && this.player.spells.drumsOfRestoration.cooldownRemaining > 0 && this.player.spells.drumsOfRestoration.cooldownRemaining < time) time = this.player.spells.drumsOfRestoration.cooldownRemaining
+    if (this.player.spells.conflagrate && this.player.spells.conflagrate.cooldownRemaining > 0 && this.player.spells.conflagrate.cooldownRemaining < time) time = this.player.spells.conflagrate.cooldownRemaining
     if (this.player.auras.drumsOfBattle && this.player.auras.drumsOfBattle.active && this.player.auras.drumsOfBattle.durationRemaining < time) time = this.player.auras.drumsOfBattle.durationRemaining
     if (this.player.auras.drumsOfWar && this.player.auras.drumsOfWar.active && this.player.auras.drumsOfWar.durationRemaining < time) time = this.player.auras.drumsOfWar.durationRemaining
     if (this.player.auras.drumsOfRestoration && this.player.auras.drumsOfRestoration.active && this.player.auras.drumsOfRestoration.tickTimerRemaining < time) time = this.player.auras.drumsOfRestoration.tickTimerRemaining
@@ -159,6 +160,7 @@ class Simulation {
     if (this.player.spells.flameCap && this.player.spells.flameCap.cooldownRemaining > 0) this.player.spells.flameCap.tick(time)
     if (this.player.spells.bloodFury && this.player.spells.bloodFury.cooldownRemaining > 0) this.player.spells.bloodFury.tick(time)
     if (this.player.spells.mysticalSkyfireDiamond && this.player.spells.mysticalSkyfireDiamond.cooldownRemaining > 0) this.player.spells.mysticalSkyfireDiamond.tick(time)
+    if (this.player.spells.conflagrate && this.player.spells.conflagrate.cooldownRemaining > 0) this.player.spells.conflagrate.tick(time)
     if (this.player.spells.bloodlust) {
       for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
         if (this.player.spells.bloodlust[i].cooldownRemaining > 0) this.player.spells.bloodlust[i].tick(time)
@@ -281,6 +283,7 @@ class Simulation {
       if (this.player.spells.bandOfTheEternalSage) this.player.spells.bandOfTheEternalSage.reset()
       if (this.player.spells.mysticalSkyfireDiamond) this.player.spells.mysticalSkyfireDiamond.reset()
       if (this.player.spells.insightfulEarthstormDiamond) this.player.spells.insightfulEarthstormDiamond.reset()
+      if (this.player.spells.conflagrate) this.player.spells.conflagrate.reset()
       if (this.player.spells.bloodlust) {
         for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
           this.player.spells.bloodlust[i].reset()
@@ -319,11 +322,13 @@ class Simulation {
             // Not enough time left to cast another filler spell.
             if (timeRemaining <= this.player.spells[this.player.filler].getCastTime() && (this.player.rotation.finisher.deathCoil || this.player.rotation.finisher.shadowburn)) {
               this.player.useCooldowns()
-              // Cast Death Coil if there's time to cast both Death Coil and Shadowburn (if both spells are chosen), otherwise only cast Shadowburn
-              if (this.player.spells.deathCoil && this.player.spells.deathCoil.ready() && (!this.player.spells.shadowburn || (timeRemaining > this.player.getGcdValue() && this.player.mana >= this.player.spells.deathCoil.manaCost + this.player.spells.shadowburn.manaCost))) {
-                this.player.cast('deathCoil')
+              // todo: need to rework this thing to just choose the highest damage spell of the three (death coil, shadowburn, and conflag)
+              if (this.player.spells.conflagrate && this.player.auras.immolate && this.player.auras.immolate.active && this.player.spells.conflagrate.ready()) {
+                this.player.cast('conflagrate')
               } else if (this.player.spells.shadowburn && this.player.spells.shadowburn.ready()) {
                 this.player.cast('shadowburn')
+              } else if (this.player.spells.deathCoil && this.player.spells.deathCoil.ready()) {
+                this.player.cast('deathCoil')
               } else {
                 this.player.cast('lifeTap')
               }

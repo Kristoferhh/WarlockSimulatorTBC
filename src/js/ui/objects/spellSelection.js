@@ -81,6 +81,11 @@ const _spellSelection = {
         name: 'Shadowburn',
         iconName: 'spell_shadow_scourgebuild',
         id: 30546
+      },
+      conflagrate: {
+        name: 'Conflagrate',
+        iconName: 'spell_fire_fireball',
+        id: 30912
       }
     }
   }

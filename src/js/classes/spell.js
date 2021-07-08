@@ -619,6 +619,30 @@ class CurseOfDoom extends Spell {
   }
 }
 
+class Conflagrate extends Spell {
+  constructor (player) {
+    super(player)
+    this.name = 'Conflagrate'
+    this.manaCost = 305 * (1 - 0.01 * player.talents.cataclysm)
+    this.cooldown = 10
+    this.minDmg = 579
+    this.maxDmg = 721
+    this.coefficient = 1.5/3.5
+    this.doesDamage = true
+    this.canCrit = true
+    this.school = 'fire'
+    this.type = 'destruction'
+    this.setup()
+  }
+
+  startCast() {
+    if (this.player.auras.immolate && this.player.auras.immolate.active) {
+      super.startCast()
+      this.player.auras.immolate.active = false
+    }
+  }
+}
+
 class DestructionPotion extends Spell {
   constructor (player) {
     super(player)
