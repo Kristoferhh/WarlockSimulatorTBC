@@ -903,6 +903,40 @@ const items = {
       source: 'Black Temple',
       phase: 3
     },
+    mercilessGladiatorsFelweaveAmice: {
+      name: "Merciless Gladiator's Felweave Amice",
+      stamina: 46,
+      intellect: 10,
+      blue: 1,
+      yellow: 1,
+      socketBonus: {
+        resilienceRating: 3
+      },
+      spellPower: 36,
+      critRating: 14,
+      resilienceRating: 23,
+      source: 'PVP',
+      id: 31979,
+      setId: 615,
+      phase: 2
+    },
+    mercilessGladiatorsDreadweaveMantle: {
+      name: "Merciless Gladiator's Dreadweave Mantle",
+      stamina: 45,
+      intellect: 10,
+      blue: 1,
+      yellow: 1,
+      socketBonus: {
+        resilienceRating: 3
+      },
+      spellPower: 36,
+      resilienceRating: 21,
+      hitRating: 13,
+      source: 'PVP',
+      id: 31976,
+      setId: 568,
+      phase: 2
+    },
     mantleOfTheCorruptor: {
       name: 'Mantle of the Corruptor',
       stamina: 37,
@@ -1456,6 +1490,39 @@ const items = {
       id: 32327,
       source: 'Black Temple',
       phase: 3
+    },
+    mercilessGladiatorsFelweaveRaiment: {
+      name: "Merciless Gladiator's Felweave Raiment",
+      stamina: 57,
+      intellect: 12,
+      red: 1,
+      yellow: 2,
+      socketBonus: {
+        critRating: 4
+      },
+      spellPower: 35,
+      resilienceRating: 26,
+      critRating: 30,
+      id: 31982,
+      source: 'PVP',
+      setId: 615,
+      phase: 2
+    },
+    mercilessGladiatorsDreadweaveRobe: {
+      name: "Merciless Gladiator's Dreadweave Robe",
+      stamina: 69,
+      intellect: 18,
+      red: 1,
+      yellow: 2,
+      socketBonus: {
+        resilienceRating: 4
+      },
+      spellPower: 44,
+      resilienceRating: 24,
+      id: 31977,
+      setId: 568,
+      source: 'PVP',
+      phase: 2
     },
     robeOfHatefulEchoes: {
       name: 'Robe of Hateful Echoes',
@@ -2151,6 +2218,29 @@ const items = {
       source: 'Hyjal Summit',
       phase: 3
     },
+    mercilessGladiatorsFelweaveHandguards: {
+      name: "Merciless Gladiator's Felweave Handguards",
+      stamina: 46,
+      intellect: 15,
+      spellPower: 36,
+      critRating: 19,
+      resilienceRating: 23,
+      setId: 615,
+      id: 31981,
+      source: 'PVP',
+      phase: 2
+    },
+    mercilessGladiatorsDreadweaveGloves: {
+      name: "Merciless Gladiator's Dreadweave Gloves",
+      stamina: 45,
+      intellect: 25,
+      spellPower: 36,
+      resilienceRating: 21,
+      id: 31973,
+      setId: 568,
+      source: 'PVP',
+      phase: 2
+    },
     glovesOfTheCorruptor: {
       name: 'Gloves of the Corruptor',
       stamina: 50,
@@ -2803,6 +2893,29 @@ const items = {
       id: 31053,
       source: 'Black Temple',
       phase: 3
+    },
+    mercilessGladiatorsFelweaveTrousers: {
+      name: "Merciless Gladiator's Felweave Trousers",
+      stamina: 60,
+      intellect: 20,
+      spellPower: 49,
+      critRating: 29,
+      resilienceRating: 30,
+      source: 'PVP',
+      id: 31983,
+      setId: 615,
+      phase: 2
+    },
+    mercilessGladiatorsDreadweaveLeggings: {
+      name: "Merciless Gladiator's Dreadweave Trousers",
+      stamina: 69,
+      intellect: 27,
+      spellPower: 53,
+      resilienceRating: 33,
+      source: 'PVP',
+      id: 31975,
+      setId: 568,
+      phase: 2
     },
     leggingsOfTheCorruptor: {
       name: 'Leggings of the Corruptor',
@@ -3976,6 +4089,14 @@ const items = {
       source: 'Blessings Deck',
       phase: 2 // unsure?
     },
+    essenceOfTheMartyr: {
+      name: 'Essence of the Martyr',
+      spellPower: 28,
+      unique: true,
+      id: 29376,
+      source: "41 Badge of Justice - G'eras",
+      phase: 1
+    },
     iconOfTheSilverCrescent: {
       name: 'Icon of the Silver Crescent',
       spellPower: 43,
@@ -4218,6 +4339,17 @@ const items = {
       source: 'Black Temple',
       phase: 3
     },
+    mercilessGladiatorsSpellblade: {
+      name: "Merciless Gladiator's Spellblade",
+      stamina: 27,
+      intellect: 18,
+      spellPower: 225,
+      resilienceRating: 18,
+      hitRating: 15,
+      id: 32053,
+      source: 'PVP',
+      phase: 2
+    },
     fangOfTheLeviathan: {
       name: 'Fang of the Leviathan',
       stamina: 28,
@@ -4441,6 +4573,16 @@ const items = {
       id: 30911,
       source: 'Hyjal Summit',
       phase: 3
+    },
+    mercilessGladiatorsEndgame: {
+      name: "Merciless Gladiator's Endgame",
+      stamina: 27,
+      intellect: 19,
+      spellPower: 33,
+      resilienceRating: 27,
+      id: 31978,
+      source: 'PVP',
+      phase: 2
     },
     fathomstone: {
       name: 'Fathomstone',
@@ -4671,6 +4813,18 @@ const items = {
       source: 'Hyjal Summit',
       phase: 3
     },
+    mercilessGladiatorsWarStaff: {
+      name: "Merciless Gladiator's War Staff",
+      stamina: 55,
+      intellect: 42,
+      spellPower: 225,
+      critRating: 42,
+      hitRating: 24,
+      resilienceRating: 29,
+      id: 32055,
+      source: 'PVP',
+      phase: 2
+    },
     theNexusKey: {
       name: 'The Nexus Key',
       stamina: 76,
@@ -4833,6 +4987,16 @@ const items = {
       id: 32343,
       source: 'Black Temple',
       phase: 3
+    },
+    mercilessGladiatorsTouchOfDefeat: {
+      name: "Merciless Gladiator's Touch of Defeat",
+      stamina: 15,
+      intellect: 13,
+      spellPower: 16,
+      resilienceRating: 14,
+      id: 32962,
+      source: 'PVP',
+      phase: 2,
     },
     wandOfTheForgottenStar: {
       name: 'Wand of the Forgotten Star',

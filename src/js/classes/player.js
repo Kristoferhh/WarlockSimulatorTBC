@@ -303,6 +303,7 @@ class Player {
     if (this.trinketIds.includes(25936)) this.trinkets.push(new TerokkarTabletOfVim(this))
     if (this.trinketIds.includes(28040)) this.trinkets.push(new VengeanceOfTheIllidari(this))
     if (this.trinketIds.includes(24126)) this.trinkets.push(new FigurineLivingRubySerpent(this))
+    if (this.trinketIds.includes(29376)) this.trinkets.push(new EssenceOfTheMartyr(this))
 
     // Assign the filler spell.
     this.filler = null
@@ -534,9 +535,9 @@ class Player {
     for (let i = 0; i < this.trinkets.length; i++) {
       if (this.trinkets[i] && this.trinkets[i].ready()) {
         this.trinkets[i].use()
-        // Set the other on-use trinket (if another is equipped) on cooldown for the duration of the trinket just used
+        // Set the other on-use trinket (if another is equipped) on cooldown for the duration of the trinket just used if the trinkets share cooldown
         const otherTrinketSlot = i == 1 ? 2 : 1
-        if (this.trinkets[otherTrinketSlot]) {
+        if (this.trinkets[otherTrinketSlot] && this.trinkets[otherTrinketSlot].sharesCooldown && this.trinkets[i].sharesCooldown) {
           this.trinkets[otherTrinketSlot].cooldownRemaining = Math.max(this.trinkets[otherTrinketSlot].cooldownRemaining, this.trinkets[i].duration)
         }
       }

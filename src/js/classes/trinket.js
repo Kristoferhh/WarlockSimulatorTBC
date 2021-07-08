@@ -213,3 +213,16 @@ class FigurineLivingRubySerpent extends Trinket {
     }
   }
 }
+
+class EssenceOfTheMartyr extends Trinket {
+  constructor (player) {
+    super(player)
+    this.name = 'Essence of the Martyr'
+    this.cooldown = 120
+    this.duration = 20
+    this.stats = {
+      spellPower: 99
+    }
+    this.sharesCooldown = false
+  }
+}
