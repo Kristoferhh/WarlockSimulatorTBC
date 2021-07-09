@@ -177,7 +177,7 @@ class Pet {
       this.stats.baseStats.ap = (this.stats.baseStats.strength + this.stats.buffs.strength) * 2 - 20
       this.stats.ap = this.stats.baseStats.ap + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.57
       this.stats.agility = this.stats.baseStats.agility + this.stats.buffs.agility
-      this.stats.critChance = 1 + this.player.talents.demonicTactics + (this.stats.agility * this.stats.agilityModifier) / 33 + this.stats.buffs.critChance
+      this.stats.critChance = this.player.talents.demonicTactics + (this.stats.agility * this.stats.agilityModifier) * 0.04 + 0.65 + this.stats.buffs.critChance
       this.stats.spellCritChance = 5 + this.player.talents.demonicTactics + this.stats.buffs.spellCritChance
       this.stats.spellPower = this.stats.buffs.spellPower + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15
       this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * 11.555 * this.stats.intellectModifier
