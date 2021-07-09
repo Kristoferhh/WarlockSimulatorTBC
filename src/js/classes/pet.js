@@ -350,7 +350,6 @@ class Felguard extends Pet {
     this.stats.baseStats.intellect = 133
     this.stats.baseStats.spirit = 122
     this.stats.baseStats.mana = 893
-    this.stats.baseStats.ap = 51.7 // needs confirmation
     this.dmg = 206 // base melee damage
     this.stats.damageModifier *= 1 + (0.01 * player.talents.masterDemonologist)
     this.player.damageBreakdown.melee = { name: 'Melee (Felguard)' }
