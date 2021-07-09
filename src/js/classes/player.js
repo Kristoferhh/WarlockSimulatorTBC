@@ -369,7 +369,7 @@ class Player {
       this.combatlog.push('Intellect: ' + Math.round(this.pet.stats.intellect * this.pet.stats.intellectModifier))
       this.combatlog.push('Strength: ' + Math.round((this.pet.stats.baseStats.strength + this.pet.stats.buffs.strength) * this.pet.stats.strengthModifier))
       this.combatlog.push('Agility: ' + Math.round(this.pet.stats.agility * this.pet.stats.agilityModifier))
-      this.combatlog.push('Spirit: ' + Math.round(this.pet.stats.spirit * this.pet.stats.spiritModifier))
+      this.combatlog.push('Spirit: ' + Math.round((this.pet.stats.baseStats.spirit + this.pet.stats.spirit) * this.pet.stats.spiritModifier))
       this.combatlog.push('Attack Power: ' + Math.round(this.pet.stats.ap * this.pet.stats.apModifier))
       this.combatlog.push('Spell Power: ' + Math.round(this.pet.stats.spellPower))
       this.combatlog.push('Mana: ' + Math.round(this.pet.stats.maxMana))

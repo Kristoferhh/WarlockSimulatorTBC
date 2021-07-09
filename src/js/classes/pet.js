@@ -168,19 +168,19 @@ class Pet {
     this.armorMultiplier = Math.max(0.25, this.armorMultiplier)
   }
 
-  // Player -> Pet stat scaling info taken from https://wowwiki-archive.fandom.com/wiki/Warlock?oldid=1618728
+  // Player -> Pet stat scaling info taken from https://wowwiki-archive.fandom.com/wiki/Warlock?oldid=1618728 and from Max's research on the warlock discord
   calculateStatsFromPlayer (stat = 'stamina') {
     if (stat == 'stamina' || stat == 'intellect' || stat == 'spellPower' || stat == 'shadowPower' || stat == 'firePower') {
-      this.stats.stamina = this.stats.baseStats.stamina + this.stats.buffs.stamina + 0.3 * (this.player.stats.stamina * this.player.stats.staminaModifier)
-      this.stats.intellect = this.stats.baseStats.intellect + this.stats.buffs.intellect + 0.3 * (this.player.stats.intellect * this.player.stats.intellectModifier)
+      this.stats.stamina = this.stats.baseStats.stamina + this.stats.buffs.stamina + (0.3 * this.player.stats.stamina * this.player.stats.staminaModifier)
+      this.stats.intellect = this.stats.baseStats.intellect + this.stats.buffs.intellect + (0.3 * this.player.stats.intellect * this.player.stats.intellectModifier)
       this.player.demonicKnowledgeSp = ((this.stats.stamina * this.stats.staminaModifier) + (this.stats.intellect * this.stats.intellectModifier)) * (0.04 * this.player.talents.demonicKnowledge)
-      // Need confirmation that 1 strength = 1.869 ap
-      this.stats.ap = this.stats.baseStats.ap + this.stats.buffs.ap + (this.stats.baseStats.strength + this.stats.buffs.strength) * 1.869 + (this.player.stats.spellPower + this.player.demonicKnowledgeSp + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.57
+      this.stats.baseStats.ap = (this.stats.baseStats.strength + this.stats.buffs.strength) * 2 - 20
+      this.stats.ap = this.stats.baseStats.ap + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.57
       this.stats.agility = this.stats.baseStats.agility + this.stats.buffs.agility
       this.stats.critChance = 1 + this.player.talents.demonicTactics + (this.stats.agility * this.stats.agilityModifier) / 33 + this.stats.buffs.critChance
       this.stats.spellCritChance = 5 + this.player.talents.demonicTactics + this.stats.buffs.spellCritChance
-      this.stats.spellPower = this.stats.buffs.spellPower + (this.player.stats.spellPower + this.player.demonicKnowledgeSp + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15
-      this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * 4.7 * this.stats.intellectModifier // confirm
+      this.stats.spellPower = this.stats.buffs.spellPower + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15
+      this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * 11.555 * this.stats.intellectModifier
       this.player.combatLog("Recalculated pet's stats")
     }
   }
@@ -343,13 +343,14 @@ class Felguard extends Pet {
     this.name = 'Felguard'
     this.type = PetType.MELEE
     this.pet = PetName.FELGUARD
-    this.stats.baseStats.stamina = 322
+    this.stats.baseStats.health = 440
+    this.stats.baseStats.stamina = 280
     this.stats.baseStats.strength = 153
-    this.stats.baseStats.agility = 109
-    this.stats.baseStats.intellect = 152
+    this.stats.baseStats.agility = 108
+    this.stats.baseStats.intellect = 133
     this.stats.baseStats.spirit = 122
-    this.stats.baseStats.mana = 849
-    this.stats.baseStats.ap = 104.5 // needs confirmation
+    this.stats.baseStats.mana = 893
+    this.stats.baseStats.ap = 51.7 // needs confirmation
     this.dmg = 206 // base melee damage
     this.stats.damageModifier *= 1 + (0.01 * player.talents.masterDemonologist)
     this.player.damageBreakdown.melee = { name: 'Melee (Felguard)' }
@@ -357,11 +358,7 @@ class Felguard extends Pet {
   }
 
   getAttackPower () {
-    let attackPower = super.getAttackPower()
-    if (this.pet == PetName.FELGUARD) {
-      attackPower *= (1 + 0.05 * this.auras.demonicFrenzy.stacks)
-    }
-    return attackPower
+    return super.getAttackPower() * (1 + 0.05 * this.auras.demonicFrenzy.stacks)
   }
 
   reset () {
