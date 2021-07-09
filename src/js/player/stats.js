@@ -171,7 +171,7 @@ function refreshCharacterStats () {
   $('#character-mana-val').text(Math.round((characterStats.mana + (characterStats.intellect * characterStats.intellectModifier) * manaPerInt) * (1 + (0.01 * talents.felIntellect))))
   $('#character-stamina-val').text(Math.round(stamina * staminaModifier))
   $('#character-intellect-val').text(Math.round(characterStats.intellect * characterStats.intellectModifier))
-  $('#character-spirit-val').text(Math.round(characterStats.spirit * characterStats.spiritModifier))
+  $('#character-spirit-val').text(Math.round(characterStats.spirit * spiritModifier))
   $('#character-spell-power-val').text(spellPower)
   $('#character-shadow-power-val').text(characterStats.shadowPower + ' (' + (characterStats.shadowPower + spellPower) + ')')
   $('#character-fire-power-val').text(characterStats.firePower + ' (' + (characterStats.firePower + spellPower) + ')')
