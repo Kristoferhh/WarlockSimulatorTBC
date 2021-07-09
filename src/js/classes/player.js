@@ -345,9 +345,6 @@ class Player {
       else if (selectedPet == PetName.SUCCUBUS) this.pet = new Succubus(this, settings)
       else if (selectedPet == PetName.FELHUNTER) this.pet = new Felhunter(this, settings)
       else if (selectedPet == PetName.FELGUARD && settings.talents.summonFelguard > 0) this.pet = new Felguard(this, settings)
-      if (this.pet) {
-        this.pet.initialize()
-      }
     }
 
     this.combatlog.push('---------------- Player stats ----------------')
@@ -366,13 +363,20 @@ class Player {
     this.combatlog.push('MP5: ' + this.stats.mp5)
     this.combatlog.push('Spell Penetration: ' + this.stats.spellPen)
     if (this.pet) {
+      let petAp = this.pet.stats.ap * this.pet.stats.apModifier
+      // Divide away the hidden 10% Felguard attack power bonus for the combat log to avoid confusion
+      if (this.pet.pet == PetName.FELGUARD) {
+        petAp /= 1.1
+      } else if (this.pet.pet == PetName.SUCCUBUS) {
+        petAp /= 1.05
+      }
       this.combatlog.push('---------------- Pet stats ----------------')
       this.combatlog.push('Stamina: ' + Math.round(this.pet.stats.stamina * this.pet.stats.staminaModifier))
       this.combatlog.push('Intellect: ' + Math.round(this.pet.stats.intellect * this.pet.stats.intellectModifier))
       this.combatlog.push('Strength: ' + Math.round((this.pet.stats.baseStats.strength + this.pet.stats.buffs.strength) * this.pet.stats.strengthModifier))
       this.combatlog.push('Agility: ' + Math.round(this.pet.stats.agility * this.pet.stats.agilityModifier))
       this.combatlog.push('Spirit: ' + Math.round((this.pet.stats.baseStats.spirit + this.pet.stats.spirit) * this.pet.stats.spiritModifier))
-      this.combatlog.push('Attack Power: ' + Math.round(this.pet.stats.ap * this.pet.stats.apModifier))
+      this.combatlog.push('Attack Power: ' + Math.round(petAp))
       this.combatlog.push('Spell Power: ' + Math.round(this.pet.stats.spellPower))
       this.combatlog.push('Mana: ' + Math.round(this.pet.stats.maxMana))
       this.combatlog.push('MP5: ' + Math.round(this.pet.stats.mp5))

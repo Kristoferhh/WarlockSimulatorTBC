@@ -155,6 +155,13 @@ class Pet {
     if (this.playerAuras.scrollOfStrengthV) this.stats.buffs.strength += 20
     if (this.playerAuras.scrollOfAgilityV) this.stats.buffs.agility += 20
     if (this.playerAuras.scrollOfSpiritV) this.stats.spirit += 20
+    
+    // Hidden ap modifiers (source: Max on warlock discord)
+    if (this.pet == PetName.FELGUARD) {
+      this.stats.apModifier *= 1.1
+    } else if (this.pet == PetName.SUCCUBUS) {
+      this.stats.apModifier *= 1.05
+    }
 
     // Calculate armor
     if (this.type == PetType.MELEE) {
@@ -181,11 +188,16 @@ class Pet {
       this.stats.spellCritChance = 5 + this.player.talents.demonicTactics + this.stats.buffs.spellCritChance
       this.stats.spellPower = this.stats.buffs.spellPower + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15
       this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * 11.555 * this.stats.intellectModifier
+      if (this.type == PetType.MELEE) {
+        // Halp, need confirmation that this is actually the right way to get its average melee damage.
+        this.dmg = (this.getAttackPower() / 14 + 51.7) * this.baseMeleeSpeed
+      }
       this.player.combatLog("Recalculated pet's stats")
     }
   }
 
   setup () {
+    this.initialize()
     this.calculateStatsFromAuras()
     this.calculateStatsFromPlayer()
   }
@@ -305,8 +317,7 @@ class Succubus extends Pet {
     this.stats.baseStats.spirit = 122
     this.stats.baseStats.strength = 153
     this.stats.baseStats.agility = 109
-    this.stats.baseStats.ap = 104.5 // needs confirmation
-    this.dmg = 105
+    this.baseMeleeSpeed = 2
     this.healthPerStamina = 7
     this.stats.damageModifier *= 1 + (0.02 * player.talents.masterDemonologist)
     this.setup()
@@ -350,7 +361,7 @@ class Felguard extends Pet {
     this.stats.baseStats.intellect = 133
     this.stats.baseStats.spirit = 122
     this.stats.baseStats.mana = 893
-    this.dmg = 206 // base melee damage
+    this.baseMeleeSpeed = 2
     this.stats.damageModifier *= 1 + (0.01 * player.talents.masterDemonologist)
     this.player.damageBreakdown.melee = { name: 'Melee (Felguard)' }
     this.setup()

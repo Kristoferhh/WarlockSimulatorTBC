@@ -66,7 +66,7 @@ class PetSpell {
     } else {
       combatLogEntry += ' casts ' + this.name
       if (this.varName === 'melee') {
-        combatLogEntry += '. Attack Speed: ' + this.pet.spells.melee.getCooldown() + ' (' + Math.round((this.pet.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base attack speed of ' + this.pet.spells.melee.cooldown.toFixed(2) + ')'
+        combatLogEntry += '. Attack Speed: ' + this.pet.spells.melee.getCooldown().toFixed(2) + ' (' + Math.round((this.pet.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base attack speed of ' + this.pet.spells.melee.cooldown.toFixed(2) + ')'
       }
     }
     if (this.manaCost > 0) {
@@ -182,7 +182,7 @@ class PetSpell {
     if (isCrit) combatLogMsg += '*'
     combatLogMsg += dmg
     if (isCrit) combatLogMsg += '*'
-    combatLogMsg += ' (' + baseDamage + ' Base Damage'
+    combatLogMsg += ' (' + Math.round(baseDamage) + ' Base Damage'
     if (this.type == SpellTypes.MAGICAL) {
       combatLogMsg += ' - ' + Math.round(this.coefficient * 1000) / 1000 + ' Coefficient'
       combatLogMsg += ' - ' + Math.round(this.pet.stats.spellPower) + ' Spell Power'
@@ -225,10 +225,13 @@ class Melee extends PetSpell {
     this.cooldown = 2
     this.name = 'Melee'
     this.varName = 'melee'
-    this.dmg = pet.dmg
     this.pet.player.damageBreakdown[this.varName] = { name: 'Melee (' + this.pet.name + ')' }
     this.resetsFiveSecondRule = false
     this.type = SpellTypes.PHYSICAL
+  }
+
+  getBaseDamage() {
+    return this.pet.dmg
   }
 
   getCooldown() {
