@@ -383,6 +383,11 @@ const _auras = {
     heading: 'Pet Buffs (your pet also inherits group-wide buffs selected above)',
     type: 'spell',
     auras: {
+      kiblersBits: {
+        name: "Kibler's Bits",
+        iconName: 'inv_misc_food_49',
+        id: 43771
+      },
       heroicPresence: {
         name: 'Heroic Presence',
         iconName: 'inv_helmet_21',

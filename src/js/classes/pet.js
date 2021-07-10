@@ -159,6 +159,10 @@ class Pet {
     if (this.playerAuras.scrollOfStrengthV) this.stats.buffs.strength += 20
     if (this.playerAuras.scrollOfAgilityV) this.stats.buffs.agility += 20
     if (this.playerAuras.scrollOfSpiritV) this.stats.spirit += 20
+    if (this.playerAuras.kiblersBits) {
+      this.stats.buffs.strength += 20
+      this.stats.spirit += 20
+    }
     if (this.player.simSettings.race == 'orc') this.stats.damageModifier *= 1.05
     
     // Hidden ap modifiers (source: Max on warlock discord)
