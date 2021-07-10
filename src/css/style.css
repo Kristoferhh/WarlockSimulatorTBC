@@ -258,7 +258,7 @@ ul {
 }
 
 .breakdown-table td, .breakdown-table th {
-	padding: 10px;
+	padding: 8px;
 	border: 1px solid black;
 	border-collapse: collapse;
 }
