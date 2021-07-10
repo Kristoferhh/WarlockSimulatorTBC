@@ -73,7 +73,7 @@ const presetTalents = {
     improvedLifeTap: 2,
     soulSiphon: 2,
     improvedCurseOfAgony: 2,
-    amplifyMagic: 1,
+    amplifyCurse: 1,
     nightfall: 2,
     empoweredCorruption: 3,
     improvedShadowBolt: 5,
