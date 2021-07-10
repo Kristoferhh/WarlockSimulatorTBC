@@ -401,9 +401,9 @@ class Player {
     this.spells = {
       lifeTap: new LifeTap(this)
     }
-    if (this.rotation.filler.shadowBolt || this.filler == 'shadowBolt') this.spells.shadowBolt = new ShadowBolt(this)
+    if (this.rotation.filler.shadowBolt || this.filler == 'shadowBolt' || this.talents.nightfall > 0) this.spells.shadowBolt = new ShadowBolt(this)
+    if (this.rotation.filler.incinerate) this.spells.incinerate = new Incinerate(this)
     else if (this.rotation.filler.searingPain) this.spells.searingPain = new SearingPain(this)
-    else if (this.rotation.filler.incinerate) this.spells.incinerate = new Incinerate(this)
     if (this.rotation.dot.corruption) this.spells.corruption = new Corruption(this)
     if (this.rotation.dot.unstableAffliction && this.talents.unstableAffliction) this.spells.unstableAffliction = new UnstableAffliction(this)
     if (this.rotation.dot.siphonLife && this.talents.siphonLife) this.spells.siphonLife = new SiphonLife(this)

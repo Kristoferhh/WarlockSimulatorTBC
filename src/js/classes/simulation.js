@@ -339,7 +339,7 @@ class Simulation {
               } else {
                 this.player.useCooldowns()
                 // Cast Curse of Doom if there's more than 60 seconds remaining
-                if (this.player.curse && !this.player.auras[this.player.curse].active && this.player.curse == 'curseOfDoom' && timeRemaining > 60) {
+                if (this.player.curse && !this.player.auras[this.player.curse].active && this.player.curse == 'curseOfDoom' && timeRemaining > 60 && this.player.spells.curseOfDoom.ready()) {
                   this.player.cast('curseOfDoom')
                 }
                 // Cast Curse of Agony if CoA is the selected curse or if Curse of Doom is the selected curse and there's less than 60 seconds remaining of the fight
@@ -351,7 +351,7 @@ class Simulation {
                   this.player.cast('corruption')
                 }
                 // Cast Shadow Bolt if Shadow Trance (Nightfall) is active and Corruption is active as well to avoid potentially wasting another Nightfall proc
-                else if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.corruption.active) {
+                else if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.corruption.active && this.player.spells.shadowBolt.ready()) {
                   this.player.cast('shadowBolt')
                 }
                 // Cast Unstable Affliction if it's not up or if it's about to expire
@@ -365,6 +365,10 @@ class Simulation {
                 // Cast Immolate if it's not up or about to expire
                 else if (this.player.spells.immolate && (!this.player.auras.immolate.active || (this.player.auras.immolate.ticksRemaining == 1 && this.player.auras.immolate.tickTimerRemaining < this.player.spells.immolate.getCastTime())) && this.player.spells.immolate.ready() && (timeRemaining - this.player.spells.immolate.getCastTime()) >= this.player.auras.immolate.minimumDuration) {
                   this.player.cast('immolate')
+                }
+                // Cast Shadow Bolt if Shadow Trance (Nightfall) is active
+                else if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.spells.shadowBolt.ready()) {
+                  this.player.cast('shadowBolt')
                 }
                 // Cast Life Tap if there's more than 20 seconds left of the fight, there are no "important auras" active.
                 // This is to try and avoid having to cast Life Tap when you e.g. have a trinket active or Bloodlust 
