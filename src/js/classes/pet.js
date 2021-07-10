@@ -27,6 +27,8 @@ class Pet {
     this.spiritTickTimerRemaining = 2
     this.mode = this.simSettings.petMode
     this.critMultiplier = 1.5
+    this.glancingBlowMultiplier = 1 - (0.1 + (player.enemy.level * 5 - player.level * 5) / 100)
+    this.glancingBlowChance = 10 + player.enemy.level * 5 - player.level * 5
     this.spells = {}
     this.auras = {}
     this.stats = {
@@ -157,6 +159,7 @@ class Pet {
     if (this.playerAuras.scrollOfStrengthV) this.stats.buffs.strength += 20
     if (this.playerAuras.scrollOfAgilityV) this.stats.buffs.agility += 20
     if (this.playerAuras.scrollOfSpiritV) this.stats.spirit += 20
+    if (this.player.simSettings.race == 'orc') this.stats.damageModifier *= 1.05
     
     // Hidden ap modifiers (source: Max on warlock discord)
     if (this.pet == PetName.FELGUARD) {

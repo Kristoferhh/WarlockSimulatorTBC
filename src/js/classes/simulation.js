@@ -162,7 +162,7 @@ class Simulation {
     if (this.player.spells.bloodFury && this.player.spells.bloodFury.cooldownRemaining > 0) this.player.spells.bloodFury.tick(time)
     if (this.player.spells.mysticalSkyfireDiamond && this.player.spells.mysticalSkyfireDiamond.cooldownRemaining > 0) this.player.spells.mysticalSkyfireDiamond.tick(time)
     if (this.player.spells.conflagrate && this.player.spells.conflagrate.cooldownRemaining > 0) this.player.spells.conflagrate.tick(time)
-    if (this.player.spells.shadowfury && this.player.spells.shadowfury.cooldownRemaining > 0) this.player.spells.shadowfury.tick(time)
+    if (this.player.spells.shadowfury && (this.player.spells.shadowfury.cooldownRemaining > 0 || this.player.spells.shadowfury.casting)) this.player.spells.shadowfury.tick(time)
     if (this.player.spells.bloodlust) {
       for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
         if (this.player.spells.bloodlust[i].cooldownRemaining > 0) this.player.spells.bloodlust[i].tick(time)

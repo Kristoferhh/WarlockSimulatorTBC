@@ -96,13 +96,21 @@ class PetSpell {
       this.pet.player.damageBreakdown[this.varName].dodges = this.pet.player.damageBreakdown[this.varName].dodges + 1 || 1
       if (!isMiss) this.pet.player.combatLog(this.pet.name + ' ' + this.name + ' *dodge*')
     }
+    // Check for glancing blow if melee attack
+    let isGlancing = false
+    if (this.varName == 'melee') {
+      isGlancing = random(1,100) <= this.pet.glancingBlowChance
+      if (isGlancing) {
+        this.pet.player.damageBreakdown[this.varName].glancingBlows = this.pet.player.damageBreakdown[this.varName].glancingBlows + 1 || 1
+      }
+    }
 
     if (!isMiss && !isDodge) {
-      this.damage(isCrit)
+      this.damage(isCrit, isGlancing)
     }
   }
 
-  damage (isCrit) {
+  damage (isCrit, isGlancing) {
     const baseDamage = this.getBaseDamage()
     let dmg = baseDamage
     let modifier = this.modifier
@@ -167,6 +175,10 @@ class PetSpell {
     }
     // Pet damage modifier (from Unholy Power, Master Demonologist, and such)
     modifier *= this.pet.stats.damageModifier
+
+    if (isGlancing) {
+      dmg *= this.pet.glancingBlowMultiplier
+    }
     
     dmg *= modifier
 
@@ -182,12 +194,14 @@ class PetSpell {
     if (isCrit) combatLogMsg += '*'
     combatLogMsg += dmg
     if (isCrit) combatLogMsg += '*'
+    if (isGlancing) combatLogMsg += ' Glancing'
     combatLogMsg += ' (' + Math.round(baseDamage) + ' Base Damage'
     if (this.type == SpellTypes.MAGICAL) {
       combatLogMsg += ' - ' + Math.round(this.coefficient * 1000) / 1000 + ' Coefficient'
       combatLogMsg += ' - ' + Math.round(this.pet.stats.spellPower) + ' Spell Power'
       combatLogMsg += ' - ' + Math.round(partialResistMultiplier * 1000) / 10 + '% Partial Resist Multiplier'
     } else if (this.type == SpellTypes.PHYSICAL) {
+      if (isGlancing) combatLogMsg += ' - ' + this.pet.glancingBlowMultiplier * 100 + '% Glancing Blow Multiplier'
       combatLogMsg += ' - ' + Math.round(this.pet.getAttackPower()) + ' Attack Power'
       combatLogMsg += ' - ' + (Math.round(this.pet.armorMultiplier * 10000) / 100) + '% Damage Modifier (Armor)'
     }

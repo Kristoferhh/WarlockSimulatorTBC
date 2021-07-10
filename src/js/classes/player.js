@@ -415,7 +415,7 @@ class Player {
     if (this.rotation.finisher.conflagrate && this.talents.conflagrate == 1) this.spells.conflagrate = new Conflagrate(this)
     if (this.rotation.finisher.shadowburn && this.talents.shadowburn > 0) this.spells.shadowburn = new Shadowburn(this)
     if (this.rotation.finisher.deathCoil) this.spells.deathCoil = new DeathCoil(this)
-    if (this.rotation.optional.shadowfury && this.talents.shadowfury == 1) this.spells.shadowfury = new Shadowfury(this)
+    if (this.rotation.other.shadowfury && this.talents.shadowfury == 1) this.spells.shadowfury = new Shadowfury(this)
     if (this.selectedAuras.destructionPotion) this.spells.destructionPotion = new DestructionPotion(this)
     if (this.selectedAuras.superManaPotion) this.spells.superManaPotion = new SuperManaPotion(this)
     if (this.selectedAuras.demonicRune) this.spells.demonicRune = new DemonicRune(this)

@@ -418,6 +418,7 @@ class Shadowfury extends Spell {
     this.minDmg = 612
     this.maxDmg = 728
     this.manaCost = 710 * (1 - 0.01 * player.talents.cataclysm)
+    this.castTime = 0.5
     this.doesDamage = true
     this.school = 'shadow'
     this.type = 'destruction'

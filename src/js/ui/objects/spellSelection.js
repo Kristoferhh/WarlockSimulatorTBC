@@ -89,8 +89,8 @@ const _spellSelection = {
       }
     }
   },
-  optional: {
-    header: 'Optional',
+  other: {
+    header: 'Other',
     spells: {
       shadowfury: {
         name: 'Shadowfury',
