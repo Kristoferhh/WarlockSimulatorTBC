@@ -50,6 +50,13 @@ ul {
 	text-align: right;
 }
 
+#pet-wip-note {
+	padding: 10px;
+	margin-top: 0px;
+	text-align: center;
+	border-bottom: 1px solid gray;
+}
+
 #stat-weights {
 	width: 300px;
 	border-bottom: none;
