@@ -439,7 +439,7 @@ ul {
 	line-height: 0px;
 }
 
-#guybrush-note a:visited, #paypal-note a:visited {
+#guybrush-note a, #paypal-note a {
 	color: #fff;
 }
 
