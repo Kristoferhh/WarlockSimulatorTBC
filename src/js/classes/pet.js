@@ -216,7 +216,7 @@ class Pet {
   reset () {
     this.stats.mana = this.stats.maxMana
     this.fiveSecondRuleTimerRemaining = 5 // If higher than 0 then the pet can't gain mana from Spirit regen (July 2021 update: I have no idea what this comment means)
-    this.spiritTickTimerRemaining = 2
+    this.spiritTickTimerRemaining = 5
     if (this.type == PetType.MELEE) {
       this.spells.melee.cooldownRemaining = 0
     }
@@ -260,16 +260,17 @@ class Pet {
   }
 
   tick (t) {
-    if (this.spells.melee) this.spells.melee.tick(t)
+    if (this.spells.melee) {
+      this.spells.melee.tick(t)
+    }
     this.castTimeRemaining = Math.max(0, this.castTimeRemaining - t)
     this.fiveSecondRuleTimerRemaining = Math.max(0, this.fiveSecondRuleTimerRemaining - t)
     this.spiritTickTimerRemaining = Math.max(0, this.spiritTickTimerRemaining - t)
     if (this.spiritTickTimerRemaining <= 0) {
-      this.spiritTickTimerRemaining = 2
+      this.spiritTickTimerRemaining = 5
       if (this.fiveSecondRuleTimerRemaining <= 0) {
-        // Fromula from https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1601392
-        // Divide by 2.5 since it calculates mana per five seconds but the tick is every 2 seconds
-        const manaGain = (5 * Math.sqrt(this.stats.intellect * this.stats.intellectModifier) * (this.stats.spirit * this.stats.spiritModifier) * 0.009327) / 2.5
+        // Formula from Max on the warlock discord https://discord.com/channels/253210018697052162/823476479550816266/836007015762886707
+        const manaGain = ((this.stats.baseStats.spirit + this.stats.spirit) * this.stats.spiritModifier) + 0.7 * (this.stats.intellect * this.stats.intellectModifier) - 258
         const currentMana = this.stats.mana
         this.stats.mana = Math.min(this.stats.maxMana, this.stats.mana + manaGain)
         if (this.stats.mana > currentMana) {
