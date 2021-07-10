@@ -424,11 +424,15 @@ ul {
 	font-weight: bold;
 }
 
-#guybrush-note {
+#guybrush-note, #paypal-note {
 	font-size: 12px;
 }
 
-#guybrush-note a:visited {
+#paypal-note {
+	line-height: 0px;
+}
+
+#guybrush-note a:visited, #paypal-note a:visited {
 	color: #fff;
 }
 
@@ -595,6 +599,10 @@ img[data-color='meta'] {
 
 #item-selection-table td, #enchant-selection-table td {
 	padding: 5px;
+}
+
+#sidebar-sets {
+	line-height: 5px;
 }
 
 .item-row a, .enchant-row a, .sidebar-set-bonus a {
