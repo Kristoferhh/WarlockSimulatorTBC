@@ -13,6 +13,7 @@ class DamageOverTime {
     this.active = false
     this.name = null
     this.coefficient = 0
+    this.amplified = false // Amplify Curse
   }
 
   setup () {
@@ -47,6 +48,13 @@ class DamageOverTime {
     if (this.varName == 'siphonLife') {
       this.isbActive = (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.simSettings.customIsbUptime == 'no')
     }
+    // Amplify Curse
+    if ((this.varName == 'curseOfAgony' || this.varName == 'curseOfDoom') && this.player.auras.amplifyCurse && this.player.auras.amplifyCurse.active) {
+      this.amplified = true
+      this.player.auras.amplifyCurse.fade()
+    } else {
+      this.amplified = false
+    }
   }
 
   fade (endOfIteration = false) {
@@ -71,6 +79,11 @@ class DamageOverTime {
       if (this.tickTimerRemaining == 0) {
         const sp = this.snapshots ? this.spellPower : this.player.getSpellPower() + this.player.stats[this.school + 'Power']
         let modifier = this.getModifier()
+
+        // Amplify Curse
+        if (this.amplified) {
+          modifier *= 1.5
+        }
 
         // Add bonus from ISB (without removing ISB stacks since it's a dot)
         if ((this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.varName != 'siphonLife') || (this.varName == 'siphonLife' && this.isbActive)) {

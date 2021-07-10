@@ -78,6 +78,10 @@ class Simulation {
       if (this.player.spells.mysticalSkyfireDiamond.cooldownRemaining > 0 && this.player.spells.mysticalSkyfireDiamond.cooldownRemaining < time) time = this.player.spells.mysticalSkyfireDiamond.cooldownRemaining
       if (this.player.auras.mysticalSkyfireDiamond.active && this.player.spells.mysticalSkyfireDiamond.durationRemaining < time) time = this.player.auras.mysticalSkyfireDiamond.durationRemaining
     }
+    if (this.player.spells.amplifyCurse) {
+      if (this.player.spells.amplifyCurse.cooldownRemaining > 0 && this.player.spells.amplifyCurse.cooldownRemaining < time) time = this.player.spells.amplifyCurse.cooldownRemaining
+      if (this.player.auras.amplifyCurse.active && this.player.auras.amplifyCurse.durationRemaining < time) time = this.player.auras.amplifyCurse.durationRemaining
+    }
     if (this.player.spells.shadowfury && this.player.spells.shadowfury.cooldownRemaining > 0 && this.player.spells.shadowfury.cooldownRemaining < time) time = this.player.spells.shadowfury.cooldownRemaining
     if (this.player.spells.insightfulEarthstormDiamond && this.player.spells.insightfulEarthstormDiamond.cooldownRemaining > 0 && this.player.spells.insightfulEarthstormDiamond.cooldownRemaining < time) time = this.player.spells.insightfulEarthstormDiamond.cooldownRemaining
     if (this.player.spells.timbalsFocusingCrystal && this.player.spells.timbalsFocusingCrystal.cooldownRemaining > 0 && this.player.spells.timbalsFocusingCrystal.cooldownRemaining < time) time = this.player.spells.timbalsFocusingCrystal.cooldownRemaining
@@ -163,11 +167,7 @@ class Simulation {
     if (this.player.spells.mysticalSkyfireDiamond && this.player.spells.mysticalSkyfireDiamond.cooldownRemaining > 0) this.player.spells.mysticalSkyfireDiamond.tick(time)
     if (this.player.spells.conflagrate && this.player.spells.conflagrate.cooldownRemaining > 0) this.player.spells.conflagrate.tick(time)
     if (this.player.spells.shadowfury && (this.player.spells.shadowfury.cooldownRemaining > 0 || this.player.spells.shadowfury.casting)) this.player.spells.shadowfury.tick(time)
-    if (this.player.spells.bloodlust) {
-      for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
-        if (this.player.spells.bloodlust[i].cooldownRemaining > 0) this.player.spells.bloodlust[i].tick(time)
-      }
-    }
+    if (this.player.spells.amplifyCurse && this.player.spells.amplifyCurse.cooldownRemaining > 0) this.player.spells.amplifyCurse.tick(time)
     if (this.player.spells.drumsOfBattle && this.player.spells.drumsOfBattle.cooldownRemaining > 0) this.player.spells.drumsOfBattle.tick(time)
     if (this.player.spells.drumsOfWar && this.player.spells.drumsOfWar.cooldownRemaining > 0) this.player.spells.drumsOfWar.tick(time)
     if (this.player.spells.drumsOfRestoration && this.player.spells.drumsOfRestoration.cooldownRemaining > 0) this.player.spells.drumsOfRestoration.tick(time)
@@ -182,6 +182,11 @@ class Simulation {
     if (this.player.spells.sextantOfUnstableCurrents && this.player.spells.sextantOfUnstableCurrents.cooldownRemaining > 0) this.player.spells.sextantOfUnstableCurrents.tick(time)
     if (this.player.spells.bandOfTheEternalSage && this.player.spells.bandOfTheEternalSage.cooldownRemaining > 0) this.player.spells.bandOfTheEternalSage.tick(time)
     if (this.player.spells.insightfulEarthstormDiamond && this.player.spells.insightfulEarthstormDiamond.cooldownRemaining > 0) this.player.spells.insightfulEarthstormDiamond.tick(time)
+    if (this.player.spells.bloodlust) {
+      for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
+        if (this.player.spells.bloodlust[i].cooldownRemaining > 0) this.player.spells.bloodlust[i].tick(time)
+      }
+    }
 
     // Auras
     if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.tick(time)
@@ -216,6 +221,7 @@ class Simulation {
     if (this.player.auras.robeOfTheElderScribes && this.player.auras.robeOfTheElderScribes.active) this.player.auras.robeOfTheElderScribes.tick(time)
     if (this.player.auras.bandOfTheEternalSage && this.player.auras.bandOfTheEternalSage.active) this.player.auras.bandOfTheEternalSage.tick(time)
     if (this.player.auras.mysticalSkyfireDiamond && this.player.auras.mysticalSkyfireDiamond.active) this.player.auras.mysticalSkyfireDiamond.tick(time)
+    if (this.player.auras.amplifyCurse && this.player.auras.amplifyCurse.active) this.player.auras.amplifyCurse.tick(time)
 
     // Trinkets
     if (this.player.trinkets[0]) this.player.trinkets[0].tick(time)
@@ -287,6 +293,7 @@ class Simulation {
       if (this.player.spells.insightfulEarthstormDiamond) this.player.spells.insightfulEarthstormDiamond.reset()
       if (this.player.spells.conflagrate) this.player.spells.conflagrate.reset()
       if (this.player.spells.shadowfury) this.player.spells.shadowfury.reset()
+      if (this.player.spells.amplifyCurse) this.player.spells.amplifyCurse.reset()
       if (this.player.spells.bloodlust) {
         for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
           this.player.spells.bloodlust[i].reset()
@@ -343,10 +350,16 @@ class Simulation {
                 this.player.useCooldowns()
                 // Cast Curse of Doom if there's more than 60 seconds remaining
                 if (this.player.curse && !this.player.auras[this.player.curse].active && this.player.curse == 'curseOfDoom' && timeRemaining > 60 && this.player.spells.curseOfDoom.ready()) {
+                  if (this.player.spells.amplifyCurse && this.player.spells.amplifyCurse.ready()) {
+                    this.player.cast('amplifyCurse')
+                  }
                   this.player.cast('curseOfDoom')
                 }
                 // Cast Curse of Agony if CoA is the selected curse or if Curse of Doom is the selected curse and there's less than 60 seconds remaining of the fight
                 else if (this.player.curse && ((this.player.curse == 'curseOfDoom' && !this.player.auras.curseOfDoom.active) || this.player.curse == 'curseOfAgony') && !this.player.auras.curseOfAgony.active && ((this.player.curse == 'curseOfDoom' && timeRemaining <= 60) || (this.player.curse == 'curseOfAgony' && timeRemaining >= this.player.auras.curseOfAgony.minimumDuration && this.player.spells.curseOfAgony.ready()))) {
+                  if (this.player.spells.amplifyCurse && this.player.spells.amplifyCurse.ready()) {
+                    this.player.cast('amplifyCurse')
+                  }
                   this.player.cast('curseOfAgony')
                 }
                 // Cast Corruption if Corruption isn't up or if it will expire before the cast finishes (if no instant Corruption)
@@ -475,6 +488,7 @@ class Simulation {
       if (this.player.auras.shatteredSunPendantOfAcumen && this.player.auras.shatteredSunPendantOfAcumen.active) this.player.auras.shatteredSunPendantOfAcumen.fade(true)
       if (this.player.auras.robeOfTheElderScribes && this.player.auras.robeOfTheElderScribes.active) this.player.auras.robeOfTheElderScribes.fade(true)
       if (this.player.auras.mysticalSkyfireDiamond && this.player.auras.mysticalSkyfireDiamond.active) this.player.auras.mysticalSkyfireDiamond.fade(true)
+      if (this.player.auras.amplifyCurse && this.player.auras.amplifyCurse.active) this.player.auras.amplifyCurse.fade(true)
       for (let i = 0; i < this.player.trinkets.length; i++) {
         if (this.player.trinkets[i]) {
           this.player.trinkets[i].fade(true)

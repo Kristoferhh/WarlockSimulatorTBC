@@ -83,7 +83,7 @@ class Spell {
     }
 
     // Check if the spell hits or misses
-    if ((!this.isItem || this.doesDamage) && !this.player.isHit(this.type === 'affliction')) {
+    if (((!this.isItem && this.varName !== 'amplifyCurse') || this.doesDamage) && !this.player.isHit(this.type === 'affliction')) {
       this.player.combatLog(this.name + ' *resist*')
       this.player[this.breakdownTable + 'Breakdown'][this.varName].misses = this.player[this.breakdownTable + 'Breakdown'][this.varName].misses + 1 || 1
       return
@@ -110,7 +110,7 @@ class Spell {
     }
 
     // If it's an item such as mana potion, demonic rune, destruction potion, or if it's a proc with a hidden cooldown like Blade of Wizardry or Robe of the Elder Scribes then jump out of the method
-    if (this.isItem || this.isProc) {
+    if (this.isItem || this.isProc || this.varName == 'amplifyCurse') {
       return
     }
 
@@ -996,5 +996,16 @@ class InsightfulEarthstormDiamond extends Spell {
     this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + this.manaGain || this.manaGain
     this.player.mana = Math.min(this.player.stats.maxMana, currentPlayerMana + this.manaGain)
     this.player.combatLog('Player gains ' + Math.round(this.player.mana - currentPlayerMana) + ' mana from ' + this.name + ' (' + Math.round(currentPlayerMana) + ' -> ' + Math.round(this.player.mana) + ')')
+  }
+}
+
+class AmplifyCurse extends Spell {
+  constructor (player) {
+    super(player)
+    this.name = 'Amplify Curse'
+    this.cooldown = 180
+    this.isAura = true
+    this.onGcd = false
+    this.setup()
   }
 }
