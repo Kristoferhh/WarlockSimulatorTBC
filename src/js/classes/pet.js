@@ -270,7 +270,12 @@ class Pet {
       this.spiritTickTimerRemaining = 5
       if (this.fiveSecondRuleTimerRemaining <= 0) {
         // Formula from Max on the warlock discord https://discord.com/channels/253210018697052162/823476479550816266/836007015762886707
-        const manaGain = ((this.stats.baseStats.spirit + this.stats.spirit) * this.stats.spiritModifier) + 0.7 * (this.stats.intellect * this.stats.intellectModifier) - 258
+        let manaGain = 0
+        if (this.pet == PetName.IMP) {
+          manaGain = ((this.stats.baseStats.spirit + this.stats.spirit) * this.stats.spiritModifier) + 0.7 * (this.stats.intellect * this.stats.intellectModifier) - 258
+        } else if (this.pet == PetName.FELGUARD || this.pet == PetName.SUCCUBUS) {
+          manaGain = 0.75 * ((this.stats.baseStats.spirit + this.stats.spirit) * this.stats.spiritModifier) + 0.62 * (this.stats.intellect * this.stats.intellectModifier) - 108
+        }
         const currentMana = this.stats.mana
         this.stats.mana = Math.min(this.stats.maxMana, this.stats.mana + manaGain)
         if (this.stats.mana > currentMana) {
