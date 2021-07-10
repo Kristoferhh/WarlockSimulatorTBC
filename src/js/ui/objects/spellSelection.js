@@ -88,5 +88,15 @@ const _spellSelection = {
         id: 30912
       }
     }
+  },
+  optional: {
+    header: 'Optional',
+    spells: {
+      shadowfury: {
+        name: 'Shadowfury',
+        iconName: 'spell_shadow_shadowfury',
+        id: 30414
+      }
+    }
   }
 }

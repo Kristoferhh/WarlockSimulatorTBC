@@ -78,6 +78,7 @@ class Simulation {
       if (this.player.spells.mysticalSkyfireDiamond.cooldownRemaining > 0 && this.player.spells.mysticalSkyfireDiamond.cooldownRemaining < time) time = this.player.spells.mysticalSkyfireDiamond.cooldownRemaining
       if (this.player.auras.mysticalSkyfireDiamond.active && this.player.spells.mysticalSkyfireDiamond.durationRemaining < time) time = this.player.auras.mysticalSkyfireDiamond.durationRemaining
     }
+    if (this.player.spells.shadowfury && this.player.spells.shadowfury.cooldownRemaining > 0 && this.player.spells.shadowfury.cooldownRemaining < time) time = this.player.spells.shadowfury.cooldownRemaining
     if (this.player.spells.insightfulEarthstormDiamond && this.player.spells.insightfulEarthstormDiamond.cooldownRemaining > 0 && this.player.spells.insightfulEarthstormDiamond.cooldownRemaining < time) time = this.player.spells.insightfulEarthstormDiamond.cooldownRemaining
     if (this.player.spells.timbalsFocusingCrystal && this.player.spells.timbalsFocusingCrystal.cooldownRemaining > 0 && this.player.spells.timbalsFocusingCrystal.cooldownRemaining < time) time = this.player.spells.timbalsFocusingCrystal.cooldownRemaining
     if (this.player.spells.markOfDefiance && this.player.spells.markOfDefiance.cooldownRemaining > 0 && this.player.spells.markOfDefiance.cooldownRemaining < time) time = this.player.spells.markOfDefiance.cooldownRemaining
@@ -161,6 +162,7 @@ class Simulation {
     if (this.player.spells.bloodFury && this.player.spells.bloodFury.cooldownRemaining > 0) this.player.spells.bloodFury.tick(time)
     if (this.player.spells.mysticalSkyfireDiamond && this.player.spells.mysticalSkyfireDiamond.cooldownRemaining > 0) this.player.spells.mysticalSkyfireDiamond.tick(time)
     if (this.player.spells.conflagrate && this.player.spells.conflagrate.cooldownRemaining > 0) this.player.spells.conflagrate.tick(time)
+    if (this.player.spells.shadowfury && this.player.spells.shadowfury.cooldownRemaining > 0) this.player.spells.shadowfury.tick(time)
     if (this.player.spells.bloodlust) {
       for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
         if (this.player.spells.bloodlust[i].cooldownRemaining > 0) this.player.spells.bloodlust[i].tick(time)
@@ -284,6 +286,7 @@ class Simulation {
       if (this.player.spells.mysticalSkyfireDiamond) this.player.spells.mysticalSkyfireDiamond.reset()
       if (this.player.spells.insightfulEarthstormDiamond) this.player.spells.insightfulEarthstormDiamond.reset()
       if (this.player.spells.conflagrate) this.player.spells.conflagrate.reset()
+      if (this.player.spells.shadowfury) this.player.spells.shadowfury.reset()
       if (this.player.spells.bloodlust) {
         for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
           this.player.spells.bloodlust[i].reset()
@@ -369,6 +372,10 @@ class Simulation {
                 // Cast Shadow Bolt if Shadow Trance (Nightfall) is active
                 else if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.spells.shadowBolt.ready()) {
                   this.player.cast('shadowBolt')
+                }
+                // Cast Shadowfury
+                else if (this.player.spells.shadowfury && this.player.spells.shadowfury.ready()) {
+                  this.player.cast('shadowfury')
                 }
                 // Cast Life Tap if there's more than 20 seconds left of the fight, there are no "important auras" active.
                 // This is to try and avoid having to cast Life Tap when you e.g. have a trinket active or Bloodlust 
