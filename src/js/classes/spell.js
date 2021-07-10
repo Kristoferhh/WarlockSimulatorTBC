@@ -64,8 +64,15 @@ class Spell {
 
   // Called when a spell finishes casting or immediately called if the spell has no cast time.
   cast () {
-    if (!this.isAura) this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
-    this.player.mana -= (this.manaCost * this.player.stats.manaCostModifier)
+    if (!this.isAura) {
+      this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
+    }
+    // Infinite mana setting
+    // For some reason the setting sometimes has the value 'on' if it isn't enabled when loading settings from previous sessions.
+    // The setting is only enabled when it is equal to true, so lower the player's mana if it's equal to false or 'on'
+    if (this.player.simSettings.infinitePlayerMana === false || this.player.simSettings.infinitePlayerMana === 'on') {
+      this.player.mana -= (this.manaCost * this.player.stats.manaCostModifier)
+    }
     this.cooldownRemaining = this.cooldown
     this.casting = false
     if (this.castTime > 0) {
@@ -511,12 +518,16 @@ class DarkPact extends Spell {
     const currentPlayerMana = this.player.mana
     const currentPetMana = this.player.pet.stats.mana
     this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain)
-    this.player.pet.stats.mana = Math.max(0, this.player.pet.stats.mana - manaGain)
     const manaGained = this.player.mana - currentPlayerMana
     this.player.totalManaRegenerated += manaGained
     this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
     this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + manaGained || manaGained
-    this.player.combatLog(this.name + ' ' + Math.round(manaGained) + '. Player mana: ' + Math.round(currentPlayerMana) + ' -> ' + Math.round(this.player.mana) + '. Pet mana: ' + Math.round(currentPetMana) + ' -> ' + Math.round(this.player.pet.stats.mana))
+    let combatLogMsg = this.name + ' ' + Math.round(manaGained) + '. Player mana: ' + Math.round(currentPlayerMana) + ' -> ' + Math.round(this.player.mana)
+    if (this.player.simSettings.infinitePetMana === false || this.player.simSettings.infinitePetMana === 'on') {
+      this.player.pet.stats.mana = Math.max(0, this.player.pet.stats.mana - manaGain)
+      combatLogMsg += + '. Pet mana: ' + Math.round(currentPetMana) + ' -> ' + Math.round(this.player.pet.stats.mana)
+    }
+    this.player.combatLog(combatLogMsg)
     if (currentPlayerMana + manaGain > this.player.stats.maxMana) {
       console.log('Dark Pact used at too high mana (mana wasted)')
     }

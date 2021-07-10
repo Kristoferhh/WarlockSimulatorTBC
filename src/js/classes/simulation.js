@@ -232,11 +232,13 @@ class Simulation {
     if (this.player.mp5Timer == 0) {
       this.player.mp5Timer = 5
       if (this.player.stats.mp5 > 0) {
-        this.player.totalManaRegenerated += this.player.stats.mp5
-        this.player.manaGainBreakdown.mp5.casts = this.player.manaGainBreakdown.mp5.casts + 1 || 1
-        this.player.manaGainBreakdown.mp5.manaGain = this.player.manaGainBreakdown.mp5.manaGain + this.player.stats.mp5 || this.player.stats.mp5
+        const currentPlayerMana = this.player.mana
         this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.player.stats.mp5)
-        this.player.combatLog('Player gains ' + Math.round(this.player.stats.mp5) + ' mana from MP5. Player mana: ' + Math.round(this.player.mana) + '/' + Math.round(this.player.stats.maxMana))
+        const manaGained = this.player.mana - currentPlayerMana
+        this.player.totalManaRegenerated += manaGained
+        this.player.manaGainBreakdown.mp5.casts = this.player.manaGainBreakdown.mp5.casts + 1 || 1
+        this.player.manaGainBreakdown.mp5.manaGain = this.player.manaGainBreakdown.mp5.manaGain + manaGained || manaGained
+        this.player.combatLog('Player gains ' + Math.round(manaGained) + ' mana from MP5 (' + Math.round(currentPlayerMana) + ' -> ' + Math.round(this.player.mana))
       }
       if (this.player.pet && this.player.pet.stats.mp5 > 0) {
         const currentMana = this.player.pet.stats.mana
@@ -339,6 +341,8 @@ class Simulation {
                 this.player.cast('shadowburn')
               } else if (this.player.spells.deathCoil && this.player.spells.deathCoil.ready()) {
                 this.player.cast('deathCoil')
+              } else if (this.player.spells.darkPact && this.player.spells.darkPact.ready()) {
+                this.player.cast('darkPact')
               } else {
                 this.player.cast('lifeTap')
               }
@@ -393,7 +397,6 @@ class Simulation {
                 // Cast Dark Pact or Life Tap if there's more than 20 seconds left of the fight and if there are no (or few) "important auras" active.
                 // This is to try and avoid having to cast Dark Pact/Life Tap when you e.g. have a trinket active or Bloodlust
                 else if (this.player.importantAuraCounter <= 1 && timeRemaining > 20 && ((this.player.spells.darkPact && this.player.spells.darkPact.ready()) || (this.player.spells.lifeTap.ready() && (!this.player.spells.darkPact || this.player.spells.darkPact.manaGain() > this.player.pet.stats.mana)))) {
-                  console.log('yep ' + this.player.iteration)
                   if (this.player.spells.darkPact && this.player.spells.darkPact.ready()) {
                     this.player.cast('darkPact')
                   } else {
