@@ -125,6 +125,8 @@ class Pet {
       this.stats.buffs.intellect += 14
       this.stats.spirit += 14
     }
+    // todo implement improved imp
+    if (this.playerAuras.bloodPact) this.stats.buffs.stamina += 70
     if (this.playerAuras.arcaneIntellect) this.stats.buffs.intellect += 40
     if (this.playerAuras.prayerOfFortitude) this.stats.buffs.stamina += 79
     if (this.playerAuras.prayerOfSpirit) {
@@ -185,12 +187,14 @@ class Pet {
       this.stats.ap = this.stats.baseStats.ap + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.57
       this.stats.agility = this.stats.baseStats.agility + this.stats.buffs.agility
       this.stats.critChance = this.player.talents.demonicTactics + (this.stats.agility * this.stats.agilityModifier) * 0.04 + 0.65 + this.stats.buffs.critChance
-      this.stats.spellCritChance = 5 + this.player.talents.demonicTactics + this.stats.buffs.spellCritChance
       this.stats.spellPower = this.stats.buffs.spellPower + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15
-      this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * 11.555 * this.stats.intellectModifier
       if (this.type == PetType.MELEE) {
         // Halp, need confirmation that this is actually the right way to get its average melee damage.
         this.dmg = (this.getAttackPower() / 14 + 51.7) * this.baseMeleeSpeed
+        this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * 11.555 * this.stats.intellectModifier
+      } else if (this.type == PetType.RANGED) {
+        this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * this.stats.intellectModifier * 4.95
+        this.stats.spellCritChance = 0.0125 * (this.stats.intellect * this.stats.intellectModifier) + 0.91 + this.player.talents.demonicTactics + this.stats.buffs.spellCritChance
       }
       this.player.combatLog("Recalculated pet's stats")
     }
@@ -278,9 +282,12 @@ class Imp extends Pet {
     super(player, settings)
     this.name = 'Imp'
     this.type = PetType.RANGED
-    this.stats.baseStats.stamina = 114
+    this.stats.baseStats.stamina = 101
     this.stats.baseStats.intellect = 327
-    this.stats.baseStats.mana = 849
+    this.stats.baseStats.mana = 756
+    this.stats.baseStats.spirit = 263
+    this.stats.baseStats.strength = 145
+    this.stats.baseStats.agility = 38
     this.pet = PetName.IMP
     this.setup()
   }
@@ -311,9 +318,9 @@ class Succubus extends Pet {
     this.name = 'Succubus'
     this.pet = PetName.SUCCUBUS
     this.type = PetType.MELEE
-    this.stats.baseStats.stamina = 114
+    this.stats.baseStats.stamina = 280
     this.stats.baseStats.intellect = 133
-    this.stats.baseStats.mana = 1109
+    this.stats.baseStats.mana = 849
     this.stats.baseStats.spirit = 122
     this.stats.baseStats.strength = 153
     this.stats.baseStats.agility = 109
