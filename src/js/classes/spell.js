@@ -457,7 +457,7 @@ class LifeTap extends Spell {
     this.name = 'Life Tap'
     this.manaReturn = 582
     this.coefficient = 0.8
-    this.modifier = 1 * (1 + 0.1 * this.player.talents.improvedLifeTap) * (1 + 0.02 * this.player.talents.shadowMastery)
+    this.modifier = 1 * (1 + 0.1 * this.player.talents.improvedLifeTap)
     this.breakdownTable = 'manaGain'
     this.setup()
   }
