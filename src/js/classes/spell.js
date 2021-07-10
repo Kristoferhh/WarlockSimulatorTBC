@@ -525,8 +525,9 @@ class DarkPact extends Spell {
     let combatLogMsg = this.name + ' ' + Math.round(manaGained) + '. Player mana: ' + Math.round(currentPlayerMana) + ' -> ' + Math.round(this.player.mana)
     if (this.player.simSettings.infinitePetMana === false || this.player.simSettings.infinitePetMana === 'on') {
       this.player.pet.stats.mana = Math.max(0, this.player.pet.stats.mana - manaGain)
-      combatLogMsg += '. Pet mana: ' + Math.round(currentPetMana) + ' -> ' + Math.round(this.player.pet.stats.mana)
+      combatLogMsg += '. Pet mana: ' + Math.round(currentPetMana) + ' -> ' + Math.round(this.player.pet.stats.mana) + '.'
     }
+    combatLogMsg += ' ' + this.manaReturn + ' Base Mana Return - ' + this.player.getSpellPower() + ' Spell Power - ' + this.coefficient + ' Coefficient'
     this.player.combatLog(combatLogMsg)
     if (currentPlayerMana + manaGain > this.player.stats.maxMana) {
       console.log('Dark Pact used at too high mana (mana wasted)')
