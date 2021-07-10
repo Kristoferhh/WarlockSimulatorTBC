@@ -421,7 +421,7 @@ class Simulation {
             if (this.player.pet.spells.cleave && this.player.pet.spells.cleave.ready()) {
               this.player.pet.cast('cleave')
             }
-            if (this.player.pet.spells.lashOfPain && this.player.pet.spells.lashOfPain.ready() && (this.player.simSettings.lashOfPainUsage == 'onCooldown' || (this.player.simSettings.customIsbUptime == 'no' && !this.player.auras.improvedShadowBolt.active))) {
+            if (this.player.pet.spells.lashOfPain && this.player.pet.spells.lashOfPain.ready() && (this.player.simSettings.lashOfPainUsage == 'onCooldown' || (this.player.simSettings.customIsbUptime == 'no' && (!this.player.auras.improvedShadowBolt || !this.player.auras.improvedShadowBolt.active)))) {
               this.player.pet.cast('lashOfPain')
             }
           } else if (this.player.pet.type == PetType.RANGED) {
