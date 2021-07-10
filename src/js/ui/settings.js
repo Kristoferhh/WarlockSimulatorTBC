@@ -198,4 +198,12 @@ function updateSimulationSettingsVisibility () {
   } else {
     $('#custom-isb-uptime-value').hide()
   }
+
+  if (selectedItems.neck == 34678) {
+    $('#shattrathFaction').show()
+    $('#shattrathFactionReputation').show()
+  } else {
+    $('#shattrathFaction').hide()
+    $('#shattrathFactionReputation').hide()
+  }
 }

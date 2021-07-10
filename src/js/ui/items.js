@@ -102,6 +102,9 @@ $('#item-selection-table tbody').on('click', 'tr', function () {
   updateSetBonuses()
   refreshCharacterStats()
   localStorage.selectedItems = JSON.stringify(selectedItems)
+  if (itemId == 34678) {
+    updateSimulationSettingsVisibility()
+  }
   return false
 })
 
