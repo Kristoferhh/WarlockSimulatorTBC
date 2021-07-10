@@ -455,6 +455,10 @@ class LifeTap extends Spell {
     this.setup()
   }
 
+  ready() {
+    return super.ready() && this.manaGain() + this.player.mana < this.player.stats.maxMana
+  }
+
   manaGain () {
     return (this.manaReturn + ((this.player.getSpellPower() + this.player.stats.shadowPower) * this.coefficient)) * this.modifier
   }
@@ -493,15 +497,29 @@ class DarkPact extends Spell {
     this.setup()
   }
 
+  manaGain() {
+    return this.manaReturn + (this.player.getSpellPower() + this.player.stats.shadowPower) * this.coefficient
+  }
+
+  ready() {
+    return super.ready() && this.player.pet.stats.mana >= this.manaGain() + this.player.mana
+  }
+
   cast () {
     this.casting = false
-    const manaGain = this.manaReturn + (this.player.getSpellPower() + this.player.stats.shadowPower) * this.coefficient
-    this.player.totalManaRegenerated += manaGain
-    this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
-    this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + manaGain || manaGain
-    this.player.combatLog(this.name + ' ' + Math.round(manaGain))
-    if (this.player.mana + manaGain > this.player.stats.maxMana) console.log('Dark Pact used at too high mana (mana wasted)')
+    const manaGain = this.manaGain()
+    const currentPlayerMana = this.player.mana
+    const currentPetMana = this.player.pet.stats.mana
     this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + manaGain)
+    this.player.pet.stats.mana = Math.max(0, this.player.pet.stats.mana - manaGain)
+    const manaGained = this.player.mana - currentPlayerMana
+    this.player.totalManaRegenerated += manaGained
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + manaGained || manaGained
+    this.player.combatLog(this.name + ' ' + Math.round(manaGained) + '. Player mana: ' + Math.round(currentPlayerMana) + ' -> ' + Math.round(this.player.mana) + '. Pet mana: ' + Math.round(currentPetMana) + ' -> ' + Math.round(this.player.pet.stats.mana))
+    if (currentPlayerMana + manaGain > this.player.stats.maxMana) {
+      console.log('Dark Pact used at too high mana (mana wasted)')
+    }
   }
 }
 

@@ -96,6 +96,16 @@ const _spellSelection = {
         name: 'Shadowfury',
         iconName: 'spell_shadow_shadowfury',
         id: 30414
+      },
+      amplifyCurse: {
+        name: 'Amplify Curse',
+        iconName: 'spell_shadow_contagion',
+        id: 18288
+      },
+      darkPact: {
+        name: 'Dark Pact',
+        iconName: 'spell_shadow_darkritual',
+        id: 27265
       }
     }
   }

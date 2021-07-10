@@ -390,16 +390,24 @@ class Simulation {
                 else if (this.player.spells.shadowfury && this.player.spells.shadowfury.ready()) {
                   this.player.cast('shadowfury')
                 }
-                // Cast Life Tap if there's more than 20 seconds left of the fight, there are no "important auras" active.
-                // This is to try and avoid having to cast Life Tap when you e.g. have a trinket active or Bloodlust 
-                else if (this.player.importantAuraCounter == 0 && timeRemaining > 20 && (timeRemaining / fightLength) > (this.player.mana / this.player.stats.maxMana) && !this.player.areAnyCooldownsReady() && (this.player.spells.lifeTap.manaGain() + this.player.mana < this.player.stats.maxMana)) {
-                  this.player.cast('lifeTap')
+                // Cast Dark Pact or Life Tap if there's more than 20 seconds left of the fight and if there are no (or few) "important auras" active.
+                // This is to try and avoid having to cast Dark Pact/Life Tap when you e.g. have a trinket active or Bloodlust
+                else if (this.player.importantAuraCounter <= 1 && timeRemaining > 20 && ((this.player.spells.darkPact && this.player.spells.darkPact.ready()) || (this.player.spells.lifeTap.ready() && (!this.player.spells.darkPact || this.player.spells.darkPact.manaGain() > this.player.pet.stats.mana)))) {
+                  console.log('yep ' + this.player.iteration)
+                  if (this.player.spells.darkPact && this.player.spells.darkPact.ready()) {
+                    this.player.cast('darkPact')
+                  } else {
+                    this.player.cast('lifeTap')
+                  }
                 }
                 // Cast filler spell
                 else if (this.player.spells[this.player.filler].ready()) {
                   this.player.cast(this.player.filler)
                 }
-                // Cast Life Tap if nothing else is possible
+                // Cast Dark Pact/Life Tap if nothing else is possible
+                else if (this.player.spells.darkPact && this.player.spells.darkPact.ready()) {
+                  this.player.cast('darkPact')
+                }
                 else {
                   this.player.cast('lifeTap')
                 }
