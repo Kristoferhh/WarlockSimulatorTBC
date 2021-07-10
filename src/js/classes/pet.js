@@ -216,7 +216,7 @@ class Pet {
   reset () {
     this.stats.mana = this.stats.maxMana
     this.fiveSecondRuleTimerRemaining = 5 // If higher than 0 then the pet can't gain mana from Spirit regen (July 2021 update: I have no idea what this comment means)
-    this.spiritTickTimerRemaining = 5
+    this.spiritTickTimerRemaining = 2
     if (this.type == PetType.MELEE) {
       this.spells.melee.cooldownRemaining = 0
     }
@@ -266,21 +266,31 @@ class Pet {
     this.castTimeRemaining = Math.max(0, this.castTimeRemaining - t)
     this.fiveSecondRuleTimerRemaining = Math.max(0, this.fiveSecondRuleTimerRemaining - t)
     this.spiritTickTimerRemaining = Math.max(0, this.spiritTickTimerRemaining - t)
+    // Mp5 & Spirit mana regen
     if (this.spiritTickTimerRemaining <= 0) {
       this.spiritTickTimerRemaining = 5
+      // Formulas from Max on the warlock discord https://discord.com/channels/253210018697052162/823476479550816266/836007015762886707 & https://discord.com/channels/253210018697052162/823476479550816266/839484387741138994
+      let manaGain = this.stats.mp5
+      // Mana regen from spirit
       if (this.fiveSecondRuleTimerRemaining <= 0) {
-        // Formula from Max on the warlock discord https://discord.com/channels/253210018697052162/823476479550816266/836007015762886707
-        let manaGain = 0
         if (this.pet == PetName.IMP) {
-          manaGain = ((this.stats.baseStats.spirit + this.stats.spirit) * this.stats.spiritModifier) + 0.7 * (this.stats.intellect * this.stats.intellectModifier) - 258
+          manaGain += ((this.stats.baseStats.spirit + this.stats.spirit) * this.stats.spiritModifier) + 0.7 * (this.stats.intellect * this.stats.intellectModifier) - 258
         } else if (this.pet == PetName.FELGUARD || this.pet == PetName.SUCCUBUS) {
-          manaGain = 0.75 * ((this.stats.baseStats.spirit + this.stats.spirit) * this.stats.spiritModifier) + 0.62 * (this.stats.intellect * this.stats.intellectModifier) - 108
+          manaGain += 0.75 * ((this.stats.baseStats.spirit + this.stats.spirit) * this.stats.spiritModifier) + 0.62 * (this.stats.intellect * this.stats.intellectModifier) - 108
         }
-        const currentMana = this.stats.mana
-        this.stats.mana = Math.min(this.stats.maxMana, this.stats.mana + manaGain)
-        if (this.stats.mana > currentMana) {
-          this.player.combatLog(this.name + ' gains ' + Math.round(manaGain) + ' mana from Spirit regeneration (' + Math.round(currentMana) + ' -> ' + Math.round(this.stats.mana) + ')')
+      }
+      // Mana regen while the 5 second spirit regen timer is active (no bonus from spirit)
+      else {
+        if (this.pet == PetName.IMP) {
+          manaGain += 0.375 * (this.stats.intellect * this.stats.intellectModifier) - 123
+        } else if (this.pet == PetName.FELGUARD || this.pet == PetName.SUCCUBUS) {
+          manaGain += 0.365 * (this.stats.intellect * this.stats.intellectModifier) - 48
         }
+      }
+      const currentMana = this.stats.mana
+      this.stats.mana = Math.min(this.stats.maxMana, this.stats.mana + manaGain)
+      if (this.stats.mana > currentMana) {
+        this.player.combatLog(this.name + ' gains ' + Math.round(manaGain) + ' mana from Mp5/Spirit regeneration (' + Math.round(currentMana) + ' -> ' + Math.round(this.stats.mana) + ')')
       }
     }
   }

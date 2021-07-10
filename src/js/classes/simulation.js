@@ -240,13 +240,6 @@ class Simulation {
         this.player.manaGainBreakdown.mp5.manaGain = this.player.manaGainBreakdown.mp5.manaGain + manaGained || manaGained
         this.player.combatLog('Player gains ' + Math.round(manaGained) + ' mana from MP5 (' + Math.round(currentPlayerMana) + ' -> ' + Math.round(this.player.mana) + ')')
       }
-      if (this.player.pet && this.player.pet.stats.mp5 > 0) {
-        const currentMana = this.player.pet.stats.mana
-        this.player.pet.stats.mana = Math.min(this.player.pet.stats.maxMana, this.player.pet.stats.mana + this.player.pet.stats.mp5)
-        if (this.player.pet.stats.mana > currentMana) {
-          this.player.combatLog(this.player.pet.name + ' gains ' + Math.round(this.player.pet.stats.mana - currentMana) + ' mana from MP5 (' + Math.round(currentMana) + ' -> ' + Math.round(this.player.pet.stats.mana) + ')')
-        }
-      }
     }
 
     return time
