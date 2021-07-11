@@ -45,7 +45,7 @@ const raceStats = {
   gnome: {
     stamina: 75,
     intellect: 136,
-    spirit: 131,
+    spirit: 139,
     arcaneResist: 10,
     intellectModifier: 1.05
   },
