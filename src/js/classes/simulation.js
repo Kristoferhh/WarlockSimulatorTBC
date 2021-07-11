@@ -132,13 +132,15 @@ class Simulation {
       if (this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining > 0 && this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining < time) time = this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining
       if (this.player.auras.shatteredSunPendantOfAcumen && this.player.auras.shatteredSunPendantOfAcumen.active && this.player.auras.shatteredSunPendantOfAcumen.durationRemaining < time) time = this.player.auras.shatteredSunPendantOfAcumen.durationRemaining
     }
-
     if (this.player.mp5Timer < time) time = this.player.mp5Timer
     for (let i = 0; i < 2; i++) {
       if (this.player.trinkets[i]) {
         if (this.player.trinkets[i].active && this.player.trinkets[i].durationRemaining < time) time = this.player.trinkets[i].durationRemaining
         if (this.player.trinkets[i].cooldownRemaining > 0 && this.player.trinkets[i].cooldownRemaining < time) time = this.player.trinkets[i].cooldownRemaining
       }
+    }
+    if (this.player.pet) {
+      if (this.player.pet.auras.blackBook && this.player.pet.auras.blackBook.active && this.player.pet.auras.blackBook.durationRemaining < time) time = this.player.pet.auras.blackBook.durationRemaining
     }
 
     // Pass time

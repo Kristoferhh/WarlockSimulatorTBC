@@ -71,9 +71,8 @@ class Pet {
   }
 
   initialize () {
-    if (this.type == PetType.MELEE) {
-      this.spells.melee = new Melee(this)
-    }
+    if (this.type == PetType.MELEE) this.spells.melee = new Melee(this)
+    if (this.player.simSettings.prepopBlackBook === 'yes') this.auras.blackBook = new BlackBook(this)
   }
 
   // Calculates stats from buffs/debuffs/pet buffs
@@ -185,24 +184,24 @@ class Pet {
   }
 
   // Player -> Pet stat scaling info taken from https://wowwiki-archive.fandom.com/wiki/Warlock?oldid=1618728 and from Max's research on the warlock discord
-  calculateStatsFromPlayer (stat = 'stamina') {
-    if (stat == 'stamina' || stat == 'intellect' || stat == 'spellPower' || stat == 'shadowPower' || stat == 'firePower') {
-      this.stats.stamina = this.stats.baseStats.stamina + this.stats.buffs.stamina + (0.3 * this.player.stats.stamina * this.player.stats.staminaModifier)
-      this.stats.intellect = this.stats.baseStats.intellect + this.stats.buffs.intellect + (0.3 * this.player.stats.intellect * this.player.stats.intellectModifier)
-      this.player.demonicKnowledgeSp = ((this.stats.stamina * this.stats.staminaModifier) + (this.stats.intellect * this.stats.intellectModifier)) * (0.04 * this.player.talents.demonicKnowledge)
-      this.stats.baseStats.ap = (this.stats.baseStats.strength + this.stats.buffs.strength) * 2 - 20
-      this.stats.ap = this.stats.baseStats.ap + this.stats.buffs.ap + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.57
-      this.stats.agility = this.stats.baseStats.agility + this.stats.buffs.agility
-      this.stats.critChance = this.player.talents.demonicTactics + (this.stats.agility * this.stats.agilityModifier) * 0.04 + 0.65 + this.stats.buffs.critChance
-      this.stats.spellPower = this.stats.buffs.spellPower + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15
-      if (this.type == PetType.MELEE) {
-        // Halp, need confirmation that this is actually the right way to get its average melee damage.
-        this.dmg = (this.getAttackPower() / 14 + 51.7) * this.baseMeleeSpeed
-        this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * 11.555 * this.stats.intellectModifier
-      } else if (this.type == PetType.RANGED) {
-        this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * this.stats.intellectModifier * 4.95
-        this.stats.spellCritChance = 0.0125 * (this.stats.intellect * this.stats.intellectModifier) + 0.91 + this.player.talents.demonicTactics + this.stats.buffs.spellCritChance
-      }
+  calculateStatsFromPlayer (announceInCombatlog = true) {
+    this.stats.stamina = this.stats.baseStats.stamina + this.stats.buffs.stamina + (0.3 * this.player.stats.stamina * this.player.stats.staminaModifier)
+    this.stats.intellect = this.stats.baseStats.intellect + this.stats.buffs.intellect + (0.3 * this.player.stats.intellect * this.player.stats.intellectModifier)
+    this.player.demonicKnowledgeSp = ((this.stats.stamina * this.stats.staminaModifier) + (this.stats.intellect * this.stats.intellectModifier)) * (0.04 * this.player.talents.demonicKnowledge)
+    this.stats.baseStats.ap = (this.stats.baseStats.strength + this.stats.buffs.strength) * 2 - 20
+    this.stats.ap = this.stats.baseStats.ap + this.stats.buffs.ap + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.57
+    this.stats.agility = this.stats.baseStats.agility + this.stats.buffs.agility
+    this.stats.critChance = this.player.talents.demonicTactics + (this.stats.agility * this.stats.agilityModifier) * 0.04 + 0.65 + this.stats.buffs.critChance
+    this.stats.spellPower = this.stats.buffs.spellPower + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15
+    if (this.type == PetType.MELEE) {
+      // Halp, need confirmation that this is actually the right way to get its average melee damage.
+      this.dmg = (this.getAttackPower() / 14 + 51.7) * this.baseMeleeSpeed
+      this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * 11.555 * this.stats.intellectModifier
+    } else if (this.type == PetType.RANGED) {
+      this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * this.stats.intellectModifier * 4.95
+      this.stats.spellCritChance = 0.0125 * (this.stats.intellect * this.stats.intellectModifier) + 0.91 + this.player.talents.demonicTactics + this.stats.buffs.spellCritChance
+    }
+    if (announceInCombatlog) {
       this.player.combatLog("Recalculated pet's stats")
     }
   }
@@ -221,10 +220,13 @@ class Pet {
     this.stats.mana = this.stats.maxMana
     this.fiveSecondRuleTimerRemaining = 5 // If higher than 0 then the pet can't gain mana from Spirit regen (July 2021 update: I have no idea what this comment means)
     this.spiritTickTimerRemaining = 2
-    if (this.type == PetType.MELEE) {
-      this.spells.melee.cooldownRemaining = 0
+    if (this.type == PetType.MELEE) this.spells.melee.cooldownRemaining = 0
+    if (this.auras.blackBook && this.auras.blackBook.active) this.auras.blackBook.fade(true)
+    // Black Book prepop
+    if (this.player.simSettings.prepopBlackBook === 'yes') {
+      this.auras.blackBook.apply(false)
     }
-    this.calculateStatsFromPlayer()
+    this.calculateStatsFromPlayer(false)
   }
 
   getMeleeCritChance () {
@@ -264,9 +266,9 @@ class Pet {
   }
 
   tick (t) {
-    if (this.spells.melee) {
-      this.spells.melee.tick(t)
-    }
+    if (this.spells.melee) this.spells.melee.tick(t)
+    if (this.auras.blackBook && this.auras.blackBook.active) this.auras.blackBook.tick(t)
+
     this.castTimeRemaining = Math.max(0, this.castTimeRemaining - t)
     this.fiveSecondRuleTimerRemaining = Math.max(0, this.fiveSecondRuleTimerRemaining - t)
     this.spiritTickTimerRemaining = Math.max(0, this.spiritTickTimerRemaining - t)

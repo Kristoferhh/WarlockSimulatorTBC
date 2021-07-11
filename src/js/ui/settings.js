@@ -92,6 +92,7 @@ function updateSimulationSettingsVisibility () {
     $('#petBuffs-heading').show()
     $('.petBuffs').show()
     if ($('#petMode').children('select').val() == PetMode.AGGRESSIVE) {
+      $('#prepopBlackBook').show()
       if ($('#petChoice').children('select').val() != PetName.IMP) {
         $('#enemyArmor').show()
         $('#enemy-armor-val').closest('li').show()
@@ -101,11 +102,13 @@ function updateSimulationSettingsVisibility () {
       }
       $('.petDebuff').show()
     } else {
+      $('#prepopBlackBook').hide()
       $('#enemyArmor').hide()
       $('#enemy-armor-val').closest('li').hide()
       $('.petDebuff').hide()
     }
   } else {
+    $('#prepopBlackBook').hide()
     $('#petBuffs-heading').hide()
     $('.petBuffs').hide()
     $('#enemyArmor').hide()

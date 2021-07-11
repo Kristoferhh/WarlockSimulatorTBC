@@ -18,12 +18,20 @@ class PetAura {
   apply () {
     this.active = true
     this.durationRemaining = this.duration
+    let combatLogMsg = this.name + ' gains ' + this.name
+    if (this.stacks) combatLogMsg += '(' + this.stacks + '). Current AP: ' + Math.round(this.pet.getAttackPower()) + ')'
+    this.pet.player.combatLog(combatLogMsg)
   }
 
   fade (endOfIteration = false) {
     this.active = false
     this.durationRemaining = 0
-    if (!endOfIteration) this.pet.player.combatLog(this.name + ' (' + this.stacks + ') fades from ' + this.pet.name)
+    if (!endOfIteration) {
+      let combatLogMsg = this.name
+      if (this.stacks) combatLogMsg += '(' + this.stacks + ')'
+      combatLogMsg += ' fades from ' + this.pet.name
+      this.pet.player.combatLog(combatLogMsg)
+    }
   }
 }
 
@@ -39,7 +47,6 @@ class DemonicFrenzy extends PetAura {
   apply () {
     if (this.stacks < this.maxStacks) {
       this.stacks++
-      this.pet.player.combatLog(this.pet.name + ' gains ' + this.name + ' (' + this.stacks + '). Current AP: ' + Math.round(this.pet.getAttackPower()) + ')')
     }
     super.apply()
   }
@@ -47,5 +54,35 @@ class DemonicFrenzy extends PetAura {
   fade (endOfIteration = false) {
     this.stacks = 0
     super.fade(endOfIteration)
+  }
+}
+
+class BlackBook extends PetAura {
+  constructor (pet) {
+    super(pet)
+    this.name = 'Black Book'
+    this.duration = 30
+  }
+
+  apply(announceInCombatlog = true) {
+    if (!this.active) {
+      super.apply()
+      this.pet.player.combatLog(this.pet.name + ' Spell Power + 200 (' + Math.round(this.pet.stats.spellPower) + ' -> ' + Math.round(this.pet.stats.spellPower + 200) + ')')
+      this.pet.player.combatLog(this.pet.name + ' Attack Power + 325 (' + Math.round(this.pet.stats.ap) + ' -> ' + Math.round(this.pet.stats.ap + 325) + ')')
+      this.pet.stats.buffs.spellPower += 200
+      this.pet.stats.buffs.ap += 325
+      this.pet.calculateStatsFromPlayer(announceInCombatlog)
+    }
+  }
+
+  fade(endOfIteration = false) {
+    if (this.active) {
+      super.fade(endOfIteration)
+      this.pet.player.combatLog(this.pet.name + ' Spell Power - 200 (' + Math.round(this.pet.stats.spellPower) + ' -> ' + Math.round(this.pet.stats.spellPower - 200) + ')')
+      this.pet.player.combatLog(this.pet.name + ' Attack Power - 325 (' + Math.round(this.pet.stats.ap) + ' -> ' + Math.round(this.pet.stats.ap - 325) + ')')
+      this.pet.stats.buffs.spellPower -= 200
+      this.pet.stats.buffs.ap -= 325
+      this.pet.calculateStatsFromPlayer(!endOfIteration)
+    }
   }
 }

@@ -164,13 +164,19 @@
 					<label class="settings-left" for="randomizeValues">Randomize instead of averaging</label>
 					<input class="settings-right" type="checkbox" id='randomize-values' name="randomizeValues" />
 				</li>
-				<li>
-					<label class='settings-left' for='infinitePlayerMana'>Infinite player mana</label>
-					<input class='settings-right' type='checkbox' id='infinite-player-mana' name='infinitePlayerMana' />
+				<li id="infinitePlayerMana">
+					<label class="settings-left" for="infinitePlayerMana">Infinite player mana?</label>
+					<select class="settings-right" name="infinitePlayerMana">
+						<option value="no">No</option>
+						<option value="yes">Yes</option>
+					</select>
 				</li>
-				<li>
-					<label class='settings-left' for='infinitePetMana'>Infinite pet mana</label>
-					<input class='settings-right' type='checkbox' id='infinite-pet-mana' name='infinitePetMana' />
+				<li id="infinitePetMana">
+					<label class="settings-left" for="infinitePetMana">Infinite pet mana?</label>
+					<select class="settings-right" name="infinitePetMana">
+						<option value="no">No</option>
+						<option value="yes">Yes</option>
+					</select>
 				</li>
 				<li id='petChoice'>
 					<label class="settings-left" for="petChoice">Pet</label>
@@ -192,6 +198,13 @@
 					<select class="settings-right" name="petMode">
 						<option value="0">Passive</option>
 						<option value="1">Aggressive</option>
+					</select>
+				</li>
+				<li id="prepopBlackBook">
+					<label class="settings-left" for="prepopBlackBook">Prepop Black Book?</label>
+					<select class="settings-right" name="prepopBlackBook">
+						<option value="no">No</option>
+						<option value="yes">Yes</option>
 					</select>
 				</li>
 				<li id="shattrathFaction">
