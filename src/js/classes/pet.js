@@ -148,7 +148,7 @@ class Pet {
     if (this.playerAuras.exposeWeakness) this.stats.buffs.ap += (this.simSettings.survivalHunterAgility * 0.25 * (this.simSettings.exposeWeaknessUptime / 100)) || 0
     if (this.playerAuras.heroicPresence) this.stats.hitChance++
     if (this.playerAuras.blessingOfMight) this.stats.buffs.ap += 220
-    if (this.playerAuras.strengthOfEarthTotem) this.stats.buffs.strength += 86 // need to find out how much AP demons get from Strength
+    if (this.playerAuras.strengthOfEarthTotem) this.stats.buffs.strength += 86
     if (this.playerAuras.graceOfAirTotem) this.stats.buffs.agility += 67
     if (this.playerAuras.battleShout) this.stats.buffs.ap += 306
     if (this.playerAuras.trueshotAura) this.stats.buffs.ap += 300
@@ -191,7 +191,7 @@ class Pet {
       this.stats.intellect = this.stats.baseStats.intellect + this.stats.buffs.intellect + (0.3 * this.player.stats.intellect * this.player.stats.intellectModifier)
       this.player.demonicKnowledgeSp = ((this.stats.stamina * this.stats.staminaModifier) + (this.stats.intellect * this.stats.intellectModifier)) * (0.04 * this.player.talents.demonicKnowledge)
       this.stats.baseStats.ap = (this.stats.baseStats.strength + this.stats.buffs.strength) * 2 - 20
-      this.stats.ap = this.stats.baseStats.ap + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.57
+      this.stats.ap = this.stats.baseStats.ap + this.stats.buffs.ap + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.57
       this.stats.agility = this.stats.baseStats.agility + this.stats.buffs.agility
       this.stats.critChance = this.player.talents.demonicTactics + (this.stats.agility * this.stats.agilityModifier) * 0.04 + 0.65 + this.stats.buffs.critChance
       this.stats.spellPower = this.stats.buffs.spellPower + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15
