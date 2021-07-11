@@ -70,7 +70,7 @@ class Spell {
     // Infinite mana setting
     // For some reason the setting sometimes has the value 'on' if it isn't enabled when loading settings from previous sessions.
     // The setting is only enabled when it is equal to true, so lower the player's mana if it's equal to false or 'on'
-    if (this.player.simSettings.infinitePlayerMana === 'no') {
+    if (this.player.simSettings.infinitePlayerMana !== 'yes') {
       this.player.mana -= (this.manaCost * this.player.stats.manaCostModifier)
     }
     this.cooldownRemaining = this.cooldown
@@ -523,7 +523,7 @@ class DarkPact extends Spell {
     this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
     this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain = this.player[this.breakdownTable + 'Breakdown'][this.varName].manaGain + manaGained || manaGained
     let combatLogMsg = this.name + ' ' + Math.round(manaGained) + '. Player mana: ' + Math.round(currentPlayerMana) + ' -> ' + Math.round(this.player.mana)
-    if (this.player.simSettings.infinitePetMana === 'no') {
+    if (this.player.simSettings.infinitePetMana !== 'yes') {
       this.player.pet.stats.mana = Math.max(0, this.player.pet.stats.mana - manaGain)
       combatLogMsg += '. Pet mana: ' + Math.round(currentPetMana) + ' -> ' + Math.round(this.player.pet.stats.mana)
     }
