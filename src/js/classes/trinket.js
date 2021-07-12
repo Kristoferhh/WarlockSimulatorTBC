@@ -17,10 +17,17 @@ class Trinket {
     this.cooldownRemaining = 0
   }
 
+  setup () {
+    this.varName = camelCase(this.name)
+    this.player.auraBreakdown[this.varName] = this.player.auraBreakdown[this.varName] || { name: this.name }
+  }
+
   use () {
     if (!this.active) {
       let recalculatePetStats = false
       this.player.combatLog(this.name + ' used')
+      this.player.auraBreakdown[this.varName].appliedAt = this.player.fightTime
+      this.player.auraBreakdown[this.varName].count = this.player.auraBreakdown[this.varName].count + 1 || 1
       if (this.duration > 0) {
         for (const stat in this.stats) {
           if (this.player.stats.hasOwnProperty(stat)) {
@@ -60,6 +67,9 @@ class Trinket {
       if (!endOfIteration) {
         this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
       }
+      // Log the aura uptime
+      const auraUptime = this.player.fightTime - this.player.auraBreakdown[this.varName].appliedAt
+      this.player.auraBreakdown[this.varName].uptime = this.player.auraBreakdown[this.varName].uptime + auraUptime || auraUptime
     }
   }
 
@@ -81,6 +91,7 @@ class RestrainedEssenceOfSapphiron extends Trinket {
     this.stats = {
       spellPower: 130
     }
+    this.setup()
   }
 }
 
@@ -93,6 +104,7 @@ class ShiftingNaaruSliver extends Trinket {
     this.stats = {
       spellPower: 320
     }
+    this.setup()
   }
 }
 
@@ -105,6 +117,7 @@ class SkullOfGuldan extends Trinket {
     this.stats = {
       hasteRating: 175
     }
+    this.setup()
   }
 }
 
@@ -117,6 +130,7 @@ class HexShrunkenHead extends Trinket {
     this.stats = {
       spellPower: 211
     }
+    this.setup()
   }
 }
 
@@ -129,6 +143,7 @@ class IconOfTheSilverCrescent extends Trinket {
     this.stats = {
       spellPower: 155
     }
+    this.setup()
   }
 }
 
@@ -141,6 +156,7 @@ class ScryersBloodgem extends Trinket {
     this.stats = {
       spellPower: 150
     }
+    this.setup()
   }
 }
 
@@ -153,6 +169,7 @@ class AncientCrystalTalisman extends Trinket {
     this.stats = {
       spellPower: 104
     }
+    this.setup()
   }
 }
 
@@ -165,6 +182,7 @@ class ArcanistsStone extends Trinket {
 	 	this.stats = {
 	 		spellPower: 167
 	 	}
+     this.setup()
   }
 }
 
@@ -177,6 +195,7 @@ class TerokkarTabletOfVim extends Trinket {
     this.stats = {
       spellPower: 84
     }
+    this.setup()
   }
 }
 
@@ -189,6 +208,7 @@ class XirisGift extends Trinket {
     this.stats = {
       spellPower: 150
     }
+    this.setup()
   }
 }
 
@@ -201,6 +221,7 @@ class VengeanceOfTheIllidari extends Trinket {
     this.stats = {
       spellPower: 120
     }
+    this.setup()
   }
 }
 
@@ -213,6 +234,7 @@ class FigurineLivingRubySerpent extends Trinket {
     this.stats = {
       spellPower: 150
     }
+    this.setup()
   }
 }
 
@@ -225,6 +247,7 @@ class EssenceOfTheMartyr extends Trinket {
     this.stats = {
       spellPower: 99
     }
+    this.setup()
     this.sharesCooldown = false
   }
 }

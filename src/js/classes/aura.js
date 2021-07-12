@@ -53,13 +53,13 @@ class Aura {
         this.player.pet.calculateStatsFromPlayer()
       }
       this.player.combatLog(this.name + ' applied')
+      if (this.isImportant) {
+        this.player.importantAuraCounter++
+        this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
+      }
     }
     this.player.auraBreakdown[this.varName].count = this.player.auraBreakdown[this.varName].count + 1 || 1
     this.durationRemaining = this.durationTotal
-    if (this.isImportant) {
-      this.player.importantAuraCounter++
-      this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
-    }
     this.active = true
   }
 

@@ -290,23 +290,6 @@ class Player {
     if (settings.auras.annihilator) this.enemy.armor -= 600
     this.enemy.armor = Math.max(0, this.enemy.armor)
 
-    // Trinkets
-    this.trinkets = []
-    this.trinketIds = [this.items.trinket1, this.items.trinket2]
-    if (this.trinketIds.includes(32483)) this.trinkets.push(new SkullOfGuldan(this))
-    if (this.trinketIds.includes(34429)) this.trinkets.push(new ShiftingNaaruSliver(this))
-    if (this.trinketIds.includes(33829)) this.trinkets.push(new HexShrunkenHead(this))
-    if (this.trinketIds.includes(29370)) this.trinkets.push(new IconOfTheSilverCrescent(this))
-    if (this.trinketIds.includes(29132)) this.trinkets.push(new ScryersBloodgem(this))
-    if (this.trinketIds.includes(23046)) this.trinkets.push(new RestrainedEssenceOfSapphiron(this))
-    if (this.trinketIds.includes(29179)) this.trinkets.push(new XirisGift(this))
-    if (this.trinketIds.includes(25620)) this.trinkets.push(new AncientCrystalTalisman(this))
-    if (this.trinketIds.includes(28223)) this.trinkets.push(new ArcanistsStone(this))
-    if (this.trinketIds.includes(25936)) this.trinkets.push(new TerokkarTabletOfVim(this))
-    if (this.trinketIds.includes(28040)) this.trinkets.push(new VengeanceOfTheIllidari(this))
-    if (this.trinketIds.includes(24126)) this.trinkets.push(new FigurineLivingRubySerpent(this))
-    if (this.trinketIds.includes(29376)) this.trinkets.push(new EssenceOfTheMartyr(this))
-
     // Assign the filler spell.
     this.filler = null
     for (const spell in settings.rotation.filler) {
@@ -398,6 +381,24 @@ class Player {
   }
 
   initialize () {
+    // Trinkets
+    this.trinkets = []
+    this.trinketIds = [this.items.trinket1, this.items.trinket2]
+    if (this.trinketIds.includes(32483)) this.trinkets.push(new SkullOfGuldan(this))
+    if (this.trinketIds.includes(34429)) this.trinkets.push(new ShiftingNaaruSliver(this))
+    if (this.trinketIds.includes(33829)) this.trinkets.push(new HexShrunkenHead(this))
+    if (this.trinketIds.includes(29370)) this.trinkets.push(new IconOfTheSilverCrescent(this))
+    if (this.trinketIds.includes(29132)) this.trinkets.push(new ScryersBloodgem(this))
+    if (this.trinketIds.includes(23046)) this.trinkets.push(new RestrainedEssenceOfSapphiron(this))
+    if (this.trinketIds.includes(29179)) this.trinkets.push(new XirisGift(this))
+    if (this.trinketIds.includes(25620)) this.trinkets.push(new AncientCrystalTalisman(this))
+    if (this.trinketIds.includes(28223)) this.trinkets.push(new ArcanistsStone(this))
+    if (this.trinketIds.includes(25936)) this.trinkets.push(new TerokkarTabletOfVim(this))
+    if (this.trinketIds.includes(28040)) this.trinkets.push(new VengeanceOfTheIllidari(this))
+    if (this.trinketIds.includes(24126)) this.trinkets.push(new FigurineLivingRubySerpent(this))
+    if (this.trinketIds.includes(29376)) this.trinkets.push(new EssenceOfTheMartyr(this))
+
+    // Spells
     this.spells = {
       lifeTap: new LifeTap(this)
     }
@@ -445,6 +446,7 @@ class Player {
       }
     }
 
+    // Auras
     this.auras = {}
     if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusion(this)
     if (this.simSettings.race == 'orc') this.auras.bloodFury = new BloodFuryAura(this)
