@@ -122,17 +122,11 @@ class ImprovedShadowBolt extends Aura {
     this.stacks = this.maxStacks
   }
 
-  fade (endOfIteration = false) {
-    this.stacks = 0
-    super.fade(endOfIteration)
-  }
-
   decrementStacks () {
     this.stacks--
 
     if (this.stacks <= 0) {
-      this.active = false
-      this.player.combatLog(this.name + ' faded')
+      this.fade()
     } else {
       this.player.combatLog(this.name + '(' + this.stacks + ')')
     }
@@ -238,7 +232,9 @@ class PowerInfusion extends Aura {
 
   fade (endOfIteration = false) {
     if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Haste % + ' + this.hasteModifier + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + '% -> ' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 - this.hasteModifier + '%)')
+      if (!endOfIteration) {
+        this.player.combatLog('Haste % + ' + this.hasteModifier + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + '% -> ' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 - this.hasteModifier + '%)')
+      }
       this.player.stats.hasteRating -= hasteRatingPerPercent * this.hasteModifier
       this.player.stats.manaCostModifier /= this.manaModifier
     }
@@ -415,8 +411,8 @@ class BloodlustAura extends Aura {
       if (this.player.pet) {
         this.player.pet.stats.hasteRating -= 30 * hasteRatingPerPercent
       }
+      super.fade(endOfIteration)
     }
-    super.fade(endOfIteration)
   }
 }
 
