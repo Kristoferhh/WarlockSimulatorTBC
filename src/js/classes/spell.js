@@ -191,6 +191,11 @@ class Spell {
     if (this.player.spells.insightfulEarthstormDiamond && this.player.spells.insightfulEarthstormDiamond.ready() && random(1, 100) <= this.player.spells.insightfulEarthstormDiamond.procChance) {
       this.player.spells.insightfulEarthstormDiamond.cast()
     }
+
+    // Wrath of Cenarius
+    if (this.player.auras.wrathOfCenarius && random(1,100) <= this.player.auras.wrathOfCenarius.procChance) {
+      this.player.auras.wrathOfCenarius.apply()
+    }
   }
 
   getModifier () {

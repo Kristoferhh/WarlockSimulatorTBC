@@ -4177,6 +4177,13 @@ const items = {
       id: 23063,
       source: 'Naxxramas',
       phase: 0
+    },
+    wrathOfCenarius: {
+      name: 'Wrath of Cenarius',
+      unique: true,
+      id: 21190,
+      source: 'Silithus Quest',
+      phase: 0
     }
   },
   trinket: {

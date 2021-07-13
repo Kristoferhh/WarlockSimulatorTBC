@@ -639,3 +639,17 @@ class AmplifyCurseAura extends Aura {
     this.setup()
   }
 }
+
+class WrathOfScenarius extends Aura {
+  constructor (player) {
+    super(player)
+    this.name = 'Wrath of Cenarius'
+    this.durationTotal = 10
+    this.procChance = 5
+    this.isImportant = true
+    this.stats = {
+      spellPower: 132
+    }
+    this.setup()
+  }
+}

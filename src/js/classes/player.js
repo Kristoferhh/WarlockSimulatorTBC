@@ -476,6 +476,7 @@ class Player {
     else if (this.selectedAuras.drumsOfWar) this.auras.drumsOfWar = new DrumsOfWarAura(this)
     else if (this.selectedAuras.drumsOfRestoration) this.auras.drumsOfRestoration = new DrumsOfRestorationAura(this)
     if ([this.items.ring1, this.items.ring2].includes(29305)) this.auras.bandOfTheEternalSage = new BandOfTheEternalSageAura(this)
+    if ([this.items.ring1, this.items.ring2].includes(21190)) this.auras.wrathOfCenarius = new WrathOfScenarius(this)
     if (this.items.mainhand == 31336) this.auras.bladeOfWizardry = new BladeOfWizardryAura(this)
     if (this.items.neck == 34678 && this.shattrathFaction == 'Aldor') this.auras.shatteredSunPendantOfAcumen = new ShatteredSunPendantOfAcumenAura(this)
     if (this.items.chest == 28602) this.auras.robeOfTheElderScribes = new RobeOfTheElderScribesAura(this)

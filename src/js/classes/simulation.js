@@ -94,6 +94,7 @@ class Simulation {
     if (this.player.auras.drumsOfWar && this.player.auras.drumsOfWar.active && this.player.auras.drumsOfWar.durationRemaining < time) time = this.player.auras.drumsOfWar.durationRemaining
     if (this.player.auras.drumsOfRestoration && this.player.auras.drumsOfRestoration.active && this.player.auras.drumsOfRestoration.tickTimerRemaining < time) time = this.player.auras.drumsOfRestoration.tickTimerRemaining
     if (this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.shadowTrance.durationRemaining < time) time = this.player.auras.shadowTrance.durationRemaining
+    if (this.player.auras.wrathOfCenarius && this.player.auras.wrathOfCenarius.active && this.player.auras.wrathOfCenarius.durationRemaining < time) time = this.player.auras.wrathOfCenarius.durationRemaining
     if (this.player.auras.flameshadow && this.player.auras.flameshadow.active && this.player.auras.flameshadow.durationRemaining < time) time = this.player.auras.flameshadow.durationRemaining
     if (this.player.auras.shadowflame && this.player.auras.shadowflame.active && this.player.auras.shadowflame.durationRemaining < time) time = this.player.auras.shadowflame.durationRemaining
     if (this.player.auras.spellstrikeProc && this.player.auras.spellstrikeProc.active && this.player.auras.spellstrikeProc.durationRemaining < time) time = this.player.auras.spellstrikeProc.durationRemaining
@@ -224,6 +225,7 @@ class Simulation {
     if (this.player.auras.bandOfTheEternalSage && this.player.auras.bandOfTheEternalSage.active) this.player.auras.bandOfTheEternalSage.tick(time)
     if (this.player.auras.mysticalSkyfireDiamond && this.player.auras.mysticalSkyfireDiamond.active) this.player.auras.mysticalSkyfireDiamond.tick(time)
     if (this.player.auras.amplifyCurse && this.player.auras.amplifyCurse.active) this.player.auras.amplifyCurse.tick(time)
+    if (this.player.auras.wrathOfCenarius && this.player.auras.wrathOfCenarius.active) this.player.auras.wrathOfCenarius.tick(time)
 
     // Trinkets
     if (this.player.trinkets[0]) this.player.trinkets[0].tick(time)
@@ -495,6 +497,7 @@ class Simulation {
       if (this.player.auras.robeOfTheElderScribes && this.player.auras.robeOfTheElderScribes.active) this.player.auras.robeOfTheElderScribes.fade(true)
       if (this.player.auras.mysticalSkyfireDiamond && this.player.auras.mysticalSkyfireDiamond.active) this.player.auras.mysticalSkyfireDiamond.fade(true)
       if (this.player.auras.amplifyCurse && this.player.auras.amplifyCurse.active) this.player.auras.amplifyCurse.fade(true)
+      if (this.player.auras.wrathOfCenarius && this.player.auras.wrathOfCenarius.active) this.player.auras.wrathOfCenarius.fade(true)
       for (let i = 0; i < this.player.trinkets.length; i++) {
         if (this.player.trinkets[i]) {
           this.player.trinkets[i].fade(true)
