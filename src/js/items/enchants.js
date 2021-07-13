@@ -88,6 +88,19 @@ const enchants = {
       source: 'The Scryers - Exalted',
       phase: 1
     },
+    inscriptionOfDiscipline: {
+      name: 'Inscription of Discipline',
+      spellPower: 15,
+      id: 35405,
+      source: 'The Aldor - Honored',
+      phase: 1
+    },
+    inscriptionOfTheOrb: {
+      name: 'Inscription of the Orb',
+      critRating: 13,
+      id: 35436,
+      source: 'The Scryers - Honored'
+    },
     inscriptionOfEndurance: {
       name: 'Inscription of Endurance',
       fireResist: 7,

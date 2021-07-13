@@ -251,3 +251,16 @@ class EssenceOfTheMartyr extends Trinket {
     this.sharesCooldown = false
   }
 }
+
+class StarkillersBauble extends Trinket {
+  constructor (player) {
+    super(player)
+    this.name = "Starkiller's Bauble",
+    this.cooldown = 90
+    this.duration = 15
+    this.stats = {
+      spellPower: 125
+    }
+    this.setup()
+  }
+}

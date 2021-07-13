@@ -398,6 +398,7 @@ class Player {
     if (this.trinketIds.includes(28040)) this.trinkets.push(new VengeanceOfTheIllidari(this))
     if (this.trinketIds.includes(24126)) this.trinkets.push(new FigurineLivingRubySerpent(this))
     if (this.trinketIds.includes(29376)) this.trinkets.push(new EssenceOfTheMartyr(this))
+    if (this.trinketIds.includes(30340)) this.trinkets.push(new StarkillersBauble(this))
 
     // Spells
     this.spells = {

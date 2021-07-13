@@ -994,6 +994,23 @@ const items = {
       source: "Gruul's Lair",
       phase: 1
     },
+    HWLGMDreadweaveMantle: {
+      name: 'HWL/GM Dreadweave Mantle',
+      stamina: 19,
+      intellect: 15,
+      yellow: 1,
+      blue: 1,
+      socketBonus: {
+        resilienceRating: 3
+      },
+      id: 28820,
+      hitRating: 6,
+      resilienceRating: 17,
+      spellPower: 26,
+      setId: 592,
+      source: 'PVP',
+      phase: 1
+    },
     frozenShadoweaveShoulders: {
       name: 'Frozen Shadoweave Shoulders',
       stamina: 21,
@@ -3977,6 +3994,15 @@ const items = {
       source: 'AQ40',
       phase: 0
     },
+    ringOfTheEternalFlame: {
+      name: 'Ring of the Eternal Flame',
+      intellect: 10,
+      firePower: 34,
+      critRating: 14,
+      id: 23237,
+      source: 'Naxxramas',
+      phase: 0
+    },
     bandOfTheInevitable: {
       name: 'Band of the Inevitable',
       spellPower: 36,
@@ -4088,6 +4114,14 @@ const items = {
       id: 31856,
       source: 'Blessings Deck',
       phase: 2 // unsure?
+    },
+    starkillersBauble: {
+      name: "Starkiller's Bauble",
+      hitRating: 26,
+      unique: true,
+      id: 30340,
+      source: 'Netherstorm Quest',
+      phase: 1
     },
     essenceOfTheMartyr: {
       name: 'Essence of the Martyr',
