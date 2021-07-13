@@ -1,3 +1,18 @@
+// Made up item IDs that I use for items such as the bracers/boots from the Karazhan basement bosses where all the items use the same item id but they have different stats
+// But each item in the sim needs to have a unique ID so I just make one up here and use that
+const fakeItemIds = {
+  lurkersCordOfShadowWrath: -1,
+  lurkersCordOfFireWrath: -2,
+  lurkersCordOfTheSorcerer: -3,
+  lurkersCordOfTheInvoker: -4,
+  ravagersCuffsOfFireWrath: -5,
+  ravagersCuffsOfTheSorcerer: -6,
+  ravagersCuffsOfTheInvoker: -7,
+  glidersBootsOfShadowWrath: -8,
+  glidersBootsOfFireWrath: -9,
+  glidersBootsOfTheInvoker: -10
+}
+
 const items = {
   head: {
     darkConjurorsCollar: {
@@ -2021,6 +2036,34 @@ const items = {
       source: 'Karazhan',
       phase: 1
     },
+    ravagersCuffsOfFireWrath: {
+      name: "Ravager's Cuffs of Fire Wrath",
+      firePower: 58,
+      displayId: 30684,
+      id: fakeItemIds.ravagersCuffsOfFireWrath,
+      source: 'Karazhan',
+      phase: 1
+    },
+    ravagersCuffsOfTheSorcerer: {
+      name: "Ravager's Cuffs of the Sorcerer",
+      stamina: 32,
+      intellect: 22,
+      spellPower: 25,
+      displayId: 30684,
+      id: fakeItemIds.ravagersCuffsOfTheSorcerer,
+      source: 'Karazhan',
+      phase: 1
+    },
+    ravagersCuffsOfTheInvoker: {
+      name: "Ravager's Cuffs of the Invoker",
+      intellect: 22,
+      spellPower: 25,
+      critRating: 22,
+      displayId: 30684,
+      id: fakeItemIds.ravagersCuffsOfTheInvoker,
+      source: 'Karazhan',
+      phase: 1
+    },
     illidariBracers: {
       name: 'Illidari Bracers of the Invoker',
       intellect: 17,
@@ -2623,6 +2666,42 @@ const items = {
       id: 30020,
       source: 'The Eye',
       phase: 2
+    },
+    lurkersCordOfShadowWrath: {
+      name: "Lurker's Cord of Shadow Wrath",
+      shadowPower: 78,
+      displayId: 30675,
+      id: fakeItemIds.lurkersCordOfShadowWrath,
+      source: 'Karazhan',
+      phase: 1
+    },
+    lurkersCordOfFireWrath: {
+      name: "Lurker's Cord of Fire Wrath",
+      firePower: 78,
+      displayId: 30675,
+      id: fakeItemIds.lurkersCordOfFireWrath,
+      source: 'Karazhan',
+      phase: 1
+    },
+    lurkersCordOfTheSorcerer: {
+      name: "Lurker's Cord of the Sorcerer",
+      stamina: 43,
+      intellect: 29,
+      spellPower: 34,
+      displayId: 30675,
+      id: fakeItemIds.lurkersCordOfTheSorcerer,
+      source: 'Karazhan',
+      phase: 1
+    },
+    lurkersCordOfTheInvoker: {
+      name: "Lurker's Cord of the Invoker",
+      intellect: 29,
+      spellPower: 34,
+      critRating: 29,
+      displayId: 30675,
+      id: fakeItemIds.lurkersCordOfTheInvoker,
+      source: 'Karazhan',
+      phase: 1
     },
     nethershardGirdle: {
       name: 'Nethershard Girdle',
@@ -3337,6 +3416,32 @@ const items = {
       id: 30037,
       source: 'Tailoring',
       phase: 2
+    },
+    glidersBootsOfShadowWrath: {
+      name: "Glider's Boots of Shadow Wrath",
+      shadowPower: 78,
+      displayId: 30681,
+      id: fakeItemIds.glidersBootsOfShadowWrath,
+      source: 'Karazhan',
+      phase: 1
+    },
+    glidersBootsOfFireWrath: {
+      name: "Glider's Boots of Fire Wrath",
+      firePower: 78,
+      displayId: 30681,
+      id: fakeItemIds.glidersBootsOfFireWrath,
+      source: 'Karazhan',
+      phase: 1
+    },
+    glidersBootsOfTheInvoker: {
+      name: "Glider's Boots of the Invoker",
+      intellect: 29,
+      spellPower: 34,
+      critRating: 29,
+      displayId: 30681,
+      id: fakeItemIds.glidersBootsOfTheInvoker,
+      source: 'Karazhan',
+      phase: 1
     },
     frozenShadoweaveBoots: {
       name: 'Frozen Shadoweave Boots',

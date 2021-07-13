@@ -602,10 +602,6 @@ img[data-color='meta'] {
 	padding: 5px;
 }
 
-#sidebar-sets {
-	line-height: 5px;
-}
-
 .item-row a, .enchant-row a, .sidebar-set-bonus a {
 	color: #fff;
 	text-decoration: none;

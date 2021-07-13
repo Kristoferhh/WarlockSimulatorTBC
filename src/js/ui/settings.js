@@ -116,7 +116,7 @@ function updateSimulationSettingsVisibility () {
     $('.petDebuff').hide()
   }
 
-  if ($('#petChoice').children('select').val() == PetName.SUCCUBUS && $('#petMode').children('select').val() == PetMode.AGGRESSIVE) {
+  if ($('#petChoice').children('select').val() == PetName.SUCCUBUS && $('#petMode').children('select').val() == PetMode.AGGRESSIVE && (talents.demonicSacrifice == 0 || $('#sacrificePet').children('select').val() === 'no')) {
     $('#lashOfPainUsage').show()
   } else {
     $('#lashOfPainUsage').hide()
