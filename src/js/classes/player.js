@@ -29,6 +29,7 @@ class Player {
     this.talents = settings.talents
     this.simSettings = settings.simSettings
     this.level = 70
+    this.gcdValue = 1.5
     this.shattrathFaction = settings.simSettings.shattrathFaction // Aldor or Scryers
     this.exaltedWithShattrathFaction = settings.simSettings.shattrathFactionReputation == 'yes'
     this.itemId = customItemId || settings.items[settings.selectedItemSlot] || 0
@@ -274,9 +275,9 @@ class Player {
     }
     // Add stamina from Demonic Embrace
     this.stats.stamina *= 1 + (0.03 * this.talents.demonicEmbrace)
-    // Add mp5 from Vampiric Touch
+    // Add mp5 from Vampiric Touch (add 25% instead of 5% since we're adding it to the mana per 5 seconds variable)
     if (settings.auras.vampiricTouch) {
-      this.stats.mp5 += settings.simSettings.shadowPriestDps * 0.05
+      this.stats.mp5 += settings.simSettings.shadowPriestDps * 0.25
     }
     if (settings.auras.powerOfTheGuardianWarlock) {
       this.stats.spellPower += 33 * settings.simSettings.warlockAtieshAmount
@@ -489,10 +490,10 @@ class Player {
 
   reset () {
     this.castTimeRemaining = 0
-    this.gcdValue = 1.5
     this.gcdRemaining = 0
     this.mana = this.stats.maxMana
     this.mp5Timer = 5
+    this.importantAuraCounter = 0
   }
 
   cast (spell) {

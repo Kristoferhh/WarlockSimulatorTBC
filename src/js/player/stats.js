@@ -154,9 +154,9 @@ function refreshCharacterStats () {
 
   // MP5
   let mp5 = characterStats.mp5
-  // Add mp5 from Vampiric Touch
+  // Add mp5 from Vampiric Touch (add 25% instead of 5% since we're adding it to the mana per 5 seconds variable)
   if (auras.vampiricTouch) {
-    mp5 += settings.shadowPriestDps * 0.05
+    mp5 += settings.shadowPriestDps * 0.25
   }
 
   // Enemy armor
