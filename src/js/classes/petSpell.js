@@ -119,10 +119,6 @@ class PetSpell {
     if (this.type == SpellTypes.MAGICAL) {
       dmg += (this.pet.stats.spellPower * this.coefficient)
     }
-    // Add damage from Attack Power
-    else if (this.type == SpellTypes.PHYSICAL) {
-      dmg += this.pet.getAttackPower() / 7
-    }
     // Multiply if it's a crit
     if (isCrit) {
       dmg *= this.pet.critMultiplier
