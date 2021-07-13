@@ -27,7 +27,7 @@ class PetSpell {
 
   getCastTime() {
     // todo: figure out how much haste % pets get from each haste rating point
-    return Math.round((this.castTime / (1 + ((this.pet.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000
+    return Math.round((this.castTime / (1 + this.pet.stats.hastePercent / 100)) * 10000) / 10000
   }
 
   getCooldown() {
@@ -48,7 +48,7 @@ class PetSpell {
     if (this.castTime > 0) {
       this.casting = true
       this.pet.castTimeRemaining = this.getCastTime()
-      this.pet.player.combatLog(this.pet.name + ' started casting ' + this.name + '. Cast time: ' + this.pet.castTimeRemaining + ' (' + Math.round((this.pet.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base cast speed of ' + this.castTime + ')')
+      this.pet.player.combatLog(this.pet.name + ' started casting ' + this.name + '. Cast time: ' + this.pet.castTimeRemaining + ' (' + Math.round((this.pet.stats.hastePercent) * 10000) / 10000 + '% haste at a base cast speed of ' + this.castTime + ')')
     } else {
       this.cast()
     }
@@ -66,7 +66,7 @@ class PetSpell {
     } else {
       combatLogEntry += ' casts ' + this.name
       if (this.varName === 'melee') {
-        combatLogEntry += '. Attack Speed: ' + this.pet.spells.melee.getCooldown().toFixed(2) + ' (' + Math.round((this.pet.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base attack speed of ' + this.pet.spells.melee.cooldown.toFixed(2) + ')'
+        combatLogEntry += '. Attack Speed: ' + this.pet.spells.melee.getCooldown().toFixed(2) + ' (' + Math.round(this.pet.stats.hastePercent * 10000) / 10000 + '% haste at a base attack speed of ' + this.pet.spells.melee.cooldown.toFixed(2) + ')'
       }
     }
     if (this.manaCost > 0 && this.pet.player.simSettings.infinitePetMana !== 'yes') {
@@ -249,7 +249,7 @@ class Melee extends PetSpell {
   }
 
   getCooldown() {
-    return Math.round((this.cooldown / (1 + ((this.pet.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000
+    return Math.round((this.cooldown / (1 + this.pet.stats.hastePercent / 100)) * 10000) / 10000
   }
 }
 

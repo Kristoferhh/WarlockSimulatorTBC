@@ -40,7 +40,7 @@ class Aura {
           this.player.stats[stat] += this.stats[stat]
           // Add stats to pet
           if (this.player.pet) {
-            if (this.player.pet.stats.hasOwnProperty(stat)) {
+            if (this.player.pet.stats.hasOwnProperty(stat) && this.groupWide) {
               this.player.pet.stats[stat] += this.stats[stat]
             }
             if (this.player.pet.stats.buffs.hasOwnProperty(stat)) {
@@ -398,7 +398,7 @@ class BloodlustAura extends Aura {
       this.player.combatLog('Haste + 30% (' + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + '% -> ' + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) + 30) * 100) / 100 + '%)')
       this.player.stats.hasteRating += 30 * hasteRatingPerPercent
       if (this.player.pet) {
-        this.player.pet.stats.hasteRating += 30 * hasteRatingPerPercent
+        this.player.pet.stats.hastePercent += 30
       }
     }
     super.apply()
@@ -409,7 +409,7 @@ class BloodlustAura extends Aura {
       if (!endOfIteration) this.player.combatLog('Haste - 30% (' + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + '% -> ' + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) - 30) * 100) / 100 + '%)')
       this.player.stats.hasteRating -= 30 * hasteRatingPerPercent
       if (this.player.pet) {
-        this.player.pet.stats.hasteRating -= 30 * hasteRatingPerPercent
+        this.player.pet.stats.hastePercent -= 30
       }
       super.fade(endOfIteration)
     }

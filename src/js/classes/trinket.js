@@ -34,10 +34,14 @@ class Trinket {
             const combatLogStat = stat == 'spellPower' ? this.player.getSpellPower() : this.player.stats[stat]
             this.player.combatLog(stat + ' + ' + this.stats[stat] + ' (' + Math.round(combatLogStat) + ' -> ' + Math.round(combatLogStat + this.stats[stat]) + ')')
             this.player.stats[stat] += this.stats[stat]
-            if (this.player.pet) recalculatePetStats = true
+            if (this.player.pet) {
+              recalculatePetStats = true
+            }
           }
         }
-        if (recalculatePetStats) this.player.pet.calculateStatsFromPlayer()
+        if (recalculatePetStats) {
+          this.player.pet.calculateStatsFromPlayer()
+        }
         this.player.importantAuraCounter++
         this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
         this.active = true
@@ -58,10 +62,14 @@ class Trinket {
             this.player.combatLog(stat + ' - ' + this.stats[stat] + ' (' + Math.round(combatLogStat) + ' -> ' + Math.round(combatLogStat - this.stats[stat]) + ')')
           }
           this.player.stats[stat] -= this.stats[stat]
-          if (this.player.pet) recalculatePetStats = true
+          if (this.player.pet) {
+            recalculatePetStats = true
+          }
         }
       }
-      if (recalculatePetStats) this.player.pet.calculateStatsFromPlayer()
+      if (recalculatePetStats) {
+        this.player.pet.calculateStatsFromPlayer()
+      }
       this.player.importantAuraCounter--
       this.active = false
       if (!endOfIteration) {
