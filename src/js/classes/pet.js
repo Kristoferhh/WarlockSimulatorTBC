@@ -203,8 +203,10 @@ class Pet {
       // Halp, need confirmation that this is actually the right way to get its average melee damage.
       this.dmg = (this.getAttackPower() / 14 + 51.7) * this.baseMeleeSpeed
       this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * 11.555 * this.stats.intellectModifier
-    } else if (this.type == PetType.RANGED) {
+    }
+    if (this.pet === PetName.IMP) {
       this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * this.stats.intellectModifier * 4.95
+    } else if (this.pet === PetName.SUCCUBUS) {
       this.stats.spellCritChance = 0.0125 * (this.stats.intellect * this.stats.intellectModifier) + 0.91 + this.player.talents.demonicTactics + this.stats.buffs.spellCritChance
     }
     if (announceInCombatlog) {
@@ -226,8 +228,15 @@ class Pet {
     this.stats.mana = this.stats.maxMana
     this.fiveSecondRuleTimerRemaining = 5 // If higher than 0 then the pet can't gain mana from Spirit regen (July 2021 update: I have no idea what this comment means)
     this.spiritTickTimerRemaining = 2
-    if (this.type == PetType.MELEE) this.spells.melee.cooldownRemaining = 0
-    if (this.auras.blackBook && this.auras.blackBook.active) this.auras.blackBook.fade(true)
+    this.castTimeRemaining = 0
+    // Reset melee swing timer
+    if (this.type == PetType.MELEE) {
+      this.spells.melee.cooldownRemaining = 0
+    }
+    // Remove Black Book if Active
+    if (this.auras.blackBook && this.auras.blackBook.active) {
+      this.auras.blackBook.fade(true)
+    }
     // Black Book prepop
     if (this.player.simSettings.prepopBlackBook === 'yes') {
       this.auras.blackBook.apply(false)
@@ -333,6 +342,11 @@ class Imp extends Pet {
   initialize () {
     this.spells.firebolt = new ImpFirebolt(this)
     super.initialize()
+  }
+
+  reset() {
+    this.spells.firebolt.casting = false
+    super.reset()
   }
 
   tick (t) {

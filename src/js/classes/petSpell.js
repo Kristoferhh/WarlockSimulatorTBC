@@ -76,37 +76,60 @@ class PetSpell {
     this.pet.player.combatLog(combatLogEntry)
     this.pet.player.damageBreakdown[this.varName].casts = this.pet.player.damageBreakdown[this.varName].casts + 1 || 1
 
-    // Check for crit
-    let isCrit = false
-    if (this.canCrit) {
-      isCrit = this.pet.isCrit(this.type)
-      if (isCrit) {
-        this.pet.player.damageBreakdown[this.varName].crits = this.pet.player.damageBreakdown[this.varName].crits + 1 || 1
+    // Physical dmg spell
+    if (this.type == SpellTypes.PHYSICAL) {
+      let isCrit, isGlancing = false
+      let critChance = this.pet.getMeleeCritChance() * this.pet.player.stats.hitChanceMultiplier
+      let dodgeChance = critChance + this.pet.enemyDodgeChance * this.pet.player.stats.hitChanceMultiplier
+      let missChance = dodgeChance + (100 - this.pet.getMeleeHitChance()) * this.pet.player.stats.hitChanceMultiplier
+      let glancingChance = missChance
+      // Only check for a glancing blow if it's a normal melee attack
+      if (this.varName === 'melee') {
+        glancingChance += this.pet.glancingBlowChance * this.pet.player.stats.hitChanceMultiplier
       }
-    }
-    // Check for miss
-    const isMiss = !this.pet.isHit(this.type)
-    if (isMiss) {
-      this.pet.player.damageBreakdown[this.varName].misses = this.pet.player.damageBreakdown[this.varName].misses + 1 || 1
-      this.pet.player.combatLog(this.pet.name + ' ' + this.name + ' ' + (this.type == SpellTypes.MAGICAL ? '*resist*' : '*miss*'))
-    }
-    // Check for dodge if melee
-    const isDodge = this.type == SpellTypes.PHYSICAL && random(1, 100 * this.pet.player.stats.hitChanceMultiplier) <= this.pet.enemyDodgeChance * this.pet.player.stats.hitChanceMultiplier
-    if (isDodge) {
-      this.pet.player.damageBreakdown[this.varName].dodges = this.pet.player.damageBreakdown[this.varName].dodges + 1 || 1
-      if (!isMiss) this.pet.player.combatLog(this.pet.name + ' ' + this.name + ' *dodge*')
-    }
-    // Check for glancing blow if melee attack
-    let isGlancing = false
-    if (this.varName == 'melee') {
-      isGlancing = random(1,100) <= this.pet.glancingBlowChance
-      if (isGlancing) {
-        this.pet.player.damageBreakdown[this.varName].glancingBlows = this.pet.player.damageBreakdown[this.varName].glancingBlows + 1 || 1
-      }
-    }
 
-    if (!isMiss && !isDodge) {
+      // Check whether the attack is a crit, dodge, miss, glancing, or just a normal hit.
+      const attackRoll = random(1,100 * this.pet.player.stats.hitChanceMultiplier)
+      // Crit
+      if (attackRoll <= critChance) {
+        this.pet.player.damageBreakdown[this.varName].crits = this.pet.player.damageBreakdown[this.varName].crits + 1 || 1
+        isCrit = true
+      }
+      // Dodge
+      else if (attackRoll <= dodgeChance) {
+        this.pet.player.damageBreakdown[this.varName].dodges = this.pet.player.damageBreakdown[this.varName].dodges + 1 || 1
+        this.pet.player.combatLog(this.pet.name + ' ' + this.name + ' *dodge*')
+        return
+      }
+      // Miss
+      else if (attackRoll <= missChance) {
+        this.pet.player.damageBreakdown[this.varName].misses = this.pet.player.damageBreakdown[this.varName].misses + 1 || 1
+        this.pet.player.combatLog(this.pet.name + ' ' + this.name + ' *miss*')
+        return
+      }
+      // Glancing Blow
+      else if (attackRoll <= glancingChance && this.varName === 'melee') {
+        this.pet.player.damageBreakdown[this.varName].glancingBlows = this.pet.player.damageBreakdown[this.varName].glancingBlows + 1 || 1
+        isGlancing = true
+      }
+
       this.damage(isCrit, isGlancing)
+    }
+    // Magic dmg spell
+    else if (this.type == SpellTypes.MAGICAL) {
+      // Check for resist
+      if (!this.pet.isHit(this.type)) {
+        this.pet.player.damageBreakdown[this.varName].misses = this.pet.player.damageBreakdown[this.varName].misses + 1 || 1
+        this.pet.player.combatLog(this.pet.name + ' ' + this.name + ' *resist*')
+      } else {
+        // Check for crit
+        let isCrit = false
+        if (this.canCrit && this.pet.isCrit(this.type)) {
+          isCrit = true
+          this.pet.player.damageBreakdown[this.varName].crits = this.pet.player.damageBreakdown[this.varName].crits + 1 || 1
+        }
+        this.damage(isCrit, false)
+      }
     }
   }
 
@@ -277,6 +300,7 @@ class SuccubusLashOfPain extends PetSpell {
     this.coefficient = 0.429
     this.pet.player.damageBreakdown[this.varName] = { name: 'Lash of Pain (Succubus)' }
     this.type = SpellTypes.MAGICAL
+    this.canCrit = true
     this.resetsFiveSecondRule = true
     this.modifier = 1
   }

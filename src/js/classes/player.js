@@ -364,10 +364,15 @@ class Player {
       this.combatlog.push('Spell Power: ' + Math.round(this.pet.stats.spellPower))
       this.combatlog.push('Mana: ' + Math.round(this.pet.stats.maxMana))
       this.combatlog.push('MP5: ' + Math.round(this.pet.stats.mp5))
-      this.combatlog.push('Physical Hit Chance: ' + Math.round(this.pet.getMeleeHitChance() * 100) / 100 + '%')
-      this.combatlog.push('Physical Crit Chance: ' + Math.round(this.pet.getMeleeCritChance() * 100) / 100 + '%')
-      this.combatlog.push('Spell Hit Chance: ' + Math.round(this.pet.getSpellHitChance() * 100) / 100 + '%')
-      this.combatlog.push('Spell Crit Chance: ' + Math.round(this.pet.getSpellCritChance() * 100) / 100 + '%')
+      if (this.pet.pet !== PetName.IMP) {
+        this.combatlog.push('Physical Hit Chance: ' + Math.round(this.pet.getMeleeHitChance() * 100) / 100 + '%')
+        this.combatlog.push('Physical Crit Chance: ' + Math.round(this.pet.getMeleeCritChance() * 100) / 100 + '% (' + this.pet.critSuppression + '% Crit Suppression Applied)')
+        this.combatlog.push('Glancing Blow Chance: ' + Math.round(this.pet.glancingBlowChance * 100) / 100 + '%')
+      }
+      if (this.pet.pet === PetName.IMP || this.pet.pet === PetName.SUCCUBUS) {
+        this.combatlog.push('Spell Hit Chance: ' + Math.round(this.pet.getSpellHitChance() * 100) / 100 + '%')
+        this.combatlog.push('Spell Crit Chance: ' + Math.round(this.pet.getSpellCritChance() * 100) / 100 + '%')
+      }
       this.combatlog.push('Damage Modifier: ' + Math.round(this.pet.stats.damageModifier * 100) + '%')
     }
     this.combatlog.push('---------------- Enemy stats ----------------')
@@ -375,6 +380,7 @@ class Player {
     this.combatlog.push('Shadow Resistance: ' + this.enemy.shadowResist)
     this.combatlog.push('Fire Resistance: ' + this.enemy.fireResist)
     if (this.pet && this.pet.pet != PetName.IMP) {
+      this.combatlog.push('Dodge Chance: ' + this.pet.enemyDodgeChance + '%')
       this.combatlog.push('Armor: ' + this.enemy.armor)
       this.combatlog.push('Damage Reduction From Armor: ' + Math.round((1 - this.pet.armorMultiplier) * 10000) / 100 + '%')
     }
