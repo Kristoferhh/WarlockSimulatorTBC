@@ -21,7 +21,7 @@ class Pet {
     this.player = player
     this.simSettings = settings.simSettings
     this.playerAuras = settings.auras
-    this.enemyDodgeChance = 5
+    this.enemyDodgeChance = 6.5
     this.castTimeRemaining = 0
     this.fiveSecondRuleTimerRemaining = 5
     this.spiritTickTimerRemaining = 2
@@ -29,6 +29,7 @@ class Pet {
     this.critMultiplier = 1.5
     this.glancingBlowMultiplier = 1 - (0.1 + (player.enemy.level * 5 - player.level * 5) / 100)
     this.glancingBlowChance = Math.max(0, 6 + (player.enemy.level * 5 - player.level * 5) * 1.2)
+    this.critSuppression = 4.73
     this.spells = {}
     this.auras = {}
     this.stats = {
@@ -235,7 +236,7 @@ class Pet {
   }
 
   getMeleeCritChance () {
-    return this.stats.critChance
+    return this.stats.critChance - this.critSuppression
   }
 
   getSpellCritChance () {
