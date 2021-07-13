@@ -51,6 +51,10 @@ class Pet {
         critChance: 0,
         spellCritChance: 0
       },
+      // Separate attack power from boss debuffs so it won't get multiplied with the AP modifier
+      debuffs: {
+        ap: 0
+      },
       mp5: 0,
       ap: 0,
       strength: 0,
@@ -144,7 +148,8 @@ class Pet {
     if (this.playerAuras.vampiricTouch) this.stats.mp5 += this.simSettings.shadowPriestDps * 0.05
     // Improved Faerie Fire
     if (this.playerAuras.faerieFire && this.simSettings.improvedFaerieFire == 'yes') this.stats.hitChance += 3
-    if (this.playerAuras.exposeWeakness) this.stats.buffs.ap += (this.simSettings.survivalHunterAgility * 0.25 * (this.simSettings.exposeWeaknessUptime / 100)) || 0
+    if (this.playerAuras.exposeWeakness) this.stats.debuffs.ap += (this.simSettings.survivalHunterAgility * 0.25 * (this.simSettings.exposeWeaknessUptime / 100)) || 0
+    if (this.playerAuras.improvedHuntersMark) this.stats.debuffs.ap += 110
     if (this.playerAuras.heroicPresence) this.stats.hitChance++
     if (this.playerAuras.blessingOfMight) this.stats.buffs.ap += 220
     if (this.playerAuras.strengthOfEarthTotem) this.stats.buffs.strength += 86
@@ -189,7 +194,7 @@ class Pet {
     this.stats.intellect = this.stats.baseStats.intellect + this.stats.buffs.intellect + (0.3 * this.player.stats.intellect * this.player.stats.intellectModifier)
     this.player.demonicKnowledgeSp = ((this.stats.stamina * this.stats.staminaModifier) + (this.stats.intellect * this.stats.intellectModifier)) * (0.04 * this.player.talents.demonicKnowledge)
     this.stats.baseStats.ap = (this.stats.baseStats.strength + this.stats.buffs.strength) * 2 - 20
-    this.stats.ap = this.stats.baseStats.ap + this.stats.buffs.ap + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.57
+    this.stats.ap = this.stats.baseStats.ap + this.stats.buffs.ap + this.stats.debuffs.ap + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.57
     this.stats.agility = this.stats.baseStats.agility + this.stats.buffs.agility
     this.stats.critChance = this.player.talents.demonicTactics + (this.stats.agility * this.stats.agilityModifier) * 0.04 + 0.65 + this.stats.buffs.critChance
     this.stats.spellPower = this.stats.buffs.spellPower + (this.player.getSpellPower() + Math.max(this.player.stats.shadowPower, this.player.stats.firePower)) * 0.15
@@ -262,7 +267,14 @@ class Pet {
   }
 
   getAttackPower () {
-    return this.stats.ap * this.stats.apModifier
+    // Remove AP from debuffs on the boss before multiplying by the AP multiplier since it doesn't affect those debuffs
+    let ap = (this.stats.ap - this.stats.debuffs.ap) * this.stats.apModifier 
+    if (this.pet == PetName.FELGUARD) {
+      ap *= (1 + 0.05 * this.auras.demonicFrenzy.stacks)
+    }
+    // Add the AP from boss debuffs back and return
+    ap += this.stats.debuffs.ap
+    return ap
   }
 
   tick (t) {
@@ -397,10 +409,6 @@ class Felguard extends Pet {
     this.stats.damageModifier *= 1 + (0.01 * player.talents.masterDemonologist)
     this.player.damageBreakdown.melee = { name: 'Melee (Felguard)' }
     this.setup()
-  }
-
-  getAttackPower () {
-    return super.getAttackPower() * (1 + 0.05 * this.auras.demonicFrenzy.stacks)
   }
 
   reset () {

@@ -10,7 +10,11 @@ const fakeItemIds = {
   ravagersCuffsOfTheInvoker: -7,
   glidersBootsOfShadowWrath: -8,
   glidersBootsOfFireWrath: -9,
-  glidersBootsOfTheInvoker: -10
+  glidersBootsOfTheInvoker: -10,
+  drakeweaveRaimentOfShadowWrath: -11,
+  drakeweaveRaimentOfFireWrath: -12,
+  drakeweaveRaimentOfTheSorcerer: -13,
+  drakeweaveRaimentOfTheInvoker: -14,
 }
 
 const items = {
@@ -1602,6 +1606,42 @@ const items = {
       source: 'The Eye',
       phase: 2
     },
+    drakeweaveRaimentOfShadowWrath: {
+      name: 'Drakeweave Raiment of Shadow Wrath',
+      shadowPower: 85,
+      displayId: 31158,
+      id: fakeItemIds.drakeweaveRaimentOfShadowWrath,
+      source: 'Hemathion - BEM Rare',
+      phase: 1
+    },
+    drakeweaveRaimentOfFireWrath: {
+      name: 'Drakeweave Raiment of Fire Wrath',
+      firePower: 85,
+      displayId: 31158,
+      id: fakeItemIds.drakeweaveRaimentOfFireWrath,
+      source: 'Hemathion - BEM Rare',
+      phase: 1
+    },
+    /*drakeweaveRaimentOfTheSorcerer: {
+      name: 'Drakeweave Raiment of the Sorcerer',
+      stamina: 47,
+      intellect: 32,
+      spellPower: 37,
+      displayId: 31158,
+      id: fakeItemIds.drakeweaveRaimentOfTheSorcerer,
+      source: 'Hemathion - BEM Rare',
+      phase: 1
+    },
+    drakeweaveRaimentOfTheInvoker: {
+      name: 'Drakeweave Raiment of the Invoker',
+      intellect: 32,
+      spellPower: 37,
+      critRating: 32,
+      displayId: 31158,
+      id: fakeItemIds.drakeweaveRaimentOfTheInvoker,
+      source: 'Hemathion - BEM Rare',
+      phase: 1
+    },*/
     voidheartRobe: {
       name: 'Voidheart Robe',
       stamina: 42,

@@ -233,6 +233,12 @@ const _auras = {
         iconName: 'inv_axe_12',
         forPet: true,
         id: 16928
+      },
+      improvedHuntersMark: {
+        name: "Improved Hunter's Mark",
+        iconName: 'ability_hunter_snipershot',
+        forPet: true,
+        id: 19425
       }
     }
   },
