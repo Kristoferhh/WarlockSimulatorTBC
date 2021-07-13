@@ -18,7 +18,7 @@ class PetAura {
   apply () {
     this.active = true
     this.durationRemaining = this.duration
-    let combatLogMsg = this.name + ' gains ' + this.name
+    let combatLogMsg = this.pet.name + ' gains ' + this.name
     if (this.stacks) combatLogMsg += '(' + this.stacks + '). Current AP: ' + Math.round(this.pet.getAttackPower()) + ')'
     this.pet.player.combatLog(combatLogMsg)
   }
