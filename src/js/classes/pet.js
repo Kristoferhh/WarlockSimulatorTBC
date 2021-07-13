@@ -28,11 +28,7 @@ class Pet {
     this.mode = this.simSettings.petMode
     this.critMultiplier = 1.5
     this.glancingBlowMultiplier = 1 - (0.1 + (player.enemy.level * 5 - player.level * 5) / 100)
-    this.glancingBlowChance = 10 + player.enemy.level * 5 - player.level * 5
-    // Glancing blow chance on a lvl 73 target is 24% according to Fierywind on the warlock discord
-    if (player.enemy.level - player.level == 3) {
-      this.glancingBlowChance = 24
-    }
+    this.glancingBlowChance = Math.max(0, 6 + (player.enemy.level * 5 - player.level * 5) * 1.2)
     this.spells = {}
     this.auras = {}
     this.stats = {
