@@ -91,7 +91,7 @@ class PetSpell {
       this.pet.player.combatLog(this.pet.name + ' ' + this.name + ' ' + (this.type == SpellTypes.MAGICAL ? '*resist*' : '*miss*'))
     }
     // Check for dodge if melee
-    const isDodge = this.type == SpellTypes.PHYSICAL && random(1, 100) <= this.pet.enemyDodgeChance
+    const isDodge = this.type == SpellTypes.PHYSICAL && random(1, 100 * this.pet.player.stats.hitChanceMultiplier) <= this.pet.enemyDodgeChance * this.pet.player.stats.hitChanceMultiplier
     if (isDodge) {
       this.pet.player.damageBreakdown[this.varName].dodges = this.pet.player.damageBreakdown[this.varName].dodges + 1 || 1
       if (!isMiss) this.pet.player.combatLog(this.pet.name + ' ' + this.name + ' *dodge*')
