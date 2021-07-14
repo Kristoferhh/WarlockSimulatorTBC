@@ -357,7 +357,7 @@ class Simulation {
                   this.player.cast('curseOfDoom')
                 }
                 // Cast Curse of Agony if CoA is the selected curse or if Curse of Doom is the selected curse and there's less than 60 seconds remaining of the fight
-                else if (this.player.curse && ((this.player.curse == 'curseOfDoom' && !this.player.auras.curseOfDoom.active) || this.player.curse == 'curseOfAgony') && !this.player.auras.curseOfAgony.active && ((this.player.curse == 'curseOfDoom' && timeRemaining <= 60) || (this.player.curse == 'curseOfAgony' && timeRemaining >= this.player.auras.curseOfAgony.minimumDuration && this.player.spells.curseOfAgony.ready()))) {
+                else if (this.player.curse && (this.player.auras.curseOfAgony && !this.player.auras.curseOfAgony.active) && timeRemaining > this.player.auras.curseOfAgony.minimumDuration && ((this.player.curse == 'curseOfDoom' && !this.player.auras.curseOfDoom.active && (this.player.spells.curseOfDoom.cooldownRemaining > this.player.auras.curseOfAgony.minimumDuration || timeRemaining < 60)) || (this.player.curse == 'curseOfAgony' && this.player.spells.curseOfAgony.ready()))) {
                   if (this.player.spells.amplifyCurse && this.player.spells.amplifyCurse.ready()) {
                     this.player.cast('amplifyCurse')
                   }
