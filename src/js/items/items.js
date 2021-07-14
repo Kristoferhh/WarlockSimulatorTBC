@@ -1199,6 +1199,17 @@ const items = {
     }
   },
   back: {
+    spellSlingersProtector: {
+      name: "Spell-slinger's Protector",
+      stamina: 15,
+      intellect: 14,
+      spirit: 9,
+      spellPower: 16,
+      critRating: 13,
+      id: 28030,
+      source: 'Nagrand Quest',
+      phase: 1
+    },    
     tatteredCapeOfAntonidas: {
       name: 'Tattered Cape of Antonidas',
       stamina: 25,
