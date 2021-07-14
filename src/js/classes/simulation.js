@@ -437,7 +437,7 @@ class Simulation {
 
         // If passTime() returns 0 then the simulation somehow got stuck in an endless loop. This should never happen, so the best solution is to fix the reason it returned 0 rather than setting a minimum value for it to return.
         if (this.passTime() == 0) {
-          throw "The simulation got stuck in an endless loop. If you'd like to help with fixing this bug then please mention which spells you had selected and which gear you had equipped to Kristofer#8003 on Discord."
+          throw "The simulation got stuck in an endless loop. If you'd like to help with fixing this bug then please export your current settings and send it to Kristofer#8003 on Discord."
         }
       }
 

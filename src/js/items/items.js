@@ -1199,17 +1199,6 @@ const items = {
     }
   },
   back: {
-    spellSlingersProtector: {
-      name: "Spell-slinger's Protector",
-      stamina: 15,
-      intellect: 14,
-      spirit: 9,
-      spellPower: 16,
-      critRating: 13,
-      id: 28030,
-      source: 'Nagrand Quest',
-      phase: 1
-    },    
     tatteredCapeOfAntonidas: {
       name: 'Tattered Cape of Antonidas',
       stamina: 25,
@@ -1353,15 +1342,6 @@ const items = {
       source: 'Doom Lord Kazzak',
       phase: 1
     },
-    shadowCloakOfDalaran: {
-      name: 'Shadow-Cloak of Dalaran',
-      stamina: 19,
-      intellect: 18,
-      spellPower: 36,
-      id: 28570,
-      source: 'Karazhan',
-      phase: 1
-    },
     cloakOfWovenEnergy: {
       name: 'Cloak of Woven Energy',
       stamina: 6,
@@ -1383,14 +1363,24 @@ const items = {
       source: "25 Badge of Justice - G'eras",
       phase: 1
     },
-    sporeSoakedVaneer: {
-      name: 'Spore-Soaked Vaneer',
+    shadowCloakOfDalaran: {
+      name: 'Shadow-Cloak of Dalaran',
+      stamina: 19,
+      intellect: 18,
+      spellPower: 36,
+      id: 28570,
+      source: 'Karazhan',
+      phase: 1
+    },
+    spellSlingersProtector: {
+      name: "Spell-slinger's Protector",
       stamina: 15,
-      intellect: 15,
-      spellPower: 19,
-      critRating: 11,
-      id: 24362,
-      source: 'Slave Pens',
+      intellect: 14,
+      spirit: 9,
+      spellPower: 16,
+      critRating: 13,
+      id: 28030,
+      source: 'Nagrand Quest',
       phase: 1
     },
     embroideredCapeOfMysteries: {
@@ -1400,6 +1390,16 @@ const items = {
       spellPower: 25,
       id: 27485,
       source: 'Heroic Blood Furnace',
+      phase: 1
+    },
+    sporeSoakedVaneer: {
+      name: 'Spore-Soaked Vaneer',
+      stamina: 15,
+      intellect: 15,
+      spellPower: 19,
+      critRating: 11,
+      id: 24362,
+      source: 'Slave Pens',
       phase: 1
     },
     cloakOfTheNecropolis: {
