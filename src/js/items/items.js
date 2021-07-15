@@ -207,7 +207,7 @@ const items = {
       critRating: 29,
       id: 32494,
       source: 'Engineering',
-      phase: 3
+      phase: 2
     },
     hoodOfTheCorruptor: {
       name: 'Hood of the Corruptor',
