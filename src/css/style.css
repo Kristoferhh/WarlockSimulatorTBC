@@ -105,6 +105,10 @@ ul {
 	margin-top: -21px;
 }
 
+#sidebar-sets h3 {
+	line-height: 0px;
+}
+
 #item-section {
 	width: 30%;
 	display: inline-block;
