@@ -270,9 +270,9 @@ class Spell {
     // T5 4pc. Increase Corruption & Immolate DoT dmg when Shadow Bolt/Incinerate hits
     if (this.player.sets['646'] >= 4) {
       if (this.varName == 'shadowBolt' && this.player.auras.corruption && this.player.auras.corruption.active) {
-        this.player.auras.corruption.t5BonusModifier *= 1.1
+        this.player.auras.corruption.t5BonusModifier += 0.1
       } else if (this.varName == 'incinerate' && this.player.auras.immolate && this.player.auras.immolate.active) {
-        this.player.auras.immolate.t5BonusModifier *= 1.1
+        this.player.auras.immolate.t5BonusModifier += 0.1
       }
     }
   }
