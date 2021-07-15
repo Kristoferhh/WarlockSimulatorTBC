@@ -153,6 +153,51 @@ $(document).on('click', '#show-hidden-gems-button', function (e) {
   e.stopPropagation()
 })
 
+// "Fill Item Sockets" button clicked
+$('#gem-options-button').click(function () {
+  $('#gem-options-window').toggle()
+
+  if ($('#gem-options-window').is(':visible')) {
+    const selectedSocketColor = $('#gem-options-window-socket-selection input[type="radio"]:checked').val()
+    refreshGemOptionsGems(selectedSocketColor)
+  }
+})
+
+// When one of the socket selection radio buttons gets changed in the "Fill Item Sockets"
+$('#gem-options-window-socket-selection').change(function () {
+  const selectedSocketColor = $('#gem-options-window-socket-selection input[type="radio"]:checked').val()
+  refreshGemOptionsGems(selectedSocketColor)
+})
+
+// A gem in the "Fill Item Sockets" options gets clicked
+$(document).on('click', '.gem-options-gem', function () {
+  $('.gem-options-gem').attr('data-checked', 'false')
+  $(this).attr('data-checked', 'true')
+  return false
+})
+
+$('#gem-options-apply-button').click(function () {
+  alert($('.gem-options-gem').attr('data-checked').length)
+})
+
+// Adds gems to the "Fill Item Sockets" window
+function refreshGemOptionsGems (socketColor) {
+  // Remove all currently listed gems
+  $('.gem-options-gem').remove()
+
+  for (const socket in gems) {
+    // If the socket is a meta gem socket then only show meta gems, otherwise show all non-meta gems
+    if ((socketColor === 'meta' && socket === 'meta') || (socketColor !== 'meta' && socket !== 'meta')) {
+      for (const gem in gems[socket]) {
+        const g = gems[socket][gem]
+        if (!gemPreferences.hidden.includes(Number(gem))) {
+          $('#gem-options-gem-list').append('<div class="gem-options-gem" data-gem-id="' + gem +'"><img src="img/' + g.iconName + '.jpg"><a href="https://tbc.wowhead.com/item=' + gem +'">' + g.name + '</a></div>')
+        }
+      }
+    }
+  }
+}
+
 function modifyStatsFromGem (gemId, action) {
   for (const color in gems) {
     if (gems[color][gemId]) {

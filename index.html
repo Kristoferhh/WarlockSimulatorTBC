@@ -504,6 +504,33 @@
 			<li data-slot="trinket" data-subslot='2'>Trinket 2</li>
 			<li data-slot="wand">Wand</li>
 		</ul>
+		<button id='gem-options-button'>Fill Item Sockets</button>
+		<div id='gem-options-window'>
+			<div id='gem-options-window-replacement-options'>
+				<input type="radio" name='gem-replacement-option' value='emptySockets' checked />
+				<label for='emptySockets'>Fill empty sockets</label>
+				<input type="radio" name='gem-replacement-option' value='allSockets' />
+				<label for='allSockets'>Fill all sockets (replaces equipped gems)</label>
+			</div>
+			<div>
+				<input type='radio' name='item-slot' value='currentSlot' checked />
+				<label for='currentSlot'>Current item slot</label>
+				<input type='radio' name='item-slot' value='allItems' />
+				<label for='allItems'>All item slots</label>
+			</div>
+			<div id='gem-options-window-socket-selection'>
+				<input type="radio" name="socket-selection" value='meta'>
+				<label for='metaSockets'>Meta Sockets</label>
+				<input type="radio" name="socket-selection" value='red' checked>
+				<label for='redSockets'>Red Sockets</label>
+				<input type="radio" name="socket-selection" value='blue'>
+				<label for='blueSockets'>Blue Sockets</label>
+				<input type="radio" name="socket-selection" value='yellow'>
+				<label for='yellowSockets'>Yellow Sockets</label>
+			</div>
+			<div id='gem-options-gem-list'></div>
+			<button id='gem-options-apply-button'>Apply</button>
+		</div>
 		<table id="item-selection-table" data-type="mainhand" class="tablesorter" data-sortlist='[[11,1]]'>
 			<colgroup id="item-selection-colgroup">
 				<col style="width: 20%">
