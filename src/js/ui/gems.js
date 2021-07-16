@@ -177,7 +177,28 @@ $(document).on('click', '.gem-options-gem', function () {
 })
 
 $('#gem-options-apply-button').click(function () {
-  alert($('.gem-options-gem').attr('data-checked').length)
+  const selectedGemId = $('.gem-options-gem[data-checked="true"]').attr('data-gem-id')
+
+  if (selectedGemId) {
+    const fillAllSockets = $('#gem-options-window-replacement-options input[type="radio"]:checked').val() == 'allSockets'
+    const allItems = $('#gem-options-window-item-slot input[type="radio"]:checked').val() == 'allItems'
+    const socketColor = $('#gem-options-window-socket-selection input[type="radio"]:checked').val()
+
+    for (const itemSlot in selectedGems) {
+      if (itemSlot == localStorage.selectedItemSlot || allItems) {
+        for (const itemId in selectedGems[itemSlot]) {
+          for (const socket in selectedGems[itemSlot][itemId]) {
+            const s = selectedGems[itemSlot][itemId][socket]
+            if (s && s[0] == socketColor) {
+              s[1] = selectedGemId
+            }
+          }
+        }
+      }
+    }
+    localStorage.selectedGems = JSON.stringify(selectedGems)
+    location.reload()
+  }
 })
 
 // Adds gems to the "Fill Item Sockets" window
@@ -191,7 +212,7 @@ function refreshGemOptionsGems (socketColor) {
       for (const gem in gems[socket]) {
         const g = gems[socket][gem]
         if (!gemPreferences.hidden.includes(Number(gem))) {
-          $('#gem-options-gem-list').append('<div class="gem-options-gem" data-gem-id="' + gem +'"><img src="img/' + g.iconName + '.jpg"><a href="https://tbc.wowhead.com/item=' + gem +'">' + g.name + '</a></div>')
+          $('#gem-options-gem-list').append('<div class="gem-options-gem" data-gem-id="' + gem + '"><img src="img/' + g.iconName + '.jpg"><a href="https://tbc.wowhead.com/item=' + gem +'">' + g.name + '</a></div>')
         }
       }
     }
