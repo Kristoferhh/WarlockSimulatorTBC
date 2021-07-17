@@ -131,7 +131,7 @@ $('#item-selection-table tbody').on('contextmenu', '.gem', function (event) {
     }
     $(this).attr('src', 'img/' + socketInfo[socketColor].iconName + '.jpg')
     $(this).closest('a').attr('href', '')
-    selectedGems[itemSlot][itemId][socketOrder] = null
+    selectedGems[itemSlot][itemId][socketOrder][1] = null
     localStorage.selectedGems = JSON.stringify(selectedGems)
     refreshCharacterStats()
   }
@@ -152,6 +152,99 @@ $(document).on('click', '#show-hidden-gems-button', function (e) {
 
   e.stopPropagation()
 })
+
+// "Fill Item Sockets" button clicked
+$('#gem-options-button').click(function () {
+  $('#gem-options-window').toggle()
+
+  if ($('#gem-options-window').is(':visible')) {
+    const selectedSocketColor = $('#gem-options-window-socket-selection input[type="radio"]:checked').val()
+    refreshGemOptionsGems(selectedSocketColor)
+  }
+})
+
+// When one of the socket selection radio buttons gets changed in the "Fill Item Sockets"
+$('#gem-options-window-socket-selection').change(function () {
+  const selectedSocketColor = $('#gem-options-window-socket-selection input[type="radio"]:checked').val()
+  refreshGemOptionsGems(selectedSocketColor)
+})
+
+// A gem in the "Fill Item Sockets" options gets clicked
+$(document).on('click', '.gem-options-gem', function () {
+  $('.gem-options-gem').attr('data-checked', 'false')
+  $(this).attr('data-checked', 'true')
+  return false
+})
+
+// "Apply" button in the "Fill item sockets" options is clicked
+$('#gem-options-apply-button').click(function () {
+  const selectedGemId = $('.gem-options-gem[data-checked="true"]').attr('data-gem-id')
+
+  if (selectedGemId) {
+    const fillAllSockets = $('#gem-options-window-replacement-options input[type="radio"]:checked').val() == 'allSockets'
+    const allItems = $('#gem-options-window-item-slot input[type="radio"]:checked').val() == 'allItems'
+    const selectedSocketColor = $('#gem-options-window-socket-selection input[type="radio"]:checked').val()
+
+    // Loop through all items
+    for (const itemSlot in items) {
+      if (allItems || localStorage.selectedItemSlot == itemSlot) {
+        // Create an object for this item slot if it doesn't already exist in the selectedGems object
+        if (!selectedGems[itemSlot]) {
+          selectedGems[itemSlot] = {}
+        }
+        for (const item in items[itemSlot]) {
+          const i = items[itemSlot][item]
+          // Check if item has the socket color
+          if (items[itemSlot][item].hasOwnProperty(selectedSocketColor)) {
+            // Create the gem array for the item if it doesn't have one already
+            if (!selectedGems[itemSlot][i.id]) {
+              selectedGems[itemSlot][i.id] = []
+
+              // Loop through the item's sockets and for each socket, create an array where the first index is the socket color and 2nd index is the gem id (null for now)
+              for (const socketColor in socketInfo) {
+                if (i.hasOwnProperty(socketColor)) {
+                  // Create an x amount of sockets for the item where x is the amount of sockets the item has of the color 'socketColor'
+                  for (let j = 0; j < i[socketColor]; j++) {
+                    selectedGems[itemSlot][i.id].push([socketColor, null])
+                  }
+                }
+              }
+            }
+            // Fill the item's socket(s)
+            for (const socket in selectedGems[itemSlot][i.id]) {
+              let s = selectedGems[itemSlot][i.id][socket]
+              // Checks if the socket is the color that the user chose to fill
+              if (s && s[0] == selectedSocketColor && (s[1] == null || fillAllSockets)) {
+                s[1] = selectedGemId
+              }
+            }
+          }
+        }
+      }
+    }
+    // Save the selectedGems object in the localStorage and reload the page
+    localStorage.selectedGems = JSON.stringify(selectedGems)
+    location.reload()
+  }
+})
+
+// Adds gems to the "Fill Item Sockets" window
+function refreshGemOptionsGems (socketColor) {
+  // Remove all currently listed gems
+  $('.gem-options-gem').remove()
+
+  for (const socket in gems) {
+    // If the socket is a meta gem socket then only show meta gems, otherwise show all non-meta gems
+    if ((socketColor === 'meta' && socket === 'meta') || (socketColor !== 'meta' && socket !== 'meta')) {
+      for (const gem in gems[socket]) {
+        const g = gems[socket][gem]
+        if (!gemPreferences.hidden.includes(Number(gem))) {
+          $('#gem-options-gem-list').append('<div class="gem-options-gem" data-gem-id="' + gem + '"><img src="img/' + g.iconName + '.jpg"><a href="https://tbc.wowhead.com/item=' + gem +'">' + g.name + '</a></div>')
+        }
+      }
+    }
+  }
+}
 
 function modifyStatsFromGem (gemId, action) {
   for (const color in gems) {

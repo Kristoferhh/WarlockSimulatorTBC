@@ -568,7 +568,7 @@ img[data-color='meta'] {
 	text-align: left;
 }
 
-.item-row:hover, .enchant-row:hover, .gem-name:hover {
+.item-row:hover, .enchant-row:hover, .gem-name:hover, .gem-options-gem:hover {
 	cursor: pointer;
 	background-color: rgba(104, 105, 163, 0.3);
 }
@@ -617,6 +617,51 @@ table.dataTable tbody tr {
 
 table.dataTable thead th, table.dataTable.no-footer {
 	border: none !important;
+}
+
+#gem-options-button {
+	padding: 3px;
+	margin-bottom: 5px;
+}
+
+#gem-options-window {
+	border: 1px solid gray;
+	position: absolute;
+	width: clamp(100px,60%,1000px);
+	text-align: center;
+	background-color: black;
+	padding: 20px;
+	display: none;
+	line-height: 30px;
+}
+
+#gem-options-gem-list {
+	margin-top: 10px;
+}
+
+#gem-options-gem-list img {
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	margin-top: 6px;
+}
+
+#gem-options-gem-list a {
+	display: inline-block;
+	text-decoration: none;
+	color: white;
+	width: 80%;
+	text-align: left;
+	margin-bottom: 5px;
+}
+
+#gem-options-gem-list div {
+	display: inline-block;
+	min-width: 300px;
+}
+
+.gem-options-gem[data-checked='true'] {
+	background-color: gray;
 }
 
 .item-row[data-selected='true'], .enchant-row[data-selected='true'] {
