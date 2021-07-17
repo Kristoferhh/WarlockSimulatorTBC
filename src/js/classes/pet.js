@@ -207,7 +207,8 @@ class Pet {
     }
     if (this.pet === PetName.IMP) {
       this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * this.stats.intellectModifier * 4.95
-    } else if (this.pet === PetName.SUCCUBUS) {
+    }
+    if (this.pet == PetName.IMP || this.pet === PetName.SUCCUBUS) {
       this.stats.spellCritChance = 0.0125 * (this.stats.intellect * this.stats.intellectModifier) + 0.91 + this.player.talents.demonicTactics + this.stats.buffs.spellCritChance
     }
     if (announceInCombatlog) {
