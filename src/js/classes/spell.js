@@ -203,32 +203,15 @@ class Spell {
   }
 
   damage (isCrit) {
-    let dmg = this.player.simSettings.randomizeValues && this.minDmg && this.maxDmg ? random(this.minDmg, this.maxDmg) : this.dmg
-    let critMultiplier = 1.5
-    let spellPower = this.player.getSpellPower()
-    const shadowPower = this.player.stats.shadowPower
-    const firePower = this.player.stats.firePower
-    let modifier = this.getModifier()
-
-    // If casting Incinerate and Immolate is up, add the bonus damage.
-    if (this.varName == 'incinerate' && this.player.auras.immolate && this.player.auras.immolate.active) {
-      dmg += this.player.simSettings.randomizeValues ? random(this.bonusDamageFromImmolateMin, this.bonusDamageFromImmolateMax) : this.bonusDamageFromImmolate
-    }
+    // [baseDamage, totalDamage, dmgModifier, partialResistMultiplier, spellPower]
+    const constantDamage = this.getConstantDamage()
     // Make a variable for the base damage to output into the combat log
-    const baseDamage = dmg
-    // Damage from spell power * coefficient
-    const sp = spellPower + (this.school == 'shadow' ? shadowPower : this.school == 'fire' ? firePower : 0)
-    dmg += sp * this.coefficient
-
-    // Improved Shadow Bolt
-    if (this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.simSettings.customIsbUptime == 'no') {
-      modifier *= this.player.auras.improvedShadowBolt.modifier
-      if (!this.isDot) {
-        this.player.auras.improvedShadowBolt.decrementStacks()
-      }
-    }
-
-    dmg *= modifier
+    const baseDamage = constantDamage[0]
+    let dmg = constantDamage[1]
+    const modifier = constantDamage[2]
+    const partialResistMultiplier = constantDamage[3]
+    const sp = constantDamage[4]
+    let critMultiplier = 1.5
 
     if (isCrit) {
       // Chaotic Skyfire Diamond meta gem
@@ -254,11 +237,10 @@ class Spell {
         this.player.spells.theLightningCapacitor.startCast()
       }
     }
-    const partialResistMultiplier = this.player.getPartialResistMultiplier(this.player.enemy[this.school + 'Resist'])
-    dmg = Math.round(dmg * partialResistMultiplier)
+
     let combatLogMsg = this.name + ' '
     if (isCrit) combatLogMsg += '*'
-    combatLogMsg += dmg
+    combatLogMsg += Math.round(dmg)
     if (isCrit) combatLogMsg += '*'
     combatLogMsg += ' (' + baseDamage + ' Base Damage - ' + Math.round(this.coefficient * 1000) / 1000 + ' Coefficient - ' + Math.round(sp) + ' Spell Power - '
     if (isCrit) combatLogMsg += critMultiplier.toFixed(2) + '% Crit Multiplier - '
@@ -275,6 +257,39 @@ class Spell {
         this.player.auras.immolate.t5BonusModifier *= 1.1
       }
     }
+  }
+
+  // Returns the non-RNG damage of the spell (basically just the base damage + spell power + damage modifiers, no crit/miss etc.)
+  // If the player has the randomize values setting enabled, then it will still randomize the base damage
+  getConstantDamage(noRNG = false) {
+    let dmg = this.player.simSettings.randomizeValues && this.minDmg && this.maxDmg ? random(this.minDmg, this.maxDmg) : this.dmg
+    const baseDamage = dmg // Creating a variable for the base damage just for the combat log
+    let spellPower = this.player.getSpellPower()
+    const shadowPower = this.player.stats.shadowPower
+    const firePower = this.player.stats.firePower
+    let modifier = this.getModifier()
+    const partialResistMultiplier = this.player.getPartialResistMultiplier(this.player.enemy[this.school + 'Resist'])
+
+    // If casting Incinerate and Immolate is up, add the bonus damage.
+    if (this.varName == 'incinerate' && this.player.auras.immolate && this.player.auras.immolate.active) {
+      dmg += this.player.simSettings.randomizeValues ? random(this.bonusDamageFromImmolateMin, this.bonusDamageFromImmolateMax) : this.bonusDamageFromImmolate
+    }
+
+    // Damage from spell power * coefficient
+    const sp = spellPower + (this.school == 'shadow' ? shadowPower : this.school == 'fire' ? firePower : 0)
+    dmg += sp * this.coefficient
+
+    // Improved Shadow Bolt
+    if (this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.simSettings.customIsbUptime == 'no') {
+      modifier *= this.player.auras.improvedShadowBolt.modifier
+      if (!this.isDot) {
+        this.player.auras.improvedShadowBolt.decrementStacks()
+      }
+    }
+
+    dmg *= modifier * partialResistMultiplier
+
+    return [baseDamage, dmg, modifier, partialResistMultiplier, sp]
   }
 
   tick (t) {
