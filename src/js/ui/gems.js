@@ -131,7 +131,7 @@ $('#item-selection-table tbody').on('contextmenu', '.gem', function (event) {
     }
     $(this).attr('src', 'img/' + socketInfo[socketColor].iconName + '.jpg')
     $(this).closest('a').attr('href', '')
-    selectedGems[itemSlot][itemId][socketOrder] = null
+    selectedGems[itemSlot][itemId][socketOrder][1] = null
     localStorage.selectedGems = JSON.stringify(selectedGems)
     refreshCharacterStats()
   }
@@ -176,26 +176,53 @@ $(document).on('click', '.gem-options-gem', function () {
   return false
 })
 
+// "Apply" button in the "Fill item sockets" options is clicked
 $('#gem-options-apply-button').click(function () {
   const selectedGemId = $('.gem-options-gem[data-checked="true"]').attr('data-gem-id')
 
   if (selectedGemId) {
     const fillAllSockets = $('#gem-options-window-replacement-options input[type="radio"]:checked').val() == 'allSockets'
     const allItems = $('#gem-options-window-item-slot input[type="radio"]:checked').val() == 'allItems'
-    const socketColor = $('#gem-options-window-socket-selection input[type="radio"]:checked').val()
+    const selectedSocketColor = $('#gem-options-window-socket-selection input[type="radio"]:checked').val()
 
-    for (const itemSlot in selectedGems) {
-      if (itemSlot == localStorage.selectedItemSlot || allItems) {
-        for (const itemId in selectedGems[itemSlot]) {
-          for (const socket in selectedGems[itemSlot][itemId]) {
-            const s = selectedGems[itemSlot][itemId][socket]
-            if (s && s[0] == socketColor) {
-              s[1] = selectedGemId
+    // Loop through all items
+    for (const itemSlot in items) {
+      if (allItems || localStorage.selectedItemSlot == itemSlot) {
+        // Create an object for this item slot if it doesn't already exist in the selectedGems object
+        if (!selectedGems[itemSlot]) {
+          selectedGems[itemSlot] = {}
+        }
+        for (const item in items[itemSlot]) {
+          const i = items[itemSlot][item]
+          // Check if item has the socket color
+          if (items[itemSlot][item].hasOwnProperty(selectedSocketColor)) {
+            // Create the gem array for the item if it doesn't have one already
+            if (!selectedGems[itemSlot][i.id]) {
+              selectedGems[itemSlot][i.id] = []
+
+              // Loop through the item's sockets and for each socket, create an array where the first index is the socket color and 2nd index is the gem id (null for now)
+              for (const socketColor in socketInfo) {
+                if (i.hasOwnProperty(socketColor)) {
+                  // Create an x amount of sockets for the item where x is the amount of sockets the item has of the color 'socketColor'
+                  for (let j = 0; j < i[socketColor]; j++) {
+                    selectedGems[itemSlot][i.id].push([socketColor, null])
+                  }
+                }
+              }
+            }
+            // Fill the item's socket(s)
+            for (const socket in selectedGems[itemSlot][i.id]) {
+              let s = selectedGems[itemSlot][i.id][socket]
+              // Checks if the socket is the color that the user chose to fill
+              if (s && s[0] == selectedSocketColor && (s[1] == null || fillAllSockets)) {
+                s[1] = selectedGemId
+              }
             }
           }
         }
       }
     }
+    // Save the selectedGems object in the localStorage and reload the page
     localStorage.selectedGems = JSON.stringify(selectedGems)
     location.reload()
   }
