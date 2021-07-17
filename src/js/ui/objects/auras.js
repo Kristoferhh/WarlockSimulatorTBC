@@ -386,9 +386,44 @@ const _auras = {
     }
   },
   petBuffs: {
-    heading: 'Pet Buffs (your pet also inherits group-wide buffs selected above)',
+    heading: 'Pet Buffs (your pet also inherits group-wide auras selected above)',
     type: 'spell',
     auras: {
+      blessingOfKingsPet: {
+        name: 'Blessing of Kings',
+        iconName: 'spell_magic_greaterblessingofkings',
+        id: 25898
+      },
+      blessingOfWisdomPet: {
+        name: 'Blessing of Wisdom',
+        iconName: 'spell_holy_greaterblessingofwisdom',
+        id: 27143
+      },
+      blessingOfMight: {
+        name: 'Blessing of Might',
+        iconName: 'spell_holy_greaterblessingofkings',
+        id: 27141
+      },
+      arcaneIntellectPet: {
+        name: 'Arcane Intellect',
+        iconName: 'spell_holy_arcaneintellect',
+        id: 27127
+      },
+      markOfTheWildPet: {
+        name: 'Mark of the Wild',
+        iconName: 'spell_nature_regeneration',
+        id: 26990
+      },
+      prayerOfFortitudePet: {
+        name: 'Prayer of Fortitude',
+        iconName: 'spell_holy_prayeroffortitude',
+        id: 25392
+      },
+      prayerOfSpiritPet: {
+        name: 'Prayer of Spirit',
+        iconName: 'spell_holy_prayerofspirit',
+        id: 32999
+      },
       kiblersBits: {
         name: "Kibler's Bits",
         iconName: 'inv_misc_food_49',
@@ -398,11 +433,6 @@ const _auras = {
         name: 'Heroic Presence',
         iconName: 'inv_helmet_21',
         id: 6562
-      },
-      blessingOfMight: {
-        name: 'Blessing of Might',
-        iconName: 'spell_holy_greaterblessingofkings',
-        id: 27141
       },
       strengthOfEarthTotem: {
         name: 'Strength of Earth Totem',

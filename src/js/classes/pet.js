@@ -110,14 +110,14 @@ class Pet {
     }
 
     // Configure stats based on selected auras
-    if (this.playerAuras.blessingOfKings) {
+    if (this.playerAuras.blessingOfKingsPet) {
       this.stats.staminaModifier *= 1.1
       this.stats.intellectModifier *= 1.1
       this.stats.agilityModifier *= 1.1
       this.stats.strengthModifier *= 1.1
       this.stats.spiritModifier *= 1.1
     }
-    if (this.playerAuras.blessingOfWisdom) this.stats.mp5 += 41
+    if (this.playerAuras.blessingOfWisdomPet) this.stats.mp5 += 41
     if (this.playerAuras.manaSpringTotem) this.stats.mp5 += 50
     if (this.playerAuras.wrathOfAirTotem) this.stats.buffs.spellPower += 101
     if (this.playerAuras.totemOfWrath) {
@@ -126,16 +126,16 @@ class Pet {
       this.stats.spellHitChance = Math.min(99, this.stats.spellHitChance + hitAndCritAmount)
     }
     // todo implement improved motw
-    if (this.playerAuras.markOfTheWild) {
+    if (this.playerAuras.markOfTheWildPet) {
       this.stats.buffsstamina += 14
       this.stats.buffs.intellect += 14
       this.stats.spirit += 14
     }
     // todo implement improved imp
     if (this.playerAuras.bloodPact) this.stats.buffs.stamina += 70
-    if (this.playerAuras.arcaneIntellect) this.stats.buffs.intellect += 40
-    if (this.playerAuras.prayerOfFortitude) this.stats.buffs.stamina += 79
-    if (this.playerAuras.prayerOfSpirit) {
+    if (this.playerAuras.arcaneIntellectPet) this.stats.buffs.intellect += 40
+    if (this.playerAuras.prayerOfFortitudePet) this.stats.buffs.stamina += 79
+    if (this.playerAuras.prayerOfSpiritPet) {
       const multiplier = parseInt(this.simSettings.improvedDivineSpirit)
       this.stats.spirit += 50 * (1 + (0.1 * multiplier))
     }
@@ -301,6 +301,7 @@ class Pet {
       this.spiritTickTimerRemaining = 5
       // Formulas from Max on the warlock discord https://discord.com/channels/253210018697052162/823476479550816266/836007015762886707 & https://discord.com/channels/253210018697052162/823476479550816266/839484387741138994
       let manaGain = this.stats.mp5
+      console.log("mp5: " + this.stats.mp5)
       // Mana regen from spirit
       if (this.fiveSecondRuleTimerRemaining <= 0) {
         if (this.pet == PetName.IMP) {
@@ -313,6 +314,7 @@ class Pet {
       else {
         if (this.pet == PetName.IMP) {
           manaGain += 0.375 * (this.stats.intellect * this.stats.intellectModifier) - 123
+          console.log("manaGain += " + 0.375 * (this.stats.intellect * this.stats.intellectModifier) - 123)
         } else if (this.pet == PetName.FELGUARD || this.pet == PetName.SUCCUBUS) {
           manaGain += 0.365 * (this.stats.intellect * this.stats.intellectModifier) - 48
         }
