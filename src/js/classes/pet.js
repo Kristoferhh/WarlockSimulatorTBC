@@ -50,7 +50,8 @@ class Pet {
         spellPower: 0,
         ap: 0,
         critChance: 0,
-        spellCritChance: 0
+        spellCritChance: 0,
+        spellCritRating: 0
       },
       // Separate attack power from boss debuffs so it won't get multiplied with the AP modifier
       debuffs: {
@@ -141,7 +142,18 @@ class Pet {
     }
     if (this.playerAuras.inspiringPresence) this.stats.spellHitChance = Math.min(99, this.stats.spellHitChance + 1)
     if (this.playerAuras.moonkinAura) this.stats.buffs.spellCritChance += 5
-    // todo add atiesh auras
+    if (this.playerAuras.eyeOfTheNight) this.stats.buffs.spellPower += 34
+    if (this.playerAuras.chainOfTheTwilightOwl) this.stats.buffs.spellCritChance += 2
+    if (this.playerAuras.jadePendantOfBlasting) this.stats.buffs.spellPower += 15
+    if (this.playerAuras.idolOfTheRavenGoddess) this.stats.buffs.spellCritRating += 20
+    // Atiesh auras
+    // Add 33sp if the player has Atiesh equipped since the aura's spell power is just added to the item itself
+    if (this.player.items.twohand == 22630) this.stats.buffs.spellPower += 33
+    // Warlock Atiesh
+    if (this.playerAuras.powerOfTheGuardianWarlock) this.stats.buffs.spellPower += 33 * this.player.simSettings.warlockAtieshAmount
+    // Mage Atiesh
+    // todo: do pets even get crit from crit rating buffs?
+    if (this.playerAuras.powerOfTheGuardianMage) this.stats.buffs.spellCritRating += 28 * this.player.simSettings.mageAtieshAmount
     if (this.playerAuras.judgementOfTheCrusader) {
       this.stats.buffs.critChance += 3
       this.stats.buffs.spellCritChance += 3
@@ -209,7 +221,7 @@ class Pet {
       this.stats.maxMana = this.stats.baseStats.mana + this.stats.intellect * this.stats.intellectModifier * 4.95
     }
     if (this.pet == PetName.IMP || this.pet === PetName.SUCCUBUS) {
-      this.stats.spellCritChance = 0.0125 * (this.stats.intellect * this.stats.intellectModifier) + 0.91 + this.player.talents.demonicTactics + this.stats.buffs.spellCritChance
+      this.stats.spellCritChance = 0.0125 * (this.stats.intellect * this.stats.intellectModifier) + 0.91 + this.player.talents.demonicTactics + this.stats.buffs.spellCritChance + (this.stats.buffs.spellCritRating / critRatingPerPercent)
     }
     if (announceInCombatlog) {
       this.player.combatLog("Recalculated pet's stats")
@@ -301,7 +313,6 @@ class Pet {
       this.spiritTickTimerRemaining = 5
       // Formulas from Max on the warlock discord https://discord.com/channels/253210018697052162/823476479550816266/836007015762886707 & https://discord.com/channels/253210018697052162/823476479550816266/839484387741138994
       let manaGain = this.stats.mp5
-      console.log("mp5: " + this.stats.mp5)
       // Mana regen from spirit
       if (this.fiveSecondRuleTimerRemaining <= 0) {
         if (this.pet == PetName.IMP) {
@@ -314,7 +325,6 @@ class Pet {
       else {
         if (this.pet == PetName.IMP) {
           manaGain += 0.375 * (this.stats.intellect * this.stats.intellectModifier) - 123
-          console.log("manaGain += " + 0.375 * (this.stats.intellect * this.stats.intellectModifier) - 123)
         } else if (this.pet == PetName.FELGUARD || this.pet == PetName.SUCCUBUS) {
           manaGain += 0.365 * (this.stats.intellect * this.stats.intellectModifier) - 48
         }

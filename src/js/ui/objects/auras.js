@@ -105,8 +105,8 @@ const _auras = {
         iconName: 'spell_nature_moonglow',
         id: 28142
       },
-      eyeOfNight: {
-        name: 'Eye of Night',
+      eyeOfTheNight: {
+        name: 'Eye of The Night',
         spellPower: 34,
         iconName: 'inv_jewelry_necklace_28',
         id: 31033
