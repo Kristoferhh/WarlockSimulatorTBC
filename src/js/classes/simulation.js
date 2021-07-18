@@ -460,7 +460,7 @@ class Simulation {
                 if (this.player.spells.darkPact && this.player.spells.darkPact.ready() && !this.player.simChoosingRotation) {
                   this.player.cast('darkPact')
                 }
-                if (!this.player.simChoosingRotation) {
+                if (!this.player.simChoosingRotation && this.player.spells.lifeTap.ready()) {
                   this.player.cast('lifeTap')
                 }
               }
