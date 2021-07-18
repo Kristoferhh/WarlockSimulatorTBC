@@ -30,7 +30,7 @@ for (const auraType in _auras) {
 // Spell Selection
 for (const type in _spellSelection) {
   const rotationList = $('#rotation-list')
-  let str = '<div><h4>' + _spellSelection[type].header + '</h4>'
+  let str = '<div id="rotation-' + _spellSelection[type].header.toLowerCase() + '"><h4>' + _spellSelection[type].header + '</h4>'
   for (const spell in _spellSelection[type].spells) {
     rotation[type] = rotation[type] || {}
     str += "<li data-type='" + type + "' data-name='" + spell + "' class='rotation-" + type + "' data-checked='" + (rotation[type][spell] || false) + "' id='" + type + '-' + spell + "'><a href=https://tbc.wowhead.com/spell=" + _spellSelection[type].spells[spell].id + "><img src='img/" + _spellSelection[type].spells[spell].iconName + ".jpg' alt='" + _spellSelection[type].spells[spell].name + "'></a></li>"

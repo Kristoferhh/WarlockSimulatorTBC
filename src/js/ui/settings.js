@@ -76,6 +76,13 @@ $('#race-dropdown-list').change(function () {
 })
 
 function updateSimulationSettingsVisibility () {
+  if ($('#sim-settings input[name="rotationOption"]:checked').val() == 'simChooses') {
+    $('#rotation-list div').hide()
+    $('#rotation-curse').show()
+  } else {
+    $('#rotation-list div').show()
+  }
+
   if (talents.demonicSacrifice === 0) {
     $('#sacrificePet').hide()
   } else {
