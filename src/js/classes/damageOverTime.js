@@ -90,11 +90,6 @@ class DamageOverTime {
     let modifier = this.getModifier()
     const partialResistMultiplier = this.player.getPartialResistMultiplier(this.player.enemy[this.school + 'Resist'])
     let dmg = (this.dmg + spellPower * this.coefficient) * modifier * partialResistMultiplier
-    // Divide the damage by the original duration and then multiply by its total duration
-    // This is just for the T4 4-set bonus to add the damage of the extra tick of Immolate or Corruption
-    // So for Corruption it would divide by 18 and then multiply by 21
-    dmg /= this.originalDurationTotal
-    dmg *= this.durationTotal
 
     return [dmg, spellPower, modifier, partialResistMultiplier]
   }
