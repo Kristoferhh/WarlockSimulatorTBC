@@ -43,6 +43,7 @@ class Player {
     this.enemy.arcaneResist = Math.max(enemyBaseResistance, 0)
     this.enemy.frostResist = Math.max(enemyBaseResistance, 0)
     this.combatlog = []
+    this.critMultiplier = 1.5
     this.importantAuraCounter = 0 // counts the amount of active "important" auras such as trinket procs, on-use trinket uses, power infusion etc.
     this.totalManaRegenerated = 0
     // The amount to increase spell cast times by.
@@ -225,7 +226,7 @@ class Player {
     this.stats.extraHitChance = this.stats.hitRating / hitRatingPerPercent // hit percent from hit rating
     if (settings.auras.totemOfWrath) this.stats.extraHitChance += (3 * settings.simSettings.totemOfWrathAmount)
     if (settings.auras.inspiringPresence === true) this.stats.extraHitChance += 1
-    this.stats.hitChance = Math.round(this.getHitChance()) // The player's chance of hitting the enemy, usually between 83% and 99%
+    this.stats.hitChance = Math.round(this.getBaseHitChance()) // The player's chance of hitting the enemy, usually between 83% and 99%
 
     // Add bonus damage % from Demonic Sacrifice
     if (settings.talents.demonicSacrifice === 1 && settings.simSettings.sacrificePet == 'yes') {
@@ -340,7 +341,7 @@ class Player {
     this.combatlog.push('Shadow Power: ' + this.stats.shadowPower)
     this.combatlog.push('Fire Power: ' + this.stats.firePower)
     this.combatlog.push('Crit Chance: ' + Math.round(this.getCritChance() * 100) / 100 + '%')
-    this.combatlog.push('Hit Chance: ' + Math.round((this.stats.extraHitChance) * 100) / 100 + '%')
+    this.combatlog.push('Hit Chance: ' + Math.min(16, Math.round((this.stats.extraHitChance) * 100) / 100) + '%')
     this.combatlog.push('Haste: ' + Math.round((this.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + '%')
     this.combatlog.push('Shadow Modifier: ' + Math.round(this.stats.shadowModifier * 100) + '%')
     this.combatlog.push('Fire Modifier: ' + Math.round(this.stats.fireModifier * 100) + '%')
@@ -506,6 +507,7 @@ class Player {
 
   cast (spell) {
     this.spells[spell].startCast()
+    this.combatLog("Estimated damage: " + Math.round(this.spells[spell].predictDamage() * 100) / 100)
   }
 
   areAnyCooldownsReady () {
@@ -561,13 +563,16 @@ class Player {
     return Math.round((this.gcdValue / (1 + ((this.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000
   }
 
-  isHit (isAfflictionSpell) {
-    let hit
+  getHitChance(isAfflictionSpell) {
+    let hitChance = this.stats.hitChance + this.stats.extraHitChance
     if (isAfflictionSpell) {
-      hit = (random(1, 100 * this.stats.hitChanceMultiplier) <= (Math.min(99 * this.stats.hitChanceMultiplier, (this.stats.hitChance + this.stats.extraHitChance + this.talents.suppression * 2) * this.stats.hitChanceMultiplier)))
-    } else {
-      hit = (random(1, 100 * this.stats.hitChanceMultiplier) <= Math.min(99 * this.stats.hitChanceMultiplier, (this.stats.hitChance + this.stats.extraHitChance) * this.stats.hitChanceMultiplier))
+      hitChance += this.talents.suppression * 2
     }
+    return Math.min(99, hitChance)
+  }
+
+  isHit (isAfflictionSpell) {
+    const hit = (random(1, 100 * this.stats.hitChanceMultiplier) <= this.getHitChance(isAfflictionSpell) * this.stats.hitChanceMultiplier)
 
     // Eye of Magtheridon
     if (!hit && this.trinketIds.includes(28789)) {
@@ -602,7 +607,7 @@ class Player {
   }
 
   // formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/ && https://royalgiraffe.github.io/resist-guide
-  getHitChance () {
+  getBaseHitChance () {
     const levelDifference = parseInt(this.enemy.level) - this.level
     if (levelDifference <= 2) {
       return Math.min(99, 100 - levelDifference - 4)
