@@ -39,16 +39,24 @@ class Spell {
   }
 
   ready () {
-    return (!this.onGcd || this.player.gcdRemaining <= 0) && (this.isProc || this.player.castTimeRemaining <= 0) && this.manaCost <= this.player.mana && this.cooldownRemaining <= 0
+    return this.canCast() && this.hasEnoughMana()
+  }
+
+  canCast() {
+    return (!this.onGcd || this.player.gcdRemaining <= 0) && (this.isProc || this.player.castTimeRemaining <= 0) && this.cooldownRemaining <= 0
+  }
+
+  hasEnoughMana() {
+    return this.manaCost <= this.player.mana
   }
 
   getCastTime () {
     return Math.round((this.castTime / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000 + this.player.spellDelay
   }
 
-  startCast () {
+  startCast (predictedDamage = 0) {
     if (this.onGcd) {
-      this.player.gcdRemaining = Math.max(1, this.player.getGcdValue())
+      this.player.gcdRemaining = Math.max(this.player.minimumGcdValue, this.player.getGcdValue())
     }
 
     let combatLogMsg = ''
@@ -68,7 +76,7 @@ class Spell {
       combatLogMsg += ' - Global cooldown: ' + this.player.gcdRemaining
     }
     if (this.doesDamage || this.isDot) {
-      combatLogMsg += ' - Estimated damage: ' + Math.round(this.predictDamage())
+      combatLogMsg += ' - Estimated damage: ' + Math.round(predictedDamage)
     }
     this.player.combatLog(combatLogMsg)
   }
@@ -330,7 +338,7 @@ class Spell {
       estimatedDamage += this.player.auras[this.varName].predictDamage()
     }
 
-    return estimatedDamage * hitChance
+    return (estimatedDamage * hitChance) / Math.max(this.player.minimumGcdValue, this.getCastTime())
   }
 
   tick (t) {

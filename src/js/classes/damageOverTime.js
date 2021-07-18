@@ -82,10 +82,19 @@ class DamageOverTime {
   }
 
   getConstantDamage() {
-    const spellPower = this.snapshots ? this.spellPower : this.player.getSpellPower() + this.player.stats[this.school + 'Power']
+    let spellPower = this.snapshots ? this.spellPower : this.player.getSpellPower() + this.player.stats[this.school + 'Power']
+    // If the DoT isn't currently active then this.spellPower will be 0, so use the player's current Spell Power
+    if (!this.active) {
+      spellPower = this.player.getSpellPower() + this.player.stats[this.school + 'Power']
+    }
     let modifier = this.getModifier()
     const partialResistMultiplier = this.player.getPartialResistMultiplier(this.player.enemy[this.school + 'Resist'])
-    const dmg = (this.dmg + spellPower * this.coefficient) * modifier * partialResistMultiplier
+    let dmg = (this.dmg + spellPower * this.coefficient) * modifier * partialResistMultiplier
+    // Divide the damage by the original duration and then multiply by its total duration
+    // This is just for the T4 4-set bonus to add the damage of the extra tick of Immolate or Corruption
+    // So for Corruption it would divide by 18 and then multiply by 21
+    dmg /= this.originalDurationTotal
+    dmg *= this.durationTotal
 
     return [dmg, spellPower, modifier, partialResistMultiplier]
   }
@@ -147,6 +156,7 @@ class CorruptionDot extends DamageOverTime {
     this.name = 'Corruption'
     this.coefficient = 0.936 + (0.12 * player.talents.empoweredCorruption)
     this.minimumDuration = 9
+    this.t5BonusModifier = 1
     this.setup()
 
     // T3 4pc
@@ -211,6 +221,7 @@ class ImmolateDot extends DamageOverTime {
     this.name = 'Immolate'
     this.coefficient = 0.65
     this.minimumDuration = 12
+    this.t5BonusModifier = 1
     this.setup()
   }
 

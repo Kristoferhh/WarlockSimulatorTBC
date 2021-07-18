@@ -328,6 +328,18 @@ class Simulation {
           // Spells on the global cooldown
           if (this.player.gcdRemaining <= 0) {
             const timeRemaining = fightLength - this.player.fightTime
+            // Array where each element is a sub-array where the first element is the 'varName' of the spell and the second element is how much damage the spell is predicted to deal
+            // This is then used to decide which spell would be best to cast if the player chose to have the sim choose the rotation for them
+            let predictedDamageOfSpells = []
+            let wantToCastLifeTapWhenNotOom = false
+
+            // If the sim is choosing the rotation for the user then predict the damage of the three filler spells if they're available (maybe just skip Searing Pain to save time, there's no way it will ever be the best spell to cast)
+            if (this.player.simChoosingRotation) {
+              predictedDamageOfSpells.push([this.player.spells.shadowBolt.varName, this.player.spells.shadowBolt.predictDamage()])
+              predictedDamageOfSpells.push([this.player.spells.incinerate.varName, this.player.spells.incinerate.predictDamage()])
+              predictedDamageOfSpells.push([this.player.spells.searingPain.varName, this.player.spells.searingPain.predictDamage()])
+            }
+
             // Not enough time left to cast another filler spell.
             if (timeRemaining <= this.player.spells[this.player.filler].getCastTime() && (this.player.rotation.finisher.deathCoil || this.player.rotation.finisher.shadowburn)) {
               this.player.useCooldowns()
@@ -350,67 +362,126 @@ class Simulation {
               } else {
                 this.player.useCooldowns()
                 // Cast Curse of Doom if there's more than 60 seconds remaining
-                if (this.player.curse && !this.player.auras[this.player.curse].active && this.player.curse == 'curseOfDoom' && timeRemaining > 60 && this.player.spells.curseOfDoom.ready()) {
-                  if (this.player.spells.amplifyCurse && this.player.spells.amplifyCurse.ready()) {
-                    this.player.cast('amplifyCurse')
+                if (this.player.curse && !this.player.auras[this.player.curse].active && this.player.curse == 'curseOfDoom' && timeRemaining > 60 && this.player.spells.curseOfDoom.canCast()) {
+                  // If the sim is choosing the rotation for the player then predict the damage of the spell and put it in the array
+                  if (this.player.simChoosingRotation) {
+                    predictedDamageOfSpells.push([this.player.spells.curseOfDoom.varName, this.player.spells.curseOfDoom.predictDamage()])
                   }
-                  this.player.cast('curseOfDoom')
+                  // Else if the player is choosing the rotation themselves then just cast the highest priority spell that needs to be cast
+                  else if(this.player.spells.curseOfDoom.hasEnoughMana()) {
+                    if (this.player.spells.amplifyCurse && this.player.spells.amplifyCurse.ready()) {
+                      this.player.cast('amplifyCurse')
+                    }
+                    this.player.cast('curseOfDoom')
+                  }
                 }
                 // Cast Curse of Agony if CoA is the selected curse or if Curse of Doom is the selected curse and there's less than 60 seconds remaining of the fight
-                else if (this.player.curse && (this.player.auras.curseOfAgony && !this.player.auras.curseOfAgony.active) && timeRemaining > this.player.auras.curseOfAgony.minimumDuration && ((this.player.curse == 'curseOfDoom' && !this.player.auras.curseOfDoom.active && (this.player.spells.curseOfDoom.cooldownRemaining > this.player.auras.curseOfAgony.minimumDuration || timeRemaining < 60)) || (this.player.curse == 'curseOfAgony' && this.player.spells.curseOfAgony.ready()))) {
-                  if (this.player.spells.amplifyCurse && this.player.spells.amplifyCurse.ready()) {
-                    this.player.cast('amplifyCurse')
+                if (this.player.curse && (this.player.auras.curseOfAgony && !this.player.auras.curseOfAgony.active) && timeRemaining > this.player.auras.curseOfAgony.minimumDuration && ((this.player.curse == 'curseOfDoom' && !this.player.auras.curseOfDoom.active && (this.player.spells.curseOfDoom.cooldownRemaining > this.player.auras.curseOfAgony.minimumDuration || timeRemaining < 60)) || (this.player.curse == 'curseOfAgony' && this.player.spells.curseOfAgony.canCast()))) {
+                  if (this.player.simChoosingRotation) {
+                    predictedDamageOfSpells.push([this.player.spells.curseOfAgony.varName, this.player.spells.curseOfAgony.predictDamage()])
+                  } else if (this.player.spells.curseOfAgony.hasEnoughMana()) {
+                    if (this.player.spells.amplifyCurse && this.player.spells.amplifyCurse.ready()) {
+                      this.player.cast('amplifyCurse')
+                    }
+                    this.player.cast('curseOfAgony')
                   }
-                  this.player.cast('curseOfAgony')
                 }
                 // Cast Corruption if Corruption isn't up or if it will expire before the cast finishes (if no instant Corruption)
-                else if (this.player.spells.corruption && (!this.player.auras.corruption.active || (this.player.auras.corruption.ticksRemaining == 1 && this.player.auras.corruption.tickTimerRemaining < this.player.spells.corruption.getCastTime())) && this.player.spells.corruption.ready() && (timeRemaining - this.player.spells.corruption.getCastTime()) >= this.player.auras.corruption.minimumDuration) {
-                  this.player.cast('corruption')
+                if (this.player.spells.corruption && (!this.player.auras.corruption.active || (this.player.auras.corruption.ticksRemaining == 1 && this.player.auras.corruption.tickTimerRemaining < this.player.spells.corruption.getCastTime())) && this.player.spells.corruption.canCast() && (timeRemaining - this.player.spells.corruption.getCastTime()) >= this.player.auras.corruption.minimumDuration) {
+                  if (this.player.simChoosingRotation) {
+                    predictedDamageOfSpells.push([this.player.spells.corruption.varName, this.player.spells.corruption.predictDamage()])
+                  } else if (this.player.spells.corruption.hasEnoughMana()) {
+                    this.player.cast('corruption')
+                  }
                 }
                 // Cast Shadow Bolt if Shadow Trance (Nightfall) is active and Corruption is active as well to avoid potentially wasting another Nightfall proc
-                else if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.corruption.active && this.player.spells.shadowBolt.ready()) {
-                  this.player.cast('shadowBolt')
+                if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.auras.corruption.active && this.player.spells.shadowBolt.canCast()) {
+                  if (this.player.simChoosingRotation) {
+                    // todo: check if the spell is already in the array before adding it
+                    predictedDamageOfSpells.push([this.player.spells.shadowBolt.varName, this.player.spells.shadowBolt.predictDamage()])
+                  } else if (this.player.spells.shadowBolt.hasEnoughMana()) {
+                    this.player.cast('shadowBolt')
+                  }
                 }
                 // Cast Unstable Affliction if it's not up or if it's about to expire
-                else if (this.player.spells.unstableAffliction && (!this.player.auras.unstableAffliction.active || (this.player.auras.unstableAffliction.ticksRemaining == 1 && this.player.auras.unstableAffliction.tickTimerRemaining < this.player.spells.unstableAffliction.getCastTime())) && this.player.spells.unstableAffliction.ready() && (timeRemaining - this.player.spells.unstableAffliction.getCastTime()) >= this.player.auras.unstableAffliction.minimumDuration) {
-                  this.player.cast('unstableAffliction')
+                if (this.player.spells.unstableAffliction && this.player.spells.unstableAffliction.canCast() && (!this.player.auras.unstableAffliction.active || (this.player.auras.unstableAffliction.ticksRemaining == 1 && this.player.auras.unstableAffliction.tickTimerRemaining < this.player.spells.unstableAffliction.getCastTime())) && (timeRemaining - this.player.spells.unstableAffliction.getCastTime()) >= this.player.auras.unstableAffliction.minimumDuration) {
+                  if (this.player.simChoosingRotation) {
+                    predictedDamageOfSpells.push([this.player.spells.unstableAffliction.varName, this.player.spells.unstableAffliction.predictDamage()])
+                  } else if (this.player.spells.unstableAffliction.hasEnoughMana()) {
+                    this.player.cast('unstableAffliction')
+                  }
                 }
                 // Cast Siphon Life if it's not up (todo: add option to only cast it while ISB is active if not using custom ISB uptime %)
-                else if (this.player.spells.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.ready() && /* (!this.player.auras.improvedShadowBolt || this.player.auras.improvedShadowBolt.active) && */ timeRemaining >= this.player.auras.siphonLife.minimumDuration) {
-                  this.player.cast('siphonLife')
+                if (this.player.spells.siphonLife && !this.player.auras.siphonLife.active && this.player.spells.siphonLife.canCast() && /* (!this.player.auras.improvedShadowBolt || this.player.auras.improvedShadowBolt.active) && */ timeRemaining >= this.player.auras.siphonLife.minimumDuration) {
+                  if (this.player.simChoosingRotation) {
+                    predictedDamageOfSpells.push([this.player.spells.siphonLife.varName, this.player.spells.siphonLife.predictDamage()])
+                  } else if (this.player.spells.siphonLife.hasEnoughMana()) {
+                    this.player.cast('siphonLife')
+                  }
                 }
                 // Cast Immolate if it's not up or about to expire
-                else if (this.player.spells.immolate && (!this.player.auras.immolate.active || (this.player.auras.immolate.ticksRemaining == 1 && this.player.auras.immolate.tickTimerRemaining < this.player.spells.immolate.getCastTime())) && this.player.spells.immolate.ready() && (timeRemaining - this.player.spells.immolate.getCastTime()) >= this.player.auras.immolate.minimumDuration) {
-                  this.player.cast('immolate')
+                if (this.player.spells.immolate && this.player.spells.immolate.canCast() && (!this.player.auras.immolate.active || (this.player.auras.immolate.ticksRemaining == 1 && this.player.auras.immolate.tickTimerRemaining < this.player.spells.immolate.getCastTime())) && (timeRemaining - this.player.spells.immolate.getCastTime()) >= this.player.auras.immolate.minimumDuration) {
+                  if (this.player.simChoosingRotation) {
+                    predictedDamageOfSpells.push([this.player.spells.immolate.varName, this.player.spells.immolate.predictDamage()])
+                  } else if (this.player.spells.immolate.hasEnoughMana()) {
+                    this.player.cast('immolate')
+                  }
                 }
                 // Cast Shadow Bolt if Shadow Trance (Nightfall) is active
-                else if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.spells.shadowBolt.ready()) {
-                  this.player.cast('shadowBolt')
+                if (this.player.spells.shadowBolt && this.player.auras.shadowTrance && this.player.auras.shadowTrance.active && this.player.spells.shadowBolt.canCast()) {
+                  if (this.player.simChoosingRotation) {
+                    predictedDamageOfSpells.push([this.player.spells.shadowBolt.varName, this.player.spells.shadowBolt.predictDamage()])
+                  } else if (this.player.spells.shadowBolt.hasEnoughMana()) {
+                    this.player.cast('shadowBolt')
+                  }
                 }
                 // Cast Shadowfury
-                else if (this.player.spells.shadowfury && this.player.spells.shadowfury.ready()) {
-                  this.player.cast('shadowfury')
+                if (this.player.spells.shadowfury && this.player.spells.shadowfury.canCast()) {
+                  if (this.player.simChoosingRotation) {
+                    predictedDamageOfSpells.push([this.player.spells.shadowfury.varName, this.player.spells.shadowfury.predictDamage()])
+                  } else if (this.player.spells.shadowfury.hasEnoughMana()) {
+                    this.player.cast('shadowfury')
+                  }
                 }
                 // Cast Dark Pact or Life Tap if there's more than 20 seconds left of the fight and if there are no (or few) "important auras" active.
                 // This is to try and avoid having to cast Dark Pact/Life Tap when you e.g. have a trinket active or Bloodlust
-                else if (this.player.importantAuraCounter <= 1 && timeRemaining > 20 && ((this.player.spells.darkPact && this.player.spells.darkPact.ready()) || (this.player.spells.lifeTap.ready() && (!this.player.spells.darkPact || this.player.spells.darkPact.manaGain() > this.player.pet.stats.mana)))) {
-                  if (this.player.spells.darkPact && this.player.spells.darkPact.ready()) {
-                    this.player.cast('darkPact')
+                if (this.player.importantAuraCounter <= 1 && timeRemaining > 20 && ((this.player.spells.darkPact && this.player.spells.darkPact.ready()) || (this.player.spells.lifeTap.ready() && (!this.player.spells.darkPact || this.player.spells.darkPact.manaGain() > this.player.pet.stats.mana)))) {
+                  if (this.player.simChoosingRotation) {
+                    wantToCastLifeTapWhenNotOom = true
                   } else {
-                    this.player.cast('lifeTap')
+                    this.player.castLifeTapOrDarkPact()
                   }
                 }
-                // Cast filler spell
-                else if (this.player.spells[this.player.filler].ready()) {
+                // Cast filler spell if sim is not choosing the rotation for the user
+                if (this.player.spells[this.player.filler].ready() && !this.player.simChoosingRotation) {
                   this.player.cast(this.player.filler)
                 }
-                // Cast Dark Pact/Life Tap if nothing else is possible
-                else if (this.player.spells.darkPact && this.player.spells.darkPact.ready()) {
+                // Cast Dark Pact/Life Tap if nothing else is possible and the sim is not choosing the rotation for the user
+                if (this.player.spells.darkPact && this.player.spells.darkPact.ready() && !this.player.simChoosingRotation) {
                   this.player.cast('darkPact')
                 }
-                else {
+                if (!this.player.simChoosingRotation) {
                   this.player.cast('lifeTap')
                 }
+              }
+            }
+
+            // If the sim is choosing the rotation for the player then check now which spell would be the best to cast
+            if (this.player.simChoosingRotation) {
+              //console.log(predictedDamageOfSpells)
+              // First index is the spell's varName and second index is the damage
+              let maxDamage = ['', 0]
+              for (const spell in predictedDamageOfSpells) {
+                if (predictedDamageOfSpells[spell][1] > maxDamage[1]) {
+                  maxDamage = predictedDamageOfSpells[spell]
+                }
+              }
+
+              // If a max damage spell was not found or if the max damage spell isn't ready (no mana), then cast Life Tap
+              if (maxDamage[0] !== '' && this.player.spells[maxDamage[0]].ready()) {
+                this.player.cast(maxDamage[0])
+              } else {
+                this.player.castLifeTapOrDarkPact()
               }
             }
           }
