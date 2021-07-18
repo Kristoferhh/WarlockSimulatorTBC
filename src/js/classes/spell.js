@@ -48,18 +48,29 @@ class Spell {
 
   startCast () {
     if (this.onGcd) {
-      // 1 second is the minimum for global cooldown?
       this.player.gcdRemaining = Math.max(1, this.player.getGcdValue())
     }
 
+    let combatLogMsg = ''
     if (this.castTime > 0) {
       this.casting = true
       this.player.castTimeRemaining = this.getCastTime()
-      if (!this.isProc) this.player.combatLog('Started casting ' + this.name + '. Cast time: ' + (this.player.castTimeRemaining - this.player.spellDelay) + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base cast speed of ' + this.castTime + '). Global cooldown: ' + this.player.gcdRemaining)
+      if (!this.isProc) {
+        combatLogMsg += 'Started casting ' + this.name + ' - Cast time: ' + (this.player.castTimeRemaining - this.player.spellDelay) + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base cast speed of ' + this.castTime + ').'
+      }
     } else {
-      if (!this.isProc) this.player.combatLog('Cast ' + this.name)
+      if (!this.isProc) {
+        combatLogMsg += 'Cast ' + this.name
+      }
       this.cast()
     }
+    if (this.onGcd) {
+      combatLogMsg += ' - Global cooldown: ' + this.player.gcdRemaining
+    }
+    if (this.doesDamage || this.isDot) {
+      combatLogMsg += ' - Estimated damage: ' + Math.round(this.predictDamage())
+    }
+    this.player.combatLog(combatLogMsg)
   }
 
   // Called when a spell finishes casting or immediately called if the spell has no cast time.
@@ -303,13 +314,23 @@ class Spell {
 
   // Predicts how much damage the spell will do based on crit % and miss %
   predictDamage() {
-    let normalDamage = this.getConstantDamage()[1]
-    let critDamage = normalDamage * this.getCritMultiplier(this.player.critMultiplier)
-    const critChance = this.player.getCritChance() / 100
-    const chanceToNotCrit = 1 - critChance
-    const hitChance = this.player.getHitChance(this.type == 'affliction') / 100
+    const normalDamage = this.getConstantDamage()[1] || 0
+    let critDamage = 0, critChance = 0, chanceToNotCrit = 0
 
-    return ((normalDamage * chanceToNotCrit) + (critDamage * critChance)) * hitChance
+    if (this.canCrit) {
+      critDamage = normalDamage * this.getCritMultiplier(this.player.critMultiplier)
+      critChance = this.player.getCritChance() / 100
+      chanceToNotCrit = 1 - critChance
+    }
+    const hitChance = this.player.getHitChance(this.type == 'affliction') / 100
+    let estimatedDamage = this.canCrit ? (normalDamage * chanceToNotCrit) + (critDamage * critChance) : normalDamage
+
+    // Add the predicted damage of the DoT over its full duration
+    if (this.isDot) {
+      estimatedDamage += this.player.auras[this.varName].predictDamage()
+    }
+
+    return estimatedDamage * hitChance
   }
 
   tick (t) {

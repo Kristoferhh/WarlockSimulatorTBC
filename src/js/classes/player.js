@@ -507,7 +507,6 @@ class Player {
 
   cast (spell) {
     this.spells[spell].startCast()
-    this.combatLog("Estimated damage: " + Math.round(this.spells[spell].predictDamage() * 100) / 100)
   }
 
   areAnyCooldownsReady () {
