@@ -718,6 +718,14 @@ const items = {
       source: 'Jewelcrafting BoE',
       phase: 1
     },
+    chainOfTheTwilightOwl: {
+      name: 'Chain of the Twilight Owl',
+      intellect: 19,
+      spellPower: 21,
+      id: 24121,
+      source: 'Jewelcrafting BoE',
+      phase: 1
+    },
     luminousPearlsOfInsight: {
       name: 'Luminous Pearls of Insight',
       intellect: 15,
