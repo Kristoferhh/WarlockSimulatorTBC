@@ -453,11 +453,11 @@ class Simulation {
                   }
                 }
                 // Cast filler spell if sim is not choosing the rotation for the user
-                if (this.player.spells[this.player.filler].ready() && !this.player.simChoosingRotation) {
+                if (!this.player.simChoosingRotation && this.player.spells[this.player.filler].ready()) {
                   this.player.cast(this.player.filler)
                 }
                 // Cast Dark Pact/Life Tap if nothing else is possible and the sim is not choosing the rotation for the user
-                if (this.player.spells.darkPact && this.player.spells.darkPact.ready() && !this.player.simChoosingRotation) {
+                if (!this.player.simChoosingRotation && this.player.spells.darkPact && this.player.spells.darkPact.ready()) {
                   this.player.cast('darkPact')
                 }
                 if (!this.player.simChoosingRotation && this.player.spells.lifeTap.ready()) {
@@ -478,8 +478,8 @@ class Simulation {
               }
 
               // If a max damage spell was not found or if the max damage spell isn't ready (no mana), then cast Life Tap
-              if (maxDamage[0] !== '' && this.player.spells[maxDamage[0]].ready()) {
-                this.player.cast(maxDamage[0])
+              if (maxDamage[0] !== '' && this.player.spells[maxDamage[0]].hasEnoughMana()) {
+                this.player.cast(maxDamage[0], maxDamage[1])
               } else {
                 this.player.castLifeTapOrDarkPact()
               }

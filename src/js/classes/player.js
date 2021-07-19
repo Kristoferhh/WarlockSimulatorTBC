@@ -507,8 +507,8 @@ class Player {
     this.importantAuraCounter = 0
   }
 
-  cast (spell) {
-    this.spells[spell].startCast()
+  cast (spell, predictedDamage = 0) {
+    this.spells[spell].startCast(predictedDamage)
   }
 
   areAnyCooldownsReady () {
@@ -569,7 +569,7 @@ class Player {
   }
 
   getGcdValue() {
-    return Math.round((this.gcdValue / (1 + ((this.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000
+    return Math.max(this.minimumGcdValue, Math.round((this.gcdValue / (1 + ((this.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000)
   }
 
   getHitChance(isAfflictionSpell) {

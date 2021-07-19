@@ -56,7 +56,7 @@ class Spell {
 
   startCast (predictedDamage = 0) {
     if (this.onGcd) {
-      this.player.gcdRemaining = Math.max(this.player.minimumGcdValue, this.player.getGcdValue())
+      this.player.gcdRemaining = this.player.getGcdValue()
     }
 
     let combatLogMsg = ''
@@ -75,8 +75,8 @@ class Spell {
     if (this.onGcd) {
       combatLogMsg += ' - Global cooldown: ' + this.player.gcdRemaining
     }
-    if (this.doesDamage || this.isDot) {
-      combatLogMsg += ' - Estimated damage: ' + Math.round(predictedDamage)
+    if (predictedDamage > 0) {
+      combatLogMsg += ' - Estimated damage / Cast Time: ' + Math.round(predictedDamage)
     }
     this.player.combatLog(combatLogMsg)
   }
@@ -338,7 +338,7 @@ class Spell {
       estimatedDamage += this.player.auras[this.varName].predictDamage()
     }
 
-    return (estimatedDamage * hitChance) / Math.max(this.player.minimumGcdValue, this.getCastTime())
+    return (estimatedDamage * hitChance) / Math.max(this.player.getGcdValue(), this.getCastTime())
   }
 
   tick (t) {
