@@ -331,7 +331,6 @@ class Simulation {
             // Array where each element is a sub-array where the first element is the 'varName' of the spell and the second element is how much damage the spell is predicted to deal
             // This is then used to decide which spell would be best to cast if the player chose to have the sim choose the rotation for them
             let predictedDamageOfSpells = []
-            let wantToCastLifeTapWhenNotOom = false
 
             // If the sim is choosing the rotation for the user then predict the damage of the three filler spells if they're available (maybe just skip Searing Pain to save time, there's no way it will ever be the best spell to cast)
             if (this.player.simChoosingRotation) {
@@ -441,15 +440,6 @@ class Simulation {
                     predictedDamageOfSpells.push([this.player.spells.shadowfury.varName, this.player.spells.shadowfury.predictDamage()])
                   } else if (this.player.spells.shadowfury.hasEnoughMana()) {
                     this.player.cast('shadowfury')
-                  }
-                }
-                // Cast Dark Pact or Life Tap if there's more than 20 seconds left of the fight and if there are no (or few) "important auras" active.
-                // This is to try and avoid having to cast Dark Pact/Life Tap when you e.g. have a trinket active or Bloodlust
-                if (this.player.importantAuraCounter <= 1 && timeRemaining > 20 && ((this.player.spells.darkPact && this.player.spells.darkPact.ready()) || (this.player.spells.lifeTap.ready() && (!this.player.spells.darkPact || this.player.spells.darkPact.manaGain() > this.player.pet.stats.mana)))) {
-                  if (this.player.simChoosingRotation) {
-                    wantToCastLifeTapWhenNotOom = true
-                  } else {
-                    this.player.castLifeTapOrDarkPact()
                   }
                 }
                 // Cast filler spell if sim is not choosing the rotation for the user
