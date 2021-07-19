@@ -96,7 +96,15 @@ class DamageOverTime {
 
   // Predicts how much damage the dot will do over its full duration
   predictDamage() {
-    return this.getConstantDamage()[0]
+    let dmg = this.getConstantDamage()[0]
+    // If it's Corruption or Immolate then divide by the original duration (18s and 15s) and multiply by the durationTotal property
+    // This is just for the t4 4pc bonus since their durationTotal property is increased by 3 seconds to include another tick
+    // but the damage they do stays the same which assumes the normal duration without the bonus
+    if (this.varName == this.player.spells.corruption.varName || this.varName == this.player.spells.immolate.varName) {
+      dmg /= this.originalDurationTotal
+      dmg *= this.durationTotal
+    }
+    return dmg
   }
 
   tick (t) {

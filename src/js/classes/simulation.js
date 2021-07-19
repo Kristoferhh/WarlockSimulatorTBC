@@ -152,6 +152,9 @@ class Simulation {
     // Pet
     if (this.player.pet) this.player.pet.tick(time)
 
+    // Auras need to tick before Spells because otherwise you'll, for example, finish casting Corruption and then immediately afterwards, in the same millisecond, immediately tick down the aura
+    // This was also causing buffs like the t4 4pc buffs to expire sooner than they should.
+
     // Auras
     if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.tick(time)
     if (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active) this.player.auras.improvedShadowBolt.tick(time)
