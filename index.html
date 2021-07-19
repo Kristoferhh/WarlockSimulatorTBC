@@ -164,13 +164,19 @@
 					<span class="settings-left">Target Fire Resistance</span>
 					<input id="target-fire-resistance" value="0" type="number" name="target-fire-resistance" class="settings-right">
 				</li>
-				<li>
+				<li id='automatically-open-sim-details'>
 					<label class="settings-left" for="automatically-open-sim-details">Show Damage & Aura Tables</label>
-					<input class="settings-right" type="checkbox" id='automatically-open-sim-details' name="automatically-open-sim-details" />
+					<select class="settings-right" name="automatically-open-sim-details">
+						<option value="no">No</option>
+						<option value="yes">Yes</option>
+					</select>
 				</li>
-				<li title="Chooses a random value between a minimum and a maximum value instead of taking the average of the two.">
+				<li id='randomizeValues' title="Chooses a random value between a minimum and a maximum value instead of taking the average of the two.">
 					<label class="settings-left" for="randomizeValues">Randomize instead of averaging</label>
-					<input class="settings-right" type="checkbox" id='randomize-values' name="randomizeValues" />
+					<select class="settings-right" name="randomizeValues">
+						<option value="no">No</option>
+						<option value="yes">Yes</option>
+					</select>
 				</li>
 				<li id="infinitePlayerMana">
 					<label class="settings-left" for="infinitePlayerMana">Infinite player mana?</label>
