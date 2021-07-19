@@ -69,6 +69,12 @@ const gems = {
       iconName: 'inv_jewelcrafting_crimsonspinel_02',
       phase: 3
     },
+    38549: {
+      name: 'Runed Ornate Ruby',
+      spellPower: 12,
+      iconName: 'inv_misc_gem_bloodstone_01',
+      phase: 1
+    },
     27777: {
       name: 'Stark Blood Garnet',
       spellPower: 8,
