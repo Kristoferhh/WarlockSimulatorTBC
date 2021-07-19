@@ -35,6 +35,7 @@ class Player {
     this.itemId = customItemId || settings.items[settings.selectedItemSlot] || 0
     this.sets = JSON.parse(JSON.stringify(settings.sets))
     this.selectedAuras = settings.auras
+    this.minimumGcdValue = 1
     // I don't know if this formula only works for bosses or not, so for the moment I'm only using it for lvl >=73 targets.
     const enemyBaseResistance = settings.enemy.level >= 73 ? (6 * this.level * 5) / 75 : 0
     this.enemy.shadowResist = Math.max(this.enemy.shadowResist, enemyBaseResistance, 0)
@@ -43,8 +44,10 @@ class Player {
     this.enemy.arcaneResist = Math.max(enemyBaseResistance, 0)
     this.enemy.frostResist = Math.max(enemyBaseResistance, 0)
     this.combatlog = []
+    this.critMultiplier = 1.5
     this.importantAuraCounter = 0 // counts the amount of active "important" auras such as trinket procs, on-use trinket uses, power infusion etc.
     this.totalManaRegenerated = 0
+    this.simChoosingRotation = settings.simSettings.rotationOption == 'simChooses'
     // The amount to increase spell cast times by.
     // This will not have any actual effect on the dps result because of how small the value is, but it will make things a lot more realistic
     // because cast times, dot ticks, and such will fall out of sync with each other (which is what happens when a real player is playing)
@@ -225,7 +228,7 @@ class Player {
     this.stats.extraHitChance = this.stats.hitRating / hitRatingPerPercent // hit percent from hit rating
     if (settings.auras.totemOfWrath) this.stats.extraHitChance += (3 * settings.simSettings.totemOfWrathAmount)
     if (settings.auras.inspiringPresence === true) this.stats.extraHitChance += 1
-    this.stats.hitChance = Math.round(this.getHitChance()) // The player's chance of hitting the enemy, usually between 83% and 99%
+    this.stats.hitChance = Math.round(this.getBaseHitChance()) // The player's chance of hitting the enemy, usually between 83% and 99%
 
     // Add bonus damage % from Demonic Sacrifice
     if (settings.talents.demonicSacrifice === 1 && settings.simSettings.sacrificePet == 'yes') {
@@ -340,7 +343,7 @@ class Player {
     this.combatlog.push('Shadow Power: ' + this.stats.shadowPower)
     this.combatlog.push('Fire Power: ' + this.stats.firePower)
     this.combatlog.push('Crit Chance: ' + Math.round(this.getCritChance() * 100) / 100 + '%')
-    this.combatlog.push('Hit Chance: ' + Math.round((this.stats.extraHitChance) * 100) / 100 + '%')
+    this.combatlog.push('Hit Chance: ' + Math.min(16, Math.round((this.stats.extraHitChance) * 100) / 100) + '%')
     this.combatlog.push('Haste: ' + Math.round((this.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + '%')
     this.combatlog.push('Shadow Modifier: ' + Math.round(this.stats.shadowModifier * 100) + '%')
     this.combatlog.push('Fire Modifier: ' + Math.round(this.stats.fireModifier * 100) + '%')
@@ -410,23 +413,23 @@ class Player {
     this.spells = {
       lifeTap: new LifeTap(this)
     }
-    if (this.rotation.filler.shadowBolt || this.filler == 'shadowBolt' || this.talents.nightfall > 0) this.spells.shadowBolt = new ShadowBolt(this)
-    if (this.rotation.filler.incinerate) this.spells.incinerate = new Incinerate(this)
-    else if (this.rotation.filler.searingPain) this.spells.searingPain = new SearingPain(this)
-    if (this.rotation.dot.corruption) this.spells.corruption = new Corruption(this)
-    if (this.rotation.dot.unstableAffliction && this.talents.unstableAffliction) this.spells.unstableAffliction = new UnstableAffliction(this)
-    if (this.rotation.dot.siphonLife && this.talents.siphonLife) this.spells.siphonLife = new SiphonLife(this)
-    if (this.rotation.dot.immolate) this.spells.immolate = new Immolate(this)
+    if (this.rotation.filler.shadowBolt || this.filler == 'shadowBolt' || this.talents.nightfall > 0 || this.simChoosingRotation) this.spells.shadowBolt = new ShadowBolt(this)
+    if (this.rotation.filler.incinerate  || this.simChoosingRotation) this.spells.incinerate = new Incinerate(this)
+    if (this.rotation.filler.searingPain  || this.simChoosingRotation) this.spells.searingPain = new SearingPain(this)
+    if (this.rotation.dot.corruption  || this.simChoosingRotation) this.spells.corruption = new Corruption(this)
+    if (this.talents.unstableAffliction && (this.rotation.dot.unstableAffliction || this.simChoosingRotation)) this.spells.unstableAffliction = new UnstableAffliction(this)
+    if (this.talents.siphonLife && (this.rotation.dot.siphonLife || this.simChoosingRotation)) this.spells.siphonLife = new SiphonLife(this)
+    if (this.rotation.dot.immolate  || this.simChoosingRotation) this.spells.immolate = new Immolate(this)
     if (this.rotation.curse.curseOfAgony || this.rotation.curse.curseOfDoom) this.spells.curseOfAgony = new CurseOfAgony(this)
     if (this.rotation.curse.curseOfTheElements) this.spells.curseOfTheElements = new CurseOfTheElements(this)
     if (this.rotation.curse.curseOfRecklessness) this.spells.curseOfRecklessness = new CurseOfRecklessness(this)
     if (this.rotation.curse.curseOfDoom) this.spells.curseOfDoom = new CurseOfDoom(this)
-    if (this.rotation.finisher.conflagrate && this.talents.conflagrate == 1) this.spells.conflagrate = new Conflagrate(this)
-    if (this.rotation.finisher.shadowburn && this.talents.shadowburn > 0) this.spells.shadowburn = new Shadowburn(this)
-    if (this.rotation.finisher.deathCoil) this.spells.deathCoil = new DeathCoil(this)
-    if (this.rotation.other.shadowfury && this.talents.shadowfury == 1) this.spells.shadowfury = new Shadowfury(this)
-    if (this.rotation.other.amplifyCurse && this.talents.amplifyCurse == 1) this.spells.amplifyCurse = new AmplifyCurse(this)
-    if (this.rotation.other.darkPact && this.talents.darkPact == 1) this.spells.darkPact = new DarkPact(this)
+    if (this.talents.conflagrate == 1 && (this.rotation.finisher.conflagrate || this.simChoosingRotation)) this.spells.conflagrate = new Conflagrate(this)
+    if (this.talents.shadowburn > 0 && (this.rotation.finisher.shadowburn || this.simChoosingRotation)) this.spells.shadowburn = new Shadowburn(this)
+    if (this.rotation.finisher.deathCoil || this.simChoosingRotation) this.spells.deathCoil = new DeathCoil(this)
+    if (this.talents.shadowfury == 1 && (this.rotation.other.shadowfury || this.simChoosingRotation)) this.spells.shadowfury = new Shadowfury(this)
+    if (this.talents.amplifyCurse == 1 && (this.rotation.other.amplifyCurse || this.simChoosingRotation)) this.spells.amplifyCurse = new AmplifyCurse(this)
+    if (this.talents.darkPact == 1 && (this.rotation.other.darkPact || this.simChoosingRotation)) this.spells.darkPact = new DarkPact(this)
     if (this.selectedAuras.destructionPotion) this.spells.destructionPotion = new DestructionPotion(this)
     if (this.selectedAuras.superManaPotion) this.spells.superManaPotion = new SuperManaPotion(this)
     if (this.selectedAuras.demonicRune) this.spells.demonicRune = new DemonicRune(this)
@@ -459,11 +462,11 @@ class Player {
     if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusion(this)
     if (this.simSettings.race == 'orc') this.auras.bloodFury = new BloodFuryAura(this)
     if (this.talents.improvedShadowBolt > 0) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this)
-    if (this.rotation.dot.corruption) this.auras.corruption = new CorruptionDot(this)
-    if (this.rotation.dot.unstableAffliction) this.auras.unstableAffliction = new UnstableAfflictionDot(this)
-    if (this.rotation.dot.siphonLife) this.auras.siphonLife = new SiphonLifeDot(this)
-    if (this.rotation.dot.immolate) this.auras.immolate = new ImmolateDot(this)
-    if (this.rotation.curse.curseOfAgony || this.rotation.curse.curseOfDoom) this.auras.curseOfAgony = new CurseOfAgonyDot(this)
+    if (this.spells.corruption) this.auras.corruption = new CorruptionDot(this)
+    if (this.spells.unstableAffliction) this.auras.unstableAffliction = new UnstableAfflictionDot(this)
+    if (this.spells.siphonLife) this.auras.siphonLife = new SiphonLifeDot(this)
+    if (this.spells.immolate) this.auras.immolate = new ImmolateDot(this)
+    if (this.spells.curseOfAgony) this.auras.curseOfAgony = new CurseOfAgonyDot(this)
     if (this.rotation.curse.curseOfTheElements) this.auras.curseOfTheElements = new CurseOfTheElementsAura(this)
     if (this.rotation.curse.curseOfRecklessness) this.auras.curseOfRecklessness = new CurseOfRecklessnessAura(this)
     if (this.rotation.curse.curseOfDoom) this.auras.curseOfDoom = new CurseOfDoomDot(this)
@@ -471,7 +474,7 @@ class Player {
     if (this.selectedAuras.destructionPotion) this.auras.destructionPotion = new DestructionPotionAura(this)
     if (this.selectedAuras.flameCap) this.auras.flameCap = new FlameCapAura(this)
     if (this.selectedAuras.bloodlust) this.auras.bloodlust = new BloodlustAura(this)
-    if (this.talents.amplifyCurse == 1 && this.rotation.other.amplifyCurse) this.auras.amplifyCurse = new AmplifyCurseAura(this)
+    if (this.spells.amplifyCurse) this.auras.amplifyCurse = new AmplifyCurseAura(this)
     if (this.selectedAuras.drumsOfBattle) this.auras.drumsOfBattle = new DrumsOfBattleAura(this)
     else if (this.selectedAuras.drumsOfWar) this.auras.drumsOfWar = new DrumsOfWarAura(this)
     else if (this.selectedAuras.drumsOfRestoration) this.auras.drumsOfRestoration = new DrumsOfRestorationAura(this)
@@ -504,8 +507,8 @@ class Player {
     this.importantAuraCounter = 0
   }
 
-  cast (spell) {
-    this.spells[spell].startCast()
+  cast (spell, predictedDamage = 0) {
+    this.spells[spell].startCast(predictedDamage)
   }
 
   areAnyCooldownsReady () {
@@ -557,17 +560,28 @@ class Player {
     }
   }
 
+  castLifeTapOrDarkPact() {
+    if (this.spells.darkPact && this.spells.darkPact.ready()) {
+      this.cast('darkPact')
+    } else {
+      this.cast('lifeTap')
+    }
+  }
+
   getGcdValue() {
-    return Math.round((this.gcdValue / (1 + ((this.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000
+    return Math.max(this.minimumGcdValue, Math.round((this.gcdValue / (1 + ((this.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000)
+  }
+
+  getHitChance(isAfflictionSpell) {
+    let hitChance = this.stats.hitChance + this.stats.extraHitChance
+    if (isAfflictionSpell) {
+      hitChance += this.talents.suppression * 2
+    }
+    return Math.min(99, hitChance)
   }
 
   isHit (isAfflictionSpell) {
-    let hit
-    if (isAfflictionSpell) {
-      hit = (random(1, 100 * this.stats.hitChanceMultiplier) <= (Math.min(99 * this.stats.hitChanceMultiplier, (this.stats.hitChance + this.stats.extraHitChance + this.talents.suppression * 2) * this.stats.hitChanceMultiplier)))
-    } else {
-      hit = (random(1, 100 * this.stats.hitChanceMultiplier) <= Math.min(99 * this.stats.hitChanceMultiplier, (this.stats.hitChance + this.stats.extraHitChance) * this.stats.hitChanceMultiplier))
-    }
+    const hit = (random(1, 100 * this.stats.hitChanceMultiplier) <= this.getHitChance(isAfflictionSpell) * this.stats.hitChanceMultiplier)
 
     // Eye of Magtheridon
     if (!hit && this.trinketIds.includes(28789)) {
@@ -602,7 +616,7 @@ class Player {
   }
 
   // formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/ && https://royalgiraffe.github.io/resist-guide
-  getHitChance () {
+  getBaseHitChance () {
     const levelDifference = parseInt(this.enemy.level) - this.level
     if (levelDifference <= 2) {
       return Math.min(99, 100 - levelDifference - 4)

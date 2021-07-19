@@ -69,7 +69,34 @@ class DamageOverTime {
   }
 
   getModifier () {
-    return this.modifier * this.player.stats[this.school + 'Modifier']
+    let modifier = this.modifier * this.player.stats[this.school + 'Modifier']
+    // Amplify Curse
+    if (this.amplified) {
+      modifier *= 1.5
+    }
+    // Improved Shadow Bolt
+    if ((this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.varName != 'siphonLife') || (this.varName == 'siphonLife' && this.isbActive)) {
+      modifier *= this.player.auras.improvedShadowBolt.modifier
+    }
+    return modifier
+  }
+
+  getConstantDamage() {
+    let spellPower = this.snapshots ? this.spellPower : this.player.getSpellPower() + this.player.stats[this.school + 'Power']
+    // If the DoT isn't currently active then this.spellPower will be 0, so use the player's current Spell Power
+    if (!this.active) {
+      spellPower = this.player.getSpellPower() + this.player.stats[this.school + 'Power']
+    }
+    let modifier = this.getModifier()
+    const partialResistMultiplier = this.player.getPartialResistMultiplier(this.player.enemy[this.school + 'Resist'])
+    let dmg = (this.dmg + spellPower * this.coefficient) * modifier * partialResistMultiplier
+
+    return [dmg, spellPower, modifier, partialResistMultiplier]
+  }
+
+  // Predicts how much damage the dot will do over its full duration
+  predictDamage() {
+    return this.getConstantDamage()[0]
   }
 
   tick (t) {
@@ -77,19 +104,11 @@ class DamageOverTime {
       this.tickTimerRemaining = Math.max(0, this.tickTimerRemaining - t)
 
       if (this.tickTimerRemaining == 0) {
-        const sp = this.snapshots ? this.spellPower : this.player.getSpellPower() + this.player.stats[this.school + 'Power']
-        let modifier = this.getModifier()
-
-        // Amplify Curse
-        if (this.amplified) {
-          modifier *= 1.5
-        }
-
-        // Add bonus from ISB (without removing ISB stacks since it's a dot)
-        if ((this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.varName != 'siphonLife') || (this.varName == 'siphonLife' && this.isbActive)) {
-          modifier *= this.player.auras.improvedShadowBolt.modifier
-        }
-        let dmg = ((this.dmg + sp * this.coefficient) * modifier) / (this.originalDurationTotal / this.tickTimerTotal)
+        const constantDamage = this.getConstantDamage()
+        const dmg = constantDamage[0] / (this.originalDurationTotal / this.tickTimerTotal)
+        const spellPower = constantDamage[1]
+        const modifier = constantDamage[2]
+        const partialResistMultiplier = constantDamage[3]
 
         // Check for Nightfall proc
         if (this.varName == 'corruption' && this.player.talents.nightfall > 0) {
@@ -98,12 +117,9 @@ class DamageOverTime {
           }
         }
 
-        // Partial resist damage reduction
-        const partialResistMultiplier = this.player.getPartialResistMultiplier(this.player.enemy[this.school + 'Resist'])
-        dmg = Math.round(dmg * partialResistMultiplier)
         this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg
         this.player.iterationDamage += dmg
-        this.player.combatLog(this.name + ' Tick ' + Math.round(dmg) + ' (' + this.dmg + ' Base Damage - ' + Math.round(sp) + ' Spell Power - ' + this.coefficient + ' Coefficient - ' + Math.round(modifier * 10000) / 100 + '% Damage Modifier ' + Math.round(partialResistMultiplier * 1000) / 1000 + '% Partial Resist Multiplier)')
+        this.player.combatLog(this.name + ' Tick ' + Math.round(dmg) + ' (' + this.dmg + ' Base Damage - ' + Math.round(spellPower) + ' Spell Power - ' + this.coefficient + ' Coefficient - ' + (Math.round(modifier * 10000) / 100).toFixed(2) + '% Damage Modifier ' + Math.round(partialResistMultiplier * 1000) / 1000 + '% Partial Resist Multiplier)')
         this.ticksRemaining--
         this.tickTimerRemaining = this.tickTimerTotal
 
@@ -135,6 +151,7 @@ class CorruptionDot extends DamageOverTime {
     this.name = 'Corruption'
     this.coefficient = 0.936 + (0.12 * player.talents.empoweredCorruption)
     this.minimumDuration = 9
+    this.t5BonusModifier = 1
     this.setup()
 
     // T3 4pc
@@ -199,6 +216,7 @@ class ImmolateDot extends DamageOverTime {
     this.name = 'Immolate'
     this.coefficient = 0.65
     this.minimumDuration = 12
+    this.t5BonusModifier = 1
     this.setup()
   }
 

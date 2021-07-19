@@ -39,27 +39,46 @@ class Spell {
   }
 
   ready () {
-    return (!this.onGcd || this.player.gcdRemaining <= 0) && (this.isProc || this.player.castTimeRemaining <= 0) && this.manaCost <= this.player.mana && this.cooldownRemaining <= 0
+    return this.canCast() && this.hasEnoughMana()
+  }
+
+  canCast() {
+    return (!this.onGcd || this.player.gcdRemaining <= 0) && (this.isProc || this.player.castTimeRemaining <= 0) && this.cooldownRemaining <= 0
+  }
+
+  hasEnoughMana() {
+    return this.manaCost <= this.player.mana
   }
 
   getCastTime () {
     return Math.round((this.castTime / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000 + this.player.spellDelay
   }
 
-  startCast () {
+  startCast (predictedDamage = 0) {
     if (this.onGcd) {
-      // 1 second is the minimum for global cooldown?
-      this.player.gcdRemaining = Math.max(1, this.player.getGcdValue())
+      this.player.gcdRemaining = this.player.getGcdValue()
     }
 
+    let combatLogMsg = ''
     if (this.castTime > 0) {
       this.casting = true
       this.player.castTimeRemaining = this.getCastTime()
-      if (!this.isProc) this.player.combatLog('Started casting ' + this.name + '. Cast time: ' + (this.player.castTimeRemaining - this.player.spellDelay) + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base cast speed of ' + this.castTime + '). Global cooldown: ' + this.player.gcdRemaining)
+      if (!this.isProc) {
+        combatLogMsg += 'Started casting ' + this.name + ' - Cast time: ' + (this.player.castTimeRemaining - this.player.spellDelay) + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base cast speed of ' + this.castTime + ').'
+      }
     } else {
-      if (!this.isProc) this.player.combatLog('Cast ' + this.name)
+      if (!this.isProc) {
+        combatLogMsg += 'Cast ' + this.name
+      }
       this.cast()
     }
+    if (this.onGcd) {
+      combatLogMsg += ' - Global cooldown: ' + this.player.gcdRemaining
+    }
+    if (predictedDamage > 0) {
+      combatLogMsg += ' - Estimated damage / Cast Time: ' + Math.round(predictedDamage)
+    }
+    this.player.combatLog(combatLogMsg)
   }
 
   // Called when a spell finishes casting or immediately called if the spell has no cast time.
@@ -203,45 +222,18 @@ class Spell {
   }
 
   damage (isCrit) {
-    let dmg = this.player.simSettings.randomizeValues && this.minDmg && this.maxDmg ? random(this.minDmg, this.maxDmg) : this.dmg
-    let critMultiplier = 1.5
-    let spellPower = this.player.getSpellPower()
-    const shadowPower = this.player.stats.shadowPower
-    const firePower = this.player.stats.firePower
-    let modifier = this.getModifier()
-
-    // If casting Incinerate and Immolate is up, add the bonus damage.
-    if (this.varName == 'incinerate' && this.player.auras.immolate && this.player.auras.immolate.active) {
-      dmg += this.player.simSettings.randomizeValues ? random(this.bonusDamageFromImmolateMin, this.bonusDamageFromImmolateMax) : this.bonusDamageFromImmolate
-    }
+    // [baseDamage, dmg, modifier, partialResistMultiplier, spellPower]
+    const constantDamage = this.getConstantDamage()
     // Make a variable for the base damage to output into the combat log
-    const baseDamage = dmg
-    // Damage from spell power * coefficient
-    const sp = spellPower + (this.school == 'shadow' ? shadowPower : this.school == 'fire' ? firePower : 0)
-    dmg += sp * this.coefficient
-
-    // Improved Shadow Bolt
-    if (this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.simSettings.customIsbUptime == 'no') {
-      modifier *= this.player.auras.improvedShadowBolt.modifier
-      if (!this.isDot) {
-        this.player.auras.improvedShadowBolt.decrementStacks()
-      }
-    }
-
-    dmg *= modifier
+    const baseDamage = constantDamage[0]
+    let dmg = constantDamage[1]
+    const modifier = constantDamage[2]
+    const partialResistMultiplier = constantDamage[3]
+    const spellPower = constantDamage[4]
+    let critMultiplier = this.player.critMultiplier
 
     if (isCrit) {
-      // Chaotic Skyfire Diamond meta gem
-      if (this.player.metaGemIds.includes(34220)) {
-        critMultiplier *= 1.03
-      }
-      // Ruin
-      if (this.type == 'destruction' && this.player.talents.ruin > 0) {
-        critMultiplier -= 1
-        critMultiplier *= 2
-        critMultiplier += 1
-      }
-
+      critMultiplier = this.getCritMultiplier(critMultiplier)
       dmg *= critMultiplier
 
       // Apply ISB debuff if casting Shadow Bolt
@@ -253,14 +245,19 @@ class Spell {
       if (this.player.spells.theLightningCapacitor) {
         this.player.spells.theLightningCapacitor.startCast()
       }
+    } else {
+      // Decrement the Improved Shadow Bolt stacks if it's not a crit
+      if (this.school == 'shadow' && !this.isDot && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.simSettings.customIsbUptime == 'no') {
+        this.player.auras.improvedShadowBolt.decrementStacks()
+      }
     }
-    const partialResistMultiplier = this.player.getPartialResistMultiplier(this.player.enemy[this.school + 'Resist'])
-    dmg = Math.round(dmg * partialResistMultiplier)
+
+    // Combat Log
     let combatLogMsg = this.name + ' '
     if (isCrit) combatLogMsg += '*'
-    combatLogMsg += dmg
+    combatLogMsg += Math.round(dmg)
     if (isCrit) combatLogMsg += '*'
-    combatLogMsg += ' (' + baseDamage + ' Base Damage - ' + Math.round(this.coefficient * 1000) / 1000 + ' Coefficient - ' + Math.round(sp) + ' Spell Power - '
+    combatLogMsg += ' (' + baseDamage + ' Base Damage - ' + Math.round(this.coefficient * 1000) / 1000 + ' Coefficient - ' + Math.round(spellPower) + ' Spell Power - '
     if (isCrit) combatLogMsg += critMultiplier.toFixed(2) + '% Crit Multiplier - '
     combatLogMsg += Math.round(modifier * 10000) / 100 + '% Damage Modifier - ' + Math.round(partialResistMultiplier * 1000) / 10 + '% Partial Resist Multiplier)'
     this.player.combatLog(combatLogMsg)
@@ -275,6 +272,73 @@ class Spell {
         this.player.auras.immolate.t5BonusModifier *= 1.1
       }
     }
+  }
+
+  // Returns the non-RNG damage of the spell (basically just the base damage + spell power + damage modifiers, no crit/miss etc.)
+  getConstantDamage(noRNG = false) {
+    let dmg = this.player.simSettings.randomizeValues && this.minDmg && this.maxDmg && !noRNG ? random(this.minDmg, this.maxDmg) : this.dmg
+    const baseDamage = dmg // Creating a variable for the base damage just for the combat log
+    const spellPower = this.player.getSpellPower() + (this.school == 'shadow' ? this.player.stats.shadowPower : this.school == 'fire' ? this.player.stats.firePower : 0)
+    let modifier = this.getModifier()
+    const partialResistMultiplier = this.player.getPartialResistMultiplier(this.player.enemy[this.school + 'Resist'])
+
+    // If casting Incinerate and Immolate is up, add the bonus damage.
+    if (this.varName == 'incinerate' && this.player.auras.immolate && this.player.auras.immolate.active) {
+      dmg += this.player.simSettings.randomizeValues && !noRNG ? random(this.bonusDamageFromImmolateMin, this.bonusDamageFromImmolateMax) : this.bonusDamageFromImmolate
+    }
+
+    // Add damage from Spell Power
+    dmg += spellPower * this.coefficient
+
+    // Improved Shadow Bolt
+    if (this.school == 'shadow' && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.simSettings.customIsbUptime == 'no') {
+      modifier *= this.player.auras.improvedShadowBolt.modifier
+    }
+
+    dmg *= modifier * partialResistMultiplier
+
+    return [baseDamage, dmg, modifier, partialResistMultiplier, spellPower]
+  }
+
+  // Returns the number that the damage of the spell will be multiplied with if it crits
+  getCritMultiplier(critMult) {
+    let critMultiplier = critMult
+
+    // Chaotic Skyfire Diamond meta gem
+    if (this.player.metaGemIds.includes(34220)) {
+      critMultiplier *= 1.03
+    }
+    // Ruin
+    if (this.type == 'destruction' && this.player.talents.ruin > 0) {
+      // Ruin doubles the *bonus* of your crits, not the damage of the crit itself
+      // So if your crit damage % is e.g. 154.5% it would become 209% because the 54.5% is being doubled
+      critMultiplier -= 1
+      critMultiplier *= 2
+      critMultiplier += 1
+    }
+
+    return critMultiplier
+  }
+
+  // Predicts how much damage the spell will do based on crit % and miss %
+  predictDamage() {
+    const normalDamage = this.getConstantDamage()[1] || 0
+    let critDamage = 0, critChance = 0, chanceToNotCrit = 0
+
+    if (this.canCrit) {
+      critDamage = normalDamage * this.getCritMultiplier(this.player.critMultiplier)
+      critChance = this.player.getCritChance() / 100
+      chanceToNotCrit = 1 - critChance
+    }
+    const hitChance = this.player.getHitChance(this.type == 'affliction') / 100
+    let estimatedDamage = this.canCrit ? (normalDamage * chanceToNotCrit) + (critDamage * critChance) : normalDamage
+
+    // Add the predicted damage of the DoT over its full duration
+    if (this.isDot) {
+      estimatedDamage += this.player.auras[this.varName].predictDamage()
+    }
+
+    return (estimatedDamage * hitChance) / Math.max(this.player.getGcdValue(), this.getCastTime())
   }
 
   tick (t) {

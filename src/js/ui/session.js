@@ -3,6 +3,8 @@ $('#sim-settings select, #sim-settings input').each(function () {
   if (settings[$(this).attr('name')]) {
     if ($(this).is(':checkbox')) {
       $(this).attr('checked', settings[$(this).attr('name')])
+    } else if ($(this).is(':radio')) {
+      $(this).attr('checked', $(this).val() == settings[$(this).attr('name')])
     } else {
       $(this).val(settings[$(this).attr('name')])
     }
