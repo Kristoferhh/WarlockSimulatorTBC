@@ -56,7 +56,9 @@ class Spell {
 
   startCast (predictedDamage = 0) {
     if (this.onGcd) {
-      this.player.gcdRemaining = this.player.getGcdValue()
+      if (!this.player.spells.shadowfury || this.varName !== this.player.spells.shadowfury.varName) {
+        this.player.gcdRemaining = this.player.getGcdValue()
+      }
     }
 
     let combatLogMsg = ''
