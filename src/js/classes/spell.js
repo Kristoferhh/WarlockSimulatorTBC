@@ -56,9 +56,7 @@ class Spell {
 
   startCast (predictedDamage = 0) {
     if (this.onGcd) {
-      if (!this.player.spells.shadowfury || this.varName !== this.player.spells.shadowfury.varName) {
-        this.player.gcdRemaining = this.player.getGcdValue()
-      }
+      this.player.gcdRemaining = this.player.getGcdValue(this.varName)
     }
 
     let combatLogMsg = ''
@@ -340,7 +338,7 @@ class Spell {
       estimatedDamage += this.player.auras[this.varName].predictDamage()
     }
 
-    return (estimatedDamage * hitChance) / Math.max(this.player.getGcdValue(), this.getCastTime())
+    return (estimatedDamage * hitChance) / Math.max(this.player.getGcdValue(this.varName), this.getCastTime())
   }
 
   tick (t) {

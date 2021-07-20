@@ -568,8 +568,12 @@ class Player {
     }
   }
 
-  getGcdValue() {
-    return Math.max(this.minimumGcdValue, Math.round((this.gcdValue / (1 + ((this.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000)
+  getGcdValue(spellVarName = '') {
+    // As far as I know, Shadowfury doesn't trigger a global cooldown
+    if (!this.spells.shadowfury || this.spells.shadowfury.varName !== spellVarName) {
+      return Math.max(this.minimumGcdValue, Math.round((this.gcdValue / (1 + ((this.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000)
+    }
+    return 0
   }
 
   getHitChance(isAfflictionSpell) {
