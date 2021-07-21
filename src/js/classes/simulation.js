@@ -254,7 +254,7 @@ class Simulation {
 
   start () {
     let totalDamage = 0
-    let totalDuration = 0
+    this.player.totalDuration = 0
     let minDps = 9999
     let maxDps = 0
     const startTime = performance.now()
@@ -505,7 +505,7 @@ class Simulation {
         }
       }
 
-      totalDuration += fightLength
+      this.player.totalDuration += fightLength
       totalDamage += this.player.iterationDamage
 
       const iterationDps = this.player.iterationDamage / fightLength
@@ -518,7 +518,7 @@ class Simulation {
       // Send an update to the sim worker for every 1% of progress
       if (this.player.iteration % ~~(this.iterations / 100) == 0) {
         this.simulationUpdate({
-          avgDps: Math.round((totalDamage / totalDuration) * 100) / 100,
+          avgDps: Math.round((totalDamage / this.player.totalDuration) * 100) / 100,
           percent: Math.round((this.player.iteration / this.iterations) * 100),
           itemId: this.player.itemId,
           customStat: this.player.customStat
@@ -588,8 +588,8 @@ class Simulation {
       combatlog: this.player.combatlog,
       iterations: this.iterations,
       totalDamage: totalDamage,
-      totalDuration: totalDuration,
-      avgDps: Math.round((totalDamage / totalDuration) * 100) / 100,
+      totalDuration: this.player.totalDuration,
+      avgDps: Math.round((totalDamage / this.player.totalDuration) * 100) / 100,
       totalManaRegenerated: this.player.totalManaRegenerated,
       itemId: this.player.itemId,
       customStat: this.player.customStat

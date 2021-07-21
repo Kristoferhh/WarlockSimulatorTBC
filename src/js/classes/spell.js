@@ -338,6 +338,19 @@ class Spell {
       estimatedDamage += this.player.auras[this.varName].predictDamage()
     }
 
+    // If the player is not using a custom ISB uptime, they have the ISB talent selected, but the ISB aura is not active, then give some % modifier as an "average" for the damage.
+    // Without this, the sim will choose Incinerate over Shadow Bolt because it basically just doesn't know that ISB exists
+    if (this.school == 'shadow' && this.player.simSettings.customIsbUptime !== 'yes' && this.player.auras.improvedShadowBolt && !this.player.auras.improvedShadowBolt.active) {
+      // If this isn't the player's first iteration then check what their ISB uptime is and add that %
+      if (this.player.iteration > 1) {
+        estimatedDamage *= (1 + 0.2 * this.player.auras.improvedShadowBolt.uptimeSoFar)
+      }
+      // If it's the first iteration where we don't have enough data to assume what the player's ISB uptime is, then add a fixed amount
+      else {
+        estimatedDamage *= 1.15;
+      }
+    }
+
     return (estimatedDamage * hitChance) / Math.max(this.player.getGcdValue(this.varName), this.getCastTime())
   }
 

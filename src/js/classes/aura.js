@@ -114,6 +114,7 @@ class ImprovedShadowBolt extends Aura {
     this.stacks = 0
     this.maxStacks = 4
     this.modifier = 1 + (this.player.talents.improvedShadowBolt * 0.04)
+    this.uptimeSoFar = 0
     this.setup()
   }
 
@@ -130,6 +131,11 @@ class ImprovedShadowBolt extends Aura {
     } else {
       this.player.combatLog(this.name + '(' + this.stacks + ')')
     }
+  }
+
+  fade() {
+    super.fade()
+    this.uptimeSoFar = this.player.auraBreakdown[this.varName].uptime / this.player.totalDuration
   }
 }
 
