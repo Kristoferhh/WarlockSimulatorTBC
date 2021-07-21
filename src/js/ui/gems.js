@@ -178,7 +178,7 @@ $(document).on('click', '.gem-options-gem', function () {
 
 // "Apply" button in the "Fill item sockets" options is clicked
 $('#gem-options-apply-button').click(function () {
-  const selectedGemId = $('.gem-options-gem[data-checked="true"]').attr('data-gem-id')
+  const selectedGemId = Number($('.gem-options-gem[data-checked="true"]').attr('data-gem-id'))
 
   if (selectedGemId) {
     const fillAllSockets = $('#gem-options-window-replacement-options input[type="radio"]:checked').val() == 'allSockets'
