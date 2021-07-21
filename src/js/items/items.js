@@ -3479,7 +3479,7 @@ const items = {
     glidersBootsOfShadowWrath: {
       name: "Glider's Boots of Shadow Wrath",
       shadowPower: 78,
-      displayId: 30681,
+      displayId: 30680,
       id: fakeItemIds.glidersBootsOfShadowWrath,
       source: 'Karazhan',
       phase: 1
@@ -3487,7 +3487,7 @@ const items = {
     glidersBootsOfFireWrath: {
       name: "Glider's Boots of Fire Wrath",
       firePower: 78,
-      displayId: 30681,
+      displayId: 30680,
       id: fakeItemIds.glidersBootsOfFireWrath,
       source: 'Karazhan',
       phase: 1
@@ -3497,7 +3497,7 @@ const items = {
       intellect: 28,
       spellPower: 33,
       critRating: 28,
-      displayId: 30681,
+      displayId: 30680,
       id: fakeItemIds.glidersBootsOfTheInvoker,
       source: 'Karazhan',
       phase: 1
