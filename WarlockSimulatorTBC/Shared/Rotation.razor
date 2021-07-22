@@ -1,0 +1,21 @@
+﻿@using Shared.Classes.UI
+
+<section id="rotation-section">
+    <h3>Rotation</h3>
+    <ul id="rotation-list">
+        @foreach (var rotationGroup in RotationGroups.groups)
+		{
+            <div id="rotation-@rotationGroup.Key">
+                <h4>@rotationGroup.Value.heading</h4>
+                @foreach (var spell in rotationGroup.Value.spells)
+				{
+                    <li id="@rotationGroup.Key-@spell.Value.name" class="rotation-@rotationGroup.Key" data-type="@rotationGroup.Key" data-name="@spell.Value.name" data-checked="false">
+                        <a href="https://tbc.wowhead.com/spell=@spell.Value.id">
+                            <img alt="@spell.Value.name" src="img/@spell.Value.iconName" />
+                        </a>
+                    </li>
+				}
+            </div>
+		}
+    </ul>
+</section>

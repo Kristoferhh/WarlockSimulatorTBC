@@ -1,0 +1,18 @@
+﻿@using Shared.Classes.UI
+
+<section id="aura-section">
+    @foreach (var auraGroup in AuraGroups.groups)
+    {
+        <h3>@auraGroup.Value.heading</h3>
+        <ul id="@auraGroup.Key-section">
+            @foreach (var aura in auraGroup.Value.auras)
+            {
+                <li id="@aura.Key" data-aura-type="@auraGroup.Key" data-checked="false" name="@aura.Key" class="aura @auraGroup.Key @(aura.Value.alcohol ? "alcohol" : "") @(aura.Value.potion ? "potion" : "") @(aura.Value.battleElixir ? "battle-elixir" : "") @(aura.Value.guardianElixir ? "guardian-elixir" : "") @(aura.Value.weaponOil ? "weapon-oil" : "") @(aura.Value.foodBuff ? "food-buff" : "") @(aura.Value.demonicRune ? "demonic-rune" : "") @(aura.Value.petOnly ? "petBuff" : "") @(aura.Value.forPet ? "petDebuff" : "")">
+                    <a href="https://tbc.wowhead.com/@auraGroup.Value.type=@aura.Value.id">
+                        <img alt="@aura.Value.name" src="img/@aura.Value.iconName" />
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+</section>
