@@ -3900,6 +3900,14 @@ const items = {
       source: 'The Eye',
       phase: 2
     },
+    bandOfDominion: {
+      name: 'Band of Dominion',
+      spellPower: 28,
+      critRating: 21,
+      id: 31290,
+      source: 'World Drop',
+      phase: 1
+    },
     ringOfRecurrence: {
       name: 'Ring of Recurrence',
       stamina: 15,
