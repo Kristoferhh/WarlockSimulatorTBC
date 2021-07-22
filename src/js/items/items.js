@@ -15,6 +15,8 @@ const fakeItemIds = {
   drakeweaveRaimentOfFireWrath: -12,
   drakeweaveRaimentOfTheSorcerer: -13,
   drakeweaveRaimentOfTheInvoker: -14,
+  flawlessWandOfShadowWrath: -15,
+  flawlessWandOfFireWrath: -16,
 }
 
 const items = {
@@ -5301,6 +5303,22 @@ const items = {
       critRating: 12,
       id: 25640,
       source: 'Nagrand Quest',
+      phase: 1
+    },
+    flawlessWandOfShadowWrath: {
+      name: 'Flawless Wand of Shadow Wrath',
+      shadowPower: 25,
+      id: fakeItemIds.flawlessWandOfShadowWrath,
+      displayId: 25295,
+      source: 'World Drop',
+      phase: 1
+    },
+    flawlessWandOfFireWrath: {
+      name: 'Flawless Wand of Fire Wrath',
+      firePower: 25,
+      id: fakeItemIds.flawlessWandOfFireWrath,
+      displayId: 25295,
+      source: 'World Drop',
       phase: 1
     },
     nexusTorch: {
