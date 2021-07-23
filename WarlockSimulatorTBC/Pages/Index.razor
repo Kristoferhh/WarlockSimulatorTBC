@@ -1,4 +1,6 @@
-﻿@page "/"
+﻿@using Shared.Classes.UI
+@using Pages
+@page "/"
 
 <p id="pet-wip-note">This sim is still a work in progress (especially pets!). Please report bugs to the warlock Discord or PM me at Kristofer#8003</p>
 <div>
@@ -55,15 +57,15 @@
     <section class="breakdown-section" id="damage-breakdown-section">
         <table class="breakdown-table tablesorter" id="damage-breakdown-table" data-sortlist='[[1,1]]'>
             <thead>
-                <th>Name</th>
-                <th>Damage</th>
-                <th>Casts</th>
-                <th>Avg Cast</th>
-                <th>Crit %</th>
-                <th>Miss %</th>
-                <th id='damage-breakdown-dodge'>Dodge %</th>
-                <th id='damage-breakdown-glancing'>Glancing %</th>
-                <th>Dps</th>
+            <th>Name</th>
+            <th>Damage</th>
+            <th>Casts</th>
+            <th>Avg Cast</th>
+            <th>Crit %</th>
+            <th>Miss %</th>
+            <th id='damage-breakdown-dodge'>Dodge %</th>
+            <th id='damage-breakdown-glancing'>Glancing %</th>
+            <th>Dps</th>
             </thead>
             <tbody></tbody>
         </table>
@@ -72,10 +74,10 @@
     <section class="breakdown-section" id="mana-gain-breakdown-section">
         <table class="breakdown-table tablesorter" id="mana-gain-breakdown-table" data-sortlist='[[1,1]]'>
             <thead>
-                <th>Name</th>
-                <th>% Of Total Gain</th>
-                <th>Casts</th>
-                <th>Avg Cast</th>
+            <th>Name</th>
+            <th>% Of Total Gain</th>
+            <th>Casts</th>
+            <th>Avg Cast</th>
             </thead>
             <tbody></tbody>
         </table>
@@ -84,9 +86,9 @@
     <section class="breakdown-section" id="aura-breakdown-section">
         <table class="breakdown-table tablesorter" id="aura-breakdown-table" data-sortlist='[[2,1]]'>
             <thead>
-                <th>Name</th>
-                <th>Count</th>
-                <th>Uptime</th>
+            <th>Name</th>
+            <th>Count</th>
+            <th>Uptime</th>
             </thead>
             <tbody></tbody>
         </table>
@@ -143,24 +145,24 @@
     </div>
 
     <ul id="item-slot-selection-list">
-        <li data-slot="mainhand">Main Hand</li>
-        <li data-slot="offhand">Off Hand</li>
-        <li data-slot="twohand">Two Hand</li>
-        <li data-slot='head'>Head</li>
-        <li data-slot="neck">Neck</li>
-        <li data-slot="shoulders">Shoulders</li>
-        <li data-slot="back">Back</li>
-        <li data-slot="chest">Chest</li>
-        <li data-slot="bracer">Bracer</li>
-        <li data-slot="gloves">Gloves</li>
-        <li data-slot="belt">Belt</li>
-        <li data-slot="legs">Legs</li>
-        <li data-slot="boots">Boots</li>
-        <li data-slot="ring" data-subslot='1'>Ring 1</li>
-        <li data-slot="ring" data-subslot='2'>Ring 2</li>
-        <li data-slot="trinket" data-subslot='1'>Trinket 1</li>
-        <li data-slot="trinket" data-subslot='2'>Trinket 2</li>
-        <li data-slot="wand">Wand</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.MAINHAND))">Main Hand</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.OFFHAND))">Off Hand</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.TWOHAND))">Two Hand</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.HEAD))">Head</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.NECK))">Neck</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.SHOULDERS))">Shoulders</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BACK))">Back</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.CHEST))">Chest</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BRACERS))">Bracer</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.GLOVES))">Gloves</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BELT))">Belt</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.LEGS))">Legs</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BOOTS))">Boots</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.RING))">Ring 1</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.RING))">Ring 2</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.TRINKET))">Trinket 1</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.TRINKET))">Trinket 2</li>
+        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.WAND))">Wand</li>
     </ul>
     <button id='gem-options-button'>Fill Item Sockets</button>
     <div id='gem-options-window'>
@@ -189,6 +191,13 @@
         <div id='gem-options-gem-list'></div>
         <button id='gem-options-apply-button'>Apply</button>
     </div>
-    <ItemsTable/>
-    <EnchantsTable/>
+    <ItemsTable ItemSlot="@ItemSlots.HEAD" />
+    <EnchantsTable />
 </div>
+
+@code {
+    private void ItemSlotClickHandler(string itemSlot)
+    {
+        Items.LoadItemsBySlot(itemSlot);
+    }
+}

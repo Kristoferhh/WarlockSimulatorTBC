@@ -73,6 +73,11 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 
 	public static class Items
 	{
+		public static void LoadItemsBySlot(string itemSlot)
+		{
+			Console.WriteLine("Loading item slot " + itemSlot);
+		}
+
 		public static readonly Dictionary<string, ItemSlot> itemSlots = new Dictionary<string, ItemSlot>
 		{
 			{

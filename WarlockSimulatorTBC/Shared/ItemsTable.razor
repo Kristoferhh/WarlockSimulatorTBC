@@ -34,9 +34,9 @@
         </tr>
     </thead>
     <tbody aria-live='polite'>
-        @foreach (var item in Items.itemSlots["head"].items)
+        @foreach (var item in Items.itemSlots[ItemSlot].items)
 		{
-        <tr class="item-row" data-subslot="1" data-socket-bonus-active="false" data-slot="head" data-name="@item" data-selected="false" data-wowhead-id="@item.Value.id">
+        <tr class="item-row">
             <td><a href="https://tbc.wowhead.com/item=@item.Value.id">@item.Value.name</a></td>
             <td></td> <!-- Sockets -->
             <td>@item.Value.source</td>
@@ -53,3 +53,7 @@
 		}
     </tbody>
 </table>
+
+@code {
+    [Parameter] public string ItemSlot { get; set; }
+}
