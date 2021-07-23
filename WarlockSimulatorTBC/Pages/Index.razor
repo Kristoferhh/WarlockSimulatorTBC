@@ -134,70 +134,15 @@
         <fieldset id="source-filters">
             <legend>Sources</legend>
             <ul>
-                <li data-checked='false' data-source='phase' data-value='0'>Classic</li>
-                <li data-checked='false' data-source='phase' data-value='1'>P1</li>
-                <li data-checked='false' data-source='phase' data-value='2'>P2</li>
-                <li data-checked='false' data-source='phase' data-value='3'>P3</li>
-                <li data-checked='false' data-source='phase' data-value='4'>P4</li>
-                <li data-checked='false' data-source='phase' data-value='5'>P5</li>
+                <li>Classic</li>
+                <li>P1</li>
+                <li>P2</li>
+                <li>P3</li>
+                <li>P4</li>
+                <li>P5</li>
             </ul>
         </fieldset>
     </div>
 
-    <ul id="item-slot-selection-list">
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.MAINHAND))">Main Hand</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.OFFHAND))">Off Hand</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.TWOHAND))">Two Hand</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.HEAD))">Head</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.NECK))">Neck</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.SHOULDERS))">Shoulders</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BACK))">Back</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.CHEST))">Chest</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BRACERS))">Bracer</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.GLOVES))">Gloves</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BELT))">Belt</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.LEGS))">Legs</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BOOTS))">Boots</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.RING))">Ring 1</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.RING))">Ring 2</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.TRINKET))">Trinket 1</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.TRINKET))">Trinket 2</li>
-        <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.WAND))">Wand</li>
-    </ul>
-    <button id='gem-options-button'>Fill Item Sockets</button>
-    <div id='gem-options-window'>
-        <div id='gem-options-window-replacement-options'>
-            <input type="radio" name='gem-replacement-option' value='emptySockets' checked />
-            <label for='emptySockets'>Fill empty sockets</label>
-            <input type="radio" name='gem-replacement-option' value='allSockets' />
-            <label for='allSockets'>Fill all sockets (replaces equipped gems)</label>
-        </div>
-        <div id='gem-options-window-item-slot'>
-            <input type='radio' name='item-slot' value='currentSlot' checked />
-            <label for='currentSlot'>Current item slot</label>
-            <input type='radio' name='item-slot' value='allItems' />
-            <label for='allItems'>All item slots</label>
-        </div>
-        <div id='gem-options-window-socket-selection'>
-            <input type="radio" name="socket-selection" value='meta'>
-            <label for='metaSockets'>Meta Sockets</label>
-            <input type="radio" name="socket-selection" value='red' checked>
-            <label for='redSockets'>Red Sockets</label>
-            <input type="radio" name="socket-selection" value='blue'>
-            <label for='blueSockets'>Blue Sockets</label>
-            <input type="radio" name="socket-selection" value='yellow'>
-            <label for='yellowSockets'>Yellow Sockets</label>
-        </div>
-        <div id='gem-options-gem-list'></div>
-        <button id='gem-options-apply-button'>Apply</button>
-    </div>
-    <ItemsTable ItemSlot="@ItemSlots.HEAD" />
-    <EnchantsTable />
+    <ItemAndEnchantTables />
 </div>
-
-@code {
-    private void ItemSlotClickHandler(string itemSlot)
-    {
-        Items.LoadItemsBySlot(itemSlot);
-    }
-}

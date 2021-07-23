@@ -1,0 +1,143 @@
+﻿@using Shared.Classes.UI
+
+<ul id="item-slot-selection-list">
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.MAINHAND))">Main Hand</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.OFFHAND))">Off Hand</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.TWOHAND))">Two Hand</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.HEAD))">Head</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.NECK))">Neck</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.SHOULDERS))">Shoulders</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BACK))">Back</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.CHEST))">Chest</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BRACERS))">Bracer</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.GLOVES))">Gloves</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BELT))">Belt</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.LEGS))">Legs</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BOOTS))">Boots</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.RING))">Ring 1</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.RING))">Ring 2</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.TRINKET))">Trinket 1</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.TRINKET))">Trinket 2</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.WAND))">Wand</li>
+</ul>
+<button id='gem-options-button'>Fill Item Sockets</button>
+<div id='gem-options-window'>
+    <div id='gem-options-window-replacement-options'>
+        <input type="radio" name='gem-replacement-option' value='emptySockets' checked />
+        <label for='emptySockets'>Fill empty sockets</label>
+        <input type="radio" name='gem-replacement-option' value='allSockets' />
+        <label for='allSockets'>Fill all sockets (replaces equipped gems)</label>
+    </div>
+    <div id='gem-options-window-item-slot'>
+        <input type='radio' name='item-slot' value='currentSlot' checked />
+        <label for='currentSlot'>Current item slot</label>
+        <input type='radio' name='item-slot' value='allItems' />
+        <label for='allItems'>All item slots</label>
+    </div>
+    <div id='gem-options-window-socket-selection'>
+        <input type="radio" name="socket-selection" value='meta'>
+        <label for='metaSockets'>Meta Sockets</label>
+        <input type="radio" name="socket-selection" value='red' checked>
+        <label for='redSockets'>Red Sockets</label>
+        <input type="radio" name="socket-selection" value='blue'>
+        <label for='blueSockets'>Blue Sockets</label>
+        <input type="radio" name="socket-selection" value='yellow'>
+        <label for='yellowSockets'>Yellow Sockets</label>
+    </div>
+    <div id='gem-options-gem-list'></div>
+    <button id='gem-options-apply-button'>Apply</button>
+</div>
+<table id="item-selection-table" data-type="mainhand" class="tablesorter" data-sortlist='[[11,1]]'>
+    <colgroup id="item-selection-colgroup">
+        <col style="width: 20%">
+        <col style="width: 4%">
+        <col style="width: 13%">
+        <col style="width: 3%">
+        <col style="width: 3%">
+        <col style="width: 5%">
+        <col style="width: 6.5%">
+        <col style="width: 4.5%">
+        <col style="width: 3%">
+        <col style="width: 3%">
+        <col style="width: 3%">
+        <!--<col style="width: 4%">-->
+        <col style="width: 8%">
+    </colgroup>
+    <thead>
+        <tr id="item-selection-header">
+            <th id="header-name">Name</th>
+            <th id="header-gems"></th>
+            <th id="header-source">Source</th>
+            <th id="header-stamina">Stam</th>
+            <th id="header-intellect">Int</th>
+            <th id="header-spell-power">Spell Power</th>
+            <th id="header-shadow-power">Shadow Power</th>
+            <th id="header-fire-power">Fire Power</th>
+            <th id="header-crit">Crit</th>
+            <th id="header-hit">Hit</th>
+            <!--<th id="header-mp5">MP5</th>-->
+            <th id="header-haste">Haste</th>
+            <th id="header-dps">DPS</th>
+        </tr>
+    </thead>
+    <tbody aria-live='polite'>
+        @foreach (var item in Items.itemSlots[Items.SelectedItemSlot].items)
+        {
+            <tr class="item-row">
+                <td><a href="https://tbc.wowhead.com/item=@item.Value.id">@item.Value.name</a></td>
+                <td></td> <!-- Sockets -->
+                <td>@item.Value.source</td>
+                <td>@(item.Value.stamina > 0 ? item.Value.stamina : "")</td>
+                <td>@(item.Value.intellect > 0 ? item.Value.intellect : "")</td>
+                <td>@(item.Value.spellPower > 0 ? item.Value.spellPower : "")</td>
+                <td>@(item.Value.shadowPower > 0 ? item.Value.shadowPower : "")</td>
+                <td>@(item.Value.firePower > 0 ? item.Value.firePower : "")</td>
+                <td>@(item.Value.spellCritRating > 0 ? item.Value.spellCritRating : "")</td>
+                <td>@(item.Value.spellHitRating > 0 ? item.Value.spellHitRating : "")</td>
+                <td>@(item.Value.spellHasteRating > 0 ? item.Value.spellHasteRating : "")</td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<table id="enchant-selection-table" data-type="mainhand">
+    <colgroup id="item-selection-colgroup">
+        <col style="width: 20%">
+        <col style="width: 9%">
+        <col style="width: 10%">
+        <col style="width: 9%">
+        <col style="width: 9%">
+        <col style="width: 9%">
+        <col style="width: 6%">
+        <col style="width: 6%">
+        <col style="width: 6%">
+        <col style="width: 6%">
+        <col style="width: 10%">
+    </colgroup>
+    <thead>
+        <tr id="item-selection-header">
+            <th id="header-enchant-name">Enchant</th>
+            <th id="header-enchant-spell-power">Spell Power</th>
+            <th id="header-enchant-shadow-power">Shadow Power</th>
+            <th id="header-enchant-fire-power">Fire Power</th>
+            <th id="header-enchant-hit-rating">Hit Rating</th>
+            <th id="header-enchant-crit-rating">Crit Rating</th>
+            <th id="header-enchant-stamina">Stamina</th>
+            <th id="header-enchant-intellect">Intellect</th>
+            <th id="header-enchant-mp5">MP5</th>
+            <th id="header-enchant-spell-penetration">Spell Pen</th>
+            <th id="header-enchant-dps">DPS</th>
+        </tr>
+    </thead>
+    <tbody aria-live='polite'>
+
+    </tbody>
+</table>
+
+@code {
+    private void ItemSlotClickHandler(string itemSlot)
+    {
+        Items.SelectedItemSlot = itemSlot;
+    }
+}
