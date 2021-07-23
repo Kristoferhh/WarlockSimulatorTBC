@@ -84,8 +84,28 @@
         @foreach (var item in Items.itemSlots[Items.SelectedItemSlot].items)
         {
             <tr class="item-row">
-                <td><a href="https://tbc.wowhead.com/item=@item.Value.id">@item.Value.name</a></td>
-                <td></td> <!-- Sockets -->
+                <td><a href="https://tbc.wowhead.com/item=@item.Key">@item.Value.name</a></td>
+                <td>
+                    <div>
+                        <!-- todo: put this in a loop through the Sockets object -->
+                        @for (int i = 0; i < item.Value.meta; i++)
+                        {
+                            <a href=""><img src="img/@Sockets.sockets["meta"].iconName" /></a>
+                        }
+                        @for (int i = 0; i < item.Value.red; i++)
+                        {
+                            <a href=""><img src="img/@Sockets.sockets["red"].iconName" /></a>
+                        }
+                        @for (int i = 0; i < item.Value.yellow; i++)
+                        {
+                            <a href=""><img src="img/@Sockets.sockets["yellow"].iconName" /></a>
+                        }
+                        @for (int i = 0; i < item.Value.blue; i++)
+                        {
+                            <a href=""><img src="img/@Sockets.sockets["blue"].iconName" /></a>
+                        }
+                    </div>
+                </td>
                 <td>@item.Value.source</td>
                 <td>@(item.Value.stamina > 0 ? item.Value.stamina : "")</td>
                 <td>@(item.Value.intellect > 0 ? item.Value.intellect : "")</td>
@@ -131,7 +151,7 @@
         </tr>
     </thead>
     <tbody aria-live='polite'>
-
+        
     </tbody>
 </table>
 

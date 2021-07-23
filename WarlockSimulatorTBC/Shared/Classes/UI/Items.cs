@@ -7,6 +7,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 {
 	public static class ItemSource
 	{
+		public static string MAGTHERIDONS_LAIR = "Magtheridon's Lair";
 		public static string GRUULS_LAIR = "Gruul's Lair";
 		public static string KARAZHAN = "Karazhan";
 		public static string TAILORING = "Tailoring";
@@ -46,7 +47,6 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 
 	public class Item
 	{
-		public int id = 0;
 		public int phase = 0;
 		public int setId = 0;
 		public int stamina = 0;
@@ -65,11 +65,17 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 		public int resilienceRating = 0;
 		public string name = null;
 		public string source = null;
+
+		public object this[string propertyName]
+		{
+			get { return this.GetType().GetProperty(propertyName).GetValue(this, null); }
+			set { this.GetType().GetProperty(propertyName).SetValue(this, value, null); }
+		}
 	}
 
 	public class ItemSlot
 	{
-		public Dictionary<string, Item> items;
+		public Dictionary<int, Item> items;
 	}
 
 	public static class Items
@@ -81,13 +87,12 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 			{
 				ItemSlots.HEAD, new ItemSlot
 				{
-					items = new Dictionary<string, Item>
+					items = new Dictionary<int, Item>
 					{
 						{
-							"voidheartCrown", new Item
+							28963, new Item
 							{
 								name = "Voidheart Crown",
-								id = 28963,
 								meta = 1,
 								red = 1,
 								socketBonus = new SocketBonus
@@ -103,10 +108,9 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 							}
 						},
 						{
-							"spellstrikeHood", new Item
+							24266, new Item
 							{
 								name = "Spellstrike Hood",
-								id = 24266,
 								red = 1,
 								blue = 1,
 								yellow = 1,
@@ -129,17 +133,16 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 			{
 				ItemSlots.NECK, new ItemSlot
 				{
-					items = new Dictionary<string, Item>
+					items = new Dictionary<int, Item>
 					{
 						{
-							"adornmentOfStolenSouls", new Item
+							28762, new Item
 							{
 								name = "Adornment of Stolen Souls",
 								stamina = 18,
 								intellect = 20,
 								spellPower = 28,
 								spellCritRating = 23,
-								id = 28762,
 								source = ItemSource.KARAZHAN,
 								phase = 1
 							}
@@ -150,10 +153,10 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 			{
 				ItemSlots.SHOULDERS, new ItemSlot
 				{
-					items = new Dictionary<string, Item>
+					items = new Dictionary<int, Item>
 					{
 						{
-							"voidheartMantle", new Item
+							28967, new Item
 							{
 								name = "Voidheart Mantle",
 								stamina = 26,
@@ -162,8 +165,293 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 								spellHitRating = 14,
 								blue = 1,
 								yellow = 1,
-								id = 28967,
 								source = ItemSource.GRUULS_LAIR,
+								phase = 1,
+								setId = 645
+							}
+						}
+					}
+				}
+			},
+			{
+				ItemSlots.BACK, new ItemSlot
+				{
+					items = new Dictionary<int, Item>
+					{
+						{
+							28766, new Item
+							{
+								name = "Ruby Drape of the Mysticant",
+								stamina = 22,
+								intellect = 21,
+								spellPower = 30,
+								spellHitRating = 18,
+								source = ItemSource.KARAZHAN,
+								phase = 1
+							}
+						}
+					}
+				}
+			},
+			{
+				ItemSlots.CHEST, new ItemSlot
+				{
+					items = new Dictionary<int, Item>
+					{
+						{
+							28964, new Item
+							{
+								name = "Voidheart Robe",
+								stamina = 42,
+								intellect = 33,
+								spellPower = 42,
+								spellHitRating = 13,
+								red = 1,
+								yellow = 2,
+								source = ItemSource.MAGTHERIDONS_LAIR,
+								phase = 1,
+								setId = 645
+							}
+						}
+					}
+				}
+			},
+			{
+				ItemSlots.BRACERS, new ItemSlot
+				{
+					items = new Dictionary<int, Item>
+					{
+						{
+							24250, new Item
+							{
+								name = "Bracers of Havok",
+								intellect = 12,
+								spellPower = 30,
+								yellow = 1,
+								source = ItemSource.TAILORING,
+								phase = 1
+							}
+						}
+					}
+				}
+			},
+			{
+				ItemSlots.GLOVES, new ItemSlot
+				{
+					items = new Dictionary<int, Item>
+					{
+						{
+							28968, new Item
+							{
+								name = "Voidheart Gloves",
+								stamina = 34,
+								intellect = 28,
+								spellPower = 35,
+								spellCritRating = 22,
+								source = ItemSource.KARAZHAN,
+								phase = 1,
+								setId = 645
+							}
+						}
+					}
+				}
+			},
+			{
+				ItemSlots.BELT, new ItemSlot
+				{
+					items = new Dictionary<int, Item>
+					{
+						{
+							24256, new Item
+							{
+								name = "Girdle of Ruination",
+								stamina = 18,
+								intellect = 13,
+								spellPower = 39,
+								spellCritRating = 20,
+								red = 1,
+								yellow = 1,
+								source = ItemSource.TAILORING,
+								phase = 1
+							}
+						}
+					}
+				}
+			},
+			{
+				ItemSlots.LEGS, new ItemSlot
+				{
+					items = new Dictionary<int, Item>
+					{
+						{
+							24262, new Item
+							{
+								name = "Spellstrike Pants",
+								stamina = 12,
+								intellect = 8,
+								spellPower = 46,
+								spellCritRating = 26,
+								spellHitRating = 22,
+								red = 1,
+								yellow = 1,
+								blue = 1,
+								source = ItemSource.TAILORING,
+								phase = 1
+							}
+						}
+					}
+				}
+			},
+			{
+				ItemSlots.BOOTS, new ItemSlot
+				{
+					items = new Dictionary<int, Item>
+					{
+						{
+							21870, new Item
+							{
+								name = "Frozen Shadoweave Boots",
+								stamina = 15,
+								intellect = 9,
+								shadowPower = 57,
+								yellow = 1,
+								blue = 1,
+								source = ItemSource.TAILORING,
+								phase = 1
+							}
+						}
+					}
+				}
+			},
+			{
+				ItemSlots.RING, new ItemSlot
+				{
+					items = new Dictionary<int, Item>
+					{
+						{
+							28793, new Item
+							{
+								name = "Band of Crimson Fury",
+								stamina = 22,
+								intellect = 22,
+								spellPower = 28,
+								spellHitRating = 16,
+								source = ItemSource.MAGTHERIDONS_LAIR,
+								phase = 1
+							}
+						},
+						{
+							28753, new Item
+							{
+								name = "Ring of Recurrence",
+								stamina = 15,
+								intellect = 15,
+								spellPower = 32,
+								spellCritRating = 19,
+								source = ItemSource.KARAZHAN,
+								phase = 1
+							}
+						}
+					}
+				}
+			},
+			{
+				ItemSlots.TRINKET, new ItemSlot
+				{
+					items = new Dictionary<int, Item>
+					{
+						{
+							29370, new Item
+							{
+								name = "Icon of the Silver Crescent",
+								spellPower = 43,
+								source = "41 Badge of Justice - G'eras",
+								phase = 1
+							}
+						},
+						{
+							27683, new Item
+							{
+								name = "Quagmirran's Eye",
+								spellPower = 37,
+								source = "Heroic Slave Pens",
+								phase = 1
+							}
+						}
+					}
+				}
+			},
+			{
+				ItemSlots.MAINHAND, new ItemSlot
+				{
+					items = new Dictionary<int, Item>
+					{
+						{
+							28802, new Item
+							{
+								name = "Bloodmaw Magus-Blade",
+								stamina = 16,
+								intellect = 15,
+								spellPower = 203,
+								spellCritRating = 25,
+								source = ItemSource.GRUULS_LAIR,
+								phase = 1
+							}
+						}
+					}
+				}
+			},
+			{
+				ItemSlots.OFFHAND, new ItemSlot
+				{
+					items = new Dictionary<int, Item>
+					{
+						{
+							29273, new Item
+							{
+								name = "Khadgar's Knapsack",
+								spellPower = 49,
+								source = "25 Badge of Justice - G'eras",
+								phase = 1
+							}
+						}
+					}
+				}
+			},
+			{
+				ItemSlots.TWOHAND, new ItemSlot
+				{
+					items = new Dictionary<int, Item>
+					{
+						{
+							22630, new Item
+							{
+								name = "Atiesh, Greatstaff of the Guardian",
+								stamina = 30,
+								intellect = 29,
+								spellPower = 183,
+								spellCritRating = 28,
+								source = ItemSource.NAXXRAMAS,
+								phase = 0
+							}
+						}
+					}
+				}
+			},
+			{
+				ItemSlots.WAND, new ItemSlot
+				{
+					items = new Dictionary<int, Item>
+					{
+						{
+							28783, new Item
+							{
+								name = "Eredar Wand of Obliteration",
+								stamina = 10,
+								intellect = 11,
+								spellPower = 16,
+								spellCritRating = 14,
+								source = ItemSource.MAGTHERIDONS_LAIR,
 								phase = 1
 							}
 						}
