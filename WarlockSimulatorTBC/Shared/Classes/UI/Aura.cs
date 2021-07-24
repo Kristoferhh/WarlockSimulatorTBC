@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blazored.LocalStorage;
 
 namespace WarlockSimulatorTBC.Shared.Classes.UI
 {
@@ -52,7 +53,8 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 
 	public static class AuraGroups
 	{
-		public static readonly Dictionary<string, AuraGroup> groups = new Dictionary<string, AuraGroup>
+		public static List<string> SelectedAuras = new List<string>();
+		public static Dictionary<string, AuraGroup> groups = new Dictionary<string, AuraGroup>
 		{
 			{
 				"buffs", new AuraGroup

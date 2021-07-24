@@ -1,4 +1,7 @@
-﻿@using Shared.Classes.UI
+﻿@using System.Text.Json
+@using Shared.Classes.UI
+
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <section id="aura-section">
     @foreach (var auraGroup in AuraGroups.groups)
@@ -7,7 +10,7 @@
         <ul id="@auraGroup.Key-section">
             @foreach (var aura in auraGroup.Value.auras)
             {
-                <li id="@aura.Key" @onclick="@(() => AuraClickHandler(aura.Key))" @onclick:preventDefault="true" data-aura-type="@auraGroup.Key" data-checked="@(aura.Value.selected ? "true" : "false")" name="@aura.Key" class="aura @auraGroup.Key">
+                <li id="@aura.Key" @onclick="@(() => AuraClickHandler(aura.Key))" @onclick:preventDefault="true" data-aura-type="@auraGroup.Key" data-checked="@(AuraGroups.SelectedAuras.Contains(aura.Key) ? "true" : "false")" name="@aura.Key" class="aura @auraGroup.Key">
                     <a href="https://tbc.wowhead.com/@auraGroup.Value.type=@aura.Value.id">
                         <img alt="@aura.Value.name" src="img/@aura.Value.iconName" />
                     </a>
@@ -18,8 +21,32 @@
 </section>
 
 @code {
+    protected override async Task OnInitializedAsync()
+    {
+        if (await localStorage.ContainKeyAsync("auras"))
+        {
+            var auras = await localStorage.GetItemAsync<string>("auras");
+            try
+            {
+                AuraGroups.SelectedAuras = JsonSerializer.Deserialize<List<string>>(auras);
+            }
+            catch
+            {
+                // Backup for old localStorage from before Blazor
+                var aura = JsonSerializer.Deserialize<Dictionary<string, bool>>(auras);
+                foreach (var a in aura)
+                {
+                    if (a.Value)
+					{
+                        AuraGroups.SelectedAuras.Add(a.Key);
+					}
+                }
+            }
+        }
+    }
+
     //todo: optimize
-    private void AuraClickHandler(string auraName)
+    private async void AuraClickHandler(string auraName)
     {
         foreach (var auraGroup in AuraGroups.groups)
         {
@@ -28,7 +55,7 @@
                 if (aura.Key == auraName)
                 {
                     // If clicking an aura that isn't currently selected and it's a battle/guardian elixir, potion, weapon oil etc. then de-select all others that also have that property
-                    if (!aura.Value.selected && (aura.Value.drum || aura.Value.alcohol || aura.Value.battleElixir || aura.Value.guardianElixir || aura.Value.potion || aura.Value.demonicRune || aura.Value.weaponOil || aura.Value.foodBuff))
+                    if (!AuraGroups.SelectedAuras.Contains(auraName) && (aura.Value.drum || aura.Value.alcohol || aura.Value.battleElixir || aura.Value.guardianElixir || aura.Value.potion || aura.Value.demonicRune || aura.Value.weaponOil || aura.Value.foodBuff))
                     {
                         foreach (var subAuraGroup in AuraGroups.groups)
                         {
@@ -36,13 +63,20 @@
                             {
                                 if (aura.Key != subAura.Key && ((aura.Value.drum && subAura.Value.drum) || (aura.Value.alcohol && subAura.Value.alcohol) || (aura.Value.battleElixir && subAura.Value.battleElixir) || (aura.Value.guardianElixir && subAura.Value.guardianElixir) || (aura.Value.potion && subAura.Value.potion) || (aura.Value.demonicRune && subAura.Value.demonicRune) || (aura.Value.weaponOil && subAura.Value.weaponOil) || (aura.Value.foodBuff && subAura.Value.foodBuff)))
                                 {
-                                    subAura.Value.selected = false;
+                                    AuraGroups.SelectedAuras.Remove(subAura.Key);
                                 }
                             }
                         }
                     }
-                    // Toggle the selected property
-                    aura.Value.selected = !aura.Value.selected;
+                    if (!AuraGroups.SelectedAuras.Contains(aura.Key))
+                    {
+                        AuraGroups.SelectedAuras.Add(aura.Key);
+                    }
+                    else
+                    {
+                        AuraGroups.SelectedAuras.Remove(aura.Key);
+                    }
+                    await localStorage.SetItemAsync("auras", AuraGroups.SelectedAuras);
                     return;
                 }
             }
