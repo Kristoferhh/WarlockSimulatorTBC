@@ -28,10 +28,10 @@
                                         column++;
                                     }
                                     <td>
-                                        <div id="@talent.Key" class="talent-icon">
+                                        <div id="@talent.Key" class="talent-icon" data-points="@talent.Value.pointsTaken" @onmouseup="@((mouseArgs) => TalentClickHandler(mouseArgs, talent.Key))" oncontextmenu="return false;" @onclick:preventDefault="true">
                                             <a href="https://tbc.wowhead.com/spell=@talent.Value.rankIds[0]">
                                                 <img src="img/@talent.Value.iconName" />
-                                                <span id="@talent.Key-point-amount" class="talent-point-amount">0</span>
+                                                <span id="@talent.Key-point-amount" class="talent-point-amount" data-points="@talent.Value.pointsTaken">@talent.Value.pointsTaken</span>
                                             </a>
                                         </div>
                                     </td>
@@ -44,3 +44,35 @@
 		}
     </section>
 </div>
+
+@code {
+    private void TalentClickHandler(MouseEventArgs mouseArgs, string talentName)
+    {
+        if (mouseArgs.Button != 0 && mouseArgs.Button != 2)
+        {
+            return;
+        }
+
+        //todo: optimize this
+        foreach (var talentTree in TalentTree.trees)
+        {
+            foreach (var talentRow in talentTree.Value)
+            {
+                foreach (var talent in talentRow.Value)
+                {
+                    if (talent.Key == talentName)
+                    {
+                        if (mouseArgs.Button == 0 && talent.Value.pointsTaken < talent.Value.rankIds.Length)
+						{
+                            talent.Value.pointsTaken++;
+						}
+                        else if (mouseArgs.Button == 2 && talent.Value.pointsTaken > 0)
+						{
+                            talent.Value.pointsTaken--;
+						}
+                    }
+                }
+            }
+        }
+    }
+}

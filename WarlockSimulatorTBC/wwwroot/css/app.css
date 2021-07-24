@@ -395,6 +395,10 @@
     padding: 1px 3px;
 }
 
+.talent-point-amount[data-points='0'] {
+    display: none;
+}
+
 .talent-icon img {
     width: 40px;
     height: 40px;

@@ -15,6 +15,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 	{
 		public int[] rankIds = null;
 		public int column = 0;
+		public int pointsTaken = 0;
 		public string name = null;
 		public string iconName = null;
 		public TalentRequirement requirement = null;
@@ -801,9 +802,5 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 				}
 			}
 		};
-	}
-
-	public class Talents
-	{
 	}
 }
