@@ -12,53 +12,32 @@
     <section id="talents-section">
         @foreach (var talentTree in TalentTree.trees)
         {
-            //todo: fix copy pasted code
-            int currentRow = 1;
-            int currentCol = 0;
             <div class="talent-tree-div">
                 <table id="talent-table-@talentTree.Key" class="talent-tree-table" background="img/talent_tree_background_@(talentTree.Key).jpg">
                     <tbody>
-                        @foreach (var talent in talentTree.Value)
-                        {
-                            currentCol++;
-                            // Check if the current talent should go in the next row and if so then create a new table row
-                            if (talent.Value.row > currentRow)
-                            {
-                                currentRow++;
-                                currentCol = 1;
-                                <tr class="@(talentTree.Key)-tree-row">
-                                    @while (talent.Value.column > currentCol)
-					                {
+                        @foreach (var talentRow in talentTree.Value)
+				        {
+                            int column = 0;
+                            <tr>
+                                @foreach (var talent in talentRow.Value)
+					            {
+                                    column++;
+                                    while (talent.Value.column > column)
+						            {
                                         <td></td>
-                                        currentCol++;
+                                        column++;
                                     }
                                     <td>
                                         <div id="@talent.Key" class="talent-icon">
                                             <a href="https://tbc.wowhead.com/spell=@talent.Value.rankIds[0]">
-                                                <img src="img/@talent.Value.iconName" alt="@talent.Value.name" />
+                                                <img src="img/@talent.Value.iconName" />
                                                 <span id="@talent.Key-point-amount" class="talent-point-amount">0</span>
                                             </a>
                                         </div>
                                     </td>
-                                </tr>
-					        }
-                            else
-					        {
-                                while (talent.Value.column > currentCol)
-					            {
-                                    <td></td>
-                                    currentCol++;
-                                }
-                                <td>
-                                    <div id="@talent.Key" class="talent-icon">
-                                        <a href="https://tbc.wowhead.com/spell=@talent.Value.rankIds[0]">
-                                            <img src="img/@talent.Value.iconName" alt="@talent.Value.name" />
-                                            <span id="@talent.Key-point-amount" class="talent-point-amount">0</span>
-                                        </a>
-                                    </div>
-                                </td>
-					        }
-                        }
+					            }
+                            </tr>
+				        }
                     </tbody>
                 </table>
             </div>
