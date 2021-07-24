@@ -65,12 +65,6 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 		public int resilienceRating = 0;
 		public string name = null;
 		public string source = null;
-
-		public object this[string propertyName]
-		{
-			get { return this.GetType().GetProperty(propertyName).GetValue(this, null); }
-			set { this.GetType().GetProperty(propertyName).SetValue(this, value, null); }
-		}
 	}
 
 	public class ItemSlot
