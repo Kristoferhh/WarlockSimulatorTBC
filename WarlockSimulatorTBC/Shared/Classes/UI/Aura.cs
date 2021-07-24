@@ -29,6 +29,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 		public double spiritModifier = 1;
 		public string name = null;
 		public string iconName = null;
+		public bool selected = false;
 		public bool battleElixir = false;
 		public bool guardianElixir = false;
 		public bool potion = false;
@@ -38,6 +39,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 		public bool alcohol = false;
 		public bool petOnly = false;
 		public bool forPet = false;
+		public bool drum = false;
 	}
 
 	public class AuraGroup
@@ -254,7 +256,8 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 							{
 								id = 35476,
 								name = "Drums of Battle",
-								iconName = "inv_misc_drum_02.jpg"
+								iconName = "inv_misc_drum_02.jpg",
+								drum = true
 							}
 						},
 						{
@@ -262,7 +265,8 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 							{
 								id = 35475,
 								name = "Drums of War",
-								iconName = "inv_misc_drum_03.jpg"
+								iconName = "inv_misc_drum_03.jpg",
+								drum = true
 							}
 						},
 						{
@@ -270,7 +274,8 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 							{
 								id = 35478,
 								name = "Drums of Restoration",
-								iconName = "inv_misc_drum_07.jpg"
+								iconName = "inv_misc_drum_07.jpg",
+								drum = true
 							}
 						},
 						{

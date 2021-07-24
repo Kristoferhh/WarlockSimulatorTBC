@@ -7,7 +7,7 @@
         <ul id="@auraGroup.Key-section">
             @foreach (var aura in auraGroup.Value.auras)
             {
-                <li id="@aura.Key" data-aura-type="@auraGroup.Key" data-checked="false" name="@aura.Key" class="aura @auraGroup.Key @(aura.Value.alcohol ? "alcohol" : "") @(aura.Value.potion ? "potion" : "") @(aura.Value.battleElixir ? "battle-elixir" : "") @(aura.Value.guardianElixir ? "guardian-elixir" : "") @(aura.Value.weaponOil ? "weapon-oil" : "") @(aura.Value.foodBuff ? "food-buff" : "") @(aura.Value.demonicRune ? "demonic-rune" : "") @(aura.Value.petOnly ? "petBuff" : "") @(aura.Value.forPet ? "petDebuff" : "")">
+                <li id="@aura.Key" @onclick="@(() => AuraClickHandler(aura.Key))" @onclick:preventDefault="true" data-aura-type="@auraGroup.Key" data-checked="@(aura.Value.selected ? "true" : "false")" name="@aura.Key" class="aura @auraGroup.Key">
                     <a href="https://tbc.wowhead.com/@auraGroup.Value.type=@aura.Value.id">
                         <img alt="@aura.Value.name" src="img/@aura.Value.iconName" />
                     </a>
@@ -16,3 +16,36 @@
         </ul>
     }
 </section>
+
+@code {
+    //todo: optimize
+    private void AuraClickHandler(string auraName)
+    {
+        foreach (var auraGroup in AuraGroups.groups)
+        {
+            foreach (var aura in auraGroup.Value.auras)
+            {
+                if (aura.Key == auraName)
+                {
+                    // If clicking an aura that isn't currently selected and it's a battle/guardian elixir, potion, weapon oil etc. then de-select all others that also have that property
+                    if (!aura.Value.selected && (aura.Value.drum || aura.Value.alcohol || aura.Value.battleElixir || aura.Value.guardianElixir || aura.Value.potion || aura.Value.demonicRune || aura.Value.weaponOil || aura.Value.foodBuff))
+                    {
+                        foreach (var subAuraGroup in AuraGroups.groups)
+                        {
+                            foreach (var subAura in subAuraGroup.Value.auras)
+                            {
+                                if (aura.Key != subAura.Key && ((aura.Value.drum && subAura.Value.drum) || (aura.Value.alcohol && subAura.Value.alcohol) || (aura.Value.battleElixir && subAura.Value.battleElixir) || (aura.Value.guardianElixir && subAura.Value.guardianElixir) || (aura.Value.potion && subAura.Value.potion) || (aura.Value.demonicRune && subAura.Value.demonicRune) || (aura.Value.weaponOil && subAura.Value.weaponOil) || (aura.Value.foodBuff && subAura.Value.foodBuff)))
+                                {
+                                    subAura.Value.selected = false;
+                                }
+                            }
+                        }
+                    }
+                    // Toggle the selected property
+                    aura.Value.selected = !aura.Value.selected;
+                    return;
+                }
+            }
+        }
+    }
+} 

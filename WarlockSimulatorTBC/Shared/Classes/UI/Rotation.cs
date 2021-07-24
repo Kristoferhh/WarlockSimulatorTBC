@@ -16,6 +16,9 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 		public int id;
 		public string name;
 		public string iconName;
+		public bool curse = false;
+		public bool filler = false;
+		public bool selected = false;
 	}
 
 	public static class RotationGroups
@@ -77,6 +80,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 								id = 30459,
 								name = "Searing Pain",
 								iconName = "spell_fire_soulburn.jpg",
+								filler = true
 
 							}
 						},
@@ -86,6 +90,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 								id = 27209,
 								name = "Shadow Bolt",
 								iconName = "spell_shadow_shadowbolt.jpg",
+								filler = true
 
 							}
 						},
@@ -95,7 +100,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 								id = 32231,
 								name = "Incinerate",
 								iconName = "spell_fire_burnout.jpg",
-
+								filler = true
 							}
 						}
 					}
@@ -113,6 +118,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 								id = 27226,
 								name = "Curse of Recklessness",
 								iconName = "spell_shadow_unholystrength.jpg",
+								curse = true
 							}
 						},
 						{
@@ -121,6 +127,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 								id = 27228,
 								name = "Curse of the Elements",
 								iconName = "spell_shadow_chilltouch.jpg",
+								curse = true
 							}
 						},
 						{
@@ -129,6 +136,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 								id = 30910,
 								name = "Curse of Doom",
 								iconName = "spell_shadow_auraofdarkness.jpg",
+								curse = true
 							}
 						},
 						{
@@ -137,6 +145,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 								id = 27218,
 								name = "Curse of Agony",
 								iconName = "spell_shadow_curseofsargeras.jpg",
+								curse = true
 							}
 						}
 					}

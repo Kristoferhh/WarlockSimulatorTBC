@@ -9,7 +9,7 @@
                 <h4>@rotationGroup.Value.heading</h4>
                 @foreach (var spell in rotationGroup.Value.spells)
 				{
-                    <li id="@rotationGroup.Key-@spell.Value.name" class="rotation-@rotationGroup.Key" data-type="@rotationGroup.Key" data-name="@spell.Value.name" data-checked="false">
+                    <li id="@rotationGroup.Key-@spell.Value.name" @onclick="@(() => SpellClickHandler(spell.Key))" @onclick:preventDefault="true" class="rotation-@rotationGroup.Key" data-type="@rotationGroup.Key" data-name="@spell.Value.name" data-checked="@(spell.Value.selected ? "true" : "false")">
                         <a href="https://tbc.wowhead.com/spell=@spell.Value.id">
                             <img alt="@spell.Value.name" src="img/@spell.Value.iconName" />
                         </a>
@@ -19,3 +19,34 @@
 		}
     </ul>
 </section>
+
+@code {
+    //todo: optimize this
+    private void SpellClickHandler(string spellName)
+	{
+        foreach (var rotationGroup in RotationGroups.groups)
+		{
+            foreach (var spell in rotationGroup.Value.spells)
+			{
+                if (spell.Key == spellName)
+				{
+                    if (!spell.Value.selected && (spell.Value.curse || spell.Value.filler))
+					{
+                        foreach (var subRotationGroup in RotationGroups.groups)
+						{
+                            foreach (var subSpell in subRotationGroup.Value.spells)
+							{
+                                if (spell.Key != subSpell.Key && ((spell.Value.curse && subSpell.Value.curse) || (spell.Value.filler && subSpell.Value.filler)))
+								{
+                                    subSpell.Value.selected = false;
+								}
+							}
+						}
+					}
+                    spell.Value.selected = !spell.Value.selected;
+                    return;
+				}
+			}
+		}
+	}
+} 
