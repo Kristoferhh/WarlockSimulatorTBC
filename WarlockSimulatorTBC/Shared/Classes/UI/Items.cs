@@ -74,7 +74,29 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 
 	public static class Items
 	{
-		public static string SelectedItemSlot { get; set; } = ItemSlots.HEAD;
+		public static string SelectedItemSlot = ItemSlots.HEAD;
+		public static string SelectedItemSubSlot = "";
+		public static Dictionary<string, int?> SelectedItems = new Dictionary<string, int?>
+		{
+			{ ItemSlots.HEAD, null },
+			{ ItemSlots.NECK, null },
+			{ ItemSlots.SHOULDERS, null },
+			{ ItemSlots.BACK, null },
+			{ ItemSlots.CHEST, null },
+			{ ItemSlots.BRACERS, null },
+			{ ItemSlots.GLOVES, null },
+			{ ItemSlots.BELT, null },
+			{ ItemSlots.LEGS, null },
+			{ ItemSlots.BOOTS, null },
+			{ ItemSlots.RING + "1", null },
+			{ ItemSlots.RING + "2", null },
+			{ ItemSlots.TRINKET + "1", null },
+			{ ItemSlots.TRINKET + "2", null },
+			{ ItemSlots.MAINHAND, null },
+			{ ItemSlots.OFFHAND, null },
+			{ ItemSlots.TWOHAND, null },
+			{ ItemSlots.WAND, null }
+		};
 
 		public static readonly Dictionary<string, ItemSlot> itemSlots = new Dictionary<string, ItemSlot>
 		{

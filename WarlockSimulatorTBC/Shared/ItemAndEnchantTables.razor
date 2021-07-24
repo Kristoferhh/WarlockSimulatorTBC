@@ -14,10 +14,10 @@
     <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BELT))">Belt</li>
     <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.LEGS))">Legs</li>
     <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BOOTS))">Boots</li>
-    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.RING))">Ring 1</li>
-    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.RING))">Ring 2</li>
-    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.TRINKET))">Trinket 1</li>
-    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.TRINKET))">Trinket 2</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.RING, "1"))">Ring 1</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.RING, "2"))">Ring 2</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.TRINKET, "1"))">Trinket 1</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.TRINKET, "2"))">Trinket 2</li>
     <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.WAND))">Wand</li>
 </ul>
 <button id='gem-options-button'>Fill Item Sockets</button>
@@ -83,7 +83,12 @@
     <tbody aria-live='polite'>
         @foreach (var item in Items.itemSlots[Items.SelectedItemSlot].items)
         {
-            <tr class="item-row">
+            // If the item is a ring or a trinket, the item is unique, and it's equipped in the other item slot, then don't display it in the item list.
+            if ((Items.SelectedItemSlot == ItemSlots.RING || Items.SelectedItemSlot == ItemSlots.TRINKET) && (item.Key == Items.SelectedItems[Items.SelectedItemSlot + (Items.SelectedItemSubSlot == "1" ? "2" : "1")]))
+			{
+                continue;
+			}
+            <tr class="item-row" @onclick="@(() => ItemClickHandler(item.Key))" data-selected="@(Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot] == item.Key ? "true" : "false")">
                 <td><a href="https://tbc.wowhead.com/item=@item.Key">@item.Value.name</a></td>
                 <td>
                     <div>
@@ -156,8 +161,34 @@
 </table>
 
 @code {
-    private void ItemSlotClickHandler(string itemSlot)
+    private void ItemSlotClickHandler(string itemSlot, string itemSubSlot = "")
     {
         Items.SelectedItemSlot = itemSlot;
+        Items.SelectedItemSubSlot = itemSubSlot;
+    }
+
+    private void ItemClickHandler(int itemId)
+    {
+        // If clicking a mainhand/offhand, unequip the twohand
+        if (Items.SelectedItemSlot == ItemSlots.MAINHAND || Items.SelectedItemSlot == ItemSlots.OFFHAND)
+        {
+            Items.SelectedItems[ItemSlots.TWOHAND] = null;
+        }
+        // If clicking a twohand, unequip the mainhand & offhand
+        else if (Items.SelectedItemSlot == ItemSlots.TWOHAND)
+        {
+            Items.SelectedItems[ItemSlots.MAINHAND] = null;
+            Items.SelectedItems[ItemSlots.OFFHAND] = null;
+        }
+
+        // If the clicked item is the currently equipped item then set it to null, otherwise change to new item id
+        if (Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot] == itemId)
+        {
+            Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot] = null;
+        }
+        else
+        {
+            Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot] = itemId;
+        }
     }
 }
