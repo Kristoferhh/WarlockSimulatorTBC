@@ -2728,6 +2728,15 @@ const items = {
       source: 'The Eye',
       phase: 2
     },
+    sashOfSealedFate: {
+      name: 'Sash of Sealed Fate',
+      intellect: 15,
+      spellPower: 35,
+      critRating: 23,
+      id: 31283,
+      source: 'World Drop',
+      phase: 1
+    },
     lurkersCordOfShadowWrath: {
       name: "Lurker's Cord of Shadow Wrath",
       shadowPower: 78,
