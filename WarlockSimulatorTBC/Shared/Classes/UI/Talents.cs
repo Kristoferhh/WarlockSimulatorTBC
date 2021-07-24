@@ -277,6 +277,528 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 						}
 					}
 				}
+			},
+			{
+				"demonology", new Dictionary<int, Dictionary<string, Talent>>
+				{
+					{
+						1, new Dictionary<string, Talent>
+						{
+							{
+								"improvedHealthstone", new Talent
+								{
+									name = "Improved Healthstone",
+									rankIds = new int[] { 18692, 18693 },
+									iconName = "inv_stone_04.jpg",
+									column = 1
+								}
+							},
+							{
+								"improvedImp", new Talent
+								{
+									name = "Improved Imp",
+									rankIds = new int[] { 18694, 18695, 18696 },
+									iconName = "spell_shadow_summonimp.jpg",
+									column = 2
+								}
+							},
+							{
+								"demonicEmbrace", new Talent
+								{
+									name = "Demonic Embrace",
+									rankIds = new int[] { 18697, 18698, 18699, 18700, 18701 },
+									iconName = "spell_shadow_metamorphosis.jpg",
+									column = 3
+								}
+							}
+						}
+					},
+					{
+						2, new Dictionary<string, Talent>
+						{
+							{
+								"improvedHealthFunnel", new Talent
+								{
+									name = "Improved Health Funnel",
+									rankIds = new int[] { 18703, 18704 },
+									iconName = "spell_shadow_lifedrain.jpg",
+									column = 1
+								}
+							},
+							{
+								"improvedVoidwalker", new Talent
+								{
+									name = "Improved Voidwalker",
+									rankIds = new int[] { 18705, 18706, 18707 },
+									iconName = "spell_shadow_summonvoidwalker.jpg",
+									column = 2
+								}
+							},
+							{
+								"felIntellect", new Talent
+								{
+									name = "Fel Intellect",
+									rankIds = new int[] { 18731, 18743, 18744 },
+									iconName = "spell_holy_magicalsentry.jpg",
+									column = 3
+								}
+							}
+						}
+					},
+					{
+						3, new Dictionary<string, Talent>
+						{
+							{
+								"improvedSuccubus", new Talent
+								{
+									name = "Improved Succubus",
+									rankIds = new int[] { 18754, 18755, 18756 },
+									iconName = "spell_shadow_summonsuccubus.jpg",
+									column = 1
+								}
+							},
+							{
+								"felDomination", new Talent
+								{
+									name = "Fel Domination",
+									rankIds = new int[] { 18708 },
+									iconName = "spell_nature_removecurse.jpg",
+									column = 2
+								}
+							},
+							{
+								"felStamina", new Talent
+								{
+									name = "Fel Stamina",
+									rankIds = new int[] { 18748, 18749, 18750 },
+									iconName = "spell_shadow_antishadow.jpg",
+									column = 3
+								}
+							},
+							{
+								"demonicAegis", new Talent
+								{
+									name = "Demonic Aegis",
+									rankIds = new int[] { 30143, 30144, 30145 },
+									iconName = "spell_shadow_ragingscream.jpg",
+									column = 4
+								}
+							}
+						}
+					},
+					{
+						4, new Dictionary<string, Talent>
+						{
+							{
+								"masterSummoner", new Talent
+								{
+									name = "Master Summoner",
+									rankIds = new int[] { 18709, 18710 },
+									iconName = "spell_shadow_impphaseshift.jpg",
+									column = 2,
+									requirement = new TalentRequirement
+									{
+										name = "felDomination",
+										pointsRequired = 1
+									}
+								}
+							},
+							{
+								"unholyPower", new Talent
+								{
+									name = "Unholy Power",
+									rankIds = new int[] { 18769, 18770, 18771, 18772, 18773 },
+									iconName = "spell_shadow_shadowworddominate.jpg",
+									column = 3
+								}
+							}
+						}
+					},
+					{
+						5, new Dictionary<string, Talent>
+						{
+							{
+								"improvedEnslaveDemon", new Talent
+								{
+									name = "Improved Enslave Demon",
+									rankIds = new int[] { 18821, 18822, 18823, 18824, 18825 },
+									iconName = "spell_shadow_enslavedemon.jpg",
+									column = 1
+								}
+							},
+							{
+								"demonicSacrifice", new Talent
+								{
+									name = "Demonic Sacrifice",
+									rankIds = new int[] { 18788 },
+									iconName = "spell_shadow_psychicscream.jpg",
+									column = 2
+								}
+							},
+							{
+								"improvedFirestone", new Talent
+								{
+									name = "Improved Firestone",
+									rankIds = new int[] { 18767, 18768 },
+									iconName = "inv_ammo_firetar.jpg",
+									column = 4
+								}
+							}
+						}
+					},
+					{
+						6, new Dictionary<string, Talent>
+						{
+							{
+								"manaFeed", new Talent
+								{
+									name = "Mana Feed",
+									rankIds = new int[] { 30326, 30327, 30328 },
+									iconName = "spell_shadow_manafeed.jpg",
+									column = 1
+								}
+							},
+							{
+								"masterDemonologist", new Talent
+								{
+									name = "Master Demonologist",
+									rankIds = new int[] { 23785, 23822, 23823, 23824, 23825 },
+									iconName = "spell_shadow_shadowpact.jpg",
+									column = 3,
+									requirement = new TalentRequirement
+									{
+										name = "unholyPower",
+										pointsRequired = 5
+									}
+								}
+							}
+						}
+					},
+					{
+						7, new Dictionary<string, Talent>
+						{
+							{
+								"demonicResilience", new Talent
+								{
+									name = "Demonic Resilience",
+									rankIds = new int[] { 30319, 30320, 30321 },
+									iconName = "spell_shadow_demonicfortitude.jpg",
+									column = 1
+								}
+							},
+							{
+								"soulLink", new Talent
+								{
+									name = "Soul Link",
+									rankIds = new int[] { 19028 },
+									iconName = "spell_shadow_gathershadows.jpg",
+									column = 2,
+									requirement = new TalentRequirement
+									{
+										name = "demonicSacrifice",
+										pointsRequired = 1
+									}
+								}
+							},
+							{
+								"demonicKnowledge", new Talent
+								{
+									name = "Demonic Knowledge",
+									rankIds = new int[] { 35691, 35692, 35693 },
+									iconName = "Spell_shadow_improvedvampiricembrace.jpg",
+									column = 3
+								}
+							}
+						}
+					},
+					{
+						8, new Dictionary<string, Talent>
+						{
+							{
+								"demonicTactics", new Talent
+								{
+									name = "Demonic Tactics",
+									rankIds = new int[] { 30242, 30245, 30246, 30247, 30248 },
+									iconName = "Spell_shadow_demonictactics.jpg",
+									column = 2
+								}
+							}
+						}
+					},
+					{
+						9, new Dictionary<string, Talent>
+						{
+							{
+								"summonFelguard", new Talent
+								{
+									name = "Summon Felguard",
+									rankIds = new int[] { 30146 },
+									iconName = "spell_shadow_summonfelguard.jpg",
+									column = 2
+								}
+							}
+						}
+					}
+				}
+			},
+			{
+				"destruction", new Dictionary<int, Dictionary<string, Talent>>
+				{
+					{
+						1, new Dictionary<string, Talent>
+						{
+							{
+								"improvedShadowBolt", new Talent
+								{
+									name = "Improved Shadow Bolt",
+									rankIds = new int[] { 17793, 17796, 17801, 17802, 17803 },
+									iconName = "spell_shadow_shadowbolt.jpg",
+									column = 2
+								}
+							},
+							{
+								"cataclysm", new Talent
+								{
+									name = "Cataclysm",
+									rankIds = new int[] { 17778, 17779, 17780, 17781, 17782 },
+									iconName = "spell_fire_windsofwoe.jpg",
+									column = 3
+								}
+							}
+						}
+					},
+					{
+						2, new Dictionary<string, Talent>
+						{
+							{
+								"bane", new Talent
+								{
+									name = "Bane",
+									rankIds = new int[] { 17788, 17789, 17790, 17791, 17792 },
+									iconName = "spell_shadow_deathpact.jpg",
+									column = 2
+								}
+							},
+							{
+								"aftermath", new Talent
+								{
+									name = "Aftermath",
+									rankIds = new int[] { 18119, 18120, 18121, 18122, 18123 },
+									iconName = "spell_fire_fire.jpg",
+									column = 3
+								}
+							}
+						}
+					},
+					{
+						3, new Dictionary<string, Talent>
+						{
+							{
+								"improvedFirebolt", new Talent
+								{
+									name = "Improved Firebolt",
+									rankIds = new int[] { 18126, 18127 },
+									iconName = "spell_fire_firebolt.jpg",
+									column = 1
+								}
+							},
+							{
+								"improvedLashOfPain", new Talent
+								{
+									name = "Improved Lash of Pain",
+									rankIds = new int[] { 18128, 18129 },
+									iconName = "spell_shadow_curse.jpg",
+									column = 2
+								}
+							},
+							{
+								"devastation", new Talent
+								{
+									name = "Devastation",
+									rankIds = new int[] { 18130, 18131, 18132, 18133, 18134 },
+									iconName = "spell_fire_flameshock.jpg",
+									column = 3
+								}
+							},
+							{
+								"shadowburn", new Talent
+								{
+									name = "Shadowburn",
+									rankIds = new int[] { 17877 },
+									iconName = "spell_shadow_scourgebuild.jpg",
+									column = 4
+								}
+							}
+						}
+					},
+					{
+						4, new Dictionary<string, Talent>
+						{
+							{
+								"intensity", new Talent
+								{
+									name = "Intensity",
+									rankIds = new int[] { 18135, 18136 },
+									iconName = "spell_fire_lavaspawn.jpg",
+									column = 1
+								}
+							},
+							{
+								"destructiveReach", new Talent
+								{
+									name = "Destructive Reach",
+									rankIds = new int[] { 17917, 17918 },
+									iconName = "spell_shadow_corpseexplode.jpg",
+									column = 2
+								}
+							},
+							{
+								"improvedSearingPain", new Talent
+								{
+									name = "Improved Searing Pain",
+									rankIds = new int[] { 17927, 17929, 17930 },
+									iconName = "spell_fire_soulburn.jpg",
+									column = 4
+								}
+							}
+						}
+					},
+					{
+						5, new Dictionary<string, Talent>
+						{
+							{
+								"pyroclasm", new Talent
+								{
+									name = "Pyroclasm",
+									rankIds = new int[] { 18096, 18073 },
+									iconName = "spell_fire_volcano.jpg",
+									column = 1,
+									requirement = new TalentRequirement
+									{
+										name = "intensity",
+										pointsRequired = 2
+									}
+								}
+							},
+							{
+								"improvedImmolate", new Talent
+								{
+									name = "Improved Immolate",
+									rankIds = new int[] { 17815, 17833, 17834, 17835, 17836 },
+									iconName = "spell_fire_immolation.jpg",
+									column = 2
+								}
+							},
+							{
+								"ruin", new Talent
+								{
+									name = "Ruin",
+									rankIds = new int[] { 17959 },
+									iconName = "spell_shadow_shadowwordpain.jpg",
+									column = 3,
+									requirement = new TalentRequirement
+									{
+										name = "devastation",
+										pointsRequired = 5
+									}
+								}
+							}
+						}
+					},
+					{
+						6, new Dictionary<string, Talent>
+						{
+							{
+								"netherProtection", new Talent
+								{
+									name = "Nether Protection",
+									rankIds = new int[] { 30299, 30301, 30302 },
+									iconName = "spell_shadow_netherprotection.jpg",
+									column = 1
+								}
+							},
+							{
+								"emberstorm", new Talent
+								{
+									name = "Emberstorm",
+									rankIds = new int[] { 17954, 17955, 17956, 17957, 17958 },
+									iconName = "spell_fire_selfdestruct.jpg",
+									column = 3
+								}
+							}
+						}
+					},
+					{
+						7, new Dictionary<string, Talent>
+						{
+							{
+								"backlash", new Talent
+								{
+									name = "Backlash",
+									rankIds = new int[] { 34935, 34938, 34939 },
+									iconName = "spell_fire_playingwithfire.jpg",
+									column = 1
+								}
+							},
+							{
+								"conflagrate", new Talent
+								{
+									name = "Conflagrate",
+									rankIds = new int[] { 17962 },
+									iconName = "spell_fire_fireball.jpg",
+									column = 2,
+									requirement = new TalentRequirement
+									{
+										name = "improvedImmolate",
+										pointsRequired = 5
+									}
+								}
+							},
+							{
+								"soulLeech", new Talent
+								{
+									name = "Soul Leech",
+									rankIds = new int[] { 30293, 30295, 30296 },
+									iconName = "spell_shadow_soulleech_3.jpg",
+									column = 3
+								}
+							}
+						}
+					},
+					{
+						8, new Dictionary<string, Talent>
+						{
+							{
+								"shadowAndFlame", new Talent
+								{
+									name = "Shadow and Flame",
+									rankIds = new int[] { 30288, 30289, 30290, 30291, 30292 },
+									iconName = "spell_shadow_shadowandflame.jpg",
+									column = 2
+								}
+							}
+						}
+					},
+					{
+						9, new Dictionary<string, Talent>
+						{
+							{
+								"shadowfury", new Talent
+								{
+									name = "Shadowfury",
+									rankIds = new int[] { 30283 },
+									iconName = "spell_shadow_shadowfury.jpg",
+									column = 2,
+									requirement = new TalentRequirement
+									{
+										name = "shadowAndFlame",
+										pointsRequired = 5
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		};
 	}
