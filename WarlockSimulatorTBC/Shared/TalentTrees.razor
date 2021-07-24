@@ -2,12 +2,12 @@
 
 <div id="talents-container">
     <div id="preset-talent-buttons">
-        <button class="preset-talent-button" data-name="afflictionUa">Affli/UA</button>
-        <button class="preset-talent-button" data-name="afflictionRuin">Affli/Ruin</button>
-        <button class="preset-talent-button" data-name="destruction">Destruction</button>
-        <button class="preset-talent-button" data-name='destroNightfall'>Destro/Nightfall</button>
-        <button class="preset-talent-button" data-name="demonologyFelguard">Demonology/Felguard</button>
-        <button class="preset-talent-button" data-name="demonologyRuin">Demonology/Ruin</button>
+        <button class="preset-talent-button" @onclick="@(() => PresetTalentClickHandler("afflictionUa"))">Affli/UA</button>
+        <button class="preset-talent-button" @onclick="@(() => PresetTalentClickHandler("afflictionRuin"))">Affli/Ruin</button>
+        <button class="preset-talent-button" @onclick="@(() => PresetTalentClickHandler("destruction"))">Destruction</button>
+        <button class="preset-talent-button" @onclick="@(() => PresetTalentClickHandler("destructionNightfall"))">Destro/Nightfall</button>
+        <button class="preset-talent-button" @onclick="@(() => PresetTalentClickHandler("demonology"))">Demonology/Felguard</button>
+        <button class="preset-talent-button" @onclick="@(() => PresetTalentClickHandler("demonologyRuin"))">Demonology/Ruin</button>
     </div>
     <section id="talents-section">
         @foreach (var talentTree in TalentTree.trees)
@@ -31,7 +31,7 @@
                                         <div id="@talent.Key" class="talent-icon" data-points="@talent.Value.pointsTaken" @onmouseup="@((mouseArgs) => TalentClickHandler(mouseArgs, talent.Key))" oncontextmenu="return false;" @onclick:preventDefault="true">
                                             <a href="https://tbc.wowhead.com/spell=@talent.Value.rankIds[0]">
                                                 <img src="img/@talent.Value.iconName" />
-                                                <span id="@talent.Key-point-amount" class="talent-point-amount" data-points="@talent.Value.pointsTaken">@talent.Value.pointsTaken</span>
+                                                <span id="@talent.Key-point-amount" class="talent-point-amount" data-points="@talent.Value.pointsTaken" data-max-points="@(talent.Value.pointsTaken == talent.Value.rankIds.Length ? "true" : "false")">@talent.Value.pointsTaken</span>
                                             </a>
                                         </div>
                                     </td>
@@ -75,4 +75,32 @@
             }
         }
     }
+
+    // todo: optimize this - low priority but it's so inefficient that it hurts to even look at it.
+    private void PresetTalentClickHandler(string presetTalentName)
+	{
+        foreach (var talentTree in TalentTree.trees)
+		{
+            foreach (var talentTreeRow in talentTree.Value)
+			{
+                foreach (var talent in talentTreeRow.Value)
+				{
+                    talent.Value.pointsTaken = 0;
+                    foreach (var presetTalentTree in PresetTalents.presetTalents)
+					{
+                        if (presetTalentTree.Key == presetTalentName)
+						{
+                            foreach (var presetTalent in presetTalentTree.Value)
+							{
+                                if (presetTalent.Key == talent.Key)
+								{
+                                    talent.Value.pointsTaken = presetTalent.Value;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }

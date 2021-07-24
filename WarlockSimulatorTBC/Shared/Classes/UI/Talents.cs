@@ -21,9 +21,175 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 		public TalentRequirement requirement = null;
 	}
 
+	public static class PresetTalents
+	{
+		public static readonly Dictionary<string, Dictionary<string, int>> presetTalents = new Dictionary<string, Dictionary<string, int>>
+		{
+			{
+				"afflictionUa", new Dictionary<string, int>
+				{
+					{ "suppression", 3 },
+					{ "improvedCorruption", 5 },
+					{ "improvedDrainSoul", 2 },
+					{ "improvedLifeTap", 2 },
+					{ "improvedCurseOfAgony", 2 },
+					{ "amplifyCurse", 1 },
+					{ "grimReach", 1 },
+					{ "nightfall", 2 },
+					{ "empoweredCorruption", 3 },
+					{ "shadowEmbrace", 5 },
+					{ "siphonLife", 1 },
+					{ "shadowMastery", 5 },
+					{ "contagion", 5 },
+					{ "malediction", 3 },
+					{ "unstableAffliction", 1 },
+					{ "improvedShadowBolt", 5 },
+					{ "bane", 5 },
+					{ "devastation", 5 },
+					{ "shadowburn", 1 },
+					{ "intensity", 2 },
+					{ "destructiveReach", 2 }
+				}
+			},
+			{
+				"afflictionRuin", new Dictionary<string, int>
+				{
+					{ "suppression", 3 },
+					{ "improvedCorruption", 5 },
+					{ "improvedDrainSoul", 2 },
+					{ "improvedLifeTap", 2 },
+					{ "improvedCurseOfAgony", 2 },
+					{ "amplifyCurse", 1 },
+					{ "grimReach", 1 },
+					{ "nightfall", 2 },
+					{ "empoweredCorruption", 3 },
+					{ "shadowEmbrace", 5 },
+					{ "siphonLife", 1 },
+					{ "shadowMastery", 5 },
+					{ "contagion", 5 },
+					{ "malediction", 3 },
+					{ "improvedShadowBolt", 5 },
+					{ "bane", 5 },
+					{ "devastation", 5 },
+					{ "shadowburn", 1 },
+					{ "intensity", 2 },
+					{ "destructiveReach", 2 },
+					{ "ruin", 1 }
+				}
+			},
+			{
+				"destruction", new Dictionary<string, int>
+				{
+					{ "improvedHealthstone", 2 },
+					{ "demonicEmbrace", 5 },
+					{ "improvedVoidwalker", 1 },
+					{ "felIntellect", 3 },
+					{ "felDomination", 1 },
+					{ "felStamina", 3 },
+					{ "demonicAegis", 3 },
+					{ "masterSummoner", 2 },
+					{ "demonicSacrifice", 1 },
+					{ "improvedShadowBolt", 5 },
+					{ "bane", 5 },
+					{ "devastation", 5 },
+					{ "shadowburn", 1 },
+					{ "intensity", 2 },
+					{ "destructiveReach", 2 },
+					{ "improvedImmolate", 5 },
+					{ "ruin", 1 },
+					{ "emberstorm", 5 },
+					{ "backlash", 3 },
+					{ "conflagrate", 1 },
+					{ "shadowAndFlame", 5 }
+				}
+			},
+			{
+				"destructionNightfall", new Dictionary<string, int>
+				{
+					{ "suppression", 1 },
+					{ "improvedCorruption", 5 },
+					{ "improvedDrainSoul", 2 },
+					{ "improvedLifeTap", 2 },
+					{ "soulSiphon", 2 },
+					{ "improvedCurseOfAgony", 2 },
+					{ "amplifyCurse", 1 },
+					{ "nightfall", 2 },
+					{ "empoweredCorruption", 3 },
+					{ "improvedShadowBolt", 5 },
+					{ "bane", 5 },
+					{ "devastation", 5 },
+					{ "shadowburn", 1 },
+					{ "intensity", 2 },
+					{ "destructiveReach", 2 },
+					{ "improvedImmolate", 5 },
+					{ "ruin", 1 },
+					{ "emberstorm", 5 },
+					{ "backlash", 3 },
+					{ "conflagrate", 1 },
+					{ "shadowAndFlame", 5 },
+					{ "shadowfury", 1 }
+				}
+			},
+			{
+				"demonology", new Dictionary<string, int>
+				{
+					{ "improvedCorruption", 1 },
+					{ "improvedHealthstone", 2 },
+					{ "demonicEmbrace", 5 },
+					{ "felIntellect", 3 },
+					{ "felDomination", 1 },
+					{ "felStamina", 3 },
+					{ "demonicAegis", 3 },
+					{ "masterSummoner", 2 },
+					{ "unholyPower", 5 },
+					{ "demonicSacrifice", 1 },
+					{ "manaFeed", 1 },
+					{ "masterDemonologist", 5 },
+					{ "soulLink", 1 },
+					{ "demonicKnowledge", 3 },
+					{ "demonicTactics", 5 },
+					{ "summonFelguard", 1 },
+					{ "improvedShadowBolt", 5 },
+					{ "bane", 5 },
+					{ "devastation", 5 },
+					{ "shadowburn", 1 },
+					{ "intensity", 1 },
+					{ "destructiveReach", 2 }
+				}
+			},
+			{
+				"demonologyRuin", new Dictionary<string, int>
+				{
+					{ "improvedCorruption", 1 },
+					{ "improvedHealthstone", 2 },
+					{ "demonicEmbrace", 5 },
+					{ "felIntellect", 3 },
+					{ "felDomination", 1 },
+					{ "felStamina", 3 },
+					{ "demonicAegis", 3 },
+					{ "masterSummoner", 2 },
+					{ "unholyPower", 5 },
+					{ "demonicSacrifice", 1 },
+					{ "manaFeed", 1 },
+					{ "masterDemonologist", 5 },
+					{ "soulLink", 1 },
+					{ "demonicKnowledge", 3 },
+					{ "demonicTactics", 4 },
+					{ "improvedShadowBolt", 5 },
+					{ "bane", 5 },
+					{ "devastation", 5 },
+					{ "shadowburn", 1 },
+					{ "intensity", 2 },
+					{ "destructiveReach", 2 },
+					{ "ruin", 1 }
+				}
+			}
+		};
+	}
+
 	public static class TalentTree
 	{
-		public static readonly Dictionary<string, Dictionary<int, Dictionary<string, Talent>>> trees = new Dictionary<string, Dictionary<int, Dictionary<string, Talent>>>
+		public static Dictionary<string, Dictionary<int, Dictionary<string, Talent>>> trees = new Dictionary<string, Dictionary<int, Dictionary<string, Talent>>>
 		{
 			{
 				"affliction", new Dictionary<int, Dictionary<string, Talent>>

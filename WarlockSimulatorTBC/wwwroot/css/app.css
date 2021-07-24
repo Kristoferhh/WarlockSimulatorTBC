@@ -393,10 +393,15 @@
     border: 1px solid gray;
     border-radius: 5px;
     padding: 1px 3px;
+    color: #7FFF00;
 }
 
 .talent-point-amount[data-points='0'] {
     display: none;
+}
+
+.talent-point-amount[data-max-points='true'] {
+    color: #ffcd45;
 }
 
 .talent-icon img {
