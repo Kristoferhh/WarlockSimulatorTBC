@@ -17,8 +17,16 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 		public int spirit = 0;
 		public int mp5 = 0;
 		public int stamina = 0;
+		public int arcaneResist = 0;
+		public int shadowResist = 0;
+		public int fireResist = 0;
+		public int frostResist = 0;
+		public int natureResist = 0;
 		public double shadowModifier = 1;
 		public double fireModifier = 1;
+		public double staminaModifier = 1;
+		public double intellectModifier = 1;
+		public double spiritModifier = 1;
 		public string name = null;
 		public string iconName = null;
 		public bool battleElixir = false;
@@ -59,6 +67,219 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 								iconName = "spell_shadow_felarmour.jpg",
 								spellPower = 100
 							}
+						},
+						{
+							"blessingOfKings", new Aura
+							{
+								id = 25898,
+								name = "Blessing of Kings",
+								staminaModifier = 1.1,
+								intellectModifier = 1.1,
+								spiritModifier = 1.1,
+								iconName = "spell_magic_greaterblessingofkings.jpg"
+							}
+						},
+						{
+							"blessingOfWisdom", new Aura
+							{
+								id = 27143,
+								name = "Blessing of Wisdom",
+								mp5 = 41,
+								iconName = "spell_holy_greaterblessingofwisdom.jpg"
+							}
+						},
+						{
+							"judgementOfWisdom", new Aura
+							{
+								id = 20354,
+								name = "Judgement of Wisdom",
+								iconName = "spell_holy_righteousnessaura.jpg"
+							}
+						},
+						{
+							"manaSpringTotem", new Aura
+							{
+								id = 10497,
+								name = "Mana Spring Totem",
+								iconName = "spell_nature_manaregentotem.jpg",
+								mp5 = 50
+							}
+						},
+						{
+							"wrathOfAirTotem", new Aura
+							{
+								id = 3738,
+								name = "Wrath of Air Totem",
+								iconName = "spell_nature_slowingtotem.jpg",
+								spellPower = 101
+							}
+						},
+						{
+							"totemOfWrath", new Aura
+							{
+								id = 30706,
+								name = "Totem of Wrath",
+								iconName = "spell_fire_totemofwrath.jpg"
+							}
+						},
+						{
+							"markOfTheWild", new Aura
+							{
+								id = 26990,
+								name = "Mark of the Wild",
+								iconName = "spell_nature_regeneration.jpg",
+								stamina = 14,
+								intellect = 14,
+								spirit = 14,
+								arcaneResist = 25,
+								frostResist = 25,
+								fireResist = 25,
+								natureResist = 25,
+								shadowResist = 25,
+							}
+						},
+						{
+							"arcaneIntellect", new Aura
+							{
+								id = 27127,
+								name = "Arcane Intellect",
+								intellect = 40,
+								iconName = "spell_holy_arcaneintellect.jpg"
+							}
+						},
+						{
+							"prayerOfFortitude", new Aura
+							{
+								id = 25392,
+								name = "Prayer of Fortitude",
+								iconName = "spell_holy_prayeroffortitude.jpg",
+								stamina = 79
+							}
+						},
+						{
+							"prayerOfSpirit", new Aura
+							{
+								id = 32999,
+								name = "Prayer of Spirit",
+								iconName = "spell_holy_prayerofspirit.jpg",
+								spirit = 50
+							}
+						},
+						{
+							"bloodPact", new Aura
+							{
+								id = 27268,
+								name = "Blood Pact",
+								iconName = "spell_shadow_bloodboil.jpg",
+								stamina = 70
+							}
+						},
+						{
+							"inspiringPresence", new Aura
+							{
+								id = 28878,
+								name = "Inspiring Presence",
+								iconName = "inv_staff_23.jpg"
+							}
+						},
+						{
+							"moonkinAura", new Aura
+							{
+								id = 24907,
+								name = "Moonkin Aura",
+								iconName = "spell_nature_moonglow.jpg"
+							}
+						},
+						{
+							"powerInfusion", new Aura
+							{
+								id = 10060,
+								name = "Power Infusion",
+								iconName = "spell_holy_powerinfusion.jpg"
+							}
+						},
+						{
+							"powerOfTheGuardianWarlock", new Aura
+							{
+								id = 28143,
+								name = "Power of the Guardian (Warlock)",
+								iconName = "spell_nature_moonglow.jpg"
+							}
+						},
+						{
+							"powerOfTheGuardianMage", new Aura
+							{
+								id = 28142,
+								name = "Power of the Guardian (Mage)",
+								iconName = "spell_nature_moonglow.jpg"
+							}
+						},
+						{
+							"eyeOfTheNight", new Aura
+							{
+								id = 31033,
+								name = "Eye of the Night",
+								spellPower = 34,
+								iconName = "inv_jewelry_necklace_28.jpg"
+							}
+						},
+						{
+							"chainOfTheTwilightOwl", new Aura
+							{
+								id = 31035,
+								name = "Chain of the Twilight Owl",
+								iconName = "inv_jewelry_necklace_ahnqiraj_02.jpg"
+							}
+						},
+						{
+							"jadePendantOfBlasting", new Aura
+							{
+								id = 25607,
+								name = "Jade Pendant of Blasting",
+								iconName = "inv_jewelry_necklace_01.jpg",
+								spellPower = 15
+							}
+						},
+						{
+							"idolOfTheRavenGoddess", new Aura
+							{
+								id = 39926,
+								name = "Idol of the Raven Goddess",
+								iconName = "inv-mount_raven_54.jpg",
+								spellCritRating = 20
+							}
+						},
+						{
+							"drumsOfBattle", new Aura
+							{
+								id = 35476,
+								name = "Drums of Battle",
+								iconName = "inv_misc_drum_02.jpg"
+							}
+						},
+						{
+							"drumsOfWar", new Aura
+							{
+								id = 35475,
+								name = "Drums of War",
+								iconName = "inv_misc_drum_03.jpg"
+							}
+						},
+						{
+							"drumsOfRestoration", new Aura
+							{
+								id = 35478,
+								name = "Drums of Restoration",
+								iconName = "inv_misc_drum_07.jpg"
+							}
+						},
+						{
+							"bloodlust", new Aura
+							{
+								id = 2825,
+								name = "Bloodlust",
+								iconName = "spell_nature_bloodlust.jpg"
+							}
 						}
 					}
 				}
@@ -80,6 +301,122 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 								shadowModifier = 1.1,
 								fireModifier = 1.1
 
+							}
+						},
+						{
+							"shadowWeaving", new Aura
+							{
+								id = 15334,
+								name = "Shadow Weaving",
+								iconName = "spell_shadow_blackplague.jpg",
+								shadowModifier = 1.1
+							}
+						},
+						{
+							"improvedScorch", new Aura
+							{
+								id = 12873,
+								name = "Improved Scorch",
+								iconName = "spell_fire_soulburn.jpg",
+								fireModifier = 1.15
+							}
+						},
+						{
+							"misery", new Aura
+							{
+								id = 33195,
+								name = "Misery",
+								shadowModifier = 1.05,
+								fireModifier = 1.05,
+								iconName = "Spell_shadow_misery.jpg"
+							}
+						},
+						{
+							"judgementOfTheCrusader", new Aura
+							{
+								id = 20337,
+								name = "Judgement of the Crusader",
+								iconName = "spell_holy_holysmite.jpg"
+							}
+						},
+						{
+							"vampiricTouch", new Aura
+							{
+								id = 34914,
+								name = "Vampiric Touch",
+								iconName = "spell_holy_stoicism.jpg"
+							}
+						},
+						{
+							"faerieFire", new Aura
+							{
+								id = 26993,
+								name = "Faerie Fire",
+								forPet = true,
+								iconName = "spell_nature_faeriefire.jpg"
+							}
+						},
+						{
+							"sunderArmor", new Aura
+							{
+								id = 25225,
+								name = "Sunder Armor",
+								forPet = true,
+								iconName = "ability_warrior_sunder.jpg"
+							}
+						},
+						{
+							"exposeArmor", new Aura
+							{
+								id = 26866,
+								name = "Expose Armor",
+								forPet = true,
+								iconName = "ability_warrior_riposte.jpg"
+							}
+						},
+						{
+							"curseOfRecklessness", new Aura
+							{
+								id = 27226,
+								name = "Curse of Recklessness",
+								forPet = true,
+								iconName = "spell_shadow_unholystrength.jpg"
+							}
+						},
+						{
+							"bloodFrenzy", new Aura
+							{
+								id = 29859,
+								name = "Blood Frenzy",
+								forPet = true,
+								iconName = "ability_warrior_bloodfrenzy.jpg"
+							}
+						},
+						{
+							"exposeWeakness", new Aura
+							{
+								id = 34503,
+								iconName = "ability_rogue_findweakness.jpg",
+								forPet = true,
+								name = "Expose Weakness"
+							}
+						},
+						{
+							"annihilator", new Aura
+							{
+								id = 16928,
+								name = "Annihilator",
+								forPet = true,
+								iconName = "inv_axe_12.jpg"
+							}
+						},
+						{
+							"improvedHuntersMark", new Aura
+							{
+								id = 19425,
+								name = "Improved Hunter's Mark",
+								forPet = true,
+								iconName = "ability_hunter_snipershot.jpg"
 							}
 						}
 					}
