@@ -117,10 +117,10 @@
         staminaModifier *= (1 + (TalentTree.CurrentTalents["demonicEmbrace"] * 3.0) / 100);
 
         // Health
-        health = (Stats.playerStats.stamina * staminaModifier) * Stats.healthPerStamina;
+        health = Stats.playerStats.health + Stats.playerStats.stamina * staminaModifier * Stats.healthPerStamina;
 
         // Mana
-        mana = (Stats.playerStats.intellect * Stats.playerStats.intellectModifier) * Stats.manaPerInt;
+        mana = Stats.playerStats.mana + Stats.playerStats.intellect * Stats.playerStats.intellectModifier * Stats.manaPerInt;
 
         StateHasChanged();
     }
