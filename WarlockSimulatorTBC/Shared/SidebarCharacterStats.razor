@@ -1,4 +1,5 @@
 ﻿@using Classes
+@using Classes.UI
 
 <p id="character-race"><span id="race"></span> Warlock</p>
 <p id="character-level">Level 70</p>
@@ -6,11 +7,11 @@
 <ul class="character-stats">
     <li>
         <p class="character-stat">Health</p>
-        <p class="character-stat-val" id="character-health-val">@Stats.playerStats.health</p>
+        <p class="character-stat-val" id="character-health-val">@(Math.Round(health))</p>
     </li>
     <li>
         <p class="character-stat">Mana</p>
-        <p class="character-stat-val" id="character-mana-val">@Stats.playerStats.mana</p>
+        <p class="character-stat-val" id="character-mana-val">@(Math.Round(mana))</p>
     </li>
     <li>
         <p class="character-stat">Stamina</p>
@@ -26,7 +27,7 @@
     </li>
     <li>
         <p class="character-stat">Spell Power</p>
-        <p class="character-stat-val" id="character-spell-power-val">@Stats.playerStats.spellPower</p>
+        <p class="character-stat-val" id="character-spell-power-val">@spellPower</p>
     </li>
     <li>
         <p class="character-stat">Shadow Power</p>
@@ -38,11 +39,11 @@
     </li>
     <li>
         <p class="character-stat">Crit Rating</p>
-        <p class="character-stat-val" id="character-crit-val">@Stats.playerStats.spellCritRating</p>
+        <p class="character-stat-val" id="character-crit-val">@(Stats.playerStats.spellCritRating) (@(Math.Round(critPercent * 100) / 100)%)</p>
     </li>
     <li>
         <p class="character-stat">Hit Rating</p>
-        <p class="character-stat-val" id="character-hit-val">@Stats.playerStats.spellHitRating</p>
+        <p class="character-stat-val" id="character-hit-val">@(Stats.playerStats.spellHitRating) (@(Math.Round(hitPercent * 100) / 100)%)</p>
     </li>
     <li>
         <p class="character-stat">Haste Rating</p>
@@ -50,11 +51,11 @@
     </li>
     <li>
         <p class="character-stat">Shadow Dmg %</p>
-        <p class="character-stat-val" id="character-shadow-damage-modifier-val">@(Math.Round(Stats.playerStats.shadowModifier * 100))%</p>
+        <p class="character-stat-val" id="character-shadow-damage-modifier-val">@(Math.Round(shadowModifier * 100))%</p>
     </li>
     <li>
         <p class="character-stat">Fire Dmg %</p>
-        <p class="character-stat-val" id="character-fire-damage-modifier-val">@(Math.Round(Stats.playerStats.fireModifier * 100))%</p>
+        <p class="character-stat-val" id="character-fire-damage-modifier-val">@(Math.Round(fireModifier * 100))%</p>
     </li>
     <li>
         <p class="character-stat">MP5</p>
@@ -71,9 +72,56 @@
 </ul>
 
 @code {
+    private double health = 0;
+    private double mana = 0;
+    private double shadowModifier = 0;
+    private double fireModifier = 0;
+    private double staminaModifier = 0;
+    private double spellPower = 0;
+    private double critPercent = 0;
+    private double hitPercent = 0;
+
     public void RefreshStats()
-	{
+    {
+        shadowModifier = Stats.playerStats.shadowModifier;
+        fireModifier = Stats.playerStats.fireModifier;
+        staminaModifier = Stats.playerStats.staminaModifier;
+
+        // Crit
+        int critRating = Stats.playerStats.spellCritRating;
+        if (AuraGroups.SelectedAuras.Contains("powerOfTheGuardianMage")) critRating += 28;
+        critPercent = critRating / Stats.critRatingPerPercent + Stats.baseCritChance + (Stats.playerStats.intellect * Stats.playerStats.intellectModifier * Stats.critPercentPerInt) + TalentTree.CurrentTalents["devastation"] + TalentTree.CurrentTalents["backlash"] + TalentTree.CurrentTalents["demonicTactics"];
+        if (AuraGroups.SelectedAuras.Contains("totemOfWrath")) critPercent += 3;
+        if (AuraGroups.SelectedAuras.Contains("chainOfTheTwilightOwl")) critPercent += 2;
+        if (AuraGroups.SelectedAuras.Contains("moonkinAura")) critPercent += 5;
+        if (AuraGroups.SelectedAuras.Contains("judgementOfTheCrusader")) critPercent += 3;
+
+        // Hit
+        int hitRating = Stats.playerStats.spellHitRating;
+        hitPercent = Stats.playerStats.spellHitRating / Stats.hitRatingPerPercent;
+        if (AuraGroups.SelectedAuras.Contains("inspiringPresence")) hitPercent++;
+        if (AuraGroups.SelectedAuras.Contains("totemOfWrath")) hitPercent += 3;
+
+        // Spell Power
+        spellPower = Stats.playerStats.spellPower;
+        if (AuraGroups.SelectedAuras.Contains("felArmor")) spellPower += 10 * TalentTree.CurrentTalents["demonicAegis"];
+        if (AuraGroups.SelectedAuras.Contains("powerOfTheGuardianWarlock")) spellPower += 33;
+
+        // Shadow/Fire % Modifiers
+        shadowModifier *= (1 + (TalentTree.CurrentTalents["shadowMastery"] * 2.0) / 100);
+        // add master demonologist
+        shadowModifier *= (1 + (TalentTree.CurrentTalents["soulLink"] * 5.0) / 100);
+        fireModifier *= (1 + (TalentTree.CurrentTalents["emberstorm"] * 2.0) / 100);
+
+        // Stamina Modifiers
+        staminaModifier *= (1 + (TalentTree.CurrentTalents["demonicEmbrace"] * 3.0) / 100);
+
+        // Health
+        health = (Stats.playerStats.stamina * staminaModifier) * Stats.healthPerStamina;
+
+        // Mana
+        mana = (Stats.playerStats.intellect * Stats.playerStats.intellectModifier) * Stats.manaPerInt;
+
         StateHasChanged();
-        Console.WriteLine("Refreshed stats");
-	}
+    }
 }
