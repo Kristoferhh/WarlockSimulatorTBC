@@ -1,4 +1,5 @@
 ﻿@using Shared.Classes.UI
+@using Shared.Classes
 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
@@ -163,20 +164,31 @@
 </table>
 
 @code {
+    [Parameter] public EventCallback RefreshSidebarStats { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         if (await localStorage.ContainKeyAsync("selectedItems"))
         {
             Items.SelectedItems = await localStorage.GetItemAsync<Dictionary<string, int?>>("selectedItems");
 
-            // Pre-Blazor localStorage fix
+            // Add stats from equipped items
             foreach (string itemSlot in Items.itemSlots.Keys)
-			{
+            {
+                // Pre-Blazor localStorage fix
                 if (!Items.SelectedItems.ContainsKey(itemSlot))
-				{
+                {
                     Items.SelectedItems[itemSlot] = null;
-				}
-			}
+                }
+
+                if (Items.SelectedItems[itemSlot] != null)
+                {
+                    Items.ModifyStatsFromItem(itemSlot, (int)Items.SelectedItems[itemSlot], "add");
+                }
+            }
+            Console.WriteLine(Stats.playerStats.stamina);
+            Console.WriteLine("Attempting to invoke parameter");
+            await RefreshSidebarStats.InvokeAsync();
         }
     }
 

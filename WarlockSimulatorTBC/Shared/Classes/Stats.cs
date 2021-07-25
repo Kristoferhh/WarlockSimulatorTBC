@@ -36,6 +36,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		public double damageModifier = 1;
 		public double shadowModifier = 1;
 		public double fireModifier = 1;
+		public double staminaModifier = 1;
 		public double intellectModifier = 1;
 		public double spiritModifier = 1;
 		// Pet stats

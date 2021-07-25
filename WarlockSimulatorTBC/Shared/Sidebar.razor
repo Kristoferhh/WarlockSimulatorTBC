@@ -2,7 +2,7 @@
 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-<SidebarCharacterStats/>
+<SidebarCharacterStats @ref="characterStats" />
 
 <ul id="sidebar-sets">
     <li><h3>Set Bonuses</h3></li>
@@ -28,6 +28,8 @@
     private string minDps = null;
     private string maxDps = null;
 
+    SidebarCharacterStats characterStats;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -44,4 +46,10 @@
             maxDps = await localStorage.GetItemAsync<string>("maxDps");
         }
     }
+
+    public void RefreshCharacterStats()
+	{
+        characterStats.RefreshStats();
+        Console.WriteLine("Refreshing sidebar");
+	}
 }

@@ -51,6 +51,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 		public int setId = 0;
 		public int stamina = 0;
 		public int intellect = 0;
+		public int spirit = 0;
 		public int meta = 0;
 		public int red = 0;
 		public int blue = 0;
@@ -63,6 +64,8 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 		public int spellHitRating = 0;
 		public int spellHasteRating = 0;
 		public int resilienceRating = 0;
+		public int mp5 = 0;
+		public int spellPenetration = 0;
 		public string name = null;
 		public string source = null;
 	}
@@ -98,6 +101,25 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 			{ ItemSlots.TWOHAND, null },
 			{ ItemSlots.WAND, null }
 		};
+
+		//todo: optimize
+		public static void ModifyStatsFromItem(string itemSlot, int itemId, string action)
+		{
+			if (action == "add")
+			{
+				Stats.playerStats.stamina += itemSlots[itemSlot].items[itemId].stamina;
+				Stats.playerStats.intellect += itemSlots[itemSlot].items[itemId].intellect;
+				Stats.playerStats.spirit += itemSlots[itemSlot].items[itemId].spirit;
+				Stats.playerStats.spellPower += itemSlots[itemSlot].items[itemId].spellPower;
+				Stats.playerStats.shadowPower += itemSlots[itemSlot].items[itemId].shadowPower;
+				Stats.playerStats.firePower += itemSlots[itemSlot].items[itemId].firePower;
+				Stats.playerStats.spellCritRating += itemSlots[itemSlot].items[itemId].spellCritRating;
+				Stats.playerStats.spellHitRating += itemSlots[itemSlot].items[itemId].spellHitRating;
+				Stats.playerStats.spellHasteRating += itemSlots[itemSlot].items[itemId].spellHasteRating;
+				Stats.playerStats.mp5 += itemSlots[itemSlot].items[itemId].mp5;
+				Stats.playerStats.spellPenetration += itemSlots[itemSlot].items[itemId].spellPenetration;
+			}
+		}
 
 		public static readonly Dictionary<string, ItemSlot> itemSlots = new Dictionary<string, ItemSlot>
 		{
