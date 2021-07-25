@@ -10,7 +10,7 @@
 <div id="main">
     <p id="pet-wip-note">This sim is still a work in progress (especially pets!). Please report bugs to the warlock Discord or PM me at Kristofer#8003</p>
     <div>
-        <Auras />
+        <Auras RefreshSidebarStats="@RefreshSidebarStats" />
         <Rotation />
         <SimSettings />
         <TalentTrees />
@@ -182,7 +182,6 @@
 
     private void RefreshSidebarStats()
 	{
-        Console.WriteLine("Attempting to call RefreshCharacterStats()");
         sideBar.RefreshCharacterStats();
 	}
 

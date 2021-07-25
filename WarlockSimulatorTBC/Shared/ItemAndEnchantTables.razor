@@ -186,8 +186,6 @@
                     Items.ModifyStatsFromItem(itemSlot, (int)Items.SelectedItems[itemSlot], "add");
                 }
             }
-            Console.WriteLine(Stats.playerStats.stamina);
-            Console.WriteLine("Attempting to invoke parameter");
             await RefreshSidebarStats.InvokeAsync();
         }
     }

@@ -21,6 +21,8 @@
 </section>
 
 @code {
+    [Parameter] public EventCallback RefreshSidebarStats { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         if (await localStorage.ContainKeyAsync("auras"))
@@ -37,11 +39,27 @@
                 foreach (var aura in aurasDict)
                 {
                     if (aura.Value)
-					{
+                    {
                         AuraGroups.SelectedAuras.Add(aura.Key);
-					}
+                    }
                 }
             }
+
+            // Add stats from selected auras
+            foreach (var aura in AuraGroups.SelectedAuras)
+            {
+                // Find the aura's group
+                foreach (var auraGroup in AuraGroups.groups)
+                {
+                    if (auraGroup.Value.auras.ContainsKey(aura))
+                    {
+                        AuraGroups.ModifyStatsFromAura(auraGroup.Key, aura, "add");
+                        break;
+                    }
+                }
+            }
+
+            await RefreshSidebarStats.InvokeAsync();
         }
     }
 
@@ -64,6 +82,7 @@
                                 if (aura.Key != subAura.Key && ((aura.Value.drum && subAura.Value.drum) || (aura.Value.alcohol && subAura.Value.alcohol) || (aura.Value.battleElixir && subAura.Value.battleElixir) || (aura.Value.guardianElixir && subAura.Value.guardianElixir) || (aura.Value.potion && subAura.Value.potion) || (aura.Value.demonicRune && subAura.Value.demonicRune) || (aura.Value.weaponOil && subAura.Value.weaponOil) || (aura.Value.foodBuff && subAura.Value.foodBuff)))
                                 {
                                     AuraGroups.SelectedAuras.Remove(subAura.Key);
+                                    AuraGroups.ModifyStatsFromAura(subAuraGroup.Key, subAura.Key, "remove");
                                 }
                             }
                         }
@@ -71,11 +90,14 @@
                     if (!AuraGroups.SelectedAuras.Contains(aura.Key))
                     {
                         AuraGroups.SelectedAuras.Add(aura.Key);
+                        AuraGroups.ModifyStatsFromAura(auraGroup.Key, aura.Key, "add");
                     }
                     else
                     {
                         AuraGroups.SelectedAuras.Remove(aura.Key);
+                        AuraGroups.ModifyStatsFromAura(auraGroup.Key, aura.Key, "remove");
                     }
+                    await RefreshSidebarStats.InvokeAsync();
                     await localStorage.SetItemAsync("auras", AuraGroups.SelectedAuras);
                     return;
                 }

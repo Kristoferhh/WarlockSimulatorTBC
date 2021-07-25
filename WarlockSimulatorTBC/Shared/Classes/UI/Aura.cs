@@ -30,7 +30,6 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 		public double spiritModifier = 1;
 		public string name = null;
 		public string iconName = null;
-		public bool selected = false;
 		public bool battleElixir = false;
 		public bool guardianElixir = false;
 		public bool potion = false;
@@ -54,6 +53,46 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 	public static class AuraGroups
 	{
 		public static List<string> SelectedAuras = new List<string>();
+		
+		//todo: optimize
+		public static void ModifyStatsFromAura(string auraGroup, string auraName, string action)
+		{
+			if (action == "add")
+			{
+				Stats.playerStats.spellPower += groups[auraGroup].auras[auraName].spellPower;
+				Stats.playerStats.shadowPower += groups[auraGroup].auras[auraName].shadowPower;
+				Stats.playerStats.firePower += groups[auraGroup].auras[auraName].firePower;
+				Stats.playerStats.spellPenetration += groups[auraGroup].auras[auraName].spellPenetration;
+				Stats.playerStats.spellCritRating += groups[auraGroup].auras[auraName].spellCritRating;
+				Stats.playerStats.intellect += groups[auraGroup].auras[auraName].intellect;
+				Stats.playerStats.spirit += groups[auraGroup].auras[auraName].spirit;
+				Stats.playerStats.mp5 += groups[auraGroup].auras[auraName].mp5;
+				Stats.playerStats.stamina += groups[auraGroup].auras[auraName].stamina;
+				Stats.playerStats.shadowModifier *= groups[auraGroup].auras[auraName].shadowModifier;
+				Stats.playerStats.fireModifier *= groups[auraGroup].auras[auraName].fireModifier;
+				Stats.playerStats.staminaModifier *= groups[auraGroup].auras[auraName].staminaModifier;
+				Stats.playerStats.intellectModifier *= groups[auraGroup].auras[auraName].intellectModifier;
+				Stats.playerStats.spiritModifier *= groups[auraGroup].auras[auraName].spiritModifier;
+			}
+			else if (action == "remove")
+			{
+				Stats.playerStats.spellPower -= groups[auraGroup].auras[auraName].spellPower;
+				Stats.playerStats.shadowPower -= groups[auraGroup].auras[auraName].shadowPower;
+				Stats.playerStats.firePower -= groups[auraGroup].auras[auraName].firePower;
+				Stats.playerStats.spellPenetration -= groups[auraGroup].auras[auraName].spellPenetration;
+				Stats.playerStats.spellCritRating -= groups[auraGroup].auras[auraName].spellCritRating;
+				Stats.playerStats.intellect -= groups[auraGroup].auras[auraName].intellect;
+				Stats.playerStats.spirit -= groups[auraGroup].auras[auraName].spirit;
+				Stats.playerStats.mp5 -= groups[auraGroup].auras[auraName].mp5;
+				Stats.playerStats.stamina -= groups[auraGroup].auras[auraName].stamina;
+				Stats.playerStats.shadowModifier /= groups[auraGroup].auras[auraName].shadowModifier;
+				Stats.playerStats.fireModifier /= groups[auraGroup].auras[auraName].fireModifier;
+				Stats.playerStats.staminaModifier /= groups[auraGroup].auras[auraName].staminaModifier;
+				Stats.playerStats.intellectModifier /= groups[auraGroup].auras[auraName].intellectModifier;
+				Stats.playerStats.spiritModifier /= groups[auraGroup].auras[auraName].spiritModifier;
+			}
+		}
+
 		public static Dictionary<string, AuraGroup> groups = new Dictionary<string, AuraGroup>
 		{
 			{

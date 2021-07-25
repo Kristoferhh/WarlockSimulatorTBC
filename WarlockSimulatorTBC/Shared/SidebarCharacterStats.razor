@@ -14,15 +14,15 @@
     </li>
     <li>
         <p class="character-stat">Stamina</p>
-        <p class="character-stat-val" id="character-stamina-val">@(Stats.playerStats.stamina * Stats.playerStats.staminaModifier)</p>
+        <p class="character-stat-val" id="character-stamina-val">@(Math.Round(Stats.playerStats.stamina * Stats.playerStats.staminaModifier))</p>
     </li>
     <li>
         <p class="character-stat">Intellect</p>
-        <p class="character-stat-val" id="character-intellect-val">@(Stats.playerStats.intellect * Stats.playerStats.intellectModifier)</p>
+        <p class="character-stat-val" id="character-intellect-val">@(Math.Round(Stats.playerStats.intellect * Stats.playerStats.intellectModifier))</p>
     </li>
     <li>
         <p class="character-stat">Spirit</p>
-        <p class="character-stat-val" id="character-spirit-val">@(Stats.playerStats.spirit * Stats.playerStats.spiritModifier)</p>
+        <p class="character-stat-val" id="character-spirit-val">@(Math.Round(Stats.playerStats.spirit * Stats.playerStats.spiritModifier))</p>
     </li>
     <li>
         <p class="character-stat">Spell Power</p>
@@ -50,11 +50,11 @@
     </li>
     <li>
         <p class="character-stat">Shadow Dmg %</p>
-        <p class="character-stat-val" id="character-shadow-damage-modifier-val">@(Stats.playerStats.shadowModifier * 100)%</p>
+        <p class="character-stat-val" id="character-shadow-damage-modifier-val">@(Math.Round(Stats.playerStats.shadowModifier * 100))%</p>
     </li>
     <li>
         <p class="character-stat">Fire Dmg %</p>
-        <p class="character-stat-val" id="character-fire-damage-modifier-val">@(Stats.playerStats.fireModifier * 100)%</p>
+        <p class="character-stat-val" id="character-fire-damage-modifier-val">@(Math.Round(Stats.playerStats.fireModifier * 100))%</p>
     </li>
     <li>
         <p class="character-stat">MP5</p>
