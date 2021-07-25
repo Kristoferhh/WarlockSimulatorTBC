@@ -130,6 +130,7 @@
             {
                 foreach (var talent in talentTreeRow.Value)
                 {
+                    TalentTree.CurrentTalents[talent.Key] = 0;
                     foreach (var presetTalentTree in PresetTalents.presetTalents)
                     {
                         if (presetTalentTree.Key == presetTalentName)
