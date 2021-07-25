@@ -4,152 +4,159 @@
 
 @page "/"
 
-<p id="pet-wip-note">This sim is still a work in progress (especially pets!). Please report bugs to the warlock Discord or PM me at Kristofer#8003</p>
-<div>
-    <Auras />
-    <Rotation />
-    <SimSettings />
-    <TalentTrees />
-
-    <section class="close-button-target" id="stat-weights-section" style="display: none;">
-        <div>
-            <h2 style="display: inline-block;">Stat Weights</h2>
-            <a href='#' class='close' id='stat-weight-close-button'></a>
-        </div>
-        <ul class="character-stats" id="stat-weights">
-            <li>
-                <p class="character-stat">Intellect</p>
-                <p id="stat-weight-intellect" class="character-stat-val">0</p>
-            </li>
-            <li>
-                <p class="character-stat">Spell Power</p>
-                <p id="stat-weight-spellPower" class="character-stat-val">0</p>
-            </li>
-            <li>
-                <p class="character-stat">Shadow Power</p>
-                <p id="stat-weight-shadowPower" class="character-stat-val">0</p>
-            </li>
-            <li>
-                <p class="character-stat">Fire Power</p>
-                <p id="stat-weight-firePower" class="character-stat-val">0</p>
-            </li>
-            <li>
-                <p class="character-stat">Hit Rating</p>
-                <p id="stat-weight-hitRating" class="character-stat-val">0</p>
-            </li>
-            <li>
-                <p class="character-stat">Crit Rating</p>
-                <p id="stat-weight-critRating" class="character-stat-val">0</p>
-            </li>
-            <li>
-                <p class="character-stat">Haste Rating</p>
-                <p id="stat-weight-hasteRating" class="character-stat-val">0</p>
-            </li>
-            <li>
-                <p class="character-stat">Mp5</p>
-                <p id="stat-weight-mp5" class="character-stat-val">0</p>
-            </li>
-            <li id="pawn-import-string">
-                <p></p>
-            </li>
-        </ul>
-    </section>
-
-    <!-- Damage Breakdown Table -->
-    <section class="breakdown-section" id="damage-breakdown-section">
-        <table class="breakdown-table tablesorter" id="damage-breakdown-table" data-sortlist='[[1,1]]'>
-            <thead>
-            <th>Name</th>
-            <th>Damage</th>
-            <th>Casts</th>
-            <th>Avg Cast</th>
-            <th>Crit %</th>
-            <th>Miss %</th>
-            <th id='damage-breakdown-dodge'>Dodge %</th>
-            <th id='damage-breakdown-glancing'>Glancing %</th>
-            <th>Dps</th>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </section>
-    <!-- Mana Gain Breakdown Table -->
-    <section class="breakdown-section" id="mana-gain-breakdown-section">
-        <table class="breakdown-table tablesorter" id="mana-gain-breakdown-table" data-sortlist='[[1,1]]'>
-            <thead>
-            <th>Name</th>
-            <th>% Of Total Gain</th>
-            <th>Casts</th>
-            <th>Avg Cast</th>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </section>
-    <!-- Aura Breakdown Table -->
-    <section class="breakdown-section" id="aura-breakdown-section">
-        <table class="breakdown-table tablesorter" id="aura-breakdown-table" data-sortlist='[[2,1]]'>
-            <thead>
-            <th>Name</th>
-            <th>Count</th>
-            <th>Uptime</th>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </section>
+<div id="sidebar">
+    <Sidebar @ref="sideBar" />
 </div>
+<div id="main">
+    <p id="pet-wip-note">This sim is still a work in progress (especially pets!). Please report bugs to the warlock Discord or PM me at Kristofer#8003</p>
+    <div>
+        <Auras />
+        <Rotation />
+        <SimSettings />
+        <TalentTrees />
 
-<!-- COMBAT LOG -->
-<div id="combat-log"></div>
-
-<!-- IMPORT/EXPORT -->
-<div id="import-export-window" class="close-button-target" style="display: none;">
-    <!--<a href='#' class='close' id='import-export-close-button'></a>-->
-    <textarea></textarea>
-    <br>
-    <button id="import-button">Import</button>
-    <button id="export-button">Export</button>
-    <button id="export-close-button">Close</button>
-</div>
-
-<!-- ITEMS -->
-<!-- Gem Selection Table -->
-<table id="gem-selection-table" cellspacing="0" data-color='none' style="visibility: hidden;"></table>
-
-<div id="item-selection-container">
-    <div id="profiles-and-sources">
-        <fieldset id="profile-fieldset">
-            <legend>Profile Options</legend>
-            <input placeholder='E.g. "Destruction (Fire)"' type="text" name="profileName">
-            <button id="save-new-profile-button">Save New Profile</button>
-            <div id="update-profile-div">
-                <button style="display: none;" id="save-profile-button">Save</button>
-                <button style="display: none;" id="delete-profile-button">Delete</button>
-                <button style="display: none;" id="rename-profile-button">Rename</button>
-                <button id="import-export-button">Import/Export</button>
+        <section class="close-button-target" id="stat-weights-section" style="display: none;">
+            <div>
+                <h2 style="display: inline-block;">Stat Weights</h2>
+                <a href='#' class='close' id='stat-weight-close-button'></a>
             </div>
-        </fieldset>
-
-        <fieldset id="saved-profiles" style="display: none;">
-            <legend>Saved Profiles</legend>
-            <ul></ul>
-        </fieldset>
-
-        <fieldset id="source-filters">
-            <legend>Sources</legend>
-            <ul>
-                <li @onclick="(() => PhaseClickHandler(0))" data-checked="@(Items.SelectedPhases.Contains(0) ? "true" : "false")">Classic</li>
-                <li @onclick="(() => PhaseClickHandler(1))" data-checked="@(Items.SelectedPhases.Contains(1) ? "true" : "false")">P1</li>
-                <li @onclick="(() => PhaseClickHandler(2))" data-checked="@(Items.SelectedPhases.Contains(2) ? "true" : "false")">P2</li>
-                <li @onclick="(() => PhaseClickHandler(3))" data-checked="@(Items.SelectedPhases.Contains(3) ? "true" : "false")">P3</li>
-                <li @onclick="(() => PhaseClickHandler(4))" data-checked="@(Items.SelectedPhases.Contains(4) ? "true" : "false")">P4</li>
-                <li @onclick="(() => PhaseClickHandler(5))" data-checked="@(Items.SelectedPhases.Contains(5) ? "true" : "false")">P5</li>
+            <ul class="character-stats" id="stat-weights">
+                <li>
+                    <p class="character-stat">Intellect</p>
+                    <p id="stat-weight-intellect" class="character-stat-val">0</p>
+                </li>
+                <li>
+                    <p class="character-stat">Spell Power</p>
+                    <p id="stat-weight-spellPower" class="character-stat-val">0</p>
+                </li>
+                <li>
+                    <p class="character-stat">Shadow Power</p>
+                    <p id="stat-weight-shadowPower" class="character-stat-val">0</p>
+                </li>
+                <li>
+                    <p class="character-stat">Fire Power</p>
+                    <p id="stat-weight-firePower" class="character-stat-val">0</p>
+                </li>
+                <li>
+                    <p class="character-stat">Hit Rating</p>
+                    <p id="stat-weight-hitRating" class="character-stat-val">0</p>
+                </li>
+                <li>
+                    <p class="character-stat">Crit Rating</p>
+                    <p id="stat-weight-critRating" class="character-stat-val">0</p>
+                </li>
+                <li>
+                    <p class="character-stat">Haste Rating</p>
+                    <p id="stat-weight-hasteRating" class="character-stat-val">0</p>
+                </li>
+                <li>
+                    <p class="character-stat">Mp5</p>
+                    <p id="stat-weight-mp5" class="character-stat-val">0</p>
+                </li>
+                <li id="pawn-import-string">
+                    <p></p>
+                </li>
             </ul>
-        </fieldset>
+        </section>
+
+        <!-- Damage Breakdown Table -->
+        <section class="breakdown-section" id="damage-breakdown-section">
+            <table class="breakdown-table tablesorter" id="damage-breakdown-table" data-sortlist='[[1,1]]'>
+                <thead>
+                <th>Name</th>
+                <th>Damage</th>
+                <th>Casts</th>
+                <th>Avg Cast</th>
+                <th>Crit %</th>
+                <th>Miss %</th>
+                <th id='damage-breakdown-dodge'>Dodge %</th>
+                <th id='damage-breakdown-glancing'>Glancing %</th>
+                <th>Dps</th>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+        <!-- Mana Gain Breakdown Table -->
+        <section class="breakdown-section" id="mana-gain-breakdown-section">
+            <table class="breakdown-table tablesorter" id="mana-gain-breakdown-table" data-sortlist='[[1,1]]'>
+                <thead>
+                <th>Name</th>
+                <th>% Of Total Gain</th>
+                <th>Casts</th>
+                <th>Avg Cast</th>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+        <!-- Aura Breakdown Table -->
+        <section class="breakdown-section" id="aura-breakdown-section">
+            <table class="breakdown-table tablesorter" id="aura-breakdown-table" data-sortlist='[[2,1]]'>
+                <thead>
+                <th>Name</th>
+                <th>Count</th>
+                <th>Uptime</th>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
     </div>
 
-    <ItemAndEnchantTables />
+    <!-- COMBAT LOG -->
+    <div id="combat-log"></div>
+
+    <!-- IMPORT/EXPORT -->
+    <div id="import-export-window" class="close-button-target" style="display: none;">
+        <!--<a href='#' class='close' id='import-export-close-button'></a>-->
+        <textarea></textarea>
+        <br>
+        <button id="import-button">Import</button>
+        <button id="export-button">Export</button>
+        <button id="export-close-button">Close</button>
+    </div>
+
+    <!-- ITEMS -->
+    <!-- Gem Selection Table -->
+    <table id="gem-selection-table" cellspacing="0" data-color='none' style="visibility: hidden;"></table>
+
+    <div id="item-selection-container">
+        <div id="profiles-and-sources">
+            <fieldset id="profile-fieldset">
+                <legend>Profile Options</legend>
+                <input placeholder='E.g. "Destruction (Fire)"' type="text" name="profileName">
+                <button id="save-new-profile-button">Save New Profile</button>
+                <div id="update-profile-div">
+                    <button style="display: none;" id="save-profile-button">Save</button>
+                    <button style="display: none;" id="delete-profile-button">Delete</button>
+                    <button style="display: none;" id="rename-profile-button">Rename</button>
+                    <button id="import-export-button">Import/Export</button>
+                </div>
+            </fieldset>
+
+            <fieldset id="saved-profiles" style="display: none;">
+                <legend>Saved Profiles</legend>
+                <ul></ul>
+            </fieldset>
+
+            <fieldset id="source-filters">
+                <legend>Sources</legend>
+                <ul>
+                    <li @onclick="(() => PhaseClickHandler(0))" data-checked="@(Items.SelectedPhases.Contains(0) ? "true" : "false")">Classic</li>
+                    <li @onclick="(() => PhaseClickHandler(1))" data-checked="@(Items.SelectedPhases.Contains(1) ? "true" : "false")">P1</li>
+                    <li @onclick="(() => PhaseClickHandler(2))" data-checked="@(Items.SelectedPhases.Contains(2) ? "true" : "false")">P2</li>
+                    <li @onclick="(() => PhaseClickHandler(3))" data-checked="@(Items.SelectedPhases.Contains(3) ? "true" : "false")">P3</li>
+                    <li @onclick="(() => PhaseClickHandler(4))" data-checked="@(Items.SelectedPhases.Contains(4) ? "true" : "false")">P4</li>
+                    <li @onclick="(() => PhaseClickHandler(5))" data-checked="@(Items.SelectedPhases.Contains(5) ? "true" : "false")">P5</li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <ItemAndEnchantTables RefreshSidebarStats="@RefreshSidebarStats" />
+    </div>
 </div>
 
 @code {
+    Sidebar sideBar;
+
     protected override async Task OnInitializedAsync()
     {
         if (await localStorage.ContainKeyAsync("sources"))
@@ -172,6 +179,12 @@
             }
         }
     }
+
+    private void RefreshSidebarStats()
+	{
+        Console.WriteLine("Attempting to call RefreshCharacterStats()");
+        sideBar.RefreshCharacterStats();
+	}
 
     private async void PhaseClickHandler(int phase)
     {
