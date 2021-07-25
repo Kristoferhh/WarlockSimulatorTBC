@@ -1,0 +1,71 @@
+﻿@using Classes
+
+<p id="character-race"><span id="race"></span> Warlock</p>
+<p id="character-level">Level 70</p>
+
+<ul class="character-stats">
+    <li>
+        <p class="character-stat">Health</p>
+        <p class="character-stat-val" id="character-health-val">@Stats.playerStats.health</p>
+    </li>
+    <li>
+        <p class="character-stat">Mana</p>
+        <p class="character-stat-val" id="character-mana-val">@Stats.playerStats.mana</p>
+    </li>
+    <li>
+        <p class="character-stat">Stamina</p>
+        <p class="character-stat-val" id="character-stamina-val">@Stats.playerStats.stamina</p>
+    </li>
+    <li>
+        <p class="character-stat">Intellect</p>
+        <p class="character-stat-val" id="character-intellect-val">@(Stats.playerStats.intellect * Stats.playerStats.intellectModifier)</p>
+    </li>
+    <li>
+        <p class="character-stat">Spirit</p>
+        <p class="character-stat-val" id="character-spirit-val">@(Stats.playerStats.spirit * Stats.playerStats.spiritModifier)</p>
+    </li>
+    <li>
+        <p class="character-stat">Spell Power</p>
+        <p class="character-stat-val" id="character-spell-power-val">@Stats.playerStats.spellPower</p>
+    </li>
+    <li>
+        <p class="character-stat">Shadow Power</p>
+        <p class="character-stat-val" id="character-shadow-power-val">@Stats.playerStats.shadowPower</p>
+    </li>
+    <li>
+        <p class="character-stat">Fire Power</p>
+        <p class="character-stat-val" id="character-fire-power-val">@Stats.playerStats.firePower</p>
+    </li>
+    <li>
+        <p class="character-stat">Crit Rating</p>
+        <p class="character-stat-val" id="character-crit-val">@Stats.playerStats.spellCritRating</p>
+    </li>
+    <li>
+        <p class="character-stat">Hit Rating</p>
+        <p class="character-stat-val" id="character-hit-val">@Stats.playerStats.spellHitRating</p>
+    </li>
+    <li>
+        <p class="character-stat">Haste Rating</p>
+        <p class="character-stat-val" id="character-haste-val">@Stats.playerStats.spellHasteRating</p>
+    </li>
+    <li>
+        <p class="character-stat">Shadow Dmg %</p>
+        <p class="character-stat-val" id="character-shadow-damage-modifier-val">@(Stats.playerStats.shadowModifier * 100)%</p>
+    </li>
+    <li>
+        <p class="character-stat">Fire Dmg %</p>
+        <p class="character-stat-val" id="character-fire-damage-modifier-val">@(Stats.playerStats.fireModifier * 100)%</p>
+    </li>
+    <li>
+        <p class="character-stat">MP5</p>
+        <p class="character-stat-val" id="character-mp5-val">@Stats.playerStats.mp5</p>
+    </li>
+    <li>
+        <p class="character-stat">Enemy Armor</p>
+        <p class="character-stat-val" id="enemy-armor-val"></p>
+    </li>
+    <!--<li>
+        <p class="character-stat">Spell Penetration</p>
+        <p class="character-stat-val" id="character-spell-pen-val"></p>
+    </li>-->
+</ul>

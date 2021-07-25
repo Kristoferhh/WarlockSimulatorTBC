@@ -1,72 +1,8 @@
-﻿<p id="character-race"><span id="race"></span> Warlock</p>
-<p id="character-level">Level 70</p>
+﻿@using Shared.Classes.UI
 
-<ul class="character-stats">
-    <li>
-        <p class="character-stat">Health</p>
-        <p class="character-stat-val" id="character-health-val"></p>
-    </li>
-    <li>
-        <p class="character-stat">Mana</p>
-        <p class="character-stat-val" id="character-mana-val"></p>
-    </li>
-    <li>
-        <p class="character-stat">Stamina</p>
-        <p class="character-stat-val" id="character-stamina-val"></p>
-    </li>
-    <li>
-        <p class="character-stat">Intellect</p>
-        <p class="character-stat-val" id="character-intellect-val"></p>
-    </li>
-    <li>
-        <p class="character-stat">Spirit</p>
-        <p class="character-stat-val" id="character-spirit-val"></p>
-    </li>
-    <li>
-        <p class="character-stat">Spell Power</p>
-        <p class="character-stat-val" id="character-spell-power-val"></p>
-    </li>
-    <li>
-        <p class="character-stat">Shadow Power</p>
-        <p class="character-stat-val" id="character-shadow-power-val"></p>
-    </li>
-    <li>
-        <p class="character-stat">Fire Power</p>
-        <p class="character-stat-val" id="character-fire-power-val"></p>
-    </li>
-    <li>
-        <p class="character-stat">Crit Rating</p>
-        <p class="character-stat-val" id="character-crit-val"></p>
-    </li>
-    <li>
-        <p class="character-stat">Hit Rating</p>
-        <p class="character-stat-val" id="character-hit-val"></p>
-    </li>
-    <li>
-        <p class="character-stat">Haste Rating</p>
-        <p class="character-stat-val" id="character-haste-val"></p>
-    </li>
-    <li>
-        <p class="character-stat">Shadow Dmg %</p>
-        <p class="character-stat-val" id="character-shadow-damage-modifier-val"></p>
-    </li>
-    <li>
-        <p class="character-stat">Fire Dmg %</p>
-        <p class="character-stat-val" id="character-fire-damage-modifier-val"></p>
-    </li>
-    <li>
-        <p class="character-stat">MP5</p>
-        <p class="character-stat-val" id="character-mp5-val"></p>
-    </li>
-    <li>
-        <p class="character-stat">Enemy Armor</p>
-        <p class="character-stat-val" id="enemy-armor-val"></p>
-    </li>
-    <!--<li>
-        <p class="character-stat">Spell Penetration</p>
-        <p class="character-stat-val" id="character-spell-pen-val"></p>
-    </li>-->
-</ul>
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<SidebarCharacterStats/>
 
 <ul id="sidebar-sets">
     <li><h3>Set Bonuses</h3></li>
@@ -75,8 +11,8 @@
 
 <div id="sidebar-simulation-selection">
     <div id="sim-result-dps-div">
-        <p><span id="avg-dps"></span><span> DPS</span></p>
-        <p>Min: <span id="min-dps"></span> Max: <span id="max-dps"></span></p>
+        <p><span id="avg-dps">@avgDps</span><span> DPS</span></p>
+        <p>Min: <span id="min-dps">@minDps</span> Max: <span id="max-dps">@maxDps</span></p>
     </div>
     <div class='btn' id='sim-dps'>Simulate</div>
     <div class='btn' id='sim-all-items'>Simulate All Items</div>
@@ -86,3 +22,26 @@
     <p id="guybrush-note">This sim was heavily inspired by <a target="_blank" href='https://guybrushgit.github.io/WarriorSim/'>Guybrush's 1.13 Warrior Simulator</a></p>
     <p id="paypal-note"><a href="https://www.paypal.com/paypalme/kristoferhh" target="_blank">Support me via PayPal</a></p>
 </div>
+
+@code {
+    private string avgDps = null;
+    private string minDps = null;
+    private string maxDps = null;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (await localStorage.ContainKeyAsync("avgDps"))
+        {
+            avgDps = await localStorage.GetItemAsync<string>("avgDps");
+        }
+        if (await localStorage.ContainKeyAsync("minDps"))
+        {
+            minDps = await localStorage.GetItemAsync<string>("minDps");
+        }
+        if (await localStorage.ContainKeyAsync("maxDps"))
+        {
+            maxDps = await localStorage.GetItemAsync<string>("maxDps");
+        }
+    }
+}
