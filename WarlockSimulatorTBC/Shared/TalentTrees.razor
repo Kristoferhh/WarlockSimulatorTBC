@@ -1,4 +1,7 @@
 ﻿@using Shared.Classes.UI
+@using System.Text.Json
+
+@inject Blazored.LocalStorage.ILocalStorageService localStorage 
 
 <div id="talents-container">
     <div id="preset-talent-buttons">
@@ -12,26 +15,35 @@
     <section id="talents-section">
         @foreach (var talentTree in TalentTree.trees)
         {
+            int pointsInCurrentTree = 0;
             <div class="talent-tree-div">
                 <table id="talent-table-@talentTree.Key" class="talent-tree-table" background="img/talent_tree_background_@(talentTree.Key).jpg">
                     <tbody>
                         @foreach (var talentRow in talentTree.Value)
-				        {
+                        {
                             int column = 0;
                             <tr>
                                 @foreach (var talent in talentRow.Value)
-					            {
+                                {
+                                    int pointAmount = 0;
+                                    // Check if the CurrentTalents dictionary has any points for this talent, otherwise the player doesn't have any points in the talent
+                                    if (TalentTree.CurrentTalents.ContainsKey(talent.Key))
+						            {
+                                        pointAmount = TalentTree.CurrentTalents[talent.Key];
+                                        pointsInCurrentTree += pointAmount;
+						            }
+                                    // Create empty table cells in case there's empty spaces between the talents
                                     column++;
                                     while (talent.Value.column > column)
-						            {
+                                    {
                                         <td></td>
                                         column++;
                                     }
                                     <td>
-                                        <div id="@talent.Key" class="talent-icon" data-points="@talent.Value.pointsTaken" @onmouseup="@((mouseArgs) => TalentClickHandler(mouseArgs, talent.Key))" oncontextmenu="return false;" @onclick:preventDefault="true">
+                                        <div id="@talent.Key" class="talent-icon" data-points="@pointAmount" @onmouseup="@((mouseArgs) => TalentClickHandler(mouseArgs, talent.Key))" oncontextmenu="return false;" @onclick:preventDefault="true">
                                             <a href="https://tbc.wowhead.com/spell=@talent.Value.rankIds[0]">
                                                 <img src="img/@talent.Value.iconName" />
-                                                <span id="@talent.Key-point-amount" class="talent-point-amount" data-points="@talent.Value.pointsTaken" data-max-points="@(talent.Value.pointsTaken == talent.Value.rankIds.Length ? "true" : "false")">@talent.Value.pointsTaken</span>
+                                                <span id="@talent.Key-point-amount" class="talent-point-amount" data-points="@pointAmount" data-max-points="@(pointAmount == talent.Value.rankIds.Length ? "true" : "false")">@pointAmount</span>
                                             </a>
                                         </div>
                                     </td>
@@ -40,12 +52,37 @@
 				        }
                     </tbody>
                 </table>
+                <div class="talent-tree-name">
+                    <h3 style="display: inline-block;">@(talentTree.Key.Substring(0, 1).ToUpper() + talentTree.Key.Substring(1, talentTree.Key.Length - 1)) (@(pointsInCurrentTree))</h3>
+                    <span class="clear-talent-tree" @onclick="@(() => ClearTalentTree(talentTree.Key))">❌</span>
+                </div>
             </div>
 		}
     </section>
 </div>
 
 @code {
+    protected override async Task OnInitializedAsync()
+    {
+        if (await localStorage.ContainKeyAsync("talents"))
+        {
+            var talents = await localStorage.GetItemAsync<string>("talents");
+            TalentTree.CurrentTalents = JsonSerializer.Deserialize<Dictionary<string, int>>(talents);
+        }
+    }
+
+    private void ClearTalentTree(string talentTreeName)
+    {
+        foreach (var talentTreeRow in TalentTree.trees[talentTreeName])
+        {
+            foreach (var talent in talentTreeRow.Value)
+            {
+                TalentTree.CurrentTalents.Remove(talent.Key);
+            }
+        }
+        SaveTalents();
+    }
+
     private void TalentClickHandler(MouseEventArgs mouseArgs, string talentName)
     {
         if (mouseArgs.Button != 0 && mouseArgs.Button != 2)
@@ -62,45 +99,58 @@
                 {
                     if (talent.Key == talentName)
                     {
-                        if (mouseArgs.Button == 0 && talent.Value.pointsTaken < talent.Value.rankIds.Length)
-						{
-                            talent.Value.pointsTaken++;
-						}
-                        else if (mouseArgs.Button == 2 && talent.Value.pointsTaken > 0)
-						{
-                            talent.Value.pointsTaken--;
-						}
+                        if (mouseArgs.Button == 0)
+                        {
+                            if (!TalentTree.CurrentTalents.ContainsKey(talent.Key))
+                            {
+                                TalentTree.CurrentTalents[talent.Key] = 1;
+                            }
+                            else if (TalentTree.CurrentTalents[talent.Key] < talent.Value.rankIds.Length)
+                            {
+                                TalentTree.CurrentTalents[talent.Key]++;
+                            }
+                        }
+                        else if (mouseArgs.Button == 2 && TalentTree.CurrentTalents.ContainsKey(talent.Key) && TalentTree.CurrentTalents[talent.Key] > 0)
+                        {
+                            TalentTree.CurrentTalents[talent.Key]--;
+                        }
                     }
                 }
             }
         }
+        SaveTalents();
     }
 
     // todo: optimize this - low priority but it's so inefficient that it hurts to even look at it.
     private void PresetTalentClickHandler(string presetTalentName)
-	{
+    {
         foreach (var talentTree in TalentTree.trees)
-		{
+        {
             foreach (var talentTreeRow in talentTree.Value)
-			{
+            {
                 foreach (var talent in talentTreeRow.Value)
-				{
-                    talent.Value.pointsTaken = 0;
+                {
                     foreach (var presetTalentTree in PresetTalents.presetTalents)
-					{
+                    {
                         if (presetTalentTree.Key == presetTalentName)
-						{
+                        {
                             foreach (var presetTalent in presetTalentTree.Value)
-							{
+                            {
                                 if (presetTalent.Key == talent.Key)
-								{
-                                    talent.Value.pointsTaken = presetTalent.Value;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+                                {
+                                    TalentTree.CurrentTalents[talent.Key] = presetTalent.Value;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        SaveTalents();
+    }
+
+    private async void SaveTalents()
+    {
+        await localStorage.SetItemAsync("talents", TalentTree.CurrentTalents);
+    }
 }
