@@ -21,16 +21,16 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 		public static string SHOULDERS = "shoulders";
 		public static string BACK = "back";
 		public static string CHEST = "chest";
-		public static string BRACERS = "bracers";
+		public static string BRACER = "bracer";
 		public static string GLOVES = "gloves";
 		public static string BELT = "belt";
 		public static string LEGS = "legs";
 		public static string BOOTS = "boots";
 		public static string RING = "ring";
 		public static string TRINKET = "trinket";
-		public static string MAINHAND = "mainHand";
-		public static string OFFHAND = "offHand";
-		public static string TWOHAND = "twoHand";
+		public static string MAINHAND = "mainhand";
+		public static string OFFHAND = "offhand";
+		public static string TWOHAND = "twohand";
 		public static string WAND = "wand";
 	}
 
@@ -83,7 +83,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 			{ ItemSlots.SHOULDERS, null },
 			{ ItemSlots.BACK, null },
 			{ ItemSlots.CHEST, null },
-			{ ItemSlots.BRACERS, null },
+			{ ItemSlots.BRACER, null },
 			{ ItemSlots.GLOVES, null },
 			{ ItemSlots.BELT, null },
 			{ ItemSlots.LEGS, null },
@@ -233,7 +233,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 				}
 			},
 			{
-				ItemSlots.BRACERS, new ItemSlot
+				ItemSlots.BRACER, new ItemSlot
 				{
 					items = new Dictionary<int, Item>
 					{

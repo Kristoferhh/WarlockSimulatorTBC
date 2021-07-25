@@ -1,5 +1,7 @@
 ﻿@using Shared.Classes.UI
 
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
 <ul id="item-slot-selection-list">
     <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.MAINHAND))">Main Hand</li>
     <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.OFFHAND))">Off Hand</li>
@@ -9,7 +11,7 @@
     <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.SHOULDERS))">Shoulders</li>
     <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BACK))">Back</li>
     <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.CHEST))">Chest</li>
-    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BRACERS))">Bracer</li>
+    <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BRACER))">Bracer</li>
     <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.GLOVES))">Gloves</li>
     <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.BELT))">Belt</li>
     <li @onclick="@(() => ItemSlotClickHandler(ItemSlots.LEGS))">Legs</li>
@@ -161,13 +163,30 @@
 </table>
 
 @code {
+    protected override async Task OnInitializedAsync()
+    {
+        if (await localStorage.ContainKeyAsync("selectedItems"))
+        {
+            Items.SelectedItems = await localStorage.GetItemAsync<Dictionary<string, int?>>("selectedItems");
+
+            // Pre-Blazor localStorage fix
+            foreach (string itemSlot in Items.itemSlots.Keys)
+			{
+                if (!Items.SelectedItems.ContainsKey(itemSlot))
+				{
+                    Items.SelectedItems[itemSlot] = null;
+				}
+			}
+        }
+    }
+
     private void ItemSlotClickHandler(string itemSlot, string itemSubSlot = "")
     {
         Items.SelectedItemSlot = itemSlot;
         Items.SelectedItemSubSlot = itemSubSlot;
     }
 
-    private void ItemClickHandler(int itemId)
+    private async void ItemClickHandler(int itemId)
     {
         // If clicking a mainhand/offhand, unequip the twohand
         if (Items.SelectedItemSlot == ItemSlots.MAINHAND || Items.SelectedItemSlot == ItemSlots.OFFHAND)
@@ -190,5 +209,7 @@
         {
             Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot] = itemId;
         }
+
+        await localStorage.SetItemAsync("selectedItems", Items.SelectedItems);
     }
 }
