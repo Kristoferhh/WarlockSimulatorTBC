@@ -1,5 +1,8 @@
 ﻿@using Shared.Classes.UI
 @using Pages
+
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
 @page "/"
 
 <p id="pet-wip-note">This sim is still a work in progress (especially pets!). Please report bugs to the warlock Discord or PM me at Kristofer#8003</p>
@@ -134,15 +137,55 @@
         <fieldset id="source-filters">
             <legend>Sources</legend>
             <ul>
-                <li>Classic</li>
-                <li>P1</li>
-                <li>P2</li>
-                <li>P3</li>
-                <li>P4</li>
-                <li>P5</li>
+                <li @onclick="(() => PhaseClickHandler(0))" data-checked="@(Items.SelectedPhases.Contains(0) ? "true" : "false")">Classic</li>
+                <li @onclick="(() => PhaseClickHandler(1))" data-checked="@(Items.SelectedPhases.Contains(1) ? "true" : "false")">P1</li>
+                <li @onclick="(() => PhaseClickHandler(2))" data-checked="@(Items.SelectedPhases.Contains(2) ? "true" : "false")">P2</li>
+                <li @onclick="(() => PhaseClickHandler(3))" data-checked="@(Items.SelectedPhases.Contains(3) ? "true" : "false")">P3</li>
+                <li @onclick="(() => PhaseClickHandler(4))" data-checked="@(Items.SelectedPhases.Contains(4) ? "true" : "false")">P4</li>
+                <li @onclick="(() => PhaseClickHandler(5))" data-checked="@(Items.SelectedPhases.Contains(5) ? "true" : "false")">P5</li>
             </ul>
         </fieldset>
     </div>
 
     <ItemAndEnchantTables />
 </div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        if (await localStorage.ContainKeyAsync("sources"))
+        {
+            try
+            {
+                Items.SelectedPhases = await localStorage.GetItemAsync<List<int>>("sources");
+            }
+            catch
+            {
+                // Pre-Blazor fix
+                var sources = await localStorage.GetItemAsync<Dictionary<string, Dictionary<string, bool>>>("sources");
+                foreach (var phase in sources["phase"])
+                {
+                    if (phase.Value && !Items.SelectedPhases.Contains(Int32.Parse(phase.Key)))
+                    {
+                        Items.SelectedPhases.Add(Int32.Parse(phase.Key));
+                    }
+                }
+            }
+            Items.SelectedPhases.ForEach(i => Console.WriteLine(i));
+        }
+    }
+
+    private async void PhaseClickHandler(int phase)
+    {
+        if (Items.SelectedPhases.Contains(phase))
+        {
+            Items.SelectedPhases.Remove(phase);
+        }
+        else
+        {
+            Items.SelectedPhases.Add(phase);
+        }
+
+        await localStorage.SetItemAsync("sources", Items.SelectedPhases);
+    }
+}
