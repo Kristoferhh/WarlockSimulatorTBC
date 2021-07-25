@@ -1,4 +1,7 @@
 ﻿@using Shared.Classes.UI
+@using System.Text.Json
+
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <section id="rotation-section">
     <h3>Rotation</h3>
@@ -9,7 +12,7 @@
                 <h4>@rotationGroup.Value.heading</h4>
                 @foreach (var spell in rotationGroup.Value.spells)
 				{
-                    <li id="@rotationGroup.Key-@spell.Value.name" @onclick="@(() => SpellClickHandler(spell.Key))" @onclick:preventDefault="true" class="rotation-@rotationGroup.Key" data-type="@rotationGroup.Key" data-name="@spell.Value.name" data-checked="@(spell.Value.selected ? "true" : "false")">
+                    <li id="@rotationGroup.Key-@spell.Value.name" @onclick="@(() => SpellClickHandler(spell.Key))" @onclick:preventDefault="true" class="rotation-@rotationGroup.Key" data-type="@rotationGroup.Key" data-name="@spell.Value.name" data-checked="@(RotationGroups.SelectedSpells.Contains(spell.Key) ? "true" : "false")">
                         <a href="https://tbc.wowhead.com/spell=@spell.Value.id">
                             <img alt="@spell.Value.name" src="img/@spell.Value.iconName" />
                         </a>
@@ -21,32 +24,68 @@
 </section>
 
 @code {
-    //todo: optimize this
-    private void SpellClickHandler(string spellName)
-	{
-        foreach (var rotationGroup in RotationGroups.groups)
-		{
-            foreach (var spell in rotationGroup.Value.spells)
-			{
-                if (spell.Key == spellName)
-				{
-                    if (!spell.Value.selected && (spell.Value.curse || spell.Value.filler))
+    protected override async Task OnInitializedAsync()
+    {
+        if (await localStorage.ContainKeyAsync("rotation"))
+        {
+            var rotation = await localStorage.GetItemAsync<string>("rotation");
+            try
+            {
+                RotationGroups.SelectedSpells = JsonSerializer.Deserialize<List<string>>(rotation);
+            }
+            catch
+            {
+                // Backup for old localStorage from before Blazor
+                Dictionary<string, Dictionary<string, bool>> rotationDict = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(rotation);
+                foreach (var rotationGroup in rotationDict)
+                {
+                    foreach (var spell in rotationGroup.Value)
 					{
-                        foreach (var subRotationGroup in RotationGroups.groups)
+                        if (spell.Value)
 						{
-                            foreach (var subSpell in subRotationGroup.Value.spells)
-							{
-                                if (spell.Key != subSpell.Key && ((spell.Value.curse && subSpell.Value.curse) || (spell.Value.filler && subSpell.Value.filler)))
-								{
-                                    subSpell.Value.selected = false;
-								}
-							}
+                            RotationGroups.SelectedSpells.Add(spell.Key);
 						}
 					}
-                    spell.Value.selected = !spell.Value.selected;
+                }
+            }
+        }
+    }
+
+    //todo: optimize this
+    private async void SpellClickHandler(string spellName)
+    {
+        foreach (var rotationGroup in RotationGroups.groups)
+        {
+            foreach (var spell in rotationGroup.Value.spells)
+            {
+                if (spell.Key == spellName)
+                {
+                    // If clicking a curse or filler then de-select all other curses/fillers (whichever type was clicked)
+                    if (!RotationGroups.SelectedSpells.Contains(spell.Key) && (spell.Value.curse || spell.Value.filler))
+                    {
+                        foreach (var subRotationGroup in RotationGroups.groups)
+                        {
+                            foreach (var subSpell in subRotationGroup.Value.spells)
+                            {
+                                if (spell.Key != subSpell.Key && ((spell.Value.curse && subSpell.Value.curse) || (spell.Value.filler && subSpell.Value.filler)))
+                                {
+                                    RotationGroups.SelectedSpells.Remove(subSpell.Key);
+                                }
+                            }
+                        }
+                    }
+                    if (!RotationGroups.SelectedSpells.Contains(spell.Key))
+                    {
+                        RotationGroups.SelectedSpells.Add(spell.Key);
+                    }
+                    else
+                    {
+                        RotationGroups.SelectedSpells.Remove(spell.Key);
+                    }
+                    await localStorage.SetItemAsync("rotation", RotationGroups.SelectedSpells);
                     return;
-				}
-			}
-		}
-	}
+                }
+            }
+        }
+    }
 } 

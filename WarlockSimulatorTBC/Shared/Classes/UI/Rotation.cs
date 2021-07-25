@@ -18,11 +18,11 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 		public string iconName;
 		public bool curse = false;
 		public bool filler = false;
-		public bool selected = false;
 	}
 
 	public static class RotationGroups
 	{
+		public static List<string> SelectedSpells = new List<string>();
 		public static readonly Dictionary<string, RotationGroup> groups = new Dictionary<string, RotationGroup>
 		{
 			{

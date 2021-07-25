@@ -33,12 +33,12 @@
             catch
             {
                 // Backup for old localStorage from before Blazor
-                var aura = JsonSerializer.Deserialize<Dictionary<string, bool>>(auras);
-                foreach (var a in aura)
+                Dictionary<string, bool> aurasDict = JsonSerializer.Deserialize<Dictionary<string, bool>>(auras);
+                foreach (var aura in aurasDict)
                 {
-                    if (a.Value)
+                    if (aura.Value)
 					{
-                        AuraGroups.SelectedAuras.Add(a.Key);
+                        AuraGroups.SelectedAuras.Add(aura.Key);
 					}
                 }
             }
