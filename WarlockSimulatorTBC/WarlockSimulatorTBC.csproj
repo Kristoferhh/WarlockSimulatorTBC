@@ -9,6 +9,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.8" PrivateAssets="all" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+    <PackageReference Include="Tewr.BlazorWorker.BackgroundService" Version="3.0.0" />
+    <PackageReference Include="Tewr.BlazorWorker.Core" Version="3.0.0" />
   </ItemGroup>
 
 </Project>

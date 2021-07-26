@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace WarlockSimulatorTBC.Shared.Classes
 {
-	public class Settings
+	public class SimulationSettings
 	{
-		public string shattrathFaction { get; set; }
-		public bool exaltedWithShattrathFaction { get; set; }
-
+		public int iterations;
+		public int minTime;
+		public int maxTime;
 	}
 }

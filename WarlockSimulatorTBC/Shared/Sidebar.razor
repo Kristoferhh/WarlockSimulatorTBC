@@ -1,6 +1,9 @@
 ﻿@using Shared.Classes.UI
+@using BlazorWorker.BackgroundServiceFactory;
+@using Shared.Classes;
 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject BlazorWorker.Core.IWorkerFactory workerFactory;
 
 <SidebarCharacterStats @ref="characterStats" />
 
@@ -14,7 +17,7 @@
         <p><span id="avg-dps">@avgDps</span><span> DPS</span></p>
         <p>Min: <span id="min-dps">@minDps</span> Max: <span id="max-dps">@maxDps</span></p>
     </div>
-    <div class='btn' id='sim-dps'>Simulate</div>
+    <div class='btn' @onclick="SimulateDps">Simulate</div>
     <div class='btn' id='sim-all-items'>Simulate All Items</div>
     <div class='btn' id='sim-stat-weights'>Stat Weights</div>
     <div class='btn' id='show-combat-log'>Show Combat Log</div>
@@ -46,6 +49,14 @@
             maxDps = await localStorage.GetItemAsync<string>("maxDps");
         }
     }
+
+    private void SimulateDps()
+	{
+        Console.WriteLine("Starting sim");
+        Player player = new Player(Player.GetSettings());
+        Simulation simulation = new Simulation(player, Simulation.GetSettings());
+        simulation.Start();
+	}
 
     public void RefreshCharacterStats()
 	{

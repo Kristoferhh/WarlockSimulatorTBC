@@ -21,7 +21,8 @@ namespace WarlockSimulatorTBC.Shared.Classes
 	public class CharacterStats
 	{
 		public double health = 0;
-		public double mana = 0;
+		public double maxMana = 0;
+		public double currentMana = 0;
 		public double stamina = 0;
 		public double intellect = 0;
 		public double spirit = 0;
