@@ -72,31 +72,47 @@ function simDPS (items) {
           $('.btn').css('background', '')
 
           if (itemAmount === 1) {
-            // Setup the damage breakdown table (showing avg damage, avg cast etc. for each spell)
-            $('.spell-damage-information').remove()
-            for (const spell in simulationEnd.damageBreakdown) {
-              const s = simulationEnd.damageBreakdown[spell]
-              const percentDamage = (~~((s.damage / simulationEnd.totalDamage) * 10000) / 100).toFixed(2)
-              if (s.damage > 0 || s.casts > 0) $('#damage-breakdown-table tbody').append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ('(' + ~~(s.dotDamage / s.casts) + ')') : '') + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.dodges / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.glancingBlows / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (Math.round((s.damage / simulationEnd.totalDuration) * 100) / 100 || 0) + '</td></tr>').trigger('update')
-            }
-            // Setup the aura breakdown table
-            for (const aura in simulationEnd.auraBreakdown) {
-              const a = simulationEnd.auraBreakdown[aura]
-              const percentUptime = (~~((a.uptime / simulationEnd.totalDuration) * 10000) / 100).toFixed(2)
-              if (a.count > 0) {
-                $('#aura-breakdown-table tbody').append("<tr class='spell-damage-information'><td>" + a.name + '</td><td>' + Math.ceil(a.count / simulationEnd.iterations) + "</td><td><meter value='" + percentUptime + "' min='0' max='100'></meter> " + percentUptime + '%</td></tr>')
-              }
-            }
-            // Setup the mana gain breakdown table
-            for (const element in simulationEnd.manaGainBreakdown) {
-              const e = simulationEnd.manaGainBreakdown[element]
-              const percentOfGain = (~~((e.manaGain / simulationEnd.totalManaRegenerated) * 10000) / 100).toFixed(2)
-              if (e.casts > 0) {
-                $('#mana-gain-breakdown-table tbody').append("<tr class='spell-damage-information'><td>" + e.name + "</td><td><meter value='" + percentOfGain + "' min='0' max='100'></meter> " + percentOfGain + '</td><td>' + Math.ceil(e.casts / simulationEnd.iterations) + '</td><td>' + ~~(e.manaGain / e.casts) + '</td<</tr>')
-              }
-            }
             if ($('#automatically-open-sim-details').children('select').val() === 'yes') {
+              // Setup the damage breakdown table (showing avg damage, avg cast etc. for each spell)
+              $('.spell-damage-information').remove()
+              for (const spell in simulationEnd.damageBreakdown) {
+                const s = simulationEnd.damageBreakdown[spell]
+                const percentDamage = (~~((s.damage / simulationEnd.totalDamage) * 10000) / 100).toFixed(2)
+                if (s.damage > 0 || s.casts > 0) {
+                  var tableRow = "<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ('(' + ~~(s.dotDamage / s.casts) + ')') : '') + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td>"
+                  // Only add the dodge and glancing cells if the player has a pet and it's not an imp
+                  if (simulationEnd.damageBreakdown.melee) {
+                    tableRow += "<td class='number'>" + (~~(((s.dodges / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.glancingBlows / s.casts) * 100) * 100) / 100).toFixed(2) + "</td>"
+                  }
+                  tableRow += "<td class='number'>" + (Math.round((s.damage / simulationEnd.totalDuration) * 100) / 100 || 0) + '</td></tr>'
+                  $('#damage-breakdown-table tbody').append(tableRow).trigger('update')
+                }
+              }
+              // Setup the aura breakdown table
+              for (const aura in simulationEnd.auraBreakdown) {
+                const a = simulationEnd.auraBreakdown[aura]
+                const percentUptime = (~~((a.uptime / simulationEnd.totalDuration) * 10000) / 100).toFixed(2)
+                if (a.count > 0) {
+                  $('#aura-breakdown-table tbody').append("<tr class='spell-damage-information'><td>" + a.name + '</td><td>' + Math.ceil(a.count / simulationEnd.iterations) + "</td><td><meter value='" + percentUptime + "' min='0' max='100'></meter> " + percentUptime + '%</td></tr>')
+                }
+              }
+              // Setup the mana gain breakdown table
+              for (const element in simulationEnd.manaGainBreakdown) {
+                const e = simulationEnd.manaGainBreakdown[element]
+                const percentOfGain = (~~((e.manaGain / simulationEnd.totalManaRegenerated) * 10000) / 100).toFixed(2)
+                if (e.casts > 0) {
+                  $('#mana-gain-breakdown-table tbody').append("<tr class='spell-damage-information'><td>" + e.name + "</td><td><meter value='" + percentOfGain + "' min='0' max='100'></meter> " + percentOfGain + '</td><td>' + Math.ceil(e.casts / simulationEnd.iterations) + '</td><td>' + ~~(e.manaGain / e.casts) + '</td<</tr>')
+                }
+              }
               $('.breakdown-section').css('display', 'inline-block')
+              // Hide the Glancing and Dodge columns if not using a melee pet
+              if (simulationEnd.damageBreakdown.melee) {
+                $('#damage-breakdown-dodge').show()
+                $('#damage-breakdown-glancing').show()
+              } else {
+                $('#damage-breakdown-dodge').hide()
+                $('#damage-breakdown-glancing').hide()
+              }
             }
           }
         }
