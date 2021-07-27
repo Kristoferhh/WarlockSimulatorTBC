@@ -382,6 +382,12 @@ const _auras = {
         spellPower: 23,
         iconName: 'inv_valentineschocolate02',
         id: 22238
+      },
+      midsummerSausage: {
+        name: 'Midsummer Sausage',
+        spellPower: 23,
+        iconName: 'inv_misc_food_53',
+        id: 23326
       }
     }
   },
