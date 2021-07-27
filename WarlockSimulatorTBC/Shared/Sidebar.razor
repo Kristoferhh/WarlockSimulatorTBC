@@ -1,5 +1,6 @@
 ﻿@using Shared.Classes.UI
 @using BlazorWorker.BackgroundServiceFactory;
+@using BlazorWorker.Core;
 @using Shared.Classes;
 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
@@ -50,12 +51,22 @@
         }
     }
 
-    private void SimulateDps()
+    private async void SimulateDps()
 	{
         Console.WriteLine("Starting sim");
-        Player player = new Player(Player.GetSettings());
-        Simulation simulation = new Simulation(player, Simulation.GetSettings());
-        simulation.Start();
+        var playerSettings = Player.GetSettings();
+        var player = new Player(playerSettings);
+        var simSettings = Simulation.GetSettings();
+        Console.WriteLine("1");
+        var webWorker = await workerFactory.CreateAsync();
+        Console.WriteLine("2");
+        var service = await webWorker.CreateBackgroundServiceAsync<Simulation>();
+        Console.WriteLine("3");
+        //await service.RunAsync(s => s.Constructor(player, simSettings));
+        Console.WriteLine("4");
+        await service.RunAsync(s => s.Start());
+        Console.WriteLine("5");
+        //simulation.Start();
 	}
 
     public void RefreshCharacterStats()

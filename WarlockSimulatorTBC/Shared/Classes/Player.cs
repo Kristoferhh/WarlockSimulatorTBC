@@ -8,7 +8,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 {
 	public class Player : IEntity
 	{
-		public CharacterStats stats;
+		public CharacterStats stats = Stats.playerStats;
 		int level = 70;
 		double gcdValue = 1.5;
 		double minimumGcdValue = 1.0;
@@ -17,7 +17,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		public decimal castTimeRemaining = decimal.Zero;
 		public decimal gcdRemaining = decimal.Zero;
 		public decimal mp5Timer = Convert.ToDecimal(5);
-		string shattrathFaction = null;
+		string shattrathFaction = "aldor";
 		bool exaltedWithShattrathFaction = false;
 		List<string> combatLog = new List<string>();
 		public Dictionary<string, Spell> spells = new Dictionary<string, Spell>();
@@ -29,7 +29,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		// so Immolate would need to have ~1.49999s left of its duration for it to start casting.
 		// But with this delay, Immolate's cast time would be ~1.500001 which would allow it to reapply Immolate when it has 1.5 seconds left
 		// This should solve that problem if I'm thinking through this correctly.
-		decimal spellDelay = Convert.ToDecimal(0.0001);
+		public decimal spellDelay = Convert.ToDecimal(0.0001);
 
 		// Simulation variables
 		public int totalFightDuration = 0;

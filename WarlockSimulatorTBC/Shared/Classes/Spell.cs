@@ -154,7 +154,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 
 		public override double CalculateCastTime()
 		{
-			return 3 - TalentTree.CurrentTalents["bane"] / 10.0 + player.spellDelay;
+			return 3 - TalentTree.CurrentTalents["bane"] / 10.0 + (double)player.spellDelay;
 		}
 	}
 

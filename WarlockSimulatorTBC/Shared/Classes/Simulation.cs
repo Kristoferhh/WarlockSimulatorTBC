@@ -12,9 +12,9 @@ namespace WarlockSimulatorTBC.Shared
 		private Stopwatch _timer;
 		private Random rand = new Random();
 		public Player player;
-		public int iterations;
-		public int minTime;
-		public int maxTime;
+		public int iterations = 1000;
+		public int minTime = 150;
+		public int maxTime = 210;
 
 		public static SimulationSettings GetSettings()
 		{ 
@@ -26,12 +26,14 @@ namespace WarlockSimulatorTBC.Shared
 			};
 		}
 
-		public Simulation(Player player, SimulationSettings settings)
+		public void Constructor(Player player, SimulationSettings settings)
 		{
+			Console.WriteLine("Constructor started");
 			this.player = player;
 			iterations = settings.iterations;
 			minTime = settings.minTime;
 			maxTime = settings.maxTime;
+			Console.WriteLine("Constructor finished");
 		}
 
 		private decimal PassTime()
@@ -62,6 +64,7 @@ namespace WarlockSimulatorTBC.Shared
 
 		public void Start()
 		{
+			Console.WriteLine("Sim started");
 			double totalDamage = 0;
 			double minDps = 999999;
 			double maxDps = 0;
@@ -71,6 +74,7 @@ namespace WarlockSimulatorTBC.Shared
 
 			for (player.iteration = 1; player.iteration < iterations; player.iteration++)
 			{
+				Console.WriteLine(iterations);
 				player.Reset();
 				player.iterationDamage = 0;
 				player.currentFightTime = 0;
