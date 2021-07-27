@@ -17,6 +17,10 @@ const fakeItemIds = {
   drakeweaveRaimentOfTheInvoker: -14,
   flawlessWandOfShadowWrath: -15,
   flawlessWandOfFireWrath: -16,
+  archmageSlippersOfShadowWrath: -17,
+  archmageSlippersOfFireWrath: -18,
+  elementalistBootsOfShadowWrath: -19,
+  elementalistBootsOfFireWrath: -20
 }
 
 const items = {
@@ -3511,6 +3515,38 @@ const items = {
       displayId: 30680,
       id: fakeItemIds.glidersBootsOfTheInvoker,
       source: 'Karazhan',
+      phase: 1
+    },
+    elementalistBootsOfShadowWrath: {
+      name: 'Elementalist Boots of Shadow Wrath',
+      shadowPower: 60,
+      id: fakeItemIds.elementalistBootsOfShadowWrath,
+      displayId: 24686,
+      source: 'World Drop',
+      phase: 1
+    },
+    elementalistBootsOfFireWrath: {
+      name: 'Elementalist Boots of Fire Wrath',
+      firePower: 60,
+      id: fakeItemIds.elementalistBootsOfFireWrath,
+      displayId: 24686,
+      source: 'World Drop',
+      phase: 1
+    },
+    archmageSlippersOfShadowWrath: {
+      name: 'Archmage Slippers of Shadow Wrath',
+      shadowPower: 58,
+      id: fakeItemIds.archmageSlippersOfShadowWrath,
+      displayId: 24678,
+      source: 'World Drop',
+      phase: 1
+    },
+    archmageSlippersOfFireWrath: {
+      name: 'Archmage Slippers of Fire Wrath',
+      firePower: 58,
+      id: fakeItemIds.archmageSlippersOfFireWrath,
+      displayId: 24678,
+      source: 'World Drop',
       phase: 1
     },
     frozenShadoweaveBoots: {
