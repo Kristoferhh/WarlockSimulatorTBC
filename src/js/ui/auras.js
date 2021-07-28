@@ -18,7 +18,7 @@ $(document).on('click', '.aura', function () {
 })
   
 // Array of consumables whose clicks we want to track.
-const consumableTypesToTrack = ['.weapon-oil', '.battle-elixir', '.guardian-elixir', '.food-buff', '.potion', '.demonic-rune', '.alcohol']
+const consumableTypesToTrack = ['.drums', '.weapon-oil', '.battle-elixir', '.guardian-elixir', '.food-buff', '.potion', '.demonic-rune', '.alcohol']
 // When a consumable is clicked, uncheck all other types of that consumable since we can only have one at a time (e.g. disable all other weapon oils if a weapon oil is clicked).
 $(document).on('click', consumableTypesToTrack.join(','), function () {
   const clickedConsumableName = $(this).attr('name')

@@ -23,7 +23,7 @@ for (const auraType in _auras) {
   $('#buffs-and-debuffs-section').append("<h3 id='" + auraType + "-heading'>" + _auras[auraType].heading + "</h3><ul id='" + lowerAuraType + "-list'></ul>")
   for (const aura in _auras[auraType].auras) {
     const a = _auras[auraType].auras[aura]
-    $('#' + lowerAuraType + '-list').append("<li data-aura-type='" + auraType + "' data-checked='" + (auras[aura] || false) + "' name='" + aura + "' id='" + aura + "' class='" + (a.alcohol ? 'alcohol ' : '') + (a.stats ? 'stats ' : '') + (a.potion ? 'potion ' : '') + (a.battleElixir ? 'battle-elixir ' : '') + (a.guardianElixir ? 'guardian-elixir ' : '') + (a.weaponOil ? 'weapon-oil ' : '') + (a.foodBuff ? 'food-buff ' : '') + (a.demonicRune ? 'demonic-rune ' : '') + (a.petOnly ? 'petBuff ' : '') + (a.forPet ? 'petDebuff ' : '') + auraType + " aura'><a href='https://tbc.wowhead.com/" + _auras[auraType].type + '=' + a.id + "'><img alt='" + a.name + "' src='img/" + a.iconName + ".jpg'></a></li>")
+    $('#' + lowerAuraType + '-list').append("<li data-aura-type='" + auraType + "' data-checked='" + (auras[aura] || false) + "' name='" + aura + "' id='" + aura + "' class='" + (a.drums ? 'drums ' : '') + (a.alcohol ? 'alcohol ' : '') + (a.stats ? 'stats ' : '') + (a.potion ? 'potion ' : '') + (a.battleElixir ? 'battle-elixir ' : '') + (a.guardianElixir ? 'guardian-elixir ' : '') + (a.weaponOil ? 'weapon-oil ' : '') + (a.foodBuff ? 'food-buff ' : '') + (a.demonicRune ? 'demonic-rune ' : '') + (a.petOnly ? 'petBuff ' : '') + (a.forPet ? 'petDebuff ' : '') + auraType + " aura'><a href='https://tbc.wowhead.com/" + _auras[auraType].type + '=' + a.id + "'><img alt='" + a.name + "' src='img/" + a.iconName + ".jpg'></a></li>")
   }
 }
 

@@ -131,16 +131,19 @@ const _auras = {
       drumsOfBattle: {
         name: 'Drums of Battle',
         iconName: 'inv_misc_drum_02',
+        drums: true,
         id: 35476
       },
       drumsOfWar: {
         name: 'Drums of War',
         iconName: 'inv_misc_drum_03',
+        drums: true,
         id: 35475
       },
       drumsOfRestoration: {
         name: 'Drums of Restoration',
         iconName: 'inv_misc_drum_07',
+        drums: true,
         id: 35478
       },
       bloodlust: {
