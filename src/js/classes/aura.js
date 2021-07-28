@@ -36,10 +36,11 @@ class Aura {
       // Add stats from the aura if it has any
       for (const stat in this.stats) {
         if (this.player.stats.hasOwnProperty(stat)) {
-          this.player.combatLog(stat + ' + ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] + this.stats[stat]) + ')')
           if (stat.toLowerCase().includes('modifier')) {
+            this.player.combatLog(stat + ' * ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat] * 100) / 100 + ' -> ' + Math.round(this.player.stats[stat] * this.stats[stat] * 100) / 100 + ')')
             this.player.stats[stat] *= this.stats[stat]
           } else {
+            this.player.combatLog(stat + ' + ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] + this.stats[stat]) + ')')
             this.player.stats[stat] += this.stats[stat]
           }
           // Add stats to pet
@@ -76,12 +77,15 @@ class Aura {
       let recalculatePetStats = false
       for (const stat in this.stats) {
         if (this.player.stats.hasOwnProperty(stat)) {
-          if (!endOfIteration) {
-            this.player.combatLog(stat + ' - ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] - this.stats[stat]) + ')')
-          }
           if (stat.toLowerCase().includes('modifier')) {
+            if (!endOfIteration) {
+              this.player.combatLog(stat + ' / ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat] * 100) / 100 + ' -> ' + Math.round((this.player.stats[stat] / this.stats[stat]) * 100) / 100 + ')')
+            }
             this.player.stats[stat] /= this.stats[stat]
           } else {
+            if (!endOfIteration) {
+              this.player.combatLog(stat + ' - ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] - this.stats[stat]) + ')')
+            }
             this.player.stats[stat] -= this.stats[stat]
           }
           // Remove stats from pet

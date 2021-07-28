@@ -65,7 +65,7 @@ class Spell {
       this.casting = true
       this.player.castTimeRemaining = this.getCastTime()
       if (!this.isProc) {
-        combatLogMsg += 'Started casting ' + this.name + ' - Cast time: ' + (this.player.castTimeRemaining - this.player.spellDelay) + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 10000) / 10000 + '% haste at a base cast speed of ' + this.castTime + ').'
+        combatLogMsg += 'Started casting ' + this.name + ' - Cast time: ' + (this.player.castTimeRemaining - this.player.spellDelay) + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent + this.player.stats.hastePercent) * 10000) / 10000 + '% haste at a base cast speed of ' + this.castTime + ').'
       }
     } else {
       if (!this.isProc) {

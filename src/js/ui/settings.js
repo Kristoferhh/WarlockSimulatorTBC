@@ -171,6 +171,12 @@ function updateSimulationSettingsVisibility () {
     $('#warlockAtieshAmount').hide()
   }
 
+  if (auras.powerInfusion) {
+    $('#powerInfusionAmount').show()
+  } else {
+    $('#powerInfusionAmount').hide()
+  }
+
   if (auras.bloodlust) {
     $('#bloodlustAmount').show()
   } else {

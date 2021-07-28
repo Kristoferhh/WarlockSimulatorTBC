@@ -438,7 +438,6 @@ class Player {
     if (this.selectedAuras.superManaPotion) this.spells.superManaPotion = new SuperManaPotion(this)
     if (this.selectedAuras.demonicRune) this.spells.demonicRune = new DemonicRune(this)
     if (this.selectedAuras.flameCap) this.spells.flameCap = new FlameCap(this)
-    if (this.selectedAuras.powerInfusion) this.spells.powerInfusion = new PowerInfusion(this)
     if (this.simSettings.race == 'orc') this.spells.bloodFury = new BloodFury(this)
     if (this.selectedAuras.drumsOfBattle) this.spells.drumsOfBattle = new DrumsOfBattle(this)
     else if (this.selectedAuras.drumsOfWar) this.spells.drumsOfWar = new DrumsOfWar(this)
@@ -455,6 +454,12 @@ class Player {
     if (this.trinketIds.includes(28418)) this.spells.shiffarsNexusHorn = new ShiffarsNexusHorn(this)
     if (this.trinketIds.includes(30626)) this.spells.sextantOfUnstableCurrents = new SextantOfUnstableCurrents(this)
     if ([this.items.ring1, this.items.ring2].includes(29305)) this.spells.bandOfTheEternalSage = new BandOfTheEternalSage(this)
+    if (this.selectedAuras.powerInfusion) {
+      this.spells.powerInfusion = []
+      for (let i = 0; i < this.simSettings.powerInfusionAmount; i++) {
+        this.spells.powerInfusion.push(new PowerInfusion(this))
+      }
+    }
     if (this.selectedAuras.bloodlust) {
       this.spells.bloodlust = []
       for (let i = 0; i < this.simSettings.bloodlustAmount; i++) {
@@ -519,10 +524,18 @@ class Player {
   areAnyCooldownsReady () {
     if (this.spells.bloodlust && !this.auras.bloodlust.active) {
       for (let i = 0; i < this.spells.bloodlust.length; i++) {
-        if (this.spells.bloodlust[i].ready()) return true
+        if (this.spells.bloodlust[i].ready()) {
+          return true
+        }
       }
     }
-    if (this.auras.powerInfusion && this.auras.powerInfusion.ready()) return true
+    if (this.auras.powerInfusion && !this.auras.powerInfusion.active) {
+      for (let i = 0; i < this.spells.powerInfusion.length; i++) {
+        if (this.spells.powerInfusion[i].ready()) {
+          return true
+        }
+      }
+    }
     if (this.spells.destructionPotion && this.spells.destructionPotion.ready()) return true
     for (let i = 0; i < this.trinkets.length; i++) {
       if (this.trinkets[i].ready()) return true
@@ -541,8 +554,13 @@ class Player {
         }
       }
     }
-    if (this.spells.powerInfusion && this.spells.powerInfusion.ready()) {
-      this.cast('powerInfusion')
+    if (this.spells.powerInfusion && !this.auras.powerInfusion.active) {
+      for (let i = 0; i < this.spells.powerInfusion.length; i++) {
+        if (this.spells.powerInfusion[i].ready()) {
+          this.spells.powerInfusion[i].startCast()
+          break
+        }
+      }
     }
     if (this.spells.destructionPotion && this.spells.destructionPotion.ready()) {
       this.cast('destructionPotion')
