@@ -159,6 +159,12 @@ function updateSimulationSettingsVisibility () {
     $('#mageAtieshAmount').hide()
   }
 
+  if (auras.ferociousInspiration) {
+    $('#ferociousInspirationAmount').show()
+  } else {
+    $('#ferociousInspirationAmount').hide()
+  }
+
   if (auras.powerOfTheGuardianWarlock) {
     $('#warlockAtieshAmount').show()
   } else {

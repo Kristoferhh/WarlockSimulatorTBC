@@ -181,6 +181,7 @@ class Pet {
       this.stats.buffs.strength += 20
       this.stats.spirit += 20
     }
+    if (this.playerAuras.ferociousInspiration) this.stats.damageModifier *= Math.pow(1.03, this.player.simSettings.ferociousInspirationAmount)
     if (this.player.simSettings.race == 'orc') this.stats.damageModifier *= 1.05
     
     // Hidden ap modifiers (source: Max on warlock discord)

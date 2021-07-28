@@ -141,6 +141,11 @@ function refreshCharacterStats () {
   if (talents.emberstorm > 0) {
     fireModifier *= 1 + (0.02 * talents.emberstorm)
   }
+  // Ferocious Inspiration
+  if (auras.ferociousInspiration) {
+    shadowModifier *= Math.pow(1.03, $('select[name="ferociousInspirationAmount"]').val())
+    fireModifier *= Math.pow(1.03, $('select[name="ferociousInspirationAmount"]').val())
+  }
 
   // Spell Power
   let spellPower = JSON.parse(JSON.stringify(characterStats.spellPower))

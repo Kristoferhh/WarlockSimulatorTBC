@@ -256,6 +256,11 @@ class Player {
         }
       }
     }
+    // Ferocious Inspiration
+    if (settings.auras.ferociousInspiration) {
+      this.stats.shadowModifier *= Math.pow(1.03, settings.simSettings.ferociousInspirationAmount)
+      this.stats.fireModifier *= Math.pow(1.03, settings.simSettings.ferociousInspirationAmount)
+    }
     // Add % dmg modifiers from Curse of the Elements + Malediction
     if (settings.auras.curseOfTheElements) {
       this.stats.shadowModifier *= 1.1 + (0.01 * (settings.simSettings.improvedCurseOfTheElements || 0))

@@ -147,6 +147,11 @@ const _auras = {
         name: 'Bloodlust',
         iconName: 'spell_nature_bloodlust',
         id: 2825
+      },
+      ferociousInspiration: {
+        name: 'Ferocious Inspiration',
+        iconName: 'ability_hunter_ferociousinspiration',
+        id: 34460
       }
     }
   },
