@@ -96,7 +96,7 @@ $(document).on('click', function (e) {
 
 // User clicks on the X on a section to hide it
 $(document).on('click', '.close, #export-close-button', function () {
-  $(this).closest('.close-button-target').css('display', 'none')
+  $(this).closest('.close-button-target').hide()
   return false
 })
 

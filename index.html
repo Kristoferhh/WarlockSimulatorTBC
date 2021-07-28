@@ -449,6 +449,30 @@
 		</section>
 	</div>
 
+	<!-- Currently Equipped Items -->
+	<div id="currently-equipped-items-container" class="close-button-target">
+		<div id="currently-equipped-items">
+			<div>
+				<a href='#' class='close' id='currently-equipped-items-close-button'></a>
+			</div>
+			<table>
+				<colgroup>
+					<col style="width: 13%">
+					<col style="width: 45%">
+					<col style="width: 10%">
+					<col style="width: 32%">
+				</colgroup>
+				<thead>
+					<th>Slot</th>
+					<th>Name</th>
+					<th></th>
+					<th>Enchant</th>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
 	<!-- COMBAT LOG -->
 	<div id="combat-log"></div>
 
@@ -519,6 +543,7 @@
 			<li data-slot="wand">Wand</li>
 		</ul>
 		<button id='gem-options-button'>Fill Item Sockets</button>
+		<button id='show-equipped-items'>Show Equipped Items</button>
 		<div id='gem-options-window'>
 			<div id='gem-options-window-replacement-options'>
 				<input type="radio" name='gem-replacement-option' value='emptySockets' checked />

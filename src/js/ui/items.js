@@ -171,6 +171,50 @@ $('#source-filters ul li').click(function () {
   loadItemsBySlot(localStorage.selectedItemSlot || 'mainhand', (localStorage.selectedItemSubSlot || ''))
 })
 
+// User clicks on the "Show Equipped Items" button
+$('#show-equipped-items').click(function () {
+  // Toggle the visibility of the table
+  $('#currently-equipped-items-container').toggle()
+
+  // Populate the table with the equipped items
+  if ($('#currently-equipped-items').is(':visible')) {
+    // Clear the table since it might have old data
+    $('#currently-equipped-items tbody tr').remove()
+
+    // Loop through the equipped items and insert a new row for each slot
+    for (const itemSlot in selectedItems) {
+      let itemSlotWithoutSubSlot = ['1','2'].includes(itemSlot.charAt(itemSlot.length - 1)) ? itemSlot.slice(0, itemSlot.length - 1) : itemSlot
+      if (selectedItems[itemSlot]) {
+        let itemId = selectedItems[itemSlot]
+        let item = null
+        // Find the item because I didn't use the item id as the key for some reason
+        for (const i in items[itemSlotWithoutSubSlot]) {
+          if (items[itemSlotWithoutSubSlot][i].id == itemId) {
+            item = items[itemSlotWithoutSubSlot][i]
+          }
+        }
+        enchantSlot = (['mainhand','twohand'].includes(itemSlot) ? 'weapon' : itemSlot)
+        let enchantId = selectedEnchants[enchantSlot]
+        let enchant = null
+        // Find the enchant
+        for (const e in enchants[enchantSlot]) {
+          if (enchants[enchantSlot][e].id == enchantId) {
+            enchant = enchants[enchantSlot][e]
+          }
+        }
+        // Capitalize the item slot
+        let slot = itemSlot.charAt(0).toUpperCase() + itemSlot.slice(1)
+        // E.g. 'Ring1' -> 'Ring 1'
+        if (['1','2'].includes(slot.charAt(slot.length - 1))) {
+          slot = slot.slice(0, slot.length - 1) + ' ' + slot.charAt(slot.length - 1)
+        }
+
+        $('#currently-equipped-items tbody').append('<tr><td>' + slot + '</td><td><a _target="" href=' + (item && item.id ? 'https://tbc.wowhead.com/item=' + item.id : '') + '>' + (item && item.name ? item.name : '') + '</a></td><td>' + getGemsInItemAsHTML(itemSlotWithoutSubSlot, item) + '</td><td><a href="' + (enchant && enchant.id ? 'https://tbc.wowhead.com/spell=' + enchant.id : '') + '">' + (enchant && enchant.name ? enchant.name : '') + '</a></td></tr>')
+      }
+    }
+  }
+})
+
 // Adds or removes an item's stats from the player
 function modifyStatsFromItem (itemObj, action) {
   // If the user has the item equipped and is not loading the stats from equipped items when loading the website
@@ -209,6 +253,35 @@ function modifyStatsFromItemSocketBonus (itemId, action) {
   }
 }
 
+function getGemsInItemAsHTML(itemSlot, item) {
+  let sockets = []
+  let counter = 0
+  for (const socket in socketInfo) {
+    if (item.hasOwnProperty(socket)) {
+      for (j = 0; j < item[socket]; j++) {
+        let gemIcon = socketInfo[socket].iconName
+        let gemHref = ''
+
+        if (selectedGems[itemSlot] && selectedGems[itemSlot][item.id]) {
+          for (const color in gems) {
+            if (selectedGems[itemSlot][item.id][counter]) {
+              const gemId = selectedGems[itemSlot][item.id][counter][1]
+              if (gems[color][gemId]) {
+                gemIcon = gems[color][gemId].iconName
+                gemHref = 'https://tbc.wowhead.com/item=' + gemId
+              }
+            }
+          }
+        }
+        sockets.push("<a href='" + gemHref + "'><img width='16' height='16' class='gem' data-color='" + socket + "' data-order='" + counter + "' src='img/" + gemIcon + ".jpg'></a>")
+        counter++
+      }
+    }
+  }
+
+  return sockets.join('')
+}
+
 // Loads items into the item table
 function loadItemsBySlot (itemSlot, subSlot) {
   // Set old item slot's selected value to false
@@ -245,33 +318,7 @@ function loadItemsBySlot (itemSlot, subSlot) {
       }
     }
 
-    // Add the item's gem sockets
-    const sockets = []
-    let counter = 0
-    for (const socket in socketInfo) {
-      if (i.hasOwnProperty(socket)) {
-        for (j = 0; j < i[socket]; j++) {
-          let gemIcon = socketInfo[socket].iconName
-          let gemHref = ''
-
-          if (selectedGems[itemSlot] && selectedGems[itemSlot][i.id]) {
-            for (const color in gems) {
-              if (selectedGems[itemSlot][i.id][counter]) {
-                const gemId = selectedGems[itemSlot][i.id][counter][1]
-                if (gems[color][gemId]) {
-                  gemIcon = gems[color][gemId].iconName
-                  gemHref = 'https://tbc.wowhead.com/item=' + gemId
-                }
-              }
-            }
-          }
-          sockets.push("<a href='" + gemHref + "'><img width='16' height='16' class='gem' data-color='" + socket + "' data-order='" + counter + "' src='img/" + gemIcon + ".jpg'></a>")
-          counter++
-        }
-      }
-    }
-
-    tableBody.append("<tr data-subslot='" + localStorage.selectedItemSubSlot + "' data-socket-bonus-active='false' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage.selectedItemSubSlot] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + (i.displayId || i.id) + "'>" + i.name + '</a></td><td><div>' + sockets.join('') + '</div></td><td>' + i.source + '</td><td>' + (i.stamina || '') + '</td><td>' + (i.intellect || '') + '</td><td>' + (i.spellPower || '') + '</td><td>' + (i.shadowPower || '') + '</td><td>' + (i.firePower || '') + '</td><td>' + (i.critRating || '') + '</td><td>' + (i.hitRating || '') + '</td><td>' + (i.hasteRating || '') + "</td><td class='item-dps'>" + (savedItemDps[itemSlot + subSlot][i.id] || '') + '</td></tr>').trigger('update')
+    tableBody.append("<tr data-subslot='" + localStorage.selectedItemSubSlot + "' data-socket-bonus-active='false' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage.selectedItemSubSlot] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + (i.displayId || i.id) + "'>" + i.name + '</a></td><td><div>' + getGemsInItemAsHTML(itemSlot, i) + '</div></td><td>' + i.source + '</td><td>' + (i.stamina || '') + '</td><td>' + (i.intellect || '') + '</td><td>' + (i.spellPower || '') + '</td><td>' + (i.shadowPower || '') + '</td><td>' + (i.firePower || '') + '</td><td>' + (i.critRating || '') + '</td><td>' + (i.hitRating || '') + '</td><td>' + (i.hasteRating || '') + "</td><td class='item-dps'>" + (savedItemDps[itemSlot + subSlot][i.id] || '') + '</td></tr>').trigger('update')
     if (itemMeetsSocketRequirements(i.id)) {
       $(".item-row[data-wowhead-id='" + i.id + "']").attr('data-socket-bonus-active', 'true')
     }
