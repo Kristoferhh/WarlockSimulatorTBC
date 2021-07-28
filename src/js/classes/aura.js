@@ -37,7 +37,11 @@ class Aura {
       for (const stat in this.stats) {
         if (this.player.stats.hasOwnProperty(stat)) {
           this.player.combatLog(stat + ' + ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] + this.stats[stat]) + ')')
-          this.player.stats[stat] += this.stats[stat]
+          if (stat.toLowerCase().includes('modifier')) {
+            this.player.stats[stat] *= this.stats[stat]
+          } else {
+            this.player.stats[stat] += this.stats[stat]
+          }
           // Add stats to pet
           if (this.player.pet) {
             if (this.player.pet.stats.hasOwnProperty(stat) && this.groupWide) {
@@ -75,10 +79,14 @@ class Aura {
           if (!endOfIteration) {
             this.player.combatLog(stat + ' - ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat]) + ' -> ' + Math.round(this.player.stats[stat] - this.stats[stat]) + ')')
           }
-          this.player.stats[stat] -= this.stats[stat]
+          if (stat.toLowerCase().includes('modifier')) {
+            this.player.stats[stat] /= this.stats[stat]
+          } else {
+            this.player.stats[stat] -= this.stats[stat]
+          }
           // Remove stats from pet
           if (this.player.pet) {
-            if (this.player.pet.stats.hasOwnProperty(stat)) {
+            if (this.player.pet.stats.hasOwnProperty(stat) && this.groupWide) {
               this.player.pet.stats[stat] -= this.stats[stat]
             }
             if (!endOfIteration && this.player.pet.stats.buffs.hasOwnProperty(stat)) {
@@ -209,51 +217,17 @@ class SpellstrikeProc extends Aura {
   }
 }
 
-class PowerInfusion extends Aura {
+class PowerInfusionAura extends Aura {
   constructor (player) {
     super(player)
     this.name = 'Power Infusion'
     this.durationTotal = 15
-    this.cooldown = 180
-    this.cooldownRemaining = 0
-    this.hasteModifier = 20
-    this.manaModifier = 0.8
     this.isImportant = true
+    this.stats = {
+      hastePercent: 20,
+      manaCostModifier: 0.8
+    }
     this.setup()
-  }
-
-  reset () {
-    this.cooldownRemaining = 0
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Haste % + ' + this.hasteModifier + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + '% -> ' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + this.hasteModifier + '%)')
-      this.player.stats.hasteRating += hasteRatingPerPercent * this.hasteModifier
-      this.player.stats.manaCostModifier *= this.manaModifier
-    }
-    this.cooldownRemaining = this.cooldown
-    super.apply()
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) {
-        this.player.combatLog('Haste % + ' + this.hasteModifier + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + '% -> ' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 - this.hasteModifier + '%)')
-      }
-      this.player.stats.hasteRating -= hasteRatingPerPercent * this.hasteModifier
-      this.player.stats.manaCostModifier /= this.manaModifier
-    }
-    super.fade(endOfIteration)
-  }
-
-  tick (t) {
-    this.cooldownRemaining = Math.max(0, this.cooldownRemaining - t)
-    super.tick(t)
-  }
-
-  ready () {
-    return this.cooldownRemaining <= 0
   }
 }
 
@@ -396,29 +370,11 @@ class BloodlustAura extends Aura {
     this.durationTotal = 40
     this.isImportant = true
     this.groupWide = true
+    this.hasteModifier = 30
+    this.stats = {
+      hastePercent: 30
+    }
     this.setup()
-  }
-
-  apply () {
-    if (!this.active) {
-      this.player.combatLog('Haste + 30% (' + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + '% -> ' + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) + 30) * 100) / 100 + '%)')
-      this.player.stats.hasteRating += 30 * hasteRatingPerPercent
-      if (this.player.pet) {
-        this.player.pet.stats.hastePercent += 30
-      }
-    }
-    super.apply()
-  }
-
-  fade (endOfIteration = false) {
-    if (this.active) {
-      if (!endOfIteration) this.player.combatLog('Haste - 30% (' + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) * 100) / 100) + '% -> ' + (Math.round((this.player.stats.hasteRating / hasteRatingPerPercent) - 30) * 100) / 100 + '%)')
-      this.player.stats.hasteRating -= 30 * hasteRatingPerPercent
-      if (this.player.pet) {
-        this.player.pet.stats.hastePercent -= 30
-      }
-      super.fade(endOfIteration)
-    }
   }
 }
 

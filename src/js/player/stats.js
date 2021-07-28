@@ -20,6 +20,7 @@ const characterStats = {
   critRating: 0,
   hitRating: 0,
   hasteRating: 0,
+  hastePercent: 0,
   critPercent: 0,
   mp5: 0,
   spellPen: 0,
@@ -33,6 +34,7 @@ const characterStats = {
   staminaModifier: 1,
   intellectModifier: 1,
   spiritModifier: 1,
+  manaCostModifier: 1,
   // Resistances
   shadowResist: 0,
   fireResist: 0,

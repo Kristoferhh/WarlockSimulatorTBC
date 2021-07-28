@@ -15,6 +15,7 @@ class Spell {
     this.travelTime = 0
     this.bonusCrit = 0
     this.cooldownRemaining = 0
+    this.isNonWarlockAbility = false
     this.casting = false
     this.isItem = false
     this.onGcd = true
@@ -43,7 +44,7 @@ class Spell {
   }
 
   canCast() {
-    return (!this.onGcd || this.player.gcdRemaining <= 0) && (this.isProc || this.player.castTimeRemaining <= 0) && this.cooldownRemaining <= 0
+    return (!this.onGcd || this.player.gcdRemaining <= 0) && (this.isProc || this.isNonWarlockAbility || this.player.castTimeRemaining <= 0) && this.cooldownRemaining <= 0
   }
 
   hasEnoughMana() {
@@ -51,7 +52,7 @@ class Spell {
   }
 
   getCastTime () {
-    return Math.round((this.castTime / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000 + this.player.spellDelay
+    return Math.round((this.castTime / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent + this.player.stats.hastePercent) / 100))) * 10000) / 10000 + this.player.spellDelay
   }
 
   startCast (predictedDamage = 0) {
@@ -109,7 +110,7 @@ class Spell {
     }
 
     // Check if the spell hits or misses
-    if (((!this.isItem && this.varName !== 'amplifyCurse') || this.doesDamage) && !this.player.isHit(this.type === 'affliction')) {
+    if (((!this.isItem && !this.isNonWarlockAbility && this.varName !== 'amplifyCurse') || this.doesDamage) && !this.player.isHit(this.type === 'affliction')) {
       this.player.combatLog(this.name + ' *resist*')
       this.player[this.breakdownTable + 'Breakdown'][this.varName].misses = this.player[this.breakdownTable + 'Breakdown'][this.varName].misses + 1 || 1
       return
@@ -136,7 +137,7 @@ class Spell {
     }
 
     // If it's an item such as mana potion, demonic rune, destruction potion, or if it's a proc with a hidden cooldown like Blade of Wizardry or Robe of the Elder Scribes then jump out of the method
-    if (this.isItem || this.isProc || this.varName == 'amplifyCurse') {
+    if (this.isItem || this.isProc || this.isNonWarlockAbility || this.varName == 'amplifyCurse') {
       return
     }
 
@@ -854,6 +855,7 @@ class DrumsOfBattle extends Spell {
     this.cooldown = 120
     this.isAura = true
     this.onGcd = false
+    this.isNonWarlockAbility = true
     this.isItem = true
     this.setup()
   }
@@ -870,6 +872,7 @@ class DrumsOfWar extends Spell {
     this.cooldown = 120
     this.isAura = true
     this.onGcd = false
+    this.isNonWarlockAbility = true
     this.isItem = true
     this.setup()
   }
@@ -886,6 +889,7 @@ class DrumsOfRestoration extends Spell {
     this.cooldown = 120
     this.isAura = true
     this.onGcd = false
+    this.isNonWarlockAbility = true
     this.isItem = true
     this.setup()
   }
@@ -1117,6 +1121,18 @@ class AmplifyCurse extends Spell {
     this.name = 'Amplify Curse'
     this.cooldown = 180
     this.isAura = true
+    this.onGcd = false
+    this.setup()
+  }
+}
+
+class PowerInfusion extends Spell {
+  constructor (player) {
+    super(player)
+    this.name = 'Power Infusion'
+    this.cooldown = 180
+    this.isAura = true
+    this.isNonWarlockAbility = true
     this.onGcd = false
     this.setup()
   }

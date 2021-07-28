@@ -22,7 +22,6 @@ class Player {
 
   constructor (settings, customItemSlot, customItemSubSlot, customItemId, customStat, customStatValue) {
     this.stats = JSON.parse(JSON.stringify(settings.stats)) // Create a deep-copy of the character's stats since we need to modify the values.
-    this.stats.manaCostModifier = 1
     this.items = JSON.parse(JSON.stringify(settings.items))
     this.enemy = settings.enemy
     this.rotation = settings.rotation
@@ -439,6 +438,7 @@ class Player {
     if (this.selectedAuras.superManaPotion) this.spells.superManaPotion = new SuperManaPotion(this)
     if (this.selectedAuras.demonicRune) this.spells.demonicRune = new DemonicRune(this)
     if (this.selectedAuras.flameCap) this.spells.flameCap = new FlameCap(this)
+    if (this.selectedAuras.powerInfusion) this.spells.powerInfusion = new PowerInfusion(this)
     if (this.simSettings.race == 'orc') this.spells.bloodFury = new BloodFury(this)
     if (this.selectedAuras.drumsOfBattle) this.spells.drumsOfBattle = new DrumsOfBattle(this)
     else if (this.selectedAuras.drumsOfWar) this.spells.drumsOfWar = new DrumsOfWar(this)
@@ -464,7 +464,7 @@ class Player {
 
     // Auras
     this.auras = {}
-    if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusion(this)
+    if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusionAura(this)
     if (this.simSettings.race == 'orc') this.auras.bloodFury = new BloodFuryAura(this)
     if (this.talents.improvedShadowBolt > 0) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this)
     if (this.spells.corruption) this.auras.corruption = new CorruptionDot(this)
@@ -541,8 +541,8 @@ class Player {
         }
       }
     }
-    if (this.auras.powerInfusion && this.auras.powerInfusion.ready()) {
-      this.auras.powerInfusion.apply()
+    if (this.spells.powerInfusion && this.spells.powerInfusion.ready()) {
+      this.cast('powerInfusion')
     }
     if (this.spells.destructionPotion && this.spells.destructionPotion.ready()) {
       this.cast('destructionPotion')
@@ -576,7 +576,7 @@ class Player {
   getGcdValue(spellVarName = '') {
     // As far as I know, Shadowfury doesn't trigger a global cooldown
     if (!this.spells.shadowfury || this.spells.shadowfury.varName !== spellVarName) {
-      return Math.max(this.minimumGcdValue, Math.round((this.gcdValue / (1 + ((this.stats.hasteRating / hasteRatingPerPercent) / 100))) * 10000) / 10000)
+      return Math.max(this.minimumGcdValue, Math.round((this.gcdValue / (1 + ((this.stats.hasteRating / hasteRatingPerPercent + this.stats.hastePercent) / 100))) * 10000) / 10000)
     }
     return 0
   }
