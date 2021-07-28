@@ -263,7 +263,6 @@ class Simulation {
     this.timeTotal = 0 // Used for benchmarking
 
     for (this.player.iteration = 1; this.player.iteration <= this.iterations; this.player.iteration++) {
-      console.log(this.player.iteration)
       // Reset/initialize values for spells that have a cooldown or a cast time
       if (this.player.spells.shadowBolt) this.player.spells.shadowBolt.reset()
       if (this.player.spells.incinerate) this.player.spells.incinerate.reset()
