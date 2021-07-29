@@ -183,6 +183,12 @@ function updateSimulationSettingsVisibility () {
     $('#bloodlustAmount').hide()
   }
 
+  if (auras.innervate) {
+    $('#innervateAmount').show()
+  } else {
+    $('#innervateAmount').hide()
+  }
+
   if (auras.totemOfWrath) {
     $('#totemOfWrathAmount').show()
   } else {
