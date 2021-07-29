@@ -84,6 +84,7 @@ class Spell {
 
   // Called when a spell finishes casting or immediately called if the spell has no cast time.
   cast () {
+    const currentMana = this.player.mana
     if (!this.isAura) {
       this.player[this.breakdownTable + 'Breakdown'][this.varName].casts = this.player[this.breakdownTable + 'Breakdown'][this.varName].casts + 1 || 1
     }
@@ -99,7 +100,7 @@ class Spell {
     this.cooldownRemaining = this.cooldown
     this.casting = false
     if (this.castTime > 0) {
-      this.player.combatLog('Finished casting ' + this.name)
+      this.player.combatLog('Finished casting ' + this.name + ' - Mana: ' + Math.round(currentMana) + ' -> ' + Math.round(this.player.mana) + ' - Mana Cost: ' + Math.round(this.manaCost) + ' - Mana Cost Modifier: ' + Math.round(this.player.stats.manaCostModifier * 100) + '%')
     }
 
     let isCrit = false  
