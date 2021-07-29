@@ -270,6 +270,9 @@ class Simulation {
         if (this.player.fiveSecondRuleTimer <= 0 || (this.player.auras.innervate && this.player.auras.innervate.active)) {
           // Formula from https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1572910
           let mp5FromSpirit = 5 * (0.001 + Math.sqrt(this.player.stats.intellect * this.player.stats.intellectModifier) * (this.player.stats.spirit * this.player.stats.spiritModifier) * 0.009327)
+          if (this.player.auras.innervate && this.player.auras.innervate.active) {
+            mp5FromSpirit *= 4
+          }
           this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + mp5FromSpirit)
         }
         const manaGained = this.player.mana - currentPlayerMana
