@@ -243,7 +243,7 @@ class ImpFirebolt extends PetSpell {
     this.name = 'Firebolt'
     this.castTime = 1.5 - (0.25 * pet.player.talents.improvedFirebolt)
     this.manaCost = 145
-    this.dmg = 119.5
+    this.dmg = 119.5 * (1 + 0.1 * pet.player.talents.improvedImp)
     this.coefficient = 2 / 3.5
     this.varName = 'firebolt'
     this.school = 'fire'
