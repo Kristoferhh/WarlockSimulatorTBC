@@ -44,7 +44,7 @@ class Spell {
   }
 
   canCast() {
-    return (!this.onGcd || this.player.gcdRemaining <= 0) && (this.isProc || this.isNonWarlockAbility || this.player.castTimeRemaining <= 0) && this.cooldownRemaining <= 0
+    return (!this.onGcd || this.isNonWarlockAbility || this.player.gcdRemaining <= 0) && (this.isProc || this.isNonWarlockAbility || this.player.castTimeRemaining <= 0) && this.cooldownRemaining <= 0
   }
 
   hasEnoughMana() {
@@ -73,7 +73,7 @@ class Spell {
       }
       this.cast()
     }
-    if (this.onGcd) {
+    if (this.onGcd && !this.isNonWarlockAbility) {
       combatLogMsg += ' - Global cooldown: ' + this.player.gcdRemaining
     }
     if (predictedDamage > 0) {
@@ -92,6 +92,9 @@ class Spell {
     // The setting is only enabled when it is equal to true, so lower the player's mana if it's equal to false or 'on'
     if (this.player.simSettings.infinitePlayerMana !== 'yes') {
       this.player.mana -= (this.manaCost * this.player.stats.manaCostModifier)
+    }
+    if (this.manaCost > 0) {
+      this.player.fiveSecondRuleTimer = 5
     }
     this.cooldownRemaining = this.cooldown
     this.casting = false
@@ -1133,7 +1136,17 @@ class PowerInfusion extends Spell {
     this.cooldown = 180
     this.isAura = true
     this.isNonWarlockAbility = true
-    this.onGcd = false
+    this.setup()
+  }
+}
+
+class Innervate extends Spell {
+  constructor (player) {
+    super(player)
+    this.name = 'Innervate'
+    this.cooldown = 360
+    this.isAura = true
+    this.isNonWarlockAbility = true
     this.setup()
   }
 }

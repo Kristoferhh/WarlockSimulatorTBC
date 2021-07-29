@@ -466,10 +466,17 @@ class Player {
         this.spells.bloodlust.push(new Bloodlust(this))
       }
     }
+    if (this.selectedAuras.innervate) {
+      this.spells.innervate = []
+      for (let i = 0; i < this.simSettings.innervateAmount; i++) {
+        this.spells.innervate.push(new Innervate(this))
+      }
+    }
 
     // Auras
     this.auras = {}
     if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusionAura(this)
+    if (this.selectedAuras.innervate) this.auras.innervate = new InnervateAura(this)
     if (this.simSettings.race == 'orc') this.auras.bloodFury = new BloodFuryAura(this)
     if (this.talents.improvedShadowBolt > 0) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this)
     if (this.spells.corruption) this.auras.corruption = new CorruptionDot(this)
@@ -514,6 +521,7 @@ class Player {
     this.gcdRemaining = 0
     this.mana = this.stats.maxMana
     this.mp5Timer = 5
+    this.fiveSecondRuleTimer = 5
     this.importantAuraCounter = 0
   }
 
@@ -532,6 +540,13 @@ class Player {
     if (this.auras.powerInfusion && !this.auras.powerInfusion.active) {
       for (let i = 0; i < this.spells.powerInfusion.length; i++) {
         if (this.spells.powerInfusion[i].ready()) {
+          return true
+        }
+      }
+    }
+    if (this.auras.innervate && !this.auras.innervate.active) {
+      for (let i = 0; i < this.spells.innervate.length; i++) {
+        if (this.spells.innervate[i].ready()) {
           return true
         }
       }
@@ -558,6 +573,14 @@ class Player {
       for (let i = 0; i < this.spells.powerInfusion.length; i++) {
         if (this.spells.powerInfusion[i].ready()) {
           this.spells.powerInfusion[i].startCast()
+          break
+        }
+      }
+    }
+    if (this.spells.innervate && !this.auras.innervate.active) {
+      for (let i = 0; i < this.spells.innervate.length; i++) {
+        if (this.spells.innervate[i].ready()) {
+          this.spells.innervate[i].startCast()
           break
         }
       }

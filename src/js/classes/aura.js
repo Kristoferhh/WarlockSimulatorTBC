@@ -60,7 +60,7 @@ class Aura {
       this.player.combatLog(this.name + ' applied')
       if (this.isImportant) {
         this.player.importantAuraCounter++
-        this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
+        //this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
       }
     }
     this.player.auraBreakdown[this.varName].count = this.player.auraBreakdown[this.varName].count + 1 || 1
@@ -109,7 +109,7 @@ class Aura {
       if (this.isImportant) {
         this.player.importantAuraCounter--
         if (!endOfIteration) {
-          this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
+          //this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
         }
       }
       const auraUptime = this.player.fightTime - this.player.auraBreakdown[this.varName].appliedAt
@@ -616,6 +616,15 @@ class WrathOfScenarius extends Aura {
     this.stats = {
       spellPower: 132
     }
+    this.setup()
+  }
+}
+
+class InnervateAura extends Aura {
+  constructor (player) {
+    super(player)
+    this.name = 'Innervate'
+    this.durationTotal = 20
     this.setup()
   }
 }

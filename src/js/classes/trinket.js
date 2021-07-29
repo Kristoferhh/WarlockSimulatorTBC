@@ -43,7 +43,7 @@ class Trinket {
           this.player.pet.calculateStatsFromPlayer()
         }
         this.player.importantAuraCounter++
-        this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
+        //this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
         this.active = true
         this.durationRemaining = this.duration
       }
@@ -73,7 +73,7 @@ class Trinket {
       this.player.importantAuraCounter--
       this.active = false
       if (!endOfIteration) {
-        this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
+        //this.player.combatLog(this.player.importantAuraCounter + ' important auras active')
       }
       // Log the aura uptime
       const auraUptime = this.player.fightTime - this.player.auraBreakdown[this.varName].appliedAt

@@ -155,6 +155,11 @@ const _auras = {
         name: 'Ferocious Inspiration',
         iconName: 'ability_hunter_ferociousinspiration',
         id: 34460
+      },
+      innervate: {
+        name: 'Innervate',
+        iconName: 'spell_nature_lightning',
+        id: 29166
       }
     }
   },

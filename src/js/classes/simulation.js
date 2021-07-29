@@ -79,6 +79,12 @@ class Simulation {
       }
       if (this.player.auras.bloodlust.active && this.player.auras.bloodlust.durationRemaining < time) time = this.player.auras.bloodlust.durationRemaining
     }
+    if (this.player.spells.innervate) {
+      for (let i = 0; i < this.player.spells.innervate.length; i++) {
+        if (this.player.spells.innervate[i].cooldownRemaining > 0 && this.player.spells.innervate[i].cooldownRemaining < time) time = this.player.spells.innervate[i].cooldownRemaining
+      }
+      if (this.player.auras.innervate.active && this.player.auras.innervate.durationRemaining < time) time = this.player.auras.innervate.durationRemaining
+    }
     if (this.player.spells.mysticalSkyfireDiamond) {
       if (this.player.spells.mysticalSkyfireDiamond.cooldownRemaining > 0 && this.player.spells.mysticalSkyfireDiamond.cooldownRemaining < time) time = this.player.spells.mysticalSkyfireDiamond.cooldownRemaining
       if (this.player.auras.mysticalSkyfireDiamond.active && this.player.spells.mysticalSkyfireDiamond.durationRemaining < time) time = this.player.auras.mysticalSkyfireDiamond.durationRemaining
@@ -194,6 +200,7 @@ class Simulation {
     if (this.player.auras.mysticalSkyfireDiamond && this.player.auras.mysticalSkyfireDiamond.active) this.player.auras.mysticalSkyfireDiamond.tick(time)
     if (this.player.auras.amplifyCurse && this.player.auras.amplifyCurse.active) this.player.auras.amplifyCurse.tick(time)
     if (this.player.auras.wrathOfCenarius && this.player.auras.wrathOfCenarius.active) this.player.auras.wrathOfCenarius.tick(time)
+    if (this.player.auras.innervate && this.player.auras.innervate.active) this.player.auras.innervate.tick(time)
 
     // Spells
     if (this.player.spells.shadowBolt && this.player.spells.shadowBolt.casting) this.player.spells.shadowBolt.tick(time)
@@ -238,6 +245,11 @@ class Simulation {
         if (this.player.spells.bloodlust[i].cooldownRemaining > 0) this.player.spells.bloodlust[i].tick(time)
       }
     }
+    if (this.player.spells.innervate) {
+      for (let i = 0; i < this.player.spells.innervate.length; i++) {
+        if (this.player.spells.innervate[i].cooldownRemaining > 0) this.player.spells.innervate[i].tick(time)
+      }
+    }
 
     // Trinkets
     if (this.player.trinkets[0]) this.player.trinkets[0].tick(time)
@@ -245,11 +257,21 @@ class Simulation {
 
     this.player.gcdRemaining = Math.max(0, this.player.gcdRemaining - time)
     this.player.mp5Timer = Math.max(0, this.player.mp5Timer - time)
+    this.player.fiveSecondRuleTimer = Math.max(0, this.player.fiveSecondRuleTimer - time)
     if (this.player.mp5Timer == 0) {
       this.player.mp5Timer = 5
-      if (this.player.stats.mp5 > 0) {
+      if (this.player.stats.mp5 > 0 || this.player.fiveSecondRuleTimer <= 0 || (this.player.auras.innervate && this.player.auras.innervate.active)) {
         const currentPlayerMana = this.player.mana
-        this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.player.stats.mp5)
+        // MP5
+        if (this.player.stats.mp5 > 0) {
+          this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + this.player.stats.mp5)
+        }
+        // Spirit mana regen
+        if (this.player.fiveSecondRuleTimer <= 0 || (this.player.auras.innervate && this.player.auras.innervate.active)) {
+          // Formula from https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1572910
+          let mp5FromSpirit = 5 * (0.001 + Math.sqrt(this.player.stats.intellect * this.player.stats.intellectModifier) * (this.player.stats.spirit * this.player.stats.spiritModifier) * 0.009327)
+          this.player.mana = Math.min(this.player.stats.maxMana, this.player.mana + mp5FromSpirit)
+        }
         const manaGained = this.player.mana - currentPlayerMana
         this.player.totalManaRegenerated += manaGained
         this.player.manaGainBreakdown.mp5.casts = this.player.manaGainBreakdown.mp5.casts + 1 || 1
@@ -312,6 +334,11 @@ class Simulation {
       if (this.player.spells.bloodlust) {
         for (let i = 0; i < this.player.spells.bloodlust.length; i++) {
           this.player.spells.bloodlust[i].reset()
+        }
+      }
+      if (this.player.spells.innervate) {
+        for (let i = 0; i < this.player.spells.innervate.length; i++) {
+          this.player.spells.innervate[i].reset()
         }
       }
       this.player.reset() // Resets mana, global cooldown etc.
@@ -575,6 +602,7 @@ class Simulation {
       if (this.player.auras.mysticalSkyfireDiamond && this.player.auras.mysticalSkyfireDiamond.active) this.player.auras.mysticalSkyfireDiamond.fade(true)
       if (this.player.auras.amplifyCurse && this.player.auras.amplifyCurse.active) this.player.auras.amplifyCurse.fade(true)
       if (this.player.auras.wrathOfCenarius && this.player.auras.wrathOfCenarius.active) this.player.auras.wrathOfCenarius.fade(true)
+      if (this.player.auras.innervate && this.player.auras.innervate.active) this.player.auras.innervate.fade(true)
       for (let i = 0; i < this.player.trinkets.length; i++) {
         if (this.player.trinkets[i]) {
           this.player.trinkets[i].fade(true)
