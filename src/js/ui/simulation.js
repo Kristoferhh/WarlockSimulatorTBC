@@ -31,7 +31,6 @@ function simDPS (items) {
   const multiSimInfo = []
   const simulations = []
   let simIndex = 0
-  console.log(items)
 
   if (items.length > 1) {
     $('.item-dps').text('')

@@ -110,7 +110,7 @@ $('#item-selection-table tbody').on('click', 'tr', function () {
 
 // User clicks on an item slot in the selection above the item table
 $('#item-slot-selection-list li').click(function () {
-  loadItemsBySlot($(this).attr('data-slot'), $(this).attr('data-subslot') || null)
+  loadItemsBySlot($(this).attr('data-slot'), $(this).attr('data-subslot'))
 })
 
 $('#show-combat-log').click(function () {
@@ -283,16 +283,14 @@ function getGemsInItemAsHTML(itemSlot, item) {
 }
 
 // Loads items into the item table
-function loadItemsBySlot (itemSlot, subSlot) {
+function loadItemsBySlot (itemSlot, subSlot = '') {
   // Set old item slot's selected value to false
   $("#item-slot-selection-list li[data-selected='true']").attr('data-selected', 'false')
   // Set the new item slot's seleected value to true
   let newItemSlotSelector = "#item-slot-selection-list li[data-slot='" + itemSlot + "']"
   // If the item has a subslot then add a subslot selector to the query
-  if (subSlot !== null) {
+  if (subSlot !== '') {
     newItemSlotSelector += "[data-subslot='" + subSlot + "']"
-  } else {
-    subSlot = ''
   }
   $(newItemSlotSelector).attr('data-selected', 'true')
   localStorage.selectedItemSlot = itemSlot
