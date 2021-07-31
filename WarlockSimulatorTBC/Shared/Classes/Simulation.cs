@@ -4,9 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using WarlockSimulatorTBC.Shared.Classes;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 
 namespace WarlockSimulatorTBC.Shared
 {
+	[KnownType("Simulation")]
+	[DataContract]
 	public class Simulation
 	{
 		private Stopwatch _timer;
@@ -26,13 +29,13 @@ namespace WarlockSimulatorTBC.Shared
 			};
 		}
 
-		public void Constructor(Player player, SimulationSettings settings)
+		public void Constructor(PlayerSettings playerSettings, SimulationSettings simulationSettings)
 		{
 			Console.WriteLine("Constructor started");
-			this.player = player;
-			iterations = settings.iterations;
-			minTime = settings.minTime;
-			maxTime = settings.maxTime;
+			player = new Player(playerSettings);
+			iterations = simulationSettings.iterations;
+			minTime = simulationSettings.minTime;
+			maxTime = simulationSettings.maxTime;
 			Console.WriteLine("Constructor finished");
 		}
 
@@ -68,13 +71,16 @@ namespace WarlockSimulatorTBC.Shared
 			double totalDamage = 0;
 			double minDps = 999999;
 			double maxDps = 0;
+			Console.WriteLine("Attempting to initialize player");
 			player.Initialize();
+			Console.WriteLine("Player initialized");
 			_timer = new Stopwatch();
 			_timer.Start();
+			Console.WriteLine("Started timer");
 
 			for (player.iteration = 1; player.iteration < iterations; player.iteration++)
 			{
-				Console.WriteLine(iterations);
+				Console.WriteLine("Iteration: " + iterations);
 				player.Reset();
 				player.iterationDamage = 0;
 				player.currentFightTime = 0;

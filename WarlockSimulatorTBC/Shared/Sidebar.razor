@@ -55,7 +55,6 @@
 	{
         Console.WriteLine("Starting sim");
         var playerSettings = Player.GetSettings();
-        var player = new Player(playerSettings);
         var simSettings = Simulation.GetSettings();
         Console.WriteLine("1");
         var webWorker = await workerFactory.CreateAsync();
@@ -64,6 +63,7 @@
         Console.WriteLine("3");
         //await service.RunAsync(s => s.Constructor(player, simSettings));
         Console.WriteLine("4");
+        await service.RunAsync(s => s.Constructor(playerSettings, simSettings));
         await service.RunAsync(s => s.Start());
         Console.WriteLine("5");
         //simulation.Start();

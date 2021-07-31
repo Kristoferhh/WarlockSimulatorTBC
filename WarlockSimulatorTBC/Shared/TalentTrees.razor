@@ -72,7 +72,9 @@
         if (await localStorage.ContainKeyAsync("talents"))
         {
             var talents = await localStorage.GetItemAsync<string>("talents");
+            Console.WriteLine("Loading talents. Current count: " + TalentTree.CurrentTalents.Count);
             TalentTree.CurrentTalents = JsonSerializer.Deserialize<Dictionary<string, int>>(talents);
+            Console.WriteLine("Loaded talents. Current count: " + TalentTree.CurrentTalents.Count);
             await RefreshSidebarStats.InvokeAsync();
         }
     }

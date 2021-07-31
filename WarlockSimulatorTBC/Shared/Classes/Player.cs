@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WarlockSimulatorTBC.Shared.Interfaces;
+using WarlockSimulatorTBC.Shared.Classes.UI;
+using System.Runtime.Serialization;
 
 namespace WarlockSimulatorTBC.Shared.Classes
 {
+	[KnownType("Player")]
+	[DataContract]
 	public class Player : IEntity
 	{
 		public CharacterStats stats = Stats.playerStats;
@@ -21,6 +25,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		bool exaltedWithShattrathFaction = false;
 		List<string> combatLog = new List<string>();
 		public Dictionary<string, Spell> spells = new Dictionary<string, Spell>();
+		public Dictionary<string, int> talents;
 		// The amount to increase spell cast times by.
 		// This will not have any actual effect on the dps result because of how small the value is, but it will make things a lot more realistic
 		// because cast times, dot ticks, and such will fall out of sync with each other (which is what happens when a real player is playing)
@@ -43,7 +48,8 @@ namespace WarlockSimulatorTBC.Shared.Classes
 			{
 				shattrathFaction = "aldor",
 				exaltedWithShattrathFaction = true,
-				stats = Stats.playerStats
+				stats = Stats.playerStats,
+				talents = TalentTree.CurrentTalents
 			};
 		}
 
@@ -52,10 +58,16 @@ namespace WarlockSimulatorTBC.Shared.Classes
 			shattrathFaction = settings.shattrathFaction;
 			exaltedWithShattrathFaction = settings.exaltedWithShattrathFaction;
 			stats = settings.stats;
+			talents = settings.talents;
 		}
 
 		public void Initialize()
 		{
+			foreach (var talent in talents)
+			{
+				Console.WriteLine(talent.Key + " - " + talent.Value);
+			}
+			Console.WriteLine("Talent amount: " + talents.Count);
 			spells.Add("lifeTap", new LifeTap(this));
 			spells.Add("shadowBolt", new ShadowBolt(this));
 		}

@@ -165,7 +165,13 @@ namespace WarlockSimulatorTBC.Shared.Classes
 			name = "Life Tap";
 			coefficient = 0.8;
 			manaReturn = 582;
-			modifier = 1 * (1 + 0.1 * TalentTree.CurrentTalents["improvedLifeTap"]);
+			Console.WriteLine("here");
+			foreach (var talent in p.talents)
+			{
+				Console.WriteLine(talent.Key + " - " + talent.Value);
+			}
+			modifier = 1 * (1 + 0.1 * p.talents["improvedLifeTap"]);
+			Console.WriteLine("here2");
 		}
 
 		public double ManaGain()
