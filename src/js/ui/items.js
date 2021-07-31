@@ -195,6 +195,7 @@ $('#item-selection-table tbody').on('click', '.hide-item-btn', function (event) 
 
   localStorage.hiddenItems = JSON.stringify(hiddenItems)
   event.stopPropagation()
+  loadItemsBySlot(localStorage.selectedItemSlot, localStorage.selectedItemSubSlot)
 })
 
 // User clicks on the "Show Equipped Items" button
@@ -331,7 +332,6 @@ function loadItemsBySlot (itemSlot = 'mainhand', subSlot = '') {
     const i = items[itemSlot][item]
     const itemIsHidden = hiddenItems.includes(i.displayId) || hiddenItems.includes(i.id)
 
-
     if (!sources.phase || !sources.phase[i.phase] || (itemIsHidden && !changingItemVisibility)) {
       continue
     }
@@ -344,7 +344,7 @@ function loadItemsBySlot (itemSlot = 'mainhand', subSlot = '') {
       }
     }
 
-    tableBody.append("<tr data-subslot='" + localStorage.selectedItemSubSlot + "' data-socket-bonus-active='false' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage.selectedItemSubSlot] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td title='" + (itemIsHidden ? 'Show Item' : 'Hide Item') + "' class='hide-item-btn' data-hidden='" + (itemIsHidden ? 'true' : 'false') + "'>❌</td><td><a href='https://tbc.wowhead.com/item=" + (i.displayId || i.id) + "'>" + i.name + '</a></td><td><div>' + getGemsInItemAsHTML(itemSlot, i) + '</div></td><td>' + i.source + '</td><td>' + (i.stamina || '') + '</td><td>' + (i.intellect || '') + '</td><td>' + (i.spellPower || '') + '</td><td>' + (i.shadowPower || '') + '</td><td>' + (i.firePower || '') + '</td><td>' + (i.critRating || '') + '</td><td>' + (i.hitRating || '') + '</td><td>' + (i.hasteRating || '') + "</td><td class='item-dps'>" + (savedItemDps[itemSlot + subSlot][i.id] || '') + '</td></tr>').trigger('update')
+    tableBody.append("<tr data-hidden='" + itemIsHidden + "' data-subslot='" + localStorage.selectedItemSubSlot + "' data-socket-bonus-active='false' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage.selectedItemSubSlot] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td title='" + (itemIsHidden ? 'Show Item' : 'Hide Item') + "' class='hide-item-btn' data-hidden='" + (itemIsHidden ? 'true' : 'false') + "'>❌</td><td><a href='https://tbc.wowhead.com/item=" + (i.displayId || i.id) + "'>" + i.name + '</a></td><td><div>' + getGemsInItemAsHTML(itemSlot, i) + '</div></td><td>' + i.source + '</td><td>' + (i.stamina || '') + '</td><td>' + (i.intellect || '') + '</td><td>' + (i.spellPower || '') + '</td><td>' + (i.shadowPower || '') + '</td><td>' + (i.firePower || '') + '</td><td>' + (i.critRating || '') + '</td><td>' + (i.hitRating || '') + '</td><td>' + (i.hasteRating || '') + "</td><td class='item-dps'>" + (savedItemDps[itemSlot + subSlot][i.id] || '') + '</td></tr>').trigger('update')
     if (itemMeetsSocketRequirements(i.id)) {
       $(".item-row[data-wowhead-id='" + i.id + "']").attr('data-socket-bonus-active', 'true')
     }

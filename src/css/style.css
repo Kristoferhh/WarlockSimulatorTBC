@@ -633,6 +633,12 @@ img[data-color='meta'] {
 	user-select: none;
 }
 
+.item-row[data-hidden='true'] {
+	filter: grayscale(100);
+	background-color: rgb(0, 0, 0);
+	opacity: 50%;
+}
+
 #show-hidden-gems-button {
 	padding: 5px 0px 5px 0px;
 	border: 1px solid white;
