@@ -611,13 +611,26 @@ img[data-color='meta'] {
 	padding-bottom: 100px;
 }
 
-#item-selection-table th:nth-child(1), #enchant-selection-table th:nth-child(1) {
+#hide-item-col, #hide-enchant-col {
+	display: none;
+}
+
+#header-name, #header-enchant-name {
 	text-align: left;
 }
 
 .item-row:hover, .enchant-row:hover, .gem-name:hover, .gem-options-gem:hover {
 	cursor: pointer;
 	background-color: rgba(104, 105, 163, 0.3);
+}
+
+#header-hide-item {
+	display: none;
+}
+
+.hide-item-btn {
+	display: none;
+	user-select: none;
 }
 
 #show-hidden-gems-button {
@@ -645,7 +658,7 @@ img[data-color='meta'] {
 	color: yellow;
 }
 
-.gem-hide[data-hidden='true'] {
+.gem-hide[data-hidden='true'], .hide-item-btn[data-hidden='true'] {
 	filter: grayscale(100%);
 }
 
@@ -727,7 +740,7 @@ table.dataTable thead th, table.dataTable.no-footer {
 	border-bottom: none;
 }
 
-.item-row td:nth-child(1), .enchant-row td:nth-child(1) {
+.item-row td:nth-child(2), .enchant-row td:first-child {
 	text-align: left;
 }
 

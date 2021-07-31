@@ -11,11 +11,13 @@ var auras = localStorage.auras ? JSON.parse(localStorage.auras) : {}
 var rotation = localStorage.rotation ? JSON.parse(localStorage.rotation) : {}
 var selectedEnchants = localStorage.selectedEnchants ? JSON.parse(localStorage.selectedEnchants) : {}
 // Key: Item ID. Value: Item's saved DPS from previous simulations.
-const savedItemDps = localStorage.savedItemDps ? JSON.parse(localStorage.savedItemDps) : {}
+var savedItemDps = localStorage.savedItemDps ? JSON.parse(localStorage.savedItemDps) : {}
 var settings = localStorage.settings ? JSON.parse(localStorage.settings) : {}
-const sources = localStorage.sources ? JSON.parse(localStorage.sources) : { phase: { 0: true, 1: true } }
-const profiles = localStorage.profiles ? JSON.parse(localStorage.profiles) : {}
-const gemPreferences = localStorage.gemPreferences ? JSON.parse(localStorage.gemPreferences) : { hidden: [], favorites: [] }
+var sources = localStorage.sources ? JSON.parse(localStorage.sources) : { phase: { 0: true, 1: true } }
+var profiles = localStorage.profiles ? JSON.parse(localStorage.profiles) : {}
+var gemPreferences = localStorage.gemPreferences ? JSON.parse(localStorage.gemPreferences) : { hidden: [], favorites: [] }
+var hiddenItems = localStorage.hiddenItems ? JSON.parse(localStorage.hiddenItems) : []
+var changingItemVisibility = false // True when hiding / showing items in the item table
 
 // Buffs, debuffs, consumables, and pet buffs
 for (const auraType in _auras) {

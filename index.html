@@ -602,6 +602,7 @@
 			<li data-slot="trinket" data-subslot='2'>Trinket 2</li>
 			<li data-slot="wand">Wand</li>
 		</ul>
+		<button id='hide-show-items-btn'>Hide / Show Items</button>
 		<button id='gem-options-button'>Fill Item Sockets</button>
 		<button id='show-equipped-items'>Show Equipped Items</button>
 		<div id='gem-options-window'>
@@ -630,16 +631,17 @@
 			<div id='gem-options-gem-list'></div>
 			<button id='gem-options-apply-button'>Apply</button>
 		</div>
-		<table id="item-selection-table" data-type="mainhand" class="tablesorter" data-sortlist='[[11,1]]'>
+		<table id="item-selection-table" data-type="mainhand" class="tablesorter" data-sortlist='[[12,1]]'>
 			<colgroup id="item-selection-colgroup">
+				<col id="hide-item-col" style="width: 2%">
 				<col style="width: 20%">
 				<col style="width: 4%">
 				<col style="width: 13%">
 				<col style="width: 3%">
 				<col style="width: 3%">
-				<col style="width: 5%">
+				<col style="width: 6%">
 				<col style="width: 6.5%">
-				<col style="width: 4.5%">
+				<col style="width: 5%">
 				<col style="width: 3%">
 				<col style="width: 3%">
 				<col style="width: 3%">
@@ -648,6 +650,7 @@
 			</colgroup>
 			<thead>
 				<tr id="item-selection-header">
+					<th id="header-hide-item"></th>
 					<th id="header-name">Name</th>
 					<th id="header-gems"></th>
 					<th id="header-source">Source</th>

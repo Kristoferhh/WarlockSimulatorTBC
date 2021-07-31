@@ -106,7 +106,7 @@ $('#item-selection-table').tablesorter()
 $('#damage-breakdown-table').tablesorter()
 $('#aura-breakdown-table').tablesorter()
 $('#mana-gain-breakdown-table').tablesorter()
-loadItemsBySlot(localStorage.selectedItemSlot || 'mainhand', (localStorage.selectedItemSubSlot || ''))
+loadItemsBySlot(localStorage.selectedItemSlot, localStorage.selectedItemSubSlot)
 let newItemSelector = "#item-slot-selection-list li[data-slot='" + (localStorage.selectedItemSlot || 'mainhand') + "']"
 if (localStorage.selectedItemSubSlot) newItemSelector += "[data-subslot='" + localStorage.selectedItemSubSlot + "']"
 $(newItemSelector).attr('data-selected', 'true')

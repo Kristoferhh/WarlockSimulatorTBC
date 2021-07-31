@@ -171,6 +171,32 @@ $('#source-filters ul li').click(function () {
   loadItemsBySlot(localStorage.selectedItemSlot || 'mainhand', (localStorage.selectedItemSubSlot || ''))
 })
 
+// User clicks on the "Hide / Show Items" button
+$('#hide-show-items-btn').click(function () {
+  $('#hide-item-col').toggle()
+  $('#header-hide-item').toggle()
+  $('.hide-item-btn').toggle()
+  $('.hidden-item').toggle()
+  changingItemVisibility = !changingItemVisibility
+  loadItemsBySlot(localStorage.selectedItemSlot, localStorage.selectedItemSubSlot)
+})
+
+// User clicks on the red x next to an item row to hide (or un-hide) it
+$('#item-selection-table tbody').on('click', '.hide-item-btn', function (event) {
+  const itemId = Number($(this).closest('tr').attr('data-wowhead-id'))
+
+  if (hiddenItems.includes(itemId)) {
+    hiddenItems.splice(hiddenItems.indexOf(itemId), 1)
+    $(this).attr('data-hidden', 'false')
+  } else {
+    hiddenItems.push(itemId)
+    $(this).attr('data-hidden', 'true')
+  }
+
+  localStorage.hiddenItems = JSON.stringify(hiddenItems)
+  event.stopPropagation()
+})
+
 // User clicks on the "Show Equipped Items" button
 $('#show-equipped-items').click(function () {
   // Toggle the visibility of the table
@@ -209,7 +235,7 @@ $('#show-equipped-items').click(function () {
           slot = slot.slice(0, slot.length - 1) + ' ' + slot.charAt(slot.length - 1)
         }
 
-        $('#currently-equipped-items tbody').append('<tr><td>' + slot + '</td><td><a _target="" href=' + (item && item.id ? 'https://tbc.wowhead.com/item=' + item.id : '') + '>' + (item && item.name ? item.name : '') + '</a></td><td>' + getGemsInItemAsHTML(itemSlotWithoutSubSlot, item) + '</td><td><a href="' + (enchant && enchant.id ? 'https://tbc.wowhead.com/spell=' + enchant.id : '') + '">' + (enchant && enchant.name ? enchant.name : '') + '</a></td></tr>')
+        $('#currently-equipped-items tbody').append('<tr><td>' + slot + '</td><td><a target="_blank" href=' + (item && item.id ? 'https://tbc.wowhead.com/item=' + item.id : '') + '>' + (item && item.name ? item.name : '') + '</a></td><td>' + getGemsInItemAsHTML(itemSlotWithoutSubSlot, item) + '</td><td><a target="_blank" href="' + (enchant && enchant.id ? 'https://tbc.wowhead.com/spell=' + enchant.id : '') + '">' + (enchant && enchant.name ? enchant.name : '') + '</a></td></tr>')
       }
     }
   }
@@ -273,7 +299,7 @@ function getGemsInItemAsHTML(itemSlot, item) {
             }
           }
         }
-        sockets.push("<a href='" + gemHref + "'><img width='16' height='16' class='gem' data-color='" + socket + "' data-order='" + counter + "' src='img/" + gemIcon + ".jpg'></a>")
+        sockets.push("<a target='_blank' href='" + gemHref + "'><img width='16' height='16' class='gem' data-color='" + socket + "' data-order='" + counter + "' src='img/" + gemIcon + ".jpg'></a>")
         counter++
       }
     }
@@ -283,7 +309,7 @@ function getGemsInItemAsHTML(itemSlot, item) {
 }
 
 // Loads items into the item table
-function loadItemsBySlot (itemSlot, subSlot = '') {
+function loadItemsBySlot (itemSlot = 'mainhand', subSlot = '') {
   // Set old item slot's selected value to false
   $("#item-slot-selection-list li[data-selected='true']").attr('data-selected', 'false')
   // Set the new item slot's seleected value to true
@@ -303,8 +329,10 @@ function loadItemsBySlot (itemSlot, subSlot = '') {
 
   for (const item of Object.keys(items[itemSlot])) {
     const i = items[itemSlot][item]
+    const itemIsHidden = hiddenItems.includes(i.displayId) || hiddenItems.includes(i.id)
 
-    if (!sources.phase || !sources.phase[i.phase]) {
+
+    if (!sources.phase || !sources.phase[i.phase] || (itemIsHidden && !changingItemVisibility)) {
       continue
     }
 
@@ -316,10 +344,17 @@ function loadItemsBySlot (itemSlot, subSlot = '') {
       }
     }
 
-    tableBody.append("<tr data-subslot='" + localStorage.selectedItemSubSlot + "' data-socket-bonus-active='false' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage.selectedItemSubSlot] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td><a href='https://tbc.wowhead.com/item=" + (i.displayId || i.id) + "'>" + i.name + '</a></td><td><div>' + getGemsInItemAsHTML(itemSlot, i) + '</div></td><td>' + i.source + '</td><td>' + (i.stamina || '') + '</td><td>' + (i.intellect || '') + '</td><td>' + (i.spellPower || '') + '</td><td>' + (i.shadowPower || '') + '</td><td>' + (i.firePower || '') + '</td><td>' + (i.critRating || '') + '</td><td>' + (i.hitRating || '') + '</td><td>' + (i.hasteRating || '') + "</td><td class='item-dps'>" + (savedItemDps[itemSlot + subSlot][i.id] || '') + '</td></tr>').trigger('update')
+    tableBody.append("<tr data-subslot='" + localStorage.selectedItemSubSlot + "' data-socket-bonus-active='false' data-slot='" + itemSlot + "' data-name='" + item + "' data-selected='" + (selectedItems[itemSlot + localStorage.selectedItemSubSlot] == i.id || 'false') + "' class='item-row' data-wowhead-id='" + i.id + "'><td title='" + (itemIsHidden ? 'Show Item' : 'Hide Item') + "' class='hide-item-btn' data-hidden='" + (itemIsHidden ? 'true' : 'false') + "'>❌</td><td><a href='https://tbc.wowhead.com/item=" + (i.displayId || i.id) + "'>" + i.name + '</a></td><td><div>' + getGemsInItemAsHTML(itemSlot, i) + '</div></td><td>' + i.source + '</td><td>' + (i.stamina || '') + '</td><td>' + (i.intellect || '') + '</td><td>' + (i.spellPower || '') + '</td><td>' + (i.shadowPower || '') + '</td><td>' + (i.firePower || '') + '</td><td>' + (i.critRating || '') + '</td><td>' + (i.hitRating || '') + '</td><td>' + (i.hasteRating || '') + "</td><td class='item-dps'>" + (savedItemDps[itemSlot + subSlot][i.id] || '') + '</td></tr>').trigger('update')
     if (itemMeetsSocketRequirements(i.id)) {
       $(".item-row[data-wowhead-id='" + i.id + "']").attr('data-socket-bonus-active', 'true')
     }
+  }
+
+  if (changingItemVisibility) {
+    $('#hide-item-col').show()
+    $('#header-hide-item').show()
+    $('.hide-item-btn').show()
+    $('.hidden-item').show()
   }
 
   loadEnchantsBySlot(itemSlot, subSlot)
