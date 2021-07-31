@@ -168,22 +168,30 @@ function updateStatWeight (stat, value) {
 }
 
 function simStatWeights () {
+  const statAmount = 100
   const stats = {
     normal: 0,
-    intellect: 100,
-    spellPower: 100,
-    shadowPower: 100,
-    firePower: 100,
-    critRating: 100,
-    hasteRating: 100,
-    mp5: 100
+    intellect: statAmount,
+    spellPower: statAmount,
+    shadowPower: statAmount,
+    firePower: statAmount,
+    critRating: statAmount,
+    hasteRating: statAmount,
+    mp5: statAmount
   }
   // Only check for the hit rating weight if the player isn't hit capped (this gets the player's crit % from the sidebar since we don't have any variable with crit % included)
-  if ($('#character-hit-val').text().split('(')[1].split('%')[0] < 16) {
-    stats.hitRating = 10
-  } else {
+  let hitPercent = Number($('#character-hit-val').text().split('(')[1].split('%')[0])
+  if (hitPercent >= 16) {
     updateStatWeight('hitRating', 0)
+  } else {
+    stats.hitRating = statAmount
+    // If the player is too close to hit cap then we instead subtract hit rating from them instead of adding more,
+    // since otherwise the extra hit would be wasted and it'd give the wrong result.
+    if (hitPercent >= 16 - (statAmount / hitRatingPerPercent)) {
+      stats.hitRating *= -1
+    }
   }
+  
   const sims = []
   const simInfo = []
   let normalSimAvgDps = 0
