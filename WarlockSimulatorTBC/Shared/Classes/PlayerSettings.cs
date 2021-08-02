@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace WarlockSimulatorTBC.Shared.Classes
 {
-	[KnownType("GetSettings")]
-	[DataContract]
+	[KnownType(typeof(PlayerSettings))]
 	public class PlayerSettings
 	{
 		[DataMember]

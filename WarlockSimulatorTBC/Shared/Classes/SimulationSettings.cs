@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace WarlockSimulatorTBC.Shared.Classes
 {
-	[KnownType("SimulationSettings")]
-	[DataContract]
+	[KnownType(typeof(SimulationSettings))]
 	public class SimulationSettings
 	{
 		public int iterations;

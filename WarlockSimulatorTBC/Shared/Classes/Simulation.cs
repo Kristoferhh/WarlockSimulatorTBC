@@ -8,8 +8,7 @@ using System.Runtime.Serialization;
 
 namespace WarlockSimulatorTBC.Shared
 {
-	[KnownType("Simulation")]
-	[DataContract]
+	[KnownType(typeof(Simulation))]
 	public class Simulation
 	{
 		private Stopwatch _timer;

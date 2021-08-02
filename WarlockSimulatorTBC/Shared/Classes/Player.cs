@@ -8,8 +8,7 @@ using System.Runtime.Serialization;
 
 namespace WarlockSimulatorTBC.Shared.Classes
 {
-	[KnownType("Player")]
-	[DataContract]
+	[KnownType(typeof(Player))]
 	public class Player : IEntity
 	{
 		public CharacterStats stats = Stats.playerStats;
