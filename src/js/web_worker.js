@@ -15,6 +15,12 @@ importScripts(
 )
 
 onmessage = function (e) {
+  const wasm = fetch('../../dist/js/spell.wasm')
+
+  wasm.then(module => {
+    console.log("YEP");
+  })
+
   const player = new Player(e.data.player, e.data.itemSlot || null, e.data.itemSubSlot || '', e.data.itemId || null, e.data.customStat || null, e.data.customStatValue || 0)
   const simulation = new Simulation(player, e.data.simulation,
     (simulationEnd) => {
