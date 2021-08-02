@@ -59,11 +59,14 @@
         Console.WriteLine("1");
         var webWorker = await workerFactory.CreateAsync();
         Console.WriteLine("2");
-        var service = await webWorker.CreateBackgroundServiceAsync<Simulation>();
+        var service = await webWorker.CreateBackgroundServiceAsync<Simulation>(
+            options => options
+                .AddConventionalAssemblyOfService()
+                .AddAssemblies("System.Security.Cryptography.Algorithms.dll")
+        );
         Console.WriteLine("3");
-        //await service.RunAsync(s => s.Constructor(player, simSettings));
-        Console.WriteLine("4");
         await service.RunAsync(s => s.Constructor(playerSettings, simSettings));
+        Console.WriteLine("4");
         await service.RunAsync(s => s.Start());
         Console.WriteLine("5");
         //simulation.Start();

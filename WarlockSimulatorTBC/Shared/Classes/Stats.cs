@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace WarlockSimulatorTBC.Shared.Classes
@@ -18,7 +19,9 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		public static double baseCritChance = 1.701;
 	}
 
-	public class CharacterStats
+	[Serializable()]
+	[KnownType(typeof(CharacterStats))]
+	public class CharacterStats : ISerializable
 	{
 		public double health = 0;
 		public double maxMana = 0;
@@ -43,5 +46,59 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		// Pet stats
 		public int meleeCritRating = 0;
 		public int meleeHitRating = 0;
+
+		public CharacterStats() { }
+
+		public CharacterStats(SerializationInfo info, StreamingContext context)
+		{
+			health = (double)info.GetValue("health", typeof(double));
+			maxMana = (double)info.GetValue("maxMana", typeof(double));
+			currentMana = (double)info.GetValue("currentMana", typeof(double));
+			stamina = (double)info.GetValue("stamina", typeof(double));
+			intellect = (double)info.GetValue("intellect", typeof(double));
+			spirit = (double)info.GetValue("spirit", typeof(double));
+			spellPower = (double)info.GetValue("spellPower", typeof(double));
+			shadowPower = (double)info.GetValue("shadowPower", typeof(double));
+			firePower = (double)info.GetValue("firePower", typeof(double));
+			spellCritRating = (int)info.GetValue("spellCritRating", typeof(int));
+			spellHitRating = (int)info.GetValue("spellHitRating", typeof(int));
+			spellHasteRating = (int)info.GetValue("spellHasteRating", typeof(int));
+			mp5 = (int)info.GetValue("mp5", typeof(int));
+			spellPenetration = (int)info.GetValue("spellPenetration", typeof(int));
+			damageModifier = (double)info.GetValue("damageModifier", typeof(double));
+			shadowModifier = (double)info.GetValue("shadowModifier", typeof(double));
+			fireModifier = (double)info.GetValue("fireModifier", typeof(double));
+			staminaModifier = (double)info.GetValue("staminaModifier", typeof(double));
+			intellectModifier = (double)info.GetValue("intellectModifier", typeof(double));
+			spiritModifier = (double)info.GetValue("spiritModifier", typeof(double));
+			meleeCritRating = (int)info.GetValue("meleeCritRating", typeof(int));
+			meleeHitRating = (int)info.GetValue("meleeHitRating", typeof(int));
+		}
+
+		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			info.AddValue("health", health);
+			info.AddValue("maxMana", maxMana);
+			info.AddValue("currentMana", currentMana);
+			info.AddValue("stamina", stamina);
+			info.AddValue("intellect", intellect);
+			info.AddValue("spirit", spirit);
+			info.AddValue("spellPower", spellPower);
+			info.AddValue("shadowPower", shadowPower);
+			info.AddValue("firePower", firePower);
+			info.AddValue("spellCritRating", spellCritRating);
+			info.AddValue("spellHitRating", spellHitRating);
+			info.AddValue("spellHasteRating", spellHasteRating);
+			info.AddValue("mp5", mp5);
+			info.AddValue("spellPenetration", spellPenetration);
+			info.AddValue("damageModifier", damageModifier);
+			info.AddValue("shadowModifier", shadowModifier);
+			info.AddValue("fireModifier", fireModifier);
+			info.AddValue("staminaModifier", staminaModifier);
+			info.AddValue("intellectModifier", intellectModifier);
+			info.AddValue("spiritModifier", spiritModifier);
+			info.AddValue("meleeCritRating", meleeCritRating);
+			info.AddValue("meleeHitRating", meleeHitRating);
+		}
 	}
 }

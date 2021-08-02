@@ -8,7 +8,6 @@ using System.Runtime.Serialization;
 
 namespace WarlockSimulatorTBC.Shared.Classes
 {
-	[KnownType(typeof(Player))]
 	public class Player : IEntity
 	{
 		public CharacterStats stats = Stats.playerStats;
@@ -103,5 +102,21 @@ namespace WarlockSimulatorTBC.Shared.Classes
 				Console.WriteLine(currentFightTime + ": " + msg);
 			}
 		}
+
+		/*public Player(SerializationInfo info, StreamingContext context)
+		{
+			shattrathFaction = (string)info.GetValue("shattrathFaction", typeof(string));
+			exaltedWithShattrathFaction = (bool)info.GetValue("exaltedWithShattrathFaction", typeof(bool));
+			stats = (CharacterStats)info.GetValue("stats", typeof(CharacterStats));
+			talents = (Dictionary<string, int>)info.GetValue("talents", typeof(Dictionary<string, int>));
+		}
+
+		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			info.AddValue("shattrathFaction", shattrathFaction);
+			info.AddValue("exaltedWithShattrathFaction", exaltedWithShattrathFaction);
+			info.AddValue("stats", stats);
+			info.AddValue("talents", talents);
+		}*/
 	}
 }
