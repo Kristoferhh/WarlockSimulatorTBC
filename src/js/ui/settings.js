@@ -201,6 +201,12 @@ function updateSimulationSettingsVisibility () {
     $('#shadowPriestDps').hide()
   }
 
+  if (auras.bloodPact) {
+    $('#improvedImp').show()
+  } else {
+    $('#improvedImp').hide()
+  }
+
   if ($('#faerieFire').is(':visible') && auras.faerieFire) {
     $('#improvedFaerieFire').show()
   } else {
