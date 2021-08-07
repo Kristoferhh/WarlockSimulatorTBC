@@ -280,6 +280,10 @@ class Player {
     if (settings.auras.prayerOfSpirit && settings.simSettings.improvedDivineSpirit) {
       this.stats.spellPower += (this.stats.spirit * this.stats.spiritModifier * (0 + (settings.simSettings.improvedDivineSpirit / 20)))
     }
+    // Add extra stamina from Blood Pact from Improved Imp
+    if (settings.auras.bloodPact) {
+      this.stats.stamina += 70 * (0.1 * settings.simSettings.improvedImp)
+    }
     // Add stamina from Demonic Embrace
     this.stats.stamina *= 1 + (0.03 * this.talents.demonicEmbrace)
     // Add mp5 from Vampiric Touch (add 25% instead of 5% since we're adding it to the mana per 5 seconds variable)
