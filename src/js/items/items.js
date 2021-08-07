@@ -4664,14 +4664,24 @@ const items = {
       source: 'PVP',
       phase: 1
     },
-    stormcallerBladeOfTheArchmage: {
-      name: 'Stormcaller/Blade of the Archmage',
+    stormcaller: {
+      name: 'Stormcaller',
+      stamina: 12,
+      intellect: 12,
+      spellPower: 159,
+      critRating: 21,
+      id: 29155,
+      source: 'Thrallmar - Exalted',
+      phase: 1
+    },
+    bladeOfTheArchmage: {
+      name: 'Blade of the Archmage',
       stamina: 13,
       intellect: 11,
       spellPower: 159,
       critRating: 21,
       id: 29153,
-      source: 'Honor Hold/Thrallmar - Exalted',
+      source: 'Honor Hold - Exalted',
       phase: 1
     },
     bladeOfWizardry: {
