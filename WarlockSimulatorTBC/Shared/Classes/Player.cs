@@ -61,11 +61,6 @@ namespace WarlockSimulatorTBC.Shared.Classes
 
 		public void Initialize()
 		{
-			foreach (var talent in talents)
-			{
-				Console.WriteLine(talent.Key + " - " + talent.Value);
-			}
-			Console.WriteLine("Talent amount: " + talents.Count);
 			spells.Add("lifeTap", new LifeTap(this));
 			spells.Add("shadowBolt", new ShadowBolt(this));
 		}
@@ -102,21 +97,5 @@ namespace WarlockSimulatorTBC.Shared.Classes
 				Console.WriteLine(currentFightTime + ": " + msg);
 			}
 		}
-
-		/*public Player(SerializationInfo info, StreamingContext context)
-		{
-			shattrathFaction = (string)info.GetValue("shattrathFaction", typeof(string));
-			exaltedWithShattrathFaction = (bool)info.GetValue("exaltedWithShattrathFaction", typeof(bool));
-			stats = (CharacterStats)info.GetValue("stats", typeof(CharacterStats));
-			talents = (Dictionary<string, int>)info.GetValue("talents", typeof(Dictionary<string, int>));
-		}
-
-		public void GetObjectData(SerializationInfo info, StreamingContext context)
-		{
-			info.AddValue("shattrathFaction", shattrathFaction);
-			info.AddValue("exaltedWithShattrathFaction", exaltedWithShattrathFaction);
-			info.AddValue("stats", stats);
-			info.AddValue("talents", talents);
-		}*/
 	}
 }

@@ -141,7 +141,6 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		{
 			name = "Shadow Bolt";
 			castTime = CalculateCastTime();
-			Console.WriteLine(castTime);
 			coefficient = 3 / 3.5; // check for Shadow and Flame
 			minDmg = 544;
 			maxDmg = 607;
@@ -154,7 +153,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 
 		public override double CalculateCastTime()
 		{
-			return 3 - TalentTree.CurrentTalents["bane"] / 10.0 + (double)player.spellDelay;
+			return 3 - player.talents["bane"] / 10.0 + (double)player.spellDelay;
 		}
 	}
 
@@ -165,13 +164,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 			name = "Life Tap";
 			coefficient = 0.8;
 			manaReturn = 582;
-			Console.WriteLine("here");
-			foreach (var talent in p.talents)
-			{
-				Console.WriteLine(talent.Key + " - " + talent.Value);
-			}
 			modifier = 1 * (1 + 0.1 * p.talents["improvedLifeTap"]);
-			Console.WriteLine("here2");
 		}
 
 		public double ManaGain()

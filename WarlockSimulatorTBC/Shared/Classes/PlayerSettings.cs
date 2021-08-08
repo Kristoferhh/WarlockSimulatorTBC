@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace WarlockSimulatorTBC.Shared.Classes
 {
-	[DataContract]
-	[KnownType(typeof(PlayerSettings))]
 	public class PlayerSettings
 	{
-		[DataMember] public string shattrathFaction { get; set; }
-		[DataMember] public bool exaltedWithShattrathFaction { get; set; }
-		[DataMember] public CharacterStats stats { get; set; }
-		[DataMember] public Dictionary<string, int> talents { get; set; }
+		public string shattrathFaction { get; set; }
+		public bool exaltedWithShattrathFaction { get; set; }
+		public CharacterStats stats { get; set; }
+		public Dictionary<string, int> talents { get; set; }
 	}
 }

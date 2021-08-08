@@ -9,7 +9,6 @@ using System.Text.Json;
 
 namespace WarlockSimulatorTBC.Shared
 {
-	[KnownType(typeof(SimulationSettings))]
 	public class Simulation
 	{
 		private Stopwatch _timer;
@@ -31,17 +30,11 @@ namespace WarlockSimulatorTBC.Shared
 
 		public void Constructor(string simulationSettings, string playerSettings)
 		{
-			Console.WriteLine("Constructor started");
 			player = new Player(JsonSerializer.Deserialize<PlayerSettings>(playerSettings));
 			SimulationSettings simSettings = JsonSerializer.Deserialize<SimulationSettings>(simulationSettings);
 			iterations = simSettings.iterations;
 			minTime = simSettings.minTime;
 			maxTime = simSettings.maxTime;
-			Console.WriteLine("Iterations: " + iterations);
-			Console.WriteLine("minTime: " + minTime);
-			Console.WriteLine("maxTime: " + maxTime);
-			Console.WriteLine("Shattrath faction: " + player.shattrathFaction);
-			Console.WriteLine("Constructor finished");
 		}
 
 		private decimal PassTime()
@@ -76,16 +69,12 @@ namespace WarlockSimulatorTBC.Shared
 			double totalDamage = 0;
 			double minDps = 999999;
 			double maxDps = 0;
-			Console.WriteLine("Attempting to initialize player");
 			player.Initialize();
-			Console.WriteLine("Player initialized");
 			_timer = new Stopwatch();
 			_timer.Start();
-			Console.WriteLine("Started timer");
 
 			for (player.iteration = 1; player.iteration < iterations; player.iteration++)
 			{
-				Console.WriteLine("Iteration: " + iterations);
 				player.Reset();
 				player.iterationDamage = 0;
 				player.currentFightTime = 0;
@@ -130,6 +119,7 @@ namespace WarlockSimulatorTBC.Shared
 
 			_timer.Stop();
 			Console.WriteLine("Sim duration: " + _timer.Elapsed);
+			Console.WriteLine(totalDamage / player.totalFightDuration);
 		}
 	}
 }
