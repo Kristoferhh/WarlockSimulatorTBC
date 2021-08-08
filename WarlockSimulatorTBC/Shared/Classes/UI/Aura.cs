@@ -59,8 +59,6 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 		{
 			if (action == "add")
 			{
-				Console.WriteLine(Stats.playerStats.firePower);
-				Console.WriteLine("adding " + groups[auraGroup].auras[auraName].firePower);
 				Stats.playerStats.spellPower += groups[auraGroup].auras[auraName].spellPower;
 				Stats.playerStats.shadowPower += groups[auraGroup].auras[auraName].shadowPower;
 				Stats.playerStats.firePower += groups[auraGroup].auras[auraName].firePower;
@@ -78,8 +76,6 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 			}
 			else if (action == "remove")
 			{
-				Console.WriteLine(Stats.playerStats.firePower);
-				Console.WriteLine("removing: " + groups[auraGroup].auras[auraName].firePower);
 				Stats.playerStats.spellPower -= groups[auraGroup].auras[auraName].spellPower;
 				Stats.playerStats.shadowPower -= groups[auraGroup].auras[auraName].shadowPower;
 				Stats.playerStats.firePower -= groups[auraGroup].auras[auraName].firePower;

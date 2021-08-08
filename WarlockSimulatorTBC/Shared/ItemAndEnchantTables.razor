@@ -199,23 +199,23 @@
     private async void ItemClickHandler(int itemId)
     {
         // If clicking a mainhand/offhand, unequip the twohand
-        if (Items.SelectedItemSlot == ItemSlots.MAINHAND || Items.SelectedItemSlot == ItemSlots.OFFHAND && Items.SelectedItems[ItemSlots.TWOHAND] != null)
+        if ((Items.SelectedItemSlot == ItemSlots.MAINHAND || Items.SelectedItemSlot == ItemSlots.OFFHAND) && Items.SelectedItems[ItemSlots.TWOHAND] != null)
         {
+            Items.ModifyStatsFromItem(ItemSlots.TWOHAND, (int)Items.SelectedItems[ItemSlots.TWOHAND], "remove");
             Items.SelectedItems[ItemSlots.TWOHAND] = null;
-            Items.ModifyStatsFromItem(Items.SelectedItemSlot, (int)Items.SelectedItems[ItemSlots.TWOHAND], "remove");
         }
         // If clicking a twohand, unequip the mainhand & offhand
         else if (Items.SelectedItemSlot == ItemSlots.TWOHAND)
         {
             if (Items.SelectedItems[ItemSlots.MAINHAND] != null)
             {
+                Items.ModifyStatsFromItem(ItemSlots.MAINHAND, (int)Items.SelectedItems[ItemSlots.MAINHAND], "remove");
                 Items.SelectedItems[ItemSlots.MAINHAND] = null;
-                Items.ModifyStatsFromItem(Items.SelectedItemSlot, (int)Items.SelectedItems[ItemSlots.MAINHAND], "remove");
             }
             if (Items.SelectedItems[ItemSlots.OFFHAND] != null)
             {
+                Items.ModifyStatsFromItem(ItemSlots.OFFHAND, (int)Items.SelectedItems[ItemSlots.OFFHAND], "remove");
                 Items.SelectedItems[ItemSlots.OFFHAND] = null;
-                Items.ModifyStatsFromItem(Items.SelectedItemSlot, (int)Items.SelectedItems[ItemSlots.OFFHAND], "remove");
             }
         }
 
@@ -228,7 +228,10 @@
         else
         {
             // Remove stats from the currently equipped item, change the equipped item id, and add the new item's stats
-            Items.ModifyStatsFromItem(Items.SelectedItemSlot, (int)Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot], "remove");
+            if (Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot] != null)
+            {
+                Items.ModifyStatsFromItem(Items.SelectedItemSlot, (int)Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot], "remove");
+            }
             Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot] = itemId;
             Items.ModifyStatsFromItem(Items.SelectedItemSlot, (int)Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot], "add");
         }
