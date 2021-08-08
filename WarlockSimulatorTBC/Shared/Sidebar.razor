@@ -54,15 +54,18 @@
 
     private async void SimulateDps()
     {
-        var playerSettings = Player.GetSettings();
-        var simSettings = Simulation.GetSettings();
+        // Create the player and simulation settings and serialize them into json strings
+        PlayerSettings playerSettings = Player.GetSettings();
+        SimulationSettings simSettings = Simulation.GetSettings();
         string playerString = JsonSerializer.Serialize(playerSettings);
         string simString = JsonSerializer.Serialize(simSettings);
+
+        // Create a web worker for the Simulation class and pass the player & simulation settings as parameters
         var webWorker = await workerFactory.CreateAsync();
         var service = await webWorker.CreateBackgroundServiceAsync<Simulation>(
             options => options
                 .AddConventionalAssemblyOfService()
-                .AddAssemblies("System.Security.Cryptography.Algorithms.dll", "System.Text.Json.dll", "System.Text.Encodings.Web.dll")
+                .AddAssemblies("System.Text.Json.dll", "System.Text.Encodings.Web.dll")
         );
         await service.RunAsync(s => s.Constructor(simString, playerString));
         await service.RunAsync(s => s.Start());
