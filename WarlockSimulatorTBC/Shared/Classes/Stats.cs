@@ -19,53 +19,30 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		public static double baseCritChance = 1.701;
 	}
 
-	[DataContract]
 	public class CharacterStats
 	{
-		[DataMember]
-		public double health = 0;
-		[DataMember]
-		public double maxMana = 0;
-		[DataMember]
-		public double currentMana = 0;
-		[DataMember]
-		public double stamina = 0;
-		[DataMember]
-		public double intellect = 0;
-		[DataMember]
-		public double spirit = 0;
-		[DataMember]
-		public double spellPower = 0;
-		[DataMember]
-		public double shadowPower = 0;
-		[DataMember]
-		public double firePower = 0;
-		[DataMember]
-		public int spellCritRating = 0;
-		[DataMember]
-		public int spellHitRating = 0;
-		[DataMember]
-		public int spellHasteRating = 0;
-		[DataMember]
-		public int mp5 = 0;
-		[DataMember]
-		public int spellPenetration = 0;
-		[DataMember]
-		public double damageModifier = 1;
-		[DataMember]
-		public double shadowModifier = 1;
-		[DataMember]
-		public double fireModifier = 1;
-		[DataMember]
-		public double staminaModifier = 1;
-		[DataMember]
-		public double intellectModifier = 1;
-		[DataMember]
-		public double spiritModifier = 1;
+		public double health { get; set; } = 0;
+		public double maxMana { get; set; } = 0;
+		public double currentMana { get; set; } = 0;
+		public double stamina { get; set; } = 0;
+		public double intellect { get; set; } = 0;
+		public double spirit { get; set; } = 0;
+		public double spellPower { get; set; } = 0;
+		public double shadowPower { get; set; } = 0;
+		public double firePower { get; set; } = 0;
+		public int spellCritRating { get; set; } = 0;
+		public int spellHitRating { get; set; } = 0;
+		public int spellHasteRating { get; set; } = 0;
+		public int mp5 { get; set; } = 0;
+		public int spellPenetration { get; set; } = 0;
+		public double damageModifier { get; set; } = 1;
+		public double shadowModifier { get; set; } = 1;
+		public double fireModifier { get; set; } = 1;
+		public double staminaModifier { get; set; } = 1;
+		public double intellectModifier { get; set; } = 1;
+		public double spiritModifier { get; set; } = 1;
 		// Pet stats
-		[DataMember]
-		public int meleeCritRating = 0;
-		[DataMember]
-		public int meleeHitRating = 0;
+		public int meleeCritRating { get; set; } = 0;
+		public int meleeHitRating { get; set; } = 0;
 	}
 }
