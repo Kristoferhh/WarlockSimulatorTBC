@@ -119,6 +119,20 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 				Stats.playerStats.mp5 += itemSlots[itemSlot].items[itemId].mp5;
 				Stats.playerStats.spellPenetration += itemSlots[itemSlot].items[itemId].spellPenetration;
 			}
+			else if (action == "remove")
+			{
+				Stats.playerStats.stamina -= itemSlots[itemSlot].items[itemId].stamina;
+				Stats.playerStats.intellect -= itemSlots[itemSlot].items[itemId].intellect;
+				Stats.playerStats.spirit -= itemSlots[itemSlot].items[itemId].spirit;
+				Stats.playerStats.spellPower -= itemSlots[itemSlot].items[itemId].spellPower;
+				Stats.playerStats.shadowPower -= itemSlots[itemSlot].items[itemId].shadowPower;
+				Stats.playerStats.firePower -= itemSlots[itemSlot].items[itemId].firePower;
+				Stats.playerStats.spellCritRating -= itemSlots[itemSlot].items[itemId].spellCritRating;
+				Stats.playerStats.spellHitRating -= itemSlots[itemSlot].items[itemId].spellHitRating;
+				Stats.playerStats.spellHasteRating -= itemSlots[itemSlot].items[itemId].spellHasteRating;
+				Stats.playerStats.mp5 -= itemSlots[itemSlot].items[itemId].mp5;
+				Stats.playerStats.spellPenetration -= itemSlots[itemSlot].items[itemId].spellPenetration;
+			}
 		}
 
 		public static readonly Dictionary<string, ItemSlot> itemSlots = new Dictionary<string, ItemSlot>
