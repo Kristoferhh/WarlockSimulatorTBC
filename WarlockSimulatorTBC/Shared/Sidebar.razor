@@ -19,11 +19,11 @@
         <p><span id="avg-dps">@avgDps</span><span> DPS</span></p>
         <p>Min: <span id="min-dps">@minDps</span> Max: <span id="max-dps">@maxDps</span></p>
     </div>
-    <div class='btn' @onclick="@SimulateDps">Simulate</div>
+    <div class='btn' @onclick="@SimulateDps" style="background: @("linear-gradient(to right, #9482C9 " + simProgress + "%, transparent " + simProgress + "%)")">@simulateButtonText</div>
     <div class='btn' id='sim-all-items'>Simulate All Items</div>
     <div class='btn' id='sim-stat-weights'>Stat Weights</div>
     <div class='btn' id='show-combat-log'>Show Combat Log</div>
-    <p id="sim-length-result"></p>
+    <p id="sim-length-result">@(simulationDuration != null ? simulationDuration + "s" : "")</p>
     <p id="guybrush-note">This sim was heavily inspired by <a target="_blank" href='https://guybrushgit.github.io/WarriorSim/'>Guybrush's 1.13 Warrior Simulator</a></p>
     <p id="paypal-note"><a href="https://www.paypal.com/paypalme/kristoferhh" target="_blank">Support me via PayPal</a></p>
 </div>
@@ -32,6 +32,10 @@
     private string avgDps = null;
     private string minDps = null;
     private string maxDps = null;
+    private string simulationDuration = null;
+    private string simulateButtonText = "Simulate";
+    private bool simIsActive = false;
+    private double simProgress = 0;
 
     SidebarCharacterStats characterStats;
 
@@ -50,6 +54,10 @@
         {
             maxDps = await localStorage.GetItemAsync<string>("maxDps");
         }
+        if (await localStorage.ContainKeyAsync("simulationDuration"))
+        {
+            simulationDuration = await localStorage.GetItemAsync<string>("simulationDuration");
+        }
     }
 
     private async void SimulateDps()
@@ -62,13 +70,59 @@
 
         // Create a web worker for the Simulation class and pass the player & simulation settings as parameters
         var webWorker = await workerFactory.CreateAsync();
+        webWorker.IncomingMessage += this.OnWorkerMessage;
+
         var service = await webWorker.CreateBackgroundServiceAsync<Simulation>(
             options => options
                 .AddConventionalAssemblyOfService()
                 .AddAssemblies("System.Text.Json.dll", "System.Text.Encodings.Web.dll")
         );
         await service.RunAsync(s => s.Constructor(simString, playerString));
+        simIsActive = true;
         await service.RunAsync(s => s.Start());
+    }
+
+    public async void OnWorkerMessage(object sender, string message)
+    {
+        string[] messages = message.Split("-;");
+
+        if (messages.Length >= 2)
+        {
+            try
+            {
+                // First index is the type of message and the second index is the message itself
+                SimulationUpdate msg = JsonSerializer.Deserialize<SimulationUpdate>(messages[1].Trim());
+                avgDps = Math.Round(msg.totalDamage / msg.totalFightDuration, 2).ToString();
+                minDps = Math.Round(msg.minDps, 2).ToString();
+                maxDps = Math.Round(msg.maxDps, 2).ToString();
+                simulationDuration = Math.Round(msg.simulationLength, 2).ToString();
+                if (msg.simulationProgress < 100)
+                {
+                    simProgress = msg.simulationProgress;
+                    simulateButtonText = simProgress + "%";
+                }
+                else
+                {
+                    simProgress = 0;
+                    simulateButtonText = "Simulate";
+                    simIsActive = false;
+                }
+                StateHasChanged();
+
+                //todo: only if doing a normal simulation
+                if (message.StartsWith("SimulationEnd"))
+                {
+                    await localStorage.SetItemAsync("avgDps", Convert.ToDouble(avgDps));
+                    await localStorage.SetItemAsync("minDps", Convert.ToDouble(minDps));
+                    await localStorage.SetItemAsync("maxDps", Convert.ToDouble(maxDps));
+                    await localStorage.SetItemAsync("simulationDuration", Convert.ToDouble(simulationDuration));
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Failed to read msg: " + message);
+            }
+        }
     }
 
     public void RefreshCharacterStats()

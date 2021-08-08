@@ -6,13 +6,16 @@ using WarlockSimulatorTBC.Shared.Classes;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using BlazorWorker.WorkerCore;
 
 namespace WarlockSimulatorTBC.Shared
 {
 	public class Simulation
 	{
+		private readonly IWorkerMessageService _messageService;
 		private Stopwatch _timer;
 		private Random rand = new Random();
+		private double simUpdateNum;
 		public Player player;
 		public int iterations;
 		public int minTime;
@@ -28,6 +31,11 @@ namespace WarlockSimulatorTBC.Shared
 			};
 		}
 
+		public Simulation(IWorkerMessageService messageService)
+		{
+			_messageService = messageService;
+		}
+
 		public void Constructor(string simulationSettings, string playerSettings)
 		{
 			player = new Player(JsonSerializer.Deserialize<PlayerSettings>(playerSettings));
@@ -35,6 +43,7 @@ namespace WarlockSimulatorTBC.Shared
 			iterations = simSettings.iterations;
 			minTime = simSettings.minTime;
 			maxTime = simSettings.maxTime;
+			simUpdateNum = Math.Floor(iterations / 100.0);
 		}
 
 		private decimal PassTime()
@@ -65,7 +74,6 @@ namespace WarlockSimulatorTBC.Shared
 
 		public void Start()
 		{
-			Console.WriteLine("Sim started");
 			double totalDamage = 0;
 			double minDps = 999999;
 			double maxDps = 0;
@@ -75,6 +83,7 @@ namespace WarlockSimulatorTBC.Shared
 
 			for (player.iteration = 1; player.iteration < iterations; player.iteration++)
 			{
+				if (player.iteration == 1) _messageService.PostMessageAsync("{SimulationUpdate}(yep)");
 				player.Reset();
 				player.iterationDamage = 0;
 				player.currentFightTime = 0;
@@ -115,11 +124,30 @@ namespace WarlockSimulatorTBC.Shared
 				double iterationDps = player.iterationDamage / fightLength;
 				maxDps = Math.Max(maxDps, iterationDps);
 				minDps = Math.Min(minDps, iterationDps);
+
+				// Send a simulation update for every 1% of progress
+				if (player.iteration % simUpdateNum == 0)
+				{
+					SendSimulationUpdate("SimulationUpdate", minDps, maxDps, totalDamage);
+				}
 			}
 
 			_timer.Stop();
-			Console.WriteLine("Sim duration: " + _timer.Elapsed);
-			Console.WriteLine(totalDamage / player.totalFightDuration);
+			SendSimulationUpdate("SimulationEnd", minDps, maxDps, totalDamage);
+		}
+
+		private void SendSimulationUpdate(string msgType, double minDps, double maxDps, double totalDamage)
+		{
+			SimulationUpdate msg = new SimulationUpdate
+			{
+				simulationProgress = (uint)Math.Ceiling((double)player.iteration / iterations * 100),
+				minDps = minDps,
+				maxDps = maxDps,
+				totalDamage = totalDamage,
+				totalFightDuration = player.totalFightDuration,
+				simulationLength = _timer.Elapsed.TotalSeconds
+			};
+			_messageService.PostMessageAsync(msgType + "-;" + JsonSerializer.Serialize(msg));
 		}
 	}
 }
