@@ -128,12 +128,12 @@ namespace WarlockSimulatorTBC.Shared
 				// Send a simulation update for every 1% of progress
 				if (player.iteration % simUpdateNum == 0)
 				{
-					SendSimulationUpdate("SimulationUpdate", minDps, maxDps, totalDamage);
+					SendSimulationUpdate(MessageType.SimulationUpdate, minDps, maxDps, totalDamage);
 				}
 			}
 
 			_timer.Stop();
-			SendSimulationUpdate("SimulationEnd", minDps, maxDps, totalDamage);
+			SendSimulationUpdate(MessageType.SimulationEnd, minDps, maxDps, totalDamage);
 		}
 
 		private void SendSimulationUpdate(string msgType, double minDps, double maxDps, double totalDamage)

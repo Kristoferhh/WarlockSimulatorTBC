@@ -5,6 +5,12 @@ using System.Threading.Tasks;
 
 namespace WarlockSimulatorTBC.Shared.Classes
 {
+	public static class MessageType
+	{
+		public static string SimulationUpdate = "SimulationUpdate";
+		public static string SimulationEnd = "SimulationEnd";
+	}
+
 	public class SimulationUpdate
 	{
 		public uint simulationProgress { get; set; }

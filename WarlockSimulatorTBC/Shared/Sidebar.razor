@@ -110,7 +110,7 @@
                 StateHasChanged();
 
                 //todo: only if doing a normal simulation
-                if (message.StartsWith("SimulationEnd"))
+                if (message.StartsWith(MessageType.SimulationEnd))
                 {
                     await localStorage.SetItemAsync("avgDps", Convert.ToDouble(avgDps));
                     await localStorage.SetItemAsync("minDps", Convert.ToDouble(minDps));
