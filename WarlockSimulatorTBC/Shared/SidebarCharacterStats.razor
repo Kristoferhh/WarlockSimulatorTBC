@@ -90,7 +90,10 @@
         // Crit
         int critRating = Stats.playerStats.spellCritRating;
         if (AuraGroups.SelectedAuras.Contains("powerOfTheGuardianMage")) critRating += 28;
-        critPercent = critRating / Stats.critRatingPerPercent + Stats.baseCritChance + (Stats.playerStats.intellect * Stats.playerStats.intellectModifier * Stats.critPercentPerInt) + TalentTree.CurrentTalents["devastation"] + TalentTree.CurrentTalents["backlash"] + TalentTree.CurrentTalents["demonicTactics"];
+        critPercent = critRating / Stats.critRatingPerPercent + Stats.baseCritChance + (Stats.playerStats.intellect * Stats.playerStats.intellectModifier * Stats.critPercentPerInt);
+        if (TalentTree.CurrentTalents.ContainsKey("devastation")) critPercent += TalentTree.CurrentTalents["devastation"];
+        if (TalentTree.CurrentTalents.ContainsKey("backlash")) critPercent += TalentTree.CurrentTalents["backlash"];
+        if (TalentTree.CurrentTalents.ContainsKey("demonicTactics")) critPercent += TalentTree.CurrentTalents["demonicTactics"];
         if (AuraGroups.SelectedAuras.Contains("totemOfWrath")) critPercent += 3;
         if (AuraGroups.SelectedAuras.Contains("chainOfTheTwilightOwl")) critPercent += 2;
         if (AuraGroups.SelectedAuras.Contains("moonkinAura")) critPercent += 5;
@@ -104,17 +107,17 @@
 
         // Spell Power
         spellPower = Stats.playerStats.spellPower;
-        if (AuraGroups.SelectedAuras.Contains("felArmor")) spellPower += 10 * TalentTree.CurrentTalents["demonicAegis"];
+        if (AuraGroups.SelectedAuras.Contains("felArmor") && TalentTree.CurrentTalents.ContainsKey("demonicAegis")) spellPower += 10 * TalentTree.CurrentTalents["demonicAegis"];
         if (AuraGroups.SelectedAuras.Contains("powerOfTheGuardianWarlock")) spellPower += 33;
 
         // Shadow/Fire % Modifiers
-        shadowModifier *= (1 + (TalentTree.CurrentTalents["shadowMastery"] * 2.0) / 100);
+        if (TalentTree.CurrentTalents.ContainsKey("shadowMastery")) shadowModifier *= (1 + (TalentTree.CurrentTalents["shadowMastery"] * 2.0) / 100);
         // add master demonologist
-        shadowModifier *= (1 + (TalentTree.CurrentTalents["soulLink"] * 5.0) / 100);
-        fireModifier *= (1 + (TalentTree.CurrentTalents["emberstorm"] * 2.0) / 100);
+        if (TalentTree.CurrentTalents.ContainsKey("soulLink")) shadowModifier *= (1 + (TalentTree.CurrentTalents["soulLink"] * 5.0) / 100);
+        if (TalentTree.CurrentTalents.ContainsKey("emberstorm")) fireModifier *= (1 + (TalentTree.CurrentTalents["emberstorm"] * 2.0) / 100);
 
         // Stamina Modifiers
-        staminaModifier *= (1 + (TalentTree.CurrentTalents["demonicEmbrace"] * 3.0) / 100);
+        if (TalentTree.CurrentTalents.ContainsKey("demonicEmbrace")) staminaModifier *= (1 + (TalentTree.CurrentTalents["demonicEmbrace"] * 3.0) / 100);
 
         // Health
         health = Stats.playerStats.health + Stats.playerStats.stamina * staminaModifier * Stats.healthPerStamina;
