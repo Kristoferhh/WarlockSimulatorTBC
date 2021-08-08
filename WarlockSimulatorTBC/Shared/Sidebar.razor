@@ -112,10 +112,10 @@
                 //todo: only if doing a normal simulation
                 if (message.StartsWith(MessageType.SimulationEnd))
                 {
-                    await localStorage.SetItemAsync("avgDps", Convert.ToDouble(avgDps));
-                    await localStorage.SetItemAsync("minDps", Convert.ToDouble(minDps));
-                    await localStorage.SetItemAsync("maxDps", Convert.ToDouble(maxDps));
-                    await localStorage.SetItemAsync("simulationDuration", Convert.ToDouble(simulationDuration));
+                    await localStorage.SetItemAsync("avgDps", avgDps);
+                    await localStorage.SetItemAsync("minDps", minDps);
+                    await localStorage.SetItemAsync("maxDps", maxDps);
+                    await localStorage.SetItemAsync("simulationDuration", simulationDuration);
                 }
             }
             catch
