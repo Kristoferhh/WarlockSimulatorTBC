@@ -79,7 +79,7 @@
                         {
                             foreach (var subAura in subAuraGroup.Value.auras)
                             {
-                                if (aura.Key != subAura.Key && ((aura.Value.drum && subAura.Value.drum) || (aura.Value.alcohol && subAura.Value.alcohol) || (aura.Value.battleElixir && subAura.Value.battleElixir) || (aura.Value.guardianElixir && subAura.Value.guardianElixir) || (aura.Value.potion && subAura.Value.potion) || (aura.Value.demonicRune && subAura.Value.demonicRune) || (aura.Value.weaponOil && subAura.Value.weaponOil) || (aura.Value.foodBuff && subAura.Value.foodBuff)))
+                                if (aura.Key != subAura.Key && AuraGroups.SelectedAuras.Contains(subAura.Key) && ((aura.Value.drum && subAura.Value.drum) || (aura.Value.alcohol && subAura.Value.alcohol) || (aura.Value.battleElixir && subAura.Value.battleElixir) || (aura.Value.guardianElixir && subAura.Value.guardianElixir) || (aura.Value.potion && subAura.Value.potion) || (aura.Value.demonicRune && subAura.Value.demonicRune) || (aura.Value.weaponOil && subAura.Value.weaponOil) || (aura.Value.foodBuff && subAura.Value.foodBuff)))
                                 {
                                     AuraGroups.SelectedAuras.Remove(subAura.Key);
                                     AuraGroups.ModifyStatsFromAura(subAuraGroup.Key, subAura.Key, "remove");
