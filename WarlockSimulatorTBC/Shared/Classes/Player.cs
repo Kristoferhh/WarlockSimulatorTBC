@@ -16,9 +16,9 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		double minimumGcdValue = 1.0;
 		double critMultiplier = 1.5;
 		double totalManaRegenerated = 0;
-		public decimal castTimeRemaining = decimal.Zero;
-		public decimal gcdRemaining = decimal.Zero;
-		public decimal mp5Timer = Convert.ToDecimal(5);
+		public double castTimeRemaining = 0;
+		public double gcdRemaining = 0;
+		public double mp5Timer = 5;
 		public string shattrathFaction;
 		bool exaltedWithShattrathFaction;
 		List<string> combatLog = new List<string>();
@@ -32,13 +32,13 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		// so Immolate would need to have ~1.49999s left of its duration for it to start casting.
 		// But with this delay, Immolate's cast time would be ~1.500001 which would allow it to reapply Immolate when it has 1.5 seconds left
 		// This should solve that problem if I'm thinking through this correctly.
-		public decimal spellDelay = Convert.ToDecimal(0.0001);
+		public double spellDelay = 0.0001;
 
 		// Simulation variables
 		public int totalFightDuration = 0;
 		public int iteration;
 		public double iterationDamage;
-		public decimal currentFightTime;
+		public double currentFightTime;
 
 		public static PlayerSettings GetSettings()
 		{
@@ -70,14 +70,14 @@ namespace WarlockSimulatorTBC.Shared.Classes
 			gcdRemaining = 0;
 			castTimeRemaining = 0;
 			stats.currentMana = stats.maxMana;
-			mp5Timer = Convert.ToDecimal(5);
+			mp5Timer = 5;
 
 			if (spells.ContainsKey("shadowBolt")) spells["shadowBolt"].Reset();
 		}
 
-		public decimal GetGcdValue()
+		public double GetGcdValue()
 		{
-			return (decimal)gcdValue;
+			return (double)gcdValue;
 		}
 
 		public bool IsCrit()

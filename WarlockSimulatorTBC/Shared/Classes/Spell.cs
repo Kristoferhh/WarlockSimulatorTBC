@@ -31,7 +31,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		public double manaReturn = 0;
 		protected double bonusCrit = 0;
 		protected double coefficient = 0;
-		public decimal cooldownRemaining = decimal.Zero;
+		public double cooldownRemaining = 0;
 		public string name = null;
 		protected string varName = null; // Same as 'name' except it's written in camelCase
 		protected string type = null;
@@ -63,7 +63,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 
 		public bool CanCast()
 		{
-			return (!onGcd || player.gcdRemaining.Equals(decimal.Zero)) && (isProc || player.castTimeRemaining.Equals(decimal.Zero)) && cooldownRemaining.Equals(decimal.Zero);
+			return (!onGcd || player.gcdRemaining <= 0) && (isProc || player.castTimeRemaining <= 0) && cooldownRemaining <= 0;
 		}
 
 		public bool HasEnoughMana()
@@ -92,7 +92,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 			if (castTime > 0)
 			{
 				casting = true;
-				player.castTimeRemaining = (decimal)CalculateCastTime();
+				player.castTimeRemaining = (double)CalculateCastTime();
 			}
 			else
 			{
@@ -103,7 +103,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		public virtual void Cast()
 		{
 			player.stats.currentMana -= manaCost;
-			cooldownRemaining = (decimal)cooldown;
+			cooldownRemaining = (double)cooldown;
 			casting = false;
 
 			if (doesDamage)
@@ -123,7 +123,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 			player.iterationDamage += dmg;
 		}
 
-		public void Tick(decimal time)
+		public void Tick(double time)
 		{
 			cooldownRemaining = Math.Max(0, cooldownRemaining - time);
 
