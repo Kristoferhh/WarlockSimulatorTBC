@@ -10,7 +10,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 {
 	public class Player : IEntity
 	{
-		public CharacterStats stats = Stats.playerStats;
+		public CharacterStats stats;
 		int level = 70;
 		double gcdValue = 1.5;
 		double minimumGcdValue = 1.0;
@@ -19,8 +19,8 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		public decimal castTimeRemaining = decimal.Zero;
 		public decimal gcdRemaining = decimal.Zero;
 		public decimal mp5Timer = Convert.ToDecimal(5);
-		string shattrathFaction = "aldor";
-		bool exaltedWithShattrathFaction = false;
+		public string shattrathFaction;
+		bool exaltedWithShattrathFaction;
 		List<string> combatLog = new List<string>();
 		public Dictionary<string, Spell> spells = new Dictionary<string, Spell>();
 		public Dictionary<string, int> talents;

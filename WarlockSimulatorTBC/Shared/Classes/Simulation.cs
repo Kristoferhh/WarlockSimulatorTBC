@@ -5,18 +5,19 @@ using System.Threading.Tasks;
 using WarlockSimulatorTBC.Shared.Classes;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using System.Text.Json;
 
 namespace WarlockSimulatorTBC.Shared
 {
-	[KnownType(typeof(Simulation))]
+	[KnownType(typeof(SimulationSettings))]
 	public class Simulation
 	{
 		private Stopwatch _timer;
 		private Random rand = new Random();
 		public Player player;
-		public int iterations = 1000;
-		public int minTime = 150;
-		public int maxTime = 210;
+		public int iterations;
+		public int minTime;
+		public int maxTime;
 
 		public static SimulationSettings GetSettings()
 		{ 
@@ -28,13 +29,18 @@ namespace WarlockSimulatorTBC.Shared
 			};
 		}
 
-		public void Constructor(PlayerSettings playerSettings, SimulationSettings simulationSettings)
+		public void Constructor(string simulationSettings, string playerSettings)
 		{
 			Console.WriteLine("Constructor started");
-			player = new Player(playerSettings);
-			iterations = simulationSettings.iterations;
-			minTime = simulationSettings.minTime;
-			maxTime = simulationSettings.maxTime;
+			player = new Player(JsonSerializer.Deserialize<PlayerSettings>(playerSettings));
+			SimulationSettings simSettings = JsonSerializer.Deserialize<SimulationSettings>(simulationSettings);
+			iterations = simSettings.iterations;
+			minTime = simSettings.minTime;
+			maxTime = simSettings.maxTime;
+			Console.WriteLine("Iterations: " + iterations);
+			Console.WriteLine("minTime: " + minTime);
+			Console.WriteLine("maxTime: " + maxTime);
+			Console.WriteLine("Shattrath faction: " + player.shattrathFaction);
 			Console.WriteLine("Constructor finished");
 		}
 

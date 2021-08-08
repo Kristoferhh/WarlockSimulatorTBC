@@ -2,6 +2,7 @@
 @using BlazorWorker.BackgroundServiceFactory;
 @using BlazorWorker.Core;
 @using Shared.Classes;
+@using System.Text.Json;
 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject BlazorWorker.Core.IWorkerFactory workerFactory;
@@ -18,7 +19,7 @@
         <p><span id="avg-dps">@avgDps</span><span> DPS</span></p>
         <p>Min: <span id="min-dps">@minDps</span> Max: <span id="max-dps">@maxDps</span></p>
     </div>
-    <div class='btn' @onclick="SimulateDps">Simulate</div>
+    <div class='btn' @onclick="@SimulateDps">Simulate</div>
     <div class='btn' id='sim-all-items'>Simulate All Items</div>
     <div class='btn' id='sim-stat-weights'>Stat Weights</div>
     <div class='btn' id='show-combat-log'>Show Combat Log</div>
@@ -52,28 +53,36 @@
     }
 
     private async void SimulateDps()
-	{
+    {
         Console.WriteLine("Starting sim");
         var playerSettings = Player.GetSettings();
         var simSettings = Simulation.GetSettings();
         Console.WriteLine("1");
+        string playerString = JsonSerializer.Serialize(playerSettings);
+        string simString = JsonSerializer.Serialize(simSettings);
+        Console.WriteLine(simSettings.minTime);
+        Console.WriteLine(simSettings.maxTime);
+        Console.WriteLine(simSettings.iterations);
+        Console.WriteLine(playerSettings.shattrathFaction);
+        Console.WriteLine(simString);
+        Console.WriteLine(playerString);
         var webWorker = await workerFactory.CreateAsync();
         Console.WriteLine("2");
         var service = await webWorker.CreateBackgroundServiceAsync<Simulation>(
             options => options
                 .AddConventionalAssemblyOfService()
-                .AddAssemblies("System.Security.Cryptography.Algorithms.dll")
+                .AddAssemblies("System.Security.Cryptography.Algorithms.dll", "System.Text.Json.dll", "System.Text.Encodings.Web.dll")
         );
         Console.WriteLine("3");
-        await service.RunAsync(s => s.Constructor(playerSettings, simSettings));
+        await service.RunAsync(s => s.Constructor(simString, playerString));
         Console.WriteLine("4");
         await service.RunAsync(s => s.Start());
         Console.WriteLine("5");
         //simulation.Start();
-	}
+    }
 
     public void RefreshCharacterStats()
-	{
+    {
         characterStats.RefreshStats();
-	}
+    }
 }
