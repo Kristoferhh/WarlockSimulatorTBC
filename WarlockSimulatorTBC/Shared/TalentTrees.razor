@@ -28,10 +28,10 @@
                                     int pointAmount = 0;
                                     // Check if the CurrentTalents dictionary has any points for this talent, otherwise the player doesn't have any points in the talent
                                     if (TalentTree.CurrentTalents.ContainsKey(talent.Key))
-						            {
+                                    {
                                         pointAmount = TalentTree.CurrentTalents[talent.Key];
                                         pointsInCurrentTree += pointAmount;
-						            }
+                                    }
                                     // Create empty table cells in case there's empty spaces between the talents
                                     column++;
                                     while (talent.Value.column > column)
@@ -41,7 +41,7 @@
                                     }
                                     <td>
                                         <div id="@talent.Key" class="talent-icon" data-points="@pointAmount" @onmouseup="@((mouseArgs) => TalentClickHandler(mouseArgs, talent.Key))" oncontextmenu="return false;" @onclick:preventDefault="true">
-                                            <a href="https://tbc.wowhead.com/spell=@talent.Value.rankIds[0]">
+                                            <a href="https://tbc.wowhead.com/spell=@talent.Value.rankIds[pointAmount >= 1 ? pointAmount - 1 : pointAmount]">
                                                 <img src="img/@talent.Value.iconName" />
                                                 <span id="@talent.Key-point-amount" class="talent-point-amount" data-points="@pointAmount" data-max-points="@(pointAmount == talent.Value.rankIds.Length ? "true" : "false")">@pointAmount</span>
                                             </a>
