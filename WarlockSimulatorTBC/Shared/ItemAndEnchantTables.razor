@@ -91,7 +91,7 @@
 			{
                 continue;
 			}
-            <tr class="item-row" @onclick="@(() => ItemClickHandler(item.Key))" data-selected="@(Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot] == item.Key ? "true" : "false")">
+            <tr class="item-row" @onclick="@(() => ItemClickHandler(item.Key))" data-selected="@(Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot] == item.Key ? "true" : "false")" @onclick:preventDefault="true">
                 <td><a href="https://tbc.wowhead.com/item=@item.Key">@item.Value.name</a></td>
                 <td>
                     <div>
@@ -183,7 +183,7 @@
 
                 if (Items.SelectedItems[itemSlot] != null)
                 {
-                    Items.ModifyStatsFromItem(itemSlot, (int)Items.SelectedItems[itemSlot], "add");
+                    Stats.playerStats.ModifyStatsFromItem(itemSlot, (int)Items.SelectedItems[itemSlot], "add");
                 }
             }
             await RefreshSidebarStats.InvokeAsync();
@@ -206,7 +206,7 @@
         // If clicking a mainhand/offhand, unequip the twohand
         if ((Items.SelectedItemSlot == ItemSlots.MAINHAND || Items.SelectedItemSlot == ItemSlots.OFFHAND) && Items.SelectedItems[ItemSlots.TWOHAND] != null)
         {
-            Items.ModifyStatsFromItem(ItemSlots.TWOHAND, (int)Items.SelectedItems[ItemSlots.TWOHAND], "remove");
+            Stats.playerStats.ModifyStatsFromItem(ItemSlots.TWOHAND, (int)Items.SelectedItems[ItemSlots.TWOHAND], "remove");
             Items.SelectedItems[ItemSlots.TWOHAND] = null;
         }
         // If clicking a twohand, unequip the mainhand & offhand
@@ -214,12 +214,12 @@
         {
             if (Items.SelectedItems[ItemSlots.MAINHAND] != null)
             {
-                Items.ModifyStatsFromItem(ItemSlots.MAINHAND, (int)Items.SelectedItems[ItemSlots.MAINHAND], "remove");
+                Stats.playerStats.ModifyStatsFromItem(ItemSlots.MAINHAND, (int)Items.SelectedItems[ItemSlots.MAINHAND], "remove");
                 Items.SelectedItems[ItemSlots.MAINHAND] = null;
             }
             if (Items.SelectedItems[ItemSlots.OFFHAND] != null)
             {
-                Items.ModifyStatsFromItem(ItemSlots.OFFHAND, (int)Items.SelectedItems[ItemSlots.OFFHAND], "remove");
+                Stats.playerStats.ModifyStatsFromItem(ItemSlots.OFFHAND, (int)Items.SelectedItems[ItemSlots.OFFHAND], "remove");
                 Items.SelectedItems[ItemSlots.OFFHAND] = null;
             }
         }
@@ -227,7 +227,7 @@
         // If the clicked item is the currently equipped item then set it to null, otherwise change to new item id
         if (Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot] == itemId)
         {
-            Items.ModifyStatsFromItem(Items.SelectedItemSlot, (int)Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot], "remove");
+            Stats.playerStats.ModifyStatsFromItem(Items.SelectedItemSlot, (int)Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot], "remove");
             Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot] = null;
         }
         else
@@ -235,10 +235,10 @@
             // Remove stats from the currently equipped item, change the equipped item id, and add the new item's stats
             if (Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot] != null)
             {
-                Items.ModifyStatsFromItem(Items.SelectedItemSlot, (int)Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot], "remove");
+                Stats.playerStats.ModifyStatsFromItem(Items.SelectedItemSlot, (int)Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot], "remove");
             }
             Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot] = itemId;
-            Items.ModifyStatsFromItem(Items.SelectedItemSlot, (int)Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot], "add");
+            Stats.playerStats.ModifyStatsFromItem(Items.SelectedItemSlot, (int)Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot], "add");
         }
 
         await RefreshSidebarStats.InvokeAsync();
@@ -246,7 +246,7 @@
     }
 
     public void ReRender()
-	{
+    {
         StateHasChanged();
-	}
+    }
 }

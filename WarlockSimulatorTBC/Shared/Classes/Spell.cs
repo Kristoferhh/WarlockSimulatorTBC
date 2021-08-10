@@ -168,7 +168,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		protected Player player;
 		protected int minDmg = 0;
 		protected int maxDmg = 0;
-		protected double dmg = 0;
+		protected double avgDmg = 0;
 		protected double castTime = 0;
 		protected double manaCost = 0;
 		protected double cooldown = 0;
@@ -261,8 +261,9 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		public void Damage()
 		{
 			double dmg = (minDmg + maxDmg) / 2;
-			dmg += (player.stats.spellPower + school == SpellSchool.SHADOW ? player.stats.shadowPower : player.stats.firePower) * coefficient;
+			dmg += (player.stats.spellPower + (school == SpellSchool.SHADOW ? player.stats.shadowPower : school == SpellSchool.FIRE ? player.stats.firePower : 0)) * coefficient;
 			dmg *= school == SpellSchool.SHADOW ? player.stats.shadowModifier : school == SpellSchool.FIRE ? player.stats.fireModifier : 1;
+			player.CombatLog("Spell Power: " + player.stats.spellPower);
 
 			player.CombatLog(name + " " + dmg);
 			player.iterationDamage += dmg;

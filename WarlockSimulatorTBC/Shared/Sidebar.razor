@@ -39,8 +39,10 @@
     private bool simIsActive = false;
     private uint simProgress = 0;
     private uint multiSimProgress = 0;
+    // Saves the ID of the item that was equipped when the user started a sim. Without this, the sidebar will stop updating if the user selects another item while the sim is still running
+    private int? selectedItemIdWhenStartingSim;
     // Tracks information about multi-item sims. Key is the id of the item equipped in the sim and the value is the sim's progress %
-    private Dictionary<int, int> multiItemSimInformation = new Dictionary<int, int>();
+    private Dictionary<int?, int> multiItemSimInformation = new Dictionary<int?, int>();
 
     SidebarCharacterStats characterStats;
 
@@ -70,8 +72,9 @@
         // Create the player and simulation settings and serialize them into json strings
         PlayerSettings playerSettings = Player.GetSettings();
         SimulationSettings simSettings = Simulation.GetSettings();
-        int currentlyEquippedItemId = (int)Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot];
+        int? currentlyEquippedItemId = Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot];
         int[] randomSeeds = new int[simSettings.iterations];
+        selectedItemIdWhenStartingSim = currentlyEquippedItemId;
 
         // Creates an array of random seeds for the simulations to use. This is so that each iteration will use the same Random() object across all the simulations.
         for (int i = 0; i < simSettings.iterations; i++)
@@ -82,17 +85,40 @@
         // Loop through all the items of the currently selected item slot
         foreach (var item in Items.itemSlots[Items.SelectedItemSlot].items)
         {
-            // Start a new simulation if it's a multi-item sim or if the item is the currently equipped item.
-            if (simulationType == SimulationType.AllItems || item.Key == currentlyEquippedItemId)
+            // Start a new simulation if it's a multi-item sim or if the item is the currently equipped item or if there is no item equipped in this item slot.
+            if (simulationType == SimulationType.AllItems || item.Key == currentlyEquippedItemId || currentlyEquippedItemId == null)
             {
-                string playerString = JsonSerializer.Serialize(playerSettings);
+                // Create a new clone of the playerSettings object since we're modifying the stats
+                PlayerSettings newPlayerSettings = playerSettings.Clone();
+
+                // Remove the stats of the currently equipped item and add the stats of the new item if it's a multi-item sim and if it's not our currently equipped item
+                if (simulationType == SimulationType.AllItems && item.Key != currentlyEquippedItemId)
+                {
+                    if (currentlyEquippedItemId != null)
+                    {
+                        newPlayerSettings.stats.ModifyStatsFromItem(Items.SelectedItemSlot, (int)currentlyEquippedItemId, "remove");
+                        Console.WriteLine("Removed stats from " + currentlyEquippedItemId);
+                    }
+                    newPlayerSettings.stats.ModifyStatsFromItem(Items.SelectedItemSlot, item.Key, "add");
+                    Console.WriteLine("Added stats from " + item.Key);
+                }
+
+                string playerString = JsonSerializer.Serialize(newPlayerSettings);
                 string simString = JsonSerializer.Serialize(simSettings);
-                StartSimulation(simString, playerString, simulationType, item.Key, randomSeeds);
+
+                int? itemId = simulationType == SimulationType.AllItems ? item.Key : currentlyEquippedItemId;
+                StartSimulation(simString, playerString, simulationType, itemId, randomSeeds);
+
+                // If there is no item equipped in this slot and it's a normal sim then break out of the loop since the current if-statement will always be true for each item.
+                if (currentlyEquippedItemId == null && simulationType == SimulationType.Normal)
+                {
+                    break;
+                }
             }
         }
     }
 
-    private async void StartSimulation(string simulationSettings, string playerSettings, string simulationType, int itemId, int[] randomSeeds)
+    private async void StartSimulation(string simulationSettings, string playerSettings, string simulationType, int? itemId, int[] randomSeeds)
     {
         var webWorker = await workerFactory.CreateAsync();
         webWorker.IncomingMessage += this.OnWorkerMessage;
@@ -106,7 +132,7 @@
         simIsActive = true;
         if (simulationType == SimulationType.AllItems)
         {
-            multiItemSimInformation.Add(itemId, 0);
+            multiItemSimInformation.Add((int)itemId, 0);
         }
         await service.RunAsync(s => s.Start());
     }
@@ -121,9 +147,19 @@
             {
                 // First index is the type of message and the second index is the message itself
                 SimulationUpdate msg = JsonSerializer.Deserialize<SimulationUpdate>(messages[1].Trim());
-                avgDps = Math.Round(msg.totalDamage / msg.totalFightDuration, 2).ToString();
-                minDps = Math.Round(msg.minDps, 2).ToString();
-                maxDps = Math.Round(msg.maxDps, 2).ToString();
+                string msgAvgDps = Math.Round(msg.totalDamage / msg.totalFightDuration, 2).ToString();
+
+                if (msg.itemId == null || msg.itemId == selectedItemIdWhenStartingSim)
+                {
+                    avgDps = msgAvgDps;
+                    minDps = Math.Round(msg.minDps, 2).ToString();
+                    maxDps = Math.Round(msg.maxDps, 2).ToString();
+                }
+
+                if (message.StartsWith(MessageType.SimulationEnd))
+                {
+                    selectedItemIdWhenStartingSim = null;
+                }
 
                 if (msg.simulationType == SimulationType.Normal)
                 {
@@ -152,7 +188,7 @@
                 {
                     multiItemSimInformation[msg.itemId] = (int)msg.simulationProgress;
                     multiSimProgress = (uint)Math.Ceiling(multiItemSimInformation.Values.Average());
-                    Items.savedItemDps[Items.SelectedItemSlot + Items.SelectedItemSubSlot][msg.itemId.ToString()] = Convert.ToDouble(avgDps);
+                    Items.savedItemDps[Items.SelectedItemSlot + Items.SelectedItemSubSlot][msg.itemId.ToString()] = Convert.ToDouble(msgAvgDps);
                     await RefreshItemTable.InvokeAsync();
 
                     if (multiSimProgress < 100)

@@ -20,7 +20,7 @@ namespace WarlockSimulatorTBC.Shared
 		public int iterations;
 		public int minTime;
 		public int maxTime;
-		public int itemId;
+		public int? itemId;
 		public string simulationType;
 
 		private Stopwatch _passTimeTimer = new Stopwatch();
@@ -40,7 +40,7 @@ namespace WarlockSimulatorTBC.Shared
 			_messageService = messageService;
 		}
 
-		public void Constructor(string simulationSettings, string playerSettings, string simulationType, int itemId, int[] randomSeeds)
+		public void Constructor(string simulationSettings, string playerSettings, string simulationType, int? itemId, int[] randomSeeds)
 		{
 			player = new Player(JsonSerializer.Deserialize<PlayerSettings>(playerSettings));
 			SimulationSettings simSettings = JsonSerializer.Deserialize<SimulationSettings>(simulationSettings);
