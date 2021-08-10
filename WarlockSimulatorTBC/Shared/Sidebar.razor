@@ -19,23 +19,28 @@
         <p><span id="avg-dps">@avgDps</span><span> DPS</span></p>
         <p>Min: <span id="min-dps">@minDps</span> Max: <span id="max-dps">@maxDps</span></p>
     </div>
-    <div class='btn' @onclick="@SimulateDps" style="background: @("linear-gradient(to right, #9482C9 " + simProgress + "%, transparent " + simProgress + "%)")">@simulateButtonText</div>
-    <div class='btn' id='sim-all-items'>Simulate All Items</div>
-    <div class='btn' id='sim-stat-weights'>Stat Weights</div>
-    <div class='btn' id='show-combat-log'>Show Combat Log</div>
+    <div class='btn' @onclick="@(() => SimulateDps(SimulationType.Normal))" style="background: @(simProgress > 0 ? ("linear-gradient(to right, #9482C9 " + simProgress + "%, transparent " + simProgress + "%)") : "")">@simulateButtonText</div>
+    <div class='btn'@onclick="@(() => SimulateDps(SimulationType.AllItems))" style="background: @(multiSimProgress > 0 ? ("linear-gradient(to right, #9482C9 " + multiSimProgress + "%, transparent " + multiSimProgress + "%)") : "")">@multiSimButtonText</div>
+    <div class='btn'>Stat Weights</div>
+    <div class='btn'>Show Combat Log</div>
     <p id="sim-length-result">@(simulationDuration != null ? simulationDuration + "s" : "")</p>
     <p id="guybrush-note">This sim was heavily inspired by <a target="_blank" href='https://guybrushgit.github.io/WarriorSim/'>Guybrush's 1.13 Warrior Simulator</a></p>
     <p id="paypal-note"><a href="https://www.paypal.com/paypalme/kristoferhh" target="_blank">Support me via PayPal</a></p>
 </div>
 
 @code {
+    [Parameter] public EventCallback RefreshItemTable { get; set; }
     private string avgDps = null;
     private string minDps = null;
     private string maxDps = null;
     private string simulationDuration = null;
     private string simulateButtonText = "Simulate";
+    private string multiSimButtonText = "Simulate All Items";
     private bool simIsActive = false;
-    private double simProgress = 0;
+    private uint simProgress = 0;
+    private uint multiSimProgress = 0;
+    // Tracks information about multi-item sims. Key is the id of the item equipped in the sim and the value is the sim's progress %
+    private Dictionary<int, int> multiItemSimInformation = new Dictionary<int, int>();
 
     SidebarCharacterStats characterStats;
 
@@ -60,15 +65,35 @@
         }
     }
 
-    private async void SimulateDps()
+    private void SimulateDps(string simulationType)
     {
         // Create the player and simulation settings and serialize them into json strings
         PlayerSettings playerSettings = Player.GetSettings();
         SimulationSettings simSettings = Simulation.GetSettings();
-        string playerString = JsonSerializer.Serialize(playerSettings);
-        string simString = JsonSerializer.Serialize(simSettings);
+        int currentlyEquippedItemId = (int)Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot];
+        int[] randomSeeds = new int[simSettings.iterations];
 
-        // Create a web worker for the Simulation class and pass the player & simulation settings as parameters
+        // Creates an array of random seeds for the simulations to use. This is so that each iteration will use the same Random() object across all the simulations.
+        for (int i = 0; i < simSettings.iterations; i++)
+        {
+            randomSeeds[i] = Guid.NewGuid().GetHashCode();
+        }
+
+        // Loop through all the items of the currently selected item slot
+        foreach (var item in Items.itemSlots[Items.SelectedItemSlot].items)
+        {
+            // Start a new simulation if it's a multi-item sim or if the item is the currently equipped item.
+            if (simulationType == SimulationType.AllItems || item.Key == currentlyEquippedItemId)
+            {
+                string playerString = JsonSerializer.Serialize(playerSettings);
+                string simString = JsonSerializer.Serialize(simSettings);
+                StartSimulation(simString, playerString, simulationType, item.Key, randomSeeds);
+            }
+        }
+    }
+
+    private async void StartSimulation(string simulationSettings, string playerSettings, string simulationType, int itemId, int[] randomSeeds)
+    {
         var webWorker = await workerFactory.CreateAsync();
         webWorker.IncomingMessage += this.OnWorkerMessage;
 
@@ -77,8 +102,12 @@
                 .AddConventionalAssemblyOfService()
                 .AddAssemblies("System.Text.Json.dll", "System.Text.Encodings.Web.dll")
         );
-        await service.RunAsync(s => s.Constructor(simString, playerString));
+        await service.RunAsync(s => s.Constructor(simulationSettings, playerSettings, simulationType, itemId, randomSeeds));
         simIsActive = true;
+        if (simulationType == SimulationType.AllItems)
+        {
+            multiItemSimInformation.Add(itemId, 0);
+        }
         await service.RunAsync(s => s.Start());
     }
 
@@ -95,28 +124,55 @@
                 avgDps = Math.Round(msg.totalDamage / msg.totalFightDuration, 2).ToString();
                 minDps = Math.Round(msg.minDps, 2).ToString();
                 maxDps = Math.Round(msg.maxDps, 2).ToString();
-                simulationDuration = Math.Round(msg.simulationLength, 2).ToString();
-                if (msg.simulationProgress < 100)
-                {
-                    simProgress = msg.simulationProgress;
-                    simulateButtonText = simProgress + "%";
-                }
-                else
-                {
-                    simProgress = 0;
-                    simulateButtonText = "Simulate";
-                    simIsActive = false;
-                }
-                StateHasChanged();
 
-                //todo: only if doing a normal simulation
-                if (message.StartsWith(MessageType.SimulationEnd))
+                if (msg.simulationType == SimulationType.Normal)
                 {
-                    await localStorage.SetItemAsync("avgDps", avgDps);
-                    await localStorage.SetItemAsync("minDps", minDps);
-                    await localStorage.SetItemAsync("maxDps", maxDps);
-                    await localStorage.SetItemAsync("simulationDuration", simulationDuration);
+                    if (msg.simulationProgress < 100)
+                    {
+                        simProgress = msg.simulationProgress;
+                        simulateButtonText = simProgress + "%";
+                    }
+                    else
+                    {
+                        simProgress = 0;
+                        simulateButtonText = "Simulate";
+                        simIsActive = false;
+                    }
+
+                    if (message.StartsWith(MessageType.SimulationEnd))
+                    {
+                        simulationDuration = Math.Round(msg.simulationLength, 2).ToString();
+                        await localStorage.SetItemAsync("avgDps", avgDps);
+                        await localStorage.SetItemAsync("minDps", minDps);
+                        await localStorage.SetItemAsync("maxDps", maxDps);
+                        await localStorage.SetItemAsync("simulationDuration", simulationDuration);
+                    }
                 }
+                else if (msg.simulationType == SimulationType.AllItems && Items.savedItemDps[Items.SelectedItemSlot + Items.SelectedItemSubSlot].ContainsKey(msg.itemId.ToString()))
+                {
+                    multiItemSimInformation[msg.itemId] = (int)msg.simulationProgress;
+                    multiSimProgress = (uint)Math.Ceiling(multiItemSimInformation.Values.Average());
+                    Items.savedItemDps[Items.SelectedItemSlot + Items.SelectedItemSubSlot][msg.itemId.ToString()] = Convert.ToDouble(avgDps);
+                    await RefreshItemTable.InvokeAsync();
+
+                    if (multiSimProgress < 100)
+                    {
+                        multiSimButtonText = multiSimProgress + "%";
+                    }
+                    else
+                    {
+                        multiSimProgress = 0;
+                        multiSimButtonText = "Simulate All Items";
+                        multiItemSimInformation.Clear();
+                    }
+
+                    if (message.StartsWith(MessageType.SimulationEnd))
+                    {
+                        await localStorage.SetItemAsync("savedItemDps", Items.savedItemDps);
+                    }
+                }
+
+                StateHasChanged();
             }
             catch
             {

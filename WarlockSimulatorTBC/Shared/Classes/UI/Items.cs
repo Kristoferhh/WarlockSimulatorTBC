@@ -79,6 +79,7 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 	{
 		public static string SelectedItemSlot = ItemSlots.HEAD;
 		public static string SelectedItemSubSlot = "";
+		public static Dictionary<string, Dictionary<string, double>> savedItemDps = new Dictionary<string, Dictionary<string, double>>();
 		public static List<int> SelectedPhases = new List<int>() { 0, 1 };
 		public static Dictionary<string, int?> SelectedItems = new Dictionary<string, int?>
 		{

@@ -18,6 +18,151 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		public static string FIRE = "fire";
 	}
 
+	/*public struct Spell
+	{
+		Player Player { get; set; }
+		uint MinDmg { get; set; }
+		uint MaxDmg { get; set; }
+		double Dmg { get; set; }
+		double CastTime { get; set; }
+		double ManaCost { get; set; }
+		double Cooldown { get; set; }
+		double Modifier { get; set; }
+		double ManaReturn { get; set; }
+		double BonusCrit { get; set; }
+		double Coefficient { get; set; }
+		double CooldownRemaining { get; set; }
+		string Name { get; set; }
+		string VarName { get; set; } // Same as 'name' except it's written in camelCase
+		string Type { get; set; }
+		string School { get; set; }
+		string BreakdownTable { get; set; }
+		bool IsDot { get; set; }
+		bool DoesDamage { get; set; }
+		bool CanCrit { get; set; }
+		public bool Casting { get; set; }
+		bool IsItem { get; set; }
+		bool OnGcd { get; set; }
+		bool IsProc { get; set; }
+
+		public Spell(string name, Player p, int minDmg, int maxDmg, double castTime, double manaCost, double cooldown, double modifier, double coefficient, string type, string school, double manaReturn, double bonusCrit, string breakdownTable, bool isDot, bool doesDamage, bool canCrit, bool isItem, bool onGcd, bool isProc)
+		{
+			Name = name;
+			VarName = name;
+			Player = p;
+			MinDmg = minDmg;
+			MaxDmg = maxDmg;
+			Dmg = (minDmg + maxDmg / 2);
+			CastTime = castTime;
+			Cooldown = cooldown;
+			Modifier = modifier;
+			ManaCost = manaCost;
+			Coefficient = coefficient;
+			Type = type;
+			School = school;
+			ManaReturn = manaReturn;
+			BonusCrit = bonusCrit;
+			IsDot = isDot;
+			DoesDamage = doesDamage;
+			BreakdownTable = breakdownTable;
+			CanCrit = canCrit;
+			IsItem = isItem;
+			OnGcd = onGcd;
+			IsProc = isProc;
+			CooldownRemaining = 0;
+			Casting = false;
+		}
+
+		public void Reset()
+		{
+			CooldownRemaining = 0;
+			Casting = false;
+		}
+
+		public bool CanCast()
+		{
+			return (!OnGcd || Player.gcdRemaining <= 0) && (IsProc || Player.castTimeRemaining <= 0) && CooldownRemaining <= 0;
+		}
+
+		public bool HasEnoughMana()
+		{
+			//return manaCost <= player.stats.mana;
+			return true;
+		}
+
+		public bool Ready()
+		{
+			return CanCast() && HasEnoughMana();
+		}
+
+		public void StartCast()
+		{
+			if (OnGcd)
+			{
+				Player.gcdRemaining = Player.GetGcdValue();
+			}
+
+			if (CastTime > 0)
+			{
+				Casting = true;
+				Player.castTimeRemaining = CastTime;
+				Player.CombatLog("Started casting " + Name);
+			}
+			else
+			{
+				Cast();
+			}
+		}
+
+		public void Cast()
+		{
+			Player.CombatLog("Cast " + Name);
+			Player.stats.currentMana -= ManaCost;
+			CooldownRemaining = Cooldown;
+			Casting = false;
+
+			if (DoesDamage)
+			{
+				Player.CombatLog("Should do damage with " + Name + " now");
+				Damage();
+			}
+			else
+			{
+				Player.CombatLog("Doesn't do dmg");
+			}
+		}
+
+		public void Damage()
+		{
+			Player.CombatLog("Doing damage with " + Name);
+			double dmg = Dmg;
+			dmg += (Player.stats.spellPower + School == SpellSchool.SHADOW ? Player.stats.shadowPower : Player.stats.firePower) * Coefficient;
+			dmg *= School == SpellSchool.SHADOW ? Player.stats.shadowModifier : School == SpellSchool.FIRE ? Player.stats.fireModifier : 1;
+
+			Player.CombatLog(Name + " " + dmg);
+			Player.iterationDamage += dmg;
+		}
+
+		public void Tick(double time)
+		{
+			CooldownRemaining -= time;
+
+			if (Casting && Player.castTimeRemaining <= 0)
+			{
+				Player.CombatLog("Should cast " + Name + " now");
+				Cast();
+			}
+			else
+			{
+				if (!Casting)
+				{
+					Player.CombatLog("Not casting " + Name);
+				}
+				Player.CombatLog("Player cast time remaining: " + Player.castTimeRemaining);
+			}
+		}
+	}*/
+
 	public class Spell
 	{
 		protected Player player;

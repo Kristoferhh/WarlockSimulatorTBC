@@ -14,12 +14,16 @@ namespace WarlockSimulatorTBC.Shared
 	{
 		private readonly IWorkerMessageService _messageService;
 		private Stopwatch _timer;
-		private Random rand = new Random();
 		private double simUpdateNum;
+		private int[] randomSeeds;
 		public Player player;
 		public int iterations;
 		public int minTime;
 		public int maxTime;
+		public int itemId;
+		public string simulationType;
+
+		private Stopwatch _passTimeTimer = new Stopwatch();
 
 		public static SimulationSettings GetSettings()
 		{ 
@@ -36,7 +40,7 @@ namespace WarlockSimulatorTBC.Shared
 			_messageService = messageService;
 		}
 
-		public void Constructor(string simulationSettings, string playerSettings)
+		public void Constructor(string simulationSettings, string playerSettings, string simulationType, int itemId, int[] randomSeeds)
 		{
 			player = new Player(JsonSerializer.Deserialize<PlayerSettings>(playerSettings));
 			SimulationSettings simSettings = JsonSerializer.Deserialize<SimulationSettings>(simulationSettings);
@@ -44,11 +48,15 @@ namespace WarlockSimulatorTBC.Shared
 			minTime = simSettings.minTime;
 			maxTime = simSettings.maxTime;
 			simUpdateNum = Math.Floor(iterations / 100.0);
+			this.simulationType = simulationType;
+			this.itemId = itemId;
+			this.randomSeeds = randomSeeds;
 		}
 
-		private decimal PassTime()
+		private double PassTime()
 		{
-			decimal time = player.castTimeRemaining;
+			_passTimeTimer.Start();
+			double time = player.castTimeRemaining;
 			if (time == 0)
 			{
 				time = player.gcdRemaining;
@@ -57,18 +65,19 @@ namespace WarlockSimulatorTBC.Shared
 			// Tick the spells and auras
 			player.CombatLog("Forwarding by: " + time + " seconds");
 			player.currentFightTime += time;
-			player.castTimeRemaining = Math.Max(0, player.castTimeRemaining - time);
-			player.gcdRemaining = Math.Max(0, player.gcdRemaining - time);
+			player.castTimeRemaining -= time;
+			player.gcdRemaining -= time;
 
 			if (player.spells.ContainsKey("shadowBolt") && player.spells["shadowBolt"].casting) player.spells["shadowBolt"].Tick(time);
 
-			player.mp5Timer = Math.Max(0, player.mp5Timer - time);
+			player.mp5Timer -= time;
 			if (player.mp5Timer <= 0)
 			{
 				player.mp5Timer = 5;
 				player.stats.currentMana += player.stats.mp5;
 			}
 
+			_passTimeTimer.Stop();
 			return time;
 		}
 
@@ -83,11 +92,12 @@ namespace WarlockSimulatorTBC.Shared
 
 			for (player.iteration = 1; player.iteration < iterations; player.iteration++)
 			{
-				if (player.iteration == 1) _messageService.PostMessageAsync("{SimulationUpdate}(yep)");
+				// Create a new Random object with a pre-determined (but random) seed from the randomSeeds array.
+				player.rand = new Random(randomSeeds[player.iteration - 1]);
 				player.Reset();
 				player.iterationDamage = 0;
 				player.currentFightTime = 0;
-				int fightLength = rand.Next(minTime, maxTime);
+				int fightLength = player.rand.Next(minTime, maxTime);
 
 				while (player.currentFightTime < fightLength)
 				{
@@ -97,16 +107,16 @@ namespace WarlockSimulatorTBC.Shared
 						// Spells on the GCD
 						if (player.gcdRemaining <= 0)
 						{
-							decimal timeRemaining = fightLength - player.currentFightTime;
+							double timeRemaining = fightLength - player.currentFightTime;
 
 							if (player.spells["shadowBolt"].Ready())
 							{
-								player.CombatLog("Casting Shadow Bolt");
+								player.CombatLog("Choosing Shadow Bolt");
 								player.spells["shadowBolt"].StartCast();
 							}
 							else if (player.spells["lifeTap"].Ready())
 							{
-								player.CombatLog("Casting Life Tap");
+								player.CombatLog("Choosing Life Tap");
 								player.spells["lifeTap"].StartCast();
 							}
 						}
@@ -133,6 +143,7 @@ namespace WarlockSimulatorTBC.Shared
 			}
 
 			_timer.Stop();
+			Console.WriteLine("PassTime(): " + _passTimeTimer.Elapsed);
 			SendSimulationUpdate(MessageType.SimulationEnd, minDps, maxDps, totalDamage);
 		}
 
@@ -140,12 +151,14 @@ namespace WarlockSimulatorTBC.Shared
 		{
 			SimulationUpdate msg = new SimulationUpdate
 			{
+				simulationType = simulationType,
 				simulationProgress = (uint)Math.Ceiling((double)player.iteration / iterations * 100),
 				minDps = minDps,
 				maxDps = maxDps,
 				totalDamage = totalDamage,
 				totalFightDuration = player.totalFightDuration,
-				simulationLength = _timer.Elapsed.TotalSeconds
+				simulationLength = _timer.Elapsed.TotalSeconds,
+				itemId = itemId
 			};
 			_messageService.PostMessageAsync(msgType + "-;" + JsonSerializer.Serialize(msg));
 		}

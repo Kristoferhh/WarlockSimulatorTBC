@@ -123,7 +123,7 @@
                 <td>@(item.Value.spellCritRating > 0 ? item.Value.spellCritRating : "")</td>
                 <td>@(item.Value.spellHitRating > 0 ? item.Value.spellHitRating : "")</td>
                 <td>@(item.Value.spellHasteRating > 0 ? item.Value.spellHasteRating : "")</td>
-                <td></td>
+                <td>@(Items.savedItemDps.ContainsKey((Items.SelectedItemSlot + Items.SelectedItemSubSlot)) ? Items.savedItemDps[Items.SelectedItemSlot + Items.SelectedItemSubSlot].ContainsKey(item.Key.ToString()) ? Items.savedItemDps[Items.SelectedItemSlot + Items.SelectedItemSubSlot][item.Key.ToString()] : "" : "")</td>
             </tr>
         }
     </tbody>
@@ -188,6 +188,11 @@
             }
             await RefreshSidebarStats.InvokeAsync();
         }
+
+        if (await localStorage.ContainKeyAsync("savedItemDps"))
+        {
+            Items.savedItemDps = await localStorage.GetItemAsync<Dictionary<string, Dictionary<string, double>>>("savedItemDps");
+        }
     }
 
     private void ItemSlotClickHandler(string itemSlot, string itemSubSlot = "")
@@ -239,4 +244,9 @@
         await RefreshSidebarStats.InvokeAsync();
         await localStorage.SetItemAsync("selectedItems", Items.SelectedItems);
     }
+
+    public void ReRender()
+	{
+        StateHasChanged();
+	}
 }

@@ -10,6 +10,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 {
 	public class Player : IEntity
 	{
+		public Random rand;
 		public CharacterStats stats;
 		int level = 70;
 		double gcdValue = 1.5;
@@ -63,6 +64,8 @@ namespace WarlockSimulatorTBC.Shared.Classes
 		{
 			spells.Add("lifeTap", new LifeTap(this));
 			spells.Add("shadowBolt", new ShadowBolt(this));
+			//spells.Add("lifeTap", new Spell("lifeTap", this, 0, 0, 0, 0, 0, 1 * (1 + 0.1 * talents["improvedLifeTap"]), 0.8, SpellType.AFFLICTION, SpellSchool.SHADOW, 582, 0, "manaGain", false, false, false, false, true, false));
+			//spells.Add("shadowBolt", new Spell("shadowBolt", this, 544, 607, 3 - talents["bane"] / 10.0, 420, 0, 1, 3 / 3.5, SpellType.DESTRUCTION, SpellSchool.SHADOW, 0, 0, "damage", false, true, true, false, true, false));
 		}
 
 		public void Reset()
