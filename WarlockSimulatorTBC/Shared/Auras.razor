@@ -22,6 +22,7 @@
 
 @code {
     [Parameter] public EventCallback RefreshSidebarStats { get; set; }
+    [Parameter] public EventCallback RefreshSimulationSettings { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,6 +61,7 @@
             }
 
             await RefreshSidebarStats.InvokeAsync();
+            await RefreshSimulationSettings.InvokeAsync();
         }
     }
 
@@ -98,6 +100,7 @@
                         AuraGroups.ModifyStatsFromAura(auraGroup.Key, aura.Key, "remove");
                     }
                     await RefreshSidebarStats.InvokeAsync();
+                    await RefreshSimulationSettings.InvokeAsync();
                     await localStorage.SetItemAsync("auras", AuraGroups.SelectedAuras);
                     return;
                 }

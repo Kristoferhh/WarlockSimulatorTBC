@@ -63,6 +63,7 @@
 
 @code {
     [Parameter] public EventCallback RefreshSidebarStats { get; set; }
+    [Parameter] public EventCallback RefreshSimulationSettings { get; set; }
 
     // All talents in this list will refresh the stats in the sidebar when modified
     List<string> talentsWithStats = new List<string>() { "shadowMastery", "malediction", "demonicEmbrace", "felIntellect", "felStamina", "demonicAegis", "masterDemonologist", "souLink", "demonicKnowledge", "demonicTactics", "devastation", "emberstorm", "backlash" };
@@ -74,6 +75,7 @@
             var talents = await localStorage.GetItemAsync<string>("talents");
             TalentTree.CurrentTalents = JsonSerializer.Deserialize<Dictionary<string, int>>(talents);
             await RefreshSidebarStats.InvokeAsync();
+            await RefreshSimulationSettings.InvokeAsync();
         }
     }
 
@@ -159,6 +161,7 @@
     private async void SaveTalents()
     {
         await RefreshSidebarStats.InvokeAsync();
+        await RefreshSimulationSettings.InvokeAsync();
         await localStorage.SetItemAsync("talents", TalentTree.CurrentTalents);
     }
 }

@@ -10,10 +10,10 @@
 <div id="main">
     <p id="pet-wip-note">This sim is still a work in progress (especially pets!). Please report bugs to the warlock Discord or PM me at Kristofer#8003</p>
     <div>
-        <Auras RefreshSidebarStats="@RefreshSidebarStats" />
+        <Auras RefreshSidebarStats="@RefreshSidebarStats" RefreshSimulationSettings="@RefreshSimulationSettings" />
         <Rotation />
-        <SimSettings />
-        <TalentTrees RefreshSidebarStats="@RefreshSidebarStats" />
+        <SimSettings @ref="simSettings" />
+        <TalentTrees RefreshSidebarStats="@RefreshSidebarStats" RefreshSimulationSettings="@RefreshSimulationSettings" />
 
         <section class="close-button-target" id="stat-weights-section" style="display: none;">
             <div>
@@ -157,6 +157,7 @@
 @code {
     Sidebar sideBar;
     ItemAndEnchantTables ItemTable;
+    SimSettings simSettings;
 
     protected override async Task OnInitializedAsync()
     {
@@ -189,6 +190,11 @@
     private void RefreshItemTable()
 	{
         ItemTable.ReRender();
+	}
+
+    private void RefreshSimulationSettings()
+	{
+        simSettings.ReRender();
 	}
 
     private async void PhaseClickHandler(int phase)
