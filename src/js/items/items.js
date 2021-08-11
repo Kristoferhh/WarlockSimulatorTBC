@@ -3953,6 +3953,16 @@ const items = {
       source: 'World Drop',
       phase: 1
     },
+    manastormBand: {
+      name: 'Manastorm Band',
+      intellect: 15,
+      spellPower: 29,
+      critRating: 10,
+      unique: true,
+      id: 30366,
+      source: 'Netherstorm Quest',
+      phase: 1
+    },
     ringOfRecurrence: {
       name: 'Ring of Recurrence',
       stamina: 15,
