@@ -1,4 +1,5 @@
 ﻿@using Shared.Classes.UI
+@using Shared.Classes
 @using System.Text.Json
 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
@@ -7,19 +8,22 @@
     <h3>Rotation</h3>
     <ul id="rotation-list">
         @foreach (var rotationGroup in RotationGroups.groups)
-		{
-            <div id="rotation-@rotationGroup.Key">
+        {
+            if (rotationGroup.Key == "curse" || (SimulationSettings.settings["rotationOption"] == "userChooses"))
+            {
+                <div id="rotation-@rotationGroup.Key">
                 <h4>@rotationGroup.Value.heading</h4>
                 @foreach (var spell in rotationGroup.Value.spells)
-				{
+                {
                     <li id="@rotationGroup.Key-@spell.Value.name" @onclick="@(() => SpellClickHandler(spell.Key))" @onclick:preventDefault="true" class="rotation-@rotationGroup.Key" data-type="@rotationGroup.Key" data-name="@spell.Value.name" data-checked="@(RotationGroups.SelectedSpells.Contains(spell.Key) ? "true" : "false")">
                         <a href="https://tbc.wowhead.com/spell=@spell.Value.id">
                             <img alt="@spell.Value.name" src="img/@spell.Value.iconName" />
                         </a>
                     </li>
-				}
-            </div>
-		}
+                }
+                </div>
+            }
+        }
     </ul>
 </section>
 
@@ -40,12 +44,12 @@
                 foreach (var rotationGroup in rotationDict)
                 {
                     foreach (var spell in rotationGroup.Value)
-					{
+                    {
                         if (spell.Value)
-						{
+                        {
                             RotationGroups.SelectedSpells.Add(spell.Key);
-						}
-					}
+                        }
+                    }
                 }
             }
         }
@@ -87,5 +91,10 @@
                 }
             }
         }
+    }
+
+    public void ReRender()
+    {
+        StateHasChanged();
     }
 } 

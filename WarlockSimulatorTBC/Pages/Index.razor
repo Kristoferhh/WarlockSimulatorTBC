@@ -11,8 +11,8 @@
     <p id="pet-wip-note">This sim is still a work in progress (especially pets!). Please report bugs to the warlock Discord or PM me at Kristofer#8003</p>
     <div>
         <Auras RefreshSidebarStats="@RefreshSidebarStats" RefreshSimulationSettings="@RefreshSimulationSettings" />
-        <Rotation />
-        <SimSettings @ref="simSettings" />
+        <Rotation @ref="rotation" />
+        <SimSettings @ref="simSettings" RefreshRotationSpells="@RefreshRotationSpells" />
         <TalentTrees RefreshSidebarStats="@RefreshSidebarStats" RefreshSimulationSettings="@RefreshSimulationSettings" />
 
         <section class="close-button-target" id="stat-weights-section" style="display: none;">
@@ -158,6 +158,7 @@
     Sidebar sideBar;
     ItemAndEnchantTables ItemTable;
     SimSettings simSettings;
+    Rotation rotation;
 
     protected override async Task OnInitializedAsync()
     {
@@ -195,6 +196,11 @@
     private void RefreshSimulationSettings()
 	{
         simSettings.ReRender();
+	}
+
+    private void RefreshRotationSpells()
+	{
+        rotation.ReRender();
 	}
 
     private async void PhaseClickHandler(int phase)
