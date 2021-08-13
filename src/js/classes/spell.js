@@ -964,10 +964,10 @@ class TheLightningCapacitor extends Spell {
     if (this.cooldownRemaining <= 0) {
       this.player.auras.theLightningCapacitor.apply()
       if (this.player.auras.theLightningCapacitor.stacks == 3) {
+        this.cooldownRemaining = this.cooldown
         this.player.auras.theLightningCapacitor.fade()
         super.startCast()
       }
-      this.cooldownRemaining = this.cooldown
     }
   }
 }
