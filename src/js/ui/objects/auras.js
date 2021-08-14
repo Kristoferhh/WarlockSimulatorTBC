@@ -401,6 +401,12 @@ const _auras = {
         spellPower: 23,
         iconName: 'inv_misc_food_53',
         id: 23326
+      },
+      bloodthistle: {
+        name: "Bloodthistle",
+        spellPower: 10,
+        iconName: "inv_misc_herb_11",
+        id: 22710
       }
     }
   },
