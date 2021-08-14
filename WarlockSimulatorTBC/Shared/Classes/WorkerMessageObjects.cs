@@ -23,7 +23,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
 	public class SimulationUpdate
 	{
 		public string simulationType { get; set; }
-		public uint simulationProgress { get; set; }
+		public int simulationProgress { get; set; }
 		public int? itemId { get; set; }
 		public double minDps { get; set; }
 		public double maxDps { get; set; }

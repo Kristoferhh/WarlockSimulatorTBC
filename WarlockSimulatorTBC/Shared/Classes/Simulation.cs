@@ -152,7 +152,7 @@ namespace WarlockSimulatorTBC.Shared
 			SimulationUpdate msg = new SimulationUpdate
 			{
 				simulationType = simulationType,
-				simulationProgress = (uint)Math.Ceiling((double)player.iteration / iterations * 100),
+				simulationProgress = (int)Math.Ceiling((double)player.iteration / iterations * 100),
 				minDps = minDps,
 				maxDps = maxDps,
 				totalDamage = totalDamage,

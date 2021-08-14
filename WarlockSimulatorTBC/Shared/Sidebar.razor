@@ -27,5 +27,9 @@
 @code {
     [Parameter] public EventCallback RefreshItemTable { get; set; } // probably remove
 
-    protected override async Task OnInitializedAsync() => await SidebarVM.InitializeViewModel();
+    protected override async Task OnInitializedAsync()
+    {
+        await SidebarVM.InitializeViewModel();
+        SidebarVM.PropertyChanged += (s, e) => StateHasChanged();
+    }
 }

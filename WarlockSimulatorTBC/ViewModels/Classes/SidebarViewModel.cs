@@ -11,10 +11,12 @@ using WarlockSimulatorTBC.Shared.Classes.UI;
 using System.Text.Json;
 using BlazorWorker.BackgroundServiceFactory;
 using WarlockSimulatorTBC.ViewModels.Interfaces;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace WarlockSimulatorTBC.ViewModels.Classes
 {
-    public class SidebarViewModel : ObservableObject, ISidebarViewModel
+    public class SidebarViewModel : BaseViewModel, ISidebarViewModel
     {
         private ILocalStorageService _localStorage;
         private IWorkerFactory _workerFactory;
@@ -31,7 +33,6 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
         private int? _selectedItemIdWhenStartingSim;
         // Tracks information about multi-item sims. Key is the id of the item equipped in the sim and the value is the sim's progress %
         private Dictionary<int?, int> _multiItemSimInformation = new Dictionary<int?, int>();
-
 
         private string _avgDps;
         public string AvgDps
@@ -75,23 +76,27 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
             set => SetProperty(ref _multiSimButtonText, value);
         }
 
-        private uint _simProgress = 0;
-        public uint SimProgress
+        private int _simProgress = 0;
+        public int SimProgress
         {
             get => _simProgress;
             set => SetProperty(ref _simProgress, value);
         }
 
-        private uint _multiSimProgress = 0;
-        public uint MultiSimProgress
+        private int _multiSimProgress = 0;
+        public int MultiSimProgress
         {
             get => _multiSimProgress;
             set => SetProperty(ref _multiSimProgress, value);
         }
 
-
         public void SimulateDps(string simulationType)
         {
+            if (_simIsActive)
+            {
+                return;
+            }
+
             // Create the player and simulation settings and serialize them into json strings
             PlayerSettings playerSettings = Player.GetSettings();
             SimulationSettings simSettings = Simulation.GetSettings();
@@ -208,7 +213,7 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
                     else if (msg.simulationType == SimulationType.AllItems && Items.savedItemDps[Items.SelectedItemSlot + Items.SelectedItemSubSlot].ContainsKey(msg.itemId.ToString()))
                     {
                         _multiItemSimInformation[msg.itemId] = (int)msg.simulationProgress;
-                        MultiSimProgress = (uint)Math.Ceiling(_multiItemSimInformation.Values.Average());
+                        MultiSimProgress = (int)Math.Ceiling(_multiItemSimInformation.Values.Average());
                         Items.savedItemDps[Items.SelectedItemSlot + Items.SelectedItemSubSlot][msg.itemId.ToString()] = Convert.ToDouble(msgAvgDps);
 
                         if (MultiSimProgress < 100)
@@ -235,10 +240,6 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
             }
         }
 
-        public void RefreshCharacterStats()
-        {
-            //characterStats.RefreshStats();
-        }
 
         public async Task InitializeViewModel()
         {

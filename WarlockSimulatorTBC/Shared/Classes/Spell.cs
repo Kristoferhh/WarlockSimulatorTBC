@@ -21,8 +21,8 @@ namespace WarlockSimulatorTBC.Shared.Classes
 	/*public struct Spell
 	{
 		Player Player { get; set; }
-		uint MinDmg { get; set; }
-		uint MaxDmg { get; set; }
+		int MinDmg { get; set; }
+		int MaxDmg { get; set; }
 		double Dmg { get; set; }
 		double CastTime { get; set; }
 		double ManaCost { get; set; }
