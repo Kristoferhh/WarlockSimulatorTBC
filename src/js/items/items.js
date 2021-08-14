@@ -20,7 +20,9 @@ const fakeItemIds = {
   archmageSlippersOfShadowWrath: -17,
   archmageSlippersOfFireWrath: -18,
   elementalistBootsOfShadowWrath: -19,
-  elementalistBootsOfFireWrath: -20
+  elementalistBootsOfFireWrath: -20,
+  illidariCloakOfShadowWrath: -21,
+  illidariCloakOfFireWrath: -22
 }
 
 const items = {
@@ -1289,6 +1291,22 @@ const items = {
       id: 29992,
       source: 'The Eye',
       phase: 2
+    },
+    illidariCloakOfShadowWrath: {
+      name: "Illidari Cloak of Shadow Wrath",
+      shadowPower: 47,
+      displayId: 31201,
+      id: fakeItemIds.illidariCloakOfShadowWrath,
+      source: "Netherstorm Rare Spawn",
+      phase: 1
+    },
+    illidariCloakOfFireWrath: {
+      name: "Illidari Cloak of Fire Wrath",
+      firePower: 47,
+      displayId: 31201,
+      id: fakeItemIds.illidariCloakOfFireWrath,
+      source: "Netherstorm Rare Spawn",
+      phase: 1
     },
     bruteCloakOfTheOgreMagi: {
       name: 'Brute Cloak of the Ogre-Magi',
@@ -5114,6 +5132,17 @@ const items = {
       id: 29988,
       source: 'The Eye',
       phase: 2
+    },
+    frostscytheOfLordAhune: {
+      name: "Frostscythe of Lord Ahune",
+      stamina: 40,
+      intellect: 35,
+      spellPower: 176,
+      mp5: 13,
+      critRating: 33,
+      id: 35514,
+      source: "Lord Ahune",
+      phase: 1
     },
     gladiatorsWarStaff: {
       name: "Gladiator's War Staff",
