@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using BlazorWorker.Core;
+using WarlockSimulatorTBC.ViewModels.Classes;
+using WarlockSimulatorTBC.ViewModels.Interfaces;
 
 namespace WarlockSimulatorTBC
 {
@@ -20,6 +22,7 @@ namespace WarlockSimulatorTBC
 			builder.RootComponents.Add<App>("#app");
 
 			builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped<ISidebarViewModel, SidebarViewModel>();
 			builder.Services.AddBlazoredLocalStorage();
 			builder.Services.AddWorkerFactory();
 
