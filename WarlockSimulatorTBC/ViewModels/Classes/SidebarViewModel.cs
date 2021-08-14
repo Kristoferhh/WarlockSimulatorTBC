@@ -90,6 +90,119 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
             set => SetProperty(ref _multiSimProgress, value);
         }
 
+        private double _health = 0;
+        public double Health
+        {
+            get => _health;
+            set => SetProperty(ref _health, value);
+        }
+
+        private double _mana = 0;
+        public double Mana
+        {
+            get => _mana;
+            set => SetProperty(ref _mana, value);
+        }
+
+        private double _stamina = 0;
+        public double Stamina
+        {
+            get => _stamina;
+            set => SetProperty(ref _stamina, value);
+        }
+
+        private double _intellect = 0;
+        public double Intellect
+        {
+            get => _intellect;
+            set => SetProperty(ref _intellect, value);
+        }
+
+        private double _spirit = 0;
+        public double Spirit
+        {
+            get => _spirit;
+            set => SetProperty(ref _spirit, value);
+        }
+
+        private double _spellPower = 0;
+        public double SpellPower
+        {
+            get => _spellPower;
+            set => SetProperty(ref _spellPower, value);
+        }
+
+        private double _shadowPower = 0;
+        public double ShadowPower
+        {
+            get => _shadowPower;
+            set => SetProperty(ref _shadowPower, value);
+        }
+
+        private double _firePower = 0;
+        public double FirePower
+        {
+            get => _firePower;
+            set => SetProperty(ref _firePower, value);
+        }
+
+        private double _spellCritRating = 0;
+        public double SpellCritRating
+        {
+            get => _spellCritRating;
+            set => SetProperty(ref _spellCritRating, value);
+        }
+
+        private double _spellHitRating = 0;
+        public double SpellHitRating
+        {
+            get => _spellHitRating;
+            set => SetProperty(ref _spellHitRating, value);
+        }
+
+        private double _spellHasteRating = 0;
+        public double SpellHasteRating
+        {
+            get => _spellHasteRating;
+            set => SetProperty(ref _spellHasteRating, value);
+        }
+
+        private double _mp5 = 0;
+        public double MP5
+        {
+            get => _mp5;
+            set => SetProperty(ref _mp5, value);
+        }
+
+        private double _shadowModifier = 0;
+        public double ShadowModifier
+        {
+            get => _shadowModifier;
+            set => SetProperty(ref _shadowModifier, value);
+        }
+
+        private double _fireModifier = 0;
+        public double FireModifier
+        {
+            get => _fireModifier;
+            set => SetProperty(ref _fireModifier, value);
+        }
+
+        private double _critPercent = 0;
+        public double CritPercent
+        {
+            get => _critPercent;
+            set => SetProperty(ref _critPercent, value);
+        }
+
+        private double _hitPercent = 0;
+        public double HitPercent
+        {
+            get => _hitPercent;
+            set => SetProperty(ref _hitPercent, value);
+        }
+
+
         public void SimulateDps(string simulationType)
         {
             if (_simIsActive)
@@ -238,6 +351,58 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
                     Console.WriteLine("Failed to read msg: " + message);
                 }
             }
+        }
+
+        public void RefreshStats()
+        {
+            ShadowModifier = Stats.playerStats.shadowModifier;
+            FireModifier = Stats.playerStats.fireModifier;
+            double staminaModifier = Stats.playerStats.staminaModifier;
+
+            // Crit
+            SpellCritRating = Stats.playerStats.spellCritRating;
+            if (AuraGroups.SelectedAuras.Contains("powerOfTheGuardianMage")) SpellCritRating += 28;
+            CritPercent = SpellCritRating / Stats.critRatingPerPercent + Stats.baseCritChance + (Stats.playerStats.intellect * Stats.playerStats.intellectModifier * Stats.critPercentPerInt);
+            if (TalentTree.CurrentTalents.ContainsKey("devastation")) CritPercent += TalentTree.CurrentTalents["devastation"];
+            if (TalentTree.CurrentTalents.ContainsKey("backlash")) CritPercent += TalentTree.CurrentTalents["backlash"];
+            if (TalentTree.CurrentTalents.ContainsKey("demonicTactics")) CritPercent += TalentTree.CurrentTalents["demonicTactics"];
+            if (AuraGroups.SelectedAuras.Contains("totemOfWrath")) CritPercent += 3;
+            if (AuraGroups.SelectedAuras.Contains("chainOfTheTwilightOwl")) CritPercent += 2;
+            if (AuraGroups.SelectedAuras.Contains("moonkinAura")) CritPercent += 5;
+            if (AuraGroups.SelectedAuras.Contains("judgementOfTheCrusader")) CritPercent += 3;
+
+            // Hit
+            SpellHitRating = Stats.playerStats.spellHitRating;
+            HitPercent = SpellHitRating / Stats.hitRatingPerPercent;
+            if (AuraGroups.SelectedAuras.Contains("inspiringPresence")) HitPercent++;
+            if (AuraGroups.SelectedAuras.Contains("totemOfWrath")) HitPercent += 3;
+
+            // Spell Power
+            SpellPower = Stats.playerStats.spellPower;
+            if (AuraGroups.SelectedAuras.Contains("felArmor") && TalentTree.CurrentTalents.ContainsKey("demonicAegis")) SpellPower += 10 * TalentTree.CurrentTalents["demonicAegis"];
+            if (AuraGroups.SelectedAuras.Contains("powerOfTheGuardianWarlock")) SpellPower += 33;
+
+            // Shadow/Fire % Modifiers
+            if (TalentTree.CurrentTalents.ContainsKey("shadowMastery")) ShadowModifier *= (1 + (TalentTree.CurrentTalents["shadowMastery"] * 2.0) / 100);
+            // add master demonologist
+            if (TalentTree.CurrentTalents.ContainsKey("soulLink")) ShadowModifier *= (1 + (TalentTree.CurrentTalents["soulLink"] * 5.0) / 100);
+            if (TalentTree.CurrentTalents.ContainsKey("emberstorm")) FireModifier *= (1 + (TalentTree.CurrentTalents["emberstorm"] * 2.0) / 100);
+
+            // Stamina Modifiers
+            if (TalentTree.CurrentTalents.ContainsKey("demonicEmbrace")) staminaModifier *= (1 + (TalentTree.CurrentTalents["demonicEmbrace"] * 3.0) / 100);
+            Stamina = Stats.playerStats.stamina * staminaModifier;
+
+            Health = Stats.playerStats.health + Stamina * Stats.healthPerStamina;
+            Intellect = Stats.playerStats.intellect * Stats.playerStats.intellectModifier;
+            Spirit = Stats.playerStats.spirit * Stats.playerStats.spiritModifier;
+            ShadowPower = Stats.playerStats.shadowPower;
+            FirePower = Stats.playerStats.firePower;
+            SpellHasteRating = Stats.playerStats.spellHasteRating;
+            MP5 = Stats.playerStats.mp5;
+
+            // Mana
+            Stats.playerStats.maxMana = Stats.playerStats.intellect * Stats.playerStats.intellectModifier * Stats.manaPerInt;
+            Mana = Stats.playerStats.maxMana;
         }
 
 

@@ -1,5 +1,8 @@
 ﻿@using Classes
 @using Classes.UI
+@using ViewModels.Interfaces 
+
+@inject ISidebarViewModel SidebarVM; 
 
 <p id="character-race"><span id="race"></span> Warlock</p>
 <p id="character-level">Level 70</p>
@@ -7,59 +10,59 @@
 <ul class="character-stats">
     <li>
         <p class="character-stat">Health</p>
-        <p class="character-stat-val" id="character-health-val">@(Math.Round(health))</p>
+        <p class="character-stat-val" id="character-health-val">@(Math.Round(SidebarVM.Health))</p>
     </li>
     <li>
         <p class="character-stat">Mana</p>
-        <p class="character-stat-val" id="character-mana-val">@(Math.Round(Stats.playerStats.maxMana))</p>
+        <p class="character-stat-val" id="character-mana-val">@(Math.Round(SidebarVM.Mana))</p>
     </li>
     <li>
         <p class="character-stat">Stamina</p>
-        <p class="character-stat-val" id="character-stamina-val">@(Math.Round(Stats.playerStats.stamina * Stats.playerStats.staminaModifier))</p>
+        <p class="character-stat-val" id="character-stamina-val">@(Math.Round(SidebarVM.Stamina))</p>
     </li>
     <li>
         <p class="character-stat">Intellect</p>
-        <p class="character-stat-val" id="character-intellect-val">@(Math.Round(Stats.playerStats.intellect * Stats.playerStats.intellectModifier))</p>
+        <p class="character-stat-val" id="character-intellect-val">@(Math.Round(SidebarVM.Intellect))</p>
     </li>
     <li>
         <p class="character-stat">Spirit</p>
-        <p class="character-stat-val" id="character-spirit-val">@(Math.Round(Stats.playerStats.spirit * Stats.playerStats.spiritModifier))</p>
+        <p class="character-stat-val" id="character-spirit-val">@(Math.Round(SidebarVM.Spirit))</p>
     </li>
     <li>
         <p class="character-stat">Spell Power</p>
-        <p class="character-stat-val" id="character-spell-power-val">@spellPower</p>
+        <p class="character-stat-val" id="character-spell-power-val">@SidebarVM.SpellPower</p>
     </li>
     <li>
         <p class="character-stat">Shadow Power</p>
-        <p class="character-stat-val" id="character-shadow-power-val">@Stats.playerStats.shadowPower</p>
+        <p class="character-stat-val" id="character-shadow-power-val">@SidebarVM.ShadowPower</p>
     </li>
     <li>
         <p class="character-stat">Fire Power</p>
-        <p class="character-stat-val" id="character-fire-power-val">@Stats.playerStats.firePower</p>
+        <p class="character-stat-val" id="character-fire-power-val">@SidebarVM.FirePower</p>
     </li>
     <li>
         <p class="character-stat">Crit Rating</p>
-        <p class="character-stat-val" id="character-crit-val">@(Stats.playerStats.spellCritRating) (@(Math.Round(critPercent * 100) / 100)%)</p>
+        <p class="character-stat-val" id="character-crit-val">@(SidebarVM.SpellCritRating) (@(Math.Round(SidebarVM.CritPercent * 100) / 100)%)</p>
     </li>
     <li>
         <p class="character-stat">Hit Rating</p>
-        <p class="character-stat-val" id="character-hit-val">@(Stats.playerStats.spellHitRating) (@(Math.Round(hitPercent * 100) / 100)%)</p>
+        <p class="character-stat-val" id="character-hit-val">@(SidebarVM.SpellHitRating) (@(Math.Round(SidebarVM.HitPercent * 100) / 100)%)</p>
     </li>
     <li>
         <p class="character-stat">Haste Rating</p>
-        <p class="character-stat-val" id="character-haste-val">@Stats.playerStats.spellHasteRating</p>
+        <p class="character-stat-val" id="character-haste-val">@SidebarVM.SpellHasteRating</p>
     </li>
     <li>
         <p class="character-stat">Shadow Dmg %</p>
-        <p class="character-stat-val" id="character-shadow-damage-modifier-val">@(Math.Round(shadowModifier * 100))%</p>
+        <p class="character-stat-val" id="character-shadow-damage-modifier-val">@(Math.Round(SidebarVM.ShadowModifier * 100))%</p>
     </li>
     <li>
         <p class="character-stat">Fire Dmg %</p>
-        <p class="character-stat-val" id="character-fire-damage-modifier-val">@(Math.Round(fireModifier * 100))%</p>
+        <p class="character-stat-val" id="character-fire-damage-modifier-val">@(Math.Round(SidebarVM.FireModifier * 100))%</p>
     </li>
     <li>
         <p class="character-stat">MP5</p>
-        <p class="character-stat-val" id="character-mp5-val">@Stats.playerStats.mp5</p>
+        <p class="character-stat-val" id="character-mp5-val">@SidebarVM.MP5</p>
     </li>
     <li>
         <p class="character-stat">Enemy Armor</p>
@@ -72,59 +75,8 @@
 </ul>
 
 @code {
-    private double health = 0;
-    private double mana = 0;
-    private double shadowModifier = 0;
-    private double fireModifier = 0;
-    private double staminaModifier = 0;
-    private double spellPower = 0;
-    private double critPercent = 0;
-    private double hitPercent = 0;
-
-    public void RefreshStats()
+    protected override void OnInitialized()
     {
-        shadowModifier = Stats.playerStats.shadowModifier;
-        fireModifier = Stats.playerStats.fireModifier;
-        staminaModifier = Stats.playerStats.staminaModifier;
-
-        // Crit
-        int critRating = Stats.playerStats.spellCritRating;
-        if (AuraGroups.SelectedAuras.Contains("powerOfTheGuardianMage")) critRating += 28;
-        critPercent = critRating / Stats.critRatingPerPercent + Stats.baseCritChance + (Stats.playerStats.intellect * Stats.playerStats.intellectModifier * Stats.critPercentPerInt);
-        if (TalentTree.CurrentTalents.ContainsKey("devastation")) critPercent += TalentTree.CurrentTalents["devastation"];
-        if (TalentTree.CurrentTalents.ContainsKey("backlash")) critPercent += TalentTree.CurrentTalents["backlash"];
-        if (TalentTree.CurrentTalents.ContainsKey("demonicTactics")) critPercent += TalentTree.CurrentTalents["demonicTactics"];
-        if (AuraGroups.SelectedAuras.Contains("totemOfWrath")) critPercent += 3;
-        if (AuraGroups.SelectedAuras.Contains("chainOfTheTwilightOwl")) critPercent += 2;
-        if (AuraGroups.SelectedAuras.Contains("moonkinAura")) critPercent += 5;
-        if (AuraGroups.SelectedAuras.Contains("judgementOfTheCrusader")) critPercent += 3;
-
-        // Hit
-        int hitRating = Stats.playerStats.spellHitRating;
-        hitPercent = Stats.playerStats.spellHitRating / Stats.hitRatingPerPercent;
-        if (AuraGroups.SelectedAuras.Contains("inspiringPresence")) hitPercent++;
-        if (AuraGroups.SelectedAuras.Contains("totemOfWrath")) hitPercent += 3;
-
-        // Spell Power
-        spellPower = Stats.playerStats.spellPower;
-        if (AuraGroups.SelectedAuras.Contains("felArmor") && TalentTree.CurrentTalents.ContainsKey("demonicAegis")) spellPower += 10 * TalentTree.CurrentTalents["demonicAegis"];
-        if (AuraGroups.SelectedAuras.Contains("powerOfTheGuardianWarlock")) spellPower += 33;
-
-        // Shadow/Fire % Modifiers
-        if (TalentTree.CurrentTalents.ContainsKey("shadowMastery")) shadowModifier *= (1 + (TalentTree.CurrentTalents["shadowMastery"] * 2.0) / 100);
-        // add master demonologist
-        if (TalentTree.CurrentTalents.ContainsKey("soulLink")) shadowModifier *= (1 + (TalentTree.CurrentTalents["soulLink"] * 5.0) / 100);
-        if (TalentTree.CurrentTalents.ContainsKey("emberstorm")) fireModifier *= (1 + (TalentTree.CurrentTalents["emberstorm"] * 2.0) / 100);
-
-        // Stamina Modifiers
-        if (TalentTree.CurrentTalents.ContainsKey("demonicEmbrace")) staminaModifier *= (1 + (TalentTree.CurrentTalents["demonicEmbrace"] * 3.0) / 100);
-
-        // Health
-        health = Stats.playerStats.health + Stats.playerStats.stamina * staminaModifier * Stats.healthPerStamina;
-
-        // Mana
-        Stats.playerStats.maxMana = Stats.playerStats.intellect * Stats.playerStats.intellectModifier * Stats.manaPerInt;
-
-        StateHasChanged();
+        SidebarVM.PropertyChanged += (sender, e) => StateHasChanged();
     }
 }
