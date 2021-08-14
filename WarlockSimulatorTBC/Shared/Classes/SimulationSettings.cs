@@ -11,6 +11,7 @@ namespace WarlockSimulatorTBC.Shared.Classes
         // The settings need to be initialized here to their default values. Otherwise there will be an error on startup because the binds won't find the keys in the empty dictionary.
         public static Dictionary<string, string> settings = new Dictionary<string, string>()
         {
+            //todo: fix the inconsistent key names (imported from before Blazor when using Javascript)
             { "race", "gnome" },
             { "rotationOption", "simChooses" },
             { "iterations", "1000" },

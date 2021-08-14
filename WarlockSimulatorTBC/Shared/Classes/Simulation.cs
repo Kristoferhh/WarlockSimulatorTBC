@@ -29,10 +29,10 @@ namespace WarlockSimulatorTBC.Shared
 		{ 
 			return new SimulationSettings
 			{
-				iterations = 1000,
-				minTime = 150,
-				maxTime = 210
-			};
+				iterations = int.Parse(SimulationSettings.settings["iterations"]),
+				minTime = int.Parse(SimulationSettings.settings["min-fight-length"]),
+				maxTime = int.Parse(SimulationSettings.settings["max-fight-length"])
+            };
 		}
 
 		public Simulation(IWorkerMessageService messageService)
