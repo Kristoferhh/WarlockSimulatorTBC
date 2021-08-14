@@ -668,6 +668,15 @@ namespace WarlockSimulatorTBC.Shared.Classes.UI
 								spellPower = 23
 							}
 						},
+                        {
+                            "bloodthistle", new Aura
+                            {
+                                id = 22710,
+                                name = "Bloodthistle",
+                                iconName = "inv_misc_herb_11.jpg",
+                                spellPower = 10
+                            }
+                        }
 					}
 				}
 			}
