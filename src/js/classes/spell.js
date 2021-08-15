@@ -56,7 +56,7 @@ class Spell {
   }
 
   startCast (predictedDamage = 0) {
-    if (this.onGcd) {
+    if (this.onGcd && !this.isNonWarlockAbility) {
       this.player.gcdRemaining = this.player.getGcdValue(this.varName)
     }
 
