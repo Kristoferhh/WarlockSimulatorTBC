@@ -16,6 +16,8 @@ namespace WarlockSimulatorTBC.Shared
 		private Stopwatch _timer;
 		private double simUpdateNum;
 		private int[] randomSeeds;
+        private int startingIteration;
+        private int iterationAmount;
 		public Player player;
 		public int iterations;
 		public int minTime;
@@ -40,7 +42,7 @@ namespace WarlockSimulatorTBC.Shared
 			_messageService = messageService;
 		}
 
-		public void Constructor(string simulationSettings, string playerSettings, string simulationType, int? itemId, int[] randomSeeds)
+		public void Constructor(string simulationSettings, string playerSettings, string simulationType, int? itemId, int[] randomSeeds, int startingIteration, int iterationAmount)
 		{
 			player = new Player(JsonSerializer.Deserialize<PlayerSettings>(playerSettings));
 			SimulationSettings simSettings = JsonSerializer.Deserialize<SimulationSettings>(simulationSettings);
@@ -51,6 +53,8 @@ namespace WarlockSimulatorTBC.Shared
 			this.simulationType = simulationType;
 			this.itemId = itemId;
 			this.randomSeeds = randomSeeds;
+            this.startingIteration = startingIteration;
+            this.iterationAmount = iterationAmount;
 		}
 
 		private double PassTime()
@@ -83,18 +87,18 @@ namespace WarlockSimulatorTBC.Shared
 
 		public void Start()
 		{
-			double totalDamage = 0;
+            List<double> damageResults = new List<double>();
 			double minDps = 999999;
 			double maxDps = 0;
 			player.Initialize();
 			_timer = new Stopwatch();
 			_timer.Start();
 
-			for (player.iteration = 1; player.iteration < iterations; player.iteration++)
+			for (player.iteration = startingIteration; player.iteration < (startingIteration + iterationAmount); player.iteration++)
 			{
-				// Create a new Random object with a pre-determined (but random) seed from the randomSeeds array.
-				player.rand = new Random(randomSeeds[player.iteration - 1]);
-				player.Reset();
+                // Create a new Random object with a pre-determined (but random) seed from the randomSeeds array.
+                player.rand = new Random(randomSeeds[player.iteration]);
+                player.Reset();
 				player.iterationDamage = 0;
 				player.currentFightTime = 0;
 				int fightLength = player.rand.Next(minTime, maxTime);
@@ -128,37 +132,36 @@ namespace WarlockSimulatorTBC.Shared
 					}
 				}
 
-				player.totalFightDuration += fightLength;
-				totalDamage += player.iterationDamage;
-
-				double iterationDps = player.iterationDamage / fightLength;
+                double iterationDps = player.iterationDamage / fightLength;
+                damageResults.Add(iterationDps);
 				maxDps = Math.Max(maxDps, iterationDps);
 				minDps = Math.Min(minDps, iterationDps);
 
 				// Send a simulation update for every 1% of progress
 				if (player.iteration % simUpdateNum == 0)
 				{
-					SendSimulationUpdate(MessageType.SimulationUpdate, minDps, maxDps, totalDamage);
+					SendSimulationUpdate(MessageType.SimulationUpdate, minDps, maxDps, damageResults);
 				}
 			}
 
 			_timer.Stop();
-			Console.WriteLine("PassTime(): " + _passTimeTimer.Elapsed);
-			SendSimulationUpdate(MessageType.SimulationEnd, minDps, maxDps, totalDamage);
+			//Console.WriteLine("PassTime(): " + _passTimeTimer.Elapsed);
+			SendSimulationUpdate(MessageType.SimulationEnd, minDps, maxDps, damageResults);
 		}
 
-		private void SendSimulationUpdate(string msgType, double minDps, double maxDps, double totalDamage)
+		private void SendSimulationUpdate(string msgType, double minDps, double maxDps, List<double> damageResults)
 		{
 			SimulationUpdate msg = new SimulationUpdate
 			{
-				simulationType = simulationType,
-				simulationProgress = (int)Math.Ceiling((double)player.iteration / iterations * 100),
-				minDps = minDps,
-				maxDps = maxDps,
-				totalDamage = totalDamage,
-				totalFightDuration = player.totalFightDuration,
-				simulationLength = _timer.Elapsed.TotalSeconds,
-				itemId = itemId
+				SimulationType = simulationType,
+				SimulationProgress = (int)Math.Ceiling(((double)player.iteration - startingIteration) / iterationAmount * 100),
+				MinDps = minDps,
+				MaxDps = maxDps,
+                DamageResults = damageResults,
+				TotalFightDuration = player.totalFightDuration,
+				SimulationLength = _timer.Elapsed.TotalSeconds,
+				ItemId = itemId,
+                StartingIteration = startingIteration
 			};
 			_messageService.PostMessageAsync(msgType + "-;" + JsonSerializer.Serialize(msg));
 		}

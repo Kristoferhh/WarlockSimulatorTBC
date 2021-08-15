@@ -12,7 +12,7 @@
 
 <div id="sidebar-simulation-selection">
     <div id="sim-result-dps-div">
-        <p><span id="avg-dps">@SidebarVM.AvgDps</span><span> DPS</span></p>
+        <p><span id="avg-dps">@SidebarVM.MedianDps</span><span> DPS</span></p>
         <p>Min: <span id="min-dps">@SidebarVM.MinDps</span> Max: <span id="max-dps">@SidebarVM.MaxDps</span></p>
     </div>
     <div class='btn' @onclick="@(() => SidebarVM.SimulateDps(SimulationType.Normal))" style="background: @(SidebarVM.SimProgress > 0 ? ("linear-gradient(to right, #9482C9 " + SidebarVM.SimProgress + "%, transparent " + SidebarVM.SimProgress + "%)") : "")">@SidebarVM.SimulateButtonText</div>
@@ -29,7 +29,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await SidebarVM.InitializeViewModel();
+        await SidebarVM.InitializeViewModel(RefreshItemTable);
         SidebarVM.PropertyChanged += (s, e) => StateHasChanged();
     }
 

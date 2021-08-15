@@ -7,9 +7,9 @@ namespace WarlockSimulatorTBC.Shared.Classes
 {
 	public static class SimulationType
 	{
-		public static string Normal = "normal";
-		public static string AllItems = "allItems";
-		public static string StatWeights = "statWeights";
+		public const string Normal = "normal";
+		public const string AllItems = "allItems";
+		public const string StatWeights = "statWeights";
 	}
 
 	public static class MessageType
@@ -22,13 +22,14 @@ namespace WarlockSimulatorTBC.Shared.Classes
 
 	public class SimulationUpdate
 	{
-		public string simulationType { get; set; }
-		public int simulationProgress { get; set; }
-		public int? itemId { get; set; }
-		public double minDps { get; set; }
-		public double maxDps { get; set; }
-		public double totalDamage { get; set; }
-		public double totalFightDuration { get; set; }
-		public double simulationLength { get; set; }
+		public string SimulationType { get; set; }
+		public int SimulationProgress { get; set; }
+		public int? ItemId { get; set; }
+		public double MinDps { get; set; }
+		public double MaxDps { get; set; }
+        public List<double> DamageResults { get; set; }
+		public double TotalFightDuration { get; set; }
+		public double SimulationLength { get; set; }
+        public int StartingIteration { get; set; }
 	}
 }

@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Components;
+using System.Threading.Tasks;
 
 namespace WarlockSimulatorTBC.ViewModels.Interfaces
 {
     public interface ISidebarViewModel : IBaseViewModel
     {
-        string AvgDps { get; set; }
         double CritPercent { get; set; }
         double FireModifier { get; set; }
         double FirePower { get; set; }
@@ -13,6 +13,7 @@ namespace WarlockSimulatorTBC.ViewModels.Interfaces
         double Intellect { get; set; }
         double Mana { get; set; }
         string MaxDps { get; set; }
+        string MedianDps { get; set; }
         string MinDps { get; set; }
         double MP5 { get; set; }
         string MultiSimButtonText { get; set; }
@@ -29,9 +30,9 @@ namespace WarlockSimulatorTBC.ViewModels.Interfaces
         double Spirit { get; set; }
         double Stamina { get; set; }
 
-        Task InitializeViewModel();
+        Task InitializeViewModel(EventCallback refreshItemTable);
         void OnWorkerMessage(object sender, string message);
         void RefreshStats();
-        void SimulateDps(string simulationType);
+        Task SimulateDps(string simulationType);
     }
 }

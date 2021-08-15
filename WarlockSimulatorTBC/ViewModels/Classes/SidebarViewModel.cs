@@ -13,6 +13,8 @@ using BlazorWorker.BackgroundServiceFactory;
 using WarlockSimulatorTBC.ViewModels.Interfaces;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace WarlockSimulatorTBC.ViewModels.Classes
 {
@@ -20,11 +22,13 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
     {
         private ILocalStorageService _localStorage;
         private IWorkerFactory _workerFactory;
+        private IJSRuntime _jsRuntime;
 
-        public SidebarViewModel(ILocalStorageService localStorage, IWorkerFactory workerFactory)
+        public SidebarViewModel(ILocalStorageService localStorage, IWorkerFactory workerFactory, IJSRuntime jsRuntime)
         {
             _localStorage = localStorage;
             _workerFactory = workerFactory;
+            _jsRuntime = jsRuntime;
         }
 
 
@@ -32,13 +36,17 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
         // Saves the ID of the item that was equipped when the user started a sim. Without this, the sidebar will stop updating if the user selects another item while the sim is still running
         private int? _selectedItemIdWhenStartingSim;
         // Tracks information about multi-item sims. Key is the id of the item equipped in the sim and the value is the sim's progress %
-        private Dictionary<int?, int> _multiItemSimInformation = new Dictionary<int?, int>();
+        private Dictionary<int?, int> _multiItemSimInformation = new();
+        private Dictionary<int, List<double>> _multiThreadSimDpsResults = new();
+        private Dictionary<int, int> _multiThreadSimProgress = new();
+        private DateTime? normalSimStart = null;
+        private EventCallback RefreshItemTable;
 
-        private string _avgDps;
-        public string AvgDps
+        private string _medianDps;
+        public string MedianDps
         {
-            get => _avgDps;
-            set => SetProperty(ref _avgDps, value);
+            get => _medianDps;
+            set => SetProperty(ref _medianDps, value);
         }
 
         private string _minDps;
@@ -203,7 +211,7 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
         }
 
 
-        public void SimulateDps(string simulationType)
+        public async Task SimulateDps(string simulationType)
         {
             if (_simIsActive)
             {
@@ -216,6 +224,11 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
             int? currentlyEquippedItemId = Items.SelectedItems[Items.SelectedItemSlot + Items.SelectedItemSubSlot];
             int[] randomSeeds = new int[simSettings.iterations];
             _selectedItemIdWhenStartingSim = currentlyEquippedItemId;
+            // Can't use the maximum amount of web workers cause the website will just slow down too much.
+            // Maybe implement an option in the UI for the user to select how many threads they want to use.
+            int maxWebWorkers = Math.Min(4, await _jsRuntime.InvokeAsync<int>("getMaxWebWorkers"));
+            int webWorkersInUse = 0;
+            int iterationAmount = simSettings.iterations;
 
             // Creates an array of random seeds for the simulations to use. This is so that each iteration will use the same Random() object across all the simulations.
             for (int i = 0; i < simSettings.iterations; i++)
@@ -244,9 +257,29 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
 
                     string playerString = JsonSerializer.Serialize(newPlayerSettings);
                     string simString = JsonSerializer.Serialize(simSettings);
-
                     int? itemId = simulationType == SimulationType.AllItems ? item.Key : currentlyEquippedItemId;
-                    StartSimulation(simString, playerString, simulationType, itemId, randomSeeds);
+
+                    // If it's a normal sim then split the simulation up into multiple threads to speed it up.
+                    if (simulationType == SimulationType.Normal)
+                    {
+                        int iterationsPerWebWorker = (int)Math.Floor((double)iterationAmount / (maxWebWorkers - webWorkersInUse));
+                        int simulationsStarted = 0;
+
+                        while (webWorkersInUse++ < maxWebWorkers)
+                        {
+                            int startingIteration = iterationsPerWebWorker * simulationsStarted;
+
+                            StartSimulation(simString, playerString, simulationType, itemId, randomSeeds, startingIteration, iterationsPerWebWorker);
+                            _multiThreadSimDpsResults.Add(startingIteration, new List<double>());
+                            _multiThreadSimProgress.Add(startingIteration, 0);
+                            simulationsStarted++;
+                        }
+                    }
+                    // If it's a multi-item sim then just start a normal sim for each item since we'll be using all available threads to run multiple items at once.
+                    else if (simulationType == SimulationType.AllItems)
+                    {
+                        StartSimulation(simString, playerString, simulationType, itemId, randomSeeds, 0, simSettings.iterations);
+                    }
 
                     // If there is no item equipped in this slot and it's a normal sim then break out of the loop since the current if-statement will always be true for each item.
                     if (currentlyEquippedItemId == null && simulationType == SimulationType.Normal)
@@ -257,21 +290,29 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
             }
         }
 
-        private async void StartSimulation(string simulationSettings, string playerSettings, string simulationType, int? itemId, int[] randomSeeds)
+        // The startingIteration and iterationAmount parameters are just for multi-threading normal sims. For multi-item sims, startingIteration is just set to 0 and iterationAmount is the total iteration amount.
+        private async void StartSimulation(string simulationSettings, string playerSettings, string simulationType, int? itemId, int[] randomSeeds, int startingIteration, int iterationAmount)
         {
             var webWorker = await _workerFactory.CreateAsync();
-            webWorker.IncomingMessage += this.OnWorkerMessage;
+            webWorker.IncomingMessage += OnWorkerMessage;
 
             var service = await webWorker.CreateBackgroundServiceAsync<Simulation>(
                 options => options
                     .AddConventionalAssemblyOfService()
                     .AddAssemblies("System.Text.Json.dll", "System.Text.Encodings.Web.dll")
             );
-            await service.RunAsync(s => s.Constructor(simulationSettings, playerSettings, simulationType, itemId, randomSeeds));
+            await service.RunAsync(s => s.Constructor(simulationSettings, playerSettings, simulationType, itemId, randomSeeds, startingIteration, iterationAmount));
             _simIsActive = true;
             if (simulationType == SimulationType.AllItems)
             {
                 _multiItemSimInformation.Add((int)itemId, 0);
+            }
+            else if (simulationType == SimulationType.Normal)
+            {
+                if (normalSimStart == null)
+                {
+                    normalSimStart = DateTime.UtcNow;
+                }
             }
             await service.RunAsync(s => s.Start());
         }
@@ -286,25 +327,51 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
                 {
                     // First index is the type of message and the second index is the message itself
                     SimulationUpdate msg = JsonSerializer.Deserialize<SimulationUpdate>(messages[1].Trim());
-                    string msgAvgDps = Math.Round(msg.totalDamage / msg.totalFightDuration, 2).ToString();
+                    string msgMedianDps;
 
-                    if (msg.itemId == null || msg.itemId == _selectedItemIdWhenStartingSim)
+                    if (msg.SimulationType == SimulationType.Normal)
                     {
-                        AvgDps = msgAvgDps;
-                        MinDps = Math.Round(msg.minDps, 2).ToString();
-                        MaxDps = Math.Round(msg.maxDps, 2).ToString();
+                        // Update the dps list and sim progress for this thread
+                        _multiThreadSimDpsResults[msg.StartingIteration] = msg.DamageResults;
+                        _multiThreadSimProgress[msg.StartingIteration] = msg.SimulationProgress;
+
+                        // Find the median dps
+                        // Create a new List<> and for each thread, loop through the dps results and get the median and add it to the list.
+                        List<double> medianDpsResults = new();
+                        foreach (var sim in _multiThreadSimDpsResults)
+                        {
+                            medianDpsResults.Add(msg.DamageResults.OrderBy(x => x).Skip(msg.DamageResults.Count() / 2).First());
+                        }
+
+                        // After all the threads' median dps has been found, find the median value of that list to get the median dps across all threads.
+                        msgMedianDps = Math.Round(medianDpsResults.OrderBy(x => x).Skip(medianDpsResults.Count() / 2).First(), 2).ToString();
+                    }
+                    // If it's not a normal sim then just get the median dps fo the DamageResults list from the message.
+                    else
+                    {
+                        msgMedianDps = Math.Round(msg.DamageResults.OrderBy(x => x).Skip(msg.DamageResults.Count() / 2).First(), 2).ToString();
+                    }
+
+                    if (msg.ItemId == null || msg.ItemId == _selectedItemIdWhenStartingSim)
+                    {
+                        MedianDps = msgMedianDps;
+                        MinDps = Math.Round(msg.MinDps, 2).ToString();
+                        MaxDps = Math.Round(msg.MaxDps, 2).ToString();
                     }
 
                     if (message.StartsWith(MessageType.SimulationEnd))
                     {
                         _selectedItemIdWhenStartingSim = null;
+                        _simIsActive = false;
                     }
 
-                    if (msg.simulationType == SimulationType.Normal)
+                    if (msg.SimulationType == SimulationType.Normal)
                     {
-                        if (msg.simulationProgress < 100)
+                        // Find the average thread's sim progress and use that for the button text.
+                        int averageSimProgress = (int)_multiThreadSimProgress.Average(x => x.Value);
+                        if (averageSimProgress < 100)
                         {
-                            SimProgress = msg.simulationProgress;
+                            SimProgress = averageSimProgress;
                             SimulateButtonText = SimProgress + "%";
                         }
                         else
@@ -312,22 +379,27 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
                             SimProgress = 0;
                             SimulateButtonText = "Simulate";
                             _simIsActive = false;
+                            // Clear the multi-thread lists at the end of a normal simulation.
+                            _multiThreadSimDpsResults.Clear();
+                            _multiThreadSimProgress.Clear();
                         }
 
-                        if (message.StartsWith(MessageType.SimulationEnd))
+                        // Since each thread will send a SimulationEnd update when they finish, we need to only run this code-block when all threads have finished running.
+                        if (message.StartsWith(MessageType.SimulationEnd) && averageSimProgress >= 100)
                         {
-                            SimulationDuration = Math.Round(msg.simulationLength, 2).ToString();
-                            await _localStorage.SetItemAsync("avgDps", AvgDps);
+                            SimulationDuration = Math.Round(DateTime.UtcNow.Subtract((DateTime)normalSimStart).TotalSeconds, 2).ToString();
+                            normalSimStart = null;
+                            await _localStorage.SetItemAsync("medianDps", MedianDps);
                             await _localStorage.SetItemAsync("minDps", MinDps);
                             await _localStorage.SetItemAsync("maxDps", MaxDps);
                             await _localStorage.SetItemAsync("simulationDuration", SimulationDuration);
                         }
                     }
-                    else if (msg.simulationType == SimulationType.AllItems && Items.savedItemDps[Items.SelectedItemSlot + Items.SelectedItemSubSlot].ContainsKey(msg.itemId.ToString()))
+                    else if (msg.SimulationType == SimulationType.AllItems && Items.savedItemDps[Items.SelectedItemSlot + Items.SelectedItemSubSlot].ContainsKey(msg.ItemId.ToString()))
                     {
-                        _multiItemSimInformation[msg.itemId] = (int)msg.simulationProgress;
+                        _multiItemSimInformation[msg.ItemId] = msg.SimulationProgress;
                         MultiSimProgress = (int)Math.Ceiling(_multiItemSimInformation.Values.Average());
-                        Items.savedItemDps[Items.SelectedItemSlot + Items.SelectedItemSubSlot][msg.itemId.ToString()] = Convert.ToDouble(msgAvgDps);
+                        Items.savedItemDps[Items.SelectedItemSlot + Items.SelectedItemSubSlot][msg.ItemId.ToString()] = Convert.ToDouble(msgMedianDps);
 
                         if (MultiSimProgress < 100)
                         {
@@ -344,6 +416,8 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
                         {
                             await _localStorage.SetItemAsync("savedItemDps", Items.savedItemDps);
                         }
+
+                        await RefreshItemTable.InvokeAsync();
                     }
                 }
                 catch
@@ -406,11 +480,11 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
         }
 
 
-        public async Task InitializeViewModel()
+        public async Task InitializeViewModel(EventCallback refreshItemTable)
         {
-            if (await _localStorage.ContainKeyAsync("avgDps"))
+            if (await _localStorage.ContainKeyAsync("medianDps"))
             {
-                _avgDps = await _localStorage.GetItemAsync<string>("avgDps");
+                _medianDps = await _localStorage.GetItemAsync<string>("medianDps");
             }
             if (await _localStorage.ContainKeyAsync("minDps"))
             {
@@ -424,6 +498,7 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
             {
                 _simulationDuration = await _localStorage.GetItemAsync<string>("simulationDuration");
             }
+            RefreshItemTable = refreshItemTable;
         }
     }
 }
