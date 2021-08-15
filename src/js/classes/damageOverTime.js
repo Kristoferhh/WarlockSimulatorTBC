@@ -89,7 +89,13 @@ class DamageOverTime {
     }
     let modifier = this.getModifier()
     const partialResistMultiplier = this.player.getPartialResistMultiplier(this.player.enemy[this.school + 'Resist'])
-    let dmg = (this.dmg + spellPower * this.coefficient) * modifier * partialResistMultiplier
+    let dmg = this.dmg
+    // Add the t5 4-set bonus modifier to the base damage
+    if (this.varName == 'corruption' || this.varName == 'immolate') {
+      dmg *= this.t5BonusModifier
+    }
+    dmg += (spellPower * this.coefficient)
+    dmg *= modifier * partialResistMultiplier
 
     return [dmg, spellPower, modifier, partialResistMultiplier]
   }
@@ -127,7 +133,12 @@ class DamageOverTime {
 
         this.player.damageBreakdown[this.varName].damage = this.player.damageBreakdown[this.varName].damage + dmg || dmg
         this.player.iterationDamage += dmg
-        this.player.combatLog(this.name + ' Tick ' + Math.round(dmg) + ' (' + this.dmg + ' Base Damage - ' + Math.round(spellPower) + ' Spell Power - ' + this.coefficient + ' Coefficient - ' + (Math.round(modifier * 10000) / 100).toFixed(2) + '% Damage Modifier ' + Math.round(partialResistMultiplier * 1000) / 1000 + '% Partial Resist Multiplier)')
+        let combatLogStr = this.name + ' Tick ' + Math.round(dmg) + ' (' + this.dmg + ' Base Damage - ' + Math.round(spellPower) + ' Spell Power - ' + this.coefficient + ' Coefficient - ' + (Math.round(modifier * 10000) / 100).toFixed(2) + '% Damage Modifier ' + Math.round(partialResistMultiplier * 1000) / 1000 + '% Partial Resist Multiplier'
+        if (this.t5BonusModifier > 1) {
+          combatLogStr += " - " + Math.round(this.t5BonusModifier * 10000) / 100 + "% Base Dmg Modifier (T5 4pc bonus)"
+        }
+        combatLogStr += ')'
+        this.player.combatLog(combatLogStr)
         this.ticksRemaining--
         this.tickTimerRemaining = this.tickTimerTotal
 
@@ -174,8 +185,6 @@ class CorruptionDot extends DamageOverTime {
       // Multiply the modifier with the bonus from Shadow Mastery + Contagion
       modifier *= (1 * (1 + ((this.player.talents.shadowMastery * 0.02) + (this.player.talents.contagion / 100))))
     }
-    // Add the t5 4-set bonus modifier
-    modifier *= this.t5BonusModifier
     return modifier
   }
 
@@ -226,10 +235,6 @@ class ImmolateDot extends DamageOverTime {
     this.minimumDuration = 12
     this.t5BonusModifier = 1
     this.setup()
-  }
-
-  getModifier () {
-    return super.getModifier() * this.t5BonusModifier
   }
 
   apply (spellPower) {
