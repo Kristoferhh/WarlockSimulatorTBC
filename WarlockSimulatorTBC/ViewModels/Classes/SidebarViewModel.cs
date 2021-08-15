@@ -37,7 +37,9 @@ namespace WarlockSimulatorTBC.ViewModels.Classes
         private int? _selectedItemIdWhenStartingSim;
         // Tracks information about multi-item sims. Key is the id of the item equipped in the sim and the value is the sim's progress %
         private Dictionary<int?, int> _multiItemSimInformation = new();
+        // Tracks information about the recorded DPS results of a normal sim's threads. The key is the thread's startingIteration and the value is a List<> of the thread's recorded DPS values.
         private Dictionary<int, List<double>> _multiThreadSimDpsResults = new();
+        // Tracks information about the simulation progress of a normal sim's threads. The key is the thread's startingIteration and the value is the thread's progress %
         private Dictionary<int, int> _multiThreadSimProgress = new();
         private DateTime? normalSimStart = null;
         private EventCallback RefreshItemTable;
