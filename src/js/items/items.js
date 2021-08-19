@@ -5014,12 +5014,12 @@ const items = {
       phase: 1
     },
     sagaOfTerokk: {
-        name: 'The Saga of Terokk',
-        intellect: 23,
-        spellPower: 28,
-        id: 29330,
-        source: 'Auchindoun (Quest)',
-        phase: 1
+      name: 'The Saga of Terokk',
+      intellect: 23,
+      spellPower: 28,
+      id: 29330,
+      source: 'Auchindoun (Quest)',
+      phase: 1
     },
     masterSpellstone: {
       name: 'Master Spellstone',
