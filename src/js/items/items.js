@@ -5013,6 +5013,14 @@ const items = {
       source: 'Heroic Slave Pens',
       phase: 1
     },
+    sagaOfTerokk: {
+      name: 'The Saga of Terokk',
+      intellect: 23,
+      spellPower: 28,
+      id: 29330,
+      source: 'Auchindoun (Quest)',
+      phase: 1
+    },
     masterSpellstone: {
       name: 'Master Spellstone',
       critRating: 20,
@@ -5029,6 +5037,15 @@ const items = {
       hitRating: 8,
       id: 23049,
       source: 'Naxxramas',
+      phase: 0
+    },
+    scepterOfInterminableFocus: {
+      name: "Scepter of Interminable Focus",
+      spellPower: 9,
+      critRating: 14,
+      hitRating: 8,
+      id: 22329,
+      source: 'Stratholme (Live)',
       phase: 0
     }
   },
