@@ -31,7 +31,7 @@ const _auras = {
         name: 'Mana Spring Totem',
         mp5: 50,
         iconName: 'spell_nature_manaregentotem',
-        id: 10497
+        id: 25570
       },
       wrathOfAirTotem: {
         name: 'Wrath of Air Totem',
