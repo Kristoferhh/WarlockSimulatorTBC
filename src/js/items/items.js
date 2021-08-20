@@ -4693,6 +4693,15 @@ const items = {
       source: 'Doomwalker',
       phase: 1
     },
+    eterniumRunedBlade: {
+      name: "Eternium Runed Blade",
+      intellect: 19,
+      spellPower: 168,
+      critRating: 21,
+      id: 23554,
+      source: "Blacksmithing BoE",
+      phase: 1
+    },
     gladiatorsSpellblade: {
       name: "Gladiator's Spellblade",
       stamina: 28,

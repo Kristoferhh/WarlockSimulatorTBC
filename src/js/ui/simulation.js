@@ -41,16 +41,20 @@ function simDPS (items) {
 
     simulations.push(new SimWorker(
       (simulationEnd) => {
+        let avgDps = Math.round(median(simulationEnd.dpsArray) * 100) / 100
+        let minDps = Math.round(Math.min(...simulationEnd.dpsArray) * 100) / 100
+        let maxDps = Math.round(Math.max(...simulationEnd.dpsArray) * 100) / 100
         simulationsFinished++
+
         // DPS information on the sidebar
         if (itemAmount === 1) {
-          localStorage.avgDps = simulationEnd.avgDps
-          localStorage.minDps = simulationEnd.minDps
-          localStorage.maxDps = simulationEnd.maxDps
+          localStorage.avgDps = avgDps
+          localStorage.minDps = minDps
+          localStorage.maxDps = maxDps
           localStorage.simulationDuration = simulationEnd.length
-          $('#avg-dps').text(simulationEnd.avgDps)
-          $('#min-dps').text(simulationEnd.minDps)
-          $('#max-dps').text(simulationEnd.maxDps)
+          $('#avg-dps').text(avgDps)
+          $('#min-dps').text(minDps)
+          $('#max-dps').text(maxDps)
           $('#sim-length-result').text(Math.round(simulationEnd.length * 10000) / 10000 + 's')
           $('#sim-dps').text('Simulate')
 
@@ -63,7 +67,7 @@ function simDPS (items) {
           $('#sim-all-items').text('Simulate All Items')
         }
         savedItemDps[itemSlot + itemSubSlot] = savedItemDps[itemSlot + itemSubSlot] || {}
-        savedItemDps[itemSlot + itemSubSlot][simulationEnd.itemId] = simulationEnd.avgDps
+        savedItemDps[itemSlot + itemSubSlot][simulationEnd.itemId] = avgDps
         localStorage.savedItemDps = JSON.stringify(savedItemDps)
 
         if (simulationsFinished === itemAmount) {
@@ -122,8 +126,10 @@ function simDPS (items) {
         }
       },
       (simulationUpdate) => {
+        let avgDps = Math.round(median(simulationUpdate.dpsArray) * 100) / 100
+
         if (itemAmount === 1) {
-          $('#avg-dps').text(simulationUpdate.avgDps)
+          $('#avg-dps').text(avgDps)
           // Uses the sim button as a progress bar by coloring it based on how many iterations are done with
           $('#sim-dps').css('background', 'linear-gradient(to right, #9482C9 ' + simulationUpdate.percent + '%, transparent ' + simulationUpdate.percent + '%)')
           $('#sim-dps').text(Math.round(simulationUpdate.percent) + '%')
@@ -142,7 +148,7 @@ function simDPS (items) {
           $('#sim-all-items').text(averageProgress + '%')
         }
         // Set the DPS value on the item in the item selection list
-        $(".item-row[data-wowhead-id='" + simulationUpdate.itemId + "']").find('.item-dps').text(simulationUpdate.avgDps)
+        $(".item-row[data-wowhead-id='" + simulationUpdate.itemId + "']").find('.item-dps').text(avgDps)
         $('#item-selection-table').trigger('update')
       },
       {
