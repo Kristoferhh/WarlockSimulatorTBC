@@ -70,7 +70,6 @@ const items = {
         spellPower: 5
       },
       spellPower: 81,
-      critRating: 42,
       id: 34847,
       source: 'Engineering',
       phase: 5
@@ -1293,19 +1292,19 @@ const items = {
       phase: 2
     },
     illidariCloakOfShadowWrath: {
-      name: "Illidari Cloak of Shadow Wrath",
+      name: 'Illidari Cloak of Shadow Wrath',
       shadowPower: 47,
       displayId: 31201,
       id: fakeItemIds.illidariCloakOfShadowWrath,
-      source: "Netherstorm Rare Spawn",
+      source: 'Netherstorm Rare Spawn',
       phase: 1
     },
     illidariCloakOfFireWrath: {
-      name: "Illidari Cloak of Fire Wrath",
+      name: 'Illidari Cloak of Fire Wrath',
       firePower: 47,
       displayId: 31201,
       id: fakeItemIds.illidariCloakOfFireWrath,
-      source: "Netherstorm Rare Spawn",
+      source: 'Netherstorm Rare Spawn',
       phase: 1
     },
     bruteCloakOfTheOgreMagi: {
@@ -1665,7 +1664,7 @@ const items = {
       source: 'Hemathion - BEM Rare',
       phase: 1
     },
-    /*drakeweaveRaimentOfTheSorcerer: {
+    /* drakeweaveRaimentOfTheSorcerer: {
       name: 'Drakeweave Raiment of the Sorcerer',
       stamina: 47,
       intellect: 32,
@@ -1684,7 +1683,7 @@ const items = {
       id: fakeItemIds.drakeweaveRaimentOfTheInvoker,
       source: 'Hemathion - BEM Rare',
       phase: 1
-    },*/
+    }, */
     voidheartRobe: {
       name: 'Voidheart Robe',
       stamina: 42,
@@ -4694,12 +4693,12 @@ const items = {
       phase: 1
     },
     eterniumRunedBlade: {
-      name: "Eternium Runed Blade",
+      name: 'Eternium Runed Blade',
       intellect: 19,
       spellPower: 168,
       critRating: 21,
       id: 23554,
-      source: "Blacksmithing BoE",
+      source: 'Blacksmithing BoE',
       phase: 1
     },
     gladiatorsSpellblade: {
@@ -5053,7 +5052,7 @@ const items = {
       phase: 0
     },
     scepterOfInterminableFocus: {
-      name: "Scepter of Interminable Focus",
+      name: 'Scepter of Interminable Focus',
       spellPower: 9,
       critRating: 14,
       hitRating: 8,
@@ -5164,14 +5163,14 @@ const items = {
       phase: 2
     },
     frostscytheOfLordAhune: {
-      name: "Frostscythe of Lord Ahune",
+      name: 'Frostscythe of Lord Ahune',
       stamina: 40,
       intellect: 35,
       spellPower: 176,
       mp5: 13,
       critRating: 33,
       id: 35514,
-      source: "Lord Ahune",
+      source: 'Lord Ahune',
       phase: 1
     },
     gladiatorsWarStaff: {
@@ -5335,7 +5334,7 @@ const items = {
       resilienceRating: 14,
       id: 32962,
       source: 'PVP',
-      phase: 2,
+      phase: 2
     },
     wandOfTheForgottenStar: {
       name: 'Wand of the Forgotten Star',
