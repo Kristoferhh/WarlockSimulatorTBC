@@ -207,12 +207,12 @@ function simStatWeights () {
   sims.push(new SimWorker(
     (simulationEnd) => {
       simsFinished++
-      normalSimAvgDps = simulationEnd.avgDps
-      $('#avg-dps').text(simulationEnd.avgDps)
+      normalSimAvgDps = Math.round(median(simulationEnd.dpsArray) * 100) / 100
+      $('#avg-dps').text(normalSimAvgDps)
     },
     (simulationUpdate) => {
-      normalSimAvgDps = simulationUpdate.avgDps
-      $('#avg-dps').text(simulationUpdate.avgDps)
+      normalSimAvgDps = Math.round(median(simulationUpdate.dpsArray) * 100) / 100
+      $('#avg-dps').text(normalSimAvgDps)
     },
     {
       player: Player.getSettings(),
@@ -224,7 +224,7 @@ function simStatWeights () {
     sims.push(new SimWorker(
       (simulationEnd) => {
         // Round to 3 decimals
-        const statValue = Math.round((((simulationEnd.avgDps - normalSimAvgDps) / stats[simulationEnd.customStat.stat]) * 1000)) / 1000
+        const statValue = Math.round((((median(simulationEnd.dpsArray) - normalSimAvgDps) / stats[simulationEnd.customStat.stat]) * 1000)) / 1000
         updateStatWeight(simulationEnd.customStat.stat, statValue)
         simsFinished++
 
@@ -244,7 +244,7 @@ function simStatWeights () {
         }
       },
       (simulationUpdate) => {
-        const statValue = Math.round((((simulationUpdate.avgDps - normalSimAvgDps) / stats[simulationUpdate.customStat.stat]) * 1000)) / 1000
+        const statValue = Math.round((((median(simulationUpdate.dpsArray) - normalSimAvgDps) / stats[simulationUpdate.customStat.stat]) * 1000)) / 1000
         updateStatWeight(simulationUpdate.customStat.stat, statValue)
 
         let smallestValue = 100
