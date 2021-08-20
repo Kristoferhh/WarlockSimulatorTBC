@@ -15,7 +15,7 @@ importScripts(
 )
 
 onmessage = function (e) {
-  const wasm = fetch('../../dist/js/spell.wasm')
+  const wasm = fetch('./src/cpp/warlocksim.wasm')
 
   wasm.then(module => {
     console.log("YEP");
