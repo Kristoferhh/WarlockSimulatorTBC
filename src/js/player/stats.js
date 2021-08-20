@@ -87,6 +87,11 @@ function refreshCharacterStats () {
   const staminaModifier = characterStats.staminaModifier * (1 + (0.03 * talents.demonicEmbrace))
   let stamina = characterStats.stamina
 
+  // Stamina
+  if (auras.bloodPact) {
+    stamina += _auras.buffs.auras.bloodPact.stamina * (0.1 * $('select[name="improvedImp"]').val())
+  }
+
   // Crit
   let critRating = characterStats.critRating
   if (auras.powerOfTheGuardianMage) critRating += 28 * $("select[name='mageAtieshAmount']").val()

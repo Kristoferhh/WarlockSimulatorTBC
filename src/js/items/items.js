@@ -20,7 +20,9 @@ const fakeItemIds = {
   archmageSlippersOfShadowWrath: -17,
   archmageSlippersOfFireWrath: -18,
   elementalistBootsOfShadowWrath: -19,
-  elementalistBootsOfFireWrath: -20
+  elementalistBootsOfFireWrath: -20,
+  illidariCloakOfShadowWrath: -21,
+  illidariCloakOfFireWrath: -22
 }
 
 const items = {
@@ -1289,6 +1291,22 @@ const items = {
       id: 29992,
       source: 'The Eye',
       phase: 2
+    },
+    illidariCloakOfShadowWrath: {
+      name: "Illidari Cloak of Shadow Wrath",
+      shadowPower: 47,
+      displayId: 31201,
+      id: fakeItemIds.illidariCloakOfShadowWrath,
+      source: "Netherstorm Rare Spawn",
+      phase: 1
+    },
+    illidariCloakOfFireWrath: {
+      name: "Illidari Cloak of Fire Wrath",
+      firePower: 47,
+      displayId: 31201,
+      id: fakeItemIds.illidariCloakOfFireWrath,
+      source: "Netherstorm Rare Spawn",
+      phase: 1
     },
     bruteCloakOfTheOgreMagi: {
       name: 'Brute Cloak of the Ogre-Magi',
@@ -3953,6 +3971,16 @@ const items = {
       source: 'World Drop',
       phase: 1
     },
+    manastormBand: {
+      name: 'Manastorm Band',
+      intellect: 15,
+      spellPower: 29,
+      critRating: 10,
+      unique: true,
+      id: 30366,
+      source: 'Netherstorm Quest',
+      phase: 1
+    },
     ringOfRecurrence: {
       name: 'Ring of Recurrence',
       stamina: 15,
@@ -4654,6 +4682,15 @@ const items = {
       source: 'Doomwalker',
       phase: 1
     },
+    eterniumRunedBlade: {
+      name: "Eternium Runed Blade",
+      intellect: 19,
+      spellPower: 168,
+      critRating: 21,
+      id: 23554,
+      source: "Blacksmithing BoE",
+      phase: 1
+    },
     gladiatorsSpellblade: {
       name: "Gladiator's Spellblade",
       stamina: 28,
@@ -4664,14 +4701,24 @@ const items = {
       source: 'PVP',
       phase: 1
     },
-    stormcallerBladeOfTheArchmage: {
-      name: 'Stormcaller/Blade of the Archmage',
+    stormcaller: {
+      name: 'Stormcaller',
+      stamina: 12,
+      intellect: 12,
+      spellPower: 159,
+      critRating: 21,
+      id: 29155,
+      source: 'Thrallmar - Exalted',
+      phase: 1
+    },
+    bladeOfTheArchmage: {
+      name: 'Blade of the Archmage',
       stamina: 13,
       intellect: 11,
       spellPower: 159,
       critRating: 21,
       id: 29153,
-      source: 'Honor Hold/Thrallmar - Exalted',
+      source: 'Honor Hold - Exalted',
       phase: 1
     },
     bladeOfWizardry: {
@@ -4975,6 +5022,14 @@ const items = {
       source: 'Heroic Slave Pens',
       phase: 1
     },
+    sagaOfTerokk: {
+      name: 'The Saga of Terokk',
+      intellect: 23,
+      spellPower: 28,
+      id: 29330,
+      source: 'Auchindoun (Quest)',
+      phase: 1
+    },
     masterSpellstone: {
       name: 'Master Spellstone',
       critRating: 20,
@@ -4991,6 +5046,15 @@ const items = {
       hitRating: 8,
       id: 23049,
       source: 'Naxxramas',
+      phase: 0
+    },
+    scepterOfInterminableFocus: {
+      name: "Scepter of Interminable Focus",
+      spellPower: 9,
+      critRating: 14,
+      hitRating: 8,
+      id: 22329,
+      source: 'Stratholme (Live)',
       phase: 0
     }
   },
@@ -5094,6 +5158,17 @@ const items = {
       id: 29988,
       source: 'The Eye',
       phase: 2
+    },
+    frostscytheOfLordAhune: {
+      name: "Frostscythe of Lord Ahune",
+      stamina: 40,
+      intellect: 35,
+      spellPower: 176,
+      mp5: 13,
+      critRating: 33,
+      id: 35514,
+      source: "Lord Ahune",
+      phase: 1
     },
     gladiatorsWarStaff: {
       name: "Gladiator's War Staff",

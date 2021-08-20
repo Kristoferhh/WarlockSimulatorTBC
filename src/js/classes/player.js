@@ -280,6 +280,10 @@ class Player {
     if (settings.auras.prayerOfSpirit && settings.simSettings.improvedDivineSpirit) {
       this.stats.spellPower += (this.stats.spirit * this.stats.spiritModifier * (0 + (settings.simSettings.improvedDivineSpirit / 20)))
     }
+    // Add extra stamina from Blood Pact from Improved Imp
+    if (settings.auras.bloodPact) {
+      this.stats.stamina += 70 * (0.1 * settings.simSettings.improvedImp)
+    }
     // Add stamina from Demonic Embrace
     this.stats.stamina *= 1 + (0.03 * this.talents.demonicEmbrace)
     // Add mp5 from Vampiric Touch (add 25% instead of 5% since we're adding it to the mana per 5 seconds variable)
@@ -346,7 +350,7 @@ class Player {
     this.combatlog.push('Spell Power: ' + this.getSpellPower())
     this.combatlog.push('Shadow Power: ' + this.stats.shadowPower)
     this.combatlog.push('Fire Power: ' + this.stats.firePower)
-    this.combatlog.push('Crit Chance: ' + Math.round(this.getCritChance() * 100) / 100 + '%')
+    this.combatlog.push('Crit Chance: ' + Math.round(this.getCritChance('destruction') * 100) / 100 + '%')
     this.combatlog.push('Hit Chance: ' + Math.min(16, Math.round((this.stats.extraHitChance) * 100) / 100) + '%')
     this.combatlog.push('Haste: ' + Math.round((this.stats.hasteRating / hasteRatingPerPercent) * 100) / 100 + '%')
     this.combatlog.push('Shadow Modifier: ' + Math.round(this.stats.shadowModifier * 100) + '%')
@@ -652,12 +656,19 @@ class Player {
 
   // Returns the crit percentage of the player.
   // Since crit gains a bonus from intellect, and intellect could fluctuate during the fight (through procs and such), it's better to calculate it by calling a function like this.
-  getCritChance () {
-    return this.stats.critChance + ((this.stats.intellect * this.stats.intellectModifier) * critPerInt)
+  getCritChance (spellType) {
+    let critChance = this.stats.critChance + ((this.stats.intellect * this.stats.intellectModifier) * critPerInt)
+    
+    // Remove the 5% crit chance from Devastation if it isn't a Destruction spell
+    if (spellType !== 'destruction') {
+      critChance -= this.talents.devastation
+    }
+
+    return critChance
   }
 
-  isCrit (extraCrit = 0) {
-    return (random(1, (100 * this.stats.critChanceMultiplier)) <= ((this.getCritChance() + extraCrit) * this.stats.critChanceMultiplier))
+  isCrit (spellType, extraCrit = 0) {
+    return (random(1, (100 * this.stats.critChanceMultiplier)) <= ((this.getCritChance(spellType) + extraCrit) * this.stats.critChanceMultiplier))
   }
 
   // The formula is (75 * resistance) / (playerLevel * 5) which gives the number to multiply the damage with (between 0 and 1) to simulate the average partial resist mitigation.

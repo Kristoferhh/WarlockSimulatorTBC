@@ -56,7 +56,7 @@ class Spell {
   }
 
   startCast (predictedDamage = 0) {
-    if (this.onGcd) {
+    if (this.onGcd && !this.isNonWarlockAbility) {
       this.player.gcdRemaining = this.player.getGcdValue(this.varName)
     }
 
@@ -106,7 +106,7 @@ class Spell {
     let isCrit = false  
     if (this.canCrit) {
       // Checks if the spell is a crit.
-      isCrit = this.player.isCrit(this.bonusCrit)
+      isCrit = this.player.isCrit(this.type, this.bonusCrit)
       if (isCrit) {
         // Increment the crit counter whether the spell hits or not so that the crit % on the damage breakdown is correct. Otherwise the crit % will be lower due to lost crits when the spell misses.
         this.player[this.breakdownTable + 'Breakdown'][this.varName].crits = this.player[this.breakdownTable + 'Breakdown'][this.varName].crits + 1 || 1
@@ -332,7 +332,7 @@ class Spell {
 
     if (this.canCrit) {
       critDamage = normalDamage * this.getCritMultiplier(this.player.critMultiplier)
-      critChance = this.player.getCritChance() / 100
+      critChance = this.player.getCritChance(this.type) / 100
       chanceToNotCrit = 1 - critChance
     }
     const hitChance = this.player.getHitChance(this.type == 'affliction') / 100
@@ -964,10 +964,10 @@ class TheLightningCapacitor extends Spell {
     if (this.cooldownRemaining <= 0) {
       this.player.auras.theLightningCapacitor.apply()
       if (this.player.auras.theLightningCapacitor.stacks == 3) {
+        this.cooldownRemaining = this.cooldown
         this.player.auras.theLightningCapacitor.fade()
         super.startCast()
       }
-      this.cooldownRemaining = this.cooldown
     }
   }
 }

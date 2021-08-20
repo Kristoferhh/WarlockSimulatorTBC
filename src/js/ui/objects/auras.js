@@ -31,7 +31,7 @@ const _auras = {
         name: 'Mana Spring Totem',
         mp5: 50,
         iconName: 'spell_nature_manaregentotem',
-        id: 10497
+        id: 25570
       },
       wrathOfAirTotem: {
         name: 'Wrath of Air Totem',
@@ -401,6 +401,12 @@ const _auras = {
         spellPower: 23,
         iconName: 'inv_misc_food_53',
         id: 23326
+      },
+      bloodthistle: {
+        name: "Bloodthistle",
+        spellPower: 10,
+        iconName: "inv_misc_herb_11",
+        id: 22710
       }
     }
   },
