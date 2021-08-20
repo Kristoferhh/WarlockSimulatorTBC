@@ -1942,6 +1942,17 @@ const items = {
       source: 'Heroic Mana-Tombs',
       phase: 1
     },
+    goldweaveTunic: {
+      name: 'Goldweave Tunic',
+      stamina: 13,
+      intellect: 15,
+      spirit: 8,
+      spellPower: 42,
+      critRating: 14,
+      id: 28052,
+      source: 'Hellfire Peninsula Quest',
+      phase: 1
+    },
     plagueheartRobe: {
       name: 'Plagueheart Robe',
       stamina: 27,
@@ -5018,7 +5029,7 @@ const items = {
       intellect: 23,
       spellPower: 28,
       id: 29330,
-      source: 'Auchindoun (Quest)',
+      source: 'Sethekk Halls Quest',
       phase: 1
     },
     masterSpellstone: {
