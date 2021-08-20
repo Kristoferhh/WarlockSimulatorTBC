@@ -5041,13 +5041,6 @@ const items = {
       source: 'Sethekk Halls Quest',
       phase: 1
     },
-    masterSpellstone: {
-      name: 'Master Spellstone',
-      critRating: 20,
-      id: 22646,
-      source: 'Warlock Spell',
-      phase: 1
-    },
     sapphironsLeftEye: {
       name: "Sapphiron's Left Eye",
       stamina: 12,
@@ -5491,6 +5484,13 @@ const items = {
       name: 'Master Firestone',
       firePower: 30,
       id: 22128,
+      source: 'Warlock Spell',
+      phase: 1
+    },
+    masterSpellstone: {
+      name: 'Master Spellstone',
+      critRating: 20,
+      id: 22646,
       source: 'Warlock Spell',
       phase: 1
     },
