@@ -290,8 +290,6 @@ class Simulation {
     let totalDamage = 0
     let dpsArray = []
     this.player.totalDuration = 0
-    let minDps = 9999
-    let maxDps = 0
     const startTime = performance.now()
     this.player.initialize()
     this.timeTotal = 0 // Used for benchmarking
@@ -555,8 +553,9 @@ class Simulation {
 
       // Send an update to the sim worker for every 1% of progress
       if (this.player.iteration % ~~(this.iterations / 100) == 0) {
+        dpsArray.sort()
         this.simulationUpdate({
-          dpsArray: dpsArray,
+          medianDps: Math.round(medianOfSortedArrayWithKnownLength(dpsArray, this.player.iteration) * 100) / 100,
           percent: Math.round((this.player.iteration / this.iterations) * 100),
           itemId: this.player.itemId,
           customStat: this.player.customStat
@@ -616,6 +615,7 @@ class Simulation {
       console.log(this.timeTotal)
     }
 
+    dpsArray.sort()
     this.simulationEnd({
       length: (performance.now() - startTime) / 1000,
       damageBreakdown: this.player.damageBreakdown,
@@ -623,7 +623,9 @@ class Simulation {
       manaGainBreakdown: this.player.manaGainBreakdown,
       combatlog: this.player.combatlog,
       iterations: this.iterations,
-      dpsArray: dpsArray,
+      medianDps: Math.round(medianOfSortedArrayWithKnownLength(dpsArray, this.player.iteration) * 100) / 100,
+      minDps: Math.round(Math.min(...dpsArray) * 100) / 100,
+      maxDps: Math.round(Math.max(...dpsArray) * 100) / 100,
       totalDamage: totalDamage,
       totalDuration: this.player.totalDuration,
       totalManaRegenerated: this.player.totalManaRegenerated,
