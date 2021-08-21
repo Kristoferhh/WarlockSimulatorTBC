@@ -233,6 +233,12 @@ function updateSimulationSettingsVisibility () {
     $('#custom-isb-uptime-value').hide()
   }
 
+  if ($('#fight-type').val() == 'singleTarget') {
+    $('#enemy-amount').hide()
+  } else {
+    $('#enemy-amount').show()
+  }
+
   if (selectedItems.neck == 34678) {
     $('#shattrathFaction').show()
     $('#shattrathFactionReputation').show()
