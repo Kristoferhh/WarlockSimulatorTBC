@@ -280,6 +280,7 @@ class Spell {
   }
 
   // Returns the non-RNG damage of the spell (basically just the base damage + spell power + damage modifiers, no crit/miss etc.)
+  // todo: investigate this noRNG variable
   getConstantDamage(noRNG = false) {
     let dmg = this.player.simSettings.randomizeValues === 'yes' && this.minDmg && this.maxDmg && !noRNG ? random(this.minDmg, this.maxDmg) : this.dmg
     const baseDamage = dmg // Creating a variable for the base damage just for the combat log
@@ -541,7 +542,7 @@ class SeedOfCorruption extends Spell {
   }
 
   damage() {
-    let baseDamage = this.player.simSettings.randomizeValues === 'yes' && this.minDmg && this.maxDmg && !noRNG ? random(this.minDmg, this.maxDmg) : this.dmg
+    let baseDamage = this.player.simSettings.randomizeValues === 'yes' && this.minDmg && this.maxDmg ? random(this.minDmg, this.maxDmg) : this.dmg
     let enemyAmount = this.player.simSettings.enemyAmount - 1 // Minus one because the enemy that Seed is being cast on doesn't get hit
     let resistAmount = 0
     let critAmount = 0
