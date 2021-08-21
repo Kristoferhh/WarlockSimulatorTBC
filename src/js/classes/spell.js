@@ -126,18 +126,6 @@ class Spell {
 
     if (this.doesDamage) {
       this.damage(isCrit)
-
-      if (isCrit && this.canCrit) {
-        // Sextant of Unstable Currents
-        if (this.player.trinketIds.includes(30626) && this.player.spells.sextantOfUnstableCurrents.ready() && random(1, 100) <= this.player.spells.sextantOfUnstableCurrents.procChance) this.player.spells.sextantOfUnstableCurrents.cast()
-        // Shiffar's Nexus-Horn
-        if (this.player.trinketIds.includes(28418) && this.player.spells.shiffarsNexusHorn.ready() && random(1, 100) <= this.player.spells.shiffarsNexusHorn.procChance) this.player.spells.shiffarsNexusHorn.cast()
-      }
-
-      // Shattered Sun Pendant of Acumen
-      if (this.player.exaltedWithShattrathFaction && this.player.spells.shatteredSunPendantOfAcumen && this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining <= 0 && random(1, 100) <= this.player.spells.shatteredSunPendantOfAcumen.procChance) {
-        this.player.spells.shatteredSunPendantOfAcumen.cast()
-      }
     }
 
     // If it's an item such as mana potion, demonic rune, destruction potion, or if it's a proc with a hidden cooldown like Blade of Wizardry or Robe of the Elder Scribes then jump out of the method
@@ -240,22 +228,15 @@ class Spell {
     if (isCrit) {
       critMultiplier = this.getCritMultiplier(critMultiplier)
       dmg *= critMultiplier
-
-      // Apply ISB debuff if casting Shadow Bolt
-      if (this.player.simSettings.customIsbUptime == 'no' && this.varName == 'shadowBolt' && this.player.talents.improvedShadowBolt > 0) {
-        this.player.auras.improvedShadowBolt.apply()
-      }
-
-      // The Lightning Capacitor
-      if (this.player.spells.theLightningCapacitor) {
-        this.player.spells.theLightningCapacitor.startCast()
-      }
+      this.onCritProcs()
     } else {
       // Decrement the Improved Shadow Bolt stacks if it's not a crit
       if (this.school == 'shadow' && !this.isDot && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.simSettings.customIsbUptime == 'no') {
         this.player.auras.improvedShadowBolt.decrementStacks()
       }
     }
+
+    this.onDamageProcs()
 
     // Combat Log
     let combatLogMsg = this.name + ' '
@@ -368,6 +349,33 @@ class Spell {
 
     if (this.casting && this.player.castTimeRemaining <= 0) {
       this.cast()
+    }
+  }
+
+  onCritProcs() {
+    // Apply ISB debuff if casting Shadow Bolt
+    if (this.player.simSettings.customIsbUptime == 'no' && this.varName == 'shadowBolt' && this.player.talents.improvedShadowBolt > 0) {
+      this.player.auras.improvedShadowBolt.apply()
+    }
+    // The Lightning Capacitor
+    if (this.player.spells.theLightningCapacitor) {
+      this.player.spells.theLightningCapacitor.startCast()
+    }
+    // Sextant of Unstable Currents
+    if (this.player.trinketIds.includes(30626) && this.player.spells.sextantOfUnstableCurrents.ready() && random(1, 100) <= this.player.spells.sextantOfUnstableCurrents.procChance) {
+      this.player.spells.sextantOfUnstableCurrents.cast()
+    }
+    // Shiffar's Nexus-Horn
+    if (this.player.trinketIds.includes(28418) && this.player.spells.shiffarsNexusHorn.ready() && random(1, 100) <= this.player.spells.shiffarsNexusHorn.procChance) {
+      this.player.spells.shiffarsNexusHorn.cast()
+    }
+  }
+
+  onDamageProcs() {
+    // Confirm that this procs on dealing damage
+    // Shattered Sun Pendant of Acumen
+    if (this.player.exaltedWithShattrathFaction && this.player.spells.shatteredSunPendantOfAcumen && this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining <= 0 && random(1, 100) <= this.player.spells.shatteredSunPendantOfAcumen.procChance) {
+      this.player.spells.shatteredSunPendantOfAcumen.cast()
     }
   }
 }
@@ -546,20 +554,22 @@ class SeedOfCorruption extends Spell {
     let enemyAmount = this.player.simSettings.enemyAmount - 1 // Minus one because the enemy that Seed is being cast on doesn't get hit
     let resistAmount = 0
     let critAmount = 0
+    let spellPower = this.player.getSpellPower() + this.player.stats.shadowPower
+    let modifier = this.player.stats.shadowModifier
 
     for (let i = 0; i < enemyAmount; i++) {
       // Check for a resist
       if (!this.player.isHit(true)) {
         resistAmount++
+        this.onDamageProcs()
       }
       // Check for a crit
       else if (this.player.isCrit(this.type)) {
         critAmount++
+        this.onCritProcs()
       }
     }
 
-    let spellPower = this.player.getSpellPower() + this.player.stats.shadowPower
-    let modifier = this.player.stats.shadowModifier
     let individualSeedDamage = baseDamage + (spellPower * this.coefficient)
     // Oblivion Raiment (dungeon set) 4pc bonus
     if (this.player.sets['644'] && this.player.sets['644'] >= 4) {
