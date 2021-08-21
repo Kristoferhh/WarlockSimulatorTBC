@@ -583,7 +583,7 @@ class SeedOfCorruption extends Spell {
     let partialResistMultiplier = this.player.getPartialResistMultiplier(this.player.enemy.shadowResist)
     totalSeedDamage *= partialResistMultiplier
 
-    this.player.combatLog(this.name + " " + Math.round(totalSeedDamage) + " (" + enemyAmount + " Enemies (" + resistAmount + " Resists & " + critAmount + " Crits) - " + baseDamage + " Base Damage - " + this.coefficient + " Coefficient - " + spellPower + " Spell Power - " + Math.round(modifier * 100) / 100 + "% Modifier - " + partialResistMultiplier + "% Partial Resist Multiplier)")
+    this.player.combatLog(this.name + " " + Math.round(totalSeedDamage) + " (" + enemyAmount + " Enemies (" + resistAmount + " Resists & " + critAmount + " Crits) - " + baseDamage + " Base Damage - " + this.coefficient + " Coefficient - " + spellPower + " Spell Power - " + Math.round(modifier * 1000) / 1000 + "% Modifier - " + partialResistMultiplier + "% Partial Resist Multiplier)")
     this.player[this.breakdownTable + 'Breakdown'][this.varName].damage = this.player[this.breakdownTable + 'Breakdown'][this.varName].damage + totalSeedDamage || totalSeedDamage
     this.player[this.breakdownTable + "Breakdown"][this.varName].crits = this.player[this.breakdownTable + "Breakdown"][this.varName].crits + critAmount || critAmount
     this.player[this.breakdownTable + "Breakdown"][this.varName].misses = this.player[this.breakdownTable + "Breakdown"][this.varName].misses + resistAmount || resistAmount
