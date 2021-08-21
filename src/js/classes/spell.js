@@ -571,7 +571,10 @@ class SeedOfCorruption extends Spell {
     // If the total damage goes above the aoe cap then we need to reduce the amount of each seed's damage
     if (totalSeedDamage > this.dmgCap) {
       // Set the damage of each individual seed to the aoe cap divided by the amount of enemies hit
-      individualSeedDamage = this.dmgCap / enemiesHit
+      // There's a bug with Seed of Corruption where if you hit the AoE cap,
+      // the number used to divide here is 1 higher because it's including the enemy that Seed is being cast on,
+      // even though that enemy doesn't actually get damaged by the Seed. Nice game :)
+      individualSeedDamage = this.dmgCap / (enemiesHit + 1)
       // Re-calculate the total damage done by all the seed hits
       totalSeedDamage = individualSeedDamage * enemiesHit
     }
