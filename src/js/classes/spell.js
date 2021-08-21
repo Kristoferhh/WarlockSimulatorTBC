@@ -523,6 +523,7 @@ class Shadowfury extends Spell {
   }
 }
 
+// https://web.archive.org/web/20081023033855/http://elitistjerks.com/f47/t25902-aoe_spell_cap_mechanics/#Warlock_AoE_Spells
 class SeedOfCorruption extends Spell {
   constructor (player) {
     super(player)
@@ -530,11 +531,65 @@ class SeedOfCorruption extends Spell {
     this.minDmg = 1110
     this.maxDmg = 1290
     this.manaCost = 882
+    this.castTime = 2
+    this.dmgCap = 13580
     this.doesDamage = true
     this.school = 'shadow'
     this.type = 'affliction'
     this.coefficient = 0.22
     this.setup()
+  }
+
+  damage() {
+    let baseDamage = this.player.simSettings.randomizeValues === 'yes' && this.minDmg && this.maxDmg && !noRNG ? random(this.minDmg, this.maxDmg) : this.dmg
+    let enemyAmount = this.player.simSettings.enemyAmount - 1 // Minus one because the enemy that Seed is being cast on doesn't get hit
+    let resistAmount = 0
+    let critAmount = 0
+
+    for (let i = 0; i < enemyAmount; i++) {
+      // Check for a resist
+      if (!this.player.isHit(true)) {
+        resistAmount++
+      }
+      // Check for a crit
+      else if (this.player.isCrit(this.type)) {
+        critAmount++
+      }
+    }
+
+    let spellPower = this.player.getSpellPower() + this.player.stats.shadowPower
+    let modifier = this.player.stats.shadowModifier
+    let individualSeedDamage = baseDamage + (spellPower * this.coefficient)
+    // Oblivion Raiment (dungeon set) 4pc bonus
+    if (this.player.sets['644'] && this.player.sets['644'] >= 4) {
+      individualSeedDamage += 180
+    }
+    individualSeedDamage *= modifier
+
+    let enemiesHit = enemyAmount - resistAmount
+    let totalSeedDamage = individualSeedDamage * enemiesHit
+    // If the total damage goes above the aoe cap then we need to reduce the amount of each seed's damage
+    if (totalSeedDamage > this.dmgCap) {
+      // Set the damage of each individual seed to the aoe cap divided by the amount of enemies hit
+      individualSeedDamage = this.dmgCap / enemiesHit
+      // Re-calculate the total damage done by all the seed hits
+      totalSeedDamage = individualSeedDamage * enemiesHit
+    }
+    // Add damage from the Seed crits
+    let individualSeedCrit = individualSeedDamage * this.getCritMultiplier(this.player.critMultiplier)
+    let bonusDamageFromCrit = individualSeedCrit - individualSeedDamage
+    totalSeedDamage += bonusDamageFromCrit * critAmount
+    // Partial resists (probably need to calculate a partial resist for each seed hit, not sure how it interacts for the aoe cap)
+    let partialResistMultiplier = this.player.getPartialResistMultiplier(this.player.enemy.shadowResist)
+    totalSeedDamage *= partialResistMultiplier
+
+    this.player.combatLog(this.name + " " + Math.round(totalSeedDamage) + " (" + enemyAmount + " Enemies (" + resistAmount + " Resists & " + critAmount + " Crits) - " + baseDamage + " Base Damage - " + this.coefficient + " Coefficient - " + spellPower + " Spell Power - " + Math.round(modifier * 100) / 100 + "% Modifier - " + partialResistMultiplier + "% Partial Resist Multiplier)")
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].damage = this.player[this.breakdownTable + 'Breakdown'][this.varName].damage + totalSeedDamage || totalSeedDamage
+    this.player[this.breakdownTable + "Breakdown"][this.varName].crits = this.player[this.breakdownTable + "Breakdown"][this.varName].crits + critAmount || critAmount
+    this.player[this.breakdownTable + "Breakdown"][this.varName].misses = this.player[this.breakdownTable + "Breakdown"][this.varName].misses + resistAmount || resistAmount
+    // the cast() function already adds 1 to the amount of casts so we only need to add enemiesHit - 1 to the cast amount
+    this.player[this.breakdownTable + "Breakdown"][this.varName].casts = this.player[this.breakdownTable + "Breakdown"][this.varName].casts + (enemiesHit - 1) || (enemiesHit - 1)
+    this.player.iterationDamage += totalSeedDamage
   }
 }
 
