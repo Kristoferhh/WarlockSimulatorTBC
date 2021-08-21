@@ -164,6 +164,17 @@
 					<span class="settings-left">Target Fire Resistance</span>
 					<input id="target-fire-resistance" value="0" type="number" name="target-fire-resistance" class="settings-right">
 				</li>
+				<li>
+					<span class="settings-left">Fight Type</span>
+					<select name="fightType" id="fight-type" class="settings-right">
+						<option value="singleTarget">Single Target</option>
+						<option value="aoe">AoE (Seed of Corruption)</option>
+					</select>
+				</li>
+				<li id="enemy-amount" title="Including the target you're casting Seed of Corruption on">
+					<span class="settings-left">Enemy Amount</span>
+					<input name="enemyAmount" class="settings-right" value="5" step="1" min="1" type="number" />
+				</li>
 				<li id='automatically-open-sim-details'>
 					<label class="settings-left" for="automatically-open-sim-details">Show Damage & Aura Tables</label>
 					<select class="settings-right" name="automatically-open-sim-details">
