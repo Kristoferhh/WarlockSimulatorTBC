@@ -227,7 +227,7 @@ class Player {
     this.stats.extraHitChance = this.stats.hitRating / hitRatingPerPercent // hit percent from hit rating
     if (settings.auras.totemOfWrath) this.stats.extraHitChance += (3 * settings.simSettings.totemOfWrathAmount)
     if (settings.auras.inspiringPresence === true) this.stats.extraHitChance += 1
-    this.stats.hitChance = Math.round(this.getBaseHitChance()) // The player's chance of hitting the enemy, usually between 83% and 99%
+    this.stats.hitChance = Math.round(getBaseHitChance(this.level, parseInt(this.enemy.level))) // The player's chance of hitting the enemy, usually between 83% and 99%
 
     // Add bonus damage % from Demonic Sacrifice
     if (settings.talents.demonicSacrifice === 1 && settings.simSettings.sacrificePet == 'yes') {
@@ -684,18 +684,6 @@ class Player {
   // The formula is (75 * resistance) / (playerLevel * 5) which gives the number to multiply the damage with (between 0 and 1) to simulate the average partial resist mitigation.
   getPartialResistMultiplier (resist) {
     return 1 - ((75 * resist) / (this.level * 5)) / 100
-  }
-
-  // formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/ && https://royalgiraffe.github.io/resist-guide
-  getBaseHitChance () {
-    const levelDifference = parseInt(this.enemy.level) - this.level
-    if (levelDifference <= 2) {
-      return Math.min(99, 100 - levelDifference - 4)
-    } else if (levelDifference == 3) { // target 3 levels above
-      return 83
-    } else if (levelDifference >= 4) { // target 4 or more levels above
-      return 83 - 11 * levelDifference
-    }
   }
 
   combatLog (info) {

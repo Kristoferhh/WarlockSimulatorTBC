@@ -183,19 +183,22 @@ function simStatWeights () {
     hasteRating: statAmount,
     mp5: statAmount
   }
-  // Only check for the hit rating weight if the player isn't hit capped (this gets the player's crit % from the sidebar since we don't have any variable with crit % included)
+  // Only check for the hit rating weight if the player isn't hit capped (this gets the player's hit % from the sidebar since we don't have any variable with hit % included)
   let hitPercent = Number($('#character-hit-val').text().split('(')[1].split('%')[0])
-  if (hitPercent >= 16) {
+  let baseHitChance = getBaseHitChance($('#character-level span').text(), $('#target-level').val())
+  let playerHitChance = hitPercent + baseHitChance
+  
+  if (playerHitChance >= 99) {
     updateStatWeight('hitRating', 0)
   } else {
     stats.hitRating = statAmount
     // If the player is too close to hit cap then we instead subtract hit rating from them instead of adding more,
     // since otherwise the extra hit would be wasted and it'd give the wrong result.
-    if (hitPercent >= 16 - (statAmount / hitRatingPerPercent)) {
+    if (playerHitChance >= 99 - (statAmount / hitRatingPerPercent)) {
       stats.hitRating *= -1
     }
   }
-  
+
   const sims = []
   const simInfo = []
   let normalSimMedianDps = 0

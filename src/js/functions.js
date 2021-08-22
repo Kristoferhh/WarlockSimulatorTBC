@@ -34,3 +34,15 @@ function medianOfSortedArrayWithKnownLength(numbers, length) {
 
   return numbers[middle];
 }
+
+// formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/ && https://royalgiraffe.github.io/resist-guide
+function getBaseHitChance (playerLevel, enemyLevel) {
+  const levelDifference = enemyLevel - playerLevel
+  if (levelDifference <= 2) {
+    return Math.min(99, 100 - levelDifference - 4)
+  } else if (levelDifference == 3) { // target 3 levels above
+    return 83 
+  } else if (levelDifference >= 4) { // target 4 or more levels above
+    return 83 - 11 * levelDifference
+  }
+}
