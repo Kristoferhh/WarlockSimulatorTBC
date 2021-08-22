@@ -167,7 +167,8 @@ function simDPS (items) {
 }
 
 function updateStatWeight (stat, value) {
-  $('#stat-weight-' + stat).text(Math.max(0, value))
+  // If the value is smaller than 0.01 then just display 0 since the 0.01 value is likely just because it's not using the same Random seed for all simulations
+  $('#stat-weight-' + stat).text(Math.max(0, value > 0.01 ? value : 0))
 }
 
 function simStatWeights () {
