@@ -524,6 +524,7 @@ class Simulation {
             // AoE (currently just does Seed of Corruption by default)
             else {
               if (this.player.spells.seedOfCorruption.ready()) {
+                this.player.useCooldowns()
                 this.player.cast(this.player.spells.seedOfCorruption.varName)
               } else {
                 this.player.castLifeTapOrDarkPact()
