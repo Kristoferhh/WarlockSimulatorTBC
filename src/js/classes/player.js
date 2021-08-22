@@ -227,7 +227,7 @@ class Player {
     this.stats.extraHitChance = this.stats.hitRating / hitRatingPerPercent // hit percent from hit rating
     if (settings.auras.totemOfWrath) this.stats.extraHitChance += (3 * settings.simSettings.totemOfWrathAmount)
     if (settings.auras.inspiringPresence === true) this.stats.extraHitChance += 1
-    this.stats.hitChance = Math.round(this.getBaseHitChance()) // The player's chance of hitting the enemy, usually between 83% and 99%
+    this.stats.hitChance = Math.round(getBaseHitChance(this.level, parseInt(this.enemy.level))) // The player's chance of hitting the enemy, usually between 83% and 99%
 
     // Add bonus damage % from Demonic Sacrifice
     if (settings.talents.demonicSacrifice === 1 && settings.simSettings.sacrificePet == 'yes') {
@@ -421,22 +421,28 @@ class Player {
     this.spells = {
       lifeTap: new LifeTap(this)
     }
-    if (this.rotation.filler.shadowBolt || this.filler == 'shadowBolt' || this.talents.nightfall > 0 || this.simChoosingRotation) this.spells.shadowBolt = new ShadowBolt(this)
-    if (this.rotation.filler.incinerate  || this.simChoosingRotation) this.spells.incinerate = new Incinerate(this)
-    if (this.rotation.filler.searingPain  || this.simChoosingRotation) this.spells.searingPain = new SearingPain(this)
-    if (this.rotation.dot.corruption  || this.simChoosingRotation) this.spells.corruption = new Corruption(this)
-    if (this.talents.unstableAffliction && (this.rotation.dot.unstableAffliction || this.simChoosingRotation)) this.spells.unstableAffliction = new UnstableAffliction(this)
-    if (this.talents.siphonLife && (this.rotation.dot.siphonLife || this.simChoosingRotation)) this.spells.siphonLife = new SiphonLife(this)
-    if (this.rotation.dot.immolate  || this.simChoosingRotation) this.spells.immolate = new Immolate(this)
-    if (this.rotation.curse.curseOfAgony || this.rotation.curse.curseOfDoom) this.spells.curseOfAgony = new CurseOfAgony(this)
-    if (this.rotation.curse.curseOfTheElements) this.spells.curseOfTheElements = new CurseOfTheElements(this)
-    if (this.rotation.curse.curseOfRecklessness) this.spells.curseOfRecklessness = new CurseOfRecklessness(this)
-    if (this.rotation.curse.curseOfDoom) this.spells.curseOfDoom = new CurseOfDoom(this)
-    if (this.talents.conflagrate == 1 && (this.rotation.finisher.conflagrate || this.simChoosingRotation)) this.spells.conflagrate = new Conflagrate(this)
-    if (this.talents.shadowburn > 0 && (this.rotation.finisher.shadowburn || this.simChoosingRotation)) this.spells.shadowburn = new Shadowburn(this)
-    if (this.rotation.finisher.deathCoil || this.simChoosingRotation) this.spells.deathCoil = new DeathCoil(this)
-    if (this.talents.shadowfury == 1 && (this.rotation.other.shadowfury || this.simChoosingRotation)) this.spells.shadowfury = new Shadowfury(this)
-    if (this.talents.amplifyCurse == 1 && (this.rotation.other.amplifyCurse || this.simChoosingRotation)) this.spells.amplifyCurse = new AmplifyCurse(this)
+
+    if (this.simSettings.fightType == "aoe") {
+      this.spells.seedOfCorruption = new SeedOfCorruption(this)
+    } else {
+      if (this.rotation.filler.shadowBolt || this.filler == 'shadowBolt' || this.talents.nightfall > 0 || this.simChoosingRotation) this.spells.shadowBolt = new ShadowBolt(this)
+      if (this.rotation.filler.incinerate  || this.simChoosingRotation) this.spells.incinerate = new Incinerate(this)
+      if (this.rotation.filler.searingPain  || this.simChoosingRotation) this.spells.searingPain = new SearingPain(this)
+      if (this.rotation.dot.corruption  || this.simChoosingRotation) this.spells.corruption = new Corruption(this)
+      if (this.talents.unstableAffliction && (this.rotation.dot.unstableAffliction || this.simChoosingRotation)) this.spells.unstableAffliction = new UnstableAffliction(this)
+      if (this.talents.siphonLife && (this.rotation.dot.siphonLife || this.simChoosingRotation)) this.spells.siphonLife = new SiphonLife(this)
+      if (this.rotation.dot.immolate  || this.simChoosingRotation) this.spells.immolate = new Immolate(this)
+      if (this.rotation.curse.curseOfAgony || this.rotation.curse.curseOfDoom) this.spells.curseOfAgony = new CurseOfAgony(this)
+      if (this.rotation.curse.curseOfTheElements) this.spells.curseOfTheElements = new CurseOfTheElements(this)
+      if (this.rotation.curse.curseOfRecklessness) this.spells.curseOfRecklessness = new CurseOfRecklessness(this)
+      if (this.rotation.curse.curseOfDoom) this.spells.curseOfDoom = new CurseOfDoom(this)
+      if (this.talents.conflagrate == 1 && (this.rotation.finisher.conflagrate || this.simChoosingRotation)) this.spells.conflagrate = new Conflagrate(this)
+      if (this.talents.shadowburn > 0 && (this.rotation.finisher.shadowburn || this.simChoosingRotation)) this.spells.shadowburn = new Shadowburn(this)
+      if (this.rotation.finisher.deathCoil || this.simChoosingRotation) this.spells.deathCoil = new DeathCoil(this)
+      if (this.talents.shadowfury == 1 && (this.rotation.other.shadowfury || this.simChoosingRotation)) this.spells.shadowfury = new Shadowfury(this)
+      if (this.talents.amplifyCurse == 1 && (this.rotation.other.amplifyCurse || this.simChoosingRotation)) this.spells.amplifyCurse = new AmplifyCurse(this)
+    }
+
     if (this.talents.darkPact == 1 && (this.rotation.other.darkPact || this.simChoosingRotation)) this.spells.darkPact = new DarkPact(this)
     if (this.selectedAuras.destructionPotion) this.spells.destructionPotion = new DestructionPotion(this)
     if (this.selectedAuras.superManaPotion) this.spells.superManaPotion = new SuperManaPotion(this)
@@ -479,23 +485,27 @@ class Player {
 
     // Auras
     this.auras = {}
+    
+    if (this.simSettings.fightType == "singleTarget") {
+      if (this.talents.improvedShadowBolt > 0) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this)
+      if (this.spells.corruption) this.auras.corruption = new CorruptionDot(this)
+      if (this.spells.unstableAffliction) this.auras.unstableAffliction = new UnstableAfflictionDot(this)
+      if (this.spells.siphonLife) this.auras.siphonLife = new SiphonLifeDot(this)
+      if (this.spells.immolate) this.auras.immolate = new ImmolateDot(this)
+      if (this.spells.curseOfAgony) this.auras.curseOfAgony = new CurseOfAgonyDot(this)
+      if (this.rotation.curse.curseOfTheElements) this.auras.curseOfTheElements = new CurseOfTheElementsAura(this)
+      if (this.rotation.curse.curseOfRecklessness) this.auras.curseOfRecklessness = new CurseOfRecklessnessAura(this)
+      if (this.rotation.curse.curseOfDoom) this.auras.curseOfDoom = new CurseOfDoomDot(this)
+      if (this.talents.nightfall > 0) this.auras.shadowTrance = new ShadowTrance(this)
+      if (this.spells.amplifyCurse) this.auras.amplifyCurse = new AmplifyCurseAura(this)
+    }
+
     if (this.selectedAuras.powerInfusion) this.auras.powerInfusion = new PowerInfusionAura(this)
     if (this.selectedAuras.innervate) this.auras.innervate = new InnervateAura(this)
     if (this.simSettings.race == 'orc') this.auras.bloodFury = new BloodFuryAura(this)
-    if (this.talents.improvedShadowBolt > 0) this.auras.improvedShadowBolt = new ImprovedShadowBolt(this)
-    if (this.spells.corruption) this.auras.corruption = new CorruptionDot(this)
-    if (this.spells.unstableAffliction) this.auras.unstableAffliction = new UnstableAfflictionDot(this)
-    if (this.spells.siphonLife) this.auras.siphonLife = new SiphonLifeDot(this)
-    if (this.spells.immolate) this.auras.immolate = new ImmolateDot(this)
-    if (this.spells.curseOfAgony) this.auras.curseOfAgony = new CurseOfAgonyDot(this)
-    if (this.rotation.curse.curseOfTheElements) this.auras.curseOfTheElements = new CurseOfTheElementsAura(this)
-    if (this.rotation.curse.curseOfRecklessness) this.auras.curseOfRecklessness = new CurseOfRecklessnessAura(this)
-    if (this.rotation.curse.curseOfDoom) this.auras.curseOfDoom = new CurseOfDoomDot(this)
-    if (this.talents.nightfall > 0) this.auras.shadowTrance = new ShadowTrance(this)
     if (this.selectedAuras.destructionPotion) this.auras.destructionPotion = new DestructionPotionAura(this)
     if (this.selectedAuras.flameCap) this.auras.flameCap = new FlameCapAura(this)
     if (this.selectedAuras.bloodlust) this.auras.bloodlust = new BloodlustAura(this)
-    if (this.spells.amplifyCurse) this.auras.amplifyCurse = new AmplifyCurseAura(this)
     if (this.selectedAuras.drumsOfBattle) this.auras.drumsOfBattle = new DrumsOfBattleAura(this)
     else if (this.selectedAuras.drumsOfWar) this.auras.drumsOfWar = new DrumsOfWarAura(this)
     else if (this.selectedAuras.drumsOfRestoration) this.auras.drumsOfRestoration = new DrumsOfRestorationAura(this)
@@ -674,18 +684,6 @@ class Player {
   // The formula is (75 * resistance) / (playerLevel * 5) which gives the number to multiply the damage with (between 0 and 1) to simulate the average partial resist mitigation.
   getPartialResistMultiplier (resist) {
     return 1 - ((75 * resist) / (this.level * 5)) / 100
-  }
-
-  // formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/ && https://royalgiraffe.github.io/resist-guide
-  getBaseHitChance () {
-    const levelDifference = parseInt(this.enemy.level) - this.level
-    if (levelDifference <= 2) {
-      return Math.min(99, 100 - levelDifference - 4)
-    } else if (levelDifference == 3) { // target 3 levels above
-      return 83
-    } else if (levelDifference >= 4) { // target 4 or more levels above
-      return 83 - 11 * levelDifference
-    }
   }
 
   combatLog (info) {

@@ -126,18 +126,6 @@ class Spell {
 
     if (this.doesDamage) {
       this.damage(isCrit)
-
-      if (isCrit && this.canCrit) {
-        // Sextant of Unstable Currents
-        if (this.player.trinketIds.includes(30626) && this.player.spells.sextantOfUnstableCurrents.ready() && random(1, 100) <= this.player.spells.sextantOfUnstableCurrents.procChance) this.player.spells.sextantOfUnstableCurrents.cast()
-        // Shiffar's Nexus-Horn
-        if (this.player.trinketIds.includes(28418) && this.player.spells.shiffarsNexusHorn.ready() && random(1, 100) <= this.player.spells.shiffarsNexusHorn.procChance) this.player.spells.shiffarsNexusHorn.cast()
-      }
-
-      // Shattered Sun Pendant of Acumen
-      if (this.player.exaltedWithShattrathFaction && this.player.spells.shatteredSunPendantOfAcumen && this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining <= 0 && random(1, 100) <= this.player.spells.shatteredSunPendantOfAcumen.procChance) {
-        this.player.spells.shatteredSunPendantOfAcumen.cast()
-      }
     }
 
     // If it's an item such as mana potion, demonic rune, destruction potion, or if it's a proc with a hidden cooldown like Blade of Wizardry or Robe of the Elder Scribes then jump out of the method
@@ -240,22 +228,15 @@ class Spell {
     if (isCrit) {
       critMultiplier = this.getCritMultiplier(critMultiplier)
       dmg *= critMultiplier
-
-      // Apply ISB debuff if casting Shadow Bolt
-      if (this.player.simSettings.customIsbUptime == 'no' && this.varName == 'shadowBolt' && this.player.talents.improvedShadowBolt > 0) {
-        this.player.auras.improvedShadowBolt.apply()
-      }
-
-      // The Lightning Capacitor
-      if (this.player.spells.theLightningCapacitor) {
-        this.player.spells.theLightningCapacitor.startCast()
-      }
+      this.onCritProcs()
     } else {
       // Decrement the Improved Shadow Bolt stacks if it's not a crit
       if (this.school == 'shadow' && !this.isDot && this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active && this.player.simSettings.customIsbUptime == 'no') {
         this.player.auras.improvedShadowBolt.decrementStacks()
       }
     }
+
+    this.onDamageProcs()
 
     // Combat Log
     let combatLogMsg = this.name + ' '
@@ -280,6 +261,7 @@ class Spell {
   }
 
   // Returns the non-RNG damage of the spell (basically just the base damage + spell power + damage modifiers, no crit/miss etc.)
+  // todo: investigate this noRNG variable
   getConstantDamage(noRNG = false) {
     let dmg = this.player.simSettings.randomizeValues === 'yes' && this.minDmg && this.maxDmg && !noRNG ? random(this.minDmg, this.maxDmg) : this.dmg
     const baseDamage = dmg // Creating a variable for the base damage just for the combat log
@@ -367,6 +349,33 @@ class Spell {
 
     if (this.casting && this.player.castTimeRemaining <= 0) {
       this.cast()
+    }
+  }
+
+  onCritProcs() {
+    // Apply ISB debuff if casting Shadow Bolt
+    if (this.player.simSettings.customIsbUptime == 'no' && this.varName == 'shadowBolt' && this.player.talents.improvedShadowBolt > 0) {
+      this.player.auras.improvedShadowBolt.apply()
+    }
+    // The Lightning Capacitor
+    if (this.player.spells.theLightningCapacitor) {
+      this.player.spells.theLightningCapacitor.startCast()
+    }
+    // Sextant of Unstable Currents
+    if (this.player.trinketIds.includes(30626) && this.player.spells.sextantOfUnstableCurrents.ready() && random(1, 100) <= this.player.spells.sextantOfUnstableCurrents.procChance) {
+      this.player.spells.sextantOfUnstableCurrents.cast()
+    }
+    // Shiffar's Nexus-Horn
+    if (this.player.trinketIds.includes(28418) && this.player.spells.shiffarsNexusHorn.ready() && random(1, 100) <= this.player.spells.shiffarsNexusHorn.procChance) {
+      this.player.spells.shiffarsNexusHorn.cast()
+    }
+  }
+
+  onDamageProcs() {
+    // Confirm that this procs on dealing damage
+    // Shattered Sun Pendant of Acumen
+    if (this.player.exaltedWithShattrathFaction && this.player.spells.shatteredSunPendantOfAcumen && this.player.spells.shatteredSunPendantOfAcumen.cooldownRemaining <= 0 && random(1, 100) <= this.player.spells.shatteredSunPendantOfAcumen.procChance) {
+      this.player.spells.shatteredSunPendantOfAcumen.cast()
     }
   }
 }
@@ -523,6 +532,7 @@ class Shadowfury extends Spell {
   }
 }
 
+// https://web.archive.org/web/20081023033855/http://elitistjerks.com/f47/t25902-aoe_spell_cap_mechanics/#Warlock_AoE_Spells
 class SeedOfCorruption extends Spell {
   constructor (player) {
     super(player)
@@ -530,11 +540,70 @@ class SeedOfCorruption extends Spell {
     this.minDmg = 1110
     this.maxDmg = 1290
     this.manaCost = 882
+    this.castTime = 2
+    this.dmgCap = 13580
     this.doesDamage = true
     this.school = 'shadow'
     this.type = 'affliction'
     this.coefficient = 0.22
     this.setup()
+  }
+
+  damage() {
+    let baseDamage = this.player.simSettings.randomizeValues === 'yes' && this.minDmg && this.maxDmg ? random(this.minDmg, this.maxDmg) : this.dmg
+    let enemyAmount = this.player.simSettings.enemyAmount - 1 // Minus one because the enemy that Seed is being cast on doesn't get hit
+    let resistAmount = 0
+    let critAmount = 0
+    let spellPower = this.player.getSpellPower() + this.player.stats.shadowPower
+    let modifier = this.player.stats.shadowModifier
+
+    for (let i = 0; i < enemyAmount; i++) {
+      // Check for a resist
+      if (!this.player.isHit(true)) {
+        resistAmount++
+        this.onDamageProcs()
+      }
+      // Check for a crit
+      else if (this.player.isCrit(this.type)) {
+        critAmount++
+        this.onCritProcs()
+      }
+    }
+
+    let individualSeedDamage = baseDamage + (spellPower * this.coefficient)
+    // Oblivion Raiment (dungeon set) 4pc bonus
+    if (this.player.sets['644'] && this.player.sets['644'] >= 4) {
+      individualSeedDamage += 180
+    }
+    individualSeedDamage *= modifier
+
+    let enemiesHit = enemyAmount - resistAmount
+    let totalSeedDamage = individualSeedDamage * enemiesHit
+    // If the total damage goes above the aoe cap then we need to reduce the amount of each seed's damage
+    if (totalSeedDamage > this.dmgCap) {
+      // Set the damage of each individual seed to the aoe cap divided by the amount of enemies hit
+      // There's a bug with Seed of Corruption where if you hit the AoE cap,
+      // the number used to divide here is 1 higher because it's including the enemy that Seed is being cast on,
+      // even though that enemy doesn't actually get damaged by the Seed. Nice game :)
+      individualSeedDamage = this.dmgCap / (enemiesHit + 1)
+      // Re-calculate the total damage done by all the seed hits
+      totalSeedDamage = individualSeedDamage * enemiesHit
+    }
+    // Add damage from the Seed crits
+    let individualSeedCrit = individualSeedDamage * this.getCritMultiplier(this.player.critMultiplier)
+    let bonusDamageFromCrit = individualSeedCrit - individualSeedDamage
+    totalSeedDamage += bonusDamageFromCrit * critAmount
+    // Partial resists (probably need to calculate a partial resist for each seed hit, not sure how it interacts for the aoe cap)
+    let partialResistMultiplier = this.player.getPartialResistMultiplier(this.player.enemy.shadowResist)
+    totalSeedDamage *= partialResistMultiplier
+
+    this.player.combatLog(this.name + " " + Math.round(totalSeedDamage) + " (" + enemyAmount + " Enemies (" + resistAmount + " Resists & " + critAmount + " Crits) - " + baseDamage + " Base Damage - " + this.coefficient + " Coefficient - " + spellPower + " Spell Power - " + Math.round(modifier * 1000) / 1000 + "% Modifier - " + partialResistMultiplier + "% Partial Resist Multiplier)")
+    this.player[this.breakdownTable + 'Breakdown'][this.varName].damage = this.player[this.breakdownTable + 'Breakdown'][this.varName].damage + totalSeedDamage || totalSeedDamage
+    this.player[this.breakdownTable + "Breakdown"][this.varName].crits = this.player[this.breakdownTable + "Breakdown"][this.varName].crits + critAmount || critAmount
+    this.player[this.breakdownTable + "Breakdown"][this.varName].misses = this.player[this.breakdownTable + "Breakdown"][this.varName].misses + resistAmount || resistAmount
+    // the cast() function already adds 1 to the amount of casts so we only need to add enemiesHit - 1 to the cast amount
+    this.player[this.breakdownTable + "Breakdown"][this.varName].casts = this.player[this.breakdownTable + "Breakdown"][this.varName].casts + (enemiesHit - 1) || (enemiesHit - 1)
+    this.player.iterationDamage += totalSeedDamage
   }
 }
 

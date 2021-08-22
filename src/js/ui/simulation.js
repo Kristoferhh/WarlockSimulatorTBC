@@ -41,18 +41,17 @@ function simDPS (items) {
 
     simulations.push(new SimWorker(
       (simulationEnd) => {
-        let avgDps = Math.round(median(simulationEnd.dpsArray) * 100) / 100
-        let minDps = Math.round(Math.min(...simulationEnd.dpsArray) * 100) / 100
-        let maxDps = Math.round(Math.max(...simulationEnd.dpsArray) * 100) / 100
+        let minDps = simulationEnd.minDps
+        let maxDps = simulationEnd.maxDps
         simulationsFinished++
 
         // DPS information on the sidebar
         if (itemAmount === 1) {
-          localStorage.avgDps = avgDps
+          localStorage.medianDps = simulationEnd.medianDps
           localStorage.minDps = minDps
           localStorage.maxDps = maxDps
           localStorage.simulationDuration = simulationEnd.length
-          $('#avg-dps').text(avgDps)
+          $('#avg-dps').text(simulationEnd.medianDps)
           $('#min-dps').text(minDps)
           $('#max-dps').text(maxDps)
           $('#sim-length-result').text(Math.round(simulationEnd.length * 10000) / 10000 + 's')
@@ -67,7 +66,7 @@ function simDPS (items) {
           $('#sim-all-items').text('Simulate All Items')
         }
         savedItemDps[itemSlot + itemSubSlot] = savedItemDps[itemSlot + itemSubSlot] || {}
-        savedItemDps[itemSlot + itemSubSlot][simulationEnd.itemId] = avgDps
+        savedItemDps[itemSlot + itemSubSlot][simulationEnd.itemId] = simulationEnd.medianDps
         localStorage.savedItemDps = JSON.stringify(savedItemDps)
 
         if (simulationsFinished === itemAmount) {
@@ -126,10 +125,8 @@ function simDPS (items) {
         }
       },
       (simulationUpdate) => {
-        let avgDps = Math.round(median(simulationUpdate.dpsArray) * 100) / 100
-
         if (itemAmount === 1) {
-          $('#avg-dps').text(avgDps)
+          $('#avg-dps').text(simulationUpdate.medianDps)
           // Uses the sim button as a progress bar by coloring it based on how many iterations are done with
           $('#sim-dps').css('background', 'linear-gradient(to right, #9482C9 ' + simulationUpdate.percent + '%, transparent ' + simulationUpdate.percent + '%)')
           $('#sim-dps').text(Math.round(simulationUpdate.percent) + '%')
@@ -148,7 +145,7 @@ function simDPS (items) {
           $('#sim-all-items').text(averageProgress + '%')
         }
         // Set the DPS value on the item in the item selection list
-        $(".item-row[data-wowhead-id='" + simulationUpdate.itemId + "']").find('.item-dps').text(avgDps)
+        $(".item-row[data-wowhead-id='" + simulationUpdate.itemId + "']").find('.item-dps').text(simulationUpdate.medianDps)
         $('#item-selection-table').trigger('update')
       },
       {
@@ -170,7 +167,8 @@ function simDPS (items) {
 }
 
 function updateStatWeight (stat, value) {
-  $('#stat-weight-' + stat).text(Math.max(0, value))
+  // If the value is smaller than 0.01 then just display 0 since the 0.01 value is likely just because it's not using the same Random seed for all simulations
+  $('#stat-weight-' + stat).text(Math.max(0, value > 0.01 ? value : 0))
 }
 
 function simStatWeights () {
@@ -185,34 +183,37 @@ function simStatWeights () {
     hasteRating: statAmount,
     mp5: statAmount
   }
-  // Only check for the hit rating weight if the player isn't hit capped (this gets the player's crit % from the sidebar since we don't have any variable with crit % included)
+  // Only check for the hit rating weight if the player isn't hit capped (this gets the player's hit % from the sidebar since we don't have any variable with hit % included)
   let hitPercent = Number($('#character-hit-val').text().split('(')[1].split('%')[0])
-  if (hitPercent >= 16) {
+  let baseHitChance = getBaseHitChance($('#character-level span').text(), $('#target-level').val())
+  let playerHitChance = hitPercent + baseHitChance
+  
+  if (playerHitChance >= 99) {
     updateStatWeight('hitRating', 0)
   } else {
     stats.hitRating = statAmount
     // If the player is too close to hit cap then we instead subtract hit rating from them instead of adding more,
     // since otherwise the extra hit would be wasted and it'd give the wrong result.
-    if (hitPercent >= 16 - (statAmount / hitRatingPerPercent)) {
+    if (playerHitChance >= 99 - (statAmount / hitRatingPerPercent)) {
       stats.hitRating *= -1
     }
   }
-  
+
   const sims = []
   const simInfo = []
-  let normalSimAvgDps = 0
+  let normalSimMedianDps = 0
   let simsFinished = 0
 
   const simStart = performance.now()
   sims.push(new SimWorker(
     (simulationEnd) => {
       simsFinished++
-      normalSimAvgDps = simulationEnd.avgDps
-      $('#avg-dps').text(simulationEnd.avgDps)
+      normalSimMedianDps = simulationEnd.medianDps
+      $('#avg-dps').text(normalSimMedianDps)
     },
     (simulationUpdate) => {
-      normalSimAvgDps = simulationUpdate.avgDps
-      $('#avg-dps').text(simulationUpdate.avgDps)
+      normalSimMedianDps = simulationUpdate.medianDps
+      $('#avg-dps').text(normalSimMedianDps)
     },
     {
       player: Player.getSettings(),
@@ -224,7 +225,7 @@ function simStatWeights () {
     sims.push(new SimWorker(
       (simulationEnd) => {
         // Round to 3 decimals
-        const statValue = Math.round((((simulationEnd.avgDps - normalSimAvgDps) / stats[simulationEnd.customStat.stat]) * 1000)) / 1000
+        const statValue = Math.round((((simulationEnd.medianDps - normalSimMedianDps) / stats[simulationEnd.customStat.stat]) * 1000)) / 1000
         updateStatWeight(simulationEnd.customStat.stat, statValue)
         simsFinished++
 
@@ -244,7 +245,7 @@ function simStatWeights () {
         }
       },
       (simulationUpdate) => {
-        const statValue = Math.round((((simulationUpdate.avgDps - normalSimAvgDps) / stats[simulationUpdate.customStat.stat]) * 1000)) / 1000
+        const statValue = Math.round((((simulationUpdate.medianDps - normalSimMedianDps) / stats[simulationUpdate.customStat.stat]) * 1000)) / 1000
         updateStatWeight(simulationUpdate.customStat.stat, statValue)
 
         let smallestValue = 100
