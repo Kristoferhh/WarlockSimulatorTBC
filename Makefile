@@ -1,0 +1,7 @@
+SOURCE_FILE_PATH = src/cpp/bindings.cpp
+DEST_FILE_PATH = src/js/WarlockSim.js
+EXPORTED_FUNCTIONS="['_startSimulation']"
+FLAGS = -O2 -s MODULARIZE=1 -s EXPORT_NAME="WarlockSim" -s EXPORTED_FUNCTIONS=$(EXPORTED_FUNCTIONS)
+
+all: $(SOURCE_FILE_PATH)
+	em++ $(SOURCE_FILE_PATH) -o $(DEST_FILE_PATH) $(FLAGS)

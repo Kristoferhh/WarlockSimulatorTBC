@@ -11,14 +11,17 @@ importScripts(
   './classes/petAura.js',
   './classes/damageOverTime.js',
   './items/items.js',
-  './items/gems.js'
+  './items/gems.js',
+  './WarlockSim.js'
 )
 
 onmessage = function (e) {
-  const wasm = fetch('./src/cpp/warlocksim.wasm')
-
-  wasm.then(module => {
-    console.log("YEP");
+  fetch('./WarlockSim.wasm')
+  .then(response => response.arrayBuffer())
+  .then(binary => WarlockSim({ wasmBinary: binary }))
+  .then(w => w.ready)
+  .then(module => {
+    module._startSimulation()
   })
 
   const player = new Player(e.data.player, e.data.itemSlot || null, e.data.itemSubSlot || '', e.data.itemId || null, e.data.customStat || null, e.data.customStatValue || 0)
