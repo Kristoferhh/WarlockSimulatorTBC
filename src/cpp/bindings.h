@@ -1,8 +1,9 @@
 #pragma once
 #include "simulation.h"
-#include <iostream>
 
 extern "C"
 {
-  int startSimulation();
+  Simulation* allocSim(Player* player, SimulationSettings* simulationSettings);
+  void freeSim();
+  void startSimulation(Simulation* sim);
 }

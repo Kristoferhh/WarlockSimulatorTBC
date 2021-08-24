@@ -1,8 +1,16 @@
 #include "bindings.h"
 #include "simulation.h"
 
-int startSimulation()
+#ifdef USE_EMSCRIPTEN
+#include <emscripten.h>
+#endif
+
+void startSimulation(Simulation* sim)
 {
-  return 55;
-  //sim.start();
+    sim->start();
+}
+
+Simulation* allocSim(Player* player, SimulationSettings* simulationSettings)
+{
+    return new Simulation(player, simulationSettings);
 }
