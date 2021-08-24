@@ -9,7 +9,7 @@ enum Type {AFFLICTION, DESTRUCTION};
 
 struct Spell
 {
-  Player &player;
+  Player* player;
   int school;
   int type;
   int minDmg = 0;
@@ -38,7 +38,7 @@ struct Spell
   std::string name = "";
   std::string breakdownTable = "damage";
 
-  Spell(Player &p) : player(p) {}
+  Spell(Player* p) : player(p) {}
 
   void reset()
   {
@@ -61,13 +61,13 @@ struct Spell
 
   bool canCast()
   {
-    return (!onGcd || isNonWarlockAbility || player.gcdRemaining <= 0) && (isProc || isNonWarlockAbility || player.castTimeRemaining <= 0) && cooldownRemaining <= 0;
+    return (!onGcd || isNonWarlockAbility || player->gcdRemaining <= 0) && (isProc || isNonWarlockAbility || player->castTimeRemaining <= 0) && cooldownRemaining <= 0;
   }
 
   bool hasEnoughMana()
   {
     return true;
-    //return manaCost <= player.stats.mana;
+    //return manaCost <= player->stats.mana;
   }
 
   virtual bool ready()
@@ -84,17 +84,17 @@ struct Spell
   {
     if (onGcd)
     {
-      player.gcdRemaining = player.getGcdValue(varName);
+      player->gcdRemaining = player->getGcdValue(varName);
     }
 
     std::string combatLogMsg = "";
     if (castTime > 0)
     {
       casting = true;
-      player.castTimeRemaining = getCastTime();
+      player->castTimeRemaining = getCastTime();
       if (!isProc)
       {
-        //combatLogMsg.append("Started casting " + name + " - Cast time: " + player.castTimeRemaining - player.spellDelay) + " (" + round((player.stats.hasteRating / hasteRatingPerPercent + player.stats.hastePercent) * 10000) / 10000 + "% haste at a base cast speed of " + castTime + ").";
+        //combatLogMsg.append("Started casting " + name + " - Cast time: " + player->castTimeRemaining - player->spellDelay) + " (" + round((player->stats.hasteRating / hasteRatingPerPercent + player->stats.hastePercent) * 10000) / 10000 + "% haste at a base cast speed of " + castTime + ").";
       }
     }
     else
@@ -107,13 +107,13 @@ struct Spell
     }
     if (onGcd && !isNonWarlockAbility)
     {
-      combatLogMsg.append(" - Global cooldown: " + std::to_string(player.gcdRemaining));
+      combatLogMsg.append(" - Global cooldown: " + std::to_string(player->gcdRemaining));
     }
     if (predictedDamage > 0)
     {
       combatLogMsg.append(" - Estimated damage / Cast time: " + std::to_string(round(predictedDamage)));
     }
-    player.combatLog(combatLogMsg);
+    player->combatLog(combatLogMsg);
   }
 
   virtual void cast()
@@ -150,11 +150,11 @@ struct Spell
   {
     if (cooldownRemaining > 0 && cooldownRemaining - t <= 0)
     {
-      player.combatLog(name + " is off cooldown");
+      player->combatLog(name + " is off cooldown");
     }
     cooldownRemaining -= t;
 
-    if (casting && player.castTimeRemaining <= 0)
+    if (casting && player->castTimeRemaining <= 0)
     {
       cast();
     }

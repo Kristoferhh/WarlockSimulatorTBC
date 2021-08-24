@@ -8,5 +8,5 @@ struct Simulation
   SimulationSettings* settings;
 
   Simulation(Player* _player, SimulationSettings* simSettings);
-  void start();
+  double start();
 };

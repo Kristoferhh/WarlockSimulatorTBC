@@ -6,7 +6,7 @@
 
 Simulation::Simulation(Player* _player, SimulationSettings* simulationSettings) : player(_player), settings(simulationSettings) {}
 
-void Simulation::start()
+double Simulation::start()
 {
     uint64_t totalDamage = 0;
     std::vector<int> dpsVector;
@@ -37,5 +37,9 @@ void Simulation::start()
 
             this->player->fightTime += 0.5;
         }
+
+        this->player->totalDuration += fightLength;
     }
+
+    return totalDamage / this->player->totalDuration;
 }

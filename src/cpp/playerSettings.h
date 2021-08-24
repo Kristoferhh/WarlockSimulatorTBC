@@ -1,11 +1,14 @@
 #pragma once
 
-#include <map>
-#include <iostream>
+#include "auras.h"
+#include "talents.h"
+#include "sets.h"
 
 struct PlayerSettings
 {
-  std::map<std::string, bool> auras;
-  std::map<std::string, bool> talents;
-  std::map<std::string, int> sets;
+  Auras* auras;
+  Talents* talents;
+  Sets* sets;
+
+  PlayerSettings(Auras* auras, Talents* talents, Sets* sets);
 };
