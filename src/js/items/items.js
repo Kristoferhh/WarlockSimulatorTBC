@@ -2978,6 +2978,15 @@ const items = {
       source: 'The Blood Furnace',
       phase: 1
     },
+    consortiumPrincesWrap: {
+      name: "Consortium Prince's Wrap",
+      spellPower: 30,
+      spellPen: 20,
+      critRating: 22,
+      id: 29328,
+      source: 'Mana Tombs',
+      phase: 1
+    },
     sashOfArcaneVisions: {
       name: 'Sash of Arcane Visions',
       stamina: 18,
