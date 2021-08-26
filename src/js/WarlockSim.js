@@ -1923,7 +1923,18 @@ var tempDouble;
 
 var tempI64;
 
-var ASM_CONSTS = {};
+var ASM_CONSTS = {
+ 2792: function($0, $1, $2) {
+  postMessage({
+   event: "update",
+   data: {
+    medianDps: $0,
+    iteration: $1,
+    iterationAmount: $2
+   }
+  });
+ }
+};
 
 function callRuntimeCallbacks(callbacks) {
  while (callbacks.length > 0) {
@@ -2057,6 +2068,30 @@ function _abort() {
  abort();
 }
 
+var readAsmConstArgsArray = [];
+
+function readAsmConstArgs(sigPtr, buf) {
+ assert(Array.isArray(readAsmConstArgsArray));
+ assert(buf % 16 == 0);
+ readAsmConstArgsArray.length = 0;
+ var ch;
+ buf >>= 2;
+ while (ch = SAFE_HEAP_LOAD(sigPtr++, 1, 1)) {
+  assert(ch === 100 || ch === 102 || ch === 105);
+  var double = ch < 105;
+  if (double && buf & 1) buf++;
+  readAsmConstArgsArray.push(double ? SAFE_HEAP_LOAD_D((buf++ >> 1) * 8, 8, 0) : SAFE_HEAP_LOAD(buf * 4, 4, 0));
+  ++buf;
+ }
+ return readAsmConstArgsArray;
+}
+
+function _emscripten_asm_const_int(code, sigPtr, argbuf) {
+ var args = readAsmConstArgs(sigPtr, argbuf);
+ if (!ASM_CONSTS.hasOwnProperty(code)) abort("No EM_ASM constant found at address " + code);
+ return ASM_CONSTS[code].apply(null, args);
+}
+
 function _emscripten_memcpy_big(dest, src, num) {
  HEAPU8.copyWithin(dest, src, src + num);
 }
@@ -2123,6 +2158,7 @@ var asmLibraryArg = {
  "__cxa_throw": ___cxa_throw,
  "abort": _abort,
  "alignfault": alignfault,
+ "emscripten_asm_const_int": _emscripten_asm_const_int,
  "emscripten_memcpy_big": _emscripten_memcpy_big,
  "emscripten_resize_heap": _emscripten_resize_heap,
  "segfault": segfault

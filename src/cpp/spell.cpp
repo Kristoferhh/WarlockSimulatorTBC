@@ -37,8 +37,7 @@ bool Spell::canCast()
 
 bool Spell::hasEnoughMana()
 {
-    return true;
-    //return manaCost <= player->stats.mana;
+    return this->manaCost * this->player->stats->manaCostModifier <= this->player->stats->mana;
 }
 
 bool Spell::ready()
@@ -99,6 +98,10 @@ void Spell::tick(int t)
 
 void Spell::cast()
 {
+    if (this->manaCost > 0)
+    {
+        this->player->stats->mana -= this->manaCost * this->player->stats->manaCostModifier;
+    }
     if (this->doesDamage)
     {
         damage(false);
@@ -187,24 +190,23 @@ LifeTap::LifeTap(Player* player) : Spell(player)
 
 bool LifeTap::ready()
 {
-    return true;
-    //return Spell::ready() && manaGain() + player->stats.mana < player->stats.maxMana;
+    return Spell::ready() && manaGain() + player->stats->mana < player->stats->maxMana;
 }
 
-double LifeTap::manaGain()
+int LifeTap::manaGain()
 {
-    return 1000;
-    //return (manaReturn + ((player->getSpellPower() + player->stats.shadowPower) * coefficient)) * modifier;
+    return (manaReturn + ((player->getSpellPower() + player->stats->shadowPower) * coefficient)) * modifier;
 }
 
 void LifeTap::cast()
 {
-    const double manaGain = this->manaGain();
-    player->totalManaRegenerated += manaGain;
+    const int manaGain = this->manaGain();
+    this->player->totalManaRegenerated += manaGain;
     
-    /*if (player->stats.mana + manaGain > player->stats.maxMana)
+    if (player->stats->mana + manaGain > player->stats->maxMana)
     {
-      player->combatLog("Life Tap used at too high mana (mana wasted)");
+        std::string combatLogEntry = "Life Tap used at too high mana (mana wasted)";
+        player->combatLog(combatLogEntry);
     }
-    player->stats.mana = std::min(player->stats.maxMana, player->stats.mana + manaGain);*/
+    player->stats->mana = std::min(player->stats->maxMana, player->stats->mana + manaGain);
 }

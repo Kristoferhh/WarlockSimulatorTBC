@@ -60,7 +60,7 @@ struct LifeTap : public Spell
 {
     LifeTap(Player* player);
     bool ready();
-    double manaGain();
+    int manaGain();
     void cast();
 };
 

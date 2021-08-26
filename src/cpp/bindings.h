@@ -5,6 +5,8 @@
 #include "sets.h"
 #include "characterStats.h"
 
+void simulationUpdate(int iteration, int iterationAmount, double medianDps);
+
 extern "C"
 {
     Auras* allocAuras(bool felArmor, bool blessingOfKings, bool blessingOfWisdom, bool judgementOfWisdom, bool manaSpringTotem, bool wrathOfAirTotem, bool totemOfWrath, bool markOfTheWild, bool arcaneIntellect

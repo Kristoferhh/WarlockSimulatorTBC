@@ -1,9 +1,20 @@
 #include "bindings.h"
 #include "simulation.h"
+#include "emscripten.h"
 
-#ifdef USE_EMSCRIPTEN
-#include <emscripten.h>
-#endif
+void simulationUpdate(int iteration, int iterationAmount, double medianDps)
+{
+    EM_ASM({
+        postMessage({
+            event: "update",
+            data: {
+                medianDps: $0,
+                iteration: $1,
+                iterationAmount: $2
+            }
+        })
+    }, medianDps, iteration, iterationAmount);
+}
 
 double startSimulation(Simulation* sim)
 {
