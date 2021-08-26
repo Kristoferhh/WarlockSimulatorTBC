@@ -9,4 +9,5 @@ struct Simulation
 
   Simulation(Player* _player, SimulationSettings* simSettings);
   double start();
+  double passTime();
 };

@@ -48,9 +48,15 @@ onmessage = function (e) {
     module._freePlayer(player)
     module._freeSimSettings(simSettings)
     module._freeSim(sim)
+    this.postMessage({
+      event: 'update',
+      data: {
+        medianDps: medianDps
+      }
+    })
   })
 
-  const player = new Player(e.data.player, e.data.itemSlot || null, e.data.itemSubSlot || '', e.data.itemId || null, e.data.customStat || null, e.data.customStatValue || 0)
+  /*const player = new Player(e.data.player, e.data.itemSlot || null, e.data.itemSubSlot || '', e.data.itemId || null, e.data.customStat || null, e.data.customStatValue || 0)
   const simulation = new Simulation(player, e.data.simulation,
     (simulationEnd) => {
       this.postMessage({
@@ -65,5 +71,5 @@ onmessage = function (e) {
       })
     }
   )
-  simulation.start()
+  simulation.start()*/
 }

@@ -1,10 +1,114 @@
 #include "spell.h"
 #include "player.h"
 
-struct ShadowBolt : public Spell
+Spell::Spell(Player* player) : player(player) {}
+
+void Spell::reset()
 {
-  ShadowBolt(Player* p) : Spell(p)
-  {
+    cooldownRemaining = 0;
+    casting = false;
+}
+
+void Spell::setup()
+{
+    varName = name; //todo implement camelCase()
+    if (minDmg > 0 && maxDmg > 0)
+    {
+      dmg = (minDmg + maxDmg) / 2;
+    }
+    if (minMana > 0 && maxMana > 0)
+    {
+      avgManaValue = (minMana + maxMana) / 2;
+    }
+}
+
+double Spell::getCastTime()
+{
+    return this->castTime;
+}
+
+bool Spell::canCast()
+{
+    return (!onGcd || isNonWarlockAbility || player->gcdRemaining <= 0) && (isProc || isNonWarlockAbility || player->castTimeRemaining <= 0) && cooldownRemaining <= 0;
+}
+
+bool Spell::hasEnoughMana()
+{
+    return true;
+    //return manaCost <= player->stats.mana;
+}
+
+bool Spell::ready()
+{
+    return canCast() && hasEnoughMana();
+}
+
+void Spell::startCast(double predictedDamage)
+{
+    if (onGcd)
+    {
+        player->gcdRemaining = player->getGcdValue(varName);
+    }
+
+    std::string combatLogMsg = "";
+    if (castTime > 0)
+    {
+        casting = true;
+        player->castTimeRemaining = getCastTime();
+        if (!isProc)
+        {
+            //combatLogMsg.append("Started casting " + name + " - Cast time: " + player->castTimeRemaining - player->spellDelay) + " (" + round((player->stats.hasteRating / hasteRatingPerPercent + player->stats.hastePercent) * 10000) / 10000 + "% haste at a base cast speed of " + castTime + ").";
+        }
+    }
+    else
+    {
+        if (!isProc)
+        {
+            combatLogMsg.append("Cast " + name);
+        }
+        cast();
+    }
+    if (onGcd && !isNonWarlockAbility)
+    {
+        combatLogMsg.append(" - Global cooldown: " + std::to_string(player->gcdRemaining));
+    }
+    if (predictedDamage > 0)
+    {
+        combatLogMsg.append(" - Estimated damage / Cast time: " + std::to_string(round(predictedDamage)));
+    }
+    player->combatLog(combatLogMsg);
+}
+
+void Spell::tick(int t)
+{
+    if (cooldownRemaining > 0 && cooldownRemaining - t <= 0)
+    {
+        std::string combatLogEntry = name + " is off cooldown";
+        player->combatLog(combatLogEntry);
+    }
+    cooldownRemaining -= t;
+
+    if (casting && player->castTimeRemaining <= 0)
+    {
+        cast();
+    }
+}
+
+void Spell::cast()
+{
+    if (this->doesDamage)
+    {
+        damage(false);
+    }
+}
+
+void Spell::damage(bool isCrit)
+{
+    this->player->iterationDamage += this->dmg;
+}
+
+ShadowBolt::ShadowBolt(Player* player) : Spell(player)
+{
     castTime = calculateCastTime();
     manaCost = 420 * (1 - 0.01 * player->talents->cataclysm);
     coefficient = (3 / 3.5) + (0.04 * player->talents->shadowAndFlame);
@@ -22,10 +126,10 @@ struct ShadowBolt : public Spell
     {
       modifier *= 1.06;
     }
-  }
+}
 
-  void startCast(double predictedDamage = 0) override
-  {
+void ShadowBolt::startCast(double predictedDamage = 0)
+{
     //bool hasShadowTrance = player->auras.count("shadowTrance") > 0;
 
     /*if (hasShadowTrance && player->auras["shadowTrance"].active)
@@ -40,40 +144,37 @@ struct ShadowBolt : public Spell
       castTime = calculateCastTime();
       player->auras["shadowTrance"].fade();
     }*/
-  }
+}
 
-  double calculateCastTime()
-  {
-    return 3 - (0.1 * player->talents->bane);
-  }
-};
-
-struct LifeTap : public Spell
+double ShadowBolt::calculateCastTime()
 {
-  LifeTap(Player* p) : Spell(p)
-  {
+    return 3 - (0.1 * player->talents->bane);
+}
+
+LifeTap::LifeTap(Player* player) : Spell(player)
+{
     name = "Life Tap";
     manaReturn = 582;
     coefficient = 0.8;
     modifier = 1 * (1 + 0.1 * player->talents->improvedLifeTap);
     breakdownTable = "manaGain";
     setup();
-  }
+}
 
-  bool ready() override
-  {
+bool LifeTap::ready()
+{
     return true;
     //return Spell::ready() && manaGain() + player->stats.mana < player->stats.maxMana;
-  }
+}
 
-  double manaGain()
-  {
+double LifeTap::manaGain()
+{
     return 1000;
     //return (manaReturn + ((player->getSpellPower() + player->stats.shadowPower) * coefficient)) * modifier;
-  }
+}
 
-  void cast() override
-  {
+void LifeTap::cast()
+{
     const double manaGain = this->manaGain();
     player->totalManaRegenerated += manaGain;
     
@@ -82,5 +183,4 @@ struct LifeTap : public Spell
       player->combatLog("Life Tap used at too high mana (mana wasted)");
     }
     player->stats.mana = std::min(player->stats.maxMana, player->stats.mana + manaGain);*/
-  }
-};
+}

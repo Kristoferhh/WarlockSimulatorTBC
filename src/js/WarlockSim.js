@@ -405,6 +405,36 @@ if (!Object.getOwnPropertyDescriptor(Module["ready"], "_emscripten_stack_get_bas
  });
 }
 
+if (!Object.getOwnPropertyDescriptor(Module["ready"], "_malloc")) {
+ Object.defineProperty(Module["ready"], "_malloc", {
+  configurable: true,
+  get: function() {
+   abort("You are getting _malloc on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
+  }
+ });
+ Object.defineProperty(Module["ready"], "_malloc", {
+  configurable: true,
+  set: function() {
+   abort("You are setting _malloc on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
+  }
+ });
+}
+
+if (!Object.getOwnPropertyDescriptor(Module["ready"], "_free")) {
+ Object.defineProperty(Module["ready"], "_free", {
+  configurable: true,
+  get: function() {
+   abort("You are getting _free on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
+  }
+ });
+ Object.defineProperty(Module["ready"], "_free", {
+  configurable: true,
+  set: function() {
+   abort("You are setting _free on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
+  }
+ });
+}
+
 if (!Object.getOwnPropertyDescriptor(Module["ready"], "onRuntimeInitialized")) {
  Object.defineProperty(Module["ready"], "onRuntimeInitialized", {
   configurable: true,
@@ -1182,14 +1212,6 @@ function cwrap(ident, returnType, argTypes, opts) {
  };
 }
 
-function _malloc() {
- abort("malloc() called but not included in the build - add '_malloc' to EXPORTED_FUNCTIONS");
-}
-
-function _free() {
- abort("free() called but not included in the build - add '_free' to EXPORTED_FUNCTIONS");
-}
-
 var ALLOC_NORMAL = 0;
 
 var ALLOC_STACK = 1;
@@ -1201,7 +1223,7 @@ function allocate(slab, allocator) {
  if (allocator == ALLOC_STACK) {
   ret = stackAlloc(slab.length);
  } else {
-  ret = abort('malloc was not included, but is needed in allocate. Adding "_malloc" to EXPORTED_FUNCTIONS should fix that. This may be a bug in the compiler, please file an issue.');
+  ret = _malloc(slab.length);
  }
  if (slab.subarray || slab.slice) {
   HEAPU8.set(slab, ret);
@@ -1415,7 +1437,7 @@ function lengthBytesUTF32(str) {
 
 function allocateUTF8(str) {
  var size = lengthBytesUTF8(str) + 1;
- var ret = abort('malloc was not included, but is needed in allocateUTF8. Adding "_malloc" to EXPORTED_FUNCTIONS should fix that. This may be a bug in the compiler, please file an issue.');
+ var ret = _malloc(size);
  if (ret) stringToUTF8Array(str, HEAP8, ret, size);
  return ret;
 }
@@ -1934,18 +1956,111 @@ function unSign(value, bits) {
  return bits <= 32 ? 2 * Math.abs(1 << bits - 1) + value : Math.pow(2, bits) + value;
 }
 
+function ___cxa_allocate_exception(size) {
+ return _malloc(size + 16) + 16;
+}
+
+function ExceptionInfo(excPtr) {
+ this.excPtr = excPtr;
+ this.ptr = excPtr - 16;
+ this.set_type = function(type) {
+  SAFE_HEAP_STORE(this.ptr + 4 | 0, type | 0, 4);
+ };
+ this.get_type = function() {
+  return SAFE_HEAP_LOAD(this.ptr + 4 | 0, 4, 0) | 0;
+ };
+ this.set_destructor = function(destructor) {
+  SAFE_HEAP_STORE(this.ptr + 8 | 0, destructor | 0, 4);
+ };
+ this.get_destructor = function() {
+  return SAFE_HEAP_LOAD(this.ptr + 8 | 0, 4, 0) | 0;
+ };
+ this.set_refcount = function(refcount) {
+  SAFE_HEAP_STORE(this.ptr | 0, refcount | 0, 4);
+ };
+ this.set_caught = function(caught) {
+  caught = caught ? 1 : 0;
+  SAFE_HEAP_STORE(this.ptr + 12 | 0, caught | 0, 1);
+ };
+ this.get_caught = function() {
+  return (SAFE_HEAP_LOAD(this.ptr + 12 | 0, 1, 0) | 0) != 0;
+ };
+ this.set_rethrown = function(rethrown) {
+  rethrown = rethrown ? 1 : 0;
+  SAFE_HEAP_STORE(this.ptr + 13 | 0, rethrown | 0, 1);
+ };
+ this.get_rethrown = function() {
+  return (SAFE_HEAP_LOAD(this.ptr + 13 | 0, 1, 0) | 0) != 0;
+ };
+ this.init = function(type, destructor) {
+  this.set_type(type);
+  this.set_destructor(destructor);
+  this.set_refcount(0);
+  this.set_caught(false);
+  this.set_rethrown(false);
+ };
+ this.add_ref = function() {
+  var value = SAFE_HEAP_LOAD(this.ptr | 0, 4, 0) | 0;
+  SAFE_HEAP_STORE(this.ptr | 0, value + 1 | 0, 4);
+ };
+ this.release_ref = function() {
+  var prev = SAFE_HEAP_LOAD(this.ptr | 0, 4, 0) | 0;
+  SAFE_HEAP_STORE(this.ptr | 0, prev - 1 | 0, 4);
+  assert(prev > 0);
+  return prev === 1;
+ };
+}
+
+var exceptionLast = 0;
+
+var uncaughtExceptionCount = 0;
+
+function ___cxa_throw(ptr, type, destructor) {
+ var info = new ExceptionInfo(ptr);
+ info.init(type, destructor);
+ exceptionLast = ptr;
+ uncaughtExceptionCount++;
+ throw ptr + " - Exception catching is disabled, this exception cannot be caught. Compile with -s NO_DISABLE_EXCEPTION_CATCHING or -s EXCEPTION_CATCHING_ALLOWED=[..] to catch.";
+}
+
 function _abort() {
  abort();
 }
 
-function abortOnCannotGrowMemory(requestedSize) {
- abort("Cannot enlarge memory arrays to size " + requestedSize + " bytes (OOM). Either (1) compile with  -s INITIAL_MEMORY=X  with X higher than the current value " + HEAP8.length + ", (2) compile with  -s ALLOW_MEMORY_GROWTH=1  which allows increasing the size at runtime, or (3) if you want malloc to return NULL (0) instead of this abort, compile with  -s ABORTING_MALLOC=0 ");
+function _emscripten_memcpy_big(dest, src, num) {
+ HEAPU8.copyWithin(dest, src, src + num);
+}
+
+function emscripten_realloc_buffer(size) {
+ try {
+  wasmMemory.grow(size - buffer.byteLength + 65535 >>> 16);
+  updateGlobalBufferAndViews(wasmMemory.buffer);
+  return 1;
+ } catch (e) {
+  err("emscripten_realloc_buffer: Attempted to grow heap from " + buffer.byteLength + " bytes to " + size + " bytes, but got error: " + e);
+ }
 }
 
 function _emscripten_resize_heap(requestedSize) {
  var oldSize = HEAPU8.length;
  requestedSize = requestedSize >>> 0;
- abortOnCannotGrowMemory(requestedSize);
+ assert(requestedSize > oldSize);
+ var maxHeapSize = 2147483648;
+ if (requestedSize > maxHeapSize) {
+  err("Cannot enlarge memory, asked to go up to " + requestedSize + " bytes, but the limit is " + maxHeapSize + " bytes!");
+  return false;
+ }
+ for (var cutDown = 1; cutDown <= 4; cutDown *= 2) {
+  var overGrownHeapSize = oldSize * (1 + .2 / cutDown);
+  overGrownHeapSize = Math.min(overGrownHeapSize, requestedSize + 100663296);
+  var newSize = Math.min(maxHeapSize, alignUp(Math.max(requestedSize, overGrownHeapSize), 65536));
+  var replacement = emscripten_realloc_buffer(newSize);
+  if (replacement) {
+   return true;
+  }
+ }
+ err("Failed to grow the heap from " + oldSize + " bytes to " + newSize + " bytes, not enough memory!");
+ return false;
 }
 
 var ASSERTIONS = true;
@@ -1974,8 +2089,11 @@ function intArrayToString(array) {
 }
 
 var asmLibraryArg = {
+ "__cxa_allocate_exception": ___cxa_allocate_exception,
+ "__cxa_throw": ___cxa_throw,
  "abort": _abort,
  "alignfault": alignfault,
+ "emscripten_memcpy_big": _emscripten_memcpy_big,
  "emscripten_resize_heap": _emscripten_resize_heap,
  "segfault": segfault
 };
@@ -2013,6 +2131,10 @@ var _freePlayer = Module["_freePlayer"] = createExportWrapper("freePlayer");
 var _freeSimSettings = Module["_freeSimSettings"] = createExportWrapper("freeSimSettings");
 
 var _freeSim = Module["_freeSim"] = createExportWrapper("freeSim");
+
+var _malloc = Module["_malloc"] = createExportWrapper("malloc");
+
+var _free = Module["_free"] = createExportWrapper("free");
 
 var ___errno_location = Module["___errno_location"] = createExportWrapper("__errno_location");
 
@@ -2244,10 +2366,6 @@ if (!Object.getOwnPropertyDescriptor(Module, "stringToNewUTF8")) Module["stringT
 
 if (!Object.getOwnPropertyDescriptor(Module, "setFileTime")) Module["setFileTime"] = function() {
  abort("'setFileTime' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
-};
-
-if (!Object.getOwnPropertyDescriptor(Module, "abortOnCannotGrowMemory")) Module["abortOnCannotGrowMemory"] = function() {
- abort("'abortOnCannotGrowMemory' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "emscripten_realloc_buffer")) Module["emscripten_realloc_buffer"] = function() {
@@ -2856,6 +2974,26 @@ if (!Object.getOwnPropertyDescriptor(Module, "IDBStore")) Module["IDBStore"] = f
 
 if (!Object.getOwnPropertyDescriptor(Module, "runAndAbortIfError")) Module["runAndAbortIfError"] = function() {
  abort("'runAndAbortIfError' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "Fetch")) Module["Fetch"] = function() {
+ abort("'Fetch' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "fetchDeleteCachedData")) Module["fetchDeleteCachedData"] = function() {
+ abort("'fetchDeleteCachedData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "fetchLoadCachedData")) Module["fetchLoadCachedData"] = function() {
+ abort("'fetchLoadCachedData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "fetchCacheData")) Module["fetchCacheData"] = function() {
+ abort("'fetchCacheData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "fetchXHR")) Module["fetchXHR"] = function() {
+ abort("'fetchXHR' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "warnOnce")) Module["warnOnce"] = function() {

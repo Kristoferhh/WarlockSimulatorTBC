@@ -126,10 +126,10 @@ function simDPS (items) {
       },
       (simulationUpdate) => {
         if (itemAmount === 1) {
-          $('#avg-dps').text(simulationUpdate.medianDps)
+          $('#avg-dps').text(Math.round(simulationUpdate.medianDps * 100) / 100)
           // Uses the sim button as a progress bar by coloring it based on how many iterations are done with
-          $('#sim-dps').css('background', 'linear-gradient(to right, #9482C9 ' + simulationUpdate.percent + '%, transparent ' + simulationUpdate.percent + '%)')
-          $('#sim-dps').text(Math.round(simulationUpdate.percent) + '%')
+          //$('#sim-dps').css('background', 'linear-gradient(to right, #9482C9 ' + simulationUpdate.percent + '%, transparent ' + simulationUpdate.percent + '%)')
+          //$('#sim-dps').text(Math.round(simulationUpdate.percent) + '%')
         } else {
           // multiSimInfo tracks the % progress of each simulation and the average simulation progress % is used for the multi-item simulation progress bar
           let totalProgress = 0
