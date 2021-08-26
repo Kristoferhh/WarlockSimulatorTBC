@@ -240,6 +240,36 @@ if (!Object.getOwnPropertyDescriptor(Module["ready"], "_freeSim")) {
  });
 }
 
+if (!Object.getOwnPropertyDescriptor(Module["ready"], "_allocStats")) {
+ Object.defineProperty(Module["ready"], "_allocStats", {
+  configurable: true,
+  get: function() {
+   abort("You are getting _allocStats on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
+  }
+ });
+ Object.defineProperty(Module["ready"], "_allocStats", {
+  configurable: true,
+  set: function() {
+   abort("You are setting _allocStats on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
+  }
+ });
+}
+
+if (!Object.getOwnPropertyDescriptor(Module["ready"], "_freeStats")) {
+ Object.defineProperty(Module["ready"], "_freeStats", {
+  configurable: true,
+  get: function() {
+   abort("You are getting _freeStats on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
+  }
+ });
+ Object.defineProperty(Module["ready"], "_freeStats", {
+  configurable: true,
+  set: function() {
+   abort("You are setting _freeStats on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
+  }
+ });
+}
+
 if (!Object.getOwnPropertyDescriptor(Module["ready"], "_sbrk")) {
  Object.defineProperty(Module["ready"], "_sbrk", {
   configurable: true,
@@ -2110,6 +2140,8 @@ var _allocTalents = Module["_allocTalents"] = createExportWrapper("allocTalents"
 
 var _allocSets = Module["_allocSets"] = createExportWrapper("allocSets");
 
+var _allocStats = Module["_allocStats"] = createExportWrapper("allocStats");
+
 var _allocPlayerSettings = Module["_allocPlayerSettings"] = createExportWrapper("allocPlayerSettings");
 
 var _allocPlayer = Module["_allocPlayer"] = createExportWrapper("allocPlayer");
@@ -2123,6 +2155,8 @@ var _freeAuras = Module["_freeAuras"] = createExportWrapper("freeAuras");
 var _freeTalents = Module["_freeTalents"] = createExportWrapper("freeTalents");
 
 var _freeSets = Module["_freeSets"] = createExportWrapper("freeSets");
+
+var _freeStats = Module["_freeStats"] = createExportWrapper("freeStats");
 
 var _freePlayerSettings = Module["_freePlayerSettings"] = createExportWrapper("freePlayerSettings");
 

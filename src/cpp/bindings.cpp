@@ -40,9 +40,17 @@ Sets* allocSets(int plagueheart, int spellfire, int frozenShadoweave, int spells
     return new Sets(plagueheart, spellfire, frozenShadoweave, spellstrike, oblivion, manaEtched, twinStars, t4, t5, t6);
 }
 
-PlayerSettings* allocPlayerSettings(Auras* auras, Talents* talents, Sets* sets)
+CharacterStats* allocStats(int health, int mana, double stamina, double intellect, double spirit, double spellPower, int shadowPower, int firePower, int hasteRating, int hitRating, int critRating, double critPercent,
+    int mp5, int spellPen, double fireModifier, double frostModifier, double hastePercent, double damageModifier, double shadowModifier, double staminaModifier, double intellectModifier,
+    double spiritModifier, double manaCostModifier, double arcaneModifier, double natureModifier, int natureResist, int arcaneResist, int fireResist, int frostResist, int shadowResist)
 {
-    return new PlayerSettings(auras, talents, sets);
+    return new CharacterStats(health, mana, stamina, intellect, spirit, spellPower, shadowPower, firePower, hasteRating, hitRating, critRating, critPercent, mp5, spellPen, fireModifier, frostModifier, hastePercent
+    , damageModifier, shadowModifier, staminaModifier, intellectModifier, spiritModifier, manaCostModifier, arcaneModifier, natureModifier, natureResist, arcaneResist, fireResist, frostResist, shadowResist);
+}
+
+PlayerSettings* allocPlayerSettings(Auras* auras, Talents* talents, Sets* sets, CharacterStats* stats)
+{
+    return new PlayerSettings(auras, talents, sets, stats);
 }
 
 Player* allocPlayer(PlayerSettings* settings)
@@ -73,6 +81,11 @@ void freeTalents(Talents* talents)
 void freeSets(Sets* sets)
 {
     delete sets;
+}
+
+void freeStats(CharacterStats* stats)
+{
+    delete stats;
 }
 
 void freePlayerSettings(PlayerSettings* settings)

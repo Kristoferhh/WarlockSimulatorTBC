@@ -1,7 +1,10 @@
 #include "spell.h"
 #include "player.h"
 
-Spell::Spell(Player* player) : player(player) {}
+Spell::Spell(Player* player) : player(player)
+{
+    modifier = 1;
+}
 
 void Spell::reset()
 {
@@ -104,7 +107,28 @@ void Spell::cast()
 
 void Spell::damage(bool isCrit)
 {
-    this->player->iterationDamage += this->dmg;
+    int dmg = this->dmg;
+    int spellPower = this->player->getSpellPower();
+    if (this->school == School::SHADOW)
+    {
+        spellPower += this->player->stats->shadowPower;
+    }
+    else if (this->school == School::FIRE)
+    {
+        spellPower += this->player->stats->firePower;
+    }
+    dmg += spellPower * this->coefficient;
+    dmg *= this->modifier;
+    if (this->school == School::SHADOW)
+    {
+        dmg *= this->player->stats->shadowModifier;
+    }
+    else if (this->school == School::FIRE)
+    {
+        dmg *= this->player->stats->fireModifier;
+    }
+
+    this->player->iterationDamage += dmg;
 }
 
 ShadowBolt::ShadowBolt(Player* player) : Spell(player)

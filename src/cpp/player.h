@@ -15,6 +15,7 @@ struct Player
   Auras* auras;
   Talents* talents;
   Sets* sets;
+  CharacterStats* stats;
   std::map<std::string, Spell*> spells;
   std::vector<std::string> combatLogEntries;
   double castTimeRemaining;

@@ -24,6 +24,7 @@ onmessage = function (e) {
     let a = e.data.player.auras
     let t = e.data.player.talents
     let s = e.data.player.sets
+    let b = e.data.player.stats
     let auras = module._allocAuras(a.felArmor, a.blessingOfKings, a.blessingOfWisdom, a.judgementOfWisdom, a.manaSpringTotem, a.wrathOfAirTotem, a.totemOfWrath, a.markOfTheWild, a.arcaneIntellect
       , a.prayerOfFortitude, a.prayerOfSpirit, a.bloodPact, a.inspiringPresence, a.moonkinAura, a.powerInfusion, a.powerOfTheGuardianWarlock, a.powerOfTheGuardianMage, a.eyeOfTheNight, a.chainOfTheTwilightOwl
       , a.jadePendantOfBlasting, a.idolOfTheRavenGoddess, a.drumsOfBattle, a.drumsOfWar, a.drumsOfRestoration, a.bloodlust, a.ferociousInspiration, a.innervate, a.curseOfTheElements, a.shadowWeaving
@@ -35,7 +36,10 @@ onmessage = function (e) {
       , t.masterDemonologist, t.soulLink, t.demonicKnowledge, t.demonicTactics, t.felguard, t.improvedShadowBolt, t.cataclysm, t.bane, t.improvedFirebolt, t.improvedLashOfPain, t.devastation, t.shadowburn
       , t.improvedSearingPain, t.improvedImmolate, t.ruin, t.emberstorm, t.backlash, t.shadowAndFlame, t.shadowfury)
     let sets = module._allocSets(s['529'], s['552'], s['553'], s['559'], s['644'], s['658'], s['667'], s['645'], s['646'], s['670'])
-    let playerSettings = module._allocPlayerSettings(auras, talents, sets)
+    let stats = module._allocStats(b.health, b.mana, b.stamina, b.intellect, b.spirit, b.spellPower, b.shadowPower, b.firePower, b.hasteRating, b.hitRating, b.critRating, b.critPercent, b.mp5, b.spellPen
+      , b.fireModifier, b.frostModifier, b.hastePercent, b.damageModifier, b.shadowModifier, b.staminaModifier, b.intellectModifier, b.spiritModifier, b.manaCostModifier, b.arcaneModifier, b.natureModifier
+      , b.natureResist, b.arcaneResist, b.fireResist, b.frostResist, b.shadowResist)
+    let playerSettings = module._allocPlayerSettings(auras, talents, sets, stats)
     let player = module._allocPlayer(playerSettings)
     let simSettings = module._allocSimSettings(e.data.simulation.iterations, e.data.simulation.minTime, e.data.simulation.maxTime)
     let sim = module._allocSim(player, simSettings)
@@ -44,6 +48,7 @@ onmessage = function (e) {
     module._freeAuras(auras)
     module._freeTalents(talents)
     module._freeSets(sets)
+    module._freeStats(stats)
     module._freePlayerSettings(playerSettings)
     module._freePlayer(player)
     module._freeSimSettings(simSettings)

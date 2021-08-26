@@ -1,8 +1,9 @@
 #include "player.h"
 #include "spell.h"
 
-Player::Player(PlayerSettings* playerSettings) : auras(playerSettings->auras), talents(playerSettings->talents), sets(playerSettings->sets)
+Player::Player(PlayerSettings* playerSettings) : auras(playerSettings->auras), talents(playerSettings->talents), sets(playerSettings->sets), stats(playerSettings->stats)
 {
+    this->stats->maxMana = this->stats->mana;
     std::vector<std::string> combatLogEntries = {};
     double castTimeRemaining = 0;
     double totalManaRegenerated = 0;
@@ -26,4 +27,9 @@ void Player::combatLog(std::string &entry)
 double Player::getGcdValue(std::string varName)
 {
     return 1.5;
+}
+
+double Player::getSpellPower()
+{
+    return this->stats->spellPower;
 }
