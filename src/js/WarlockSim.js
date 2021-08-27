@@ -315,6 +315,21 @@ if (!Object.getOwnPropertyDescriptor(Module["ready"], "_emscripten_stack_get_fre
  });
 }
 
+if (!Object.getOwnPropertyDescriptor(Module["ready"], "_emscripten_stack_get_base")) {
+ Object.defineProperty(Module["ready"], "_emscripten_stack_get_base", {
+  configurable: true,
+  get: function() {
+   abort("You are getting _emscripten_stack_get_base on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
+  }
+ });
+ Object.defineProperty(Module["ready"], "_emscripten_stack_get_base", {
+  configurable: true,
+  set: function() {
+   abort("You are setting _emscripten_stack_get_base on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
+  }
+ });
+}
+
 if (!Object.getOwnPropertyDescriptor(Module["ready"], "_emscripten_stack_init")) {
  Object.defineProperty(Module["ready"], "_emscripten_stack_init", {
   configurable: true,
@@ -420,21 +435,6 @@ if (!Object.getOwnPropertyDescriptor(Module["ready"], "_emscripten_get_sbrk_ptr"
  });
 }
 
-if (!Object.getOwnPropertyDescriptor(Module["ready"], "_emscripten_stack_get_base")) {
- Object.defineProperty(Module["ready"], "_emscripten_stack_get_base", {
-  configurable: true,
-  get: function() {
-   abort("You are getting _emscripten_stack_get_base on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
-  }
- });
- Object.defineProperty(Module["ready"], "_emscripten_stack_get_base", {
-  configurable: true,
-  set: function() {
-   abort("You are setting _emscripten_stack_get_base on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
-  }
- });
-}
-
 if (!Object.getOwnPropertyDescriptor(Module["ready"], "_malloc")) {
  Object.defineProperty(Module["ready"], "_malloc", {
   configurable: true,
@@ -461,6 +461,21 @@ if (!Object.getOwnPropertyDescriptor(Module["ready"], "_free")) {
   configurable: true,
   set: function() {
    abort("You are setting _free on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
+  }
+ });
+}
+
+if (!Object.getOwnPropertyDescriptor(Module["ready"], "___set_stack_limits")) {
+ Object.defineProperty(Module["ready"], "___set_stack_limits", {
+  configurable: true,
+  get: function() {
+   abort("You are getting ___set_stack_limits on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
+  }
+ });
+ Object.defineProperty(Module["ready"], "___set_stack_limits", {
+  configurable: true,
+  set: function() {
+   abort("You are setting ___set_stack_limits on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js");
   }
  });
 }
@@ -901,6 +916,9 @@ function addFunctionWasm(func, sig) {
  if (functionsInTableMap.has(func)) {
   return functionsInTableMap.get(func);
  }
+ for (var i = 0; i < wasmTable.length; i++) {
+  assert(wasmTable.get(i) != func, "function in Table but not functionsInTableMap");
+ }
  var ret = getEmptyTableSlot();
  try {
   wasmTable.set(ret, func);
@@ -923,6 +941,9 @@ function removeFunction(index) {
 
 function addFunction(func, sig) {
  assert(typeof func !== "undefined");
+ if (typeof sig === "undefined") {
+  err("warning: addFunction(): You should provide a wasm function signature string as a second argument. This is not necessary for asm.js and asm2wasm, but can be required for the LLVM wasm backend, so it is recommended for full portability.");
+ }
  return addFunctionWasm(func, sig);
 }
 
@@ -1605,6 +1626,7 @@ function initRuntime() {
  checkStackCookie();
  assert(!runtimeInitialized);
  runtimeInitialized = true;
+ ___set_stack_limits(_emscripten_stack_get_base(), _emscripten_stack_get_end());
  callRuntimeCallbacks(__ATINIT__);
 }
 
@@ -1924,13 +1946,26 @@ var tempDouble;
 var tempI64;
 
 var ASM_CONSTS = {
- 2792: function($0, $1, $2) {
+ 2904: function($0, $1, $2, $3) {
   postMessage({
    event: "update",
    data: {
     medianDps: $0,
     iteration: $1,
-    iterationAmount: $2
+    iterationAmount: $2,
+    itemId: $3
+   }
+  });
+ },
+ 3014: function($0, $1, $2, $3, $4) {
+  postMessage({
+   event: "end",
+   data: {
+    medianDps: $0,
+    minDps: $1,
+    maxDps: $2,
+    duration: $3,
+    itemId: $4
    }
   });
  }
@@ -2064,8 +2099,45 @@ function ___cxa_throw(ptr, type, destructor) {
  throw ptr + " - Exception catching is disabled, this exception cannot be caught. Compile with -s NO_DISABLE_EXCEPTION_CATCHING or -s EXCEPTION_CATCHING_ALLOWED=[..] to catch.";
 }
 
+function ___handle_stack_overflow() {
+ abort("stack overflow");
+}
+
 function _abort() {
  abort();
+}
+
+var _emscripten_get_now;
+
+if (ENVIRONMENT_IS_NODE) {
+ _emscripten_get_now = function() {
+  var t = process["hrtime"]();
+  return t[0] * 1e3 + t[1] / 1e6;
+ };
+} else _emscripten_get_now = function() {
+ return performance.now();
+};
+
+var _emscripten_get_now_is_monotonic = true;
+
+function setErrNo(value) {
+ SAFE_HEAP_STORE(___errno_location() | 0, value | 0, 4);
+ return value;
+}
+
+function _clock_gettime(clk_id, tp) {
+ var now;
+ if (clk_id === 0) {
+  now = Date.now();
+ } else if ((clk_id === 1 || clk_id === 4) && _emscripten_get_now_is_monotonic) {
+  now = _emscripten_get_now();
+ } else {
+  setErrNo(28);
+  return -1;
+ }
+ SAFE_HEAP_STORE(tp | 0, now / 1e3 | 0 | 0, 4);
+ SAFE_HEAP_STORE(tp + 4 | 0, now % 1e3 * 1e3 * 1e3 | 0 | 0, 4);
+ return 0;
 }
 
 var readAsmConstArgsArray = [];
@@ -2119,7 +2191,10 @@ function _emscripten_resize_heap(requestedSize) {
   var overGrownHeapSize = oldSize * (1 + .2 / cutDown);
   overGrownHeapSize = Math.min(overGrownHeapSize, requestedSize + 100663296);
   var newSize = Math.min(maxHeapSize, alignUp(Math.max(requestedSize, overGrownHeapSize), 65536));
+  var t0 = _emscripten_get_now();
   var replacement = emscripten_realloc_buffer(newSize);
+  var t1 = _emscripten_get_now();
+  out("Heap resize call from " + oldSize + " to " + newSize + " took " + (t1 - t0) + " msecs. Success: " + !!replacement);
   if (replacement) {
    return true;
   }
@@ -2156,8 +2231,10 @@ function intArrayToString(array) {
 var asmLibraryArg = {
  "__cxa_allocate_exception": ___cxa_allocate_exception,
  "__cxa_throw": ___cxa_throw,
+ "__handle_stack_overflow": ___handle_stack_overflow,
  "abort": _abort,
  "alignfault": alignfault,
+ "clock_gettime": _clock_gettime,
  "emscripten_asm_const_int": _emscripten_asm_const_int,
  "emscripten_memcpy_big": _emscripten_memcpy_big,
  "emscripten_resize_heap": _emscripten_resize_heap,
@@ -2233,6 +2310,8 @@ var _emscripten_stack_get_end = Module["_emscripten_stack_get_end"] = function()
 var _sbrk = Module["_sbrk"] = createExportWrapper("sbrk");
 
 var _emscripten_get_sbrk_ptr = Module["_emscripten_get_sbrk_ptr"] = createExportWrapper("emscripten_get_sbrk_ptr");
+
+var ___set_stack_limits = Module["___set_stack_limits"] = createExportWrapper("__set_stack_limits");
 
 if (!Object.getOwnPropertyDescriptor(Module, "intArrayFromString")) Module["intArrayFromString"] = function() {
  abort("'intArrayFromString' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");

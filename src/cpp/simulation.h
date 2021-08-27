@@ -8,6 +8,6 @@ struct Simulation
   SimulationSettings* settings;
 
   Simulation(Player* _player, SimulationSettings* simSettings);
-  double start();
+  void start();
   double passTime();
 };

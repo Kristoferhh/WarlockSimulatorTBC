@@ -57,24 +57,24 @@ void Spell::startCast(double predictedDamage)
     {
         casting = true;
         player->castTimeRemaining = getCastTime();
-        if (!isProc)
+        if (!isProc && player->iteration == 2)
         {
-            //combatLogMsg.append("Started casting " + name + " - Cast time: " + player->castTimeRemaining - player->spellDelay) + " (" + round((player->stats.hasteRating / hasteRatingPerPercent + player->stats.hastePercent) * 10000) / 10000 + "% haste at a base cast speed of " + castTime + ").";
+            combatLogMsg.append("Started casting " + name + " - Cast time: " + std::to_string(player->castTimeRemaining - player->spellDelay)) + " (" + std::to_string(round((player->stats->hasteRating / player->hasteRatingPerPercent + player->stats->hastePercent) * 10000) / 10000) + "% haste at a base cast speed of " + std::to_string(castTime) + ").";
         }
     }
     else
     {
-        if (!isProc)
+        if (!isProc && player->iteration == 2)
         {
             combatLogMsg.append("Cast " + name);
         }
         cast();
     }
-    if (onGcd && !isNonWarlockAbility)
+    if (onGcd && !isNonWarlockAbility && player->iteration == 2)
     {
         combatLogMsg.append(" - Global cooldown: " + std::to_string(player->gcdRemaining));
     }
-    if (predictedDamage > 0)
+    if (predictedDamage > 0 && player->iteration == 2)
     {
         combatLogMsg.append(" - Estimated damage / Cast time: " + std::to_string(round(predictedDamage)));
     }
@@ -83,7 +83,7 @@ void Spell::startCast(double predictedDamage)
 
 void Spell::tick(int t)
 {
-    if (cooldownRemaining > 0 && cooldownRemaining - t <= 0)
+    if (cooldownRemaining > 0 && cooldownRemaining - t <= 0 && player->iteration == 2)
     {
         std::string combatLogEntry = name + " is off cooldown";
         player->combatLog(combatLogEntry);
@@ -188,11 +188,6 @@ LifeTap::LifeTap(Player* player) : Spell(player)
     setup();
 }
 
-bool LifeTap::ready()
-{
-    return Spell::ready() && manaGain() + player->stats->mana < player->stats->maxMana;
-}
-
 int LifeTap::manaGain()
 {
     return (manaReturn + ((player->getSpellPower() + player->stats->shadowPower) * coefficient)) * modifier;
@@ -203,7 +198,7 @@ void LifeTap::cast()
     const int manaGain = this->manaGain();
     this->player->totalManaRegenerated += manaGain;
     
-    if (player->stats->mana + manaGain > player->stats->maxMana)
+    if (player->iteration == 2 && player->stats->mana + manaGain > player->stats->maxMana)
     {
         std::string combatLogEntry = "Life Tap used at too high mana (mana wasted)";
         player->combatLog(combatLogEntry);

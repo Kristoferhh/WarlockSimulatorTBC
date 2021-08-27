@@ -4,8 +4,10 @@
 #include "talents.h"
 #include "sets.h"
 #include "characterStats.h"
+#include <chrono>
 
-void simulationUpdate(int iteration, int iterationAmount, double medianDps);
+void simulationUpdate(int iteration, int iterationAmount, double medianDps, int itemId);
+void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::duration<double> duration, int itemId);
 
 extern "C"
 {
@@ -24,7 +26,7 @@ extern "C"
     CharacterStats* allocStats(int health, int mana, double stamina, double intellect, double spirit, double spellPower, int shadowPower, int firePower, int hasteRating, int hitRating, int critRating
         , double critPercent, int mp5, int spellPen, double fireModifier, double frostModifier, double hastePercent, double damageModifier, double shadowModifier, double staminaModifier, double intellectModifier
         ,double spiritModifier, double manaCostModifier, double arcaneModifier, double natureModifier, int natureResist, int arcaneResist, int fireResist, int frostResist, int shadowResist);
-    PlayerSettings* allocPlayerSettings(Auras* auras, Talents* talents, Sets* sets, CharacterStats* stats);
+    PlayerSettings* allocPlayerSettings(Auras* auras, Talents* talents, Sets* sets, CharacterStats* stats, int itemId);
     Player* allocPlayer(PlayerSettings* settings);
     SimulationSettings* allocSimSettings(int iterations, int minTime, int maxTime);
     Simulation* allocSim(Player* player, SimulationSettings* simulationSettings);
@@ -36,5 +38,5 @@ extern "C"
     void freePlayer(Player* player);
     void freeSimSettings(SimulationSettings* settings);
     void freeSim(Simulation* sim);
-    double startSimulation(Simulation* sim);
+    void startSimulation(Simulation* sim);
 }

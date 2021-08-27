@@ -59,7 +59,6 @@ struct Spell
 struct LifeTap : public Spell
 {
     LifeTap(Player* player);
-    bool ready();
     int manaGain();
     void cast();
 };

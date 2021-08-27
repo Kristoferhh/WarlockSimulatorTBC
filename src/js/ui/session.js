@@ -85,7 +85,7 @@ for (const auraType in _auras) {
 }
 
 // Use previous simulation's result on the sidebar
-$('#avg-dps').text(localStorage.avgDps || '')
+$('#avg-dps').text(localStorage.medianDps || '')
 $('#min-dps').text(localStorage.minDps || '')
 $('#max-dps').text(localStorage.maxDps || '')
 if (localStorage.simulationDuration) {

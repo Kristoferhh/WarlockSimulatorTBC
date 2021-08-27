@@ -11,6 +11,7 @@ struct PlayerSettings
   Talents* talents;
   Sets* sets;
   CharacterStats* stats;
+  int itemId;
 
-  PlayerSettings(Auras* auras, Talents* talents, Sets* sets, CharacterStats* stats);
+  PlayerSettings(Auras* auras, Talents* talents, Sets* sets, CharacterStats* stats, int itemId);
 };

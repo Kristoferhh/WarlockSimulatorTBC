@@ -1,7 +1,7 @@
 #include "player.h"
 #include "spell.h"
 
-Player::Player(PlayerSettings* playerSettings) : auras(playerSettings->auras), talents(playerSettings->talents), sets(playerSettings->sets), stats(playerSettings->stats)
+Player::Player(PlayerSettings* playerSettings) : auras(playerSettings->auras), talents(playerSettings->talents), sets(playerSettings->sets), stats(playerSettings->stats), itemId(playerSettings->itemId)
 {
     this->stats->maxMana = this->stats->mana;
     std::vector<std::string> combatLogEntries = {};

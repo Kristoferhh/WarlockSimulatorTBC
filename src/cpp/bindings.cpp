@@ -2,7 +2,7 @@
 #include "simulation.h"
 #include "emscripten.h"
 
-void simulationUpdate(int iteration, int iterationAmount, double medianDps)
+void simulationUpdate(int iteration, int iterationAmount, double medianDps, int itemId)
 {
     EM_ASM({
         postMessage({
@@ -10,15 +10,32 @@ void simulationUpdate(int iteration, int iterationAmount, double medianDps)
             data: {
                 medianDps: $0,
                 iteration: $1,
-                iterationAmount: $2
+                iterationAmount: $2,
+                itemId: $3
             }
         })
-    }, medianDps, iteration, iterationAmount);
+    }, medianDps, iteration, iterationAmount, itemId);
 }
 
-double startSimulation(Simulation* sim)
+void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::duration<double> duration, int itemId)
 {
-    return sim->start();
+    EM_ASM({
+        postMessage({
+            event: "end",
+            data: {
+                medianDps: $0,
+                minDps: $1,
+                maxDps: $2,
+                duration: $3,
+                itemId: $4
+            }
+        })
+    }, medianDps, minDps, maxDps, duration.count(), itemId);
+}
+
+void startSimulation(Simulation* sim)
+{
+    sim->start();
 }
 
 Auras* allocAuras(bool felArmor, bool blessingOfKings, bool blessingOfWisdom, bool judgementOfWisdom, bool manaSpringTotem, bool wrathOfAirTotem, bool totemOfWrath, bool markOfTheWild, bool arcaneIntellect
@@ -59,9 +76,9 @@ CharacterStats* allocStats(int health, int mana, double stamina, double intellec
     , damageModifier, shadowModifier, staminaModifier, intellectModifier, spiritModifier, manaCostModifier, arcaneModifier, natureModifier, natureResist, arcaneResist, fireResist, frostResist, shadowResist);
 }
 
-PlayerSettings* allocPlayerSettings(Auras* auras, Talents* talents, Sets* sets, CharacterStats* stats)
+PlayerSettings* allocPlayerSettings(Auras* auras, Talents* talents, Sets* sets, CharacterStats* stats, int itemId)
 {
-    return new PlayerSettings(auras, talents, sets, stats);
+    return new PlayerSettings(auras, talents, sets, stats, itemId);
 }
 
 Player* allocPlayer(PlayerSettings* settings)

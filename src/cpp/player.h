@@ -12,6 +12,7 @@ struct Spell; // dirty fix for circular reference when we were including "spell.
 
 struct Player
 {
+  double hasteRatingPerPercent = 15.77;
   Auras* auras;
   Talents* talents;
   Sets* sets;
@@ -27,6 +28,7 @@ struct Player
   int iterationDamage;
   double fightTime;
   int iteration;
+  int itemId;
 
   Player(PlayerSettings* settings);
   void initialize();

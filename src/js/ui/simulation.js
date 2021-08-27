@@ -40,6 +40,7 @@ function simDPS (items) {
     multiSimInfo.push([items[i], 0])
 
     simulations.push(new SimWorker(
+      // Simulation End callback
       (simulationEnd) => {
         let minDps = simulationEnd.minDps
         let maxDps = simulationEnd.maxDps
@@ -50,18 +51,18 @@ function simDPS (items) {
           localStorage.medianDps = simulationEnd.medianDps
           localStorage.minDps = minDps
           localStorage.maxDps = maxDps
-          localStorage.simulationDuration = simulationEnd.length
+          localStorage.simulationDuration = simulationEnd.duration
           $('#avg-dps').text(simulationEnd.medianDps)
           $('#min-dps').text(minDps)
           $('#max-dps').text(maxDps)
-          $('#sim-length-result').text(Math.round(simulationEnd.length * 10000) / 10000 + 's')
+          $('#sim-length-result').text(Math.round(simulationEnd.duration * 10000) / 10000 + 's')
           $('#sim-dps').text('Simulate')
 
           // Populate the combat log
-          $('#combat-log p').remove()
+          /*$('#combat-log p').remove()
           for (const entry in simulationEnd.combatlog) {
             $('#combat-log').append('<p>' + simulationEnd.combatlog[entry] + '</p>')
-          }
+          }*/
         } else if (simulationsFinished == itemAmount) {
           $('#sim-all-items').text('Simulate All Items')
         }
@@ -76,7 +77,7 @@ function simDPS (items) {
           if (itemAmount === 1) {
             if ($('#automatically-open-sim-details').children('select').val() === 'yes') {
               // Setup the damage breakdown table (showing avg damage, avg cast etc. for each spell)
-              $('.spell-damage-information').remove()
+              /*$('.spell-damage-information').remove()
               for (const spell in simulationEnd.damageBreakdown) {
                 const s = simulationEnd.damageBreakdown[spell]
                 const percentDamage = (~~((s.damage / simulationEnd.totalDamage) * 10000) / 100).toFixed(2)
@@ -114,7 +115,7 @@ function simDPS (items) {
               } else {
                 $('#damage-breakdown-dodge').hide()
                 $('#damage-breakdown-glancing').hide()
-              }
+              }*/
             }
           }
         }
@@ -124,6 +125,7 @@ function simDPS (items) {
           simulations[simIndex++].start()
         }
       },
+      // Simulation Update callback
       (simulationUpdate) => {
         if (itemAmount === 1) {
           let progressPercent = Math.ceil((simulationUpdate.iteration / simulationUpdate.iterationAmount) * 100)
@@ -136,7 +138,7 @@ function simDPS (items) {
           let totalProgress = 0
           for (let i = 0; i < multiSimInfo.length; i++) {
             if (multiSimInfo[i][0] == simulationUpdate.itemId) {
-              multiSimInfo[i][1] = simulationUpdate.percent
+              multiSimInfo[i][1] = Math.ceil((simulationUpdate.iteration / simulationUpdate.iterationAmount) * 100)
             }
             totalProgress += multiSimInfo[i][1]
           }

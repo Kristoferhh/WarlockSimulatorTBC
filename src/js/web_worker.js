@@ -25,6 +25,133 @@ onmessage = function (e) {
     let t = e.data.player.talents
     let s = e.data.player.sets
     let b = e.data.player.stats
+
+    let customItemSlot = e.data.itemSlot
+    let customItemSubSlot = e.data.itemSubSlot
+    let customItemId = e.data.itemId
+    // If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
+    if (customItemSlot && customItemId && customItemId !== e.data.player.items[customItemSlot + customItemSubSlot]) {
+      // Loop through all items in the custom item slot
+      for (const item in items[customItemSlot]) {
+        // Check if this is the currently equipped item
+        if (items[customItemSlot][item].id == e.data.player.items[customItemSlot + customItemSubSlot]) {
+          // Remove stats from currently equipped item
+          for (const stat in items[customItemSlot][item]) {
+            if (b.hasOwnProperty(stat)) {
+              b[stat] -= items[customItemSlot][item][stat]
+            }
+          }
+          // Decrement the counter for the set id if it is part of a set
+          if (items[customItemSlot][item].hasOwnProperty('setId')) {
+            s[items[customItemSlot][item].setId]--
+          }
+          // Remove stats from gems in the equipped item if there are any
+          // Also check if the item's socket bonus is active and remove the stats from it if so
+          if (e.data.player.gems[customItemSlot] && e.data.player.gems[customItemSlot][e.data.player.items[customItemSlot + customItemSubSlot]]) {
+            let socketBonusActive = true
+            // Loop through each socket in the equipped item
+            for (const socket in e.data.player.gems[customItemSlot][e.data.player.items[customItemSlot + customItemSubSlot]]) {
+              if (e.data.player.gems[customItemSlot][e.data.player.items[customItemSlot + customItemSubSlot]][socket]) {
+                const socketColor = e.data.player.gems[customItemSlot][e.data.player.items[customItemSlot + customItemSubSlot]][socket][0]
+                const gemId = e.data.player.gems[customItemSlot][e.data.player.items[customItemSlot + customItemSubSlot]][socket][1]
+                // Find the gem's color since the socket and gem colors might not match
+                for (const gemColor in gems) {
+                  if (gems[gemColor][gemId]) {
+                    // Check whether the gem color is in the array of gem colors that are valid for this socket color (e.g. checks whether a 'purple' gem is valid for a 'blue' socket)
+                    if (!socketInfo[socketColor].gems.includes(gemColor)) {
+                      socketBonusActive = false
+                    }
+                    if (gemColor == 'meta') {
+                      if (this.metaGemIds.includes(gemId)) {
+                        this.metaGemIds.splice(this.metaGemIds.indexOf(gemId), 1)
+                      }
+                    }
+                    // Loop through the gem's stats and remove them from the player
+                    for (const stat in gems[gemColor][gemId]) {
+                      if (b.hasOwnProperty(stat)) {
+                        b[stat] -= gems[gemColor][gemId][stat]
+                      }
+                    }
+                  }
+                }
+              } else { // No gem in this socket
+                socketBonusActive = false
+              }
+            }
+            // If the socket bonus is active then remove the socket bonus stats
+            if (socketBonusActive && items[customItemSlot][item].socketBonus) {
+              for (const stat in items[customItemSlot][item].socketBonus) {
+                if (b.hasOwnProperty(stat)) {
+                  b[stat] -= items[customItemSlot][item].socketBonus[stat]
+                } else {
+                  console.log("Can't remove stat '" + stat + "' from player (trying to remove socket bonus)")
+                }
+              }
+            }
+          }
+        }
+        // Check if this is the custom item
+        else if (items[customItemSlot][item].id == customItemId) {
+          // Add stats from the item
+          for (const stat in items[customItemSlot][item]) {
+            if (b.hasOwnProperty(stat)) {
+              b[stat] += items[customItemSlot][item][stat]
+            }
+          }
+          // Increment the counter for the set id if it is part of a set
+          if (items[customItemSlot][item].hasOwnProperty('setId')) {
+            s[items[customItemSlot][item].setId] = s[items[customItemSlot][item].setId] + 1 || 1 // Have a default value of '1' in case the set id is undefined in the sets array
+          }
+          // Add the item's id to its slot in e.data.player.items
+          // This is required for items that are on-use or have a proc such as Band of the Eternal Sage since they check if the item's ID is equipped.
+          e.data.player.items[customItemSlot + customItemSubSlot] = customItemId
+          // Add stats from any gems equipped in the custom item
+          if (e.data.player.gems[customItemSlot] && e.data.player.gems[customItemSlot][customItemId]) {
+            // Boolean to keep track of whether the item's socket bonus is active or not
+            let socketBonusActive = true
+            for (const socket in e.data.player.gems[customItemSlot][customItemId]) {
+              if (e.data.player.gems[customItemSlot][customItemId][socket]) {
+                const socketColor = e.data.player.gems[customItemSlot][customItemId][socket][0]
+                const gemId = e.data.player.gems[customItemSlot][customItemId][socket][1]
+                // Check for meta gem
+                if (customItemSlot == 'head' && gems.meta[gemId]) {
+                  this.metaGemIds.push(gemId)
+                }
+                // Find the gem's color since it might not match the socket color
+                for (const gemColor in gems) {
+                  if (gems[gemColor][gemId]) {
+                    // Check whether the gem color is in the array of gem colors that are valid for this socket color (e.g. checks whether a 'purple' gem is valid for a 'blue' socket)
+                    if (!socketInfo[socketColor].gems.includes(gemColor)) {
+                      socketBonusActive = false
+                    }
+                    // Add stats from the gem equipped in this socket
+                    for (const stat in gems[gemColor][gemId]) {
+                      if (b.hasOwnProperty(stat)) {
+                        b[stat] += gems[gemColor][gemId][stat]
+                      }
+                    }
+                  }
+                }
+              } else { // No gem equipped in this socket
+                socketBonusActive = false
+              }
+            }
+            // If the socket bonus is active then remove the socket bonus stats
+            if (socketBonusActive && items[customItemSlot][item].socketBonus) {
+              for (const stat in items[customItemSlot][item].socketBonus) {
+                if (b.hasOwnProperty(stat)) {
+                  b[stat] += items[customItemSlot][item].socketBonus[stat]
+                } else {
+                  console.log("Can't add stat '" + stat + "' to player (trying to add socket bonus)")
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Mamma mia somebody clean up this mess please
     let auras = module._allocAuras(a.felArmor, a.blessingOfKings, a.blessingOfWisdom, a.judgementOfWisdom, a.manaSpringTotem, a.wrathOfAirTotem, a.totemOfWrath, a.markOfTheWild, a.arcaneIntellect
       , a.prayerOfFortitude, a.prayerOfSpirit, a.bloodPact, a.inspiringPresence, a.moonkinAura, a.powerInfusion, a.powerOfTheGuardianWarlock, a.powerOfTheGuardianMage, a.eyeOfTheNight, a.chainOfTheTwilightOwl
       , a.jadePendantOfBlasting, a.idolOfTheRavenGoddess, a.drumsOfBattle, a.drumsOfWar, a.drumsOfRestoration, a.bloodlust, a.ferociousInspiration, a.innervate, a.curseOfTheElements, a.shadowWeaving
@@ -39,12 +166,11 @@ onmessage = function (e) {
     let stats = module._allocStats(b.health, b.mana, b.stamina, b.intellect, b.spirit, b.spellPower, b.shadowPower, b.firePower, b.hasteRating, b.hitRating, b.critRating, b.critPercent, b.mp5, b.spellPen
       , b.fireModifier, b.frostModifier, b.hastePercent, b.damageModifier, b.shadowModifier, b.staminaModifier, b.intellectModifier, b.spiritModifier, b.manaCostModifier, b.arcaneModifier, b.natureModifier
       , b.natureResist, b.arcaneResist, b.fireResist, b.frostResist, b.shadowResist)
-    let playerSettings = module._allocPlayerSettings(auras, talents, sets, stats)
+    let playerSettings = module._allocPlayerSettings(auras, talents, sets, stats, e.data.itemId)
     let player = module._allocPlayer(playerSettings)
     let simSettings = module._allocSimSettings(e.data.simulation.iterations, e.data.simulation.minTime, e.data.simulation.maxTime)
     let sim = module._allocSim(player, simSettings)
-    medianDps = module._startSimulation(sim)
-    console.log(medianDps)
+    module._startSimulation(sim)
     module._freeAuras(auras)
     module._freeTalents(talents)
     module._freeSets(sets)
@@ -54,21 +180,4 @@ onmessage = function (e) {
     module._freeSimSettings(simSettings)
     module._freeSim(sim)
   })
-
-  /*const player = new Player(e.data.player, e.data.itemSlot || null, e.data.itemSubSlot || '', e.data.itemId || null, e.data.customStat || null, e.data.customStatValue || 0)
-  const simulation = new Simulation(player, e.data.simulation,
-    (simulationEnd) => {
-      this.postMessage({
-        event: 'end',
-        data: simulationEnd
-      })
-    },
-    (simulationUpdate) => {
-      this.postMessage({
-        event: 'update',
-        data: simulationUpdate
-      })
-    }
-  )
-  simulation.start()*/
 }

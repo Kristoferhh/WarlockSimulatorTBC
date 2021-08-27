@@ -5,17 +5,18 @@
 #include "bindings.h"
 #include "spell.h"
 #include <algorithm>
+#include <chrono>
 
 Simulation::Simulation(Player* _player, SimulationSettings* simulationSettings) : player(_player), settings(simulationSettings) {}
 
 double Simulation::passTime()
 {
-    double time = this->player->castTimeRemaining;
-    if (time == 0 || (this->player->gcdRemaining > 0 && this->player->gcdRemaining < time)) time = this->player->gcdRemaining;
+    double time = player->castTimeRemaining;
+    if (time == 0 || (player->gcdRemaining > 0 && player->gcdRemaining < time)) time = player->gcdRemaining;
 
     // Find the lowest time until the next action needs to be taken
     // Spells
-    for (std::map<std::string, Spell*>::iterator it = this->player->spells.begin(); it != this->player->spells.end(); ++it)
+    for (std::map<std::string, Spell*>::iterator it = player->spells.begin(); it != player->spells.end(); ++it)
     {
         if (it->second->cooldownRemaining > 0 && it->second->cooldownRemaining < time)
         {
@@ -27,8 +28,8 @@ double Simulation::passTime()
     
     // Pass time
     // This needs to be the first modified value since the time in combat needs to be updated before spells start dealing damage/auras expiring etc. for the combat logging.
-    this->player->fightTime += time;
-    this->player->castTimeRemaining -= time;
+    player->fightTime += time;
+    player->castTimeRemaining -= time;
 
     // Auras need to tick before Spells because otherwise you'll, for example, finish casting Corruption and then immediately afterwards, in the same millisecond, immediately tick down the aura
     // This was also causing buffs like e.g. the t4 4pc buffs to expire sooner than they should.
@@ -36,7 +37,7 @@ double Simulation::passTime()
 
 
     // Spells
-    for (std::map<std::string, Spell*>::iterator it = this->player->spells.begin(); it != this->player->spells.end(); ++it)
+    for (std::map<std::string, Spell*>::iterator it = player->spells.begin(); it != player->spells.end(); ++it)
     {
         if (it->second->cooldownRemaining > 0 || it->second->casting)
         {
@@ -47,38 +48,41 @@ double Simulation::passTime()
     return time;
 }
 
-double Simulation::start()
+void Simulation::start()
 {
     double totalDamage = 0;
     std::vector<double> dpsVector;
-    this->player->totalDuration = 0;
-    this->player->initialize();
+    player->totalDuration = 0;
+    player->initialize();
+    double minDps = 99999;
+    double maxDps = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
 
-    for (this->player->iteration = 0; this->player->iteration < this->settings->iterations; this->player->iteration++)
+    for (player->iteration = 0; player->iteration < this->settings->iterations; player->iteration++)
     {
-        //std::cout << "Iteration " << this->player->iteration << std::endl;
+        //std::cout << "Iteration " << player->iteration << std::endl;
         const int fightLength = random(this->settings->minTime, this->settings->maxTime);
-        this->player->iterationDamage = 0;
-        this->player->fightTime = 0;
-        //this->player->combatLog("Fight length: " + std::to_string(fightLength) + " seconds");
+        player->iterationDamage = 0;
+        player->fightTime = 0;
+        //player->combatLog("Fight length: " + std::to_string(fightLength) + " seconds");
 
-        while (this->player->fightTime < fightLength)
+        while (player->fightTime < fightLength)
         {
             // Player
-            if (this->player->castTimeRemaining <= 0)
+            if (player->castTimeRemaining <= 0)
             {
                 // Spells not on the GCD
 
                 // Spells on the GCD
-                if (this->player->gcdRemaining <= 0)
+                if (player->gcdRemaining <= 0)
                 {
-                    if (this->player->spells.at("shadowBolt")->ready())
+                    if (player->spells.at("shadowBolt")->ready())
                     {
-                        this->player->spells.at("shadowBolt")->startCast();
+                        player->spells.at("shadowBolt")->startCast();
                     }
-                    else if (this->player->spells.at("lifeTap")->ready())
+                    else if (player->spells.at("lifeTap")->ready())
                     {
-                        this->player->spells.at("lifeTap")->startCast();
+                        player->spells.at("lifeTap")->startCast();
                     }
                 }
             }
@@ -86,20 +90,28 @@ double Simulation::start()
             passTime();
         }
 
-        this->player->totalDuration += fightLength;
-        totalDamage += this->player->iterationDamage;
-        dpsVector.push_back(this->player->iterationDamage / fightLength);
+        player->totalDuration += fightLength;
+        totalDamage += player->iterationDamage;
+        double dps = player->iterationDamage / fightLength;
+        if (dps > maxDps)
+        {
+            maxDps = dps;
+        }
+        if (dps < minDps)
+        {
+            minDps = dps;
+        }
+        dpsVector.push_back(dps);
 
         //todo remove hard-coding
-        if (this->player->iteration % 100 == 0)
+        if (player->iteration % 100 == 0)
         {
-            simulationUpdate(this->player->iteration, this->settings->iterations, median(dpsVector));
+            simulationUpdate(player->iteration, this->settings->iterations, median(dpsVector), player->itemId);
         }
     }
 
-    return median(dpsVector);
-    // todo: maybe memory leak monkaW
-    //auto min = *min_element(std::begin(dpsVector), std::end(dpsVector));
-    //auto max = *max_element(std::begin(dpsVector), std::end(dpsVector));
-    //return SimulationResults(median(dpsVector), min, max, this->player->combatLogEntries);
+    auto finishTime = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsedTime = finishTime - startTime;
+
+    simulationEnd(median(dpsVector), minDps, maxDps, elapsedTime, player->itemId);
 }
