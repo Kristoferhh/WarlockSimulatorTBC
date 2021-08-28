@@ -27,7 +27,7 @@ void Spell::setup()
 
 double Spell::getCastTime()
 {
-    return this->castTime;
+    return castTime;
 }
 
 bool Spell::canCast()
@@ -37,7 +37,7 @@ bool Spell::canCast()
 
 bool Spell::hasEnoughMana()
 {
-    return this->manaCost * this->player->stats->manaCostModifier <= this->player->stats->mana;
+    return manaCost * player->stats->manaCostModifier <= player->stats->mana;
 }
 
 bool Spell::ready()
@@ -98,11 +98,14 @@ void Spell::tick(int t)
 
 void Spell::cast()
 {
-    if (this->manaCost > 0)
+    if (manaCost > 0)
     {
-        this->player->stats->mana -= this->manaCost * this->player->stats->manaCostModifier;
+        player->stats->mana -= manaCost * player->stats->manaCostModifier;
     }
-    if (this->doesDamage)
+
+    cooldownRemaining = cooldown;
+
+    if (doesDamage)
     {
         damage(false);
     }
@@ -111,27 +114,27 @@ void Spell::cast()
 void Spell::damage(bool isCrit)
 {
     int dmg = this->dmg;
-    int spellPower = this->player->getSpellPower();
-    if (this->school == School::SHADOW)
+    int spellPower = player->getSpellPower();
+    if (school == SpellSchool::SHADOW)
     {
-        spellPower += this->player->stats->shadowPower;
+        spellPower += player->stats->shadowPower;
     }
-    else if (this->school == School::FIRE)
+    else if (school == SpellSchool::FIRE)
     {
-        spellPower += this->player->stats->firePower;
+        spellPower += player->stats->firePower;
     }
-    dmg += spellPower * this->coefficient;
-    dmg *= this->modifier;
-    if (this->school == School::SHADOW)
+    dmg += spellPower * coefficient;
+    dmg *= modifier;
+    if (school == SpellSchool::SHADOW)
     {
-        dmg *= this->player->stats->shadowModifier;
+        dmg *= player->stats->shadowModifier;
     }
-    else if (this->school == School::FIRE)
+    else if (school == SpellSchool::FIRE)
     {
-        dmg *= this->player->stats->fireModifier;
+        dmg *= player->stats->fireModifier;
     }
 
-    this->player->iterationDamage += dmg;
+    player->iterationDamage += dmg;
 }
 
 ShadowBolt::ShadowBolt(Player* player) : Spell(player)
@@ -144,8 +147,8 @@ ShadowBolt::ShadowBolt(Player* player) : Spell(player)
     name = "Shadow Bolt";
     doesDamage = true;
     canCrit = true;
-    school = School::SHADOW;
-    type = Type::DESTRUCTION;
+    school = SpellSchool::SHADOW;
+    type = SpellType::DESTRUCTION;
     setup();
 
     // T6 4pc bonus
@@ -196,7 +199,7 @@ int LifeTap::manaGain()
 void LifeTap::cast()
 {
     const int manaGain = this->manaGain();
-    this->player->totalManaRegenerated += manaGain;
+    player->totalManaRegenerated += manaGain;
     
     if (player->iteration == 2 && player->stats->mana + manaGain > player->stats->maxMana)
     {

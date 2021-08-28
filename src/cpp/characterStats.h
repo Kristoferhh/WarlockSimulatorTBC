@@ -15,6 +15,8 @@ struct CharacterStats
     int hitRating;
     int critRating;
     double critPercent;
+    double hitChance;
+    double extraHitChance;
     int mp5;
     int spellPen;
     double fireModifier;

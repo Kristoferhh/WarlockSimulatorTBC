@@ -60,7 +60,7 @@ void Simulation::start()
 
     for (player->iteration = 0; player->iteration < this->settings->iterations; player->iteration++)
     {
-        //std::cout << "Iteration " << player->iteration << std::endl;
+        player->reset();
         const int fightLength = random(this->settings->minTime, this->settings->maxTime);
         player->iterationDamage = 0;
         player->fightTime = 0;

@@ -1,11 +1,12 @@
 #pragma once
 
-#include "player.h"
+struct Player; // dirty fix for circular reference when we were including "player.h" before
+
 #include <string>
 #include <cmath>
 
-enum School {SHADOW, FIRE};
-enum Type {AFFLICTION, DESTRUCTION};
+enum SpellSchool {SHADOW, FIRE};
+enum SpellType {AFFLICTION, DESTRUCTION};
 
 struct Spell
 {
