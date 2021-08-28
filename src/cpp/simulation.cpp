@@ -112,6 +112,15 @@ void Simulation::start()
 
     auto finishTime = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsedTime = finishTime - startTime;
-
     simulationEnd(median(dpsVector), minDps, maxDps, elapsedTime, player->itemId);
+
+    // Free spells and auras
+    for(std::map<std::string, Spell*>::iterator it = player->spells.begin(); it != player->spells.end(); it++)
+    {
+        delete it->second;
+    }
+    /*for(std::map<std::string, Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
+    {
+        delete it->second;
+    }*/
 }

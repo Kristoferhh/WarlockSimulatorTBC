@@ -315,3 +315,576 @@ void LifeTap::cast()
     }
     player->stats->mana = std::min(player->stats->maxMana, player->stats->mana + manaGain);
 }
+
+Incinerate::Incinerate(Player* player) : Spell(player)
+{
+    name = "Incinerate";
+    castTime = round((2.5 * (1 - 0.02 * player->talents->emberstorm)) * 100) / 100;
+    manaCost = 355 * (1 - 0.01 * player->talents->cataclysm);
+    coefficient = (2.5 / 3.5) + (0.04 * player->talents->shadowAndFlame);
+    minDmg = 444;
+    maxDmg = 514;
+    bonusDamageFromImmolateMin = 111;
+    bonusDamageFromImmolateMax = 128;
+    bonusDamageFromImmolate = (bonusDamageFromImmolateMin + bonusDamageFromImmolateMax) / 2;
+    doesDamage = true;
+    canCrit = true;
+    school = SpellSchool::FIRE;
+    type = SpellType::DESTRUCTION;
+    setup();
+
+    if (player->sets->t6 >= 4)
+    {
+        modifier *= 1.06;
+    }
+}
+
+SearingPain::SearingPain(Player* player) : Spell(player)
+{
+    name = "Searing Pain";
+    castTime = 1.5;
+    manaCost = 205 * (1 - 0.01 * player->talents->cataclysm);
+    coefficient = 1.5 / 3.5;
+    minDmg = 270;
+    maxDmg = 320;
+    doesDamage = true;
+    canCrit = true;
+    school = SpellSchool::FIRE;
+    type = SpellType::DESTRUCTION;
+    bonusCrit = 4 * player->talents->improvedSearingPain;
+    setup();
+};
+
+SoulFire::SoulFire(Player* player) : Spell(player)
+{
+    name = "Soul Fire";
+    castTime = 6 - (0.4 * player->talents->bane);
+    manaCost = 250 * (1 - 0.01 * player->talents->cataclysm);
+    coefficient = 1.15;
+    minDmg = 1003;
+    maxDmg = 1257;
+    doesDamage = true;
+    canCrit = true;
+    school = SpellSchool::FIRE;
+    type = SpellType::DESTRUCTION;
+    setup();
+};
+
+Shadowburn::Shadowburn(Player* player) : Spell(player)
+{
+    name = "Shadowburn";
+    cooldown = 15;
+    manaCost = 515 * (1 - 0.01 * player->talents->cataclysm);
+    coefficient = 0.22;
+    minDmg = 597;
+    maxDmg = 665;
+    doesDamage = true;
+    canCrit = true;
+    school = SpellSchool::SHADOW;
+    type = SpellType::DESTRUCTION;
+    setup();
+};
+
+DeathCoil::DeathCoil(Player* player) : Spell(player)
+{
+    name = "Death Coil";
+    cooldown = 120;
+    manaCost = 600;
+    coefficient = 0.4286;
+    dmg = 526;
+    doesDamage = true;
+    school = SpellSchool::SHADOW;
+    type = SpellType::AFFLICTION;
+    setup();
+};
+
+Shadowfury::Shadowfury(Player* player) : Spell(player)
+{
+    name = "Shadowfury";
+    castTime = 0.5;
+    manaCost = 710 * (1 - 0.01 * player->talents->cataclysm);
+    minDmg = 612;
+    maxDmg = 728;
+    doesDamage = true;
+    canCrit = true;
+    school = SpellSchool::SHADOW;
+    type = SpellType::DESTRUCTION;
+    cooldown = 20;
+    coefficient = 0.195;
+    setup();
+}
+
+SeedOfCorruption::SeedOfCorruption(Player* player) : Spell(player)
+{
+    name = "Seed of Corruption";
+    minDmg = 1110;
+    maxDmg = 1290;
+    manaCost = 882;
+    castTime = 2;
+    dmgCap = 13580;
+    doesDamage = true;
+    school = SpellSchool::SHADOW;
+    type = SpellType::AFFLICTION;
+    coefficient = 0.22;
+    setup();
+};
+
+double SeedOfCorruption::damage()
+{
+    return 0;
+}
+
+DarkPact::DarkPact(Player* player) : Spell(player)
+{
+    name = "Dark Pact";
+    manaReturn = 700;
+    coefficient = 0.96;
+    setup();
+}
+
+double DarkPact::manaGain()
+{
+    return 0;
+}
+
+bool DarkPact::ready()
+{
+    return false;
+}
+
+void DarkPact::cast()
+{
+
+}
+
+Corruption::Corruption(Player* player) : Spell(player)
+{
+    name = "Corruption";
+    manaCost = 370;
+    castTime = round((2 - (0.4 * player->talents->improvedCorruption)) * 100) / 100;
+    isDot = true;
+    school = SpellSchool::SHADOW;
+    type = SpellType::AFFLICTION;
+    setup();
+}
+
+UnstableAffliction::UnstableAffliction(Player* player) : Spell(player)
+{
+    name = "Unstable Affliction";
+    manaCost = 400;
+    castTime = 1.5;
+    isDot = true;
+    school = SpellSchool::SHADOW;
+    type = SpellType::AFFLICTION;
+    setup();
+}
+
+SiphonLife::SiphonLife(Player* player) : Spell(player)
+{
+    name = "Siphon Life";
+    manaCost = 410;
+    isDot = true;
+    school = SpellSchool::SHADOW;
+    type = SpellType::AFFLICTION;
+    setup();
+}
+
+Immolate::Immolate(Player* player) : Spell(player)
+{
+    name = "Immolate";
+    manaCost = 445 * (1 - 0.01 * player->talents->cataclysm);
+    castTime = 2 - (0.1 * player->talents->bane);
+    isDot = true;
+    doesDamage = true;
+    canCrit = true;
+    dmg = 331;
+    coefficient = 0.2;
+    school = SpellSchool::FIRE;
+    type = SpellType::DESTRUCTION;
+    setup();
+}
+
+double Immolate::getModifier()
+{
+    double modifier = Spell::getModifier();
+    if (player->talents->emberstorm > 0)
+    {
+        modifier /= (1 + 0.02 * player->talents->emberstorm);
+    }
+    modifier *= (1 + (0.02 * player->talents->emberstorm + 0.05 * player->talents->improvedImmolate));
+    return modifier;
+}
+
+CurseOfAgony::CurseOfAgony(Player* player) : Spell(player)
+{
+    name = "Curse of Agony";
+    manaCost = 265;
+    isDot = true;
+    school = SpellSchool::SHADOW;
+    type = SpellType::AFFLICTION;
+    setup();
+}
+
+CurseOfTheElements::CurseOfTheElements(Player* player) : Spell(player)
+{
+    name = "Curse of the Elements";
+    manaCost = 260;
+    type = SpellType::AFFLICTION;
+    isAura = true;
+    setup();
+}
+
+CurseOfRecklessness::CurseOfRecklessness(Player* player) : Spell(player)
+{
+    name = "Curse of Recklessness";
+    manaCost = 160;
+    type = SpellType::AFFLICTION;
+    isAura = true;
+    setup();
+}
+
+CurseOfDoom::CurseOfDoom(Player* player) : Spell(player)
+{
+    name = "Curse of Doom";
+    manaCost = 380;
+    cooldown = 60;
+    school = SpellSchool::SHADOW;
+    type = SpellType::AFFLICTION;
+    isDot = true;
+    setup();
+}
+
+Conflagrate::Conflagrate(Player* player) : Spell(player)
+{
+    name = "Conflagrate";
+    manaCost = 305 * (1 - 0.01 * player->talents->cataclysm);
+    cooldown = 10;
+    minDmg = 579;
+    maxDmg = 721;
+    coefficient = 1.5 / 3.5;
+    doesDamage = true;
+    canCrit = true;
+    school = SpellSchool::FIRE;
+    type = SpellType::DESTRUCTION;
+    setup();
+}
+
+void Conflagrate::startCast()
+{
+    /*if (player->auras.count("immolate") > 0 && player->auras->immolate->active)
+    {
+        Spell::startCast();
+        player->auras->immolate->active = false;
+    }*/
+}
+
+DestructionPotion::DestructionPotion(Player* player) : Spell(player)
+{
+    name = "Destruction Potion";
+    cooldown = 120;
+    isItem = true;
+    isAura = true;
+    onGcd = false;
+    setup();
+}
+
+SuperManaPotion::SuperManaPotion(Player* player) : Spell(player)
+{
+    name = "Super Mana Potion";
+    cooldown = 120;
+    isItem = true;
+    minMana = 1800;
+    maxMana = 3000;
+    onGcd = false;
+    setup();
+}
+
+void SuperManaPotion::cast()
+{
+    Spell::cast();
+    // give mana
+}
+
+DemonicRune::DemonicRune(Player* player) : Spell(player)
+{
+    name = "Demonic Rune";
+    cooldown = 120;
+    isItem = true;
+    minMana = 900;
+    maxMana = 1500;
+    onGcd = false;
+    setup();
+}
+
+void DemonicRune::cast()
+{
+    Spell::cast();
+    // give mana
+}
+
+FlameCap::FlameCap(Player* player) : Spell(player)
+{
+    name = "Flame Cap";
+    cooldown = 180;
+    isItem = true;
+    isAura = true;
+    onGcd = false;
+    setup();
+}
+
+BloodFury::BloodFury(Player* player) : Spell(player)
+{
+    name = "Blood Fury";
+    cooldown = 120;
+    isAura = true;
+    onGcd = false;
+    setup();
+}
+
+Bloodlust::Bloodlust(Player* player) : Spell(player)
+{
+    name = "Bloodlust";
+    cooldown = 600;
+    isItem = true;
+    isAura = true;
+    onGcd = false;
+    setup();
+}
+
+DrumsOfBattle::DrumsOfBattle(Player* player) : Spell(player)
+{
+    name = "Drums of Battle";
+    cooldown = 120;
+    isAura = true;
+    onGcd = false;
+    isNonWarlockAbility = true;
+    isItem = true;
+    setup();
+}
+
+bool DrumsOfBattle::ready()
+{
+    return cooldownRemaining <= 0;
+}
+
+DrumsOfWar::DrumsOfWar(Player* player) : Spell(player)
+{
+    name = "Drums of War";
+    cooldown = 120;
+    isAura = true;
+    onGcd = false;
+    isNonWarlockAbility = true;
+    isItem = true;
+    setup();
+}
+
+bool DrumsOfWar::ready()
+{
+    return cooldownRemaining <= 0;
+}
+
+DrumsOfRestoration::DrumsOfRestoration(Player* player) : Spell(player)
+{
+    name = "Drums of Restoration";
+    cooldown = 120;
+    isAura = true;
+    onGcd = false;
+    isNonWarlockAbility = true;
+    isItem = true;
+    setup();
+}
+
+bool DrumsOfRestoration::ready()
+{
+    return cooldownRemaining <= 0;
+}
+
+TimbalsFocusingCrystal::TimbalsFocusingCrystal(Player* player) : Spell(player)
+{
+    name = "Timbal's Focusing Crystal";
+    cooldown = 15;
+    onGcd = false;
+    procChance = 10;
+    minDmg = 285;
+    maxDmg = 475;
+    doesDamage = true;
+    coefficient = 0;
+    school = SpellSchool::SHADOW;
+    canCrit = true;
+    setup();
+}
+
+MarkOfDefiance::MarkOfDefiance(Player* player) : Spell(player)
+{
+    name = "Mark of Defiance";
+    cooldown = 17;
+    procChance = 15;
+    onGcd = false;
+    minMana = 128;
+    maxMana = 172;
+    setup();
+}
+
+void MarkOfDefiance::cast()
+{
+    if (cooldownRemaining <= 0)
+    {
+        // give mana
+    }
+}
+
+TheLightningCapacitor::TheLightningCapacitor(Player* player) : Spell(player)
+{
+    name = "The Lightning Capacitor";
+    cooldown = 2.5;
+    onGcd = false;
+    minDmg = 694;
+    maxDmg = 806;
+    doesDamage = true;
+    coefficient = 0;
+    canCrit = true;
+    setup();
+}
+
+void TheLightningCapacitor::startCast()
+{
+    if (cooldownRemaining <= 0)
+    {
+        // todo
+    }
+}
+
+BladeOfWizardry::BladeOfWizardry(Player* player) : Spell(player)
+{
+    name = "Blade of Wizardry";
+    cooldown = 50;
+    onGcd = false;
+    isItem = true;
+    isProc = true;
+    isAura = true;
+    setup();
+}
+
+ShatteredSunPendantOfAcumen::ShatteredSunPendantOfAcumen(Player* player) : Spell(player)
+{
+    name = "Shattered Sun Pendant of Acumen";
+    cooldown = 45;
+    procChance = 15;
+    onGcd = false;
+    isItem = true;
+    //todo
+    setup();
+}
+
+RobeOfTheElderScribes::RobeOfTheElderScribes(Player* player) : Spell(player)
+{
+    name = "Robe of the Elder Scribes";
+    cooldown = 50;
+    procChance = 20;
+    onGcd = false;
+    isItem = true;
+    isProc = true;
+    isAura = true;
+    setup();
+}
+
+QuagmirransEye::QuagmirransEye(Player* player) : Spell(player)
+{
+    name = "Quagmirran's Eye";
+    cooldown = 45;
+    procChance = 10;
+    onGcd = false;
+    isItem = true;
+    isAura = true;
+    setup();
+}
+
+ShiffarsNexusHorn::ShiffarsNexusHorn(Player* player) : Spell(player)
+{
+    name = "Shiffar's Nexus-Horn";
+    cooldown = 45;
+    procChance = 20;
+    onGcd = false;
+    isItem = true;
+    isAura = true;
+    setup();
+}
+
+SextantOfUnstableCurrents::SextantOfUnstableCurrents(Player* player) : Spell(player)
+{
+    name = "Sextant of Unstable Currents";
+    cooldown = 45;
+    procChance = 20;
+    onGcd = false;
+    isItem = true;
+    isAura = true;
+    setup();
+}
+
+BandOfTheEternalSage::BandOfTheEternalSage(Player* player) : Spell(player)
+{
+    name = "Band of the Eternal Sage";
+    cooldown = 60;
+    procChance = 10;
+    onGcd = false;
+    isItem = true;
+    isAura = true;
+    setup();
+}
+
+MysticalSkyfireDiamond::MysticalSkyfireDiamond(Player* player) : Spell(player)
+{
+    name = "Mystical Skyfire Diamond";
+    cooldown = 35;
+    procChance = 15;
+    onGcd = false;
+    isProc = true;
+    isItem = true;
+    isAura = true;
+    setup();
+}
+
+InsightfulEarthstormDiamond::InsightfulEarthstormDiamond(Player* player) : Spell(player)
+{
+    name = "Insightful Earthstorm Diamond";
+    cooldown = 15;
+    procChance = 5;
+    onGcd = false;
+    isProc = true;
+    isItem = true;
+    manaGain = 300;
+    setup();
+}
+
+void InsightfulEarthstormDiamond::cast()
+{
+    Spell::cast();
+    //todo
+}
+
+AmplifyCurse::AmplifyCurse(Player* player) : Spell(player)
+{
+    name = "Amplify Curse";
+    cooldown = 180;
+    isAura = true;
+    onGcd = false;
+    setup();
+}
+
+PowerInfusion::PowerInfusion(Player* player) : Spell(player)
+{
+    name = "Power Infusion";
+    cooldown = 180;
+    isAura = true;
+    isNonWarlockAbility = true;
+    setup();
+}
+
+Innervate::Innervate(Player* player) : Spell(player)
+{
+    name = "Innervate";
+    cooldown = 360;
+    isAura = true;
+    isNonWarlockAbility = true;
+    setup();
+}
