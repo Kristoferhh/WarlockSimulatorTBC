@@ -1,9 +1,11 @@
 #include "spell.h"
 #include "player.h"
+#include "common.h"
 
 Spell::Spell(Player* player) : player(player)
 {
     modifier = 1;
+    coefficient = 0;
 }
 
 void Spell::reset()
@@ -218,7 +220,7 @@ double Spell::getCritMultiplier(double critMult)
     double critMultiplier = critMult;
 
     // Chaotic Skyfire Diamond
-    if (player->metaGemId == "34220")
+    if (player->metaGemId == 34220)
     {
         critMultiplier *= 1.03;
     }
@@ -602,7 +604,15 @@ SuperManaPotion::SuperManaPotion(Player* player) : Spell(player)
 void SuperManaPotion::cast()
 {
     Spell::cast();
-    // give mana
+    const int currentPlayerMana = player->stats->mana;
+    //todo check for the randomize values option
+    const int manaGain = random(minMana, maxMana);
+    player->totalManaRegenerated += manaGain;
+    player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
+    if (player->shouldWriteToCombatLog())
+    {
+        std::string msg = "Player gains " + std::to_string(round(player->stats->mana - currentPlayerMana)) + " mana from " + name + " (" + std::to_string(round(currentPlayerMana)) + " -> " + std::to_string(round(player->stats->mana)) + ")";
+    }
 }
 
 DemonicRune::DemonicRune(Player* player) : Spell(player)
@@ -619,7 +629,15 @@ DemonicRune::DemonicRune(Player* player) : Spell(player)
 void DemonicRune::cast()
 {
     Spell::cast();
-    // give mana
+    const int currentPlayerMana = player->stats->mana;
+    //todo check for the randomize values option
+    const int manaGain = random(minMana, maxMana);
+    player->totalManaRegenerated += manaGain;
+    player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
+    if (player->shouldWriteToCombatLog())
+    {
+        std::string msg = "Player gains " + std::to_string(round(player->stats->mana - currentPlayerMana)) + " mana from " + name + " (" + std::to_string(round(currentPlayerMana)) + " -> " + std::to_string(round(player->stats->mana)) + ")";
+    }
 }
 
 FlameCap::FlameCap(Player* player) : Spell(player)
@@ -708,7 +726,6 @@ TimbalsFocusingCrystal::TimbalsFocusingCrystal(Player* player) : Spell(player)
     minDmg = 285;
     maxDmg = 475;
     doesDamage = true;
-    coefficient = 0;
     school = SpellSchool::SHADOW;
     canCrit = true;
     setup();
@@ -729,7 +746,15 @@ void MarkOfDefiance::cast()
 {
     if (cooldownRemaining <= 0)
     {
-        // give mana
+        const int currentPlayerMana = player->stats->mana;
+        player->totalManaRegenerated += avgManaValue;
+        player->stats->mana = std::min(static_cast<double>(player->stats->maxMana), currentPlayerMana + avgManaValue);
+        if (player->shouldWriteToCombatLog())
+        {
+            std::string msg = "Player gains " + std::to_string(round(player->stats->mana - currentPlayerMana)) + " mana from " + name + " (" + std::to_string(round(currentPlayerMana)) + " -> " + std::to_string(round(player->stats->mana)) + ")";
+            player->combatLog(msg);
+        }
+        cooldownRemaining = cooldown;
     }
 }
 
@@ -741,7 +766,6 @@ TheLightningCapacitor::TheLightningCapacitor(Player* player) : Spell(player)
     minDmg = 694;
     maxDmg = 806;
     doesDamage = true;
-    coefficient = 0;
     canCrit = true;
     setup();
 }
@@ -750,7 +774,13 @@ void TheLightningCapacitor::startCast()
 {
     if (cooldownRemaining <= 0)
     {
-        // todo
+        /*player->auras->theLightningCapacitor->apply();
+        if (player->auras->theLightningCapacitor->stacks == 3)
+        {
+            cooldownRemaining = cooldown;
+            player->auras->theLightningCapacitor->fade();
+            Spell::startCast();
+        }*/
     }
 }
 
@@ -772,7 +802,17 @@ ShatteredSunPendantOfAcumen::ShatteredSunPendantOfAcumen(Player* player) : Spell
     procChance = 15;
     onGcd = false;
     isItem = true;
-    //todo
+    if (player->shattrathFaction == "Aldor")
+    {
+        this->isProc = true;
+        this->isAura = true;
+    }
+    else if (player->shattrathFaction == "Scryers")
+    {
+        this->doesDamage = true;
+        this->canCrit = true;
+        this->dmg = 333; // confirm
+    }
     setup();
 }
 
@@ -859,7 +899,14 @@ InsightfulEarthstormDiamond::InsightfulEarthstormDiamond(Player* player) : Spell
 void InsightfulEarthstormDiamond::cast()
 {
     Spell::cast();
-    //todo
+    const int currentPlayerMana = player->stats->mana;
+    player->totalManaRegenerated += manaGain;
+    player->stats->mana = std::min(static_cast<double>(player->stats->maxMana), currentPlayerMana + manaGain);
+    if (player->shouldWriteToCombatLog())
+    {
+        std::string msg = "Player gains " + std::to_string(round(player->stats->mana - currentPlayerMana)) + " mana from " + name + " (" + std::to_string(round(currentPlayerMana)) + " -> " + std::to_string(round(player->stats->mana)) + ")";
+        player->combatLog(msg);
+    }
 }
 
 AmplifyCurse::AmplifyCurse(Player* player) : Spell(player)

@@ -1946,7 +1946,7 @@ var tempDouble;
 var tempI64;
 
 var ASM_CONSTS = {
- 3048: function($0, $1, $2, $3) {
+ 3032: function($0, $1, $2, $3) {
   postMessage({
    event: "update",
    data: {
@@ -1957,7 +1957,7 @@ var ASM_CONSTS = {
    }
   });
  },
- 3158: function($0, $1, $2, $3, $4) {
+ 3142: function($0, $1, $2, $3, $4) {
   postMessage({
    event: "end",
    data: {

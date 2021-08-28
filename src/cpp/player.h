@@ -42,7 +42,8 @@ struct Player
   double demonicKnowledgeSpellPower;
   double critMultiplier;
   int enemyLevel;
-  std::string metaGemId;
+  int metaGemId;
+  std::string shattrathFaction;
 
   Player(PlayerSettings* settings);
   void initialize();
