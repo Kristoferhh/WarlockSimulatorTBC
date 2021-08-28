@@ -2,7 +2,7 @@
 #include "spell.h"
 #include "common.h"
 
-Player::Player(PlayerSettings* playerSettings) : auras(playerSettings->auras), talents(playerSettings->talents), sets(playerSettings->sets), stats(playerSettings->stats), itemId(playerSettings->itemId)
+Player::Player(PlayerSettings* playerSettings) : selectedAuras(playerSettings->auras), talents(playerSettings->talents), sets(playerSettings->sets), stats(playerSettings->stats), itemId(playerSettings->itemId)
 {
     stats->maxMana = stats->mana;
     combatLogEntries = {};
@@ -15,6 +15,15 @@ Player::Player(PlayerSettings* playerSettings) : auras(playerSettings->auras), t
     spellDelay = 0.0001;
     critChanceMultiplier = 1000;
     minimumGcdValue = 1.5;
+    critMultiplier = 1.5;
+    enemyLevel = 73; //fix
+
+    // Hit Chance
+    if (sets->manaEtched >= 2) stats->hitRating += 35;
+    stats->extraHitChance = stats->hitRating / hitRatingPerPercent;
+    //if (selectedAuras->totemOfWrath) stats->extraHitChance += (3 * totemOfWrathAmount);
+    if (selectedAuras->inspiringPresence) stats->extraHitChance += 1;
+    stats->hitChance = round(getBaseHitChance(level, enemyLevel));
 }
 
 void Player::initialize()
@@ -86,6 +95,25 @@ bool Player::isHit(SpellType spellType)
     return hit;
 }
 
+// formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/ && https://royalgiraffe.github.io/resist-guide
+double Player::getBaseHitChance(int playerLevel, int enemyLevel)
+{
+    const int levelDifference = enemyLevel - playerLevel;
+    if (levelDifference <= 2)
+    {
+        return std::min(99, 100 - levelDifference - 4);
+    }
+    else if (levelDifference == 3)
+    {
+        return 83;
+    }
+    else if (levelDifference >= 4)
+    {
+        return 83 - 11 * levelDifference;
+    }
+    return 0;
+}
+
 void Player::castLifeTapOrDarkPact()
 {
     if (spells.count("darkPact") == 1 && spells.at("darkPact")->ready())
@@ -110,8 +138,5 @@ bool Player::shouldWriteToCombatLog()
 
 void Player::combatLog(std::string &entry)
 {
-    if (shouldWriteToCombatLog())
-    {
-        combatLogEntries.push_back(entry);
-    }
+    combatLogEntries.push_back(entry);
 }

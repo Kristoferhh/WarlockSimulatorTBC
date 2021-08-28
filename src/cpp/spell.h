@@ -11,8 +11,8 @@ enum SpellType {AFFLICTION, DESTRUCTION};
 struct Spell
 {
   Player* player;
-  int school;
-  int type;
+  SpellSchool school;
+  SpellType type;
   int minDmg;
   int maxDmg;
   int minMana;
@@ -33,6 +33,7 @@ struct Spell
   bool isNonWarlockAbility;
   bool casting;
   bool isItem;
+  bool isAura;
   bool onGcd;
   bool isProc;
   std::string varName; // Same as 'name' except it's written in camelCase
@@ -51,10 +52,12 @@ struct Spell
   virtual void cast();
   double getModifier();
   double getConstantDamage(bool noRng);
-  double getCritMultiplier();
+  double getCritMultiplier(double critMultiplier);
   double predictDamage();
   void damage(bool isCrit);
   void tick(int t);
+  void onCritProcs();
+  void onDamageProcs();
 };
 
 struct LifeTap : public Spell

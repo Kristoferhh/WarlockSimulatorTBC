@@ -57,24 +57,24 @@ void Spell::startCast(double predictedDamage)
     {
         casting = true;
         player->castTimeRemaining = getCastTime();
-        if (!isProc && player->iteration == 2)
+        if (!isProc && player->shouldWriteToCombatLog())
         {
             combatLogMsg.append("Started casting " + name + " - Cast time: " + std::to_string(player->castTimeRemaining - player->spellDelay)) + " (" + std::to_string(round((player->stats->hasteRating / player->hasteRatingPerPercent + player->stats->hastePercent) * 10000) / 10000) + "% haste at a base cast speed of " + std::to_string(castTime) + ").";
         }
     }
     else
     {
-        if (!isProc && player->iteration == 2)
+        if (!isProc && player->shouldWriteToCombatLog())
         {
             combatLogMsg.append("Cast " + name);
         }
         cast();
     }
-    if (onGcd && !isNonWarlockAbility && player->iteration == 2)
+    if (onGcd && !isNonWarlockAbility && player->shouldWriteToCombatLog())
     {
         combatLogMsg.append(" - Global cooldown: " + std::to_string(player->gcdRemaining));
     }
-    if (predictedDamage > 0 && player->iteration == 2)
+    if (predictedDamage > 0 && player->shouldWriteToCombatLog())
     {
         combatLogMsg.append(" - Estimated damage / Cast time: " + std::to_string(round(predictedDamage)));
     }
@@ -83,7 +83,7 @@ void Spell::startCast(double predictedDamage)
 
 void Spell::tick(int t)
 {
-    if (cooldownRemaining > 0 && cooldownRemaining - t <= 0 && player->iteration == 2)
+    if (cooldownRemaining > 0 && cooldownRemaining - t <= 0 && player->shouldWriteToCombatLog())
     {
         std::string combatLogEntry = name + " is off cooldown";
         player->combatLog(combatLogEntry);
@@ -98,23 +98,73 @@ void Spell::tick(int t)
 
 void Spell::cast()
 {
+    const int currentMana = player->stats->mana;
     if (manaCost > 0)
     {
         player->stats->mana -= manaCost * player->stats->manaCostModifier;
+        player->fiveSecondRuleTimer = 5;
     }
 
     cooldownRemaining = cooldown;
+    casting = false;
+
+    if (castTime > 0 && player->shouldWriteToCombatLog())
+    {
+        std::string msg = "Finished casting " + name + " - Mana: " + std::to_string(round(currentMana)) + " -> " + std::to_string(round(player->stats->mana)) + " - Mana Cost: " + std::to_string(round(manaCost)) + " - Mana Cost Modifier: " + std::to_string(round(player->stats->manaCostModifier * 100)) + "%";
+        player->combatLog(msg);
+    }
+
+    bool isCrit = false;
+    if (canCrit)
+    {
+        isCrit = player->isCrit(type, bonusCrit);
+        if (isCrit)
+        {
+            //todo
+        }
+    }
+
+    if (((!isItem && !isNonWarlockAbility && varName != "amplifyCurse") || doesDamage) && !player->isHit(type))
+    {
+        if (player->shouldWriteToCombatLog())
+        {
+            std::string msg = name + " *resist*";
+            player->combatLog(msg);
+        }
+        //todo
+        return;
+    }
+
+    if (isDot || isAura)
+    {
+        //player->auras.at(varName)->apply();
+    }
 
     if (doesDamage)
     {
-        damage(false);
+        damage(isCrit);
     }
+}
+
+double Spell::getModifier()
+{
+    if (school == SpellSchool::SHADOW)
+    {
+        return player->stats->shadowModifier * modifier;
+    }
+    else if (school == SpellSchool::FIRE)
+    {
+        return player->stats->fireModifier * modifier;
+    }
+    return modifier;
 }
 
 void Spell::damage(bool isCrit)
 {
     int dmg = this->dmg;
     int spellPower = player->getSpellPower();
+    double critMultiplier = player->critMultiplier;
+
     if (school == SpellSchool::SHADOW)
     {
         spellPower += player->stats->shadowPower;
@@ -134,7 +184,64 @@ void Spell::damage(bool isCrit)
         dmg *= player->stats->fireModifier;
     }
 
+    if (isCrit)
+    {
+        critMultiplier = getCritMultiplier(critMultiplier);
+        dmg *= critMultiplier;
+        onCritProcs();
+    }
+    else
+    {
+        //decrement isb
+    }
+
+    onDamageProcs();
     player->iterationDamage += dmg;
+
+    //T5 4pc
+    if (player->sets->t5 >= 4)
+    {
+        /*if (varName == "shadowBolt" && player->auras.count("corruption") && player->auras->corruption->active)
+        {
+            player->auras->corruption->t5BonusModifier *= 1.1;
+        }
+        else if (varName == "incinerate" && player->auras.count("immolate") && player->auras->immolate->active)
+        {
+
+            player->auras->immolate->t5BonusModifier *= 1.1;
+        }*/
+    }
+}
+
+double Spell::getCritMultiplier(double critMult)
+{
+    double critMultiplier = critMult;
+
+    // Chaotic Skyfire Diamond
+    if (player->metaGemId == "34220")
+    {
+        critMultiplier *= 1.03;
+    }
+    // Ruin
+    if (type == SpellType::DESTRUCTION && player->talents->ruin == 1)
+    {
+        // Ruin doubles the *bonus* of your crits, not the damage of the crit itself
+        // So if your crit damage % is e.g. 154.5% it would become 209% because the 54.5% is being doubled
+        critMultiplier -= 1;
+        critMultiplier *= 2;
+        critMultiplier += 1;
+    }
+    return critMultiplier;
+}
+
+void Spell::onCritProcs()
+{
+
+}
+
+void Spell::onDamageProcs()
+{
+
 }
 
 ShadowBolt::ShadowBolt(Player* player) : Spell(player)
@@ -201,7 +308,7 @@ void LifeTap::cast()
     const int manaGain = this->manaGain();
     player->totalManaRegenerated += manaGain;
     
-    if (player->iteration == 2 && player->stats->mana + manaGain > player->stats->maxMana)
+    if (player->shouldWriteToCombatLog() && player->stats->mana + manaGain > player->stats->maxMana)
     {
         std::string combatLogEntry = "Life Tap used at too high mana (mana wasted)";
         player->combatLog(combatLogEntry);

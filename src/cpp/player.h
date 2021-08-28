@@ -18,7 +18,7 @@ struct Player
   const double healthPerStamina = 10;
   const double critPerInt = 1 / 81.95; // Crit % per point of intellect
   const double baseCritChancePercent = 1.701;
-  Auras* auras;
+  Auras* selectedAuras;
   Talents* talents;
   Sets* sets;
   CharacterStats* stats;
@@ -40,6 +40,9 @@ struct Player
   double fiveSecondRuleTimer;
   int critChanceMultiplier;
   double demonicKnowledgeSpellPower;
+  double critMultiplier;
+  int enemyLevel;
+  std::string metaGemId;
 
   Player(PlayerSettings* settings);
   void initialize();
@@ -51,6 +54,7 @@ struct Player
   double getCritChance(SpellType spellType);
   double getHitChance(SpellType spellType);
   double getPartialResistMultiplier(int resist);
+  double getBaseHitChance(int playerLevel, int enemyLevel);
   void castLifeTapOrDarkPact();
   bool shouldWriteToCombatLog();
   void combatLog(std::string& entry);
