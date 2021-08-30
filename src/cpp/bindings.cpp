@@ -1,6 +1,20 @@
 #include "bindings.h"
 #include "simulation.h"
 #include "emscripten.h"
+#include <emscripten/bind.h>
+#include "constant.h"
+
+/*void combatLogUpdate(char combatLogEntry)
+{
+    EM_ASM({
+        postMessage({
+            event: "combatLogUpdate",
+            data: {
+                combatLogEntry: UTF8ToString($0)
+            }
+        })
+    }, combatLogEntry);
+}*/
 
 void simulationUpdate(int iteration, int iterationAmount, double medianDps, int itemId)
 {
@@ -33,11 +47,13 @@ void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::
     }, medianDps, minDps, maxDps, duration.count(), itemId);
 }
 
+EMSCRIPTEN_KEEPALIVE
 void startSimulation(Simulation* sim)
 {
     sim->start();
 }
 
+EMSCRIPTEN_KEEPALIVE
 Auras* allocAuras(bool felArmor, bool blessingOfKings, bool blessingOfWisdom, bool judgementOfWisdom, bool manaSpringTotem, bool wrathOfAirTotem, bool totemOfWrath, bool markOfTheWild, bool arcaneIntellect
     , bool prayerOfFortitude, bool prayerOfSpirit, bool bloodPact, bool inspiringPresence, bool moonkinAura, bool powerInfusion, bool powerOfTheGuardianWarlock, bool powerOfTheGuardianMage, bool eyeOfTheNight
     , bool chainOfTheTwilightOwl, bool jadePendantOfBlasting, bool idolOfTheRavenGoddess, bool drumsOfBattle, bool drumsOfWar, bool drumsOfRestoration, bool bloodlust, bool ferociousInspiration
@@ -53,6 +69,7 @@ Auras* allocAuras(bool felArmor, bool blessingOfKings, bool blessingOfWisdom, bo
     , blessedWizardOil, demonicRune, flameCap, rumseyRumBlackLabel, kreegsStoutBeatdown, blackenedBasilisk, skullfishSoup, veryBerryCream, midsummerSausage, bloodthistle);
 }
 
+EMSCRIPTEN_KEEPALIVE
 Talents* allocTalents(int suppression, int improvedCorruption, int improvedLifeTap, int improvedCurseOfAgony, int amplifyCurse, int nightfall, int empoweredCorruption, int siphonLife, int shadowMastery, int contagion
     , int darkPact, int unstableAffliction, int improvedImp, int demonicEmbrace, int felIntellect, int felStamina, int improvedSuccubus, int demonicAegis, int unholyPower, int demonicSacrifice, int manaFeed
     , int masterDemonologist, int soulLink, int demonicKnowledge, int demonicTactics, int felguard, int improvedShadowBolt, int cataclysm, int bane, int improvedFirebolt, int improvedLashOfPain, int devastation
@@ -63,11 +80,13 @@ Talents* allocTalents(int suppression, int improvedCorruption, int improvedLifeT
     , felguard, improvedShadowBolt, cataclysm, bane, improvedFirebolt, improvedLashOfPain, devastation, shadowburn, improvedSearingPain, improvedImmolate, ruin, emberstorm, backlash, shadowAndFlame, shadowfury);
 }
 
+EMSCRIPTEN_KEEPALIVE
 Sets* allocSets(int plagueheart, int spellfire, int frozenShadoweave, int spellstrike, int oblivion, int manaEtched, int twinStars, int t4, int t5, int t6)
 {
     return new Sets(plagueheart, spellfire, frozenShadoweave, spellstrike, oblivion, manaEtched, twinStars, t4, t5, t6);
 }
 
+EMSCRIPTEN_KEEPALIVE
 CharacterStats* allocStats(int health, int mana, double stamina, double intellect, double spirit, double spellPower, int shadowPower, int firePower, int hasteRating, int hitRating, int critRating, double critPercent,
     int mp5, int spellPen, double fireModifier, double frostModifier, double hastePercent, double damageModifier, double shadowModifier, double staminaModifier, double intellectModifier,
     double spiritModifier, double manaCostModifier, double arcaneModifier, double natureModifier, int natureResist, int arcaneResist, int fireResist, int frostResist, int shadowResist)
@@ -76,62 +95,119 @@ CharacterStats* allocStats(int health, int mana, double stamina, double intellec
     , damageModifier, shadowModifier, staminaModifier, intellectModifier, spiritModifier, manaCostModifier, arcaneModifier, natureModifier, natureResist, arcaneResist, fireResist, frostResist, shadowResist);
 }
 
-PlayerSettings* allocPlayerSettings(Auras* auras, Talents* talents, Sets* sets, CharacterStats* stats, int itemId)
+EMSCRIPTEN_KEEPALIVE
+PlayerSettings* allocPlayerSettings(Auras* auras, Talents* talents, Sets* sets, CharacterStats* stats, int itemId, int metaGemId, bool isAldor, int enemyLevel, int enemyShadowResist, int enemyFireResist
+        , int mageAtieshAmount, int totemOfWrathAmount, bool sacrificingPet, bool petIsImp, bool petIsSuccubus, bool petIsFelguard, int ferociousInspirationAmount, int improvedCurseOfTheElements
+        , bool usingCustomIsbUptime, int customIsbUptimeValue, int improvedDivineSpirit, int improvedImp, int shadowPriestDps, int warlockAtieshAmount, int improvedExposeArmor, bool isSingleTarget, int enemyAmount
+        , bool isOrc, int powerInfusionAmount, bool bloodlustAmount, bool innervateAmount, int enemyArmor, int exposeWeaknessUptime, bool improvedFaerieFire, bool infinitePlayerMana, bool infinitePetMana
+        , bool usingLashOfPainOnCooldown, bool petIsAggressive, bool prepopBlackBook, bool randomizeValues, bool userChoosingRotation, bool exaltedWithShattrathFaction, int survivalHunterAgility)
 {
-    return new PlayerSettings(auras, talents, sets, stats, itemId);
+    return new PlayerSettings(auras, talents, sets, stats, itemId, metaGemId, isAldor, enemyLevel, enemyShadowResist, enemyFireResist, mageAtieshAmount, totemOfWrathAmount, sacrificingPet, petIsImp, petIsSuccubus
+        , petIsFelguard, ferociousInspirationAmount, improvedCurseOfTheElements, usingCustomIsbUptime, customIsbUptimeValue, improvedDivineSpirit, improvedImp, shadowPriestDps, warlockAtieshAmount
+        , improvedExposeArmor, isSingleTarget, enemyAmount, isOrc, powerInfusionAmount, bloodlustAmount, innervateAmount, enemyArmor, exposeWeaknessUptime, improvedFaerieFire, infinitePlayerMana, infinitePetMana
+        , usingLashOfPainOnCooldown, petIsAggressive, prepopBlackBook, randomizeValues, userChoosingRotation, exaltedWithShattrathFaction, survivalHunterAgility);
 }
 
+EMSCRIPTEN_KEEPALIVE
 Player* allocPlayer(PlayerSettings* settings)
 {
     return new Player(settings);
 }
 
+EMSCRIPTEN_KEEPALIVE
 SimulationSettings* allocSimSettings(int iterations, int minTime, int maxTime)
 {
     return new SimulationSettings(iterations, minTime, maxTime);
 }
 
+EMSCRIPTEN_KEEPALIVE
 Simulation* allocSim(Player* player, SimulationSettings* simulationSettings)
 {
     return new Simulation(player, simulationSettings);
 }
 
+EMSCRIPTEN_KEEPALIVE
 void freeAuras(Auras* auras)
 {
     delete auras;
 }
 
+EMSCRIPTEN_KEEPALIVE
 void freeTalents(Talents* talents)
 {
     delete talents;
 }
 
+EMSCRIPTEN_KEEPALIVE
 void freeSets(Sets* sets)
 {
     delete sets;
 }
 
+EMSCRIPTEN_KEEPALIVE
 void freeStats(CharacterStats* stats)
 {
     delete stats;
 }
 
+EMSCRIPTEN_KEEPALIVE
 void freePlayerSettings(PlayerSettings* settings)
 {
     delete settings;
 }
 
+EMSCRIPTEN_KEEPALIVE
 void freePlayer(Player* player)
 {
     delete player;
 }
 
+EMSCRIPTEN_KEEPALIVE
 void freeSimSettings(SimulationSettings* settings)
 {
     delete settings;
 }
 
+EMSCRIPTEN_KEEPALIVE
 void freeSim(Simulation* sim)
 {
     delete sim;
 }
+
+// I gave up on trying to get embind to work, but it would be better to handle it this way than using a bunch of booleans in the PlayerSettings struct
+/*EMSCRIPTEN_BINDINGS(module)
+{
+    emscripten::enum_<Constant>("Constant")
+        .value("ALDOR", ALDOR)
+        .value("Scryers", SCRYER)
+        .value("yes", YES)
+        .value("no", NO)
+        .value("onCooldown", ON_COOLDOWN)
+        .value("singleTarget", SINGLE_TARGET)
+        .value("aoe", AOE)
+        .value("noISB", NO_ISB)
+        .value("human", HUMAN)
+        .value("gnome", GNOME)
+        .value("orc", ORC)
+        .value("undead", UNDEAD)
+        .value("bloodElf", BLOOD_ELF)
+        .value("simChooses", SIM_CHOOSES)
+        .value("userChooses", USER_CHOOSES)
+        ;
+
+    emscripten::value_object<AdditionalPlayerSettings>("AdditionalPlayerSettings")
+        .field("shattrathFaction", &AdditionalPlayerSettings::shattrathFaction)
+        .field("race", &AdditionalPlayerSettings::race)
+        .field("sacrificePet", &AdditionalPlayerSettings::sacrificePet)
+        .field("improvedFaerieFire", &AdditionalPlayerSettings::improvedFaerieFire)
+        .field("lashOfPainUsage", &AdditionalPlayerSettings::lashOfPainUsage)
+        .field("shattrathFactionReputation", &AdditionalPlayerSettings::exaltedWithShattrathFaction)
+        .field("customIsbUptime", &AdditionalPlayerSettings::usingCustomIsbUptime)
+        .field("randomizeValues", &AdditionalPlayerSettings::randomizeValues)
+        .field("infinitePlayerMana", &AdditionalPlayerSettings::infinitePlayerMana)
+        .field("infinitePetMana", &AdditionalPlayerSettings::infinitePetMana)
+        .field("prepopBlackBook", &AdditionalPlayerSettings::prepopBlackBook)
+        .field("rotationOption", &AdditionalPlayerSettings::rotationOption)
+        .field("fightType", &AdditionalPlayerSettings::fightType)
+        ;
+}*/

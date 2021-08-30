@@ -166,6 +166,7 @@ void Spell::damage(bool isCrit)
     int dmg = this->dmg;
     int spellPower = player->getSpellPower();
     double critMultiplier = player->critMultiplier;
+    double modifier = getModifier();
 
     if (school == SpellSchool::SHADOW)
     {
@@ -175,16 +176,17 @@ void Spell::damage(bool isCrit)
     {
         spellPower += player->stats->firePower;
     }
+    
+    // Add damage from spell power
     dmg += spellPower * coefficient;
+
+    // Improved Shadow Bolt
+    if (school == SpellSchool::SHADOW && player->auras.count("improvedShadowBolt") > 0 && player->auras.at("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
+    {
+        modifier *= player->auras.at("improvedShadowBolt")->modifier;
+    }
+
     dmg *= modifier;
-    if (school == SpellSchool::SHADOW)
-    {
-        dmg *= player->stats->shadowModifier;
-    }
-    else if (school == SpellSchool::FIRE)
-    {
-        dmg *= player->stats->fireModifier;
-    }
 
     if (isCrit)
     {
@@ -192,9 +194,9 @@ void Spell::damage(bool isCrit)
         dmg *= critMultiplier;
         onCritProcs();
     }
-    else
+    else if (school == SpellSchool::SHADOW && !isDot && player->auras.count("improvedShadowBolt") > 0 && player->auras.at("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
     {
-        //decrement isb
+        player->auras.at("improvedShadowBolt")->decrementStacks();
     }
 
     onDamageProcs();
@@ -220,7 +222,7 @@ double Spell::getCritMultiplier(double critMult)
     double critMultiplier = critMult;
 
     // Chaotic Skyfire Diamond
-    if (player->metaGemId == 34220)
+    if (player->settings->metaGemId == 34220)
     {
         critMultiplier *= 1.03;
     }
@@ -238,7 +240,11 @@ double Spell::getCritMultiplier(double critMult)
 
 void Spell::onCritProcs()
 {
-
+    // fix varName
+    if (varName == "Shadow Bolt" && !player->settings->usingCustomIsbUptime && player->talents->improvedShadowBolt > 0)
+    {
+        player->auras.at("improvedShadowBolt")->apply();
+    }
 }
 
 void Spell::onDamageProcs()
@@ -802,12 +808,12 @@ ShatteredSunPendantOfAcumen::ShatteredSunPendantOfAcumen(Player* player) : Spell
     procChance = 15;
     onGcd = false;
     isItem = true;
-    if (player->shattrathFaction == "Aldor")
+    if (player->settings->isAldor)
     {
         this->isProc = true;
         this->isAura = true;
     }
-    else if (player->shattrathFaction == "Scryers")
+    else
     {
         this->doesDamage = true;
         this->canCrit = true;

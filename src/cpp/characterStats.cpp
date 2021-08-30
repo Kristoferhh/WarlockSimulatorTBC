@@ -1,9 +1,9 @@
 #include "characterStats.h"
 
 CharacterStats::CharacterStats(int health, int mana, double stamina, double intellect, double spirit, double spellPower, int shadowPower, int firePower, int hasteRating, int hitRating, int critRating,
-    double critPercent,
-    int mp5, int spellPen, double fireModifier, double frostModifier, double hastePercent, double damageModifier, double shadowModifier, double staminaModifier, double intellectModifier,
-    double spiritModifier, double manaCostModifier, double arcaneModifier, double natureModifier, int natureResist, int arcaneResist, int fireResist, int frostResist, int shadowResist)
+    double critChance, int mp5, int spellPen, double fireModifier, double frostModifier, double hastePercent, double damageModifier, double shadowModifier, double staminaModifier,
+    double intellectModifier, double spiritModifier, double manaCostModifier, double arcaneModifier, double natureModifier, int natureResist, int arcaneResist, int fireResist, int frostResist,
+    int shadowResist)
     : health(health)
     , mana(mana)
     , stamina(stamina)
@@ -15,6 +15,7 @@ CharacterStats::CharacterStats(int health, int mana, double stamina, double inte
     , hasteRating(hasteRating)
     , hitRating(hitRating)
     , critRating(critRating)
+    , critChance(critChance)
     , mp5(mp5)
     , spellPen(spellPen)
     , fireModifier(fireModifier)

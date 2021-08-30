@@ -16,7 +16,7 @@ double Simulation::passTime()
 
     // Find the lowest time until the next action needs to be taken
     // Spells
-    for (std::map<std::string, Spell*>::iterator it = player->spells.begin(); it != player->spells.end(); ++it)
+    for (std::map<std::string, Spell*>::iterator it = player->spells.begin(); it != player->spells.end(); it++)
     {
         if (it->second->cooldownRemaining > 0 && it->second->cooldownRemaining < time)
         {
@@ -25,7 +25,14 @@ double Simulation::passTime()
     }
 
     // Auras
-    
+    for (std::map<std::string, Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
+    {
+        if (it->second->active && it->second->durationRemaining < time)
+        {
+            time = it->second->durationRemaining;
+        }
+    }
+
     // Pass time
     // This needs to be the first modified value since the time in combat needs to be updated before spells start dealing damage/auras expiring etc. for the combat logging.
     player->fightTime += time;
@@ -34,7 +41,13 @@ double Simulation::passTime()
     // Auras need to tick before Spells because otherwise you'll, for example, finish casting Corruption and then immediately afterwards, in the same millisecond, immediately tick down the aura
     // This was also causing buffs like e.g. the t4 4pc buffs to expire sooner than they should.
     // Auras
-
+    for (std::map<std::string, Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
+    {
+        if (it->second->active)
+        {
+            it->second->tick(time);
+        }
+    }
 
     // Spells
     for (std::map<std::string, Spell*>::iterator it = player->spells.begin(); it != player->spells.end(); ++it)
@@ -106,21 +119,35 @@ void Simulation::start()
         //todo remove hard-coding
         if (player->iteration % 100 == 0)
         {
-            simulationUpdate(player->iteration, this->settings->iterations, median(dpsVector), player->itemId);
+            simulationUpdate(player->iteration, this->settings->iterations, median(dpsVector), player->settings->itemId);
+        }
+
+        // End all active auras
+        for (std::map<std::string, Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
+        {
+            if (it->second->active)
+            {
+                it->second->fade(true);
+            }
         }
     }
 
     auto finishTime = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsedTime = finishTime - startTime;
-    simulationEnd(median(dpsVector), minDps, maxDps, elapsedTime, player->itemId);
+    // Send the contents of the combat log to the web worker
+    /*for (const auto& value: player->combatLogEntries)
+    {
+        combatLogUpdate(value.c_str());
+    }*/
+    simulationEnd(median(dpsVector), minDps, maxDps, elapsedTime, player->settings->itemId);
 
     // Free spells and auras
     for(std::map<std::string, Spell*>::iterator it = player->spells.begin(); it != player->spells.end(); it++)
     {
         delete it->second;
     }
-    /*for(std::map<std::string, Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
+    for(std::map<std::string, Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
     {
         delete it->second;
-    }*/
+    }
 }

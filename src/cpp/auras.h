@@ -35,6 +35,14 @@ struct Auras
     bool misery;
     bool judgementOfTheCrusader;
     bool vampiricTouch;
+    bool faerieFire;
+    bool sunderArmor;
+    bool exposeArmor;
+    bool curseOfRecklessness;
+    bool bloodFrenzy;
+    bool exposeWeakness;
+    bool annihilator;
+    bool improvedHuntersMark;
     bool flaskOfPureDeath;
     bool elixirOfMajorShadowPower;
     bool elixirOfMajorFirepower;

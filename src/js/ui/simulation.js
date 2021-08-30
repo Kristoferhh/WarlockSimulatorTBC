@@ -31,6 +31,7 @@ function simDPS (items) {
   const multiSimInfo = []
   const simulations = []
   let simIndex = 0
+  let combatLog = []
 
   if (items.length > 1) {
     $('.item-dps').text('')
@@ -40,6 +41,10 @@ function simDPS (items) {
     multiSimInfo.push([items[i], 0])
 
     simulations.push(new SimWorker(
+      // Combat Log Update callback
+      (combatLogUpdate) => {
+        combatLog.push(combatLogUpdate.combatLogEntry)
+      },
       // Simulation End callback
       (simulationEnd) => {
         let minDps = simulationEnd.minDps
@@ -59,10 +64,10 @@ function simDPS (items) {
           $('#sim-dps').text('Simulate')
 
           // Populate the combat log
-          /*$('#combat-log p').remove()
-          for (const entry in simulationEnd.combatlog) {
-            $('#combat-log').append('<p>' + simulationEnd.combatlog[entry] + '</p>')
-          }*/
+          $('#combat-log p').remove()
+          for (const entry in combatLog) {
+            $('#combat-log').append('<p>' + combatLog[entry] + '</p>')
+          }
         } else if (simulationsFinished == itemAmount) {
           $('#sim-all-items').text('Simulate All Items')
         }

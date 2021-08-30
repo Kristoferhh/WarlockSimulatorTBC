@@ -8,10 +8,11 @@
 #include "talents.h"
 #include "sets.h"
 #include "spell.h"
+#include "aura.h"
 
 struct Player
 {
-  const double hitRatingPerPercent = 12.6;
+  const double hitRatingPerPercent = 12.62;
   const double critRatingPerPercent = 22.08;
   const double hasteRatingPerPercent = 15.77;
   const double manaPerInt = 15;
@@ -22,7 +23,9 @@ struct Player
   Talents* talents;
   Sets* sets;
   CharacterStats* stats;
+  PlayerSettings* settings;
   std::map<std::string, Spell*> spells;
+  std::map<std::string, Aura*> auras;
   std::vector<std::string> combatLogEntries;
   double castTimeRemaining;
   double totalManaRegenerated;
@@ -34,16 +37,12 @@ struct Player
   int iterationDamage;
   double fightTime;
   int iteration;
-  int itemId;
   double minimumGcdValue;
   double mp5Timer;
   double fiveSecondRuleTimer;
   int critChanceMultiplier;
   double demonicKnowledgeSpellPower;
   double critMultiplier;
-  int enemyLevel;
-  int metaGemId;
-  std::string shattrathFaction;
 
   Player(PlayerSettings* settings);
   void initialize();

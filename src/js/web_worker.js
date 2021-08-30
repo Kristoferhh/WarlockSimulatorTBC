@@ -1,17 +1,5 @@
 importScripts(
-  './classes/player.js',
-  './classes/pet.js',
-  './player/stats.js',
-  './classes/simulation.js',
-  './classes/spell.js',
-  './classes/petSpell.js',
-  './classes/trinket.js',
-  './functions.js',
-  './classes/aura.js',
-  './classes/petAura.js',
-  './classes/damageOverTime.js',
   './items/items.js',
-  './items/gems.js',
   './WarlockSim.js'
 )
 
@@ -25,10 +13,13 @@ onmessage = function (e) {
     let t = e.data.player.talents
     let s = e.data.player.sets
     let b = e.data.player.stats
+    let c = e.data.player.simSettings
 
     let customItemSlot = e.data.itemSlot
     let customItemSubSlot = e.data.itemSubSlot
     let customItemId = e.data.itemId
+
+    let metaGemIds = []
     // If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
     if (customItemSlot && customItemId && customItemId !== e.data.player.items[customItemSlot + customItemSubSlot]) {
       // Loop through all items in the custom item slot
@@ -62,8 +53,8 @@ onmessage = function (e) {
                       socketBonusActive = false
                     }
                     if (gemColor == 'meta') {
-                      if (this.metaGemIds.includes(gemId)) {
-                        this.metaGemIds.splice(this.metaGemIds.indexOf(gemId), 1)
+                      if (metaGemIds.includes(gemId)) {
+                        metaGemIds.splice(metaGemIds.indexOf(gemId), 1)
                       }
                     }
                     // Loop through the gem's stats and remove them from the player
@@ -115,7 +106,7 @@ onmessage = function (e) {
                 const gemId = e.data.player.gems[customItemSlot][customItemId][socket][1]
                 // Check for meta gem
                 if (customItemSlot == 'head' && gems.meta[gemId]) {
-                  this.metaGemIds.push(gemId)
+                  metaGemIds.push(gemId)
                 }
                 // Find the gem's color since it might not match the socket color
                 for (const gemColor in gems) {
@@ -151,22 +142,34 @@ onmessage = function (e) {
       }
     }
 
+    console.log(e.data.player.simSettings)
     // Mamma mia somebody clean up this mess please
+    // Auras
     let auras = module._allocAuras(a.felArmor, a.blessingOfKings, a.blessingOfWisdom, a.judgementOfWisdom, a.manaSpringTotem, a.wrathOfAirTotem, a.totemOfWrath, a.markOfTheWild, a.arcaneIntellect
       , a.prayerOfFortitude, a.prayerOfSpirit, a.bloodPact, a.inspiringPresence, a.moonkinAura, a.powerInfusion, a.powerOfTheGuardianWarlock, a.powerOfTheGuardianMage, a.eyeOfTheNight, a.chainOfTheTwilightOwl
       , a.jadePendantOfBlasting, a.idolOfTheRavenGoddess, a.drumsOfBattle, a.drumsOfWar, a.drumsOfRestoration, a.bloodlust, a.ferociousInspiration, a.innervate, a.curseOfTheElements, a.shadowWeaving
       , a.improvedScorch, a.misery, a.judgementOfTheCrusader, a.vampiricTouch, a.flaskOfPureDeath, a.elixirOfMajorShadowPower, a.elixirOfMajorFirepower, a.greaterArcaneElixir, a.adeptsElixir
       , a.elixirOfDraenicWisdom, a.elixirOfMajorMageblood, a.superManaPotion, a.destructionPotion, a.brilliantWizardOil, a.superiorWizardOil, a.blessedWizardOil, a.demonicRune, a.flameCap, a.rumseyRumBlackLabel
       , a.kreegsStoutBeatdown, a.blackenedBasilisk, a.skullfishSoup, a.veryBerryCream, a.midsummerSausage, a.bloodthistle)
+    // Talents
     let talents = module._allocTalents(t.suppression, t.improvedCorruption, t.improvedLifeTap, t.improvedCurseOfAgony, t.amplifyCurse, t.nightfall, t.empoweredCorruption, t.siphonLife, t.shadowMastery
       , t.contagion, t.darkPact, t.unstableAffliction, t.improvedImp, t.demonicEmbrace, t.felIntellect, t.felStamina, t.improvedSuccubus, t.demonicAegis, t.unholyPower, t.demonicSacrifice, t.manaFeed
       , t.masterDemonologist, t.soulLink, t.demonicKnowledge, t.demonicTactics, t.felguard, t.improvedShadowBolt, t.cataclysm, t.bane, t.improvedFirebolt, t.improvedLashOfPain, t.devastation, t.shadowburn
       , t.improvedSearingPain, t.improvedImmolate, t.ruin, t.emberstorm, t.backlash, t.shadowAndFlame, t.shadowfury)
+    // Sets
     let sets = module._allocSets(s['529'], s['552'], s['553'], s['559'], s['644'], s['658'], s['667'], s['645'], s['646'], s['670'])
+    // Stats
     let stats = module._allocStats(b.health, b.mana, b.stamina, b.intellect, b.spirit, b.spellPower, b.shadowPower, b.firePower, b.hasteRating, b.hitRating, b.critRating, b.critPercent, b.mp5, b.spellPen
       , b.fireModifier, b.frostModifier, b.hastePercent, b.damageModifier, b.shadowModifier, b.staminaModifier, b.intellectModifier, b.spiritModifier, b.manaCostModifier, b.arcaneModifier, b.natureModifier
       , b.natureResist, b.arcaneResist, b.fireResist, b.frostResist, b.shadowResist)
-    let playerSettings = module._allocPlayerSettings(auras, talents, sets, stats, e.data.itemId)
+    // Player settings
+    let playerSettings = module._allocPlayerSettings(auras, talents, sets, stats, e.data.itemId, (metaGemIds[0] || -1), c.shattrathFaction === "Aldor", parseInt(c['target-level'])
+      , parseInt(c['target-shadow-resistance']), parseInt(c['target-fire-resistance']), parseInt(c.mageAtieshAmount), parseInt(c.totemOfWrathAmount), c.sacrificePet === "yes", c.petChoice === "0"
+      , c.petChoice === "2", c.petChoice === "4", parseInt(c.ferociousInspirationAmount), parseInt(c.improvedCurseOfTheElements), c.customIsbUptime === "yes", parseInt(c.customIsbUptimeValue)
+      , parseInt(c.improvedDivineSpirit), parseInt(c.improvedImp), parseInt(c.shadowPriestDps), parseInt(c.warlockAtieshAmount), parseInt(c.improvedExposeArmor), c.fightType === "singleTarget"
+      , parseInt(c.enemyAmount), c.race === "orc", parseInt(c.powerInfusionAmount), parseInt(c.bloodlustAmount), parseInt(c.innervateAmount), parseInt(c.enemyArmor), parseInt(c.exposeWeaknessUptime)
+      , c.improvedFaerieFire === "yes", c.infinitePlayerMana === "yes", c.infinitePetMana === "yes", c.lashOfPainUsage === "onCooldown", c.petMode === "1", c.prepopBlackBook === "yes"
+      , c.randomizeValues === "yes", c.rotationOption === "userChooses", c.shattrathFactionReputation === "yes", parseInt(c.survivalHunterAgility))
     let player = module._allocPlayer(playerSettings)
     let simSettings = module._allocSimSettings(e.data.simulation.iterations, e.data.simulation.minTime, e.data.simulation.maxTime)
     let sim = module._allocSim(player, simSettings)

@@ -166,7 +166,7 @@ class Simulation {
     // This was also causing buffs like the t4 4pc buffs to expire sooner than they should.
 
     // Auras
-    if (this.player.auras.powerInfusion) this.player.auras.powerInfusion.tick(time)
+    if (this.player.auras.powerInfusion && this.player.auras.powerInfusion.active) this.player.auras.powerInfusion.tick(time)
     if (this.player.auras.improvedShadowBolt && this.player.auras.improvedShadowBolt.active) this.player.auras.improvedShadowBolt.tick(time)
     if (this.player.auras.corruption && this.player.auras.corruption.active) this.player.auras.corruption.tick(time)
     if (this.player.auras.unstableAffliction && this.player.auras.unstableAffliction.active) this.player.auras.unstableAffliction.tick(time)
