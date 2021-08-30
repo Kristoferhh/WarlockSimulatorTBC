@@ -16,7 +16,7 @@ void Spell::reset()
 
 void Spell::setup()
 {
-    varName = name; //todo implement camelCase()
+    varName = camelCase(name);
     if (minDmg > 0 && maxDmg > 0)
     {
       dmg = (minDmg + maxDmg) / 2;
@@ -29,7 +29,7 @@ void Spell::setup()
 
 double Spell::getCastTime()
 {
-    return castTime;
+    return castTime + player->spellDelay;
 }
 
 bool Spell::canCast()
@@ -80,7 +80,11 @@ void Spell::startCast(double predictedDamage)
     {
         combatLogMsg.append(" - Estimated damage / Cast time: " + std::to_string(round(predictedDamage)));
     }
-    player->combatLog(combatLogMsg);
+
+    if (player->shouldWriteToCombatLog())
+    {
+        player->combatLog(combatLogMsg);
+    }
 }
 
 void Spell::tick(int t)
@@ -150,23 +154,32 @@ void Spell::cast()
 
 double Spell::getModifier()
 {
+    double dmgModifier = modifier;
     if (school == SpellSchool::SHADOW)
     {
-        return player->stats->shadowModifier * modifier;
+        dmgModifier *= player->stats->shadowModifier;
+        
+        // Improved Shadow Bolt
+        if (player->auras.count("improvedShadowBolt") > 0 && player->auras.at("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
+        {
+            dmgModifier *= player->auras.at("improvedShadowBolt")->modifier;
+        }
     }
     else if (school == SpellSchool::FIRE)
     {
-        return player->stats->fireModifier * modifier;
+        dmgModifier *= player->stats->fireModifier;
     }
-    return modifier;
+
+    return dmgModifier;
 }
 
 void Spell::damage(bool isCrit)
 {
-    int dmg = this->dmg;
+    int totalDamage = dmg;
     int spellPower = player->getSpellPower();
     double critMultiplier = player->critMultiplier;
-    double modifier = getModifier();
+    double dmgModifier = getModifier();
+    double partialResistMultiplier = player->getPartialResistMultiplier(school);
 
     if (school == SpellSchool::SHADOW)
     {
@@ -178,20 +191,15 @@ void Spell::damage(bool isCrit)
     }
     
     // Add damage from spell power
-    dmg += spellPower * coefficient;
+    totalDamage += spellPower * coefficient;
 
-    // Improved Shadow Bolt
-    if (school == SpellSchool::SHADOW && player->auras.count("improvedShadowBolt") > 0 && player->auras.at("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
-    {
-        modifier *= player->auras.at("improvedShadowBolt")->modifier;
-    }
-
-    dmg *= modifier;
+    totalDamage *= dmgModifier;
+    totalDamage *= partialResistMultiplier;
 
     if (isCrit)
     {
         critMultiplier = getCritMultiplier(critMultiplier);
-        dmg *= critMultiplier;
+        totalDamage *= critMultiplier;
         onCritProcs();
     }
     else if (school == SpellSchool::SHADOW && !isDot && player->auras.count("improvedShadowBolt") > 0 && player->auras.at("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
@@ -200,7 +208,29 @@ void Spell::damage(bool isCrit)
     }
 
     onDamageProcs();
-    player->iterationDamage += dmg;
+    player->iterationDamage += totalDamage;
+
+    // Combat Log
+    if (player->shouldWriteToCombatLog())
+    {
+        std::string msg = name + " ";
+        if (isCrit)
+        {
+            msg += "*";
+        }
+        msg += std::to_string(round(totalDamage));
+        if (isCrit)
+        {
+            msg += "*";
+        }
+        msg += " (" + std::to_string(dmg) + " Base Damage - " + std::to_string(round(coefficient * 1000) / 1000) + " Coefficient - " + std::to_string(round(spellPower)) + " Spell Power - ";
+        if (isCrit)
+        {
+            msg += std::to_string(round(critMultiplier * 100) / 100) + "% Crit Multiplier - ";
+        }
+        msg += std::to_string(round(dmgModifier * 10000) / 100) + "% Damage Modifier - " + std::to_string(round(partialResistMultiplier * 1000) / 10) + "% Partial Resist Multiplier)";
+        player->combatLog(msg);
+    }
 
     //T5 4pc
     if (player->sets->t5 >= 4)
@@ -240,8 +270,7 @@ double Spell::getCritMultiplier(double critMult)
 
 void Spell::onCritProcs()
 {
-    // fix varName
-    if (varName == "Shadow Bolt" && !player->settings->usingCustomIsbUptime && player->talents->improvedShadowBolt > 0)
+    if (varName == "shadowBolt" && !player->settings->usingCustomIsbUptime && player->talents->improvedShadowBolt > 0)
     {
         player->auras.at("improvedShadowBolt")->apply();
     }

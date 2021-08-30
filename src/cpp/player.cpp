@@ -19,12 +19,14 @@ Player::Player(PlayerSettings* playerSettings)
     critChanceMultiplier = 1000;
     minimumGcdValue = 1;
     critMultiplier = 1.5;
+    // I don't know if this formula only works for bosses or not, so for the moment I'm only using it for lvl >=73 targets.
+    const double enemyBaseResistance = settings->enemyLevel >= 73 ? (6 * level * 5) / 75.0 : 0;
+    settings->enemyShadowResist = std::max(static_cast<double>(settings->enemyShadowResist), enemyBaseResistance);
+    settings->enemyFireResist = std::max(static_cast<double>(settings->enemyFireResist), enemyBaseResistance);
 
-    stats->health = (stats->health + (stats->stamina * stats->staminaModifier) * healthPerStamina) * (1 + (0.01 * talents->felStamina));
-    stats->maxMana = (stats->mana + (stats->intellect * stats->intellectModifier) * manaPerInt) * (1 + (0.01 * talents->felIntellect));
+    stats->health = (stats->health + (stats->stamina * stats->staminaModifier) * healthPerStamina) * (1 + (0.01 * static_cast<double>(talents->felStamina)));
+    stats->maxMana = (stats->mana + (stats->intellect * stats->intellectModifier) * manaPerInt) * (1 + (0.01 * static_cast<double>(talents->felIntellect)));
     stats->shadowModifier *= (1 + (0.02 * talents->shadowMastery));
-
-    if (sets->twinStars == 2) stats->spellPower += 15;
 
     // Crit chance
     if (selectedAuras->powerOfTheGuardianMage)
@@ -129,13 +131,13 @@ Player::Player(PlayerSettings* playerSettings)
     // If using a custom isb uptime % then just add to the shadow modifier % (this assumes 5/5 ISB giving 20% shadow damage)
     if (settings->usingCustomIsbUptime)
     {
-        stats->shadowModifier *= (1 + 0.02 * (settings->customIsbUptimeValue / 100));
+        stats->shadowModifier *= (1 + 0.02 * (static_cast<double>(settings->customIsbUptimeValue) / 100.0));
     }
     // Add spell power from Improved Divine Spirit
     stats->spiritModifier *= (1 - (0.01 * talents->demonicEmbrace));
     if (selectedAuras->prayerOfSpirit && settings->improvedDivineSpirit > 0)
     {
-        stats->spellPower += (stats->spirit * stats->spiritModifier * (0 + (settings->improvedDivineSpirit / 20)));
+        stats->spellPower += (stats->spirit * stats->spiritModifier * (0 + (static_cast<double>(settings->improvedDivineSpirit) / 20.0)));
     }
     // Add extra stamina from Blood Pact from Improved Imp
     if (selectedAuras->bloodPact)
@@ -157,6 +159,10 @@ Player::Player(PlayerSettings* playerSettings)
     if (selectedAuras->powerOfTheGuardianWarlock)
     {
         stats->spellPower += 33 * settings->warlockAtieshAmount;
+    }
+    if (sets->twinStars == 2)
+    {
+        stats->spellPower += 15;
     }
 
     // Enemy Armor Reduction
@@ -265,7 +271,10 @@ void Player::initialize()
     spells.insert(std::make_pair("shadowBolt", new ShadowBolt(this)));
 
     // Auras
-    auras.insert(std::make_pair("improvedShadowBolt", new ImprovedShadowBolt(this)));
+    if (talents->improvedShadowBolt > 0)
+    {
+        auras.insert(std::make_pair("improvedShadowBolt", new ImprovedShadowBolt(this)));
+    }
 }
 
 void Player::reset()
@@ -362,9 +371,18 @@ void Player::castLifeTapOrDarkPact()
     }
 }
 
-double Player::getPartialResistMultiplier(int resist)
+double Player::getPartialResistMultiplier(SpellSchool school)
 {
-    return 1 - ((75 * resist) / (level * 5)) / 100;
+    if (school == SpellSchool::SHADOW)
+    {
+        return 1 - ((75 * settings->enemyShadowResist) / (level * 5)) / 100;
+    }
+    else if (school == SpellSchool::FIRE)
+    {
+        return 1 - ((75 * settings->enemyFireResist) / (level * 5)) / 100;
+    }
+
+    return 1;
 }
 
 bool Player::shouldWriteToCombatLog()
@@ -374,5 +392,6 @@ bool Player::shouldWriteToCombatLog()
 
 void Player::combatLog(std::string &entry)
 {
-    combatLogEntries.push_back(entry);
+    std::cout << fightTime << " " << entry << std::endl;
+    combatLogEntries.push_back(std::to_string(fightTime) + " " + entry);
 }

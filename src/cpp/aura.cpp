@@ -1,17 +1,19 @@
 #include "aura.h"
 #include "player.h"
 #include <iostream>
+#include "common.h"
 
 Aura::Aura(Player* player) : player(player)
 {
     durationRemaining = 0;
     hasDuration = true;
     groupWide = false;
+    modifier = 1;
 }
 
 void Aura::setup()
 {
-    varName = name;
+    varName = camelCase(name);
     //breakdown map
 }
 
@@ -117,7 +119,10 @@ void Aura::fade(bool endOfIteration)
         active = false;
         if (!endOfIteration)
         {
-            //player->pet->calculateStatsFromPlayer();
+            if (recalculatePetStats)
+            {
+                //player->pet->calculateStatsFromPlayer();
+            }
             if (player->shouldWriteToCombatLog())
             {
                 std::string msg = name + " faded";
@@ -137,7 +142,7 @@ ImprovedShadowBolt::ImprovedShadowBolt(Player* player) : Aura(player)
     duration = 12;
     stacks = 0;
     maxStacks = 0;
-    modifier = 1 + player->talents->improvedShadowBolt * 0.04;
+    Aura::modifier = 1 + player->talents->improvedShadowBolt * 0.04;
     uptimeSoFar = 0;
     setup();
 }

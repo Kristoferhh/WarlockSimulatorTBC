@@ -53,7 +53,7 @@ struct Player
   bool isHit(SpellType spellType);
   double getCritChance(SpellType spellType);
   double getHitChance(SpellType spellType);
-  double getPartialResistMultiplier(int resist);
+  double getPartialResistMultiplier(SpellSchool school);
   double getBaseHitChance(int playerLevel, int enemyLevel);
   void castLifeTapOrDarkPact();
   bool shouldWriteToCombatLog();
