@@ -1,4 +1,5 @@
 importScripts(
+  './items/gems.js',
   './items/items.js',
   './WarlockSim.js'
 )

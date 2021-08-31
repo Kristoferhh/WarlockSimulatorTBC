@@ -274,6 +274,7 @@ void Player::initialize()
     if (talents->improvedShadowBolt > 0)
     {
         auras.insert(std::make_pair("improvedShadowBolt", new ImprovedShadowBolt(this)));
+        auras.insert(std::make_pair("spellstrike", new SpellstrikeAura(this)));
     }
 }
 
@@ -387,7 +388,7 @@ double Player::getPartialResistMultiplier(SpellSchool school)
 
 bool Player::shouldWriteToCombatLog()
 {
-    return iteration == 2;
+    return iteration == 10;
 }
 
 void Player::combatLog(std::string &entry)

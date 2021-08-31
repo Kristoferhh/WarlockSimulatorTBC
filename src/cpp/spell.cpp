@@ -150,6 +150,12 @@ void Spell::cast()
     {
         damage(isCrit);
     }
+
+    // If it's an item such as mana potion, demonic rune, destruction potion, or if it's a proc with a hidden cooldown like Blade of Wizardry or Robe of the Elder Scribes then don't check for on-hit procs
+    if (!isItem && !isProc && !isNonWarlockAbility && varName != "amplifyCurse")
+    {
+        onHitProcs();
+    }
 }
 
 double Spell::getModifier()
@@ -279,6 +285,15 @@ void Spell::onCritProcs()
 void Spell::onDamageProcs()
 {
 
+}
+
+void Spell::onHitProcs()
+{
+    // Spellstrike
+    if (player->sets->spellstrike == 2 && random(1, 100) <= player->auras.at("spellstrike")->procChance)
+    {
+        player->auras.at("spellstrike")->apply();
+    }
 }
 
 ShadowBolt::ShadowBolt(Player* player) : Spell(player)

@@ -60,6 +60,7 @@ struct Spell
     void tick(int t);
     void onCritProcs();
     void onDamageProcs();
+    void onHitProcs();
 };
 
 struct LifeTap : public Spell
