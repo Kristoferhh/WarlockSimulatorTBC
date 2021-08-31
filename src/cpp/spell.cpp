@@ -182,23 +182,12 @@ double Spell::getModifier()
 void Spell::damage(bool isCrit)
 {
     int totalDamage = dmg;
-    int spellPower = player->getSpellPower();
+    int spellPower = player->getSpellPower(school);
     double critMultiplier = player->critMultiplier;
     double dmgModifier = getModifier();
     double partialResistMultiplier = player->getPartialResistMultiplier(school);
-
-    if (school == SpellSchool::SHADOW)
-    {
-        spellPower += player->stats->shadowPower;
-    }
-    else if (school == SpellSchool::FIRE)
-    {
-        spellPower += player->stats->firePower;
-    }
     
-    // Add damage from spell power
     totalDamage += spellPower * coefficient;
-
     totalDamage *= dmgModifier;
     totalDamage *= partialResistMultiplier;
 

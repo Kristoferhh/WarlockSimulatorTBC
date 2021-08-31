@@ -4,9 +4,7 @@ struct Player; // dirty fix for circular reference when we were including "playe
 
 #include <string>
 #include <cmath>
-
-enum SpellSchool {SHADOW, FIRE};
-enum SpellType {AFFLICTION, DESTRUCTION};
+#include "enums.h"
 
 struct Spell
 {

@@ -48,7 +48,7 @@ struct Player
   void initialize();
   void reset();
   double getGcdValue(std::string varName);
-  double getSpellPower();
+  double getSpellPower(SpellSchool school = SpellSchool::NONE);
   bool isCrit(SpellType spellType, double extraCrit = 0);
   bool isHit(SpellType spellType);
   double getCritChance(SpellType spellType);

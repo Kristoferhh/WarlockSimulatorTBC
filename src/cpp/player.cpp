@@ -296,12 +296,20 @@ double Player::getGcdValue(std::string varName)
     return 0;
 }
 
-double Player::getSpellPower()
+double Player::getSpellPower(SpellSchool school)
 {
     double spellPower = stats->spellPower + demonicKnowledgeSpellPower;
     if (sets->spellfire == 3)
     {
         spellPower += stats->intellect * stats->intellectModifier * 0.07;
+    }
+    if (school == SpellSchool::SHADOW)
+    {
+        spellPower += stats->shadowPower;
+    }
+    else if (school == SpellSchool::FIRE)
+    {
+        spellPower += stats->firePower;
     }
     return spellPower;
 }
