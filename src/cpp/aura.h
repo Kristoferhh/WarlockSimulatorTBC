@@ -2,18 +2,7 @@
 
 struct Player;
 #include <iostream>
-
-struct AuraStats
-{
-    int spellPower;
-    int hasteRating;
-    int shadowPower;
-    int firePower;
-    int hastePercent;
-    double manaCostModifier;
-
-    AuraStats(int spellPower, int shadowPower, int firePower, int hasteRating, int hastePercent, double manaCostModifier);
-};
+#include "auraStats.h"
 
 struct Aura
 {
@@ -63,9 +52,9 @@ struct CurseOfRecklessnessAura : public Aura
     CurseOfRecklessnessAura(Player* player);
 };
 
-struct ShadowTrance : public Aura
+struct ShadowTranceAura : public Aura
 {
-    ShadowTrance(Player* player);
+    ShadowTranceAura(Player* player);
 };
 
 struct Flameshadow : public Aura
@@ -118,6 +107,11 @@ struct DestructionPotionAura : public Aura
     DestructionPotionAura(Player* player);
     void apply();
     void fade(bool endOfIteration = false);
+};
+
+struct FlameCapAura : public Aura
+{
+    FlameCapAura(Player* player);
 };
 
 struct BloodFuryAura : public Aura

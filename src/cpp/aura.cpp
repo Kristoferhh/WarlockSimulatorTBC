@@ -3,10 +3,6 @@
 #include <iostream>
 #include "common.h"
 
-AuraStats::AuraStats(int spellPower, int shadowPower, int firePower, int hasteRating, int hastePercent, double manaCostModifier)
-    : spellPower(spellPower), shadowPower(shadowPower), firePower(firePower), hasteRating(hasteRating), hastePercent(hastePercent), manaCostModifier(manaCostModifier)
-    {}
-
 Aura::Aura(Player* player) : player(player)
 {
     durationRemaining = 0;
@@ -190,7 +186,7 @@ CurseOfRecklessnessAura::CurseOfRecklessnessAura(Player* player) : Aura(player)
     setup();
 }
 
-ShadowTrance::ShadowTrance(Player* player) : Aura(player)
+ShadowTranceAura::ShadowTranceAura(Player* player) : Aura(player)
 {
     name = "Shadow Trance (Nightfall)";
     duration = 10;
@@ -322,6 +318,14 @@ void DestructionPotionAura::fade(bool endOfIteration)
         }*/
     }
     Aura::fade(endOfIteration);
+}
+
+FlameCapAura::FlameCapAura(Player* player) : Aura(player)
+{
+    name = "Flame Cap";
+    duration = 60;
+    Aura::stats = new AuraStats(0, 0, 80, 0, 0, 0);
+    setup();
 }
 
 BloodFuryAura::BloodFuryAura(Player* player) : Aura(player)

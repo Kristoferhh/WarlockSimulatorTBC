@@ -1,4 +1,4 @@
 #pragma once
 
-enum SpellSchool {NONE, SHADOW, FIRE};
-enum SpellType {NONE, AFFLICTION, DESTRUCTION};
+enum SpellSchool {NO_SCHOOL, SHADOW, FIRE};
+enum SpellType {NO_TYPE, AFFLICTION, DESTRUCTION};

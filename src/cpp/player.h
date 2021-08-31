@@ -3,12 +3,14 @@
 #include <map>
 #include <vector>
 #include <string>
-#include "playerSettings.h"
 #include "auras.h"
 #include "talents.h"
 #include "sets.h"
 #include "spell.h"
 #include "aura.h"
+#include "items.h"
+#include "trinket.h"
+#include "playerSettings.h"
 
 struct Player
 {
@@ -23,10 +25,13 @@ struct Player
   Talents* talents;
   Sets* sets;
   CharacterStats* stats;
+  Items* items;
   PlayerSettings* settings;
   std::map<std::string, Spell*> spells;
+  std::map<std::string, std::vector<Spell*>> spellVectors;
   std::map<std::string, Aura*> auras;
   std::vector<std::string> combatLogEntries;
+  std::vector<Trinket*> trinkets;
   double castTimeRemaining;
   double totalManaRegenerated;
   double gcdRemaining;
@@ -48,13 +53,15 @@ struct Player
   void initialize();
   void reset();
   double getGcdValue(std::string varName);
-  double getSpellPower(SpellSchool school = SpellSchool::NONE);
+  double getSpellPower(SpellSchool school = SpellSchool::NO_SCHOOL);
   bool isCrit(SpellType spellType, double extraCrit = 0);
   bool isHit(SpellType spellType);
   double getCritChance(SpellType spellType);
   double getHitChance(SpellType spellType);
   double getPartialResistMultiplier(SpellSchool school);
   double getBaseHitChance(int playerLevel, int enemyLevel);
+  bool areAnyCooldownsReady();
+  void useCooldowns();
   void castLifeTapOrDarkPact();
   bool shouldWriteToCombatLog();
   void combatLog(std::string& entry);

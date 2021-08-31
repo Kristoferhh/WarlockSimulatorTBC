@@ -2,7 +2,7 @@
 #include "common.h"
 #include "player.h"
 
-DamageOverTime::DamageOverTime(Player* player) : player(player)
+DamageOverTime::DamageOverTime(Player* player) : Aura(player)
 {
     duration = 0;
     tickTimerTotal = 3;

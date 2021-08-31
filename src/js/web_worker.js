@@ -15,6 +15,9 @@ onmessage = function (e) {
     let s = e.data.player.sets
     let b = e.data.player.stats
     let c = e.data.player.simSettings
+    let d = e.data.player.rotation
+    let i = e.data.player.items
+    console.log(i)
 
     let customItemSlot = e.data.itemSlot
     let customItemSubSlot = e.data.itemSubSlot
@@ -145,6 +148,8 @@ onmessage = function (e) {
 
     console.log(e.data.player.simSettings)
     // Mamma mia somebody clean up this mess please
+    // Items
+    let items = module._allocItems(i.head, i.neck, i.shoulders, i.back, i.chest, i.bracers, i.gloves, i.belt, i.legs, i.boots, i.ring1, i.ring2, i.trinket1, i.trinket2, i.mainhand, i.offhand, i.twohand, i.wand)
     // Auras
     let auras = module._allocAuras(a.felArmor, a.blessingOfKings, a.blessingOfWisdom, a.judgementOfWisdom, a.manaSpringTotem, a.wrathOfAirTotem, a.totemOfWrath, a.markOfTheWild, a.arcaneIntellect
       , a.prayerOfFortitude, a.prayerOfSpirit, a.bloodPact, a.inspiringPresence, a.moonkinAura, a.powerInfusion, a.powerOfTheGuardianWarlock, a.powerOfTheGuardianMage, a.eyeOfTheNight, a.chainOfTheTwilightOwl
@@ -156,7 +161,7 @@ onmessage = function (e) {
     let talents = module._allocTalents(t.suppression, t.improvedCorruption, t.improvedLifeTap, t.improvedCurseOfAgony, t.amplifyCurse, t.nightfall, t.empoweredCorruption, t.siphonLife, t.shadowMastery
       , t.contagion, t.darkPact, t.unstableAffliction, t.improvedImp, t.demonicEmbrace, t.felIntellect, t.felStamina, t.improvedSuccubus, t.demonicAegis, t.unholyPower, t.demonicSacrifice, t.manaFeed
       , t.masterDemonologist, t.soulLink, t.demonicKnowledge, t.demonicTactics, t.felguard, t.improvedShadowBolt, t.cataclysm, t.bane, t.improvedFirebolt, t.improvedLashOfPain, t.devastation, t.shadowburn
-      , t.improvedSearingPain, t.improvedImmolate, t.ruin, t.emberstorm, t.backlash, t.shadowAndFlame, t.shadowfury)
+      , t.improvedSearingPain, t.improvedImmolate, t.ruin, t.emberstorm, t.backlash, t.conflagrate, t.shadowAndFlame, t.shadowfury)
     // Sets
     let sets = module._allocSets(s['529'], s['552'], s['553'], s['559'], s['644'], s['658'], s['667'], s['645'], s['646'], s['670'])
     // Stats
@@ -164,17 +169,20 @@ onmessage = function (e) {
       , b.fireModifier, b.frostModifier, b.hastePercent, b.damageModifier, b.shadowModifier, b.staminaModifier, b.intellectModifier, b.spiritModifier, b.manaCostModifier, b.arcaneModifier, b.natureModifier
       , b.natureResist, b.arcaneResist, b.fireResist, b.frostResist, b.shadowResist)
     // Player settings
-    let playerSettings = module._allocPlayerSettings(auras, talents, sets, stats, e.data.itemId, (metaGemIds[0] || -1), c.shattrathFaction === "Aldor", parseInt(c['target-level'])
+    let playerSettings = module._allocPlayerSettings(auras, talents, sets, stats, items, e.data.itemId, (metaGemIds[0] || -1), c.shattrathFaction === "Aldor", parseInt(c['target-level'])
       , parseInt(c['target-shadow-resistance']), parseInt(c['target-fire-resistance']), parseInt(c.mageAtieshAmount), parseInt(c.totemOfWrathAmount), c.sacrificePet === "yes", c.petChoice === "0"
       , c.petChoice === "2", c.petChoice === "4", parseInt(c.ferociousInspirationAmount), parseInt(c.improvedCurseOfTheElements), c.customIsbUptime === "yes", parseInt(c.customIsbUptimeValue)
       , parseInt(c.improvedDivineSpirit), parseInt(c.improvedImp), parseInt(c.shadowPriestDps), parseInt(c.warlockAtieshAmount), parseInt(c.improvedExposeArmor), c.fightType === "singleTarget"
       , parseInt(c.enemyAmount), c.race === "orc", parseInt(c.powerInfusionAmount), parseInt(c.bloodlustAmount), parseInt(c.innervateAmount), parseInt(c.enemyArmor), parseInt(c.exposeWeaknessUptime)
       , c.improvedFaerieFire === "yes", c.infinitePlayerMana === "yes", c.infinitePetMana === "yes", c.lashOfPainUsage === "onCooldown", c.petMode === "1", c.prepopBlackBook === "yes"
-      , c.randomizeValues === "yes", c.rotationOption === "userChooses", c.shattrathFactionReputation === "yes", parseInt(c.survivalHunterAgility))
+      , c.randomizeValues === "yes", c.rotationOption === "simChooses", c.shattrathFactionReputation === "yes", parseInt(c.survivalHunterAgility), d.dot.immolate, d.dot.corruption
+      , d.dot.siphonLife, d.dot.unstableAffliction, d.filler.searingPain, d.filler.shadowBolt, d.filler.incinerate, d.curse.curseOfRecklessness, d.curse.curseOfTheElements, d.curse.curseOfAgony
+      , d.curse.curseOfDoom, d.finisher.deathCoil, d.finisher.shadowburn, d.finisher.conflagrate, d.other.shadowfury, d.other.amplifyCurse, d.other.darkPact)
     let player = module._allocPlayer(playerSettings)
     let simSettings = module._allocSimSettings(e.data.simulation.iterations, e.data.simulation.minTime, e.data.simulation.maxTime)
     let sim = module._allocSim(player, simSettings)
     module._startSimulation(sim)
+    module._freeItems(items)
     module._freeAuras(auras)
     module._freeTalents(talents)
     module._freeSets(sets)

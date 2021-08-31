@@ -81,14 +81,37 @@ void Simulation::start()
 
         while (player->fightTime < fightLength)
         {
+            // Use Drums
+            if (player->auras.count("drumsOfBattle") > 0 && !player->auras.at("drumsOfBattle")->active && player->spells.at("drumsOfBattle")->ready())
+            {
+                player->spells.at("drumsOfBattle")->startCast();
+            }
+            else if (player->auras.count("drumsOfWar") > 0 && !player->auras.at("drumsOfWar")->active && player->spells.at("drumsOfWar")->ready())
+            {
+                player->spells.at("drumsOfWar")->startCast();
+            }
+            else if (player->auras.count("drumsOfRestoration") > 0 && !player->auras.at("drumsOfRestoration")->active && player->spells.at("drumsOfRestoration")->ready())
+            {
+                player->spells.at("drumsOfRestoration")->startCast();
+            }
+
             // Player
             if (player->castTimeRemaining <= 0)
             {
                 // Spells not on the GCD
+                if (player->spells.count("demonicRune") > 0 && (player->stats->maxMana - player->stats->mana) > player->spells.at("demonicRune")->avgManaValue && player->spells.at("demonicRune")->ready())
+                {
+                    player->spells.at("demonicRune")->startCast();
+                }
+                if (player->spells.count("superManaPotion") > 0 && (player->stats->maxMana - player->stats->mana) > player->spells.at("superManaPotion")->avgManaValue && player->spells.at("superManaPotion")->ready())
+                {
+                    player->spells.at("superManaPotion")->startCast();
+                }
 
                 // Spells on the GCD
                 if (player->gcdRemaining <= 0)
                 {
+                    player->useCooldowns();
                     if (player->spells.at("shadowBolt")->ready())
                     {
                         player->spells.at("shadowBolt")->startCast();
