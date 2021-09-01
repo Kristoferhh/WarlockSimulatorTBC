@@ -9,6 +9,7 @@ Aura::Aura(Player* player) : player(player)
     hasDuration = true;
     groupWide = false;
     modifier = 1;
+    stacks = 0;
     tickTimerRemaining = 0;
 }
 
@@ -49,6 +50,61 @@ void Aura::apply()
                 player->combatLog(msg);
             }
             player->stats->spellPower += stats->spellPower;
+            recalculatePetStats = true;
+        }
+        if (stats->shadowPower > 0)
+        {
+            if (player->shouldWriteToCombatLog())
+            {
+                int currentShadowPower = player->stats->shadowPower;
+                std::string msg = "Shadow Power + " + std::to_string(stats->shadowPower) + " (" + std::to_string(currentShadowPower) + " -> " + std::to_string(currentShadowPower + stats->shadowPower);
+                player->combatLog(msg);
+            }
+            player->stats->shadowPower += stats->shadowPower;
+            recalculatePetStats = true;
+        }
+        if (stats->firePower > 0)
+        {
+            if (player->shouldWriteToCombatLog())
+            {
+                int currentFirePower = player->stats->firePower;
+                std::string msg = "Fire Power + " + std::to_string(stats->firePower) + " (" + std::to_string(currentFirePower) + " -> " + std::to_string(currentFirePower + stats->firePower);
+                player->combatLog(msg);
+            }
+            player->stats->firePower += stats->firePower;
+            recalculatePetStats = true;
+        }
+        if (stats->hasteRating > 0)
+        {
+            if (player->shouldWriteToCombatLog())
+            {
+                int currenthasteRating = player->stats->hasteRating;
+                std::string msg = "Haste Rating + " + std::to_string(stats->hasteRating) + " (" + std::to_string(currenthasteRating) + " -> " + std::to_string(currenthasteRating + stats->hasteRating);
+                player->combatLog(msg);
+            }
+            player->stats->hasteRating += stats->hasteRating;
+            recalculatePetStats = true;
+        }
+        if (stats->hastePercent > 0)
+        {
+            if (player->shouldWriteToCombatLog())
+            {
+                int currenthastePercent = player->stats->hastePercent;
+                std::string msg = "Haste % + " + std::to_string(stats->hastePercent) + " (" + std::to_string(currenthastePercent) + " -> " + std::to_string(currenthastePercent * (1.0 + stats->hastePercent / 100));
+                player->combatLog(msg);
+            }
+            player->stats->hastePercent += stats->hastePercent;
+            recalculatePetStats = true;
+        }
+        if (stats->manaCostModifier > 0)
+        {
+            if (player->shouldWriteToCombatLog())
+            {
+                int currentmanaCostModifier = player->stats->manaCostModifier;
+                std::string msg = "Mana Cost Modifier + " + std::to_string(stats->manaCostModifier) + " (" + std::to_string(currentmanaCostModifier) + " -> " + std::to_string(currentmanaCostModifier * stats->manaCostModifier);
+                player->combatLog(msg);
+            }
+            player->stats->manaCostModifier *= stats->manaCostModifier;
             recalculatePetStats = true;
         }
         /*this.player.auraBreakdown[this.varName].appliedAt = this.player.fightTime
@@ -112,6 +168,61 @@ void Aura::fade(bool endOfIteration)
             player->stats->spellPower -= stats->spellPower;
             recalculatePetStats = true;
             //todo remove stats from pet
+        }
+        if (stats->shadowPower > 0)
+        {
+            if (player->shouldWriteToCombatLog())
+            {
+                int currentShadowPower = player->stats->shadowPower;
+                std::string msg = "Shadow Power - " + std::to_string(stats->shadowPower) + " (" + std::to_string(currentShadowPower) + " -> " + std::to_string(currentShadowPower - stats->shadowPower);
+                player->combatLog(msg);
+            }
+            player->stats->shadowPower -= stats->shadowPower;
+            recalculatePetStats = true;
+        }
+        if (stats->firePower > 0)
+        {
+            if (player->shouldWriteToCombatLog())
+            {
+                int currentFirePower = player->stats->firePower;
+                std::string msg = "Fire Power - " + std::to_string(stats->firePower) + " (" + std::to_string(currentFirePower) + " -> " + std::to_string(currentFirePower - stats->firePower);
+                player->combatLog(msg);
+            }
+            player->stats->firePower -= stats->firePower;
+            recalculatePetStats = true;
+        }
+        if (stats->hasteRating > 0)
+        {
+            if (player->shouldWriteToCombatLog())
+            {
+                int currenthasteRating = player->stats->hasteRating;
+                std::string msg = "Haste Rating - " + std::to_string(stats->hasteRating) + " (" + std::to_string(currenthasteRating) + " -> " + std::to_string(currenthasteRating - stats->hasteRating);
+                player->combatLog(msg);
+            }
+            player->stats->hasteRating -= stats->hasteRating;
+            recalculatePetStats = true;
+        }
+        if (stats->hastePercent > 0)
+        {
+            if (player->shouldWriteToCombatLog())
+            {
+                int currenthastePercent = player->stats->hastePercent;
+                std::string msg = "Haste % - " + std::to_string(stats->hastePercent) + " (" + std::to_string(currenthastePercent) + " -> " + std::to_string(currenthastePercent / (1.0 + stats->hastePercent / 100));
+                player->combatLog(msg);
+            }
+            player->stats->hastePercent -= stats->hastePercent;
+            recalculatePetStats = true;
+        }
+        if (stats->manaCostModifier > 0)
+        {
+            if (player->shouldWriteToCombatLog())
+            {
+                int currentmanaCostModifier = player->stats->manaCostModifier;
+                std::string msg = "Mana Cost Modifier / " + std::to_string(stats->manaCostModifier) + " (" + std::to_string(currentmanaCostModifier) + " -> " + std::to_string(currentmanaCostModifier / stats->manaCostModifier);
+                player->combatLog(msg);
+            }
+            player->stats->manaCostModifier /= stats->manaCostModifier;
+            recalculatePetStats = true;
         }
 
         active = false;
@@ -470,7 +581,6 @@ TheLightningCapacitorAura::TheLightningCapacitorAura(Player* player) : Aura(play
 {
     name = "The Lightning Capacitor";
     hasDuration = false;
-    stacks = 0;
     maxStacks = 3;
     setup();
 }

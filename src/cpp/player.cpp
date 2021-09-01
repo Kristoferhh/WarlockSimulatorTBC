@@ -547,7 +547,7 @@ bool Player::areAnyCooldownsReady()
 
 void Player::useCooldowns()
 {
-    if (spells.count("bloodlust") > 0 && !auras.at("bloodlust")->active)
+    if (spellVectors.count("bloodlust") > 0 && !auras.at("bloodlust")->active)
     {
         for (int i = 0; i < settings->bloodlustAmount; i++)
         {
@@ -558,7 +558,7 @@ void Player::useCooldowns()
             }
         }
     }
-    if (spells.count("powerInfusion") > 0 && !auras.at("powerInfusion")->active)
+    if (spellVectors.count("powerInfusion") > 0 && !auras.at("powerInfusion")->active)
     {
         for (int i = 0; i < settings->powerInfusionAmount; i++)
         {
@@ -569,7 +569,7 @@ void Player::useCooldowns()
             }
         }
     }
-    if (spells.count("innervate") > 0 && !auras.at("innervate")->active)
+    if (spellVectors.count("innervate") > 0 && !auras.at("innervate")->active)
     {
         for (int i = 0; i < settings->innervateAmount; i++)
         {

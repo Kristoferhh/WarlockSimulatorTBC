@@ -25,7 +25,7 @@ const fakeItemIds = {
   illidariCloakOfFireWrath: -22
 }
 
-const items = {
+var items = {
   head: {
     darkConjurorsCollar: {
       name: "Dark Conjuror's Collar",

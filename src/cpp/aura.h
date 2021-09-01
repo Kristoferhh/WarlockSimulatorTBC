@@ -15,6 +15,9 @@ struct Aura
     int hiddenCooldown;
     int procChance;
     int tickTimerRemaining;
+    // The Lightning Capacitor & ISB
+    int stacks;
+    int maxStacks;
     double modifier; // ISB
     double hasteModifier; // Bloodlust
     bool active;
@@ -24,15 +27,13 @@ struct Aura
     Aura(Player* player);
     void setup();
     void tick(int time);
-    void apply();
-    void fade(bool endOfIteration = false);
+    virtual void apply();
+    virtual void fade(bool endOfIteration = false);
     void decrementStacks(); // ISB
 };
 
 struct ImprovedShadowBolt : public Aura
 {
-    int stacks;
-    int maxStacks;
     double modifier;
     double uptimeSoFar;
 
@@ -164,9 +165,6 @@ struct DarkmoonCardCrusadeAura : public Aura
 
 struct TheLightningCapacitorAura : public Aura
 {
-    int stacks;
-    int maxStacks;
-
     TheLightningCapacitorAura(Player* player);
     void apply();
     void fade(bool endOfIteration = false);

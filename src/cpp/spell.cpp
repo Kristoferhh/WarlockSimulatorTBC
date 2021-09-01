@@ -6,6 +6,7 @@ Spell::Spell(Player* player) : player(player)
 {
     modifier = 1;
     coefficient = 0;
+    school = SpellSchool::NO_SCHOOL;
 }
 
 void Spell::reset()
@@ -29,7 +30,7 @@ void Spell::setup()
 
 double Spell::getCastTime()
 {
-    return castTime + player->spellDelay;
+    return round((castTime / (1.0 + ((player->stats->hasteRating / player->hasteRatingPerPercent + player->stats->hastePercent) / 100))) * 10000) / 10000 + player->spellDelay;
 }
 
 bool Spell::canCast()
@@ -143,7 +144,7 @@ void Spell::cast()
 
     if (isDot || isAura)
     {
-        //player->auras.at(varName)->apply();
+        player->auras.at(varName)->apply();
     }
 
     if (doesDamage)
@@ -265,23 +266,106 @@ double Spell::getCritMultiplier(double critMult)
 
 void Spell::onCritProcs()
 {
+    // ISB
     if (varName == "shadowBolt" && !player->settings->usingCustomIsbUptime && player->talents->improvedShadowBolt > 0)
     {
         player->auras.at("improvedShadowBolt")->apply();
+    }
+    // The Lightning Capacitor
+    if (player->spells.count("theLightningCapacitor") > 0)
+    {
+        player->spells.at("theLightningCapacitor")->startCast();
+    }
+    // Sextant of Unstable Currents
+    if (player->spells.count("sextantOfUnstableCurrents") > 0 && player->spells.at("sextantOfUnstableCurrents")->ready() && random(1, 100) <= player->spells.at("sextantOfUnstableCurrents")->procChance)
+    {
+        player->spells.at("sextantOfUnstableCurrents")->startCast();
+    }
+    // Shiffar's Nexus-Horn
+    if (player->spells.count("shiffarsNexusHorn") > 0 && player->spells.at("shiffarsNexusHorn")->ready() && random(1, 100) <= player->spells.at("shiffarsNexusHorn")->procChance)
+    {
+        player->spells.at("shiffarsNexusHorn")->startCast();
     }
 }
 
 void Spell::onDamageProcs()
 {
-
+    // Confirm that this procs on dealing damage
+    // Shattered Sun Pendant of Acumen
+    if (player->settings->exaltedWithShattrathFaction && player->spells.count("shatteredSunPendantOfAcumen") > 0 && player->spells.at("shatteredSunPendantOfAcumen")->cooldownRemaining <= 0 && random(1, 100) <= player->spells.at("shatteredSunPendantOfAcumen")->procChance)
+    {
+        player->spells.at("shatteredSunPendantOfAcumen")->startCast();
+    }
 }
 
 void Spell::onHitProcs()
 {
+    // T4 2pc
+    if (player->sets->t4 >= 2 && (school == SpellSchool::SHADOW || school == SpellSchool::FIRE) && random(1, 100) <= player->auras.at("flameshadow")->procChance)
+    {
+        if (school == SpellSchool::SHADOW)
+        {
+            player->auras.at("flameshadow")->apply();
+        }
+        else if (school == SpellSchool::FIRE)
+        {
+            player->auras.at("shadowflame")->apply();
+        }
+    }
     // Spellstrike
     if (player->sets->spellstrike == 2 && random(1, 100) <= player->auras.at("spellstrike")->procChance)
     {
         player->auras.at("spellstrike")->apply();
+    }
+    // Quagmirran's Eye
+    if (player->spells.count("quagmirransEye") > 0 && player->spells.at("quagmirransEye")->ready() && random(1, 100) <= player->spells.at("quagmirransEye")->procChance)
+    {
+        player->spells.at("quagmirransEye")->startCast();
+    }
+    // Mana-Etched Regalia 4pc
+    if (player->sets->manaEtched >= 4 && random(1, 100) <= player->auras.at("manaEtched4Set")->procChance)
+    {
+        player->auras.at("manaEtched4Set")->apply();
+    }
+    // Mark of Defiance
+    if (player->spells.count("markOfDefiance") > 0 && random(1, 100) <= player->spells.at("markOfDefiance")->procChance)
+    {
+        player->spells.at("markOfDefiance")->startCast();
+    }
+    // Darkmoon Card: Crusade
+    if (player->spells.count("darkmoonCardCrusade") > 0)
+    {
+        player->auras.at("darkmoonCardCrusade")->apply();
+    }
+    // Band of the Eternal Sage
+    if (player->spells.count("bandOfTheEternalSage") > 0 && player->spells.at("bandOfTheEternalSage")->ready() && random(1, 100) <= player->spells.at("bandOfTheEternalSage")->procChance)
+    {
+        player->spells.at("bandOfTheEternalSage")->startCast();
+    }
+    // Blade of Wizardry
+    if (player->spells.count("bladeOfWizardry") > 0 && player->spells.at("bladeOfWizardry")->ready() && random(1, 100) <= player->auras.at("bladeOfWizardry")->procChance)
+    {
+        player->spells.at("bladeOfWizardry")->startCast();
+    }
+    // Mystical Skyfire Diamond
+    if (player->spells.count("mysticalSkyfireDiamond") > 0 && player->spells.at("mysticalSkyfireDiamond")->ready() && random(1, 100) <= player->spells.at("mysticalSkyfireDiamond")->procChance)
+    {
+        player->spells.at("mysticalSkyfireDiamond")->startCast();
+    }
+    // Robe of the Elder Scribes
+    if (player->spells.count("robeOfTheElderScribes") > 0 && player->spells.at("robeOfTheElderScribes")->ready() && random(1, 100) <= player->spells.at("robeOfTheElderScribes")->procChance)
+    {
+        player->spells.at("robeOfTheElderScribes")->startCast();
+    }
+    // Insightful Earthstorm Diamond
+    if (player->spells.count("insightfulEarthstormDiamond") > 0 && player->spells.at("insightfulEarthstormDiamond")->ready() && random(1, 100) <= player->spells.at("insightfulEarthstormDiamond")->procChance)
+    {
+        player->spells.at("insightfulEarthstormDiamond")->startCast();
+    }
+    // Wrath of Cenarius
+    if (player->auras.count("wrathOfCenarius") > 0 && player->spells.at("wrathOfCenarius")->ready() && random(1, 100) <= player->spells.at("wrathOfCenarius")->procChance)
+    {
+        player->auras.at("wrathOfCenarius")->apply();
     }
 }
 
@@ -809,17 +893,17 @@ TheLightningCapacitor::TheLightningCapacitor(Player* player) : Spell(player)
     setup();
 }
 
-void TheLightningCapacitor::startCast()
+void TheLightningCapacitor::startCast(double predictedDamage)
 {
     if (cooldownRemaining <= 0)
     {
-        /*player->auras->theLightningCapacitor->apply();
-        if (player->auras->theLightningCapacitor->stacks == 3)
+        player->auras.at("theLightningCapacitor")->apply();
+        if (player->auras.at("theLightningCapacitor")->stacks == 3)
         {
             cooldownRemaining = cooldown;
-            player->auras->theLightningCapacitor->fade();
+            player->auras.at("theLightningCapacitor")->fade();
             Spell::startCast();
-        }*/
+        }
     }
 }
 

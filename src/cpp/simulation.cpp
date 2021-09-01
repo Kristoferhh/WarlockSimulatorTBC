@@ -27,9 +27,25 @@ double Simulation::passTime()
     // Auras
     for (std::map<std::string, Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
     {
-        if (it->second->active && it->second->durationRemaining < time)
+        if (it->second->active && it->second->hasDuration && it->second->durationRemaining < time)
         {
             time = it->second->durationRemaining;
+        }
+    }
+
+    if (player->mp5Timer < time)
+    {
+        time = player->mp5Timer;
+    }
+    for (int i = 0; i < player->trinkets.size(); i++)
+    {
+        if (player->trinkets[i]->active && player->trinkets[i]->durationRemaining < time)
+        {
+            time = player->trinkets[i]->durationRemaining;
+        }
+        if (player->trinkets[i]->cooldownRemaining > 0 && player->trinkets[i]->cooldownRemaining < time)
+        {
+            time = player->trinkets[i]->cooldownRemaining;
         }
     }
 
@@ -43,7 +59,7 @@ double Simulation::passTime()
     // Auras
     for (std::map<std::string, Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
     {
-        if (it->second->active)
+        if (it->second->active && it->second->hasDuration)
         {
             it->second->tick(time);
         }
@@ -57,6 +73,53 @@ double Simulation::passTime()
             it->second->tick(time);
         }
     }
+
+    // Trinkets
+    for (int i = 0; i < player->trinkets.size(); i++)
+    {
+        player->trinkets[i]->tick(time);
+    }
+
+    player->gcdRemaining -= time;
+    player->mp5Timer -= time;
+    player->fiveSecondRuleTimer -= time;
+    if (player->mp5Timer <= 0)
+    {
+        player->mp5Timer = 5;
+        if (player->stats->mp5 > 0 || player->fiveSecondRuleTimer <= 0 || (player->auras.count("innervate") > 0 && player->auras.at("innervate")->active))
+        {
+            bool innervateExists = player->auras.count("innervate") > 0;
+            bool innervateActive = innervateExists && player->auras.at("innervate")->active;
+            int currentPlayerMana = player->stats->mana;
+
+            // MP5
+            if (player->stats->mp5)
+            {
+                player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + player->stats->mp5);
+            }
+            // Spirit mana regen
+            if (player->fiveSecondRuleTimer <= 0 || innervateActive)
+            {
+                // Formula from https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1572910
+                int mp5FromSpirit = 5 * (0.001 + std::sqrt(player->stats->intellect * player->stats->intellectModifier) * (player->stats->spirit * player->stats->spiritModifier) * 0.009327);
+                if (innervateActive)
+                {
+                    mp5FromSpirit *= 4;
+                }
+                player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + mp5FromSpirit);
+            }
+
+            int manaGained = player->stats->mana - currentPlayerMana;
+            player->totalManaRegenerated += manaGained;
+            
+            if (player->shouldWriteToCombatLog())
+            {
+                std::string msg = "Player gains " + std::to_string(round(manaGained)) + " mana from MP5 (" + std::to_string(currentPlayerMana) + " -> " + std::to_string(player->stats->mana) + ")";
+                player->combatLog(msg);
+            }
+        }
+    }
+
 
     return time;
 }

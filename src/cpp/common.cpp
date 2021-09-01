@@ -36,6 +36,15 @@ std::string camelCase(std::string& str)
     std::string newStr = str;
     newStr.erase(std::remove(newStr.begin(), newStr.end(), '\''), newStr.end());
     newStr.erase(std::remove(newStr.begin(), newStr.end(), '-'), newStr.end());
+    newStr.erase(std::remove(newStr.begin(), newStr.end(), ':'), newStr.end());
+    // Capitalize each word in the string
+    for (int i = 1; i < newStr.length(); i++)
+    {
+        if (isspace(newStr[i-1]))
+        {
+            newStr[i] = toupper(newStr[i]);
+        }
+    }
     newStr.erase(std::remove(newStr.begin(), newStr.end(), ' '), newStr.end());
     newStr[0] = tolower(newStr[0]);
     

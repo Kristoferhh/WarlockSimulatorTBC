@@ -17,7 +17,6 @@ onmessage = function (e) {
     let c = e.data.player.simSettings
     let d = e.data.player.rotation
     let i = e.data.player.items
-    console.log(i)
 
     let customItemSlot = e.data.itemSlot
     let customItemSubSlot = e.data.itemSubSlot
@@ -25,11 +24,11 @@ onmessage = function (e) {
 
     let metaGemIds = []
     // If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
-    if (customItemSlot && customItemId && customItemId !== e.data.player.items[customItemSlot + customItemSubSlot]) {
+    if (customItemSlot && customItemId && customItemId !== i[customItemSlot + customItemSubSlot]) {
       // Loop through all items in the custom item slot
       for (const item in items[customItemSlot]) {
         // Check if this is the currently equipped item
-        if (items[customItemSlot][item].id == e.data.player.items[customItemSlot + customItemSubSlot]) {
+        if (items[customItemSlot][item].id == i[customItemSlot + customItemSubSlot]) {
           // Remove stats from currently equipped item
           for (const stat in items[customItemSlot][item]) {
             if (b.hasOwnProperty(stat)) {
@@ -42,13 +41,13 @@ onmessage = function (e) {
           }
           // Remove stats from gems in the equipped item if there are any
           // Also check if the item's socket bonus is active and remove the stats from it if so
-          if (e.data.player.gems[customItemSlot] && e.data.player.gems[customItemSlot][e.data.player.items[customItemSlot + customItemSubSlot]]) {
+          if (e.data.player.gems[customItemSlot] && e.data.player.gems[customItemSlot][i[customItemSlot + customItemSubSlot]]) {
             let socketBonusActive = true
             // Loop through each socket in the equipped item
-            for (const socket in e.data.player.gems[customItemSlot][e.data.player.items[customItemSlot + customItemSubSlot]]) {
-              if (e.data.player.gems[customItemSlot][e.data.player.items[customItemSlot + customItemSubSlot]][socket]) {
-                const socketColor = e.data.player.gems[customItemSlot][e.data.player.items[customItemSlot + customItemSubSlot]][socket][0]
-                const gemId = e.data.player.gems[customItemSlot][e.data.player.items[customItemSlot + customItemSubSlot]][socket][1]
+            for (const socket in e.data.player.gems[customItemSlot][i[customItemSlot + customItemSubSlot]]) {
+              if (e.data.player.gems[customItemSlot][i[customItemSlot + customItemSubSlot]][socket]) {
+                const socketColor = e.data.player.gems[customItemSlot][i[customItemSlot + customItemSubSlot]][socket][0]
+                const gemId = e.data.player.gems[customItemSlot][i[customItemSlot + customItemSubSlot]][socket][1]
                 // Find the gem's color since the socket and gem colors might not match
                 for (const gemColor in gems) {
                   if (gems[gemColor][gemId]) {
@@ -95,11 +94,11 @@ onmessage = function (e) {
           }
           // Increment the counter for the set id if it is part of a set
           if (items[customItemSlot][item].hasOwnProperty('setId')) {
-            s[items[customItemSlot][item].setId] = s[items[customItemSlot][item].setId] + 1 || 1 // Have a default value of '1' in case the set id is undefined in the sets array
+            s[items[customItemSlot][item].setId] = s[items[customItemSlot][item].setId] + 1 || 1
           }
           // Add the item's id to its slot in e.data.player.items
           // This is required for items that are on-use or have a proc such as Band of the Eternal Sage since they check if the item's ID is equipped.
-          e.data.player.items[customItemSlot + customItemSubSlot] = customItemId
+          i[customItemSlot + customItemSubSlot] = customItemId
           // Add stats from any gems equipped in the custom item
           if (e.data.player.gems[customItemSlot] && e.data.player.gems[customItemSlot][customItemId]) {
             // Boolean to keep track of whether the item's socket bonus is active or not
@@ -146,10 +145,9 @@ onmessage = function (e) {
       }
     }
 
-    console.log(e.data.player.simSettings)
     // Mamma mia somebody clean up this mess please
     // Items
-    let items = module._allocItems(i.head, i.neck, i.shoulders, i.back, i.chest, i.bracers, i.gloves, i.belt, i.legs, i.boots, i.ring1, i.ring2, i.trinket1, i.trinket2, i.mainhand, i.offhand, i.twohand, i.wand)
+    let equippedItems = module._allocItems(i.head, i.neck, i.shoulders, i.back, i.chest, i.bracers, i.gloves, i.belt, i.legs, i.boots, i.ring1, i.ring2, i.trinket1, i.trinket2, i.mainhand, i.offhand, i.twohand, i.wand)
     // Auras
     let auras = module._allocAuras(a.felArmor, a.blessingOfKings, a.blessingOfWisdom, a.judgementOfWisdom, a.manaSpringTotem, a.wrathOfAirTotem, a.totemOfWrath, a.markOfTheWild, a.arcaneIntellect
       , a.prayerOfFortitude, a.prayerOfSpirit, a.bloodPact, a.inspiringPresence, a.moonkinAura, a.powerInfusion, a.powerOfTheGuardianWarlock, a.powerOfTheGuardianMage, a.eyeOfTheNight, a.chainOfTheTwilightOwl
@@ -169,7 +167,7 @@ onmessage = function (e) {
       , b.fireModifier, b.frostModifier, b.hastePercent, b.damageModifier, b.shadowModifier, b.staminaModifier, b.intellectModifier, b.spiritModifier, b.manaCostModifier, b.arcaneModifier, b.natureModifier
       , b.natureResist, b.arcaneResist, b.fireResist, b.frostResist, b.shadowResist)
     // Player settings
-    let playerSettings = module._allocPlayerSettings(auras, talents, sets, stats, items, e.data.itemId, (metaGemIds[0] || -1), c.shattrathFaction === "Aldor", parseInt(c['target-level'])
+    let playerSettings = module._allocPlayerSettings(auras, talents, sets, stats, equippedItems, e.data.itemId, (metaGemIds[0] || -1), c.shattrathFaction === "Aldor", parseInt(c['target-level'])
       , parseInt(c['target-shadow-resistance']), parseInt(c['target-fire-resistance']), parseInt(c.mageAtieshAmount), parseInt(c.totemOfWrathAmount), c.sacrificePet === "yes", c.petChoice === "0"
       , c.petChoice === "2", c.petChoice === "4", parseInt(c.ferociousInspirationAmount), parseInt(c.improvedCurseOfTheElements), c.customIsbUptime === "yes", parseInt(c.customIsbUptimeValue)
       , parseInt(c.improvedDivineSpirit), parseInt(c.improvedImp), parseInt(c.shadowPriestDps), parseInt(c.warlockAtieshAmount), parseInt(c.improvedExposeArmor), c.fightType === "singleTarget"
@@ -182,7 +180,7 @@ onmessage = function (e) {
     let simSettings = module._allocSimSettings(e.data.simulation.iterations, e.data.simulation.minTime, e.data.simulation.maxTime)
     let sim = module._allocSim(player, simSettings)
     module._startSimulation(sim)
-    module._freeItems(items)
+    module._freeItems(equippedItems)
     module._freeAuras(auras)
     module._freeTalents(talents)
     module._freeSets(sets)

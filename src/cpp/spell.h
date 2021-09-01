@@ -54,7 +54,7 @@ struct Spell
     double getConstantDamage(bool noRng);
     double getCritMultiplier(double critMultiplier);
     double predictDamage();
-    void damage(bool isCrit);
+    void damage(bool isCrit = false);
     void tick(int t);
     void onCritProcs();
     void onDamageProcs();
@@ -234,7 +234,7 @@ struct MarkOfDefiance : public Spell
 struct TheLightningCapacitor : public Spell
 {
     TheLightningCapacitor(Player* player);
-    void startCast();
+    void startCast(double predictedDamage = 0);
 };
 
 struct BladeOfWizardry : public Spell
