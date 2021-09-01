@@ -14,12 +14,20 @@ struct Aura
     int durationRemaining;
     int hiddenCooldown;
     int procChance;
+    // dots
+    int tickTimerTotal;
     int tickTimerRemaining;
+    int ticksRemaining;
+    int ticksTotal;
+    int minimumDuration;
     // The Lightning Capacitor & ISB
     int stacks;
     int maxStacks;
-    double modifier; // ISB
-    double hasteModifier; // Bloodlust
+    // ISB
+    double modifier;
+    double uptimeSoFar;
+    // Bloodlust
+    double hasteModifier;
     bool active;
     bool hasDuration;
     bool groupWide; // true if it's an aura that applies to everyone in the group (will apply to pets as well then)
@@ -35,7 +43,6 @@ struct Aura
 struct ImprovedShadowBolt : public Aura
 {
     double modifier;
-    double uptimeSoFar;
 
     ImprovedShadowBolt(Player* player);
     void apply();
@@ -138,9 +145,6 @@ struct DrumsOfWarAura : public Aura
 struct DrumsOfRestorationAura : public Aura
 {
     int manaGain;
-    int tickTimerTotal;
-    int ticksRemaining;
-    int ticksTotal;
 
     DrumsOfRestorationAura(Player* player);
     void apply();

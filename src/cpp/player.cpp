@@ -7,6 +7,8 @@
 Player::Player(PlayerSettings* playerSettings)
     : selectedAuras(playerSettings->auras), talents(playerSettings->talents), sets(playerSettings->sets), stats(playerSettings->stats), items(playerSettings->items), settings(playerSettings)
 {
+    filler = "";
+    curse = "";
     combatLogEntries = {};
     level = 70;
     castTimeRemaining = 0;
@@ -188,6 +190,17 @@ Player::Player(PlayerSettings* playerSettings)
     }
     settings->enemyArmor = std::max(0, settings->enemyArmor);
 
+    // Assign the filler spell
+    if (settings->hasShadowBolt) filler = "shadowBolt";
+    else if (settings->hasIncinerate) filler = "incinerate";
+    else if (settings->hasSearingPain) filler = "searingPain";
+
+    // Assign the curse (if selected)
+    if (settings->hasCurseOfRecklessness) curse = "curseOfRecklessness";
+    else if (settings->hasCurseOfTheElements) curse = "curseOfTheElements";
+    else if (settings->hasCurseOfDoom) curse = "curseOfDoom";
+    else if (settings->hasCurseOfAgony) curse = "curseOfAgony";
+
     // Records all information about damage done for each spell such as crit %, miss %, average damage per cast etc.
     //this.damageBreakdown = {}
     // Records all information about auras such as how often it was applied and the uptime %.
@@ -348,14 +361,14 @@ void Player::initialize()
         if (settings->isSingleTarget)
         {
             if (talents->improvedShadowBolt > 0) auras.insert(std::make_pair("improvedShadowBolt", new ImprovedShadowBolt(this)));
-            if (spells.count("corruption") > 0) auras.insert(std::make_pair("corruption", new CorruptionDot(this)));
-            if (spells.count("unstableAffliction") > 0) auras.insert(std::make_pair("unstableAffliction", new UnstableAfflictionDot(this)));
-            if (spells.count("siphonLife") > 0) auras.insert(std::make_pair("siphonLife", new SiphonLifeDot(this)));
-            if (spells.count("immolate") > 0) auras.insert(std::make_pair("immolate", new ImmolateDot(this)));
-            if (spells.count("curseOfAgony") > 0) auras.insert(std::make_pair("curseOfAgony", new CurseOfAgonyDot(this)));
+            if (spells.count("corruption") > 0) dots.insert(std::make_pair("corruption", new CorruptionDot(this)));
+            if (spells.count("unstableAffliction") > 0) dots.insert(std::make_pair("unstableAffliction", new UnstableAfflictionDot(this)));
+            if (spells.count("siphonLife") > 0) dots.insert(std::make_pair("siphonLife", new SiphonLifeDot(this)));
+            if (spells.count("immolate") > 0) dots.insert(std::make_pair("immolate", new ImmolateDot(this)));
+            if (spells.count("curseOfAgony") > 0) dots.insert(std::make_pair("curseOfAgony", new CurseOfAgonyDot(this)));
             if (settings->hasCurseOfTheElements)  auras.insert(std::make_pair("curseOfTheElements", new CurseOfTheElementsAura(this)));
             if (settings->hasCurseOfRecklessness) auras.insert(std::make_pair("curseOfRecklessness", new CurseOfRecklessnessAura(this)));
-            if (settings->hasCurseOfDoom) auras.insert(std::make_pair("curseOfDoom", new CurseOfDoomDot(this)));
+            if (settings->hasCurseOfDoom) dots.insert(std::make_pair("curseOfDoom", new CurseOfDoomDot(this)));
             if (talents->nightfall > 0) auras.insert(std::make_pair("shadowTrance", new ShadowTranceAura(this)));
             if (settings->hasCurseOfDoom) auras.insert(std::make_pair("amplifyCurse", new AmplifyCurseAura(this)));
         }

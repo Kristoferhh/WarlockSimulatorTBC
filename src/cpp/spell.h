@@ -27,6 +27,9 @@ struct Spell
     double cooldownRemaining;
     double dmg;
     double avgManaValue;
+    int bonusDamageFromImmolateMin;
+    int bonusDamageFromImmolateMax;
+    double bonusDamageFromImmolate;
     bool isDot;
     bool doesDamage;
     bool canCrit;
@@ -51,7 +54,7 @@ struct Spell
     virtual void startCast(double predictedDamage = 0);
     virtual void cast();
     double getModifier();
-    double getConstantDamage(bool noRng);
+    double* getConstantDamage(bool noRng = true);
     double getCritMultiplier(double critMultiplier);
     double predictDamage();
     void damage(bool isCrit = false);
@@ -78,9 +81,6 @@ struct ShadowBolt : public Spell
 struct Incinerate : public Spell
 {
     Incinerate(Player* player);
-    int bonusDamageFromImmolateMin;
-    int bonusDamageFromImmolateMax;
-    double bonusDamageFromImmolate;
 };
 
 struct SearingPain : public Spell

@@ -142,9 +142,13 @@ void Spell::cast()
         return;
     }
 
-    if (isDot || isAura)
+    if (isAura)
     {
         player->auras.at(varName)->apply();
+    }
+    if (isDot)
+    {
+        player->dots.at(varName)->apply();
     }
 
     if (doesDamage)
@@ -243,6 +247,34 @@ void Spell::damage(bool isCrit)
     }
 }
 
+// Returns the non-RNG damage of the spell (basically just the base damage + spell power + damage modifiers, no crit/miss etc.)
+// todo: investigate this noRng variable
+double* Spell::getConstantDamage(bool noRng)
+{
+    double dmg = player->settings->randomizeValues && minDmg > 0 && maxDmg > 0 && !noRng ? random(minDmg, maxDmg) : dmg;
+    double baseDamage = dmg;
+    double spellPower = player->getSpellPower(school);
+    double modifier = getModifier();
+    double partialResistMultiplier = player->getPartialResistMultiplier(school);
+
+    // If casting Incinerate and Immolate is up, add the bonus damage
+    if (varName == "incinerate" && player->auras.count("immolate") > 0 && player->auras.at("immolate")->active)
+    {
+        dmg += player->settings->randomizeValues && noRng ? random(bonusDamageFromImmolateMin, bonusDamageFromImmolateMax) : bonusDamageFromImmolate;
+    }
+    // Add damage from Spell Power
+    dmg += spellPower * coefficient;
+    // Improved Shadow Bolt
+    if (school == SpellSchool::SHADOW && player->auras.count("improvedShadowBolt") > 0 && player->auras.at("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
+    {
+        modifier *= player->auras.at("improvedShadowBolt")->modifier;
+    }
+
+    dmg *= modifier * partialResistMultiplier;
+
+    return new double[5] {baseDamage, dmg, modifier, partialResistMultiplier, spellPower};
+}
+
 double Spell::getCritMultiplier(double critMult)
 {
     double critMultiplier = critMult;
@@ -262,6 +294,50 @@ double Spell::getCritMultiplier(double critMult)
         critMultiplier += 1;
     }
     return critMultiplier;
+}
+
+double Spell::predictDamage()
+{
+    double* constantDamage = getConstantDamage();
+    double normalDamage = constantDamage[1];
+    double critDamage = 0;
+    double critChance = 0;
+    double chanceToNotCrit = 0;
+
+    if (canCrit)
+    {
+        critDamage = normalDamage * getCritMultiplier(player->critMultiplier);
+        critChance = player->getCritChance(type) / 100;
+        chanceToNotCrit = 1 - critChance;
+    }
+
+    double hitChance = player->getHitChance(type) / 100;
+    double estimatedDamage = canCrit ? (normalDamage * chanceToNotCrit) + (critDamage * critChance) : normalDamage;
+
+    // Add the predicted damage of the DoT over its full duration
+    if (isDot)
+    {
+        estimatedDamage += player->dots.at(varName)->predictDamage();
+    }
+
+    // If the player is not using a custom ISB uptime, they have the ISB talent selected, but the ISB aura is not active, then give some % modifier as an "average" for the damage.
+    // Without this, the sim will choose Incinerate over Shadow Bolt because it basically just doesn't know that ISB exists
+    if (school == SpellSchool::SHADOW && !player->settings->usingCustomIsbUptime && player->auras.count("improvedShadowBolt") > 0 && !player->auras.at("improvedShadowBolt")->active)
+    {
+        // If this isn't the player's first iteration then check what their ISB uptime is and add that %
+        if (player->iteration > 1)
+        {
+            estimatedDamage *= (1 + 0.2 * player->auras.at("improvedShadowBolt")->uptimeSoFar);
+        }
+        // If it's the first iteration where we don't have enough data to assume what the player's ISB uptime is, then add a fixed amount
+        else
+        {
+            estimatedDamage *= 1.15;
+        }
+    }
+
+    delete constantDamage;
+    return (estimatedDamage * hitChance) / std::max(player->getGcdValue(varName), getCastTime());
 }
 
 void Spell::onCritProcs()

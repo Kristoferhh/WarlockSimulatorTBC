@@ -2,7 +2,7 @@
 #include "common.h"
 #include "player.h"
 
-DamageOverTime::DamageOverTime(Player* player) : Aura(player)
+DamageOverTime::DamageOverTime(Player* player) : player(player)
 {
     duration = 0;
     tickTimerTotal = 3;
@@ -40,6 +40,7 @@ void DamageOverTime::apply()
         //todo breakdown table
     }
     bool isActive = active;
+
     active = true;
     tickTimerRemaining = tickTimerTotal;
     ticksRemaining = ticksTotal;
@@ -49,7 +50,7 @@ void DamageOverTime::apply()
     if (player->shouldWriteToCombatLog())
     {
         std::string refreshedOrApplied = isActive ? "refreshed" : "applied";
-        std::string msg = name + " " + refreshedOrApplied + " (" + std::to_string(spellPower);
+        std::string msg = name + " " + refreshedOrApplied + " (" + std::to_string(spellPower) + " Spell Power)";
         player->combatLog(msg);
     }
     // Siphon Life snapshots the presence of ISB. So if ISB isn't up when it's cast, it doesn't get the benefit even if it comes up later during the duration.
@@ -75,7 +76,7 @@ void DamageOverTime::fade(bool endOfIteration)
     tickTimerRemaining = 0;
     ticksRemaining = 0;
     //todo aura uptime
-    if (!endOfIteration)
+    if (!endOfIteration && player->shouldWriteToCombatLog())
     {
         std::string msg = name + " faded";
         player->combatLog(msg);
@@ -295,6 +296,7 @@ double CurseOfAgonyDot::getModifier()
 
 CurseOfDoomDot::CurseOfDoomDot(Player* player) : DamageOverTime(player)
 {
+    name = "Curse of Doom";
     duration = 60;
     tickTimerTotal = 60;
     dmg = 4200;

@@ -11,6 +11,7 @@
 #include "items.h"
 #include "trinket.h"
 #include "playerSettings.h"
+#include "damageOverTime.h"
 
 struct Player
 {
@@ -27,9 +28,12 @@ struct Player
   CharacterStats* stats;
   Items* items;
   PlayerSettings* settings;
+  std::string filler;
+  std::string curse;
   std::map<std::string, Spell*> spells;
   std::map<std::string, std::vector<Spell*>> spellVectors;
   std::map<std::string, Aura*> auras;
+  std::map<std::string, DamageOverTime*> dots;
   std::vector<std::string> combatLogEntries;
   std::vector<Trinket*> trinkets;
   double castTimeRemaining;

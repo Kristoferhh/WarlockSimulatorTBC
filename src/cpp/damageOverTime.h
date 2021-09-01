@@ -5,8 +5,9 @@ struct Player; // Can't include player.h cause of circular reference
 #include "enums.h"
 #include "aura.h"
 
-struct DamageOverTime : public Aura
+struct DamageOverTime
 {
+    Player* player;
     SpellSchool school;
     int duration; // Total duration of the dot
     int originalDuration; // Used for T4 4pc since we're increasing the duration by 3 seconds but need to know what the original duration was
