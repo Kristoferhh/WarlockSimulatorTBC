@@ -144,11 +144,11 @@ void Spell::cast()
 
     if (isAura)
     {
-        player->auras.at(varName)->apply();
+        player->getAura(varName)->apply();
     }
     if (isDot)
     {
-        player->dots.at(varName)->apply();
+        player->getDot(varName)->apply();
     }
 
     if (doesDamage)
@@ -171,9 +171,9 @@ double Spell::getModifier()
         dmgModifier *= player->stats->shadowModifier;
         
         // Improved Shadow Bolt
-        if (player->auras.count("improvedShadowBolt") > 0 && player->auras.at("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
+        if (player->getAura("improvedShadowBolt") != nullptr && player->getAura("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
         {
-            dmgModifier *= player->auras.at("improvedShadowBolt")->modifier;
+            dmgModifier *= player->getAura("improvedShadowBolt")->modifier;
         }
     }
     else if (school == SpellSchool::FIRE)
@@ -202,9 +202,9 @@ void Spell::damage(bool isCrit)
         totalDamage *= critMultiplier;
         onCritProcs();
     }
-    else if (school == SpellSchool::SHADOW && !isDot && player->auras.count("improvedShadowBolt") > 0 && player->auras.at("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
+    else if (school == SpellSchool::SHADOW && !isDot && player->getAura("improvedShadowBolt") != nullptr && player->getAura("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
     {
-        player->auras.at("improvedShadowBolt")->decrementStacks();
+        player->getAura("improvedShadowBolt")->decrementStacks();
     }
 
     onDamageProcs();
@@ -235,11 +235,11 @@ void Spell::damage(bool isCrit)
     //T5 4pc
     if (player->sets->t5 >= 4)
     {
-        /*if (varName == "shadowBolt" && player->auras.count("corruption") && player->auras->corruption->active)
+        /*if (varName == "shadowBolt" && player->getAura("corruption") != nullptrplayer->auras->corruption->active)
         {
             player->auras->corruption->t5BonusModifier *= 1.1;
         }
-        else if (varName == "incinerate" && player->auras.count("immolate") && player->auras->immolate->active)
+        else if (varName == "incinerate" && player->getAura("immolate") != nullptrplayer->auras->immolate->active)
         {
 
             player->auras->immolate->t5BonusModifier *= 1.1;
@@ -258,16 +258,16 @@ double* Spell::getConstantDamage(bool noRng)
     double partialResistMultiplier = player->getPartialResistMultiplier(school);
 
     // If casting Incinerate and Immolate is up, add the bonus damage
-    if (varName == "incinerate" && player->auras.count("immolate") > 0 && player->auras.at("immolate")->active)
+    if (varName == "incinerate" && player->getAura("immolate") != nullptr && player->getAura("immolate")->active)
     {
         dmg += player->settings->randomizeValues && noRng ? random(bonusDamageFromImmolateMin, bonusDamageFromImmolateMax) : bonusDamageFromImmolate;
     }
     // Add damage from Spell Power
     dmg += spellPower * coefficient;
     // Improved Shadow Bolt
-    if (school == SpellSchool::SHADOW && player->auras.count("improvedShadowBolt") > 0 && player->auras.at("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
+    if (school == SpellSchool::SHADOW && player->getAura("improvedShadowBolt") != nullptr && player->getAura("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
     {
-        modifier *= player->auras.at("improvedShadowBolt")->modifier;
+        modifier *= player->getAura("improvedShadowBolt")->modifier;
     }
 
     dmg *= modifier * partialResistMultiplier;
@@ -317,17 +317,17 @@ double Spell::predictDamage()
     // Add the predicted damage of the DoT over its full duration
     if (isDot)
     {
-        estimatedDamage += player->dots.at(varName)->predictDamage();
+        estimatedDamage += player->getDot(varName)->predictDamage();
     }
 
     // If the player is not using a custom ISB uptime, they have the ISB talent selected, but the ISB aura is not active, then give some % modifier as an "average" for the damage.
     // Without this, the sim will choose Incinerate over Shadow Bolt because it basically just doesn't know that ISB exists
-    if (school == SpellSchool::SHADOW && !player->settings->usingCustomIsbUptime && player->auras.count("improvedShadowBolt") > 0 && !player->auras.at("improvedShadowBolt")->active)
+    if (school == SpellSchool::SHADOW && !player->settings->usingCustomIsbUptime && player->getAura("improvedShadowBolt") != nullptr && !player->getAura("improvedShadowBolt")->active)
     {
         // If this isn't the player's first iteration then check what their ISB uptime is and add that %
         if (player->iteration > 1)
         {
-            estimatedDamage *= (1 + 0.2 * player->auras.at("improvedShadowBolt")->uptimeSoFar);
+            estimatedDamage *= (1 + 0.2 * player->getAura("improvedShadowBolt")->uptimeSoFar);
         }
         // If it's the first iteration where we don't have enough data to assume what the player's ISB uptime is, then add a fixed amount
         else
@@ -345,22 +345,22 @@ void Spell::onCritProcs()
     // ISB
     if (varName == "shadowBolt" && !player->settings->usingCustomIsbUptime && player->talents->improvedShadowBolt > 0)
     {
-        player->auras.at("improvedShadowBolt")->apply();
+        player->getAura("improvedShadowBolt")->apply();
     }
     // The Lightning Capacitor
-    if (player->spells.count("theLightningCapacitor") > 0)
+    if (player->getSpell("theLightningCapacitor") != nullptr)
     {
-        player->spells.at("theLightningCapacitor")->startCast();
+        player->getSpell("theLightningCapacitor")->startCast();
     }
     // Sextant of Unstable Currents
-    if (player->spells.count("sextantOfUnstableCurrents") > 0 && player->spells.at("sextantOfUnstableCurrents")->ready() && random(1, 100) <= player->spells.at("sextantOfUnstableCurrents")->procChance)
+    if (player->getSpell("sextantOfUnstableCurrents") != nullptr && player->getSpell("sextantOfUnstableCurrents")->ready() && random(1, 100) <= player->getSpell("sextantOfUnstableCurrents")->procChance)
     {
-        player->spells.at("sextantOfUnstableCurrents")->startCast();
+        player->getSpell("sextantOfUnstableCurrents")->startCast();
     }
     // Shiffar's Nexus-Horn
-    if (player->spells.count("shiffarsNexusHorn") > 0 && player->spells.at("shiffarsNexusHorn")->ready() && random(1, 100) <= player->spells.at("shiffarsNexusHorn")->procChance)
+    if (player->getSpell("shiffarsNexusHorn") != nullptr && player->getSpell("shiffarsNexusHorn")->ready() && random(1, 100) <= player->getSpell("shiffarsNexusHorn")->procChance)
     {
-        player->spells.at("shiffarsNexusHorn")->startCast();
+        player->getSpell("shiffarsNexusHorn")->startCast();
     }
 }
 
@@ -368,80 +368,80 @@ void Spell::onDamageProcs()
 {
     // Confirm that this procs on dealing damage
     // Shattered Sun Pendant of Acumen
-    if (player->settings->exaltedWithShattrathFaction && player->spells.count("shatteredSunPendantOfAcumen") > 0 && player->spells.at("shatteredSunPendantOfAcumen")->cooldownRemaining <= 0 && random(1, 100) <= player->spells.at("shatteredSunPendantOfAcumen")->procChance)
+    if (player->settings->exaltedWithShattrathFaction && player->getSpell("shatteredSunPendantOfAcumen") != nullptr && player->getSpell("shatteredSunPendantOfAcumen")->cooldownRemaining <= 0 && random(1, 100) <= player->getSpell("shatteredSunPendantOfAcumen")->procChance)
     {
-        player->spells.at("shatteredSunPendantOfAcumen")->startCast();
+        player->getSpell("shatteredSunPendantOfAcumen")->startCast();
     }
 }
 
 void Spell::onHitProcs()
 {
     // T4 2pc
-    if (player->sets->t4 >= 2 && (school == SpellSchool::SHADOW || school == SpellSchool::FIRE) && random(1, 100) <= player->auras.at("flameshadow")->procChance)
+    if (player->sets->t4 >= 2 && (school == SpellSchool::SHADOW || school == SpellSchool::FIRE) && random(1, 100) <= player->getAura("flameshadow")->procChance)
     {
         if (school == SpellSchool::SHADOW)
         {
-            player->auras.at("flameshadow")->apply();
+            player->getAura("flameshadow")->apply();
         }
         else if (school == SpellSchool::FIRE)
         {
-            player->auras.at("shadowflame")->apply();
+            player->getAura("shadowflame")->apply();
         }
     }
     // Spellstrike
-    if (player->sets->spellstrike == 2 && random(1, 100) <= player->auras.at("spellstrike")->procChance)
+    if (player->sets->spellstrike == 2 && random(1, 100) <= player->getAura("spellstrike")->procChance)
     {
-        player->auras.at("spellstrike")->apply();
+        player->getAura("spellstrike")->apply();
     }
     // Quagmirran's Eye
-    if (player->spells.count("quagmirransEye") > 0 && player->spells.at("quagmirransEye")->ready() && random(1, 100) <= player->spells.at("quagmirransEye")->procChance)
+    if (player->getSpell("quagmirransEye") != nullptr && player->getSpell("quagmirransEye")->ready() && random(1, 100) <= player->getSpell("quagmirransEye")->procChance)
     {
-        player->spells.at("quagmirransEye")->startCast();
+        player->getSpell("quagmirransEye")->startCast();
     }
     // Mana-Etched Regalia 4pc
-    if (player->sets->manaEtched >= 4 && random(1, 100) <= player->auras.at("manaEtched4Set")->procChance)
+    if (player->sets->manaEtched >= 4 && random(1, 100) <= player->getAura("manaEtched4Set")->procChance)
     {
-        player->auras.at("manaEtched4Set")->apply();
+        player->getAura("manaEtched4Set")->apply();
     }
     // Mark of Defiance
-    if (player->spells.count("markOfDefiance") > 0 && random(1, 100) <= player->spells.at("markOfDefiance")->procChance)
+    if (player->getSpell("markOfDefiance") != nullptr && random(1, 100) <= player->getSpell("markOfDefiance")->procChance)
     {
-        player->spells.at("markOfDefiance")->startCast();
+        player->getSpell("markOfDefiance")->startCast();
     }
     // Darkmoon Card: Crusade
-    if (player->spells.count("darkmoonCardCrusade") > 0)
+    if (player->getSpell("darkmoonCardCrusade") != nullptr)
     {
-        player->auras.at("darkmoonCardCrusade")->apply();
+        player->getAura("darkmoonCardCrusade")->apply();
     }
     // Band of the Eternal Sage
-    if (player->spells.count("bandOfTheEternalSage") > 0 && player->spells.at("bandOfTheEternalSage")->ready() && random(1, 100) <= player->spells.at("bandOfTheEternalSage")->procChance)
+    if (player->getSpell("bandOfTheEternalSage") != nullptr && player->getSpell("bandOfTheEternalSage")->ready() && random(1, 100) <= player->getSpell("bandOfTheEternalSage")->procChance)
     {
-        player->spells.at("bandOfTheEternalSage")->startCast();
+        player->getSpell("bandOfTheEternalSage")->startCast();
     }
     // Blade of Wizardry
-    if (player->spells.count("bladeOfWizardry") > 0 && player->spells.at("bladeOfWizardry")->ready() && random(1, 100) <= player->auras.at("bladeOfWizardry")->procChance)
+    if (player->getSpell("bladeOfWizardry") != nullptr && player->getSpell("bladeOfWizardry")->ready() && random(1, 100) <= player->getAura("bladeOfWizardry")->procChance)
     {
-        player->spells.at("bladeOfWizardry")->startCast();
+        player->getSpell("bladeOfWizardry")->startCast();
     }
     // Mystical Skyfire Diamond
-    if (player->spells.count("mysticalSkyfireDiamond") > 0 && player->spells.at("mysticalSkyfireDiamond")->ready() && random(1, 100) <= player->spells.at("mysticalSkyfireDiamond")->procChance)
+    if (player->getSpell("mysticalSkyfireDiamond") != nullptr && player->getSpell("mysticalSkyfireDiamond")->ready() && random(1, 100) <= player->getSpell("mysticalSkyfireDiamond")->procChance)
     {
-        player->spells.at("mysticalSkyfireDiamond")->startCast();
+        player->getSpell("mysticalSkyfireDiamond")->startCast();
     }
     // Robe of the Elder Scribes
-    if (player->spells.count("robeOfTheElderScribes") > 0 && player->spells.at("robeOfTheElderScribes")->ready() && random(1, 100) <= player->spells.at("robeOfTheElderScribes")->procChance)
+    if (player->getSpell("robeOfTheElderScribes") != nullptr && player->getSpell("robeOfTheElderScribes")->ready() && random(1, 100) <= player->getSpell("robeOfTheElderScribes")->procChance)
     {
-        player->spells.at("robeOfTheElderScribes")->startCast();
+        player->getSpell("robeOfTheElderScribes")->startCast();
     }
     // Insightful Earthstorm Diamond
-    if (player->spells.count("insightfulEarthstormDiamond") > 0 && player->spells.at("insightfulEarthstormDiamond")->ready() && random(1, 100) <= player->spells.at("insightfulEarthstormDiamond")->procChance)
+    if (player->getSpell("insightfulEarthstormDiamond") != nullptr && player->getSpell("insightfulEarthstormDiamond")->ready() && random(1, 100) <= player->getSpell("insightfulEarthstormDiamond")->procChance)
     {
-        player->spells.at("insightfulEarthstormDiamond")->startCast();
+        player->getSpell("insightfulEarthstormDiamond")->startCast();
     }
     // Wrath of Cenarius
-    if (player->auras.count("wrathOfCenarius") > 0 && player->spells.at("wrathOfCenarius")->ready() && random(1, 100) <= player->spells.at("wrathOfCenarius")->procChance)
+    if (player->getAura("wrathOfCenarius") != nullptr && player->getSpell("wrathOfCenarius")->ready() && random(1, 100) <= player->getSpell("wrathOfCenarius")->procChance)
     {
-        player->auras.at("wrathOfCenarius")->apply();
+        player->getAura("wrathOfCenarius")->apply();
     }
 }
 
@@ -468,7 +468,7 @@ ShadowBolt::ShadowBolt(Player* player) : Spell(player)
 
 void ShadowBolt::startCast(double predictedDamage = 0)
 {
-    //bool hasShadowTrance = player->auras.count("shadowTrance") > 0;
+    //bool hasShadowTrance = player->getAura("shadowTrance") != nullptr;
 
     /*if (hasShadowTrance && player->auras["shadowTrance"].active)
     {
@@ -772,7 +772,7 @@ Conflagrate::Conflagrate(Player* player) : Spell(player)
 
 void Conflagrate::startCast()
 {
-    /*if (player->auras.count("immolate") > 0 && player->auras->immolate->active)
+    /*if (player->getAura("immolate") != nullptr && player->auras->immolate->active)
     {
         Spell::startCast();
         player->auras->immolate->active = false;
@@ -973,11 +973,11 @@ void TheLightningCapacitor::startCast(double predictedDamage)
 {
     if (cooldownRemaining <= 0)
     {
-        player->auras.at("theLightningCapacitor")->apply();
-        if (player->auras.at("theLightningCapacitor")->stacks == 3)
+        player->getAura("theLightningCapacitor")->apply();
+        if (player->getAura("theLightningCapacitor")->stacks == 3)
         {
             cooldownRemaining = cooldown;
-            player->auras.at("theLightningCapacitor")->fade();
+            player->getAura("theLightningCapacitor")->fade();
             Spell::startCast();
         }
     }

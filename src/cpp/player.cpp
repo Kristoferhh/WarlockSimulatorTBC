@@ -297,62 +297,62 @@ void Player::initialize()
     if (std::find(trinketIds.begin(), trinketIds.end(), 30340) != trinketIds.end()) trinkets.push_back(new StarkillersBauble(this));
 
     // Spells
-    spells.insert(std::make_pair("lifeTap", new LifeTap(this)));
+    spells.push_back(new LifeTap(this));
     if (!settings->isSingleTarget)
     {
-        spells.insert(std::make_pair("seedOfCorruption", new SeedOfCorruption(this)));
+        spells.push_back(new SeedOfCorruption(this));
     }
     else
     {
-        if (settings->hasShadowBolt || talents->nightfall > 0 || settings->simChoosingRotation) spells.insert(std::make_pair("shadowBolt", new ShadowBolt(this)));
-        if (settings->hasIncinerate || settings->simChoosingRotation) spells.insert(std::make_pair("incinerate", new Incinerate(this)));
-        if (settings->hasSearingPain || settings->simChoosingRotation) spells.insert(std::make_pair("searingPain", new SearingPain(this)));
-        if (settings->hasCorruption || settings->simChoosingRotation) spells.insert(std::make_pair("corruption", new Corruption(this)));
-        if (talents->unstableAffliction == 1 && (settings->hasUnstableAffliction || settings->simChoosingRotation)) spells.insert(std::make_pair("unstableAffliction", new UnstableAffliction(this)));
-        if (talents->siphonLife == 1 && (settings->hasSiphonLife || settings->simChoosingRotation)) spells.insert(std::make_pair("siphonLife", new SiphonLife(this)));
-        if (settings->hasImmolate || settings->simChoosingRotation) spells.insert(std::make_pair("immolate", new Immolate(this)));
-        if (settings->hasCurseOfAgony || settings->hasCurseOfDoom) spells.insert(std::make_pair("curseOfAgony", new CurseOfAgony(this)));
-        if (settings->hasCurseOfTheElements) spells.insert(std::make_pair("curseOfTheElements", new CurseOfTheElements(this)));
-        if (settings->hasCurseOfRecklessness) spells.insert(std::make_pair("curseOfRecklessnesss", new CurseOfRecklessness(this)));
-        if (settings->hasCurseOfDoom) spells.insert(std::make_pair("curseOfDoom", new CurseOfDoom(this)));
-        if (talents->conflagrate == 1 && (settings->hasConflagrate || settings->simChoosingRotation)) spells.insert(std::make_pair("conflagrate", new Conflagrate(this)));
-        if (talents->shadowburn == 1 && (settings->hasShadowburn || settings->simChoosingRotation)) spells.insert(std::make_pair("shadowburn", new Shadowburn(this)));
-        if (settings->hasDeathCoil || settings->simChoosingRotation) spells.insert(std::make_pair("deathCoil", new DeathCoil(this)));
-        if (talents->shadowfury == 1 && (settings->hasShadowfury || settings->simChoosingRotation)) spells.insert(std::make_pair("shadowfury", new Shadowfury(this)));
-        if (talents->amplifyCurse == 1 && (settings->hasAmplifyCurse || settings->simChoosingRotation)) spells.insert(std::make_pair("amplifyCurse", new AmplifyCurse(this)));
+        if (settings->hasShadowBolt || talents->nightfall > 0 || settings->simChoosingRotation) spells.push_back(new ShadowBolt(this));
+        if (settings->hasIncinerate || settings->simChoosingRotation) spells.push_back(new Incinerate(this));
+        if (settings->hasSearingPain || settings->simChoosingRotation) spells.push_back(new SearingPain(this));
+        if (settings->hasCorruption || settings->simChoosingRotation) spells.push_back(new Corruption(this));
+        if (talents->unstableAffliction == 1 && (settings->hasUnstableAffliction || settings->simChoosingRotation)) spells.push_back(new UnstableAffliction(this));
+        if (talents->siphonLife == 1 && (settings->hasSiphonLife || settings->simChoosingRotation)) spells.push_back(new SiphonLife(this));
+        if (settings->hasImmolate || settings->simChoosingRotation) spells.push_back(new Immolate(this));
+        if (settings->hasCurseOfAgony || settings->hasCurseOfDoom) spells.push_back(new CurseOfAgony(this));
+        if (settings->hasCurseOfTheElements) spells.push_back(new CurseOfTheElements(this));
+        if (settings->hasCurseOfRecklessness) spells.push_back(new CurseOfRecklessness(this));
+        if (settings->hasCurseOfDoom) spells.push_back(new CurseOfDoom(this));
+        if (talents->conflagrate == 1 && (settings->hasConflagrate || settings->simChoosingRotation)) spells.push_back(new Conflagrate(this));
+        if (talents->shadowburn == 1 && (settings->hasShadowburn || settings->simChoosingRotation)) spells.push_back(new Shadowburn(this));
+        if (settings->hasDeathCoil || settings->simChoosingRotation) spells.push_back(new DeathCoil(this));
+        if (talents->shadowfury == 1 && (settings->hasShadowfury || settings->simChoosingRotation)) spells.push_back(new Shadowfury(this));
+        if (talents->amplifyCurse == 1 && (settings->hasAmplifyCurse || settings->simChoosingRotation)) spells.push_back(new AmplifyCurse(this));
     }
-    if (talents->darkPact == 1 && (settings->hasDarkPact || settings->simChoosingRotation)) spells.insert(std::make_pair("darkPact", new DarkPact(this)));
-    if (selectedAuras->destructionPotion) spells.insert(std::make_pair("destructionPotion", new DestructionPotion(this)));
-    if (selectedAuras->superManaPotion) spells.insert(std::make_pair("superManaPotion", new SuperManaPotion(this)));
-    if (selectedAuras->demonicRune) spells.insert(std::make_pair("demonicRune", new DemonicRune(this)));
-    if (selectedAuras->flameCap) spells.insert(std::make_pair("flameCap", new FlameCap(this)));
-    if (settings->isOrc) spells.insert(std::make_pair("bloodFury", new BloodFury(this)));
-    if (selectedAuras->drumsOfBattle) spells.insert(std::make_pair("drumsOfBattle", new DrumsOfBattle(this)));
-    else if (selectedAuras->drumsOfWar) spells.insert(std::make_pair("drumsOfWar", new DrumsOfWar(this)));
-    else if (selectedAuras->drumsOfRestoration) spells.insert(std::make_pair("drumsOfRestoration", new DrumsOfRestoration(this)));
-    if (items->mainHand == 31336) spells.insert(std::make_pair("bladeOfWizardry", new BladeOfWizardry(this)));
-    if (items->neck == 34678) spells.insert(std::make_pair("shatteredSunPendantOfAcumen", new ShatteredSunPendantOfAcumen(this)));
-    if (items->chest == 28602) spells.insert(std::make_pair("robeOfTheElderScribes", new RobeOfTheElderScribes(this)));
-    if (settings->metaGemId == 25893) spells.insert(std::make_pair("mysticalSkyfireDiamond", new MysticalSkyfireDiamond(this)));
-    if (settings->metaGemId == 25901) spells.insert(std::make_pair("insightfulEarthstormDiamond", new InsightfulEarthstormDiamond(this)));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 34470) != trinketIds.end()) spells.insert(std::make_pair("timbalsFocusingCrystal", new TimbalsFocusingCrystal(this)));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 27922) != trinketIds.end()) spells.insert(std::make_pair("markOfDefiance", new MarkOfDefiance(this)));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 28785) != trinketIds.end()) spells.insert(std::make_pair("theLightningCapacitor", new TheLightningCapacitor(this)));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 27683) != trinketIds.end()) spells.insert(std::make_pair("quagmirransEye", new QuagmirransEye(this)));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 28418) != trinketIds.end()) spells.insert(std::make_pair("shiffarsNexusHorn", new ShiffarsNexusHorn(this)));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 30626) != trinketIds.end()) spells.insert(std::make_pair("sextantOfUnstableCurrents", new SextantOfUnstableCurrents(this)));
-    if (items->ring1 == 29305 || items->ring2 == 29305) spells.insert(std::make_pair("bandOfTheEternalSage", new BandOfTheEternalSage(this)));
+    if (talents->darkPact == 1 && (settings->hasDarkPact || settings->simChoosingRotation)) spells.push_back(new DarkPact(this));
+    if (selectedAuras->destructionPotion) spells.push_back(new DestructionPotion(this));
+    if (selectedAuras->superManaPotion) spells.push_back(new SuperManaPotion(this));
+    if (selectedAuras->demonicRune) spells.push_back(new DemonicRune(this));
+    if (selectedAuras->flameCap) spells.push_back(new FlameCap(this));
+    if (settings->isOrc) spells.push_back(new BloodFury(this));
+    if (selectedAuras->drumsOfBattle) spells.push_back(new DrumsOfBattle(this));
+    else if (selectedAuras->drumsOfWar) spells.push_back(new DrumsOfWar(this));
+    else if (selectedAuras->drumsOfRestoration) spells.push_back(new DrumsOfRestoration(this));
+    if (items->mainHand == 31336) spells.push_back(new BladeOfWizardry(this));
+    if (items->neck == 34678) spells.push_back(new ShatteredSunPendantOfAcumen(this));
+    if (items->chest == 28602) spells.push_back(new RobeOfTheElderScribes(this));
+    if (settings->metaGemId == 25893) spells.push_back(new MysticalSkyfireDiamond(this));
+    if (settings->metaGemId == 25901) spells.push_back(new InsightfulEarthstormDiamond(this));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 34470) != trinketIds.end()) spells.push_back(new TimbalsFocusingCrystal(this));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 27922) != trinketIds.end()) spells.push_back(new MarkOfDefiance(this));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 28785) != trinketIds.end()) spells.push_back(new TheLightningCapacitor(this));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 27683) != trinketIds.end()) spells.push_back(new QuagmirransEye(this));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 28418) != trinketIds.end()) spells.push_back(new ShiffarsNexusHorn(this));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 30626) != trinketIds.end()) spells.push_back(new SextantOfUnstableCurrents(this));
+    if (items->ring1 == 29305 || items->ring2 == 29305) spells.push_back(new BandOfTheEternalSage(this));
     if (selectedAuras->powerInfusion)
     {
-        spellVectors.insert(std::make_pair("powerInfusion", std::vector<Spell*>(settings->powerInfusionAmount, new PowerInfusion(this))));
+        spellVectors.push_back(std::vector<Spell*>(settings->powerInfusionAmount, new PowerInfusion(this)));
     }
     if (selectedAuras->bloodlust)
     {
-        spellVectors.insert(std::make_pair("bloodlust", std::vector<Spell*>(settings->bloodlustAmount, new Bloodlust(this))));
+        spellVectors.push_back(std::vector<Spell*>(settings->bloodlustAmount, new Bloodlust(this)));
     }
     if (selectedAuras->innervate)
     {
-        spellVectors.insert(std::make_pair("innervate", std::vector<Spell*>(settings->innervateAmount, new Innervate(this))));
+        spellVectors.push_back(std::vector<Spell*>(settings->innervateAmount, new Innervate(this)));
     }
 
     // Auras
@@ -360,47 +360,47 @@ void Player::initialize()
     {
         if (settings->isSingleTarget)
         {
-            if (talents->improvedShadowBolt > 0) auras.insert(std::make_pair("improvedShadowBolt", new ImprovedShadowBolt(this)));
-            if (spells.count("corruption") > 0) dots.insert(std::make_pair("corruption", new CorruptionDot(this)));
-            if (spells.count("unstableAffliction") > 0) dots.insert(std::make_pair("unstableAffliction", new UnstableAfflictionDot(this)));
-            if (spells.count("siphonLife") > 0) dots.insert(std::make_pair("siphonLife", new SiphonLifeDot(this)));
-            if (spells.count("immolate") > 0) dots.insert(std::make_pair("immolate", new ImmolateDot(this)));
-            if (spells.count("curseOfAgony") > 0) dots.insert(std::make_pair("curseOfAgony", new CurseOfAgonyDot(this)));
-            if (settings->hasCurseOfTheElements)  auras.insert(std::make_pair("curseOfTheElements", new CurseOfTheElementsAura(this)));
-            if (settings->hasCurseOfRecklessness) auras.insert(std::make_pair("curseOfRecklessness", new CurseOfRecklessnessAura(this)));
-            if (settings->hasCurseOfDoom) dots.insert(std::make_pair("curseOfDoom", new CurseOfDoomDot(this)));
-            if (talents->nightfall > 0) auras.insert(std::make_pair("shadowTrance", new ShadowTranceAura(this)));
-            if (settings->hasCurseOfDoom) auras.insert(std::make_pair("amplifyCurse", new AmplifyCurseAura(this)));
+            if (talents->improvedShadowBolt > 0) auras.push_back(new ImprovedShadowBolt(this));
+            if (getSpell("corruption") != nullptr) dots.push_back(new CorruptionDot(this));
+            if (getSpell("unstableAffliction") != nullptr) dots.push_back(new UnstableAfflictionDot(this));
+            if (getSpell("siphonLife") != nullptr) dots.push_back(new SiphonLifeDot(this));
+            if (getSpell("immolate") != nullptr) dots.push_back(new ImmolateDot(this));
+            if (getSpell("curseOfAgony") != nullptr) dots.push_back(new CurseOfAgonyDot(this));
+            if (settings->hasCurseOfTheElements)  auras.push_back(new CurseOfTheElementsAura(this));
+            if (settings->hasCurseOfRecklessness) auras.push_back(new CurseOfRecklessnessAura(this));
+            if (settings->hasCurseOfDoom) dots.push_back(new CurseOfDoomDot(this));
+            if (talents->nightfall > 0) auras.push_back(new ShadowTranceAura(this));
+            if (settings->hasCurseOfDoom) auras.push_back(new AmplifyCurseAura(this));
         }
-        if (selectedAuras->powerInfusion) auras.insert(std::make_pair("powerInfusion", new PowerInfusionAura(this)));
-        if (selectedAuras->innervate) auras.insert(std::make_pair("innervate", new InnervateAura(this)));
-        if (settings->isOrc) auras.insert(std::make_pair("bloodFury", new BloodFuryAura(this)));
-        if (selectedAuras->destructionPotion) auras.insert(std::make_pair("destructionPotion", new DestructionPotionAura(this)));
-        if (selectedAuras->flameCap) auras.insert(std::make_pair("flameCap", new FlameCapAura(this)));
-        if (selectedAuras->bloodlust) auras.insert(std::make_pair("bloodlust", new BloodlustAura(this)));
-        if (selectedAuras->drumsOfBattle) auras.insert(std::make_pair("drumsOfBattle", new DrumsOfBattleAura(this)));
-        else if (selectedAuras->drumsOfWar) auras.insert(std::make_pair("drumsOfWar", new DrumsOfWarAura(this)));
-        else if (selectedAuras->drumsOfRestoration) auras.insert(std::make_pair("drumsOfRestoration", new DrumsOfRestorationAura(this)));
-        if (items->ring1 == 29305 || items->ring2 == 29305) auras.insert(std::make_pair("bandOfTheEternalSage", new BandOfTheEternalSageAura(this)));
-        if (items->ring1 == 21190 || items->ring2 == 21190) auras.insert(std::make_pair("wrathOfCenarius", new WrathOfCenariusAura(this)));
-        if (items->mainHand == 31336) auras.insert(std::make_pair("bladeOfWizardry", new BladeOfWizardryAura(this)));
-        if (items->neck == 34678 && settings->isAldor) auras.insert(std::make_pair("shatteredSunPendantOfAcumen", new ShatteredSunpendantOfAcumenAura(this)));
-        if (items->chest == 28602) auras.insert(std::make_pair("robeOfTheElderScribes", new RobeOfTheElderScribesAura(this)));
-        if (settings->metaGemId == 25893) auras.insert(std::make_pair("mysticalSkyfireDiamond", new MysticalSkyfireDiamondAura(this)));
-        if (std::find(trinketIds.begin(), trinketIds.end(), 28789) != trinketIds.end()) auras.insert(std::make_pair("eyeOfMagtheridon", new EyeOfMagtheridonAura(this)));
-        if (std::find(trinketIds.begin(), trinketIds.end(), 30626) != trinketIds.end()) auras.insert(std::make_pair("sextantOfUnstableCurrents", new SextantOfUnstableCurrentsAura(this)));
-        if (std::find(trinketIds.begin(), trinketIds.end(), 27683) != trinketIds.end()) auras.insert(std::make_pair("quagmirransEye", new QuagmirransEyeAura(this)));
-        if (std::find(trinketIds.begin(), trinketIds.end(), 28418) != trinketIds.end()) auras.insert(std::make_pair("shiffarsNexusHorn", new ShiffarsNexusHornAura(this)));
-        if (std::find(trinketIds.begin(), trinketIds.end(), 32493) != trinketIds.end()) auras.insert(std::make_pair("ashtongueTalismanOfShadows", new AshtongueTalismanOfShadowsAura(this)));
-        if (std::find(trinketIds.begin(), trinketIds.end(), 31856) != trinketIds.end()) auras.insert(std::make_pair("darkmoonCardCrusade", new DarkmoonCardCrusadeAura(this)));
-        if (std::find(trinketIds.begin(), trinketIds.end(), 28785) != trinketIds.end()) auras.insert(std::make_pair("theLightningCapacitor", new TheLightningCapacitorAura(this)));
+        if (selectedAuras->powerInfusion) auras.push_back(new PowerInfusionAura(this));
+        if (selectedAuras->innervate) auras.push_back(new InnervateAura(this));
+        if (settings->isOrc) auras.push_back(new BloodFuryAura(this));
+        if (selectedAuras->destructionPotion) auras.push_back(new DestructionPotionAura(this));
+        if (selectedAuras->flameCap) auras.push_back(new FlameCapAura(this));
+        if (selectedAuras->bloodlust) auras.push_back(new BloodlustAura(this));
+        if (selectedAuras->drumsOfBattle) auras.push_back(new DrumsOfBattleAura(this));
+        else if (selectedAuras->drumsOfWar) auras.push_back(new DrumsOfWarAura(this));
+        else if (selectedAuras->drumsOfRestoration) auras.push_back(new DrumsOfRestorationAura(this));
+        if (items->ring1 == 29305 || items->ring2 == 29305) auras.push_back(new BandOfTheEternalSageAura(this));
+        if (items->ring1 == 21190 || items->ring2 == 21190) auras.push_back(new WrathOfCenariusAura(this));
+        if (items->mainHand == 31336) auras.push_back(new BladeOfWizardryAura(this));
+        if (items->neck == 34678 && settings->isAldor) auras.push_back(new ShatteredSunpendantOfAcumenAura(this));
+        if (items->chest == 28602) auras.push_back(new RobeOfTheElderScribesAura(this));
+        if (settings->metaGemId == 25893) auras.push_back(new MysticalSkyfireDiamondAura(this));
+        if (std::find(trinketIds.begin(), trinketIds.end(), 28789) != trinketIds.end()) auras.push_back(new EyeOfMagtheridonAura(this));
+        if (std::find(trinketIds.begin(), trinketIds.end(), 30626) != trinketIds.end()) auras.push_back(new SextantOfUnstableCurrentsAura(this));
+        if (std::find(trinketIds.begin(), trinketIds.end(), 27683) != trinketIds.end()) auras.push_back(new QuagmirransEyeAura(this));
+        if (std::find(trinketIds.begin(), trinketIds.end(), 28418) != trinketIds.end()) auras.push_back(new ShiffarsNexusHornAura(this));
+        if (std::find(trinketIds.begin(), trinketIds.end(), 32493) != trinketIds.end()) auras.push_back(new AshtongueTalismanOfShadowsAura(this));
+        if (std::find(trinketIds.begin(), trinketIds.end(), 31856) != trinketIds.end()) auras.push_back(new DarkmoonCardCrusadeAura(this));
+        if (std::find(trinketIds.begin(), trinketIds.end(), 28785) != trinketIds.end()) auras.push_back(new TheLightningCapacitorAura(this));
         if (sets->t4 >= 2)
         {
-            auras.insert(std::make_pair("flameshadow", new Flameshadow(this)));
-            auras.insert(std::make_pair("shadowflame", new Shadowflame(this)));
+            auras.push_back(new Flameshadow(this));
+            auras.push_back(new Shadowflame(this));
         }
-        if (sets->spellstrike >= 2) auras.insert(std::make_pair("spellstrike", new SpellstrikeAura(this)));
-        if (sets->manaEtched >= 4) auras.insert(std::make_pair("manaEtched4Set", new ManaEtched4SetAura(this)));
+        if (sets->spellstrike >= 2) auras.push_back(new SpellstrikeAura(this));
+        if (sets->manaEtched >= 4) auras.push_back(new ManaEtched4SetAura(this));
     }
 }
 
@@ -413,22 +413,85 @@ void Player::reset()
     fiveSecondRuleTimer = 5;
 
     // Reset spells
-    for (std::map<std::string, Spell*>::iterator it = spells.begin(); it != spells.end(); it++)
+    for (std::vector<Spell*>::iterator it = spells.begin(); it != spells.end(); it++)
     {
-        it->second->reset();
+        (*it)->reset();
     }
-    for (std::map<std::string, std::vector<Spell*>>::iterator it = spellVectors.begin(); it != spellVectors.end(); it++)
+    for (std::vector<std::vector<Spell*>>::iterator it = spellVectors.begin(); it != spellVectors.end(); it++)
     {
-        for (auto spell : it->second)
+        for (auto spell : *it)
         {
             spell->reset();
         }
     }
 }
 
+Spell* Player::getSpell(std::string spellName)
+{
+    for (std::vector<Spell*>::iterator it = spells.begin(); it != spells.end(); it++)
+    {
+        if ((*it)->varName == spellName)
+        {
+            return *it;
+        }
+    }
+    
+    return nullptr;
+}
+
+bool Player::spellVectorExists(std::string spellName)
+{
+    for (std::vector<std::vector<Spell*>>::iterator it = spellVectors.begin(); it != spellVectors.end(); it++)
+    {
+        if ((*it)[0]->varName == spellName)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+std::vector<Spell*>& Player::getSpellVector(std::string spellName)
+{
+    for (std::vector<std::vector<Spell*>>::iterator it = spellVectors.begin(); it != spellVectors.end(); it++)
+    {
+        if ((*it)[0]->varName == spellName)
+        {
+            return *it;
+        }
+    }
+}
+
+Aura* Player::getAura(std::string auraName)
+{
+    for (std::vector<Aura*>::iterator it = auras.begin(); it != auras.end(); it++)
+    {
+        if ((*it)->varName == auraName)
+        {
+            return *it;
+        }
+    }
+    
+    return nullptr;
+}
+
+DamageOverTime* Player::getDot(std::string dotName)
+{
+    for (std::vector<DamageOverTime*>::iterator it = dots.begin(); it != dots.end(); it++)
+    {
+        if ((*it)->varName == dotName)
+        {
+            return *it;
+        }
+    }
+    
+    return nullptr;
+}
+
 double Player::getGcdValue(std::string varName)
 {
-    if (spells.count("shadowfury") == 0 || varName != spells.at("shadowfury")->varName)
+    if (varName != "shadowfury" || getSpell("shadowfury") == nullptr)
     {
         return std::max(minimumGcdValue, round((gcdValue / (1 + ((stats->hasteRating / hasteRatingPerPercent + stats->hastePercent) / 100))) * 10000) / 10000);
     }
@@ -509,41 +572,41 @@ double Player::getBaseHitChance(int playerLevel, int enemyLevel)
 
 bool Player::areAnyCooldownsReady()
 {
-    if (spells.count("bloodlust") > 0 && !auras.at("bloodlust")->active)
+    if (getSpell("bloodlust") != nullptr && !getAura("bloodlust")->active)
     {
         for (int i = 0; i < settings->bloodlustAmount; i++)
         {
-            if (spellVectors.at("bloodlust")[i]->ready())
+            if (getSpellVector("bloodlust")[i]->ready())
             {
                 return true;
             }
         }
     }
-    if (spells.count("powerInfusion") > 0 && !auras.at("powerInfusion")->active)
+    if (getSpell("powerInfusion") != nullptr && !getAura("powerInfusion")->active)
     {
         for (int i = 0; i < settings->powerInfusionAmount; i++)
         {
-            if (spellVectors.at("powerInfusion")[i]->ready())
+            if (getSpellVector("powerInfusion")[i]->ready())
             {
                 return true;
             }
         }
     }
-    if (spells.count("innervate") > 0 && !auras.at("innervate")->active)
+    if (getSpell("innervate") != nullptr && !getAura("innervate")->active)
     {
         for (int i = 0; i < settings->innervateAmount; i++)
         {
-            if (spellVectors.at("innervate")[i]->ready())
+            if (getSpellVector("innervate")[i]->ready())
             {
                 return true;
             }
         }
     }
-    if (spells.count("destructionPotion") > 0 && spells.at("destructionPotion")->ready())
+    if (getSpell("destructionPotion") != nullptr && getSpell("destructionPotion")->ready())
     {
         return true;
     }
-    if (spells.count("bloodFury") > 0 && spells.at("bloodFury")->ready())
+    if (getSpell("bloodFury") != nullptr && getSpell("bloodFury")->ready())
     {
         return true;
     }
@@ -560,50 +623,50 @@ bool Player::areAnyCooldownsReady()
 
 void Player::useCooldowns()
 {
-    if (spellVectors.count("bloodlust") > 0 && !auras.at("bloodlust")->active)
+    if (spellVectorExists("bloodlust") && !getAura("bloodlust")->active)
     {
         for (int i = 0; i < settings->bloodlustAmount; i++)
         {
-            if (spellVectors.at("bloodlust")[i]->ready())
+            if (getSpellVector("bloodlust")[i]->ready())
             {
-                spellVectors.at("bloodlust")[i]->startCast();
+                getSpellVector("bloodlust")[i]->startCast();
                 break;
             }
         }
     }
-    if (spellVectors.count("powerInfusion") > 0 && !auras.at("powerInfusion")->active)
+    if (spellVectorExists("powerInfusion") && !getAura("powerInfusion")->active)
     {
         for (int i = 0; i < settings->powerInfusionAmount; i++)
         {
-            if (spellVectors.at("powerInfusion")[i]->ready())
+            if (getSpellVector("powerInfusion")[i]->ready())
             {
-                spellVectors.at("powerInfusion")[i]->startCast();
+                getSpellVector("powerInfusion")[i]->startCast();
                 break;
             }
         }
     }
-    if (spellVectors.count("innervate") > 0 && !auras.at("innervate")->active)
+    if (spellVectorExists("innervate") && !getAura("innervate")->active)
     {
         for (int i = 0; i < settings->innervateAmount; i++)
         {
-            if (spellVectors.at("innervate")[i]->ready())
+            if (getSpellVector("innervate")[i]->ready())
             {
-                spellVectors.at("innervate")[i]->startCast();
+                getSpellVector("innervate")[i]->startCast();
                 break;
             }
         }
     }
-    if (spells.count("destructionPotion") > 0 && spells.at("destructionPotion")->ready())
+    if (getSpell("destructionPotion") != nullptr && getSpell("destructionPotion")->ready())
     {
-        spells.at("destructionPotion")->startCast();
+        getSpell("destructionPotion")->startCast();
     }
-    if (spells.count("flameCap") > 0 && spells.at("flameCap")->ready())
+    if (getSpell("flameCap") != nullptr && getSpell("flameCap")->ready())
     {
-        spells.at("flameCap")->startCast();
+        getSpell("flameCap")->startCast();
     }
-    if (spells.count("bloodFury") > 0 && spells.at("bloodFury")->ready())
+    if (getSpell("bloodFury") != nullptr && getSpell("bloodFury")->ready())
     {
-        spells.at("bloodFury")->startCast();
+        getSpell("bloodFury")->startCast();
     }
     for (int i = 0; i < trinkets.size(); i++)
     {
@@ -622,13 +685,13 @@ void Player::useCooldowns()
 
 void Player::castLifeTapOrDarkPact()
 {
-    if (spells.count("darkPact") == 1 && spells.at("darkPact")->ready())
+    if (getSpell("darkPact") != nullptr && getSpell("darkPact")->ready())
     {
-        spells.at("darkPact")->startCast();
+        getSpell("darkPact")->startCast();
     }
     else
     {
-        spells.at("lifeTap")->startCast();
+        getSpell("lifeTap")->startCast();
     }
 }
 

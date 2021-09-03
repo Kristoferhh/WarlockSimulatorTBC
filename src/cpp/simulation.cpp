@@ -16,29 +16,29 @@ double Simulation::passTime()
 
     // Find the lowest time until the next action needs to be taken
     // Spells
-    for (std::map<std::string, Spell*>::iterator it = player->spells.begin(); it != player->spells.end(); it++)
+    for (std::vector<Spell*>::iterator it = player->spells.begin(); it != player->spells.end(); it++)
     {
-        if (it->second->cooldownRemaining > 0 && it->second->cooldownRemaining < time)
+        if ((*it)->cooldownRemaining > 0 && (*it)->cooldownRemaining < time)
         {
-            time = it->second->cooldownRemaining;
+            time = (*it)->cooldownRemaining;
         }
     }
 
     // Auras
-    for (std::map<std::string, Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
+    for (std::vector<Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
     {
-        if (it->second->active && it->second->hasDuration && it->second->durationRemaining < time)
+        if ((*it)->active && (*it)->hasDuration && (*it)->durationRemaining < time)
         {
-            time = it->second->durationRemaining;
+            time = (*it)->durationRemaining;
         }
     }
 
     // Dots
-    for (std::map<std::string, DamageOverTime*>::iterator it = player->dots.begin(); it != player->dots.end(); it++)
+    for (std::vector<DamageOverTime*>::iterator it = player->dots.begin(); it != player->dots.end(); it++)
     {
-        if (it->second->active && it->second->tickTimerRemaining < time)
+        if ((*it)->active && (*it)->tickTimerRemaining < time)
         {
-            time = it->second->tickTimerRemaining;
+            time = (*it)->tickTimerRemaining;
         }
     }
 
@@ -66,29 +66,29 @@ double Simulation::passTime()
     // Auras need to tick before Spells because otherwise you'll, for example, finish casting Corruption and then immediately afterwards, in the same millisecond, immediately tick down the aura
     // This was also causing buffs like e.g. the t4 4pc buffs to expire sooner than they should.
     // Auras
-    for (std::map<std::string, Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
+    for (std::vector<Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
     {
-        if (it->second->active && it->second->hasDuration)
+        if ((*it)->active && (*it)->hasDuration)
         {
-            it->second->tick(time);
+            (*it)->tick(time);
         }
     }
 
     // Dots
-    for (std::map<std::string, DamageOverTime*>::iterator it = player->dots.begin(); it != player->dots.end(); ++it)
+    for (std::vector<DamageOverTime*>::iterator it = player->dots.begin(); it != player->dots.end(); ++it)
     {
-        if (it->second->tickTimerRemaining > 0)
+        if ((*it)->tickTimerRemaining > 0)
         {
-            it->second->tick(time);
+            (*it)->tick(time);
         }
     }
 
     // Spells
-    for (std::map<std::string, Spell*>::iterator it = player->spells.begin(); it != player->spells.end(); ++it)
+    for (std::vector<Spell*>::iterator it = player->spells.begin(); it != player->spells.end(); ++it)
     {
-        if (it->second->cooldownRemaining > 0 || it->second->casting)
+        if ((*it)->cooldownRemaining > 0 || (*it)->casting)
         {
-            it->second->tick(time);
+            (*it)->tick(time);
         }
     }
 
@@ -104,10 +104,10 @@ double Simulation::passTime()
     if (player->mp5Timer <= 0)
     {
         player->mp5Timer = 5;
-        if (player->stats->mp5 > 0 || player->fiveSecondRuleTimer <= 0 || (player->auras.count("innervate") > 0 && player->auras.at("innervate")->active))
+        if (player->stats->mp5 > 0 || player->fiveSecondRuleTimer <= 0 || (player->getSpell("innervate") != nullptr && player->getAura("innervate")->active))
         {
-            bool innervateExists = player->auras.count("innervate") > 0;
-            bool innervateActive = innervateExists && player->auras.at("innervate")->active;
+            bool innervateExists = player->getSpell("innervate") != nullptr;
+            bool innervateActive = innervateExists && player->getAura("innervate")->active;
             int currentPlayerMana = player->stats->mana;
 
             // MP5
@@ -163,17 +163,17 @@ void Simulation::start()
         while (player->fightTime < fightLength)
         {
             // Use Drums
-            if (player->auras.count("drumsOfBattle") > 0 && !player->auras.at("drumsOfBattle")->active && player->spells.at("drumsOfBattle")->ready())
+            if (player->getSpell("drumsOfBattle") != nullptr && !player->getAura("drumsOfBattle")->active && player->getSpell("drumsOfBattle")->ready())
             {
-                player->spells.at("drumsOfBattle")->startCast();
+                player->getSpell("drumsOfBattle")->startCast();
             }
-            else if (player->auras.count("drumsOfWar") > 0 && !player->auras.at("drumsOfWar")->active && player->spells.at("drumsOfWar")->ready())
+            else if (player->getSpell("drumsOfWar") != nullptr && !player->getAura("drumsOfWar")->active && player->getSpell("drumsOfWar")->ready())
             {
-                player->spells.at("drumsOfWar")->startCast();
+                player->getSpell("drumsOfWar")->startCast();
             }
-            else if (player->auras.count("drumsOfRestoration") > 0 && !player->auras.at("drumsOfRestoration")->active && player->spells.at("drumsOfRestoration")->ready())
+            else if (player->getSpell("drumsOfRestoration") != nullptr && !player->getAura("drumsOfRestoration")->active && player->getSpell("drumsOfRestoration")->ready())
             {
-                player->spells.at("drumsOfRestoration")->startCast();
+                player->getSpell("drumsOfRestoration")->startCast();
             }
 
             // Player
@@ -181,14 +181,14 @@ void Simulation::start()
             {
                 // Spells not on the GCD
                 // Demonic Rune
-                if ((player->fightTime > 5 || player->stats->mp5 == 0) && player->spells.count("demonicRune") > 0 && (player->stats->maxMana - player->stats->mana) > player->spells.at("demonicRune")->avgManaValue && player->spells.at("demonicRune")->ready())
+                if ((player->fightTime > 5 || player->stats->mp5 == 0) && player->getSpell("demonicRune") != nullptr && (player->stats->maxMana - player->stats->mana) > player->getSpell("demonicRune")->avgManaValue && player->getSpell("demonicRune")->ready())
                 {
-                    player->spells.at("demonicRune")->startCast();
+                    player->getSpell("demonicRune")->startCast();
                 }
                 // Super Mana Potion
-                if ((player->fightTime > 5 || player->stats->mp5 == 0) && player->spells.count("superManaPotion") > 0 && (player->stats->maxMana - player->stats->mana) > player->spells.at("superManaPotion")->avgManaValue && player->spells.at("superManaPotion")->ready())
+                if ((player->fightTime > 5 || player->stats->mp5 == 0) && player->getSpell("superManaPotion") != nullptr && (player->stats->maxMana - player->stats->mana) > player->getSpell("superManaPotion")->avgManaValue && player->getSpell("superManaPotion")->ready())
                 {
-                    player->spells.at("superManaPotion")->startCast();
+                    player->getSpell("superManaPotion")->startCast();
                 }
 
                 // Spells on the GCD
@@ -204,153 +204,153 @@ void Simulation::start()
                         // If the sim is choosing the rotation for the user then predict the damage of the three filler spells if they're available (maybe just skip Searing Pain to save time, there's no way it will ever be the best spell to cast)
                         if (player->settings->simChoosingRotation)
                         {
-                            predictedDamageOfSpells.insert(std::make_pair("shadowBolt", player->spells.at("shadowBolt")->predictDamage()));
-                            predictedDamageOfSpells.insert(std::make_pair("incinerate", player->spells.at("incinerate")->predictDamage()));
-                            predictedDamageOfSpells.insert(std::make_pair("searingPain", player->spells.at("searingPain")->predictDamage()));
+                            predictedDamageOfSpells.insert(std::make_pair("shadowBolt", player->getSpell("shadowBolt")->predictDamage()));
+                            predictedDamageOfSpells.insert(std::make_pair("incinerate", player->getSpell("incinerate")->predictDamage()));
+                            predictedDamageOfSpells.insert(std::make_pair("searingPain", player->getSpell("searingPain")->predictDamage()));
                         }
 
                         //todo finishers
 
                         // Cast selected curse if it's either CoR or CoE and it's not up
-                        if (player->curse != "" && (player->curse == "curseOfRecklessness" || player->curse == "curseOfTheElements") && !player->auras.at(player->curse)->active && player->spells.at(player->curse)->ready())
+                        if (player->curse != "" && (player->curse == "curseOfRecklessness" || player->curse == "curseOfTheElements") && !player->getAura(player->curse)->active && player->getSpell(player->curse)->ready())
                         {
-                            player->spells.at(player->curse)->startCast();
+                            player->getSpell(player->curse)->startCast();
                         }
                         else
                         {
                             player->useCooldowns();
                             // Cast Curse of Doom if there's more than 60 seconds remaining
-                            if (timeRemaining > 60 && player->curse == "curseOfDoom" && !player->dots.at("curseOfDoom")->active && player->spells.at("curseOfDoom")->canCast())
+                            if (timeRemaining > 60 && player->curse == "curseOfDoom" && !player->getDot("curseOfDoom")->active && player->getSpell("curseOfDoom")->canCast())
                             {
                                 // If the sim is choosing the rotation for the player then predict the damage of the spell and put it in the map
                                 if (player->settings->simChoosingRotation)
                                 {
-                                    predictedDamageOfSpells.insert(std::make_pair(player->spells.at("curseOfDoom")->varName, player->spells.at("curseOfDoom")->predictDamage()));
+                                    predictedDamageOfSpells.insert(std::make_pair(player->getSpell("curseOfDoom")->varName, player->getSpell("curseOfDoom")->predictDamage()));
                                 }
                                 // Else if the player is choosing the rotation themselves then just cast the highest priority spell that needs to be cast
-                                else if (player->spells.at(player->curse)->hasEnoughMana())
+                                else if (player->getSpell(player->curse)->hasEnoughMana())
                                 {
-                                    if (player->spells.count("amplifyCurse") > 0 && player->spells.at("amplifyCurse")->ready())
+                                    if (player->getSpell("amplifyCurse") != nullptr && player->getSpell("amplifyCurse")->ready())
                                     {
-                                        player->spells.at("amplifyCurse")->startCast();
+                                        player->getSpell("amplifyCurse")->startCast();
                                     }
-                                    player->spells.at("curseOfDoom")->startCast();
+                                    player->getSpell("curseOfDoom")->startCast();
                                 }
                             }
                             // Cast Curse of Agony if CoA is the selected curse or if Curse of Doom is the selected curse and there's less than 60 seconds remaining of the fight
-                            if (player->curse != "" && player->dots.count("curseOfAgony") > 0 && !player->dots.at("curseOfAgony")->active && timeRemaining > player->dots.at("curseOfAgony")->minimumDuration && ((player->curse == "curseOfDoom" && !player->dots.at("curseOfDoom")->active && (player->spells.at("curseOfDoom")->cooldownRemaining > player->dots.at("curseOfAgony")->minimumDuration || timeRemaining < 60)) || (player->curse == "curseOfAgony" && player->spells.at("curseOfAgony")->canCast())))
+                            if (player->curse != "" && player->getDot("curseOfAgony") != nullptr && !player->getDot("curseOfAgony")->active && timeRemaining > player->getDot("curseOfAgony")->minimumDuration && ((player->curse == "curseOfDoom" && !player->getDot("curseOfDoom")->active && (player->getSpell("curseOfDoom")->cooldownRemaining > player->getDot("curseOfAgony")->minimumDuration || timeRemaining < 60)) || (player->curse == "curseOfAgony" && player->getSpell("curseOfAgony")->canCast())))
                             {
                                 if (player->settings->simChoosingRotation)
                                 {
-                                    predictedDamageOfSpells.insert(std::make_pair("curseOfAgony", player->spells.at("curseOfAgony")->predictDamage()));
+                                    predictedDamageOfSpells.insert(std::make_pair("curseOfAgony", player->getSpell("curseOfAgony")->predictDamage()));
                                 }
-                                else if (player->spells.at("curseOfAgony")->hasEnoughMana())
+                                else if (player->getSpell("curseOfAgony")->hasEnoughMana())
                                 {
-                                    if (player->spells.count("amplifyCurse") > 0 && player->spells.at("amplifyCurse")->ready())
+                                    if (player->getSpell("amplifyCurse") != nullptr && player->getSpell("amplifyCurse")->ready())
                                     {
-                                        player->spells.at("amplifyCurse")->startCast();
+                                        player->getSpell("amplifyCurse")->startCast();
                                     }
-                                    player->spells.at("curseOfAgony")->startCast();
+                                    player->getSpell("curseOfAgony")->startCast();
                                 }
                             }
                             // Cast Corruption if Corruption isn't up or if it will expire before the cast finishes (if no instant Corruption)
-                            if (player->spells.count("corruption") > 0 && (!player->dots.at("corruption")->active || (player->dots.at("corruption")->ticksRemaining == 1 && player->dots.at("corruption")->tickTimerRemaining < player->spells.at("corruption")->getCastTime())) && player->spells.at("corruption")->canCast() && (timeRemaining - player->spells.at("corruption")->getCastTime()) >= player->dots.at("corruption")->minimumDuration)
+                            if (player->getSpell("corruption") != nullptr && (!player->getDot("corruption")->active || (player->getDot("corruption")->ticksRemaining == 1 && player->getDot("corruption")->tickTimerRemaining < player->getSpell("corruption")->getCastTime())) && player->getSpell("corruption")->canCast() && (timeRemaining - player->getSpell("corruption")->getCastTime()) >= player->getDot("corruption")->minimumDuration)
                             {
                                 if (player->settings->simChoosingRotation)
                                 {
-                                    predictedDamageOfSpells.insert(std::make_pair("corruption", player->spells.at("corruption")->predictDamage()));
+                                    predictedDamageOfSpells.insert(std::make_pair("corruption", player->getSpell("corruption")->predictDamage()));
                                 }
-                                else if (player->spells.at("corruption")->hasEnoughMana())
+                                else if (player->getSpell("corruption")->hasEnoughMana())
                                 {
-                                    player->spells.at("corruption")->startCast();
+                                    player->getSpell("corruption")->startCast();
                                 }
                             }
                             // Cast Shadow Bolt if Shadow Trance (Nightfall) is active and Corruption is active as well to avoid potentially wasting another Nightfall proc
-                            if (player->spells.count("shadowBolt") > 0 && player->auras.count("shadowTrance") > 0 && player->auras.at("shadowTrance")->active && player->dots.at("corruption")->active && player->spells.at("shadowBolt")->canCast())
+                            if (player->getSpell("shadowBolt") != nullptr && player->getSpell("shadowTrance") != nullptr && player->getAura("shadowTrance")->active && player->getDot("corruption")->active && player->getSpell("shadowBolt")->canCast())
                             {
                                 if (player->settings->simChoosingRotation)
                                 {
                                     // todo: check if the spell is already in the array before adding it
-                                    predictedDamageOfSpells.insert(std::make_pair("shadowBolt", player->spells.at("shadowBolt")->predictDamage()));
+                                    predictedDamageOfSpells.insert(std::make_pair("shadowBolt", player->getSpell("shadowBolt")->predictDamage()));
                                 }
-                                else if (player->spells.at("shadowBolt")->hasEnoughMana())
+                                else if (player->getSpell("shadowBolt")->hasEnoughMana())
                                 {
-                                    player->spells.at("shadowBolt")->startCast();
+                                    player->getSpell("shadowBolt")->startCast();
                                 }
                             }
                             // Cast Unstable Affliction if it's not up or if it's about to expire
-                            if (player->spells.count("unstableAffliction") > 0 && player->spells.at("unstableAffliction")->canCast() && (!player->dots.at("unstableAffliction")->active || (player->dots.at("unstableAffliction")->ticksRemaining == 1 && player->dots.at("unstableAffliction")->tickTimerRemaining < player->spells.at("unstableAffliction")->getCastTime())) && (timeRemaining - player->spells.at("unstableAffliction")->getCastTime()) >= player->dots.at("unstableAffliction")->minimumDuration)
+                            if (player->getSpell("unstableAffliction") != nullptr && player->getSpell("unstableAffliction")->canCast() && (!player->getDot("unstableAffliction")->active || (player->getDot("unstableAffliction")->ticksRemaining == 1 && player->getDot("unstableAffliction")->tickTimerRemaining < player->getSpell("unstableAffliction")->getCastTime())) && (timeRemaining - player->getSpell("unstableAffliction")->getCastTime()) >= player->getDot("unstableAffliction")->minimumDuration)
                             {
                                 if (player->settings->simChoosingRotation)
                                 {
-                                    predictedDamageOfSpells.insert(std::make_pair("unstableAffliction", player->spells.at("unstableAffliction")->predictDamage()));
+                                    predictedDamageOfSpells.insert(std::make_pair("unstableAffliction", player->getSpell("unstableAffliction")->predictDamage()));
                                 }
-                                else if (player->spells.at("unstableAffliction")->hasEnoughMana())
+                                else if (player->getSpell("unstableAffliction")->hasEnoughMana())
                                 {
-                                    player->spells.at("unstableAffliction")->startCast();
+                                    player->getSpell("unstableAffliction")->startCast();
                                 }
                             }
                             // Cast Siphon Life if it's not up (todo: add option to only cast it while ISB is active if not using custom ISB uptime %)
-                            if (player->spells.count("siphonLife") > 0 && !player->dots.at("siphonLife")->active && player->spells.at("siphonLife")->canCast() && timeRemaining >= player->dots.at("siphonLife")->minimumDuration)
+                            if (player->getSpell("siphonLife") != nullptr && !player->getDot("siphonLife")->active && player->getSpell("siphonLife")->canCast() && timeRemaining >= player->getDot("siphonLife")->minimumDuration)
                             {
                                 if (player->settings->simChoosingRotation)
                                 {
-                                    predictedDamageOfSpells.insert(std::make_pair("siphonLife", player->spells.at("siphonLife")->predictDamage()));
+                                    predictedDamageOfSpells.insert(std::make_pair("siphonLife", player->getSpell("siphonLife")->predictDamage()));
                                 }
-                                else if (player->spells.at("siphonLife")->hasEnoughMana())
+                                else if (player->getSpell("siphonLife")->hasEnoughMana())
                                 {
-                                    player->spells.at("siphonLife")->startCast();
+                                    player->getSpell("siphonLife")->startCast();
                                 }
                             }
                             // Cast Immolate if it's not up or about to expire
-                            if (player->spells.count("immolate") > 0 && player->spells.at("immolate")->canCast() && (!player->dots.at("immolate")->active || (player->dots.at("immolate")->ticksRemaining == 1 && player->dots.at("immolate")->tickTimerRemaining < player->spells.at("immolate")->getCastTime())) && (timeRemaining - player->spells.at("immolate")->getCastTime()) >= player->dots.at("immolate")->minimumDuration)
+                            if (player->getSpell("immolate") != nullptr && player->getSpell("immolate")->canCast() && (!player->getDot("immolate")->active || (player->getDot("immolate")->ticksRemaining == 1 && player->getDot("immolate")->tickTimerRemaining < player->getSpell("immolate")->getCastTime())) && (timeRemaining - player->getSpell("immolate")->getCastTime()) >= player->getDot("immolate")->minimumDuration)
                             {
                                 if (player->settings->simChoosingRotation)
                                 {
-                                    predictedDamageOfSpells.insert(std::make_pair("immolate", player->spells.at("immolate")->predictDamage()));
+                                    predictedDamageOfSpells.insert(std::make_pair("immolate", player->getSpell("immolate")->predictDamage()));
                                 }
-                                else if (player->spells.at("immolate")->hasEnoughMana())
+                                else if (player->getSpell("immolate")->hasEnoughMana())
                                 {
-                                    player->spells.at("immolate")->startCast();
+                                    player->getSpell("immolate")->startCast();
                                 }
                             }
                             // Cast Shadow Bolt if Shadow Trance (Nightfall) is active
-                            if (player->spells.count("shadowBolt") > 0 && player->auras.count("shadowTrance") > 0 && player->auras.at("shadowTrance")->active && player->spells.at("shadowBolt")->canCast())
+                            if (player->getSpell("shadowBolt") != nullptr && player->getSpell("shadowTrance") != nullptr && player->getAura("shadowTrance")->active && player->getSpell("shadowBolt")->canCast())
                             {
                                 if (player->settings->simChoosingRotation)
                                 {
-                                    predictedDamageOfSpells.insert(std::make_pair("shadowBolt", player->spells.at("shadowBolt")->predictDamage()));
+                                    predictedDamageOfSpells.insert(std::make_pair("shadowBolt", player->getSpell("shadowBolt")->predictDamage()));
                                 }
-                                else if (player->spells.at("shadowBolt")->hasEnoughMana())
+                                else if (player->getSpell("shadowBolt")->hasEnoughMana())
                                 {
-                                    player->spells.at("shadowBolt")->startCast();
+                                    player->getSpell("shadowBolt")->startCast();
                                 }
                             }
                             // Cast Shadowfury
-                            if (player->spells.count("shadowfury") > 0 && player->spells.at("shadowfury")->canCast())
+                            if (player->getSpell("shadowfury") != nullptr && player->getSpell("shadowfury")->canCast())
                             {
                                 if (player->settings->simChoosingRotation)
                                 {
-                                    predictedDamageOfSpells.insert(std::make_pair("shadowfury", player->spells.at("shadowfury")->predictDamage()));
+                                    predictedDamageOfSpells.insert(std::make_pair("shadowfury", player->getSpell("shadowfury")->predictDamage()));
                                 }
-                                else if (player->spells.at("shadowfury")->hasEnoughMana())
+                                else if (player->getSpell("shadowfury")->hasEnoughMana())
                                 {
-                                    player->spells.at("shadowfury")->startCast();
+                                    player->getSpell("shadowfury")->startCast();
                                 }
                             }
                             // Cast filler spell if sim is not choosing the rotation for the user
-                            if (!player->settings->simChoosingRotation && player->spells.at(player->filler)->ready())
+                            if (!player->settings->simChoosingRotation && player->getSpell(player->filler)->ready())
                             {
-                                player->spells.at(player->filler)->startCast();
+                                player->getSpell(player->filler)->startCast();
                             }
                             // Cast Dark Pact/Life Tap if nothing else is possible and the sim is not choosing the rotation for the user
-                            if (!player->settings->simChoosingRotation && player->spells.count("darkPact") > 0 && player->spells.at("darkPact")->ready())
+                            if (!player->settings->simChoosingRotation && player->getSpell("darkPact") != nullptr && player->getSpell("darkPact")->ready())
                             {
-                                player->spells.at("darkPact")->startCast();
+                                player->getSpell("darkPact")->startCast();
                             }
-                            if (!player->settings->simChoosingRotation && player->spells.at("lifeTap")->ready())
+                            if (!player->settings->simChoosingRotation && player->getSpell("lifeTap")->ready())
                             {
-                                player->spells.at("lifeTap")->startCast();
+                                player->getSpell("lifeTap")->startCast();
                             }
                         }
 
@@ -370,9 +370,9 @@ void Simulation::start()
                             }
 
                             // If a max damage spell was not found or if the max damage spell isn't ready (no mana), then cast Life Tap
-                            if (maxDamageSpellName != "" && player->spells.at(maxDamageSpellName)->hasEnoughMana())
+                            if (maxDamageSpellName != "" && player->getSpell(maxDamageSpellName)->hasEnoughMana())
                             {
-                                player->spells.at(maxDamageSpellName)->startCast();
+                                player->getSpell(maxDamageSpellName)->startCast();
                             }
                             else
                             {
@@ -383,10 +383,10 @@ void Simulation::start()
                     // AoE (currently just does Seed of Corruption by default)
                     else
                     {
-                        if (player->spells.at("seedOfCorruption")->ready())
+                        if (player->getSpell("seedOfCorruption")->ready())
                         {
                             player->useCooldowns();
-                            player->spells.at("seedOfCorruption")->startCast();
+                            player->getSpell("seedOfCorruption")->startCast();
                         }
                         else
                         {
@@ -419,18 +419,18 @@ void Simulation::start()
         }
 
         // End all active auras & dots
-        for (std::map<std::string, Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
+        for (std::vector<Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
         {
-            if (it->second->active)
+            if ((*it)->active)
             {
-                it->second->fade(true);
+                (*it)->fade(true);
             }
         }
-        for (std::map<std::string, DamageOverTime*>::iterator it = player->dots.begin(); it != player->dots.end(); it++)
+        for (std::vector<DamageOverTime*>::iterator it = player->dots.begin(); it != player->dots.end(); it++)
         {
-            if (it->second->active)
+            if ((*it)->active)
             {
-                it->second->fade(true);
+                (*it)->fade(true);
             }
         }
     }
@@ -445,16 +445,16 @@ void Simulation::start()
     simulationEnd(median(dpsVector), minDps, maxDps, elapsedTime, player->settings->itemId);
 
     // Free spells and auras
-    for(std::map<std::string, Spell*>::iterator it = player->spells.begin(); it != player->spells.end(); it++)
+    for(std::vector<Spell*>::iterator it = player->spells.begin(); it != player->spells.end(); it++)
     {
-        delete it->second;
+        delete (*it);
     }
-    for(std::map<std::string, Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
+    for(std::vector<Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); it++)
     {
-        delete it->second;
+        delete (*it);
     }
-    for(std::map<std::string, DamageOverTime*>::iterator it = player->dots.begin(); it != player->dots.end(); it++)
+    for(std::vector<DamageOverTime*>::iterator it = player->dots.begin(); it != player->dots.end(); it++)
     {
-        delete it->second;
+        delete (*it);
     }
 }

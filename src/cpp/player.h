@@ -30,12 +30,12 @@ struct Player
   PlayerSettings* settings;
   std::string filler;
   std::string curse;
-  std::map<std::string, Spell*> spells;
-  std::map<std::string, std::vector<Spell*>> spellVectors;
-  std::map<std::string, Aura*> auras;
-  std::map<std::string, DamageOverTime*> dots;
-  std::vector<std::string> combatLogEntries;
+  std::vector<Spell*> spells;
+  std::vector<std::vector<Spell*>> spellVectors;
+  std::vector<Aura*> auras;
+  std::vector<DamageOverTime*> dots;
   std::vector<Trinket*> trinkets;
+  std::vector<std::string> combatLogEntries;
   double castTimeRemaining;
   double totalManaRegenerated;
   double gcdRemaining;
@@ -69,4 +69,9 @@ struct Player
   void castLifeTapOrDarkPact();
   bool shouldWriteToCombatLog();
   void combatLog(std::string& entry);
+  Spell* getSpell(std::string spellName);
+  Aura* getAura(std::string auraName);
+  DamageOverTime* getDot(std::string dotName);
+  std::vector<Spell*>& getSpellVector(std::string spellName);
+  bool spellVectorExists(std::string spellName);
 };
