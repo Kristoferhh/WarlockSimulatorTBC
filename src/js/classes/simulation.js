@@ -566,7 +566,7 @@ class Simulation {
       if (this.player.iteration % ~~(this.iterations / 100) == 0) {
         dpsArray.sort()
         this.simulationUpdate({
-          medianDps: Math.round(medianOfSortedArrayWithKnownLength(dpsArray, this.player.iteration) * 100) / 100,
+          medianDps: Math.round(median(dpsArray) * 100) / 100,
           percent: Math.round((this.player.iteration / this.iterations) * 100),
           itemId: this.player.itemId,
           customStat: this.player.customStat
@@ -634,7 +634,7 @@ class Simulation {
       manaGainBreakdown: this.player.manaGainBreakdown,
       combatlog: this.player.combatlog,
       iterations: this.iterations,
-      medianDps: Math.round(medianOfSortedArrayWithKnownLength(dpsArray, this.player.iteration) * 100) / 100,
+      medianDps: Math.round(median(dpsArray) * 100) / 100,
       minDps: Math.round(Math.min(...dpsArray) * 100) / 100,
       maxDps: Math.round(Math.max(...dpsArray) * 100) / 100,
       totalDamage: totalDamage,
