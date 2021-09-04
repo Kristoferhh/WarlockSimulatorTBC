@@ -245,7 +245,7 @@ void Aura::fade(bool endOfIteration)
 
 void Aura::decrementStacks() {}
 
-ImprovedShadowBolt::ImprovedShadowBolt(Player* player) : Aura(player)
+ImprovedShadowBoltAura::ImprovedShadowBoltAura(Player* player) : Aura(player)
 {
     name = "Improved Shadow Bolt";
     duration = 12;
@@ -256,13 +256,13 @@ ImprovedShadowBolt::ImprovedShadowBolt(Player* player) : Aura(player)
     setup();
 }
 
-void ImprovedShadowBolt::apply()
+void ImprovedShadowBoltAura::apply()
 {
     Aura::apply();
     stacks = maxStacks;
 }
 
-void ImprovedShadowBolt::decrementStacks()
+void ImprovedShadowBoltAura::decrementStacks()
 {
     stacks--;
 
@@ -277,7 +277,7 @@ void ImprovedShadowBolt::decrementStacks()
     }
 }
 
-void ImprovedShadowBolt::fade(bool endOfIteration)
+void ImprovedShadowBoltAura::fade(bool endOfIteration)
 {
     Aura::fade(endOfIteration);
     // todo update uptimeSoFar
@@ -304,7 +304,7 @@ ShadowTranceAura::ShadowTranceAura(Player* player) : Aura(player)
     setup();
 }
 
-Flameshadow::Flameshadow(Player* player) : Aura(player)
+FlameshadowAura::FlameshadowAura(Player* player) : Aura(player)
 {
     name = "Flameshadow";
     duration = 15;
@@ -313,7 +313,7 @@ Flameshadow::Flameshadow(Player* player) : Aura(player)
     setup();
 }
 
-Shadowflame::Shadowflame(Player* player) : Aura(player)
+ShadowflameAura::ShadowflameAura(Player* player) : Aura(player)
 {
     name = "Shadowflame";
     duration = 15;
@@ -623,7 +623,7 @@ BladeOfWizardryAura::BladeOfWizardryAura(Player* player) : Aura(player)
     setup();
 }
 
-ShatteredSunpendantOfAcumenAura::ShatteredSunpendantOfAcumenAura(Player* player) : Aura(player)
+ShatteredSunPendantOfAcumenAura::ShatteredSunPendantOfAcumenAura(Player* player) : Aura(player)
 {
     name = "Shattered Sun Pendant of Acumen (Aldor)";
     duration = 10;

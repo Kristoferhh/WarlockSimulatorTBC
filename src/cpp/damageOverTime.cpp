@@ -56,13 +56,13 @@ void DamageOverTime::apply()
     // Siphon Life snapshots the presence of ISB. So if ISB isn't up when it's cast, it doesn't get the benefit even if it comes up later during the duration.
     if (varName == "siphonLife")
     {
-        isbActive = !player->settings->usingCustomIsbUptime && player->getAura("improvedShadowBolt") != nullptr && player->getAura("improvedShadowBolt")->active;
+        isbActive = !player->settings->usingCustomIsbUptime && player->auras->ImprovedShadowBolt != NULL && player->auras->ImprovedShadowBolt->active;
     }
     // Amplify Curse
-    if ((varName == "curseOfAgony" || varName == "curseOfDoom") && player->getAura("amplifyCurse") != nullptr && player->getAura("amplifyCurse")->active)
+    if ((varName == "curseOfAgony" || varName == "curseOfDoom") && player->auras->AmplifyCurse != NULL && player->auras->AmplifyCurse->active)
     {
         amplified = true;
-        player->getAura("amplifyCurse")->fade();
+        player->auras->AmplifyCurse->fade();
     }
     else
     {
@@ -100,9 +100,9 @@ double DamageOverTime::getModifier()
         dmgModifier *= 1.5;
     }
     // Improved Shadow Bolt
-    if ((school == SpellSchool::SHADOW && player->getAura("improvedShadowBolt") != nullptr && player->getAura("improvedShadowBolt")->active && varName != "siphonLife") || (varName == "siphonLife" && isbActive))
+    if ((school == SpellSchool::SHADOW && player->auras->ImprovedShadowBolt != NULL && player->auras->ImprovedShadowBolt->active && varName != "siphonLife") || (varName == "siphonLife" && isbActive))
     {
-        dmgModifier *= player->getAura("improvedShadowBolt")->modifier;
+        dmgModifier *= player->auras->ImprovedShadowBolt->modifier;
     }
     return dmgModifier;
 }
@@ -164,7 +164,7 @@ void DamageOverTime::tick(int t)
         {
             if (random(1, 100) <= player->talents->nightfall * 2)
             {
-                player->getAura("shadowTrance")->apply();
+                player->auras->ShadowTrance->apply();
             }
         }
 
@@ -174,14 +174,14 @@ void DamageOverTime::tick(int t)
         tickTimerRemaining = tickTimerTotal;
 
         // Ashtongue Talisman of Shadows
-        if (varName == "corruption" && player->getAura("ashtongueTalismanOfShadows") != nullptr && random(1, 100) <= player->getAura("ashtongueTalismanOfShadows")->procChance)
+        if (varName == "corruption" && player->auras->AshtongueTalismanOfShadows != NULL && random(1, 100) <= player->auras->AshtongueTalismanOfShadows->procChance)
         {
-            player->getAura("ashtongueTalismanOfShadows")->apply();
+            player->auras->AshtongueTalismanOfShadows->apply();
         }
         // Timbal's Focusing Crystal
-        if (player->getSpell("timbalsFocusingCrystal") != nullptr && player->getSpell("timbalsFocusingCrystal")->cooldownRemaining <= 0 && random(1, 100) <= player->getSpell("timbalsFocusingCrystal")->procChance)
+        if (player->spells->TimbalsFocusingCrystal != NULL && player->spells->TimbalsFocusingCrystal->cooldownRemaining <= 0 && random(1, 100) <= player->spells->TimbalsFocusingCrystal->procChance)
         {
-            player->getSpell("timbalsFocusingCrystal")->startCast();
+            player->spells->TimbalsFocusingCrystal->startCast();
         }
 
         if (ticksRemaining <= 0)

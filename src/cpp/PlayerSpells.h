@@ -1,0 +1,50 @@
+#pragma once
+
+#include "spell.h"
+#include <vector>
+
+struct PlayerSpells
+{
+    Spell* LifeTap;
+    Spell* SeedOfCorruption;
+    Spell* ShadowBolt;
+    Spell* Incinerate;
+    Spell* SearingPain;
+    Spell* Corruption;
+    Spell* UnstableAffliction;
+    Spell* SiphonLife;
+    Spell* Immolate;
+    Spell* CurseOfAgony;
+    Spell* CurseOfTheElements;
+    Spell* CurseOfRecklessness;
+    Spell* CurseOfDoom;
+    Spell* Conflagrate;
+    Spell* Shadowburn;
+    Spell* DeathCoil;
+    Spell* Shadowfury;
+    Spell* AmplifyCurse;
+    Spell* DarkPact;
+    Spell* DestructionPotion;
+    Spell* SuperManaPotion;
+    Spell* DemonicRune;
+    Spell* FlameCap;
+    Spell* BloodFury;
+    Spell* DrumsOfBattle;
+    Spell* DrumsOfWar;
+    Spell* DrumsOfRestoration;
+    Spell* BladeOfWizardry;
+    Spell* ShatteredSunPendantOfAcumen;
+    Spell* RobeOfTheElderScribes;
+    Spell* MysticalSkyfireDiamond;
+    Spell* InsightfulEarthstormDiamond;
+    Spell* TimbalsFocusingCrystal;
+    Spell* MarkOfDefiance;
+    Spell* TheLightningCapacitor;
+    Spell* QuagmirransEye;
+    Spell* ShiffarsNexusHorn;
+    Spell* SextantOfUnstableCurrents;
+    Spell* BandOfTheEternalSage;
+    std::vector<Spell*> PowerInfusion;
+    std::vector<Spell*> Bloodlust;
+    std::vector<Spell*> Innervate;
+};

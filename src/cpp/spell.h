@@ -5,10 +5,13 @@ struct Player; // dirty fix for circular reference when we were including "playe
 #include <string>
 #include <cmath>
 #include "enums.h"
+#include "damageOverTime.h"
 
 struct Spell
 {
     Player* player;
+    Aura* auraEffect;
+    DamageOverTime* dotEffect;
     SpellSchool school;
     SpellType type;
     int minDmg;
@@ -43,7 +46,7 @@ struct Spell
     std::string name;
     std::string breakdownTable;
 
-    Spell(Player* player);
+    Spell(Player* player, Aura* aura = nullptr, DamageOverTime* dot = nullptr);
 
     void reset();
     void setup();
@@ -125,43 +128,43 @@ struct DarkPact : public Spell
 
 struct Corruption : public Spell
 {
-    Corruption(Player* player);
+    Corruption(Player* player, Aura* aura, DamageOverTime* dot);
 };
 
 struct UnstableAffliction : public Spell
 {
-    UnstableAffliction(Player* player);
+    UnstableAffliction(Player* player, Aura* aura, DamageOverTime* dot);
 };
 
 struct SiphonLife : public Spell
 {
-    SiphonLife(Player* player);
+    SiphonLife(Player* player, Aura* aura, DamageOverTime* dot);
 };
 
 struct Immolate : public Spell
 {
-    Immolate(Player* player);
+    Immolate(Player* player, Aura* aura, DamageOverTime* dot);
     double getModifier();
 };
 
 struct CurseOfAgony : public Spell
 {
-    CurseOfAgony(Player* player);
+    CurseOfAgony(Player* player, Aura* aura, DamageOverTime* dot);
 };
 
 struct CurseOfTheElements : public Spell
 {
-    CurseOfTheElements(Player* player);
+    CurseOfTheElements(Player* player, Aura* aura);
 };
 
 struct CurseOfRecklessness : public Spell
 {
-    CurseOfRecklessness(Player* player);
+    CurseOfRecklessness(Player* player, Aura* aura);
 };
 
 struct CurseOfDoom : public Spell
 {
-    CurseOfDoom(Player* player);
+    CurseOfDoom(Player* player, Aura* aura, DamageOverTime* dot);
 };
 
 struct Conflagrate : public Spell
@@ -172,7 +175,7 @@ struct Conflagrate : public Spell
 
 struct DestructionPotion : public Spell
 {
-    DestructionPotion(Player* player);
+    DestructionPotion(Player* player, Aura* aura);
 };
 
 struct SuperManaPotion : public Spell
@@ -189,34 +192,34 @@ struct DemonicRune : public Spell
 
 struct FlameCap : public Spell
 {
-    FlameCap(Player* player);
+    FlameCap(Player* player, Aura* aura);
 };
 
 struct BloodFury : public Spell
 {
-    BloodFury(Player* player);
+    BloodFury(Player* player, Aura* aura);
 };
 
 struct Bloodlust : public Spell
 {
-    Bloodlust(Player* player);
+    Bloodlust(Player* player, Aura* aura);
 };
 
 struct DrumsOfBattle : public Spell
 {
-    DrumsOfBattle(Player* player);
+    DrumsOfBattle(Player* player, Aura* aura);
     bool ready();
 };
 
 struct DrumsOfWar : public Spell
 {
-    DrumsOfWar(Player* player);
+    DrumsOfWar(Player* player, Aura* aura);
     bool ready();
 };
 
 struct DrumsOfRestoration : public Spell
 {
-    DrumsOfRestoration(Player* player);
+    DrumsOfRestoration(Player* player, Aura* aura);
     bool ready();
 };
 
@@ -233,48 +236,48 @@ struct MarkOfDefiance : public Spell
 
 struct TheLightningCapacitor : public Spell
 {
-    TheLightningCapacitor(Player* player);
+    TheLightningCapacitor(Player* player, Aura* aura);
     void startCast(double predictedDamage = 0);
 };
 
 struct BladeOfWizardry : public Spell
 {
-    BladeOfWizardry(Player* player);
+    BladeOfWizardry(Player* player, Aura* aura);
 };
 
 struct ShatteredSunPendantOfAcumen : public Spell
 {
-    ShatteredSunPendantOfAcumen(Player* player);
+    ShatteredSunPendantOfAcumen(Player* player, Aura* aura);
 };
 
 struct RobeOfTheElderScribes : public Spell
 {
-    RobeOfTheElderScribes(Player* player);
+    RobeOfTheElderScribes(Player* player, Aura* aura);
 };
 
 struct QuagmirransEye : public Spell
 {
-    QuagmirransEye(Player* player);
+    QuagmirransEye(Player* player, Aura* aura);
 };
 
 struct ShiffarsNexusHorn : public Spell
 {
-    ShiffarsNexusHorn(Player* player);
+    ShiffarsNexusHorn(Player* player, Aura* aura);
 };
 
 struct SextantOfUnstableCurrents : public Spell
 {
-    SextantOfUnstableCurrents(Player* player);
+    SextantOfUnstableCurrents(Player* player, Aura* aura);
 };
 
 struct BandOfTheEternalSage : public Spell
 {
-    BandOfTheEternalSage(Player* player);
+    BandOfTheEternalSage(Player* player, Aura* aura);
 };
 
 struct MysticalSkyfireDiamond : public Spell
 {
-    MysticalSkyfireDiamond(Player* player);
+    MysticalSkyfireDiamond(Player* player, Aura* aura);
 };
 
 struct InsightfulEarthstormDiamond : public Spell
@@ -285,15 +288,15 @@ struct InsightfulEarthstormDiamond : public Spell
 
 struct AmplifyCurse : public Spell
 {
-    AmplifyCurse(Player* player);
+    AmplifyCurse(Player* player, Aura* aura);
 };
 
 struct PowerInfusion : public Spell
 {
-    PowerInfusion(Player* player);
+    PowerInfusion(Player* player, Aura* aura);
 };
 
 struct Innervate : public Spell
 {
-    Innervate(Player* player);
+    Innervate(Player* player, Aura* aura);
 };

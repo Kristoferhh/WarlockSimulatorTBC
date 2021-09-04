@@ -2,7 +2,7 @@
 #include "player.h"
 #include "common.h"
 
-Spell::Spell(Player* player) : player(player)
+Spell::Spell(Player* player, Aura* aura, DamageOverTime* dot) : player(player), auraEffect(aura), dotEffect(dot)
 {
     modifier = 1;
     coefficient = 0;
@@ -144,11 +144,11 @@ void Spell::cast()
 
     if (isAura)
     {
-        player->getAura(varName)->apply();
+        auraEffect->apply();
     }
     if (isDot)
     {
-        player->getDot(varName)->apply();
+        dotEffect->apply();
     }
 
     if (doesDamage)
@@ -171,9 +171,9 @@ double Spell::getModifier()
         dmgModifier *= player->stats->shadowModifier;
         
         // Improved Shadow Bolt
-        if (player->getAura("improvedShadowBolt") != nullptr && player->getAura("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
+        if (player->auras->ImprovedShadowBolt != NULL && player->auras->ImprovedShadowBolt->active && !player->settings->usingCustomIsbUptime)
         {
-            dmgModifier *= player->getAura("improvedShadowBolt")->modifier;
+            dmgModifier *= player->auras->ImprovedShadowBolt->modifier;
         }
     }
     else if (school == SpellSchool::FIRE)
@@ -202,9 +202,9 @@ void Spell::damage(bool isCrit)
         totalDamage *= critMultiplier;
         onCritProcs();
     }
-    else if (school == SpellSchool::SHADOW && !isDot && player->getAura("improvedShadowBolt") != nullptr && player->getAura("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
+    else if (school == SpellSchool::SHADOW && !isDot && player->auras->ImprovedShadowBolt != NULL && player->auras->ImprovedShadowBolt->active && !player->settings->usingCustomIsbUptime)
     {
-        player->getAura("improvedShadowBolt")->decrementStacks();
+        player->auras->ImprovedShadowBolt->decrementStacks();
     }
 
     onDamageProcs();
@@ -235,11 +235,11 @@ void Spell::damage(bool isCrit)
     //T5 4pc
     if (player->sets->t5 >= 4)
     {
-        /*if (varName == "shadowBolt" && player->getAura("corruption") != nullptrplayer->auras->corruption->active)
+        /*if (varName == "shadowBolt" && player->getAura("corruption") != NULLplayer->auras->corruption->active)
         {
             player->auras->corruption->t5BonusModifier *= 1.1;
         }
-        else if (varName == "incinerate" && player->getAura("immolate") != nullptrplayer->auras->immolate->active)
+        else if (varName == "incinerate" && player->auras->Immolate != NULLplayer->auras->immolate->active)
         {
 
             player->auras->immolate->t5BonusModifier *= 1.1;
@@ -258,16 +258,16 @@ double* Spell::getConstantDamage(bool noRng)
     double partialResistMultiplier = player->getPartialResistMultiplier(school);
 
     // If casting Incinerate and Immolate is up, add the bonus damage
-    if (varName == "incinerate" && player->getAura("immolate") != nullptr && player->getAura("immolate")->active)
+    if (varName == "incinerate" && player->auras->Immolate != NULL && player->auras->Immolate->active)
     {
         dmg += player->settings->randomizeValues && noRng ? random(bonusDamageFromImmolateMin, bonusDamageFromImmolateMax) : bonusDamageFromImmolate;
     }
     // Add damage from Spell Power
     dmg += spellPower * coefficient;
     // Improved Shadow Bolt
-    if (school == SpellSchool::SHADOW && player->getAura("improvedShadowBolt") != nullptr && player->getAura("improvedShadowBolt")->active && !player->settings->usingCustomIsbUptime)
+    if (school == SpellSchool::SHADOW && player->auras->ImprovedShadowBolt != NULL && player->auras->ImprovedShadowBolt->active && !player->settings->usingCustomIsbUptime)
     {
-        modifier *= player->getAura("improvedShadowBolt")->modifier;
+        modifier *= player->auras->ImprovedShadowBolt->modifier;
     }
 
     dmg *= modifier * partialResistMultiplier;
@@ -317,17 +317,17 @@ double Spell::predictDamage()
     // Add the predicted damage of the DoT over its full duration
     if (isDot)
     {
-        estimatedDamage += player->getDot(varName)->predictDamage();
+        estimatedDamage += dotEffect->predictDamage();
     }
 
     // If the player is not using a custom ISB uptime, they have the ISB talent selected, but the ISB aura is not active, then give some % modifier as an "average" for the damage.
     // Without this, the sim will choose Incinerate over Shadow Bolt because it basically just doesn't know that ISB exists
-    if (school == SpellSchool::SHADOW && !player->settings->usingCustomIsbUptime && player->getAura("improvedShadowBolt") != nullptr && !player->getAura("improvedShadowBolt")->active)
+    if (school == SpellSchool::SHADOW && !player->settings->usingCustomIsbUptime && player->auras->ImprovedShadowBolt != NULL && !player->auras->ImprovedShadowBolt->active)
     {
         // If this isn't the player's first iteration then check what their ISB uptime is and add that %
         if (player->iteration > 1)
         {
-            estimatedDamage *= (1 + 0.2 * player->getAura("improvedShadowBolt")->uptimeSoFar);
+            estimatedDamage *= (1 + 0.2 * player->auras->ImprovedShadowBolt->uptimeSoFar);
         }
         // If it's the first iteration where we don't have enough data to assume what the player's ISB uptime is, then add a fixed amount
         else
@@ -345,22 +345,22 @@ void Spell::onCritProcs()
     // ISB
     if (varName == "shadowBolt" && !player->settings->usingCustomIsbUptime && player->talents->improvedShadowBolt > 0)
     {
-        player->getAura("improvedShadowBolt")->apply();
+        player->auras->ImprovedShadowBolt->apply();
     }
     // The Lightning Capacitor
-    if (player->getSpell("theLightningCapacitor") != nullptr)
+    if (player->spells->TheLightningCapacitor != NULL)
     {
-        player->getSpell("theLightningCapacitor")->startCast();
+        player->spells->TheLightningCapacitor->startCast();
     }
     // Sextant of Unstable Currents
-    if (player->getSpell("sextantOfUnstableCurrents") != nullptr && player->getSpell("sextantOfUnstableCurrents")->ready() && random(1, 100) <= player->getSpell("sextantOfUnstableCurrents")->procChance)
+    if (player->spells->SextantOfUnstableCurrents != NULL && player->spells->SextantOfUnstableCurrents->ready() && random(1, 100) <= player->spells->SextantOfUnstableCurrents->procChance)
     {
-        player->getSpell("sextantOfUnstableCurrents")->startCast();
+        player->spells->SextantOfUnstableCurrents->startCast();
     }
     // Shiffar's Nexus-Horn
-    if (player->getSpell("shiffarsNexusHorn") != nullptr && player->getSpell("shiffarsNexusHorn")->ready() && random(1, 100) <= player->getSpell("shiffarsNexusHorn")->procChance)
+    if (player->spells->ShiffarsNexusHorn != NULL && player->spells->ShiffarsNexusHorn->ready() && random(1, 100) <= player->spells->ShiffarsNexusHorn->procChance)
     {
-        player->getSpell("shiffarsNexusHorn")->startCast();
+        player->spells->ShiffarsNexusHorn->startCast();
     }
 }
 
@@ -368,80 +368,80 @@ void Spell::onDamageProcs()
 {
     // Confirm that this procs on dealing damage
     // Shattered Sun Pendant of Acumen
-    if (player->settings->exaltedWithShattrathFaction && player->getSpell("shatteredSunPendantOfAcumen") != nullptr && player->getSpell("shatteredSunPendantOfAcumen")->cooldownRemaining <= 0 && random(1, 100) <= player->getSpell("shatteredSunPendantOfAcumen")->procChance)
+    if (player->settings->exaltedWithShattrathFaction && player->spells->ShatteredSunPendantOfAcumen != NULL && player->spells->ShatteredSunPendantOfAcumen->cooldownRemaining <= 0 && random(1, 100) <= player->spells->ShatteredSunPendantOfAcumen->procChance)
     {
-        player->getSpell("shatteredSunPendantOfAcumen")->startCast();
+        player->spells->ShatteredSunPendantOfAcumen->startCast();
     }
 }
 
 void Spell::onHitProcs()
 {
     // T4 2pc
-    if (player->sets->t4 >= 2 && (school == SpellSchool::SHADOW || school == SpellSchool::FIRE) && random(1, 100) <= player->getAura("flameshadow")->procChance)
+    if (player->sets->t4 >= 2 && (school == SpellSchool::SHADOW || school == SpellSchool::FIRE) && random(1, 100) <= player->auras->Flameshadow->procChance)
     {
         if (school == SpellSchool::SHADOW)
         {
-            player->getAura("flameshadow")->apply();
+            player->auras->Flameshadow->apply();
         }
         else if (school == SpellSchool::FIRE)
         {
-            player->getAura("shadowflame")->apply();
+            player->auras->Shadowflame->apply();
         }
     }
     // Spellstrike
-    if (player->sets->spellstrike == 2 && random(1, 100) <= player->getAura("spellstrike")->procChance)
+    if (player->sets->spellstrike == 2 && random(1, 100) <= player->auras->Spellstrike->procChance)
     {
-        player->getAura("spellstrike")->apply();
+        player->auras->Spellstrike->apply();
     }
     // Quagmirran's Eye
-    if (player->getSpell("quagmirransEye") != nullptr && player->getSpell("quagmirransEye")->ready() && random(1, 100) <= player->getSpell("quagmirransEye")->procChance)
+    if (player->spells->QuagmirransEye != NULL && player->spells->QuagmirransEye->ready() && random(1, 100) <= player->spells->QuagmirransEye->procChance)
     {
-        player->getSpell("quagmirransEye")->startCast();
+        player->spells->QuagmirransEye->startCast();
     }
     // Mana-Etched Regalia 4pc
-    if (player->sets->manaEtched >= 4 && random(1, 100) <= player->getAura("manaEtched4Set")->procChance)
+    if (player->sets->manaEtched >= 4 && random(1, 100) <= player->auras->ManaEtched4Set->procChance)
     {
-        player->getAura("manaEtched4Set")->apply();
+        player->auras->ManaEtched4Set->apply();
     }
     // Mark of Defiance
-    if (player->getSpell("markOfDefiance") != nullptr && random(1, 100) <= player->getSpell("markOfDefiance")->procChance)
+    if (player->spells->MarkOfDefiance != NULL && random(1, 100) <= player->spells->MarkOfDefiance->procChance)
     {
-        player->getSpell("markOfDefiance")->startCast();
+        player->spells->MarkOfDefiance->startCast();
     }
     // Darkmoon Card: Crusade
-    if (player->getSpell("darkmoonCardCrusade") != nullptr)
+    if (player->auras->DarkmoonCardCrusade != NULL)
     {
-        player->getAura("darkmoonCardCrusade")->apply();
+        player->auras->DarkmoonCardCrusade->apply();
     }
     // Band of the Eternal Sage
-    if (player->getSpell("bandOfTheEternalSage") != nullptr && player->getSpell("bandOfTheEternalSage")->ready() && random(1, 100) <= player->getSpell("bandOfTheEternalSage")->procChance)
+    if (player->spells->BandOfTheEternalSage != NULL && player->spells->BandOfTheEternalSage->ready() && random(1, 100) <= player->spells->BandOfTheEternalSage->procChance)
     {
-        player->getSpell("bandOfTheEternalSage")->startCast();
+        player->spells->BandOfTheEternalSage->startCast();
     }
     // Blade of Wizardry
-    if (player->getSpell("bladeOfWizardry") != nullptr && player->getSpell("bladeOfWizardry")->ready() && random(1, 100) <= player->getAura("bladeOfWizardry")->procChance)
+    if (player->spells->BladeOfWizardry != NULL && player->spells->BladeOfWizardry->ready() && random(1, 100) <= player->auras->BladeOfWizardry->procChance)
     {
-        player->getSpell("bladeOfWizardry")->startCast();
+        player->spells->BladeOfWizardry->startCast();
     }
     // Mystical Skyfire Diamond
-    if (player->getSpell("mysticalSkyfireDiamond") != nullptr && player->getSpell("mysticalSkyfireDiamond")->ready() && random(1, 100) <= player->getSpell("mysticalSkyfireDiamond")->procChance)
+    if (player->spells->MysticalSkyfireDiamond != NULL && player->spells->MysticalSkyfireDiamond->ready() && random(1, 100) <= player->spells->MysticalSkyfireDiamond->procChance)
     {
-        player->getSpell("mysticalSkyfireDiamond")->startCast();
+        player->spells->MysticalSkyfireDiamond->startCast();
     }
     // Robe of the Elder Scribes
-    if (player->getSpell("robeOfTheElderScribes") != nullptr && player->getSpell("robeOfTheElderScribes")->ready() && random(1, 100) <= player->getSpell("robeOfTheElderScribes")->procChance)
+    if (player->spells->RobeOfTheElderScribes != NULL && player->spells->RobeOfTheElderScribes->ready() && random(1, 100) <= player->spells->RobeOfTheElderScribes->procChance)
     {
-        player->getSpell("robeOfTheElderScribes")->startCast();
+        player->spells->RobeOfTheElderScribes->startCast();
     }
     // Insightful Earthstorm Diamond
-    if (player->getSpell("insightfulEarthstormDiamond") != nullptr && player->getSpell("insightfulEarthstormDiamond")->ready() && random(1, 100) <= player->getSpell("insightfulEarthstormDiamond")->procChance)
+    if (player->spells->InsightfulEarthstormDiamond != NULL && player->spells->InsightfulEarthstormDiamond->ready() && random(1, 100) <= player->spells->InsightfulEarthstormDiamond->procChance)
     {
-        player->getSpell("insightfulEarthstormDiamond")->startCast();
+        player->spells->InsightfulEarthstormDiamond->startCast();
     }
     // Wrath of Cenarius
-    if (player->getAura("wrathOfCenarius") != nullptr && player->getSpell("wrathOfCenarius")->ready() && random(1, 100) <= player->getSpell("wrathOfCenarius")->procChance)
+    if (player->auras->WrathOfCenarius != NULL && random(1, 100) <= player->auras->WrathOfCenarius->procChance)
     {
-        player->getAura("wrathOfCenarius")->apply();
+        player->auras->WrathOfCenarius->apply();
     }
 }
 
@@ -468,7 +468,7 @@ ShadowBolt::ShadowBolt(Player* player) : Spell(player)
 
 void ShadowBolt::startCast(double predictedDamage = 0)
 {
-    //bool hasShadowTrance = player->getAura("shadowTrance") != nullptr;
+    //bool hasShadowTrance = player->getAura("shadowTrance") != NULL;
 
     /*if (hasShadowTrance && player->auras["shadowTrance"].active)
     {
@@ -658,7 +658,7 @@ void DarkPact::cast()
 
 }
 
-Corruption::Corruption(Player* player) : Spell(player)
+Corruption::Corruption(Player* player, Aura* aura, DamageOverTime* dot) : Spell(player, aura, dot)
 {
     name = "Corruption";
     manaCost = 370;
@@ -669,7 +669,7 @@ Corruption::Corruption(Player* player) : Spell(player)
     setup();
 }
 
-UnstableAffliction::UnstableAffliction(Player* player) : Spell(player)
+UnstableAffliction::UnstableAffliction(Player* player, Aura* aura, DamageOverTime* dot) : Spell(player, aura, dot)
 {
     name = "Unstable Affliction";
     manaCost = 400;
@@ -680,7 +680,7 @@ UnstableAffliction::UnstableAffliction(Player* player) : Spell(player)
     setup();
 }
 
-SiphonLife::SiphonLife(Player* player) : Spell(player)
+SiphonLife::SiphonLife(Player* player, Aura* aura, DamageOverTime* dot) : Spell(player, aura, dot)
 {
     name = "Siphon Life";
     manaCost = 410;
@@ -690,7 +690,7 @@ SiphonLife::SiphonLife(Player* player) : Spell(player)
     setup();
 }
 
-Immolate::Immolate(Player* player) : Spell(player)
+Immolate::Immolate(Player* player, Aura* aura, DamageOverTime* dot) : Spell(player, aura, dot)
 {
     name = "Immolate";
     manaCost = 445 * (1 - 0.01 * player->talents->cataclysm);
@@ -716,7 +716,7 @@ double Immolate::getModifier()
     return modifier;
 }
 
-CurseOfAgony::CurseOfAgony(Player* player) : Spell(player)
+CurseOfAgony::CurseOfAgony(Player* player, Aura* aura, DamageOverTime* dot) : Spell(player, aura, dot)
 {
     name = "Curse of Agony";
     manaCost = 265;
@@ -726,7 +726,7 @@ CurseOfAgony::CurseOfAgony(Player* player) : Spell(player)
     setup();
 }
 
-CurseOfTheElements::CurseOfTheElements(Player* player) : Spell(player)
+CurseOfTheElements::CurseOfTheElements(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Curse of the Elements";
     manaCost = 260;
@@ -735,7 +735,7 @@ CurseOfTheElements::CurseOfTheElements(Player* player) : Spell(player)
     setup();
 }
 
-CurseOfRecklessness::CurseOfRecklessness(Player* player) : Spell(player)
+CurseOfRecklessness::CurseOfRecklessness(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Curse of Recklessness";
     manaCost = 160;
@@ -744,7 +744,7 @@ CurseOfRecklessness::CurseOfRecklessness(Player* player) : Spell(player)
     setup();
 }
 
-CurseOfDoom::CurseOfDoom(Player* player) : Spell(player)
+CurseOfDoom::CurseOfDoom(Player* player, Aura* aura, DamageOverTime* dot) : Spell(player, aura, dot)
 {
     name = "Curse of Doom";
     manaCost = 380;
@@ -772,14 +772,14 @@ Conflagrate::Conflagrate(Player* player) : Spell(player)
 
 void Conflagrate::startCast()
 {
-    /*if (player->getAura("immolate") != nullptr && player->auras->immolate->active)
+    /*if (player->auras->Immolate != NULL && player->auras->immolate->active)
     {
         Spell::startCast();
         player->auras->immolate->active = false;
     }*/
 }
 
-DestructionPotion::DestructionPotion(Player* player) : Spell(player)
+DestructionPotion::DestructionPotion(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Destruction Potion";
     cooldown = 120;
@@ -839,7 +839,7 @@ void DemonicRune::cast()
     }
 }
 
-FlameCap::FlameCap(Player* player) : Spell(player)
+FlameCap::FlameCap(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Flame Cap";
     cooldown = 180;
@@ -849,7 +849,7 @@ FlameCap::FlameCap(Player* player) : Spell(player)
     setup();
 }
 
-BloodFury::BloodFury(Player* player) : Spell(player)
+BloodFury::BloodFury(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Blood Fury";
     cooldown = 120;
@@ -858,7 +858,7 @@ BloodFury::BloodFury(Player* player) : Spell(player)
     setup();
 }
 
-Bloodlust::Bloodlust(Player* player) : Spell(player)
+Bloodlust::Bloodlust(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Bloodlust";
     cooldown = 600;
@@ -868,7 +868,7 @@ Bloodlust::Bloodlust(Player* player) : Spell(player)
     setup();
 }
 
-DrumsOfBattle::DrumsOfBattle(Player* player) : Spell(player)
+DrumsOfBattle::DrumsOfBattle(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Drums of Battle";
     cooldown = 120;
@@ -884,7 +884,7 @@ bool DrumsOfBattle::ready()
     return cooldownRemaining <= 0;
 }
 
-DrumsOfWar::DrumsOfWar(Player* player) : Spell(player)
+DrumsOfWar::DrumsOfWar(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Drums of War";
     cooldown = 120;
@@ -900,7 +900,7 @@ bool DrumsOfWar::ready()
     return cooldownRemaining <= 0;
 }
 
-DrumsOfRestoration::DrumsOfRestoration(Player* player) : Spell(player)
+DrumsOfRestoration::DrumsOfRestoration(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Drums of Restoration";
     cooldown = 120;
@@ -957,7 +957,7 @@ void MarkOfDefiance::cast()
     }
 }
 
-TheLightningCapacitor::TheLightningCapacitor(Player* player) : Spell(player)
+TheLightningCapacitor::TheLightningCapacitor(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "The Lightning Capacitor";
     cooldown = 2.5;
@@ -973,17 +973,17 @@ void TheLightningCapacitor::startCast(double predictedDamage)
 {
     if (cooldownRemaining <= 0)
     {
-        player->getAura("theLightningCapacitor")->apply();
-        if (player->getAura("theLightningCapacitor")->stacks == 3)
+        player->auras->TheLightningCapacitor->apply();
+        if (player->auras->TheLightningCapacitor->stacks == 3)
         {
             cooldownRemaining = cooldown;
-            player->getAura("theLightningCapacitor")->fade();
+            player->auras->TheLightningCapacitor->fade();
             Spell::startCast();
         }
     }
 }
 
-BladeOfWizardry::BladeOfWizardry(Player* player) : Spell(player)
+BladeOfWizardry::BladeOfWizardry(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Blade of Wizardry";
     cooldown = 50;
@@ -994,7 +994,7 @@ BladeOfWizardry::BladeOfWizardry(Player* player) : Spell(player)
     setup();
 }
 
-ShatteredSunPendantOfAcumen::ShatteredSunPendantOfAcumen(Player* player) : Spell(player)
+ShatteredSunPendantOfAcumen::ShatteredSunPendantOfAcumen(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Shattered Sun Pendant of Acumen";
     cooldown = 45;
@@ -1015,7 +1015,7 @@ ShatteredSunPendantOfAcumen::ShatteredSunPendantOfAcumen(Player* player) : Spell
     setup();
 }
 
-RobeOfTheElderScribes::RobeOfTheElderScribes(Player* player) : Spell(player)
+RobeOfTheElderScribes::RobeOfTheElderScribes(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Robe of the Elder Scribes";
     cooldown = 50;
@@ -1027,7 +1027,7 @@ RobeOfTheElderScribes::RobeOfTheElderScribes(Player* player) : Spell(player)
     setup();
 }
 
-QuagmirransEye::QuagmirransEye(Player* player) : Spell(player)
+QuagmirransEye::QuagmirransEye(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Quagmirran's Eye";
     cooldown = 45;
@@ -1038,7 +1038,7 @@ QuagmirransEye::QuagmirransEye(Player* player) : Spell(player)
     setup();
 }
 
-ShiffarsNexusHorn::ShiffarsNexusHorn(Player* player) : Spell(player)
+ShiffarsNexusHorn::ShiffarsNexusHorn(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Shiffar's Nexus-Horn";
     cooldown = 45;
@@ -1049,7 +1049,7 @@ ShiffarsNexusHorn::ShiffarsNexusHorn(Player* player) : Spell(player)
     setup();
 }
 
-SextantOfUnstableCurrents::SextantOfUnstableCurrents(Player* player) : Spell(player)
+SextantOfUnstableCurrents::SextantOfUnstableCurrents(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Sextant of Unstable Currents";
     cooldown = 45;
@@ -1060,7 +1060,7 @@ SextantOfUnstableCurrents::SextantOfUnstableCurrents(Player* player) : Spell(pla
     setup();
 }
 
-BandOfTheEternalSage::BandOfTheEternalSage(Player* player) : Spell(player)
+BandOfTheEternalSage::BandOfTheEternalSage(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Band of the Eternal Sage";
     cooldown = 60;
@@ -1071,7 +1071,7 @@ BandOfTheEternalSage::BandOfTheEternalSage(Player* player) : Spell(player)
     setup();
 }
 
-MysticalSkyfireDiamond::MysticalSkyfireDiamond(Player* player) : Spell(player)
+MysticalSkyfireDiamond::MysticalSkyfireDiamond(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Mystical Skyfire Diamond";
     cooldown = 35;
@@ -1108,7 +1108,7 @@ void InsightfulEarthstormDiamond::cast()
     }
 }
 
-AmplifyCurse::AmplifyCurse(Player* player) : Spell(player)
+AmplifyCurse::AmplifyCurse(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Amplify Curse";
     cooldown = 180;
@@ -1117,7 +1117,7 @@ AmplifyCurse::AmplifyCurse(Player* player) : Spell(player)
     setup();
 }
 
-PowerInfusion::PowerInfusion(Player* player) : Spell(player)
+PowerInfusion::PowerInfusion(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Power Infusion";
     cooldown = 180;
@@ -1126,7 +1126,7 @@ PowerInfusion::PowerInfusion(Player* player) : Spell(player)
     setup();
 }
 
-Innervate::Innervate(Player* player) : Spell(player)
+Innervate::Innervate(Player* player, Aura* aura) : Spell(player, aura)
 {
     name = "Innervate";
     cooldown = 360;
