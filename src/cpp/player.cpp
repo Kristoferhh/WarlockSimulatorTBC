@@ -384,10 +384,10 @@ void Player::initialize()
     if (settings->metaGemId == 25901) spells->InsightfulEarthstormDiamond = new InsightfulEarthstormDiamond(this);
     if (std::find(trinketIds.begin(), trinketIds.end(), 34470) != trinketIds.end()) spells->TimbalsFocusingCrystal = new TimbalsFocusingCrystal(this);
     if (std::find(trinketIds.begin(), trinketIds.end(), 27922) != trinketIds.end()) spells->MarkOfDefiance = new MarkOfDefiance(this);
-    if (spells->TheLightningCapacitor != NULL) spells->TheLightningCapacitor = new TheLightningCapacitor(this, auras->TheLightningCapacitor);
-    if (spells->QuagmirransEye != NULL) spells->QuagmirransEye = new QuagmirransEye(this, auras->QuagmirransEye);
-    if (spells->ShiffarsNexusHorn != NULL) spells->ShiffarsNexusHorn = new ShiffarsNexusHorn(this, auras->ShiffarsNexusHorn);
-    if (spells->SextantOfUnstableCurrents != NULL) spells->SextantOfUnstableCurrents = new SextantOfUnstableCurrents(this, auras->SextantOfUnstableCurrents);
+    if (auras->TheLightningCapacitor != NULL) spells->TheLightningCapacitor = new TheLightningCapacitor(this, auras->TheLightningCapacitor);
+    if (auras->QuagmirransEye != NULL) spells->QuagmirransEye = new QuagmirransEye(this, auras->QuagmirransEye);
+    if (auras->ShiffarsNexusHorn != NULL) spells->ShiffarsNexusHorn = new ShiffarsNexusHorn(this, auras->ShiffarsNexusHorn);
+    if (auras->SextantOfUnstableCurrents != NULL) spells->SextantOfUnstableCurrents = new SextantOfUnstableCurrents(this, auras->SextantOfUnstableCurrents);
     if (items->ring1 == 29305 || items->ring2 == 29305) spells->BandOfTheEternalSage = new BandOfTheEternalSage(this, auras->BandOfTheEternalSage);
     if (auras->PowerInfusion != NULL)
     {
@@ -460,15 +460,15 @@ void Player::reset()
     spells->ShiffarsNexusHorn->reset();
     spells->SextantOfUnstableCurrents->reset();
     spells->BandOfTheEternalSage->reset();
-    for(std::vector<Spell*>::iterator it = spells->PowerInfusion.begin(); it != spells->PowerInfusion.end(); it++)
+    for (std::vector<Spell*>::iterator it = spells->PowerInfusion.begin(); it != spells->PowerInfusion.end(); it++)
     {
         (*it)->reset();
     }
-    for(std::vector<Spell*>::iterator it = spells->Bloodlust.begin(); it != spells->Bloodlust.end(); it++)
+    for (std::vector<Spell*>::iterator it = spells->Bloodlust.begin(); it != spells->Bloodlust.end(); it++)
     {
         (*it)->reset();
     }
-    for(std::vector<Spell*>::iterator it = spells->Innervate.begin(); it != spells->Innervate.end(); it++)
+    for (std::vector<Spell*>::iterator it = spells->Innervate.begin(); it != spells->Innervate.end(); it++)
     {
         (*it)->reset();
     }
@@ -672,6 +672,7 @@ Aura* Player::getCurseAura()
 {
     if (auras->CurseOfTheElements != NULL) return auras->CurseOfTheElements;
     else if (auras->CurseOfRecklessness != NULL) return auras->CurseOfRecklessness;
+    else return nullptr;
 }
 
 Spell* Player::getCurseSpell()
@@ -680,6 +681,7 @@ Spell* Player::getCurseSpell()
     else if (spells->CurseOfTheElements != NULL) return spells->CurseOfTheElements;
     else if (spells->CurseOfRecklessness != NULL) return spells->CurseOfRecklessness;
     else if (spells->CurseOfAgony != NULL) return spells->CurseOfAgony;
+    else return nullptr;
 }
 
 Spell* Player::getFiller()
@@ -687,6 +689,7 @@ Spell* Player::getFiller()
     if (spells->ShadowBolt != NULL) return spells->ShadowBolt;
     else if (spells->Incinerate != NULL) return spells->Incinerate;
     else if (spells->SearingPain != NULL) return spells->SearingPain;
+    else return nullptr;
 }
 
 void Player::castLifeTapOrDarkPact()

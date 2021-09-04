@@ -44,7 +44,7 @@ void Trinket::use()
             if (player->shouldWriteToCombatLog())
             {
                 int currentSpellPower = player->getSpellPower();
-                std::string msg = "Spell Power + " + std::to_string(stats->spellPower) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower + stats->spellPower);
+                std::string msg = "Spell Power + " + std::to_string(stats->spellPower) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower + stats->spellPower) + ")";
                 player->combatLog(msg);
             }
             player->stats->spellPower += stats->spellPower;
@@ -76,7 +76,7 @@ void Trinket::fade(bool endOfIteration)
         if (player->shouldWriteToCombatLog())
         {
             int currentSpellPower = player->getSpellPower();
-            std::string msg = "Spell Power - " + std::to_string(stats->spellPower) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower - stats->spellPower);
+            std::string msg = "Spell Power - " + std::to_string(stats->spellPower) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower - stats->spellPower) + ")";
             player->combatLog(msg);
         }
         player->stats->spellPower -= stats->spellPower;
