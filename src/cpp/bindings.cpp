@@ -1,8 +1,14 @@
 #include "bindings.h"
 #include "simulation.h"
-#include "emscripten.h"
-#include <emscripten/bind.h>
 #include "constant.h"
+
+#ifdef EMSCRIPTEN
+#include <emscripten/bind.h>
+#include "emscripten.h"
+#else
+#include <iostream>
+#define EMSCRIPTEN_KEEPALIVE
+#endif
 
 /*void combatLogUpdate(char combatLogEntry)
 {
@@ -18,6 +24,7 @@
 
 void simulationUpdate(int iteration, int iterationAmount, double medianDps, int itemId)
 {
+#ifdef EMSCRIPTEN
     EM_ASM({
         postMessage({
             event: "update",
@@ -29,10 +36,14 @@ void simulationUpdate(int iteration, int iterationAmount, double medianDps, int 
             }
         })
     }, medianDps, iteration, iterationAmount, itemId);
+#else
+    std::cout << "Iteration: " << std::to_string(iteration) << "/" << std::to_string(iterationAmount) << ". Median DPS: " << std::to_string(medianDps) << std::endl;
+#endif
 }
 
 void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::duration<double> duration, int itemId)
 {
+#ifdef EMSCRIPTEN
     EM_ASM({
         postMessage({
             event: "end",
@@ -45,6 +56,9 @@ void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::
             }
         })
     }, medianDps, minDps, maxDps, duration.count(), itemId);
+#else
+    std::cout << "Median DPS: " << std::to_string(medianDps) << ". Min DPS: " << std::to_string(minDps) << ". Max DPS: " << std::to_string(maxDps) << ". Time: " << std::to_string(duration.count()) << std::endl;
+#endif
 }
 
 EMSCRIPTEN_KEEPALIVE
