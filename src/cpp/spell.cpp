@@ -376,6 +376,20 @@ void Spell::onDamageProcs()
 
 void Spell::onHitProcs()
 {
+    // Judgement of Wisdom (50% proc rate)
+    if (player->selectedAuras->judgementOfWisdom && random(1, 100) <= 50)
+    {
+        int manaVal = 74;
+        int currentMana = player->stats->mana;
+        int manaGained = std::min(player->stats->maxMana - currentMana, manaVal);
+        player->stats->mana += manaGained;
+        player->totalManaRegenerated += manaGained;
+        if (player->shouldWriteToCombatLog())
+        {
+            std::string msg = "Player gains " + std::to_string(manaGained) + " mana from Judgement of Wisdom (" + std::to_string(currentMana) + " -> " + std::to_string(player->stats->mana) + ")";
+            player->combatLog(msg);
+        }
+    }
     // T4 2pc
     if (player->sets->t4 >= 2 && (school == SpellSchool::SHADOW || school == SpellSchool::FIRE) && random(1, 100) <= player->auras->Flameshadow->procChance)
     {

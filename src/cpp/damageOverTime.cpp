@@ -199,7 +199,7 @@ CorruptionDot::CorruptionDot(Player* player) : DamageOverTime(player)
     dmg = 900;
     school = SpellSchool::SHADOW;
     coefficient = 0.936 + (0.12 * player->talents->empoweredCorruption);
-    minimumDuration = 9;
+    minimumDuration = 18;
     t5BonusModifier = 1;
     setup();
 
@@ -238,7 +238,7 @@ UnstableAfflictionDot::UnstableAfflictionDot(Player* player) : DamageOverTime(pl
     dmg = 1050;
     school = SpellSchool::SHADOW;
     coefficient = 1.2;
-    minimumDuration = 9;
+    minimumDuration = 18;
     setup();
 }
 
@@ -262,7 +262,7 @@ ImmolateDot::ImmolateDot(Player* player) : DamageOverTime(player)
     dmg = 615;
     school = SpellSchool::FIRE;
     coefficient = 0.65;
-    minimumDuration = 12;
+    minimumDuration = 15;
     t5BonusModifier = 1;
     setup();
 }
@@ -281,7 +281,7 @@ CurseOfAgonyDot::CurseOfAgonyDot(Player* player) : DamageOverTime(player)
     tickTimerTotal = 3;
     dmg = 1356;
     coefficient = 1.2;
-    minimumDuration = 15;
+    minimumDuration = 24;
     setup();
 }
 
