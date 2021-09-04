@@ -670,18 +670,42 @@ void Player::useCooldowns()
 
 Aura* Player::getCurseAura()
 {
-    if (auras->CurseOfTheElements != NULL) return auras->CurseOfTheElements;
-    else if (auras->CurseOfRecklessness != NULL) return auras->CurseOfRecklessness;
-    else return nullptr;
+    if (auras->CurseOfTheElements != NULL)
+    {
+        return auras->CurseOfTheElements;
+    }
+    else if (auras->CurseOfRecklessness != NULL)
+    {
+        return auras->CurseOfRecklessness;
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 Spell* Player::getCurseSpell()
 {
-    if (spells->CurseOfDoom != NULL) return spells->CurseOfDoom;
-    else if (spells->CurseOfTheElements != NULL) return spells->CurseOfTheElements;
-    else if (spells->CurseOfRecklessness != NULL) return spells->CurseOfRecklessness;
-    else if (spells->CurseOfAgony != NULL) return spells->CurseOfAgony;
-    else return nullptr;
+    if (spells->CurseOfDoom != NULL)
+    {
+        return spells->CurseOfDoom;
+    }
+    else if (spells->CurseOfTheElements != NULL)
+    {
+        return spells->CurseOfTheElements;
+    }
+    else if (spells->CurseOfRecklessness != NULL)
+    {
+        return spells->CurseOfRecklessness;
+    }
+    else if (spells->CurseOfAgony != NULL)
+    {
+        return spells->CurseOfAgony;
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 Spell* Player::getFiller()
