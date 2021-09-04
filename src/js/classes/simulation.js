@@ -626,7 +626,7 @@ class Simulation {
       console.log(this.timeTotal)
     }
 
-    dpsArray.sort()
+    dpsArray.sort((a, b) => a - b)
     this.simulationEnd({
       length: (performance.now() - startTime) / 1000,
       damageBreakdown: this.player.damageBreakdown,
@@ -635,8 +635,9 @@ class Simulation {
       combatlog: this.player.combatlog,
       iterations: this.iterations,
       medianDps: Math.round(median(dpsArray) * 100) / 100,
-      minDps: Math.round(Math.min(...dpsArray) * 100) / 100,
-      maxDps: Math.round(Math.max(...dpsArray) * 100) / 100,
+      // The array is already sorted, so we can access the first and last elements respectively.
+      minDps: Math.round(dpsArray[0] * 100) / 100,
+      maxDps: Math.round(dpsArray[dpsArray.length - 1] * 100) / 100,
       totalDamage: totalDamage,
       totalDuration: this.player.totalDuration,
       totalManaRegenerated: this.player.totalManaRegenerated,
