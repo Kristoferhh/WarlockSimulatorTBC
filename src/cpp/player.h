@@ -12,6 +12,8 @@
 #include "trinket.h"
 #include "playerSettings.h"
 #include "damageOverTime.h"
+#include "PlayerSpells.h"
+#include "PlayerAuras.h"
 
 struct Player
 {
@@ -28,14 +30,12 @@ struct Player
   CharacterStats* stats;
   Items* items;
   PlayerSettings* settings;
+  PlayerSpells* spells;
+  PlayerAuras* auras;
   std::string filler;
   std::string curse;
-  std::map<std::string, Spell*> spells;
-  std::map<std::string, std::vector<Spell*>> spellVectors;
-  std::map<std::string, Aura*> auras;
-  std::map<std::string, DamageOverTime*> dots;
-  std::vector<std::string> combatLogEntries;
   std::vector<Trinket*> trinkets;
+  std::vector<std::string> combatLogEntries;
   double castTimeRemaining;
   double totalManaRegenerated;
   double gcdRemaining;
@@ -69,4 +69,7 @@ struct Player
   void castLifeTapOrDarkPact();
   bool shouldWriteToCombatLog();
   void combatLog(std::string& entry);
+  Aura* getCurseAura();
+  Spell* getCurseSpell();
+  Spell* getFiller();
 };

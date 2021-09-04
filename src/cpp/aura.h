@@ -40,11 +40,11 @@ struct Aura
     void decrementStacks(); // ISB
 };
 
-struct ImprovedShadowBolt : public Aura
+struct ImprovedShadowBoltAura : public Aura
 {
     double modifier;
 
-    ImprovedShadowBolt(Player* player);
+    ImprovedShadowBoltAura(Player* player);
     void apply();
     void fade(bool endOfIteration = false);
     void decrementStacks();
@@ -65,14 +65,14 @@ struct ShadowTranceAura : public Aura
     ShadowTranceAura(Player* player);
 };
 
-struct Flameshadow : public Aura
+struct FlameshadowAura : public Aura
 {
-    Flameshadow(Player* player);
+    FlameshadowAura(Player* player);
 };
 
-struct Shadowflame : public Aura
+struct ShadowflameAura : public Aura
 {
-    Shadowflame(Player* player);
+    ShadowflameAura(Player* player);
 };
 
 struct SpellstrikeAura : public Aura
@@ -184,9 +184,9 @@ struct BladeOfWizardryAura : public Aura
     BladeOfWizardryAura(Player* player);
 };
 
-struct ShatteredSunpendantOfAcumenAura : public Aura
+struct ShatteredSunPendantOfAcumenAura : public Aura
 {
-    ShatteredSunpendantOfAcumenAura(Player* player);
+    ShatteredSunPendantOfAcumenAura(Player* player);
 };
 
 struct RobeOfTheElderScribesAura : public Aura
