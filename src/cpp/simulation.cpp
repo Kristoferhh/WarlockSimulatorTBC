@@ -224,16 +224,16 @@ double Simulation::passTime()
     if (player->mp5Timer <= 0)
     {
         player->mp5Timer = 5;
-        if (player->stats->mp5 > 0 || player->fiveSecondRuleTimer <= 0 || (!player->spells->Innervate.empty() && player->auras->Innervate->active))
+
+        if (player->stats->mp5 > 0 || player->fiveSecondRuleTimer <= 0 || (player->auras->Innervate != NULL && player->auras->Innervate->active))
         {
-            bool innervateExists = !player->spells->Innervate.empty();
-            bool innervateActive = innervateExists && player->auras->Innervate->active;
+            bool innervateActive = player->auras->Innervate != NULL && player->auras->Innervate->active;
             int currentPlayerMana = player->stats->mana;
 
             // MP5
-            if (player->stats->mp5)
+            if (player->stats->mp5 > 0)
             {
-                player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + player->stats->mp5);
+                player->stats->mana += player->stats->mp5;
             }
             // Spirit mana regen
             if (player->fiveSecondRuleTimer <= 0 || innervateActive)
@@ -244,7 +244,12 @@ double Simulation::passTime()
                 {
                     mp5FromSpirit *= 4;
                 }
-                player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + mp5FromSpirit);
+                player->stats->mana += mp5FromSpirit;
+            }
+
+            if (player->stats->mana > player->stats->maxMana)
+            {
+                player->stats->mana = player->stats->maxMana;
             }
 
             int manaGained = player->stats->mana - currentPlayerMana;

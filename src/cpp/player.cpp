@@ -647,6 +647,7 @@ void Player::useCooldowns()
             }
         }
     }
+    //todo don't use innervate until x% mana
     if (!spells->Innervate.empty() && !auras->Innervate->active)
     {
         for (int i = 0; i < settings->innervateAmount; i++)
