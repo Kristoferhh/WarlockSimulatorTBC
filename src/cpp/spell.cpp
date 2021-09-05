@@ -89,7 +89,7 @@ void Spell::startCast(double predictedDamage)
     }
     if (onGcd && !isNonWarlockAbility && player->shouldWriteToCombatLog())
     {
-        combatLogMsg.append(" - Global cooldown: " + std::to_string(player->gcdRemaining));
+        combatLogMsg.append(" - Global cooldown: " + truncateTrailingZeros(std::to_string(player->gcdRemaining), 4));
     }
     if (predictedDamage > 0 && player->shouldWriteToCombatLog())
     {
@@ -917,7 +917,8 @@ void SuperManaPotion::cast()
     player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
     {
-        std::string msg = "Player gains " + std::to_string(round(player->stats->mana - currentPlayerMana)) + " mana from " + name + " (" + std::to_string(round(currentPlayerMana)) + " -> " + std::to_string(round(player->stats->mana)) + ")";
+        std::string msg = "Player gains " + truncateTrailingZeros(std::to_string(round(player->stats->mana - currentPlayerMana))) + " mana from " + name + " (" + truncateTrailingZeros(std::to_string(round(currentPlayerMana))) + " -> " + truncateTrailingZeros(std::to_string(round(player->stats->mana))) + ")";
+        player->combatLog(msg);
     }
 }
 
@@ -944,7 +945,8 @@ void DemonicRune::cast()
     player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
     {
-        std::string msg = "Player gains " + std::to_string(round(player->stats->mana - currentPlayerMana)) + " mana from " + name + " (" + std::to_string(round(currentPlayerMana)) + " -> " + std::to_string(round(player->stats->mana)) + ")";
+        std::string msg = "Player gains " + truncateTrailingZeros(std::to_string(round(player->stats->mana - currentPlayerMana))) + " mana from " + name + " (" + truncateTrailingZeros(std::to_string(round(currentPlayerMana))) + " -> " + truncateTrailingZeros(std::to_string(round(player->stats->mana))) + ")";
+        player->combatLog(msg);
     }
 }
 
@@ -1059,7 +1061,7 @@ void MarkOfDefiance::cast()
         player->stats->mana = std::min(static_cast<double>(player->stats->maxMana), currentPlayerMana + avgManaValue);
         if (player->shouldWriteToCombatLog())
         {
-            std::string msg = "Player gains " + std::to_string(round(player->stats->mana - currentPlayerMana)) + " mana from " + name + " (" + std::to_string(round(currentPlayerMana)) + " -> " + std::to_string(round(player->stats->mana)) + ")";
+            std::string msg = "Player gains " + truncateTrailingZeros(std::to_string(round(player->stats->mana - currentPlayerMana))) + " mana from " + name + " (" + truncateTrailingZeros(std::to_string(round(currentPlayerMana))) + " -> " + truncateTrailingZeros(std::to_string(round(player->stats->mana))) + ")";
             player->combatLog(msg);
         }
         cooldownRemaining = cooldown;
