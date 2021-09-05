@@ -12,7 +12,7 @@ struct DamageOverTime
     int duration; // Total duration of the dot
     int originalDuration; // Used for T4 4pc since we're increasing the duration by 3 seconds but need to know what the original duration was
     int tickTimerTotal; // Total duration of each tick (default is 3 seconds between ticks)
-    int tickTimerRemaining; // Time until next tick
+    double tickTimerRemaining; // Time until next tick
     int ticksRemaining; // Amount of ticks remaining before the dot expires
     int ticksTotal;
     int spellPower; // Spell Power amount when dot was applied
@@ -31,7 +31,7 @@ struct DamageOverTime
     void setup();
     void apply();
     void fade(bool endOfIteration = false);
-    void tick(int time);
+    void tick(double time);
     double getModifier();
     double* getConstantDamage();
     double predictDamage();

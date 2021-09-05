@@ -25,7 +25,10 @@ void Trinket::reset()
 void Trinket::setup()
 {
     varName = camelCase(name);
-    //todo breakdown table
+    if (player->combatLogBreakdown.count(varName) == 0)
+    {
+        player->combatLogBreakdown.insert(std::make_pair(varName, new CombatLogBreakdown(name)));
+    }
 }
 
 void Trinket::use()
@@ -36,6 +39,8 @@ void Trinket::use()
         std::string msg = name + " used";
         player->combatLog(msg);
     }
+    player->combatLogBreakdown.at(varName)->appliedAt = player->fightTime;
+    player->combatLogBreakdown.at(varName)->count++;
 
     if (duration > 0)
     {
@@ -65,7 +70,7 @@ void Trinket::use()
 void Trinket::fade(bool endOfIteration)
 {
     bool recalculatePetStats = false;
-    if (player->shouldWriteToCombatLog())
+    if (!endOfIteration && player->shouldWriteToCombatLog())
     {
         std::string msg = name + " faded";
         player->combatLog(msg);
@@ -73,7 +78,7 @@ void Trinket::fade(bool endOfIteration)
 
     if (stats->spellPower > 0)
     {
-        if (player->shouldWriteToCombatLog())
+        if (!endOfIteration && player->shouldWriteToCombatLog())
         {
             int currentSpellPower = player->getSpellPower();
             std::string msg = "Spell Power - " + std::to_string(stats->spellPower) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower - stats->spellPower) + ")";
@@ -89,11 +94,17 @@ void Trinket::fade(bool endOfIteration)
     }*/
 
     active = false;
-    //todo log aura uptime
+    double auraUptime = player->fightTime - player->combatLogBreakdown.at(varName)->appliedAt;
+    player->combatLogBreakdown.at(varName)->uptime += auraUptime;
 }
 
-void Trinket::tick(int t)
+void Trinket::tick(double t)
 {
+    if (player->shouldWriteToCombatLog() && cooldownRemaining > 0 && cooldownRemaining - t <= 0)
+    {
+        std::string msg = name + " off cooldown";
+        player->combatLog(msg);
+    }
     cooldownRemaining -= t;
     durationRemaining -= t;
     if (active && durationRemaining <= 0)

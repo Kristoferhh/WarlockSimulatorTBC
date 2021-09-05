@@ -1,5 +1,5 @@
 class SimWorker {
-  constructor (combatLogUpdate, simulationEnd, simulationUpdate, workerParams) {
+  constructor (combatLogUpdate, combatLogBreakdown, simulationEnd, simulationUpdate, workerParams) {
     this.worker = new Worker('./src/js/web_worker.js')
     this.workerParams = workerParams
     this.worker.onmessage = function (e) {
@@ -9,6 +9,8 @@ class SimWorker {
         simulationEnd(e.data.data)
       } else if (e.data.event == 'update') {
         simulationUpdate(e.data.data)
+      } else if (e.data.event == "combatLogBreakdown") {
+        combatLogBreakdown(e.data.data)
       }
     }
   }

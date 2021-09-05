@@ -20,7 +20,7 @@ CharacterStats::CharacterStats(int health, int mana, double stamina, double inte
     , spellPen(spellPen)
     , fireModifier(fireModifier)
     , frostModifier(frostModifier)
-    , hastePercent(hastePercent)
+    , hastePercent(1 + hastePercent / 100)
     , damageModifier(damageModifier)
     , shadowModifier(shadowModifier)
     , staminaModifier(staminaModifier)

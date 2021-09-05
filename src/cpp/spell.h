@@ -61,7 +61,7 @@ struct Spell
     double getCritMultiplier(double critMultiplier);
     double predictDamage();
     void damage(bool isCrit = false);
-    void tick(int t);
+    void tick(double t);
     void onCritProcs();
     void onDamageProcs();
     void onHitProcs();
@@ -115,7 +115,7 @@ struct SeedOfCorruption : public Spell
 {
     int dmgCap;
     SeedOfCorruption(Player* player);
-    double damage();
+    void damage();
 };
 
 struct DarkPact : public Spell

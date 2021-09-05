@@ -1,12 +1,22 @@
 #include "spell.h"
 #include "player.h"
 #include "common.h"
+#include <iomanip>
 
 Spell::Spell(Player* player, Aura* aura, DamageOverTime* dot) : player(player), auraEffect(aura), dotEffect(dot)
 {
     modifier = 1;
     coefficient = 0;
+    cooldown = 0;
     school = SpellSchool::NO_SCHOOL;
+    isNonWarlockAbility = false;
+    isDot = false;
+    doesDamage = false;
+    canCrit = false;
+    isItem = false;
+    isAura = false;
+    onGcd = true;
+    isProc = false;
 }
 
 void Spell::reset()
@@ -26,11 +36,15 @@ void Spell::setup()
     {
       avgManaValue = (minMana + maxMana) / 2;
     }
+    if (player->combatLogBreakdown.count(varName) == 0)
+    {
+        player->combatLogBreakdown.insert(std::make_pair(varName, new CombatLogBreakdown(name)));
+    }
 }
 
 double Spell::getCastTime()
 {
-    return round((castTime / (1.0 + ((player->stats->hasteRating / player->hasteRatingPerPercent + player->stats->hastePercent) / 100))) * 10000) / 10000 + player->spellDelay;
+    return round((this->castTime / player->getHastePercent()) * 10000) / 10000 + player->spellDelay;
 }
 
 bool Spell::canCast()
@@ -62,7 +76,7 @@ void Spell::startCast(double predictedDamage)
         player->castTimeRemaining = getCastTime();
         if (!isProc && player->shouldWriteToCombatLog())
         {
-            combatLogMsg.append("Started casting " + name + " - Cast time: " + std::to_string(player->castTimeRemaining - player->spellDelay)) + " (" + std::to_string(round((player->stats->hasteRating / player->hasteRatingPerPercent + player->stats->hastePercent) * 10000) / 10000) + "% haste at a base cast speed of " + std::to_string(castTime) + ").";
+            combatLogMsg.append("Started casting " + name + " - Cast time: " + truncateTrailingZeros(std::to_string(player->castTimeRemaining - player->spellDelay), 4) + " (" + truncateTrailingZeros(std::to_string(player->getHastePercent() * 100), 4) + "% haste at a base cast speed of " + truncateTrailingZeros(std::to_string(castTime), 2) + ")");
         }
     }
     else
@@ -88,7 +102,7 @@ void Spell::startCast(double predictedDamage)
     }
 }
 
-void Spell::tick(int t)
+void Spell::tick(double t)
 {
     if (cooldownRemaining > 0 && cooldownRemaining - t <= 0 && player->shouldWriteToCombatLog())
     {
@@ -105,6 +119,10 @@ void Spell::tick(int t)
 
 void Spell::cast()
 {
+    if (!isAura)
+    {
+        player->combatLogBreakdown.at(varName)->casts++;
+    }   
     const int currentMana = player->stats->mana;
     if (manaCost > 0)
     {
@@ -117,7 +135,7 @@ void Spell::cast()
 
     if (castTime > 0 && player->shouldWriteToCombatLog())
     {
-        std::string msg = "Finished casting " + name + " - Mana: " + std::to_string(round(currentMana)) + " -> " + std::to_string(round(player->stats->mana)) + " - Mana Cost: " + std::to_string(round(manaCost)) + " - Mana Cost Modifier: " + std::to_string(round(player->stats->manaCostModifier * 100)) + "%";
+        std::string msg = "Finished casting " + name + " - Mana: " + truncateTrailingZeros(std::to_string(currentMana)) + " -> " + truncateTrailingZeros(std::to_string(player->stats->mana)) + " - Mana Cost: " + truncateTrailingZeros(std::to_string(round(manaCost))) + " - Mana Cost Modifier: " + truncateTrailingZeros(std::to_string(round(player->stats->manaCostModifier * 100))) + "%";
         player->combatLog(msg);
     }
 
@@ -127,7 +145,8 @@ void Spell::cast()
         isCrit = player->isCrit(type, bonusCrit);
         if (isCrit)
         {
-            //todo
+            // Increment the crit counter whether the spell hits or not so that the crit % on the damage breakdown is correct. Otherwise the crit % will be lower due to lost crits when the spell misses.
+            player->combatLogBreakdown.at(varName)->crits++;
         }
     }
 
@@ -138,7 +157,7 @@ void Spell::cast()
             std::string msg = name + " *resist*";
             player->combatLog(msg);
         }
-        //todo
+        player->combatLogBreakdown.at(varName)->misses++;
         return;
     }
 
@@ -211,6 +230,7 @@ void Spell::damage(bool isCrit)
     player->iterationDamage += totalDamage;
 
     // Combat Log
+    player->combatLogBreakdown.at(varName)->damage += totalDamage;
     if (player->shouldWriteToCombatLog())
     {
         std::string msg = name + " ";
@@ -218,32 +238,32 @@ void Spell::damage(bool isCrit)
         {
             msg += "*";
         }
-        msg += std::to_string(round(totalDamage));
+        msg += truncateTrailingZeros(std::to_string(round(totalDamage)));
         if (isCrit)
         {
             msg += "*";
         }
-        msg += " (" + std::to_string(dmg) + " Base Damage - " + std::to_string(round(coefficient * 1000) / 1000) + " Coefficient - " + std::to_string(round(spellPower)) + " Spell Power - ";
+        msg += " (" + truncateTrailingZeros(std::to_string(dmg)) + " Base Damage - " + truncateTrailingZeros(std::to_string(round(coefficient * 1000) / 1000), 3) + " Coefficient - " + truncateTrailingZeros(std::to_string(round(spellPower))) + " Spell Power - ";
         if (isCrit)
         {
-            msg += std::to_string(round(critMultiplier * 100) / 100) + "% Crit Multiplier - ";
+            msg += truncateTrailingZeros(std::to_string(critMultiplier * 100), 3) + "% Crit Multiplier - ";
         }
-        msg += std::to_string(round(dmgModifier * 10000) / 100) + "% Damage Modifier - " + std::to_string(round(partialResistMultiplier * 1000) / 10) + "% Partial Resist Multiplier)";
+        msg += truncateTrailingZeros(std::to_string(round(dmgModifier * 10000) / 100), 2) + "% Damage Modifier - " + truncateTrailingZeros(std::to_string(round(partialResistMultiplier * 1000) / 10)) + "% Partial Resist Multiplier)";
         player->combatLog(msg);
     }
 
     //T5 4pc
     if (player->sets->t5 >= 4)
     {
-        /*if (varName == "shadowBolt" && player->getAura("corruption") != NULLplayer->auras->corruption->active)
+        if (varName == "shadowBolt" && player->auras->Corruption != NULL && player->auras->Corruption->active)
         {
-            player->auras->corruption->t5BonusModifier *= 1.1;
+            player->auras->Corruption->t5BonusModifier *= 1.1;
         }
-        else if (varName == "incinerate" && player->auras->Immolate != NULLplayer->auras->immolate->active)
+        else if (varName == "incinerate" && player->auras->Immolate != NULL && player->auras->Immolate->active)
         {
 
-            player->auras->immolate->t5BonusModifier *= 1.1;
-        }*/
+            player->auras->Immolate->t5BonusModifier *= 1.1;
+        }
     }
 }
 
@@ -384,6 +404,8 @@ void Spell::onHitProcs()
         int manaGained = std::min(player->stats->maxMana - currentMana, manaVal);
         player->stats->mana += manaGained;
         player->totalManaRegenerated += manaGained;
+        player->combatLogBreakdown.at("judgementOfWisdom")->casts++;
+        player->combatLogBreakdown.at("judgementOfWisdom")->manaGain += manaGained;
         if (player->shouldWriteToCombatLog())
         {
             std::string msg = "Player gains " + std::to_string(manaGained) + " mana from Judgement of Wisdom (" + std::to_string(currentMana) + " -> " + std::to_string(player->stats->mana) + ")";
@@ -522,6 +544,8 @@ void LifeTap::cast()
 {
     const int manaGain = this->manaGain();
     player->totalManaRegenerated += manaGain;
+    player->combatLogBreakdown.at(varName)->casts++;
+    player->combatLogBreakdown.at(varName)->manaGain += manaGain;
     
     if (player->shouldWriteToCombatLog() && player->stats->mana + manaGain > player->stats->maxMana)
     {
@@ -644,9 +668,76 @@ SeedOfCorruption::SeedOfCorruption(Player* player) : Spell(player)
     setup();
 };
 
-double SeedOfCorruption::damage()
+void SeedOfCorruption::damage()
 {
-    return 0;
+    int baseDamage = player->settings->randomizeValues && minDmg && maxDmg ? random(minDmg, maxDmg) : dmg;
+    int enemyAmount = player->settings->enemyAmount - 1; // Minus one because the enemy that Seed is being cast on doesn't get hit
+    int resistAmount = 0;
+    int critAmount = 0;
+    int spellPower = player->getSpellPower(school);
+    double modifier = player->stats->shadowModifier; //todo debuffs increase dmg past the aoe cap
+
+    for (int i = 0; i < enemyAmount; i++)
+    {
+        // Check for a resist
+        if (!player->isHit(type))
+        {
+            resistAmount++;
+            continue;
+        }
+        else
+        {
+            onDamageProcs();
+        }
+        // Check for a crit
+        if (player->isCrit(type))
+        {
+            critAmount++;
+            onCritProcs();
+        }
+    }
+
+    double individualSeedDamage = baseDamage + (spellPower * coefficient);
+    // Oblivion Raiment (dungeon set) 4pc bonus
+    if (player->sets->oblivion >= 4)
+    {
+        individualSeedDamage += 180;
+    }
+    individualSeedDamage *= modifier;
+
+    int enemiesHit = enemyAmount - resistAmount;
+    double totalSeedDamage = individualSeedDamage * enemiesHit;
+    // If the total damage goes above the aoe cap then we need to reduce the amount of each seed's damage
+    if (totalSeedDamage > dmgCap)
+    {
+        // Set the damage of each individual seed to the aoe cap divided by the amount of enemies hit
+        // There's a bug with Seed of Corruption where if you hit the AoE cap,
+        // the number used to divide here is 1 higher because it's including the enemy that Seed is being cast on,
+        // even though that enemy doesn't actually get damaged by the Seed. Nice game :)
+        individualSeedDamage = dmgCap / (enemiesHit + 1);
+        // Re-calculate the total damage done by all seed hits
+        totalSeedDamage = individualSeedDamage * enemiesHit;
+    }
+    // Add damage from Seed crits
+    double individualSeedCrit = individualSeedDamage * getCritMultiplier(player->critMultiplier);
+    double bonusDamageFromCrit = individualSeedCrit - individualSeedDamage;
+    totalSeedDamage += bonusDamageFromCrit * critAmount;
+    // Partial resists (probably need to calculate a partial resist for each seed hit, not sure how it interacts for the aoe cap)
+    double partialResistMultiplier = player->getPartialResistMultiplier(school);
+    totalSeedDamage *= partialResistMultiplier;
+
+    player->iterationDamage += totalSeedDamage;
+
+    if (player->shouldWriteToCombatLog())
+    {
+        std::string msg = name + " " + std::to_string(round(totalSeedDamage)) + " (" + std::to_string(enemyAmount) + " Enemies (" + std::to_string(resistAmount) + " Resists & " + std::to_string(critAmount) + " Crits) - " + std::to_string(baseDamage) + " Base Damage - " + std::to_string(coefficient) + " Coefficient - " + std::to_string(spellPower) + " Spell Power - " + std::to_string(round(modifier * 1000) / 1000) + "% Modifier - " + std::to_string(partialResistMultiplier) + " % Partial Resist Multiplier)";
+        player->combatLog(msg);
+    }
+    player->combatLogBreakdown.at(varName)->damage += totalSeedDamage;
+    player->combatLogBreakdown.at(varName)->crits += critAmount;
+    player->combatLogBreakdown.at(varName)->misses += resistAmount;
+    // the cast() function already adds 1 to the amount of casts so we only need to add enemiesHit - 1 to the cast amount
+    player->combatLogBreakdown.at(varName)->casts += (enemiesHit - 1);
 }
 
 DarkPact::DarkPact(Player* player) : Spell(player)
@@ -821,6 +912,8 @@ void SuperManaPotion::cast()
     //todo check for the randomize values option
     const int manaGain = random(minMana, maxMana);
     player->totalManaRegenerated += manaGain;
+    player->combatLogBreakdown.at(varName)->casts++;
+    player->combatLogBreakdown.at(varName)->manaGain += manaGain;
     player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
     {
@@ -846,6 +939,8 @@ void DemonicRune::cast()
     //todo check for the randomize values option
     const int manaGain = random(minMana, maxMana);
     player->totalManaRegenerated += manaGain;
+    player->combatLogBreakdown.at(varName)->casts++;
+    player->combatLogBreakdown.at(varName)->manaGain += manaGain;
     player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
     {

@@ -50,3 +50,12 @@ std::string camelCase(std::string& str)
     
     return newStr;
 }
+
+std::string truncateTrailingZeros(std::string num, int decimalPlaces)
+{
+    if (decimalPlaces == 0)
+    {
+        return num.substr(0, num.find("."));
+    }
+    return num.substr(0, num.find(".") + decimalPlaces + 1);
+}

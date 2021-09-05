@@ -11,12 +11,11 @@ struct Aura
     std::string name;
     std::string varName;
     int duration;
-    int durationRemaining;
-    int hiddenCooldown;
+    double durationRemaining;
     int procChance;
     // dots
     int tickTimerTotal;
-    int tickTimerRemaining;
+    double tickTimerRemaining;
     int ticksRemaining;
     int ticksTotal;
     int minimumDuration;
@@ -34,7 +33,7 @@ struct Aura
 
     Aura(Player* player);
     void setup();
-    void tick(int time);
+    void tick(double time);
     virtual void apply();
     virtual void fade(bool endOfIteration = false);
     void decrementStacks(); // ISB
@@ -148,7 +147,7 @@ struct DrumsOfRestorationAura : public Aura
 
     DrumsOfRestorationAura(Player* player);
     void apply();
-    void tick(int time);
+    void tick(double time);
 };
 
 struct AshtongueTalismanOfShadowsAura : public Aura

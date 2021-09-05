@@ -21,7 +21,7 @@ Player::Player(PlayerSettings* playerSettings)
     spellDelay = 0.0001;
     // Multiply hit and crit percent by this number to get rid of the decimals when calling random() since we need integers
     critChanceMultiplier = 1000;
-    minimumGcdValue = 1;
+    minimumGcdValue = 0.75; // TBCC is bugged cause Blizzard is a shit company so the minimum gcd value as of 2021/9/4 is 0.75s instead of 1s
     critMultiplier = 1.5;
     // I don't know if this formula only works for bosses or not, so for the moment I'm only using it for lvl >=73 targets.
     const double enemyBaseResistance = settings->enemyLevel >= 73 ? (6 * level * 5) / 75.0 : 0;
@@ -31,6 +31,12 @@ Player::Player(PlayerSettings* playerSettings)
     stats->health = (stats->health + (stats->stamina * stats->staminaModifier) * healthPerStamina) * (1 + (0.01 * static_cast<double>(talents->felStamina)));
     stats->maxMana = (stats->mana + (stats->intellect * stats->intellectModifier) * manaPerInt) * (1 + (0.01 * static_cast<double>(talents->felIntellect)));
     stats->shadowModifier *= (1 + (0.02 * talents->shadowMastery));
+
+    combatLogBreakdown.insert(std::make_pair("mp5", new CombatLogBreakdown("Mp5")));
+    if (selectedAuras->judgementOfWisdom)
+    {
+        combatLogBreakdown.insert(std::make_pair("judgementOfWisdom", new CombatLogBreakdown("Judgement of Wisdom")));
+    }
 
     // Crit chance
     if (selectedAuras->powerOfTheGuardianMage)
@@ -90,25 +96,25 @@ Player::Player(PlayerSettings* playerSettings)
     }
     else
     {
-      // Add damage % multiplier from Master Demonologist and Soul Link
-      if (talents->soulLink == 1)
-      {
-          stats->shadowModifier *= 1.05;
-          stats->fireModifier *= 1.05;
-      }
-      if (talents->masterDemonologist > 0)
-      {
-          if (settings->petIsSuccubus)
-          {
-              stats->shadowModifier *= (1 + 0.02 * talents->masterDemonologist);
-              stats->fireModifier *= (1 + 0.02 * talents->masterDemonologist);
-          }
-          else if (settings->petIsFelguard)
-          {
-              stats->shadowModifier *= (1 + 0.01 * talents->masterDemonologist);
-              stats->fireModifier *= (1 + 0.01 * talents->masterDemonologist);
-          }
-      }
+        // Add damage % multiplier from Master Demonologist and Soul Link
+        if (talents->soulLink == 1)
+        {
+            stats->shadowModifier *= 1.05;
+            stats->fireModifier *= 1.05;
+        }
+        if (talents->masterDemonologist > 0)
+        {
+            if (settings->petIsSuccubus)
+            {
+                stats->shadowModifier *= (1 + 0.02 * talents->masterDemonologist);
+                stats->fireModifier *= (1 + 0.02 * talents->masterDemonologist);
+            }
+            else if (settings->petIsFelguard)
+            {
+                stats->shadowModifier *= (1 + 0.01 * talents->masterDemonologist);
+                stats->fireModifier *= (1 + 0.01 * talents->masterDemonologist);
+            }
+        }
     }
     // Ferocious Inspiration
     if (selectedAuras->ferociousInspiration)
@@ -130,12 +136,12 @@ Player::Player(PlayerSettings* playerSettings)
     // Add spell power from Fel Armor
     if (selectedAuras->felArmor)
     {
-        stats->spellPower += 100 * (1 + 0.01 * talents->demonicAegis);
+        stats->spellPower += 100 * (1 + 0.1 * talents->demonicAegis);
     }
     // If using a custom isb uptime % then just add to the shadow modifier % (this assumes 5/5 ISB giving 20% shadow damage)
     if (settings->usingCustomIsbUptime)
     {
-        stats->shadowModifier *= (1 + 0.02 * (static_cast<double>(settings->customIsbUptimeValue) / 100.0));
+        stats->shadowModifier *= (1.0 + 0.2 * (settings->customIsbUptimeValue / 100.0));
     }
     // Add spell power from Improved Divine Spirit
     stats->spiritModifier *= (1 - (0.01 * talents->demonicEmbrace));
@@ -224,18 +230,18 @@ Player::Player(PlayerSettings* playerSettings)
     }*/
 
     combatLogEntries.push_back("---------------- Player stats ----------------");
-    combatLogEntries.push_back("Health: " + std::to_string(round(stats->health)));
-    combatLogEntries.push_back("Mana: " + std::to_string(round(stats->maxMana)));
-    combatLogEntries.push_back("Stamina: " + std::to_string(round(stats->stamina * stats->staminaModifier)));
-    combatLogEntries.push_back("Intellect: " + std::to_string(round(stats->intellect * stats->intellectModifier)));
-    combatLogEntries.push_back("Spell Power: " + std::to_string(round(getSpellPower())));
+    combatLogEntries.push_back("Health: " + truncateTrailingZeros(std::to_string(round(stats->health))));
+    combatLogEntries.push_back("Mana: " + truncateTrailingZeros(std::to_string(round(stats->maxMana))));
+    combatLogEntries.push_back("Stamina: " + truncateTrailingZeros(std::to_string(round(stats->stamina) * stats->staminaModifier)));
+    combatLogEntries.push_back("Intellect: " + truncateTrailingZeros(std::to_string(round(stats->intellect) * stats->intellectModifier)));
+    combatLogEntries.push_back("Spell Power: " + truncateTrailingZeros(std::to_string(round(getSpellPower()))));
     combatLogEntries.push_back("Shadow Power: " + std::to_string(stats->shadowPower));
     combatLogEntries.push_back("Fire Power: " + std::to_string(stats->firePower));
-    combatLogEntries.push_back("Crit Chance: " + std::to_string(round(getCritChance(SpellType::DESTRUCTION) * 100) / 100) + "%");
-    combatLogEntries.push_back("Hit Chance: " + std::to_string(std::min(static_cast<double>(16), round((stats->extraHitChance) * 100) / 100)) + "%");
-    combatLogEntries.push_back("Haste: " + std::to_string(round((stats->hasteRating / hasteRatingPerPercent) * 100) / 100) + "%");
-    combatLogEntries.push_back("Shadow Modifier: " + std::to_string((stats->shadowModifier * 100) / 100) + "%");
-    combatLogEntries.push_back("Fire Modifier: " + std::to_string(round(stats->fireModifier * 100) / 100) + "%");
+    combatLogEntries.push_back("Crit Chance: " + truncateTrailingZeros(std::to_string(round(getCritChance(SpellType::DESTRUCTION) * 100) / 100), 2) + "%");
+    combatLogEntries.push_back("Hit Chance: " + truncateTrailingZeros(std::to_string(std::min(static_cast<double>(16), round((stats->extraHitChance) * 100) / 100)), 2) + "%");
+    combatLogEntries.push_back("Haste: " + truncateTrailingZeros(std::to_string(round((stats->hasteRating / hasteRatingPerPercent) * 100) / 100), 2) + "%");
+    combatLogEntries.push_back("Shadow Modifier: " + truncateTrailingZeros(std::to_string(stats->shadowModifier * 100)) + "%");
+    combatLogEntries.push_back("Fire Modifier: " + truncateTrailingZeros(std::to_string(stats->fireModifier * 100)) + "%");
     combatLogEntries.push_back("MP5: " + std::to_string(stats->mp5));
     combatLogEntries.push_back("Spell Penetration: " + std::to_string(stats->spellPen));
     /*if (this.pet) {
@@ -420,6 +426,12 @@ void Player::reset()
     mp5Timer = 5;
     fiveSecondRuleTimer = 5;
 
+    // Reset trinkets
+    for (int i = 0; i < trinkets.size(); i++)
+    {
+        trinkets[i]->reset();
+    }
+
     // Reset spells
     spells->LifeTap->reset();
     spells->SeedOfCorruption->reset();
@@ -474,11 +486,16 @@ void Player::reset()
     }
 }
 
+double Player::getHastePercent()
+{
+    return stats->hastePercent * (1.0 + stats->hasteRating / hasteRatingPerPercent / 100.0);
+}
+
 double Player::getGcdValue(std::string varName)
 {
     if (varName != "shadowfury" || spells->Shadowfury == NULL)
     {
-        return std::max(minimumGcdValue, round((gcdValue / (1 + ((stats->hasteRating / hasteRatingPerPercent + stats->hastePercent) / 100))) * 10000) / 10000);
+        return std::max(minimumGcdValue, round((gcdValue / getHastePercent()) * 10000) / 10000);
     }
     return 0;
 }
@@ -732,11 +749,11 @@ double Player::getPartialResistMultiplier(SpellSchool school)
 {
     if (school == SpellSchool::SHADOW)
     {
-        return 1 - ((75 * settings->enemyShadowResist) / (level * 5)) / 100;
+        return 1.0 - ((75 * settings->enemyShadowResist) / (level * 5)) / 100.0;
     }
     else if (school == SpellSchool::FIRE)
     {
-        return 1 - ((75 * settings->enemyFireResist) / (level * 5)) / 100;
+        return 1.0 - ((75 * settings->enemyFireResist) / (level * 5)) / 100.0;
     }
 
     return 1;
@@ -747,8 +764,8 @@ bool Player::shouldWriteToCombatLog()
     return iteration == 0;
 }
 
-void Player::combatLog(std::string &entry)
+void Player::combatLog(const std::string &entry)
 {
-    std::cout << fightTime << " " << entry << std::endl;
-    combatLogEntries.push_back(std::to_string(fightTime) + " " + entry);
+    // Truncate the fightTime down to 4 decimal places
+    combatLogEntries.push_back("|" + std::to_string(fightTime).substr(0, std::to_string(fightTime).find(".") + 5) + "| " + entry );
 }

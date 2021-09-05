@@ -10,8 +10,30 @@
 #define EMSCRIPTEN_KEEPALIVE
 #endif
 
-/*void combatLogUpdate(char combatLogEntry)
+void postCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, uint32_t misses, uint32_t manaGain, uint32_t damage, uint32_t count, double uptime)
 {
+#ifdef EMSCRIPTEN
+    EM_ASM({
+        postMessage({
+            event: "combatLogBreakdown",
+            data: {
+                name: UTF8ToString($0),
+                casts: $1,
+                crits: $2,
+                misses: $3,
+                manaGain: $4,
+                damage: $5,
+                count: $6,
+                uptime: $7
+            }
+        })
+    }, name, casts, crits, misses, manaGain, damage, count, uptime);
+#endif
+}
+
+void combatLogUpdate(const char* combatLogEntry)
+{
+#ifdef EMSCRIPTEN
     EM_ASM({
         postMessage({
             event: "combatLogUpdate",
@@ -20,7 +42,8 @@
             }
         })
     }, combatLogEntry);
-}*/
+#endif
+}
 
 void simulationUpdate(int iteration, int iterationAmount, double medianDps, int itemId)
 {
@@ -41,7 +64,7 @@ void simulationUpdate(int iteration, int iterationAmount, double medianDps, int 
 #endif
 }
 
-void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::duration<double> duration, int itemId)
+void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::duration<double> duration, int itemId, int iterationAmount, uint32_t totalDuration, uint32_t totalManaRegenerated)
 {
 #ifdef EMSCRIPTEN
     EM_ASM({
@@ -52,10 +75,13 @@ void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::
                 minDps: $1,
                 maxDps: $2,
                 duration: $3,
-                itemId: $4
+                itemId: $4,
+                iterationAmount: $5,
+                totalDuration: $6,
+                totalManaRegenerated: $7
             }
         })
-    }, medianDps, minDps, maxDps, duration.count(), itemId);
+    }, medianDps, minDps, maxDps, duration.count(), itemId, iterationAmount, totalDuration, totalManaRegenerated);
 #else
     std::cout << "Median DPS: " << std::to_string(medianDps) << ". Min DPS: " << std::to_string(minDps) << ". Max DPS: " << std::to_string(maxDps) << ". Time: " << std::to_string(duration.count()) << std::endl;
 #endif

@@ -8,10 +8,12 @@
 #include "constant.h"
 #include "aura.h"
 #include "items.h"
+#include "combatLogBreakdown.h"
 
-//void combatLogUpdate(char combatLogEntry);
+void postCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, uint32_t misses, uint32_t manaGain, uint32_t damage, uint32_t count, double uptime);
+void combatLogUpdate(const char* combatLogEntry);
 void simulationUpdate(int iteration, int iterationAmount, double medianDps, int itemId);
-void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::duration<double> duration, int itemId);
+void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::duration<double> duration, int itemId, int iterationAmount, uint32_t totalDuration, uint32_t totalManaRegenerated);
 
 extern "C"
 {

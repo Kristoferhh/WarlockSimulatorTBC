@@ -23,7 +23,7 @@ struct Trinket
     void setup();
     void use();
     void fade(bool endOfIteration = false);
-    void tick(int time);
+    void tick(double time);
 };
 
 struct RestrainedEssenceOfSapphiron : public Trinket

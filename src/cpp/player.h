@@ -14,6 +14,7 @@
 #include "damageOverTime.h"
 #include "PlayerSpells.h"
 #include "PlayerAuras.h"
+#include "combatLogBreakdown.h"
 
 struct Player
 {
@@ -36,6 +37,8 @@ struct Player
   std::string curse;
   std::vector<Trinket*> trinkets;
   std::vector<std::string> combatLogEntries;
+  std::map<std::string, CombatLogBreakdown*> combatLogBreakdown;
+  uint32_t iterationDamage;
   double castTimeRemaining;
   double totalManaRegenerated;
   double gcdRemaining;
@@ -43,7 +46,6 @@ struct Player
   double spellDelay;
   double totalDuration;
   int level;
-  int iterationDamage;
   double fightTime;
   int iteration;
   double minimumGcdValue;
@@ -54,10 +56,14 @@ struct Player
   double critMultiplier;
 
   Player(PlayerSettings* settings);
+  Aura* getCurseAura();
+  Spell* getCurseSpell();
+  Spell* getFiller();
   void initialize();
   void reset();
   double getGcdValue(std::string varName);
   double getSpellPower(SpellSchool school = SpellSchool::NO_SCHOOL);
+  double getHastePercent();
   bool isCrit(SpellType spellType, double extraCrit = 0);
   bool isHit(SpellType spellType);
   double getCritChance(SpellType spellType);
@@ -68,8 +74,5 @@ struct Player
   void useCooldowns();
   void castLifeTapOrDarkPact();
   bool shouldWriteToCombatLog();
-  void combatLog(std::string& entry);
-  Aura* getCurseAura();
-  Spell* getCurseSpell();
-  Spell* getFiller();
+  void combatLog(const std::string& entry);
 };

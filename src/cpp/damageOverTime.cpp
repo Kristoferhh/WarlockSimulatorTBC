@@ -26,7 +26,10 @@ void DamageOverTime::setup()
         duration += 3;
     }
     ticksTotal = duration / tickTimerTotal;
-    // todo breakdown tables
+    if (player->combatLogBreakdown.count(varName) == 0)
+    {
+        player->combatLogBreakdown.insert(std::make_pair(varName, new CombatLogBreakdown(name)));
+    }
 }
 
 void DamageOverTime::apply()
@@ -37,15 +40,16 @@ void DamageOverTime::apply()
     }
     else if (!active)
     {
-        //todo breakdown table
+        player->combatLogBreakdown.at(varName)->appliedAt = player->fightTime;
     }
     bool isActive = active;
+    int spellPower = player->getSpellPower(school);
+    this->spellPower = spellPower;
 
+    player->combatLogBreakdown.at(varName)->count++;
     active = true;
     tickTimerRemaining = tickTimerTotal;
     ticksRemaining = ticksTotal;
-    int spellPower = player->getSpellPower(school);
-    this->spellPower = spellPower;
 
     if (player->shouldWriteToCombatLog())
     {
@@ -75,7 +79,10 @@ void DamageOverTime::fade(bool endOfIteration)
     active = false;
     tickTimerRemaining = 0;
     ticksRemaining = 0;
-    //todo aura uptime
+    
+    double auraUptime = player->fightTime - player->combatLogBreakdown.at(varName)->appliedAt;
+    player->combatLogBreakdown.at(varName)->uptime += auraUptime;
+
     if (!endOfIteration && player->shouldWriteToCombatLog())
     {
         std::string msg = name + " faded";
@@ -147,7 +154,7 @@ double DamageOverTime::predictDamage()
     return dmg;
 }
 
-void DamageOverTime::tick(int t)
+void DamageOverTime::tick(double t)
 {
     tickTimerRemaining -= t;
 
@@ -168,10 +175,21 @@ void DamageOverTime::tick(int t)
             }
         }
 
-        //todo breakdown table
+        player->combatLogBreakdown.at(varName)->damage += dmg;
         player->iterationDamage += dmg;
         ticksRemaining--;
         tickTimerRemaining = tickTimerTotal;
+
+        if (player->shouldWriteToCombatLog())
+        {
+            std::string msg = name + " Tick " + truncateTrailingZeros(std::to_string(round(dmg))) + " (" + truncateTrailingZeros(std::to_string(this->dmg)) + " Base Damage - " + truncateTrailingZeros(std::to_string(player->getSpellPower(school))) + " Spell Power - " + truncateTrailingZeros(std::to_string(coefficient), 3) + " Coefficient - " + truncateTrailingZeros(std::to_string(round(modifier * 10000) / 100), 3) + "% Damage Modifier - " + truncateTrailingZeros(std::to_string(round(partialResistMultiplier * 1000) / 10)) + "% Partial Resist Multiplier";
+            if (t5BonusModifier > 1)
+            {
+                msg += " - " + std::to_string(round(t5BonusModifier * 10000) / 100) + "% Base Dmg Modifier (T5 4pc bonus)";
+            }
+            msg += ")";
+            player->combatLog(msg);
+        }
 
         // Ashtongue Talisman of Shadows
         if (varName == "corruption" && player->auras->AshtongueTalismanOfShadows != NULL && random(1, 100) <= player->auras->AshtongueTalismanOfShadows->procChance)
@@ -280,6 +298,7 @@ CurseOfAgonyDot::CurseOfAgonyDot(Player* player) : DamageOverTime(player)
     duration = 24;
     tickTimerTotal = 3;
     dmg = 1356;
+    school = SpellSchool::SHADOW;
     coefficient = 1.2;
     minimumDuration = 24;
     setup();
