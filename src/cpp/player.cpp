@@ -488,7 +488,7 @@ void Player::reset()
 
 double Player::getHastePercent()
 {
-    return stats->hastePercent * (1.0 + stats->hasteRating / hasteRatingPerPercent / 100.0);
+    return stats->hastePercent + (stats->hasteRating / hasteRatingPerPercent / 100.0);
 }
 
 double Player::getGcdValue(std::string varName)

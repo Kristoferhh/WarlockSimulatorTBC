@@ -95,17 +95,17 @@ void Aura::apply()
             if (player->shouldWriteToCombatLog())
             {
                 int currentHastePercent = player->stats->hastePercent * 100;
-                std::string msg = "Haste % * " + std::to_string(stats->hastePercent) + " (" + std::to_string(currentHastePercent) + " -> " + truncateTrailingZeros(std::to_string(currentHastePercent * (1.0 + stats->hastePercent / 100.0)), 2) + ")";
+                std::string msg = "Haste % + " + std::to_string(stats->hastePercent) + " (" + std::to_string(currentHastePercent) + " -> " + std::to_string(currentHastePercent + stats->hastePercent) + ")";
                 player->combatLog(msg);
             }
-            player->stats->hastePercent *= (1.0 + stats->hastePercent / 100.0);
+            player->stats->hastePercent += (stats->hastePercent / 100.0);
             recalculatePetStats = true;
         }
         if (stats != NULL && stats->manaCostModifier > 0)
         {
             if (player->shouldWriteToCombatLog())
             {
-                int currentmanaCostModifier = player->stats->manaCostModifier;
+                double currentmanaCostModifier = player->stats->manaCostModifier;
                 std::string msg = "Mana Cost Modifier * " + truncateTrailingZeros(std::to_string(stats->manaCostModifier), 2) + " (" + truncateTrailingZeros(std::to_string(currentmanaCostModifier), 2) + " -> " + truncateTrailingZeros(std::to_string(currentmanaCostModifier * stats->manaCostModifier), 2) + ")";
                 player->combatLog(msg);
             }
@@ -186,17 +186,17 @@ void Aura::fade(bool endOfIteration)
         if (!endOfIteration && player->shouldWriteToCombatLog())
         {
             int currentHastePercent = player->stats->hastePercent * 100.0;
-            std::string msg = "Haste % / " + std::to_string(stats->hastePercent) + "% (" + std::to_string(currentHastePercent) + " -> " + truncateTrailingZeros(std::to_string(currentHastePercent / (1.0 + stats->hastePercent / 100.0)), 2) + ")";
+            std::string msg = "Haste % - " + std::to_string(stats->hastePercent) + "% (" + std::to_string(currentHastePercent) + " -> " + std::to_string(currentHastePercent - stats->hastePercent) + ")";
             player->combatLog(msg);
         }
-        player->stats->hastePercent /= (1.0 + stats->hastePercent / 100.0);
+        player->stats->hastePercent -= (stats->hastePercent / 100.0);
         recalculatePetStats = true;
     }
     if (stats != NULL && stats->manaCostModifier > 0)
     {
         if (!endOfIteration && player->shouldWriteToCombatLog())
         {
-            int currentmanaCostModifier = player->stats->manaCostModifier;
+            double currentmanaCostModifier = player->stats->manaCostModifier;
             std::string msg = "Mana Cost Modifier / " + truncateTrailingZeros(std::to_string(stats->manaCostModifier), 2) + " (" + truncateTrailingZeros(std::to_string(currentmanaCostModifier), 2) + " -> " + truncateTrailingZeros(std::to_string(currentmanaCostModifier / stats->manaCostModifier), 2) + ")";
             player->combatLog(msg);
         }

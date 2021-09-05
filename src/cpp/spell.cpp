@@ -44,7 +44,7 @@ void Spell::setup()
 
 double Spell::getCastTime()
 {
-    return round((this->castTime / player->getHastePercent()) * 10000) / 10000 + player->spellDelay;
+    return round((castTime / player->getHastePercent()) * 10000) / 10000 + player->spellDelay;
 }
 
 bool Spell::canCast()
@@ -243,7 +243,7 @@ void Spell::damage(bool isCrit)
         {
             msg += "*";
         }
-        msg += " (" + truncateTrailingZeros(std::to_string(dmg)) + " Base Damage - " + truncateTrailingZeros(std::to_string(round(coefficient * 1000) / 1000), 3) + " Coefficient - " + truncateTrailingZeros(std::to_string(round(spellPower))) + " Spell Power - ";
+        msg += " (" + truncateTrailingZeros(std::to_string(dmg), 1) + " Base Damage - " + truncateTrailingZeros(std::to_string(round(coefficient * 1000) / 1000), 3) + " Coefficient - " + truncateTrailingZeros(std::to_string(round(spellPower))) + " Spell Power - ";
         if (isCrit)
         {
             msg += truncateTrailingZeros(std::to_string(critMultiplier * 100), 3) + "% Crit Multiplier - ";
