@@ -976,6 +976,7 @@ Bloodlust::Bloodlust(Player* player, Aura* aura) : Spell(player, aura)
     isItem = true;
     isAura = true;
     onGcd = false;
+    isNonWarlockAbility = true;
     setup();
 }
 
@@ -1233,6 +1234,7 @@ PowerInfusion::PowerInfusion(Player* player, Aura* aura) : Spell(player, aura)
     name = "Power Infusion";
     cooldown = 180;
     isAura = true;
+    onGcd = false;
     isNonWarlockAbility = true;
     setup();
 }
@@ -1242,6 +1244,7 @@ Innervate::Innervate(Player* player, Aura* aura) : Spell(player, aura)
     name = "Innervate";
     cooldown = 360;
     isAura = true;
+    onGcd = false;
     isNonWarlockAbility = true;
     setup();
 }
