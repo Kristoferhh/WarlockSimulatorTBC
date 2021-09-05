@@ -344,6 +344,12 @@ class Simulation {
           this.player.spells.innervate[i].reset()
         }
       }
+      for (let i = 0; i < this.player.trinkets.length; i++) {
+        if (this.player.trinkets[i]) {
+          this.player.trinkets[i].reset()
+        }
+      }
+
       this.player.reset() // Resets mana, global cooldown etc.
       if (this.player.pet) {
         this.player.pet.reset()
