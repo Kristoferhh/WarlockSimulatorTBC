@@ -96,9 +96,6 @@ onmessage = function (e) {
           if (items[customItemSlot][item].hasOwnProperty('setId')) {
             s[items[customItemSlot][item].setId] = s[items[customItemSlot][item].setId] + 1 || 1
           }
-          // Add the item's id to its slot in e.data.player.items
-          // This is required for items that are on-use or have a proc such as Band of the Eternal Sage since they check if the item's ID is equipped.
-          i[customItemSlot + customItemSubSlot] = customItemId
           // Add stats from any gems equipped in the custom item
           if (e.data.player.gems[customItemSlot] && e.data.player.gems[customItemSlot][customItemId]) {
             // Boolean to keep track of whether the item's socket bonus is active or not
@@ -144,6 +141,9 @@ onmessage = function (e) {
         }
       }
     }
+    // Add the item's id to its slot in e.data.player.items
+    // This is required for items that are on-use or have a proc such as Band of the Eternal Sage since they check if the item's ID is equipped.
+    i[customItemSlot + customItemSubSlot] = customItemId
 
     // Mamma mia somebody clean up this mess please
     // Items
