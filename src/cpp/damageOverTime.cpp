@@ -169,7 +169,7 @@ void DamageOverTime::tick(double t)
         // Check for Nightfall proc
         if (varName == "corruption" && player->talents->nightfall > 0)
         {
-            if (random(1, 100) <= player->talents->nightfall * 2)
+            if (player->getRand() <= player->talents->nightfall * 2 * player->critChanceMultiplier)
             {
                 player->auras->ShadowTrance->apply();
             }
@@ -192,12 +192,12 @@ void DamageOverTime::tick(double t)
         }
 
         // Ashtongue Talisman of Shadows
-        if (varName == "corruption" && player->auras->AshtongueTalismanOfShadows != NULL && random(1, 100) <= player->auras->AshtongueTalismanOfShadows->procChance)
+        if (varName == "corruption" && player->auras->AshtongueTalismanOfShadows != NULL && player->getRand() <= player->auras->AshtongueTalismanOfShadows->procChance * player->critChanceMultiplier)
         {
             player->auras->AshtongueTalismanOfShadows->apply();
         }
         // Timbal's Focusing Crystal
-        if (player->spells->TimbalsFocusingCrystal != NULL && player->spells->TimbalsFocusingCrystal->cooldownRemaining <= 0 && random(1, 100) <= player->spells->TimbalsFocusingCrystal->procChance)
+        if (player->spells->TimbalsFocusingCrystal != NULL && player->spells->TimbalsFocusingCrystal->cooldownRemaining <= 0 && player->getRand() <= player->spells->TimbalsFocusingCrystal->procChance * player->critChanceMultiplier)
         {
             player->spells->TimbalsFocusingCrystal->startCast();
         }

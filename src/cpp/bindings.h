@@ -17,6 +17,7 @@ void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::
 
 extern "C"
 {
+    unsigned int* allocRandomSeeds(int amountOfSeeds);
     Items* allocItems(int head, int neck, int shoulders, int back, int chest, int bracers, int gloves, int belt, int legs, int boots, int finger1, int finger2, int trinket1, int trinket2, int mainHand
     , int offHand, int twoHand, int wand);
     Auras* allocAuras(bool felArmor, bool blessingOfKings, bool blessingOfWisdom, bool judgementOfWisdom, bool manaSpringTotem, bool wrathOfAirTotem, bool totemOfWrath, bool markOfTheWild, bool arcaneIntellect
@@ -42,8 +43,9 @@ extern "C"
         , bool hasCorruption, bool hasSiphonLife, bool hasUnstableAffliction, bool hasSearingPain, bool hasShadowBolt, bool hasIncinerate, bool hasCurseOfRecklessness, bool hasCurseOfTheElements
         , bool hasCurseOfAgony, bool hasCurseOfDoom, bool hasDeathCoil, bool hasShadowburn, bool hasConflagrate, bool hasShadowfury, bool hasAmplifyCurse, bool hasDarkPact);
     Player* allocPlayer(PlayerSettings* settings);
-    SimulationSettings* allocSimSettings(int iterations, int minTime, int maxTime);
+    SimulationSettings* allocSimSettings(int iterations, int minTime, int maxTime, unsigned int* randomSeeds);
     Simulation* allocSim(Player* player, SimulationSettings* simulationSettings);
+    void freeUnsignedInt(unsigned int* num);
     void freeItems(Items* items);
     void freeAuras(Auras* auras);
     void freeTalents(Talents* talents);

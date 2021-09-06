@@ -373,12 +373,12 @@ void Spell::onCritProcs()
         player->spells->TheLightningCapacitor->startCast();
     }
     // Sextant of Unstable Currents
-    if (player->spells->SextantOfUnstableCurrents != NULL && player->spells->SextantOfUnstableCurrents->ready() && random(1, 100) <= player->spells->SextantOfUnstableCurrents->procChance)
+    if (player->spells->SextantOfUnstableCurrents != NULL && player->spells->SextantOfUnstableCurrents->ready() && player->getRand() <= player->spells->SextantOfUnstableCurrents->procChance * player->critChanceMultiplier)
     {
         player->spells->SextantOfUnstableCurrents->startCast();
     }
     // Shiffar's Nexus-Horn
-    if (player->spells->ShiffarsNexusHorn != NULL && player->spells->ShiffarsNexusHorn->ready() && random(1, 100) <= player->spells->ShiffarsNexusHorn->procChance)
+    if (player->spells->ShiffarsNexusHorn != NULL && player->spells->ShiffarsNexusHorn->ready() && player->getRand() <= player->spells->ShiffarsNexusHorn->procChance * player->critChanceMultiplier)
     {
         player->spells->ShiffarsNexusHorn->startCast();
     }
@@ -388,7 +388,7 @@ void Spell::onDamageProcs()
 {
     // Confirm that this procs on dealing damage
     // Shattered Sun Pendant of Acumen
-    if (player->settings->exaltedWithShattrathFaction && player->spells->ShatteredSunPendantOfAcumen != NULL && player->spells->ShatteredSunPendantOfAcumen->cooldownRemaining <= 0 && random(1, 100) <= player->spells->ShatteredSunPendantOfAcumen->procChance)
+    if (player->settings->exaltedWithShattrathFaction && player->spells->ShatteredSunPendantOfAcumen != NULL && player->spells->ShatteredSunPendantOfAcumen->cooldownRemaining <= 0 && player->getRand() <= player->spells->ShatteredSunPendantOfAcumen->procChance * player->critChanceMultiplier)
     {
         player->spells->ShatteredSunPendantOfAcumen->startCast();
     }
@@ -397,7 +397,7 @@ void Spell::onDamageProcs()
 void Spell::onHitProcs()
 {
     // Judgement of Wisdom (50% proc rate)
-    if (player->selectedAuras->judgementOfWisdom && random(1, 100) <= 50)
+    if (player->selectedAuras->judgementOfWisdom && player->getRand() <= 50 * player->critChanceMultiplier)
     {
         int manaVal = 74;
         int currentMana = player->stats->mana;
@@ -413,7 +413,7 @@ void Spell::onHitProcs()
         }
     }
     // T4 2pc
-    if (player->sets->t4 >= 2 && (school == SpellSchool::SHADOW || school == SpellSchool::FIRE) && random(1, 100) <= player->auras->Flameshadow->procChance)
+    if (player->sets->t4 >= 2 && (school == SpellSchool::SHADOW || school == SpellSchool::FIRE) && player->getRand() <= player->auras->Flameshadow->procChance * player->critChanceMultiplier)
     {
         if (school == SpellSchool::SHADOW)
         {
@@ -425,22 +425,22 @@ void Spell::onHitProcs()
         }
     }
     // Spellstrike
-    if (player->sets->spellstrike == 2 && random(1, 100) <= player->auras->Spellstrike->procChance)
+    if (player->sets->spellstrike == 2 && player->getRand() <= player->auras->Spellstrike->procChance * player->critChanceMultiplier)
     {
         player->auras->Spellstrike->apply();
     }
     // Quagmirran's Eye
-    if (player->spells->QuagmirransEye != NULL && player->spells->QuagmirransEye->ready() && random(1, 100) <= player->spells->QuagmirransEye->procChance)
+    if (player->spells->QuagmirransEye != NULL && player->spells->QuagmirransEye->ready() && player->getRand() <= player->spells->QuagmirransEye->procChance * player->critChanceMultiplier)
     {
         player->spells->QuagmirransEye->startCast();
     }
     // Mana-Etched Regalia 4pc
-    if (player->sets->manaEtched >= 4 && random(1, 100) <= player->auras->ManaEtched4Set->procChance)
+    if (player->sets->manaEtched >= 4 && player->getRand() <= player->auras->ManaEtched4Set->procChance * player->critChanceMultiplier)
     {
         player->auras->ManaEtched4Set->apply();
     }
     // Mark of Defiance
-    if (player->spells->MarkOfDefiance != NULL && random(1, 100) <= player->spells->MarkOfDefiance->procChance)
+    if (player->spells->MarkOfDefiance != NULL && player->getRand() <= player->spells->MarkOfDefiance->procChance * player->critChanceMultiplier)
     {
         player->spells->MarkOfDefiance->startCast();
     }
@@ -450,32 +450,32 @@ void Spell::onHitProcs()
         player->auras->DarkmoonCardCrusade->apply();
     }
     // Band of the Eternal Sage
-    if (player->spells->BandOfTheEternalSage != NULL && player->spells->BandOfTheEternalSage->ready() && random(1, 100) <= player->spells->BandOfTheEternalSage->procChance)
+    if (player->spells->BandOfTheEternalSage != NULL && player->spells->BandOfTheEternalSage->ready() && player->getRand() <= player->spells->BandOfTheEternalSage->procChance * player->critChanceMultiplier)
     {
         player->spells->BandOfTheEternalSage->startCast();
     }
     // Blade of Wizardry
-    if (player->spells->BladeOfWizardry != NULL && player->spells->BladeOfWizardry->ready() && random(1, 100) <= player->auras->BladeOfWizardry->procChance)
+    if (player->spells->BladeOfWizardry != NULL && player->spells->BladeOfWizardry->ready() && player->getRand() <= player->auras->BladeOfWizardry->procChance * player->critChanceMultiplier)
     {
         player->spells->BladeOfWizardry->startCast();
     }
     // Mystical Skyfire Diamond
-    if (player->spells->MysticalSkyfireDiamond != NULL && player->spells->MysticalSkyfireDiamond->ready() && random(1, 100) <= player->spells->MysticalSkyfireDiamond->procChance)
+    if (player->spells->MysticalSkyfireDiamond != NULL && player->spells->MysticalSkyfireDiamond->ready() && player->getRand() <= player->spells->MysticalSkyfireDiamond->procChance * player->critChanceMultiplier)
     {
         player->spells->MysticalSkyfireDiamond->startCast();
     }
     // Robe of the Elder Scribes
-    if (player->spells->RobeOfTheElderScribes != NULL && player->spells->RobeOfTheElderScribes->ready() && random(1, 100) <= player->spells->RobeOfTheElderScribes->procChance)
+    if (player->spells->RobeOfTheElderScribes != NULL && player->spells->RobeOfTheElderScribes->ready() && player->getRand() <= player->spells->RobeOfTheElderScribes->procChance * player->critChanceMultiplier)
     {
         player->spells->RobeOfTheElderScribes->startCast();
     }
     // Insightful Earthstorm Diamond
-    if (player->spells->InsightfulEarthstormDiamond != NULL && player->spells->InsightfulEarthstormDiamond->ready() && random(1, 100) <= player->spells->InsightfulEarthstormDiamond->procChance)
+    if (player->spells->InsightfulEarthstormDiamond != NULL && player->spells->InsightfulEarthstormDiamond->ready() && player->getRand() <= player->spells->InsightfulEarthstormDiamond->procChance * player->critChanceMultiplier)
     {
         player->spells->InsightfulEarthstormDiamond->startCast();
     }
     // Wrath of Cenarius
-    if (player->auras->WrathOfCenarius != NULL && random(1, 100) <= player->auras->WrathOfCenarius->procChance)
+    if (player->auras->WrathOfCenarius != NULL && player->getRand() <= player->auras->WrathOfCenarius->procChance * player->critChanceMultiplier)
     {
         player->auras->WrathOfCenarius->apply();
     }

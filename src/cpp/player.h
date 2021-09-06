@@ -15,6 +15,7 @@
 #include "PlayerSpells.h"
 #include "PlayerAuras.h"
 #include "combatLogBreakdown.h"
+#include <random>
 
 struct Player
 {
@@ -39,6 +40,9 @@ struct Player
   std::vector<std::string> combatLogEntries;
   std::map<std::string, CombatLogBreakdown*> combatLogBreakdown;
   uint32_t iterationDamage;
+  int critChanceMultiplier = 1000;
+  std::mt19937 gen;
+  std::uniform_int_distribution<> randomNum{1, 100 * critChanceMultiplier};
   double castTimeRemaining;
   double totalManaRegenerated;
   double gcdRemaining;
@@ -51,7 +55,6 @@ struct Player
   double minimumGcdValue;
   double mp5Timer;
   double fiveSecondRuleTimer;
-  int critChanceMultiplier;
   double demonicKnowledgeSpellPower;
   double critMultiplier;
 
@@ -72,6 +75,7 @@ struct Player
   double getBaseHitChance(int playerLevel, int enemyLevel);
   bool areAnyCooldownsReady();
   void useCooldowns();
+  int getRand();
   void castLifeTapOrDarkPact();
   bool shouldWriteToCombatLog();
   void combatLog(const std::string& entry);

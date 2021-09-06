@@ -540,17 +540,22 @@ double Player::getHitChance(SpellType spellType)
 
 bool Player::isCrit(SpellType spellType, double extraCrit)
 {
-    return (random(1, (100 * critChanceMultiplier)) <= ((getCritChance(spellType) + extraCrit) * critChanceMultiplier));
+    return getRand() <= ((getCritChance(spellType) + extraCrit) * critChanceMultiplier);
 }
 
 bool Player::isHit(SpellType spellType)
 {
-    double hit = (random(1, 100 * critChanceMultiplier) <= getHitChance(spellType) * critChanceMultiplier);
-    /*if (!hit && items.count(28789) == 1)
+    double hit = getRand() <= (getHitChance(spellType) * critChanceMultiplier);
+    if (!hit && auras->EyeOfMagtheridon != NULL)
     {
-        auras->eyeOfMagtheridon->apply();
-    }*/
+        auras->EyeOfMagtheridon->apply();
+    }
     return hit;
+}
+
+int Player::getRand()
+{
+    return randomNum(gen);
 }
 
 // formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/ && https://royalgiraffe.github.io/resist-guide

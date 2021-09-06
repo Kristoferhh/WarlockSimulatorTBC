@@ -275,16 +275,23 @@ double Simulation::passTime()
 
 void Simulation::start()
 {
+    std::cout << settings->randomSeeds[0] << std::endl;
     std::vector<double> dpsVector;
     player->totalDuration = 0;
     player->initialize();
     double minDps = 99999;
     double maxDps = 0;
     auto startTime = std::chrono::high_resolution_clock::now();
+    std::mt19937 gen;
+    std::uniform_int_distribution<> randomFightLength(settings->minTime, settings->maxTime);
 
     for (player->iteration = 0; player->iteration < settings->iterations; player->iteration++)
     {
-        int fightLength = random(settings->minTime, settings->maxTime);
+        // Set the random seeds
+        player->gen.seed(settings->randomSeeds[player->iteration]);
+        gen.seed(settings->randomSeeds[player->iteration]);
+        // Get a random fight length
+        int fightLength = randomFightLength(gen);
         player->reset();
         player->iterationDamage = 0;
         player->fightTime = 0;

@@ -1,6 +1,7 @@
 #include "bindings.h"
 #include "simulation.h"
 #include "constant.h"
+#include <random>
 
 #ifdef EMSCRIPTEN
 #include <emscripten/bind.h>
@@ -94,6 +95,20 @@ void startSimulation(Simulation* sim)
 }
 
 EMSCRIPTEN_KEEPALIVE
+unsigned int* allocRandomSeeds(int amountOfSeeds)
+{
+    std::random_device rd;
+    unsigned int* seeds = new unsigned int[amountOfSeeds];
+
+    for (int i = 0; i < amountOfSeeds; i++)
+    {
+        seeds[i] = rd();
+    }
+
+    return seeds;
+}
+
+EMSCRIPTEN_KEEPALIVE
 Items* allocItems(int head, int neck, int shoulders, int back, int chest, int bracers, int gloves, int belt, int legs, int boots
     , int finger1, int finger2, int trinket1, int trinket2, int mainHand, int offHand, int twoHand, int wand)
 {
@@ -166,15 +181,21 @@ Player* allocPlayer(PlayerSettings* settings)
 }
 
 EMSCRIPTEN_KEEPALIVE
-SimulationSettings* allocSimSettings(int iterations, int minTime, int maxTime)
+SimulationSettings* allocSimSettings(int iterations, int minTime, int maxTime, unsigned int* randomSeeds)
 {
-    return new SimulationSettings(iterations, minTime, maxTime);
+    return new SimulationSettings(iterations, minTime, maxTime, randomSeeds);
 }
 
 EMSCRIPTEN_KEEPALIVE
 Simulation* allocSim(Player* player, SimulationSettings* simulationSettings)
 {
     return new Simulation(player, simulationSettings);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void freeUnsignedInt(unsigned int* arr)
+{
+    delete arr;
 }
 
 EMSCRIPTEN_KEEPALIVE

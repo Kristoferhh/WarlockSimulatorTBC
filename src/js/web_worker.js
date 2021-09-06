@@ -146,6 +146,8 @@ onmessage = function (e) {
     i[customItemSlot + customItemSubSlot] = customItemId
 
     // Mamma mia somebody clean up this mess please
+    // Random seeds
+    let randomSeeds = module._allocRandomSeeds(e.data.simulation.iterations)
     // Items
     let equippedItems = module._allocItems(i.head, i.neck, i.shoulders, i.back, i.chest, i.bracers, i.gloves, i.belt, i.legs, i.boots, i.ring1, i.ring2, i.trinket1, i.trinket2, i.mainhand, i.offhand, i.twohand, i.wand)
     // Auras
@@ -177,9 +179,10 @@ onmessage = function (e) {
       , d.dot.siphonLife, d.dot.unstableAffliction, d.filler.searingPain, d.filler.shadowBolt, d.filler.incinerate, d.curse.curseOfRecklessness, d.curse.curseOfTheElements, d.curse.curseOfAgony
       , d.curse.curseOfDoom, d.finisher.deathCoil, d.finisher.shadowburn, d.finisher.conflagrate, d.other.shadowfury, d.other.amplifyCurse, d.other.darkPact)
     let player = module._allocPlayer(playerSettings)
-    let simSettings = module._allocSimSettings(e.data.simulation.iterations, e.data.simulation.minTime, e.data.simulation.maxTime)
+    let simSettings = module._allocSimSettings(e.data.simulation.iterations, e.data.simulation.minTime, e.data.simulation.maxTime, randomSeeds)
     let sim = module._allocSim(player, simSettings)
     module._startSimulation(sim)
+    module._freeUnsignedInt(randomSeeds)
     module._freeItems(equippedItems)
     module._freeAuras(auras)
     module._freeTalents(talents)
