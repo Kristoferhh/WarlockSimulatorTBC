@@ -6,7 +6,7 @@
 
 int random(int min, int max)
 {
-    return rand() % max + min;
+    return min + (rand() % (max - min + 1));
 }
 
 double median(std::vector<double> vec)
