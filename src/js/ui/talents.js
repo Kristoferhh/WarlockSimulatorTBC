@@ -108,12 +108,6 @@ function updateTalentTreeNames () {
 }
 
 function updateTalentInformation (talentUiObj) {
-  let talentTreeName = talentUiObj.data('tree')
-  // Improved Imp is bugged right now, this is a (hopefully temporary) bandaid for it
-  if (talentTreeName == null) {
-    return
-  }
-
   // Update the point amount on the talent icon
   talentUiObj.children('a').children('.talent-point-amount').text(talentUiObj.attr('data-points'))
   // if the point amount is 0 then we hide the amount
@@ -122,7 +116,7 @@ function updateTalentInformation (talentUiObj) {
   } else {
     talentUiObj.children('a').children('.talent-point-amount').hide()
   }
-  talentUiObj.children('a').attr('href', 'https://tbc.wowhead.com/spell=' + _talents[talentTreeName][talentUiObj.attr('id')].rankIDs[Math.max(0, talents[talentUiObj.attr('id')] - 1)])
+  talentUiObj.children('a').attr('href', 'https://tbc.wowhead.com/spell=' + _talents[talentUiObj.data('tree')][talentUiObj.attr('id')].rankIDs[Math.max(0, talents[talentUiObj.attr('id')] - 1)])
   // $WowheadPower.refreshLinks();
 
   // todo: move these JS css changes to the css file
