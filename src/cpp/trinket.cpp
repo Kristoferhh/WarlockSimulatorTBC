@@ -226,6 +226,7 @@ EssenceOfTheMartyr::EssenceOfTheMartyr(Player* player) : Trinket(player)
     name = "Essence of the Martyr";
     cooldown = 120;
     duration = 20;
+    sharesCooldown = false;
     Trinket::stats = new AuraStats(99, 0, 0, 0, 0, 0);
     setup();
 }

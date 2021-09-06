@@ -1073,11 +1073,11 @@ TheLightningCapacitor::TheLightningCapacitor(Player* player, Aura* aura) : Spell
 {
     name = "The Lightning Capacitor";
     cooldown = 2.5;
-    onGcd = false;
     minDmg = 694;
     maxDmg = 806;
     doesDamage = true;
     canCrit = true;
+    onGcd = false;
     setup();
 }
 

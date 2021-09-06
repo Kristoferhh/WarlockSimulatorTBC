@@ -762,11 +762,11 @@ double Player::getPartialResistMultiplier(SpellSchool school)
 
 bool Player::shouldWriteToCombatLog()
 {
-    return iteration == 0;
+    return iteration == 1;
 }
 
 void Player::combatLog(const std::string &entry)
 {
     // Truncate the fightTime down to 4 decimal places
-    combatLogEntries.push_back("|" + std::to_string(fightTime).substr(0, std::to_string(fightTime).find(".") + 5) + "| " + entry );
+    combatLogEntries.push_back("|" + truncateTrailingZeros(std::to_string(fightTime), 4) + "| " + entry);
 }
