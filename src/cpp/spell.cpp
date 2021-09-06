@@ -912,7 +912,6 @@ void SuperManaPotion::cast()
     //todo check for the randomize values option
     const int manaGain = random(minMana, maxMana);
     player->totalManaRegenerated += manaGain;
-    player->combatLogBreakdown.at(varName)->casts++;
     player->combatLogBreakdown.at(varName)->manaGain += manaGain;
     player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
@@ -940,7 +939,6 @@ void DemonicRune::cast()
     //todo check for the randomize values option
     const int manaGain = random(minMana, maxMana);
     player->totalManaRegenerated += manaGain;
-    player->combatLogBreakdown.at(varName)->casts++;
     player->combatLogBreakdown.at(varName)->manaGain += manaGain;
     player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
