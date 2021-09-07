@@ -205,16 +205,14 @@ double Spell::getModifier()
 
 void Spell::damage(bool isCrit)
 {
-    int totalDamage = dmg;
-    int spellPower = player->getSpellPower(school);
+    double* constantDamage = getConstantDamage();
+    double baseDamage = constantDamage[0];
+    double totalDamage = constantDamage[1];
+    double dmgModifier = constantDamage[2];
+    double partialResistMultiplier = constantDamage[3];
+    double spellPower = constantDamage[4];
     double critMultiplier = player->critMultiplier;
-    double dmgModifier = getModifier();
-    double partialResistMultiplier = player->getPartialResistMultiplier(school);
     
-    totalDamage += spellPower * coefficient;
-    totalDamage *= dmgModifier;
-    totalDamage *= partialResistMultiplier;
-
     if (isCrit)
     {
         critMultiplier = getCritMultiplier(critMultiplier);
@@ -265,34 +263,37 @@ void Spell::damage(bool isCrit)
             player->auras->Immolate->t5BonusModifier *= 1.1;
         }
     }
+
+    delete constantDamage;
 }
 
 // Returns the non-RNG damage of the spell (basically just the base damage + spell power + damage modifiers, no crit/miss etc.)
 // todo: investigate this noRng variable
 double* Spell::getConstantDamage(bool noRng)
 {
-    double dmg = player->settings->randomizeValues && minDmg > 0 && maxDmg > 0 && !noRng ? random(minDmg, maxDmg) : dmg;
-    double baseDamage = dmg;
+    double totalDmg = player->settings->randomizeValues && minDmg > 0 && maxDmg > 0 && !noRng ? random(minDmg, maxDmg) : dmg;
+    double baseDamage = totalDmg;
     double spellPower = player->getSpellPower(school);
-    double modifier = getModifier();
+    double dmgModifier = getModifier();
     double partialResistMultiplier = player->getPartialResistMultiplier(school);
 
     // If casting Incinerate and Immolate is up, add the bonus damage
     if (varName == "incinerate" && player->auras->Immolate != NULL && player->auras->Immolate->active)
     {
-        dmg += player->settings->randomizeValues && noRng ? random(bonusDamageFromImmolateMin, bonusDamageFromImmolateMax) : bonusDamageFromImmolate;
+        totalDmg += player->settings->randomizeValues && noRng ? random(bonusDamageFromImmolateMin, bonusDamageFromImmolateMax) : bonusDamageFromImmolate;
     }
     // Add damage from Spell Power
-    dmg += spellPower * coefficient;
+    totalDmg += spellPower * coefficient;
     // Improved Shadow Bolt
     if (school == SpellSchool::SHADOW && player->auras->ImprovedShadowBolt != NULL && player->auras->ImprovedShadowBolt->active && !player->settings->usingCustomIsbUptime)
     {
-        modifier *= player->auras->ImprovedShadowBolt->modifier;
+        dmgModifier *= player->auras->ImprovedShadowBolt->modifier;
     }
 
-    dmg *= modifier * partialResistMultiplier;
+    totalDmg *= dmgModifier;
+    totalDmg *= partialResistMultiplier;
 
-    return new double[5] {baseDamage, dmg, modifier, partialResistMultiplier, spellPower};
+    return new double[5] {baseDamage, totalDmg  , dmgModifier, partialResistMultiplier, spellPower};
 }
 
 double Spell::getCritMultiplier(double critMult)

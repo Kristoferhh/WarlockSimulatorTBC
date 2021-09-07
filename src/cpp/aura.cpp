@@ -83,8 +83,8 @@ void Aura::apply()
         {
             if (player->shouldWriteToCombatLog())
             {
-                int currenthasteRating = player->stats->hasteRating;
-                std::string msg = "Haste Rating + " + std::to_string(stats->hasteRating) + " (" + std::to_string(currenthasteRating) + " -> " + std::to_string(currenthasteRating + stats->hasteRating) + ")";
+                int currentHasteRating = player->stats->hasteRating;
+                std::string msg = "Haste Rating + " + std::to_string(stats->hasteRating) + " (" + std::to_string(currentHasteRating) + " -> " + std::to_string(currentHasteRating + stats->hasteRating) + ")";
                 player->combatLog(msg);
             }
             player->stats->hasteRating += stats->hasteRating;
@@ -94,7 +94,7 @@ void Aura::apply()
         {
             if (player->shouldWriteToCombatLog())
             {
-                int currentHastePercent = player->stats->hastePercent * 100;
+                double currentHastePercent = player->stats->hastePercent * 100;
                 std::string msg = "Haste % + " + std::to_string(stats->hastePercent) + " (" + std::to_string(currentHastePercent) + " -> " + std::to_string(currentHastePercent + stats->hastePercent) + ")";
                 player->combatLog(msg);
             }
@@ -174,8 +174,8 @@ void Aura::fade(bool endOfIteration)
     {
         if (!endOfIteration && player->shouldWriteToCombatLog())
         {
-            int currenthasteRating = player->stats->hasteRating;
-            std::string msg = "Haste Rating - " + std::to_string(stats->hasteRating) + " (" + std::to_string(currenthasteRating) + " -> " + std::to_string(currenthasteRating - stats->hasteRating) + ")";
+            int currentHasteRating = player->stats->hasteRating;
+            std::string msg = "Haste Rating - " + std::to_string(stats->hasteRating) + " (" + std::to_string(currentHasteRating) + " -> " + std::to_string(currentHasteRating - stats->hasteRating) + ")";
             player->combatLog(msg);
         }
         player->stats->hasteRating -= stats->hasteRating;
@@ -185,7 +185,7 @@ void Aura::fade(bool endOfIteration)
     {
         if (!endOfIteration && player->shouldWriteToCombatLog())
         {
-            int currentHastePercent = player->stats->hastePercent * 100.0;
+            double currentHastePercent = player->stats->hastePercent * 100.0;
             std::string msg = "Haste % - " + std::to_string(stats->hastePercent) + "% (" + std::to_string(currentHastePercent) + " -> " + std::to_string(currentHastePercent - stats->hastePercent) + ")";
             player->combatLog(msg);
         }
