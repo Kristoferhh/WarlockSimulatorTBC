@@ -77,13 +77,15 @@ function simDPS (items) {
             if ($('#automatically-open-sim-details').children('select').val() === 'yes') {
               // Setup the damage breakdown table (showing avg damage, avg cast etc. for each spell)
               $('.spell-damage-information').remove()
+              let hasPet = simulationEnd.damageBreakdown.melee && simulationEnd.damageBreakdown.melee.casts > 0
+
               for (const spell in simulationEnd.damageBreakdown) {
                 const s = simulationEnd.damageBreakdown[spell]
                 const percentDamage = (~~((s.damage / simulationEnd.totalDamage) * 10000) / 100).toFixed(2)
                 if (s.damage > 0 || s.casts > 0) {
                   var tableRow = "<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ('(' + ~~(s.dotDamage / s.casts) + ')') : '') + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td>"
                   // Only add the dodge and glancing cells if the player has a pet and it's not an imp
-                  if (simulationEnd.damageBreakdown.melee) {
+                  if (hasPet) {
                     tableRow += "<td class='number'>" + (~~(((s.dodges / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.glancingBlows / s.casts) * 100) * 100) / 100).toFixed(2) + "</td>"
                   }
                   tableRow += "<td class='number'>" + (Math.round((s.damage / simulationEnd.totalDuration) * 100) / 100 || 0) + '</td></tr>'
@@ -108,7 +110,7 @@ function simDPS (items) {
               }
               $('.breakdown-section').css('display', 'inline-block')
               // Hide the Glancing and Dodge columns if not using a melee pet
-              if (simulationEnd.damageBreakdown.melee) {
+              if (hasPet) {
                 $('#damage-breakdown-dodge').show()
                 $('#damage-breakdown-glancing').show()
               } else {
