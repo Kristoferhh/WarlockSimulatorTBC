@@ -7,6 +7,7 @@
 Player::Player(PlayerSettings* playerSettings)
     : selectedAuras(playerSettings->auras), talents(playerSettings->talents), sets(playerSettings->sets), stats(playerSettings->stats), items(playerSettings->items), settings(playerSettings)
 {
+    std::cout << playerSettings->metaGemId << std::endl;
     spells = new PlayerSpells();
     auras = new PlayerAuras();
     filler = "";
@@ -366,7 +367,7 @@ void Player::initialize()
         if (talents->shadowfury == 1 && (settings->hasShadowfury || settings->simChoosingRotation)) spells->Shadowfury = new Shadowfury(this);
         if (auras->Corruption != NULL) spells->Corruption = new Corruption(this, nullptr, auras->Corruption);
         if (auras->UnstableAffliction != NULL) spells->UnstableAffliction = new UnstableAffliction(this, nullptr, auras->UnstableAffliction);
-        if (auras->SiphonLife != NULL) spells->SiphonLife = new SiphonLife(this, nullptr, auras->UnstableAffliction);
+        if (auras->SiphonLife != NULL) spells->SiphonLife = new SiphonLife(this, nullptr, auras->SiphonLife);
         if (auras->Immolate != NULL) spells->Immolate = new Immolate(this, nullptr, auras->Immolate);
         if (auras->CurseOfAgony != NULL || auras->CurseOfDoom != NULL) spells->CurseOfAgony = new CurseOfAgony(this, nullptr, auras->CurseOfAgony);
         if (auras->CurseOfTheElements != NULL) spells->CurseOfTheElements = new CurseOfTheElements(this, auras->CurseOfTheElements);

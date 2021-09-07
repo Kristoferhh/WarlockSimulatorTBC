@@ -29,10 +29,10 @@ struct DamageOverTime
 
     DamageOverTime(Player* player);
     void setup();
-    void apply();
+    virtual void apply();
+    virtual double getModifier();
     void fade(bool endOfIteration = false);
     void tick(double time);
-    double getModifier();
     double* getConstantDamage();
     double predictDamage();
 };

@@ -23,12 +23,24 @@ onmessage = function (e) {
     let customItemId = e.data.itemId
 
     let metaGemIds = []
+    let equippedItemId = i[customItemSlot + customItemSubSlot]
+    // Get the equipped meta gem id
+    if (e.data.player.gems && e.data.player.gems.head && i['head']) {
+      for (const gemSocket in e.data.player.gems.head[i['head']]) {
+        if (e.data.player.gems.head[i['head']][gemSocket]) {
+          const gemId = e.data.player.gems.head[i['head']][gemSocket][1]
+          if (gems.meta[gemId]) {
+            metaGemIds.push(gemId)
+          }
+        }
+      }
+    }
     // If the player is equipped with a custom item then remove the stats from the currently equipped item and add stats from the custom item
-    if (customItemSlot && customItemId && customItemId !== i[customItemSlot + customItemSubSlot]) {
+    if (customItemSlot && customItemId && customItemId !== equippedItemId) {
       // Loop through all items in the custom item slot
       for (const item in items[customItemSlot]) {
         // Check if this is the currently equipped item
-        if (items[customItemSlot][item].id == i[customItemSlot + customItemSubSlot]) {
+        if (items[customItemSlot][item].id == equippedItemId) {
           // Remove stats from currently equipped item
           for (const stat in items[customItemSlot][item]) {
             if (b.hasOwnProperty(stat)) {
@@ -41,13 +53,13 @@ onmessage = function (e) {
           }
           // Remove stats from gems in the equipped item if there are any
           // Also check if the item's socket bonus is active and remove the stats from it if so
-          if (e.data.player.gems[customItemSlot] && e.data.player.gems[customItemSlot][i[customItemSlot + customItemSubSlot]]) {
+          if (e.data.player.gems[customItemSlot] && e.data.player.gems[customItemSlot][equippedItemId]) {
             let socketBonusActive = true
             // Loop through each socket in the equipped item
-            for (const socket in e.data.player.gems[customItemSlot][i[customItemSlot + customItemSubSlot]]) {
-              if (e.data.player.gems[customItemSlot][i[customItemSlot + customItemSubSlot]][socket]) {
-                const socketColor = e.data.player.gems[customItemSlot][i[customItemSlot + customItemSubSlot]][socket][0]
-                const gemId = e.data.player.gems[customItemSlot][i[customItemSlot + customItemSubSlot]][socket][1]
+            for (const socket in e.data.player.gems[customItemSlot][equippedItemId]) {
+              if (e.data.player.gems[customItemSlot][equippedItemId][socket]) {
+                const socketColor = e.data.player.gems[customItemSlot][equippedItemId][socket][0]
+                const gemId = e.data.player.gems[customItemSlot][equippedItemId][socket][1]
                 // Find the gem's color since the socket and gem colors might not match
                 for (const gemColor in gems) {
                   if (gems[gemColor][gemId]) {
@@ -58,6 +70,7 @@ onmessage = function (e) {
                     if (gemColor == 'meta') {
                       if (metaGemIds.includes(gemId)) {
                         metaGemIds.splice(metaGemIds.indexOf(gemId), 1)
+                        console.log("removing meta gem id " + gemId)
                       }
                     }
                     // Loop through the gem's stats and remove them from the player
@@ -107,6 +120,7 @@ onmessage = function (e) {
                 // Check for meta gem
                 if (customItemSlot == 'head' && gems.meta[gemId]) {
                   metaGemIds.push(gemId)
+                  console.log("adding meta gem id " + gemId)
                 }
                 // Find the gem's color since it might not match the socket color
                 for (const gemColor in gems) {

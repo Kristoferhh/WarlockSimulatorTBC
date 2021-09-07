@@ -206,6 +206,8 @@ void DamageOverTime::tick(double t)
         {
             fade();
         }
+
+        delete constantDamage;
     }
 }
 
@@ -217,7 +219,7 @@ CorruptionDot::CorruptionDot(Player* player) : DamageOverTime(player)
     dmg = 900;
     school = SpellSchool::SHADOW;
     coefficient = 0.936 + (0.12 * player->talents->empoweredCorruption);
-    minimumDuration = 18;
+    minimumDuration = 9;
     t5BonusModifier = 1;
     setup();
 
@@ -230,13 +232,13 @@ CorruptionDot::CorruptionDot(Player* player) : DamageOverTime(player)
 
 double CorruptionDot::getModifier()
 {
-    double modifier = getModifier();
+    double modifier = DamageOverTime::getModifier();
     if (player->talents->shadowMastery > 0 && player->talents->contagion > 0)
     {
         // Divide away the bonus from Shadow Mastery
         modifier /= (1 + (player->talents->shadowMastery * 0.02));
         // Multiply the modifier with the bonus from Shadow Mastery + Contagion
-        modifier *= (1 * (1 + ((player->talents->shadowMastery * 0.02) + (player->talents->contagion / 100))));
+        modifier *= (1 * (1 + ((player->talents->shadowMastery * 0.02) + (player->talents->contagion / 100.0))));
     }
     return modifier;
 }
@@ -256,7 +258,7 @@ UnstableAfflictionDot::UnstableAfflictionDot(Player* player) : DamageOverTime(pl
     dmg = 1050;
     school = SpellSchool::SHADOW;
     coefficient = 1.2;
-    minimumDuration = 18;
+    minimumDuration = 9;
     setup();
 }
 
@@ -280,7 +282,7 @@ ImmolateDot::ImmolateDot(Player* player) : DamageOverTime(player)
     dmg = 615;
     school = SpellSchool::FIRE;
     coefficient = 0.65;
-    minimumDuration = 15;
+    minimumDuration = 12;
     t5BonusModifier = 1;
     setup();
 }
@@ -300,16 +302,16 @@ CurseOfAgonyDot::CurseOfAgonyDot(Player* player) : DamageOverTime(player)
     dmg = 1356;
     school = SpellSchool::SHADOW;
     coefficient = 1.2;
-    minimumDuration = 24;
+    minimumDuration = 15;
     setup();
 }
 
 double CurseOfAgonyDot::getModifier()
 {
-    double modifier = getModifier();
+    double modifier = DamageOverTime::getModifier();
     // Remove bonus from Shadow Mastery and add bonus from Shadow Mastery + Contagion + Improved Curse of Agony
     modifier /= (1 + (player->talents->shadowMastery * 0.02));
-    modifier *= (1 * (1 + ((player->talents->shadowMastery * 0.02) + (player->talents->contagion / 100) + (player->talents->improvedCurseOfAgony * 0.05))));
+    modifier *= (1 * (1 + ((player->talents->shadowMastery * 0.02) + (player->talents->contagion / 100.0) + (player->talents->improvedCurseOfAgony * 0.05))));
     return modifier;
 }
 
@@ -321,5 +323,6 @@ CurseOfDoomDot::CurseOfDoomDot(Player* player) : DamageOverTime(player)
     dmg = 4200;
     school = SpellSchool::SHADOW;
     coefficient = 2;
+    minimumDuration = 60;
     setup();
 }

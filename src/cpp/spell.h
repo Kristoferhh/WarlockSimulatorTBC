@@ -1,6 +1,6 @@
 #pragma once
 
-struct Player; // dirty fix for circular reference when we were including "player.h" before
+struct Player;
 
 #include <string>
 #include <cmath>
@@ -56,11 +56,11 @@ struct Spell
     virtual double getCastTime();
     virtual void startCast(double predictedDamage = 0);
     virtual void cast();
-    double getModifier();
+    virtual double getModifier();
+    virtual void damage(bool isCrit = false);
     double* getConstantDamage(bool noRng = true);
     double getCritMultiplier(double critMultiplier);
     double predictDamage();
-    void damage(bool isCrit = false);
     void tick(double t);
     void onCritProcs();
     void onDamageProcs();
