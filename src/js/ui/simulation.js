@@ -87,7 +87,7 @@ function simDPS (items) {
                     tableRow += "<td class='number'>" + (~~(((s.dodges / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.glancingBlows / s.casts) * 100) * 100) / 100).toFixed(2) + "</td>"
                   }
                   tableRow += "<td class='number'>" + (Math.round((s.damage / simulationEnd.totalDuration) * 100) / 100 || 0) + '</td></tr>'
-                  $('#damage-breakdown-table tbody').append(tableRow).trigger('update')
+                  $('#damage-breakdown-table tbody').append(tableRow)
                 }
               }
               // Setup the aura breakdown table
@@ -115,6 +115,8 @@ function simDPS (items) {
                 $('#damage-breakdown-dodge').hide()
                 $('#damage-breakdown-glancing').hide()
               }
+
+              $(".breakdown-table").trigger('update')
             }
           }
         }
