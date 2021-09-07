@@ -10,4 +10,5 @@ struct Simulation
   Simulation(Player* _player, SimulationSettings* simSettings);
   void start();
   double passTime();
+  void selectedSpellHandler(Spell* spell, std::map<Spell*, double>& predictedDamageOfSpells);
 };
