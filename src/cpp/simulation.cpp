@@ -556,6 +556,7 @@ double Simulation::passTime()
     return time;
 }
 
+// Handle the logic for when a spell is selected to be cast
 void Simulation::selectedSpellHandler(Spell* spell, std::map<Spell*, double>& predictedDamageOfSpells)
 {
     // If the sim is choosing the rotation for the player then predict the damage of the spell and put it in the map
@@ -563,10 +564,11 @@ void Simulation::selectedSpellHandler(Spell* spell, std::map<Spell*, double>& pr
     {
         predictedDamageOfSpells.insert(std::make_pair(spell, spell->predictDamage()));
     }
-    // Else if the player is choosing the rotation themselves then just cast the highest priority spell that needs to be cast
+    // Else if the player is choosing the rotation themselves then just cast the spell right away if they have enough mana
     else if (spell->hasEnoughMana())
     {
-        if (player->spells->AmplifyCurse != NULL && ((player->spells->CurseOfAgony != NULL && spell == player->spells->CurseOfAgony) || (player->spells->CurseOfDoom != NULL && spell == player->spells->CurseOfDoom)) && player->spells->AmplifyCurse->ready())
+        // Cast Amplify Curse if it's selected and the spell we're casting is either CoA or CoD
+        if (player->spells->AmplifyCurse != NULL && player->spells->AmplifyCurse->ready() && ((player->spells->CurseOfAgony != NULL && spell == player->spells->CurseOfAgony) || (player->spells->CurseOfDoom != NULL && spell == player->spells->CurseOfDoom)))
         {
             player->spells->AmplifyCurse->startCast();
         }

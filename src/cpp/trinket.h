@@ -9,9 +9,9 @@ struct Trinket
     Player* player;
     AuraStats* stats;
     int duration;
-    int durationRemaining;
+    double durationRemaining;
     int cooldown;
-    int cooldownRemaining;
+    double cooldownRemaining;
     bool active;
     bool sharesCooldown;
     std::string name;

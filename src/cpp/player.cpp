@@ -686,7 +686,7 @@ void Player::useCooldowns()
             int otherTrinketSlot = i == 1 ? 0 : 1;
             if (trinkets.size() > otherTrinketSlot && trinkets[otherTrinketSlot] != NULL && trinkets[otherTrinketSlot]->sharesCooldown && trinkets[i]->sharesCooldown)
             {
-                trinkets[otherTrinketSlot]->cooldownRemaining = std::max(trinkets[otherTrinketSlot]->cooldownRemaining, trinkets[i]->duration);
+                trinkets[otherTrinketSlot]->cooldownRemaining = std::max(trinkets[otherTrinketSlot]->cooldownRemaining, static_cast<double>(trinkets[i]->duration));
             }
         }
     }

@@ -768,7 +768,7 @@ Corruption::Corruption(Player* player, Aura* aura, DamageOverTime* dot) : Spell(
 {
     name = "Corruption";
     manaCost = 370;
-    castTime = round((2 - (0.4 * player->talents->improvedCorruption)) * 100) / 100;
+    castTime = round((2 - (0.4 * player->talents->improvedCorruption)) * 100) / 100.0;
     isDot = true;
     school = SpellSchool::SHADOW;
     type = SpellType::AFFLICTION;
