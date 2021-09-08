@@ -122,9 +122,9 @@ void Spell::cast()
     if (!isAura)
     {
         player->combatLogBreakdown.at(varName)->casts++;
-    }   
+    }
     const int currentMana = player->stats->mana;
-    if (manaCost > 0)
+    if (manaCost > 0 && !player->settings->infinitePlayerMana)
     {
         player->stats->mana -= manaCost * player->stats->manaCostModifier;
         player->fiveSecondRuleTimer = 5;
