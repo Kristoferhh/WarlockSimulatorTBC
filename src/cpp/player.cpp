@@ -434,45 +434,32 @@ void Player::reset()
     }
 
     // Reset spells
-    spells->LifeTap->reset();
-    spells->SeedOfCorruption->reset();
-    spells->ShadowBolt->reset();
-    spells->Incinerate->reset();
-    spells->SearingPain->reset();
-    spells->Corruption->reset();
-    spells->UnstableAffliction->reset();
-    spells->SiphonLife->reset();
-    spells->Immolate->reset();
-    spells->CurseOfAgony->reset();
-    spells->CurseOfTheElements->reset();
-    spells->CurseOfRecklessness->reset();
-    spells->CurseOfDoom->reset();
-    spells->Conflagrate->reset();
-    spells->Shadowburn->reset();
-    spells->DeathCoil->reset();
-    spells->Shadowfury->reset();
-    spells->AmplifyCurse->reset();
-    spells->DarkPact->reset();
-    spells->DestructionPotion->reset();
-    spells->SuperManaPotion->reset();
-    spells->DemonicRune->reset();
-    spells->FlameCap->reset();
-    spells->BloodFury->reset();
-    spells->DrumsOfBattle->reset();
-    spells->DrumsOfWar->reset();
-    spells->DrumsOfRestoration->reset();
-    spells->BladeOfWizardry->reset();
-    spells->ShatteredSunPendantOfAcumen->reset();
-    spells->RobeOfTheElderScribes->reset();
-    spells->MysticalSkyfireDiamond->reset();
-    spells->InsightfulEarthstormDiamond->reset();
-    spells->TimbalsFocusingCrystal->reset();
-    spells->MarkOfDefiance->reset();
-    spells->TheLightningCapacitor->reset();
-    spells->QuagmirransEye->reset();
-    spells->ShiffarsNexusHorn->reset();
-    spells->SextantOfUnstableCurrents->reset();
-    spells->BandOfTheEternalSage->reset();
+    if (spells->CurseOfDoom != NULL) spells->CurseOfDoom->reset();
+    if (spells->Conflagrate != NULL) spells->Conflagrate->reset();
+    if (spells->Shadowburn != NULL) spells->Shadowburn->reset();
+    if (spells->DeathCoil != NULL) spells->DeathCoil->reset();
+    if (spells->Shadowfury != NULL) spells->Shadowfury->reset();
+    if (spells->AmplifyCurse != NULL) spells->AmplifyCurse->reset();
+    if (spells->DestructionPotion != NULL) spells->DestructionPotion->reset();
+    if (spells->SuperManaPotion != NULL) spells->SuperManaPotion->reset();
+    if (spells->DemonicRune != NULL) spells->DemonicRune->reset();
+    if (spells->FlameCap != NULL) spells->FlameCap->reset();
+    if (spells->BloodFury != NULL) spells->BloodFury->reset();
+    if (spells->DrumsOfBattle != NULL) spells->DrumsOfBattle->reset();
+    if (spells->DrumsOfWar != NULL) spells->DrumsOfWar->reset();
+    if (spells->DrumsOfRestoration != NULL) spells->DrumsOfRestoration->reset();
+    if (spells->BladeOfWizardry != NULL) spells->BladeOfWizardry->reset();
+    if (spells->ShatteredSunPendantOfAcumen != NULL) spells->ShatteredSunPendantOfAcumen->reset();
+    if (spells->RobeOfTheElderScribes != NULL) spells->RobeOfTheElderScribes->reset();
+    if (spells->MysticalSkyfireDiamond != NULL) spells->MysticalSkyfireDiamond->reset();
+    if (spells->InsightfulEarthstormDiamond != NULL) spells->InsightfulEarthstormDiamond->reset();
+    if (spells->TimbalsFocusingCrystal != NULL) spells->TimbalsFocusingCrystal->reset();
+    if (spells->MarkOfDefiance != NULL) spells->MarkOfDefiance->reset();
+    if (spells->TheLightningCapacitor != NULL) spells->TheLightningCapacitor->reset();
+    if (spells->QuagmirransEye != NULL) spells->QuagmirransEye->reset();
+    if (spells->ShiffarsNexusHorn != NULL) spells->ShiffarsNexusHorn->reset();
+    if (spells->SextantOfUnstableCurrents != NULL) spells->SextantOfUnstableCurrents->reset();
+    if (spells->BandOfTheEternalSage != NULL) spells->BandOfTheEternalSage->reset();
     for (std::vector<Spell*>::iterator it = spells->PowerInfusion.begin(); it != spells->PowerInfusion.end(); it++)
     {
         (*it)->reset();
@@ -485,6 +472,52 @@ void Player::reset()
     {
         (*it)->reset();
     }
+
+    // End all active auras, dots, and activatable trinkets
+    for (int i = 0; i < trinkets.size(); i++)
+    {
+        if (trinkets[i]->active)
+        {
+            trinkets[i]->fade(true);
+        }
+    }
+    if (auras->Corruption != NULL && auras->Corruption->active) auras->Corruption->fade(true);
+    if (auras->UnstableAffliction != NULL && auras->UnstableAffliction->active) auras->UnstableAffliction->fade(true);
+    if (auras->SiphonLife != NULL && auras->SiphonLife->active) auras->SiphonLife->fade(true);
+    if (auras->Immolate != NULL && auras->Immolate->active) auras->Immolate->fade(true);
+    if (auras->CurseOfAgony != NULL && auras->CurseOfAgony->active) auras->CurseOfAgony->fade(true);
+    if (auras->CurseOfDoom != NULL && auras->CurseOfDoom->active) auras->CurseOfDoom->fade(true);
+    if (auras->ImprovedShadowBolt != NULL && auras->ImprovedShadowBolt->active) auras->ImprovedShadowBolt->fade(true);
+    if (auras->CurseOfTheElements != NULL && auras->CurseOfTheElements->active) auras->CurseOfTheElements->fade(true);
+    if (auras->CurseOfRecklessness != NULL && auras->CurseOfRecklessness->active) auras->CurseOfRecklessness->fade(true);
+    if (auras->ShadowTrance != NULL && auras->ShadowTrance->active) auras->ShadowTrance->fade(true);
+    if (auras->AmplifyCurse != NULL && auras->AmplifyCurse->active) auras->AmplifyCurse->fade(true);
+    if (auras->PowerInfusion != NULL && auras->PowerInfusion->active) auras->PowerInfusion->fade(true);
+    if (auras->Innervate != NULL && auras->Innervate->active) auras->Innervate->fade(true);
+    if (auras->BloodFury != NULL && auras->BloodFury->active) auras->BloodFury->fade(true);
+    if (auras->DestructionPotion != NULL && auras->DestructionPotion->active) auras->DestructionPotion->fade(true);
+    if (auras->FlameCap != NULL && auras->FlameCap->active) auras->FlameCap->fade(true);
+    if (auras->Bloodlust != NULL && auras->Bloodlust->active) auras->Bloodlust->fade(true);
+    if (auras->DrumsOfBattle != NULL && auras->DrumsOfBattle->active) auras->DrumsOfBattle->fade(true);
+    if (auras->DrumsOfWar != NULL && auras->DrumsOfWar->active) auras->DrumsOfWar->fade(true);
+    if (auras->DrumsOfRestoration != NULL && auras->DrumsOfRestoration->active) auras->DrumsOfRestoration->fade(true);
+    if (auras->BandOfTheEternalSage != NULL && auras->BandOfTheEternalSage->active) auras->BandOfTheEternalSage->fade(true);
+    if (auras->WrathOfCenarius != NULL && auras->WrathOfCenarius->active) auras->WrathOfCenarius->fade(true);
+    if (auras->BladeOfWizardry != NULL && auras->BladeOfWizardry->active) auras->BladeOfWizardry->fade(true);
+    if (auras->ShatteredSunPendantOfAcumen != NULL && auras->ShatteredSunPendantOfAcumen->active) auras->ShatteredSunPendantOfAcumen->fade(true);
+    if (auras->RobeOfTheElderScribes != NULL && auras->RobeOfTheElderScribes->active) auras->RobeOfTheElderScribes->fade(true);
+    if (auras->MysticalSkyfireDiamond != NULL && auras->MysticalSkyfireDiamond->active) auras->MysticalSkyfireDiamond->fade(true);
+    if (auras->EyeOfMagtheridon != NULL && auras->EyeOfMagtheridon->active) auras->EyeOfMagtheridon->fade(true);
+    if (auras->SextantOfUnstableCurrents != NULL && auras->SextantOfUnstableCurrents->active) auras->SextantOfUnstableCurrents->fade(true);
+    if (auras->QuagmirransEye != NULL && auras->QuagmirransEye->active) auras->QuagmirransEye->fade(true);
+    if (auras->ShiffarsNexusHorn != NULL && auras->ShiffarsNexusHorn->active) auras->ShiffarsNexusHorn->fade(true);
+    if (auras->AshtongueTalismanOfShadows != NULL && auras->AshtongueTalismanOfShadows->active) auras->AshtongueTalismanOfShadows->fade(true);
+    if (auras->DarkmoonCardCrusade != NULL && auras->DarkmoonCardCrusade->active) auras->DarkmoonCardCrusade->fade(true);
+    if (auras->TheLightningCapacitor != NULL && auras->TheLightningCapacitor->active) auras->TheLightningCapacitor->fade(true);
+    if (auras->Flameshadow != NULL && auras->Flameshadow->active) auras->Flameshadow->fade(true);
+    if (auras->Shadowflame != NULL && auras->Shadowflame->active) auras->Shadowflame->fade(true);
+    if (auras->Spellstrike != NULL && auras->Spellstrike->active) auras->Spellstrike->fade(true);
+    if (auras->ManaEtched4Set != NULL && auras->ManaEtched4Set->active) auras->ManaEtched4Set->fade(true);
 }
 
 double Player::getHastePercent()

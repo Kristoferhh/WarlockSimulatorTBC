@@ -221,56 +221,10 @@ void Simulation::start()
         dpsVector.push_back(dps);
 
         //todo remove hard-coding
-        if (player->iteration % 100 == 0)
+        if (player->iteration % static_cast<int>(std::floor(settings->iterations / 100.0)) == 0)
         {
             simulationUpdate(player->iteration, settings->iterations, median(dpsVector), player->settings->itemId);
         }
-
-        // End all active auras, dots, and activatable trinkets
-        for (int i = 0; i < player->trinkets.size(); i++)
-        {
-            if (player->trinkets[i]->active)
-            {
-                player->trinkets[i]->fade(true);
-            }
-        }
-        if (player->auras->Corruption != NULL && player->auras->Corruption->active) player->auras->Corruption->fade(true);
-        if (player->auras->UnstableAffliction != NULL && player->auras->UnstableAffliction->active) player->auras->UnstableAffliction->fade(true);
-        if (player->auras->SiphonLife != NULL && player->auras->SiphonLife->active) player->auras->SiphonLife->fade(true);
-        if (player->auras->Immolate != NULL && player->auras->Immolate->active) player->auras->Immolate->fade(true);
-        if (player->auras->CurseOfAgony != NULL && player->auras->CurseOfAgony->active) player->auras->CurseOfAgony->fade(true);
-        if (player->auras->CurseOfDoom != NULL && player->auras->CurseOfDoom->active) player->auras->CurseOfDoom->fade(true);
-        if (player->auras->ImprovedShadowBolt != NULL && player->auras->ImprovedShadowBolt->active) player->auras->ImprovedShadowBolt->fade(true);
-        if (player->auras->CurseOfTheElements != NULL && player->auras->CurseOfTheElements->active) player->auras->CurseOfTheElements->fade(true);
-        if (player->auras->CurseOfRecklessness != NULL && player->auras->CurseOfRecklessness->active) player->auras->CurseOfRecklessness->fade(true);
-        if (player->auras->ShadowTrance != NULL && player->auras->ShadowTrance->active) player->auras->ShadowTrance->fade(true);
-        if (player->auras->AmplifyCurse != NULL && player->auras->AmplifyCurse->active) player->auras->AmplifyCurse->fade(true);
-        if (player->auras->PowerInfusion != NULL && player->auras->PowerInfusion->active) player->auras->PowerInfusion->fade(true);
-        if (player->auras->Innervate != NULL && player->auras->Innervate->active) player->auras->Innervate->fade(true);
-        if (player->auras->BloodFury != NULL && player->auras->BloodFury->active) player->auras->BloodFury->fade(true);
-        if (player->auras->DestructionPotion != NULL && player->auras->DestructionPotion->active) player->auras->DestructionPotion->fade(true);
-        if (player->auras->FlameCap != NULL && player->auras->FlameCap->active) player->auras->FlameCap->fade(true);
-        if (player->auras->Bloodlust != NULL && player->auras->Bloodlust->active) player->auras->Bloodlust->fade(true);
-        if (player->auras->DrumsOfBattle != NULL && player->auras->DrumsOfBattle->active) player->auras->DrumsOfBattle->fade(true);
-        if (player->auras->DrumsOfWar != NULL && player->auras->DrumsOfWar->active) player->auras->DrumsOfWar->fade(true);
-        if (player->auras->DrumsOfRestoration != NULL && player->auras->DrumsOfRestoration->active) player->auras->DrumsOfRestoration->fade(true);
-        if (player->auras->BandOfTheEternalSage != NULL && player->auras->BandOfTheEternalSage->active) player->auras->BandOfTheEternalSage->fade(true);
-        if (player->auras->WrathOfCenarius != NULL && player->auras->WrathOfCenarius->active) player->auras->WrathOfCenarius->fade(true);
-        if (player->auras->BladeOfWizardry != NULL && player->auras->BladeOfWizardry->active) player->auras->BladeOfWizardry->fade(true);
-        if (player->auras->ShatteredSunPendantOfAcumen != NULL && player->auras->ShatteredSunPendantOfAcumen->active) player->auras->ShatteredSunPendantOfAcumen->fade(true);
-        if (player->auras->RobeOfTheElderScribes != NULL && player->auras->RobeOfTheElderScribes->active) player->auras->RobeOfTheElderScribes->fade(true);
-        if (player->auras->MysticalSkyfireDiamond != NULL && player->auras->MysticalSkyfireDiamond->active) player->auras->MysticalSkyfireDiamond->fade(true);
-        if (player->auras->EyeOfMagtheridon != NULL && player->auras->EyeOfMagtheridon->active) player->auras->EyeOfMagtheridon->fade(true);
-        if (player->auras->SextantOfUnstableCurrents != NULL && player->auras->SextantOfUnstableCurrents->active) player->auras->SextantOfUnstableCurrents->fade(true);
-        if (player->auras->QuagmirransEye != NULL && player->auras->QuagmirransEye->active) player->auras->QuagmirransEye->fade(true);
-        if (player->auras->ShiffarsNexusHorn != NULL && player->auras->ShiffarsNexusHorn->active) player->auras->ShiffarsNexusHorn->fade(true);
-        if (player->auras->AshtongueTalismanOfShadows != NULL && player->auras->AshtongueTalismanOfShadows->active) player->auras->AshtongueTalismanOfShadows->fade(true);
-        if (player->auras->DarkmoonCardCrusade != NULL && player->auras->DarkmoonCardCrusade->active) player->auras->DarkmoonCardCrusade->fade(true);
-        if (player->auras->TheLightningCapacitor != NULL && player->auras->TheLightningCapacitor->active) player->auras->TheLightningCapacitor->fade(true);
-        if (player->auras->Flameshadow != NULL && player->auras->Flameshadow->active) player->auras->Flameshadow->fade(true);
-        if (player->auras->Shadowflame != NULL && player->auras->Shadowflame->active) player->auras->Shadowflame->fade(true);
-        if (player->auras->Spellstrike != NULL && player->auras->Spellstrike->active) player->auras->Spellstrike->fade(true);
-        if (player->auras->ManaEtched4Set != NULL && player->auras->ManaEtched4Set->active) player->auras->ManaEtched4Set->fade(true);
     }
 
     auto finishTime = std::chrono::high_resolution_clock::now();
@@ -449,38 +403,33 @@ double Simulation::passTime()
     if (player->spells->SearingPain != NULL && player->spells->SearingPain->casting) player->spells->SearingPain->tick(time);
     if (player->spells->Corruption != NULL && player->spells->Corruption->casting) player->spells->Corruption->tick(time);
     if (player->spells->UnstableAffliction != NULL && player->spells->UnstableAffliction->casting) player->spells->UnstableAffliction->tick(time);
-    if (player->spells->SiphonLife != NULL && player->spells->SiphonLife->casting) player->spells->SiphonLife->tick(time);
     if (player->spells->Immolate != NULL && player->spells->Immolate->casting) player->spells->Immolate->tick(time);
-    if (player->spells->CurseOfAgony != NULL && player->spells->CurseOfAgony->casting) player->spells->CurseOfAgony->tick(time);
-    if (player->spells->CurseOfTheElements != NULL && player->spells->CurseOfTheElements->casting) player->spells->CurseOfTheElements->tick(time);
-    if (player->spells->CurseOfRecklessness != NULL && player->spells->CurseOfRecklessness->casting) player->spells->CurseOfRecklessness->tick(time);
-    if (player->spells->CurseOfDoom != NULL && player->spells->CurseOfDoom->cooldownRemaining > 0 || player->spells->CurseOfDoom->casting) player->spells->CurseOfDoom->tick(time);
-    if (player->spells->Conflagrate != NULL && player->spells->Conflagrate->cooldownRemaining > 0 || player->spells->Conflagrate->casting) player->spells->Conflagrate->tick(time);
-    if (player->spells->Shadowburn != NULL && player->spells->Shadowburn->cooldownRemaining > 0 || player->spells->Shadowburn->casting) player->spells->Shadowburn->tick(time);
-    if (player->spells->DeathCoil != NULL && player->spells->DeathCoil->cooldownRemaining > 0 || player->spells->DeathCoil->casting) player->spells->DeathCoil->tick(time);
-    if (player->spells->Shadowfury != NULL && player->spells->Shadowfury->cooldownRemaining > 0 || player->spells->Shadowfury->casting) player->spells->Shadowfury->tick(time);
-    if (player->spells->AmplifyCurse != NULL && player->spells->AmplifyCurse->cooldownRemaining > 0 || player->spells->AmplifyCurse->casting) player->spells->AmplifyCurse->tick(time);
-    if (player->spells->DarkPact != NULL && player->spells->DarkPact->casting) player->spells->DarkPact->tick(time);
-    if (player->spells->DestructionPotion != NULL && player->spells->DestructionPotion->cooldownRemaining > 0 || player->spells->DestructionPotion->casting) player->spells->DestructionPotion->tick(time);
-    if (player->spells->SuperManaPotion != NULL && player->spells->SuperManaPotion->cooldownRemaining > 0 || player->spells->SuperManaPotion->casting) player->spells->SuperManaPotion->tick(time);
-    if (player->spells->DemonicRune != NULL && player->spells->DemonicRune->cooldownRemaining > 0 || player->spells->DemonicRune->casting) player->spells->DemonicRune->tick(time);
-    if (player->spells->FlameCap != NULL && player->spells->FlameCap->cooldownRemaining > 0 || player->spells->FlameCap->casting) player->spells->FlameCap->tick(time);
-    if (player->spells->BloodFury != NULL && player->spells->BloodFury->cooldownRemaining > 0 || player->spells->BloodFury->casting) player->spells->BloodFury->tick(time);
-    if (player->spells->DrumsOfBattle != NULL && player->spells->DrumsOfBattle->cooldownRemaining > 0 || player->spells->DrumsOfBattle->casting) player->spells->DrumsOfBattle->tick(time);
-    if (player->spells->DrumsOfWar != NULL && player->spells->DrumsOfWar->cooldownRemaining > 0 || player->spells->DrumsOfWar->casting) player->spells->DrumsOfWar->tick(time);
-    if (player->spells->DrumsOfRestoration != NULL && player->spells->DrumsOfRestoration->cooldownRemaining > 0 || player->spells->DrumsOfRestoration->casting) player->spells->DrumsOfRestoration->tick(time);
-    if (player->spells->BladeOfWizardry != NULL && player->spells->BladeOfWizardry->cooldownRemaining > 0 || player->spells->BladeOfWizardry->casting) player->spells->BladeOfWizardry->tick(time);
-    if (player->spells->ShatteredSunPendantOfAcumen != NULL && player->spells->ShatteredSunPendantOfAcumen->cooldownRemaining > 0 || player->spells->ShatteredSunPendantOfAcumen->casting) player->spells->ShatteredSunPendantOfAcumen->tick(time);
-    if (player->spells->RobeOfTheElderScribes != NULL && player->spells->RobeOfTheElderScribes->cooldownRemaining > 0 || player->spells->RobeOfTheElderScribes->casting) player->spells->RobeOfTheElderScribes->tick(time);
-    if (player->spells->MysticalSkyfireDiamond != NULL && player->spells->MysticalSkyfireDiamond->cooldownRemaining > 0 || player->spells->MysticalSkyfireDiamond->casting) player->spells->MysticalSkyfireDiamond->tick(time);
-    if (player->spells->InsightfulEarthstormDiamond != NULL && player->spells->InsightfulEarthstormDiamond->cooldownRemaining > 0 || player->spells->InsightfulEarthstormDiamond->casting) player->spells->InsightfulEarthstormDiamond->tick(time);
-    if (player->spells->TimbalsFocusingCrystal != NULL && player->spells->TimbalsFocusingCrystal->cooldownRemaining > 0 || player->spells->TimbalsFocusingCrystal->casting) player->spells->TimbalsFocusingCrystal->tick(time);
-    if (player->spells->MarkOfDefiance != NULL && player->spells->MarkOfDefiance->cooldownRemaining > 0 || player->spells->MarkOfDefiance->casting) player->spells->MarkOfDefiance->tick(time);
-    if (player->spells->TheLightningCapacitor != NULL && player->spells->TheLightningCapacitor->cooldownRemaining > 0 || player->spells->TheLightningCapacitor->casting) player->spells->TheLightningCapacitor->tick(time);
-    if (player->spells->QuagmirransEye != NULL && player->spells->QuagmirransEye->cooldownRemaining > 0 || player->spells->QuagmirransEye->casting) player->spells->QuagmirransEye->tick(time);
-    if (player->spells->ShiffarsNexusHorn != NULL && player->spells->ShiffarsNexusHorn->cooldownRemaining > 0 || player->spells->ShiffarsNexusHorn->casting) player->spells->ShiffarsNexusHorn->tick(time);
-    if (player->spells->SextantOfUnstableCurrents != NULL && player->spells->SextantOfUnstableCurrents->cooldownRemaining > 0 || player->spells->SextantOfUnstableCurrents->casting) player->spells->SextantOfUnstableCurrents->tick(time);
-    if (player->spells->BandOfTheEternalSage != NULL && player->spells->BandOfTheEternalSage->cooldownRemaining > 0 || player->spells->BandOfTheEternalSage->casting) player->spells->BandOfTheEternalSage->tick(time);
+    if (player->spells->CurseOfDoom != NULL && (player->spells->CurseOfDoom->cooldownRemaining > 0 || player->spells->CurseOfDoom->casting)) player->spells->CurseOfDoom->tick(time);
+    if (player->spells->Conflagrate != NULL && (player->spells->Conflagrate->cooldownRemaining > 0 || player->spells->Conflagrate->casting)) player->spells->Conflagrate->tick(time);
+    if (player->spells->Shadowburn != NULL && (player->spells->Shadowburn->cooldownRemaining > 0 || player->spells->Shadowburn->casting)) player->spells->Shadowburn->tick(time);
+    if (player->spells->DeathCoil != NULL && (player->spells->DeathCoil->cooldownRemaining > 0 || player->spells->DeathCoil->casting)) player->spells->DeathCoil->tick(time);
+    if (player->spells->Shadowfury != NULL && (player->spells->Shadowfury->cooldownRemaining > 0 || player->spells->Shadowfury->casting)) player->spells->Shadowfury->tick(time);
+    if (player->spells->AmplifyCurse != NULL && (player->spells->AmplifyCurse->cooldownRemaining > 0 || player->spells->AmplifyCurse->casting)) player->spells->AmplifyCurse->tick(time);
+    if (player->spells->DestructionPotion != NULL && (player->spells->DestructionPotion->cooldownRemaining > 0 || player->spells->DestructionPotion->casting)) player->spells->DestructionPotion->tick(time);
+    if (player->spells->SuperManaPotion != NULL && (player->spells->SuperManaPotion->cooldownRemaining > 0 || player->spells->SuperManaPotion->casting)) player->spells->SuperManaPotion->tick(time);
+    if (player->spells->DemonicRune != NULL && (player->spells->DemonicRune->cooldownRemaining > 0 || player->spells->DemonicRune->casting)) player->spells->DemonicRune->tick(time);
+    if (player->spells->FlameCap != NULL && (player->spells->FlameCap->cooldownRemaining > 0 || player->spells->FlameCap->casting)) player->spells->FlameCap->tick(time);
+    if (player->spells->BloodFury != NULL && (player->spells->BloodFury->cooldownRemaining > 0 || player->spells->BloodFury->casting)) player->spells->BloodFury->tick(time);
+    if (player->spells->DrumsOfBattle != NULL && (player->spells->DrumsOfBattle->cooldownRemaining > 0 || player->spells->DrumsOfBattle->casting)) player->spells->DrumsOfBattle->tick(time);
+    if (player->spells->DrumsOfWar != NULL && (player->spells->DrumsOfWar->cooldownRemaining > 0 || player->spells->DrumsOfWar->casting)) player->spells->DrumsOfWar->tick(time);
+    if (player->spells->DrumsOfRestoration != NULL && (player->spells->DrumsOfRestoration->cooldownRemaining > 0 || player->spells->DrumsOfRestoration->casting)) player->spells->DrumsOfRestoration->tick(time);
+    if (player->spells->BladeOfWizardry != NULL && (player->spells->BladeOfWizardry->cooldownRemaining > 0 || player->spells->BladeOfWizardry->casting)) player->spells->BladeOfWizardry->tick(time);
+    if (player->spells->ShatteredSunPendantOfAcumen != NULL && (player->spells->ShatteredSunPendantOfAcumen->cooldownRemaining > 0 || player->spells->ShatteredSunPendantOfAcumen->casting)) player->spells->ShatteredSunPendantOfAcumen->tick(time);
+    if (player->spells->RobeOfTheElderScribes != NULL && (player->spells->RobeOfTheElderScribes->cooldownRemaining > 0 || player->spells->RobeOfTheElderScribes->casting)) player->spells->RobeOfTheElderScribes->tick(time);
+    if (player->spells->MysticalSkyfireDiamond != NULL && (player->spells->MysticalSkyfireDiamond->cooldownRemaining > 0 || player->spells->MysticalSkyfireDiamond->casting)) player->spells->MysticalSkyfireDiamond->tick(time);
+    if (player->spells->InsightfulEarthstormDiamond != NULL && (player->spells->InsightfulEarthstormDiamond->cooldownRemaining > 0 || player->spells->InsightfulEarthstormDiamond->casting)) player->spells->InsightfulEarthstormDiamond->tick(time);
+    if (player->spells->TimbalsFocusingCrystal != NULL && (player->spells->TimbalsFocusingCrystal->cooldownRemaining > 0 || player->spells->TimbalsFocusingCrystal->casting)) player->spells->TimbalsFocusingCrystal->tick(time);
+    if (player->spells->MarkOfDefiance != NULL && (player->spells->MarkOfDefiance->cooldownRemaining > 0 || player->spells->MarkOfDefiance->casting)) player->spells->MarkOfDefiance->tick(time);
+    if (player->spells->TheLightningCapacitor != NULL && (player->spells->TheLightningCapacitor->cooldownRemaining > 0 || player->spells->TheLightningCapacitor->casting)) player->spells->TheLightningCapacitor->tick(time);
+    if (player->spells->QuagmirransEye != NULL && (player->spells->QuagmirransEye->cooldownRemaining > 0 || player->spells->QuagmirransEye->casting)) player->spells->QuagmirransEye->tick(time);
+    if (player->spells->ShiffarsNexusHorn != NULL && (player->spells->ShiffarsNexusHorn->cooldownRemaining > 0 || player->spells->ShiffarsNexusHorn->casting)) player->spells->ShiffarsNexusHorn->tick(time);
+    if (player->spells->SextantOfUnstableCurrents != NULL && (player->spells->SextantOfUnstableCurrents->cooldownRemaining > 0 || player->spells->SextantOfUnstableCurrents->casting)) player->spells->SextantOfUnstableCurrents->tick(time);
+    if (player->spells->BandOfTheEternalSage != NULL && (player->spells->BandOfTheEternalSage->cooldownRemaining > 0 || player->spells->BandOfTheEternalSage->casting)) player->spells->BandOfTheEternalSage->tick(time);
     for (std::vector<Spell*>::iterator it = player->spells->PowerInfusion.begin(); it != player->spells->PowerInfusion.end(); it++)
     {
         if ((*it)->cooldownRemaining > 0) (*it)->tick(time);
