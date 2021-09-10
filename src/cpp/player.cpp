@@ -210,25 +210,15 @@ Player::Player(PlayerSettings* playerSettings)
     else if (settings->hasCurseOfDoom) curse = "curseOfDoom";
     else if (settings->hasCurseOfAgony) curse = "curseOfAgony";
 
-    // Records all information about damage done for each spell such as crit %, miss %, average damage per cast etc.
-    //this.damageBreakdown = {}
-    // Records all information about auras such as how often it was applied and the uptime %.
-    //this.auraBreakdown = {}
-    // Records all information about mana gain abilities like Life Tap, Mana Pots, and Demonic Runes
-    //this.manaGainBreakdown = { mp5: { name: 'Mp5' } }
-    //if (this.selectedAuras.judgementOfWisdom) this.manaGainBreakdown.judgementOfWisdom = { name: 'Judgement of Wisdom' }
-
     // Pet
     // Spell Power from the Demonic Knowledge talent
     demonicKnowledgeSpellPower = 0;
-    /*if (settings.simSettings.sacrificePet == 'no' || settings.talents.demonicSacrifice == 0) {
-      const selectedPet = settings.simSettings.petChoice
-      if (selectedPet == PetName.IMP) this.pet = new Imp(this, settings)
-      else if (selectedPet == PetName.VOIDWALKER) this.pet = new Voidwalker(this, settings)
-      else if (selectedPet == PetName.SUCCUBUS) this.pet = new Succubus(this, settings)
-      else if (selectedPet == PetName.FELHUNTER) this.pet = new Felhunter(this, settings)
-      else if (selectedPet == PetName.FELGUARD && settings.talents.summonFelguard > 0) this.pet = new Felguard(this, settings)
-    }*/
+    if (!settings->sacrificingPet || talents->demonicSacrifice == 0)
+    {
+        if (settings->petIsImp) pet = new Imp(this);
+        else if (settings->petIsSuccubus) pet = new Succubus(this);
+        else if (settings->petIsFelguard) pet = new Felguard(this);
+    }
 
     combatLogEntries.push_back("---------------- Player stats ----------------");
     combatLogEntries.push_back("Health: " + truncateTrailingZeros(std::to_string(round(stats->health))));
@@ -245,44 +235,41 @@ Player::Player(PlayerSettings* playerSettings)
     combatLogEntries.push_back("Fire Modifier: " + truncateTrailingZeros(std::to_string(stats->fireModifier * 100)) + "%");
     combatLogEntries.push_back("MP5: " + std::to_string(stats->mp5));
     combatLogEntries.push_back("Spell Penetration: " + std::to_string(stats->spellPen));
-    /*if (this.pet) {
-      let petAp = this.pet.stats.ap * this.pet.stats.apModifier
-      // Divide away the hidden 10% Felguard attack power bonus for the combat log to avoid confusion
-      if (this.pet.pet == PetName.FELGUARD) {
-        petAp /= 1.1
-      } else if (this.pet.pet == PetName.SUCCUBUS) {
-        petAp /= 1.05
-      }
-      this.combatlog.push('---------------- Pet stats ----------------')
-      this.combatlog.push('Stamina: ' + Math.round(this.pet.stats.stamina * this.pet.stats.staminaModifier))
-      this.combatlog.push('Intellect: ' + Math.round(this.pet.stats.intellect * this.pet.stats.intellectModifier))
-      this.combatlog.push('Strength: ' + Math.round((this.pet.stats.baseStats.strength + this.pet.stats.buffs.strength) * this.pet.stats.strengthModifier))
-      this.combatlog.push('Agility: ' + Math.round(this.pet.stats.agility * this.pet.stats.agilityModifier))
-      this.combatlog.push('Spirit: ' + Math.round((this.pet.stats.baseStats.spirit + this.pet.stats.spirit) * this.pet.stats.spiritModifier))
-      this.combatlog.push('Attack Power: ' + Math.round(petAp))
-      this.combatlog.push('Spell Power: ' + Math.round(this.pet.stats.spellPower))
-      this.combatlog.push('Mana: ' + Math.round(this.pet.stats.maxMana))
-      this.combatlog.push('MP5: ' + Math.round(this.pet.stats.mp5))
-      if (this.pet.pet !== PetName.IMP) {
-        this.combatlog.push('Physical Hit Chance: ' + Math.round(this.pet.getMeleeHitChance() * 100) / 100 + '%')
-        this.combatlog.push('Physical Crit Chance: ' + Math.round(this.pet.getMeleeCritChance() * 100) / 100 + '% (' + this.pet.critSuppression + '% Crit Suppression Applied)')
-        this.combatlog.push('Glancing Blow Chance: ' + Math.round(this.pet.glancingBlowChance * 100) / 100 + '%')
-      }
-      if (this.pet.pet === PetName.IMP || this.pet.pet === PetName.SUCCUBUS) {
-        this.combatlog.push('Spell Hit Chance: ' + Math.round(this.pet.getSpellHitChance() * 100) / 100 + '%')
-        this.combatlog.push('Spell Crit Chance: ' + Math.round(this.pet.getSpellCritChance() * 100) / 100 + '%')
-      }
-      this.combatlog.push('Damage Modifier: ' + Math.round(this.pet.stats.damageModifier * 100) + '%')
-    }*/
+    if (pet != NULL)
+    {
+        combatLogEntries.push_back("---------------- Pet stats ----------------");
+        combatLogEntries.push_back("Stamina: " + std::to_string(round(pet->stats->stamina * pet->stats->staminaModifier)));
+        combatLogEntries.push_back("Intellect: " + std::to_string(round(pet->stats->intellect * pet->stats->intellectModifier)));
+        combatLogEntries.push_back("Strength: " + std::to_string(round((pet->baseStats->strength + pet->stats->strength) * pet->stats->strengthModifier)));
+        combatLogEntries.push_back("Agility: " + std::to_string(round(pet->stats->agility) * pet->stats->agilityModifier));
+        combatLogEntries.push_back("Spirit: " + std::to_string(round((pet->baseStats->spirit + pet->stats->spirit) * pet->stats->spiritModifier)));
+        combatLogEntries.push_back("Attack Power: " + std::to_string(round(pet->stats->attackPower * pet->stats->attackPowerModifier)));
+        combatLogEntries.push_back("Spell Power: " + std::to_string(pet->stats->spellPower));
+        combatLogEntries.push_back("Mana: " + std::to_string(pet->stats->maxMana));
+        combatLogEntries.push_back("MP5: " + std::to_string(pet->stats->mp5));
+        if (pet->petType == PetType::MELEE)
+        {
+            combatLogEntries.push_back("Physical Hit Chance: " + std::to_string(round(pet->getMeleeHitChance() * 100) / 100.0) + "%");
+            combatLogEntries.push_back("Physical Crit Chance: " + std::to_string(round(pet->getMeleeCritChance() * 100) / 100.0) + "%");
+            combatLogEntries.push_back("Glancing Blow Chance: " + std::to_string(round(pet->glancingBlowChance * 100) / 100.0) + "%");
+        }
+        else if (pet->pet == PetName::IMP || pet->pet == PetName::SUCCUBUS)
+        {
+            combatLogEntries.push_back("Spell Hit Chance: " + std::to_string(round(pet->getSpellHitChance() * 100) / 100.0) + "%");
+            combatLogEntries.push_back("Spell Crit Chance: " + std::to_string(round(pet->getSpellCritChance() * 100) / 100.0) + "%");
+        }
+        combatLogEntries.push_back("Damage Modifier: " + std::to_string(round(pet->stats->damageModifier * 100) / 100.0) + "%");
+    }
     combatLogEntries.push_back("---------------- Enemy stats ----------------");
     combatLogEntries.push_back("Level: " + std::to_string(settings->enemyLevel));
     combatLogEntries.push_back("Shadow Resistance: " + std::to_string(settings->enemyShadowResist));
     combatLogEntries.push_back("Fire Resistance: " + std::to_string(settings->enemyFireResist));
-    /*if (this.pet && this.pet.pet != PetName.IMP) {
-      this.combatlog.push('Dodge Chance: ' + this.pet.enemyDodgeChance + '%')
-      this.combatlog.push('Armor: ' + this.enemy.armor)
-      this.combatlog.push('Damage Reduction From Armor: ' + Math.round((1 - this.pet.armorMultiplier) * 10000) / 100 + '%')
-    }*/
+    if (pet != NULL && pet->pet != PetName::IMP)
+    {
+        combatLogEntries.push_back("Dodge Chance: " + std::to_string(pet->enemyDodgeChance) + "%");
+        combatLogEntries.push_back("Armor: " + std::to_string(settings->enemyArmor));
+        combatLogEntries.push_back("Damage Reduction From Armor: " + std::to_string(round((1 - pet->armorMultiplier) * 10000) / 100.0) + "%");
+    }
     combatLogEntries.push_back("---------------------------------------------");
 }
 

@@ -13,6 +13,8 @@ struct CombatLogBreakdown
     double appliedAt;
     double uptime;
     uint32_t count; // same as casts but for aura applications
+    uint32_t dodge;
+    uint32_t glancingBlows;
 
     CombatLogBreakdown(std::string name);
 };

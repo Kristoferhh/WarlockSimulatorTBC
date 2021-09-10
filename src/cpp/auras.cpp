@@ -6,7 +6,9 @@ Auras::Auras(bool felArmor, bool blessingOfKings, bool blessingOfWisdom, bool ju
     , bool innervate, bool curseOfTheElements, bool shadowWeaving, bool improvedScorch, bool misery, bool judgementOfTheCrusader, bool vampiricTouch, bool flaskOfPureDeath, bool elixirOfMajorShadowPower
     , bool elixirOfMajorFirepower, bool greaterArcaneElixir, bool adeptsElixir, bool elixirOfDraenicWisdom, bool elixirOfMajorMageblood, bool superManaPotion, bool destructionPotion, bool brilliantWizardOil
     , bool superiorWizardOil, bool blessedWizardOil, bool demonicRune, bool flameCap, bool rumseyRumBlackLabel, bool kreegsStoutBeatdown, bool blackenedBasilisk, bool skullfishSoup, bool veryBerryCream
-    , bool midsummerSausage, bool bloodthistle)
+    , bool midsummerSausage, bool bloodthistle, bool petBlessingOfKings, bool petBlessingOfWisdom, bool petBlessingOfMight, bool petArcaneIntellect, bool petMarkOfTheWild, bool petPrayerOfFortitude
+    , bool petPrayerOfSpirit, bool petKiblersBits, bool petHeroicPresence, bool petStrengthOfAirTotem, bool petGraceOfAirTotem, bool petBattleShout, bool petTrueshotAura, bool petLeaderOfThePack
+    , bool petUnleashedRage, bool petStaminaScroll, bool petIntellectScroll, bool petStrengthScroll, bool petAgilityScroll, bool petSpiritScroll)
     : felArmor(felArmor), blessingOfKings(blessingOfKings), blessingOfWisdom(blessingOfWisdom), judgementOfWisdom(judgementOfWisdom), manaSpringTotem(manaSpringTotem), wrathOfAirTotem(wrathOfAirTotem)
     , totemOfWrath(totemOfWrath), markOfTheWild(markOfTheWild), arcaneIntellect(arcaneIntellect), prayerOfFortitude(prayerOfFortitude), prayerOfSpirit(prayerOfSpirit), bloodPact(bloodPact)
     , inspiringPresence(inspiringPresence), moonkinAura(moonkinAura), powerInfusion(powerInfusion), powerOfTheGuardianWarlock(powerOfTheGuardianWarlock), powerOfTheGuardianMage(powerOfTheGuardianMage)
@@ -16,5 +18,9 @@ Auras::Auras(bool felArmor, bool blessingOfKings, bool blessingOfWisdom, bool ju
     , elixirOfMajorShadowPower(elixirOfMajorShadowPower), elixirOfMajorFirepower(elixirOfMajorFirepower), greaterArcaneElixir(greaterArcaneElixir), adeptsElixir(adeptsElixir)
     , elixirOfDraenicWisdom(elixirOfDraenicWisdom), elixirOfMajorMageblood(elixirOfMajorMageblood), superManaPotion(superManaPotion), destructionPotion(destructionPotion), brilliantWizardOil(brilliantWizardOil)
     , superiorWizardOil(superiorWizardOil), blessedWizardOil(blessedWizardOil), demonicRune(demonicRune), flameCap(flameCap), rumseyRumBlackLabel(rumseyRumBlackLabel), kreegsStoutBeatdown(kreegsStoutBeatdown)
-    , blackenedBasilisk(blackenedBasilisk), skullfishSoup(skullfishSoup), veryBerryCream(veryBerryCream), midsummerSausage(midsummerSausage), bloodthistle(bloodthistle)
+    , blackenedBasilisk(blackenedBasilisk), skullfishSoup(skullfishSoup), veryBerryCream(veryBerryCream), midsummerSausage(midsummerSausage), bloodthistle(bloodthistle), petBlessingOfKings(petBlessingOfKings)
+    , petBlessingOfWisdom(petBlessingOfWisdom), petBlessingOfMight(petBlessingOfMight), petArcaneIntellect(petArcaneIntellect), petMarkOfTheWild(petMarkOfTheWild), petPrayerOfFortitude(petPrayerOfFortitude)
+    , petPrayerOfSpirit(petPrayerOfSpirit), petKiblersBits(petKiblersBits), petHeroicPresence(petHeroicPresence), petStrengthOfAirTotem(petStrengthOfAirTotem), petGraceOfAirTotem(petGraceOfAirTotem)
+    , petBattleShout(petBattleShout), petTrueshotAura(petTrueshotAura), petLeaderOfThePack(petLeaderOfThePack), petUnleashedRage(petUnleashedRage), petStaminaScroll(petStaminaScroll)
+    , petIntellectScroll(petIntellectScroll), petStrengthScroll(petStrengthScroll), petAgilityScroll(petAgilityScroll), petSpiritScroll(petSpiritScroll)
     {}

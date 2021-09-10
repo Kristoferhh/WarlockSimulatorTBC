@@ -31,6 +31,10 @@ void Simulation::start()
         // Get a random fight length
         int fightLength = randomFightLength(gen);
         player->reset();
+        if (player->pet != NULL)
+        {
+            player->pet->reset();
+        }
         player->iterationDamage = 0;
         player->fightTime = 0;
         if (player->shouldWriteToCombatLog())
@@ -205,6 +209,27 @@ void Simulation::start()
                 }
             }
 
+            // Pet
+            if (player->pet != NULL && player->pet->mode == PetMode::AGGRESSIVE)
+            {
+                if (player->pet->spells->Melee != NULL && player->pet->spells->Melee->ready())
+                {
+                    player->pet->spells->Melee->startCast();
+                }
+                if (player->pet->spells->Cleave != NULL && player->pet->spells->Cleave->ready())
+                {
+                    player->pet->spells->Cleave->startCast();
+                }
+                if (player->pet->spells->LashOfPain != NULL && player->pet->spells->LashOfPain->ready() && (player->settings->usingLashOfPainOnCooldown || (!player->settings->usingCustomIsbUptime && (player->auras->ImprovedShadowBolt == NULL || !player->auras->ImprovedShadowBolt->active))))
+                {
+                    player->pet->spells->LashOfPain->startCast();
+                }
+                if (player->pet->spells->Firebolt != NULL && player->pet->spells->Firebolt->ready())
+                {
+                    player->pet->spells->Firebolt->startCast();
+                }
+            }
+
             passTime();
         }
 
@@ -253,6 +278,22 @@ double Simulation::passTime()
     if (time <= 0) time = player->gcdRemaining;
 
     // Find the lowest time until the next action needs to be taken
+    // Pet
+    if (player->pet != NULL)
+    {
+        if ((player->talents->darkPact > 0 || player->pet->mode == PetMode::AGGRESSIVE) && player->pet->spiritTickTimerRemaining < time) time = player->pet->spiritTickTimerRemaining;
+
+        // Pet's attacks/abilities and such
+        if (player->pet->mode == PetMode::AGGRESSIVE)
+        {
+            if (player->pet->spells->Melee != NULL && player->pet->spells->Melee->cooldownRemaining > 0 && player->pet->spells->Melee->cooldownRemaining < time) time = player->pet->spells->Melee->cooldownRemaining;
+            else if (player->pet->castTimeRemaining > 0 && player->pet->castTimeRemaining < time) time = player->pet->castTimeRemaining;
+            if (player->pet->spells->LashOfPain != NULL && player->pet->spells->LashOfPain->cooldownRemaining > 0 && player->pet->spells->LashOfPain->cooldownRemaining < time) time = player->pet->spells->LashOfPain->cooldownRemaining;
+            else if (player->pet->spells->Cleave != NULL && player->pet->spells->Cleave->cooldownRemaining > 0 && player->pet->spells->Cleave->cooldownRemaining < time) time = player->pet->spells->Cleave->cooldownRemaining;
+            if (player->pet->auras->BlackBook != NULL && player->pet->auras->BlackBook->active && player->pet->auras->BlackBook->durationRemaining < time) time = player->pet->auras->BlackBook->durationRemaining;
+        }
+    }
+
     // Spells
     if (player->spells->CurseOfDoom != NULL && player->spells->CurseOfDoom->cooldownRemaining > 0 && player->spells->CurseOfDoom->cooldownRemaining < time) time = player->spells->CurseOfDoom->cooldownRemaining;
     if (player->spells->Conflagrate != NULL && player->spells->Conflagrate->cooldownRemaining > 0 && player->spells->Conflagrate->cooldownRemaining < time) time = player->spells->Conflagrate->cooldownRemaining;
@@ -354,6 +395,9 @@ double Simulation::passTime()
     // This needs to be the first modified value since the time in combat needs to be updated before spells start dealing damage/auras expiring etc. for the combat logging.
     player->fightTime += time;
     player->castTimeRemaining -= time;
+
+    // Pet
+    if (player->pet != NULL) player->pet->tick(time);
 
     // Auras need to tick before Spells because otherwise you'll, for example, finish casting Corruption and then immediately afterwards, in the same millisecond, immediately tick down the aura
     // This was also causing buffs like e.g. the t4 4pc buffs to expire sooner than they should.

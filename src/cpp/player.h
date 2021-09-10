@@ -16,6 +16,7 @@
 #include "PlayerAuras.h"
 #include "combatLogBreakdown.h"
 #include <random>
+#include "pet.h"
 
 struct Player
 {
@@ -26,6 +27,7 @@ struct Player
   const double healthPerStamina = 10;
   const double critPerInt = 1 / 81.95; // Crit % per point of intellect
   const double baseCritChancePercent = 1.701;
+  Pet* pet;
   Auras* selectedAuras;
   Talents* talents;
   Sets* sets;
