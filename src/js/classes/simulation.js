@@ -509,8 +509,9 @@ class Simulation {
                 }
               }
 
-              // If the sim is choosing the rotation for the player then check now which spell would be the best to cast
-              if (this.player.simChoosingRotation) {
+              // If the sim is choosing the rotation for the player then check now which spell would be the best to cast.
+              // We do another GCD check here, because we might have cast another spell (like curse) since the last check.
+              if (this.player.simChoosingRotation && this.player.gcdRemaining <= 0) {
                 // First index is the spell's varName and second index is the damage
                 let maxDamage = ['', 0]
                 for (const spell in predictedDamageOfSpells) {
