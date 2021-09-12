@@ -62,6 +62,22 @@ void PetSpell::tick(double t)
 
 void PetSpell::startCast()
 {
+    // Error: Starting to cast a spell while casting another spell
+    if (pet->castTimeRemaining > 0)
+    {
+        std::string msg = "Pet attempting to cast " + name + " while pet's cast time remaining is at " + std::to_string(pet->castTimeRemaining) + " sec";
+        std::cout << msg << std::endl;
+        throw std::runtime_error(msg);
+    }
+
+    // Error: Casting a spell while it's on cooldown
+    if (cooldownRemaining > 0)
+    {
+        std::string msg = "Pet attempting to cast " + name + " while it's still on cooldown (" + std::to_string(cooldownRemaining) + " seconds remaining)";
+        std::cout << msg << std::endl;
+        throw std::runtime_error(msg);
+    }
+    
     if (castTime > 0)
     {
         casting = true;
