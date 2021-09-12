@@ -428,7 +428,7 @@ class Simulation {
                     }
                   }
                   // Cast Curse of Agony if CoA is the selected curse or if Curse of Doom is the selected curse and there's less than 60 seconds remaining of the fight
-                  if (this.player.curse && (this.player.auras.curseOfAgony && !this.player.auras.curseOfAgony.active) && timeRemaining > this.player.auras.curseOfAgony.minimumDuration && ((this.player.curse == 'curseOfDoom' && !this.player.auras.curseOfDoom.active && (this.player.spells.curseOfDoom.cooldownRemaining > this.player.auras.curseOfAgony.minimumDuration || timeRemaining < 60)) || (this.player.curse == 'curseOfAgony' && this.player.spells.curseOfAgony.canCast()))) {
+                  if (this.player.curse && this.player.auras.curseOfAgony && !this.player.auras.curseOfAgony.active && this.player.spells.curseOfAgony.canCast() && timeRemaining > this.player.auras.curseOfAgony.minimumDuration && ((this.player.curse == 'curseOfDoom' && !this.player.auras.curseOfDoom.active && (this.player.spells.curseOfDoom.cooldownRemaining > this.player.auras.curseOfAgony.minimumDuration || timeRemaining < 60)) || this.player.curse == 'curseOfAgony')) {
                     if (this.player.simChoosingRotation) {
                       predictedDamageOfSpells.push([this.player.spells.curseOfAgony.varName, this.player.spells.curseOfAgony.predictDamage()])
                     } else if (this.player.spells.curseOfAgony.hasEnoughMana()) {
