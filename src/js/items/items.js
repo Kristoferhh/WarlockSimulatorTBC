@@ -4534,17 +4534,6 @@ const items = {
       source: 'Terokkar Forest Quest',
       phase: 1
     },
-    starkillersBauble: {
-      name: "Starkiller's Bauble",
-      hitRating: 26,
-      onUseSpellPower: 125,
-      duration: 15,
-      cooldown: 90,
-      unique: true,
-      id: 30340,
-      source: 'Netherstorm Quest',
-      phase: 1
-    },
     theRestrainedEssenceOfSapphiron: {
       name: 'The Restrained Essence of Sapphiron',
       spellPower: 40,
