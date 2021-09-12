@@ -14,7 +14,7 @@ Simulation::Simulation(Player* _player, SimulationSettings* simulationSettings)
 void Simulation::start()
 {
     std::cout << settings->randomSeeds[0] << std::endl;
-    std::vector<double> dpsVector; //todo change to array
+    std::vector<double> dpsVector;
     player->totalDuration = 0;
     player->initialize();
     double minDps = 99999;
@@ -114,7 +114,7 @@ void Simulation::start()
                                 selectedSpellHandler(player->spells->CurseOfDoom, predictedDamageOfSpells);
                             }
                             // Cast Curse of Agony if CoA is the selected curse or if Curse of Doom is the selected curse and there's less than 60 seconds remaining of the fight
-                            if (player->curse != "" && player->auras->CurseOfAgony != NULL && !player->auras->CurseOfAgony->active && timeRemaining > player->auras->CurseOfAgony->minimumDuration && ((player->curse == "curseOfDoom" && !player->auras->CurseOfDoom->active && (player->spells->CurseOfDoom->cooldownRemaining > player->auras->CurseOfAgony->minimumDuration || timeRemaining < 60)) || (player->curse == "curseOfAgony" && player->spells->CurseOfAgony->canCast())))
+                            if (player->curse != "" && player->auras->CurseOfAgony != NULL && !player->auras->CurseOfAgony->active && player->spells->CurseOfAgony->canCast() && timeRemaining > player->auras->CurseOfAgony->minimumDuration && ((player->curse == "curseOfDoom" && !player->auras->CurseOfDoom->active && (player->spells->CurseOfDoom->cooldownRemaining > player->auras->CurseOfAgony->minimumDuration || timeRemaining < 60)) || player->curse == "curseOfAgony"))
                             {
                                 selectedSpellHandler(player->spells->CurseOfAgony, predictedDamageOfSpells);
                             }

@@ -66,6 +66,13 @@ void Spell::startCast(double predictedDamage)
 {
     if (onGcd)
     {
+        // Error: Casting a spell while GCD is active
+        if (player->gcdRemaining > 0)
+        {
+            std::string msg = "Attempting to cast " + name + " while player's GCD is at " + std::to_string(player->gcdRemaining) + " seconds remaining";
+            std::cout << msg << std::endl;
+            throw std::runtime_error(msg);
+        }
         player->gcdRemaining = player->getGcdValue(varName);
     }
 
