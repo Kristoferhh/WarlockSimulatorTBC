@@ -125,6 +125,8 @@ function simDPS (items) {
                 const percentUptime = (~~((s.uptime / simulationEnd.totalDuration) * 10000) / 100).toFixed(2)
                 $('#aura-breakdown-table tbody').append("<tr class='spell-damage-information'><td>" + s.name + '</td><td>' + Math.ceil(s.count / simulationEnd.iterationAmount) + "</td><td><meter value='" + percentUptime + "' min='0' max='100'></meter> " + percentUptime + '%</td></tr>')
               }
+
+              $(".breakdown-table").trigger('update')
             }
 
             $('.breakdown-table tbody').trigger('update')

@@ -25,16 +25,6 @@ function median(numbers) {
   return sorted[middle];
 }
 
-function medianOfSortedArrayWithKnownLength(numbers, length) {
-  const middle = Math.floor(length / 2);
-
-  if (length % 2 === 0) {
-    return (numbers[middle - 1] + numbers[middle]) / 2;
-  }
-
-  return numbers[middle];
-}
-
 // formula from https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/ && https://royalgiraffe.github.io/resist-guide
 function getBaseHitChance (playerLevel, enemyLevel) {
   const levelDifference = enemyLevel - playerLevel

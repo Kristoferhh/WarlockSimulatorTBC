@@ -416,7 +416,7 @@ const gems = {
     23108: {
       name: 'Glowing Shadow Draenite',
       stamina: 4,
-      spellPen: 4,
+      spellPower: 4,
       iconName: 'inv_misc_gem_ebondraenite_02',
       phase: 1
     }

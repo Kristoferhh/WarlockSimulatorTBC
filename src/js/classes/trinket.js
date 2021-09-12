@@ -82,6 +82,9 @@ class Trinket {
   }
 
   tick (t) {
+    if (this.cooldownRemaining > 0 && this.cooldownRemaining - t <= 0) {
+      this.player.combatLog(this.name + " off cooldown")
+    }
     this.cooldownRemaining = Math.max(0, this.cooldownRemaining - t)
     this.durationRemaining = Math.max(0, this.durationRemaining - t)
     if (this.active && this.durationRemaining <= 0) {

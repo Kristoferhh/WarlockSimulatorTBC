@@ -22,7 +22,8 @@ const fakeItemIds = {
   elementalistBootsOfShadowWrath: -19,
   elementalistBootsOfFireWrath: -20,
   illidariCloakOfShadowWrath: -21,
-  illidariCloakOfFireWrath: -22
+  illidariCloakOfFireWrath: -22,
+  ravagersCuffsOfShadowWrath: -23
 }
 
 var items = {
@@ -2125,7 +2126,8 @@ var items = {
     ravagersCuffsOfShadowWrath: {
       name: "Ravager's Cuffs of Shadow Wrath",
       shadowPower: 58,
-      id: 30684,
+      displayId: 30684,
+      id: fakeItemIds.ravagersCuffsOfShadowWrath,
       source: 'Karazhan',
       phase: 1
     },
@@ -2976,6 +2978,15 @@ var items = {
       critRating: 11,
       id: 24395,
       source: 'The Blood Furnace',
+      phase: 1
+    },
+    consortiumPrincesWrap: {
+      name: "Consortium Prince's Wrap",
+      spellPower: 30,
+      spellPen: 20,
+      critRating: 22,
+      id: 29328,
+      source: 'Mana Tombs',
       phase: 1
     },
     sashOfArcaneVisions: {
