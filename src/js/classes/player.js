@@ -539,7 +539,9 @@ class Player {
     this.importantAuraCounter = 0
   }
 
-  cast (spell, predictedDamage = 0) {
+  cast(spell, predictedDamage = 0) {
+    if (this.gcdRemaining > 0 && this.spells[spell].onGcd)
+      throw "Attempting to cast a spell (" + spell + ") on GCD with " + this.gcdRemaining + " cooldown remaining."
     this.spells[spell].startCast(predictedDamage)
   }
 
