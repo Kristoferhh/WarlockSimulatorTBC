@@ -22,7 +22,8 @@ const fakeItemIds = {
   elementalistBootsOfShadowWrath: -19,
   elementalistBootsOfFireWrath: -20,
   illidariCloakOfShadowWrath: -21,
-  illidariCloakOfFireWrath: -22
+  illidariCloakOfFireWrath: -22,
+  ravagersCuffsOfShadowWrath: -23
 }
 
 const items = {
@@ -2125,7 +2126,8 @@ const items = {
     ravagersCuffsOfShadowWrath: {
       name: "Ravager's Cuffs of Shadow Wrath",
       shadowPower: 58,
-      id: 30684,
+      displayId: 30684,
+      id: fakeItemIds.ravagersCuffsOfShadowWrath,
       source: 'Karazhan',
       phase: 1
     },

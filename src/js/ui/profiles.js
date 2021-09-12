@@ -1,6 +1,7 @@
 // User clicks on the "Save New Profile" button
 $('#save-new-profile-button').click(function () {
-  const profileName = $("input[name='profileName']").val()
+  // Remove apostrophes from the name to avoid it breaking the json object
+  const profileName = $("input[name='profileName']").val().replaceAll("'", "")
   if (profileName.length <= 0) {
     alert('Missing profile name')
   } else if (profiles[profileName]) {
@@ -37,7 +38,7 @@ $('#delete-profile-button').click(function () {
 
 // User clicks on the "Rename" profile button
 $('#rename-profile-button').click(function () {
-  const newName = prompt('Enter the new name for profile "' + localStorage.selectedProfile + "'")
+  const newName = prompt('Enter the new name for profile "' + localStorage.selectedProfile + "'").replaceAll("'", "")
   if (newName !== null && newName.length > 0) {
     // Create a copy of the profile with the new name
     profiles[newName] = profiles[localStorage.selectedProfile]
