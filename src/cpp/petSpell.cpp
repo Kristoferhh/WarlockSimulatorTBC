@@ -143,7 +143,7 @@ void PetSpell::cast()
         // Check whether the roll is a crit, dodge, miss, glancing, or just a normal hit.
         //todo should maybe give the pet its own random generator object
         int attackRoll = pet->player->getRand();
-        
+
         // Crit
         if (attackRoll <= critChance)
         {
@@ -165,7 +165,11 @@ void PetSpell::cast()
         else if (attackRoll <= missChance)
         {
             pet->player->combatLogBreakdown.at(varName)->misses++;
-            pet->player->combatLog(pet->name + " " + name + " *miss*");
+
+            if (pet->player->shouldWriteToCombatLog())
+            {
+                pet->player->combatLog(pet->name + " " + name + " *miss*");
+            }
             return;
         }
         // Glancing Blow

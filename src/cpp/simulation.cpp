@@ -168,7 +168,7 @@ void Simulation::start()
                         }
 
                         // If the sim is choosing the rotation for the player then check now which spell would be the best to cast
-                        if (player->settings->simChoosingRotation)
+                        if (player->settings->simChoosingRotation && player->gcdRemaining <= 0)
                         {
                             Spell* maxDamageSpell;
                             double maxDamageSpellValue = 0;
