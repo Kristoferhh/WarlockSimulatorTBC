@@ -250,15 +250,15 @@ Player::Player(PlayerSettings* playerSettings)
         if (pet->petType == PetType::MELEE)
         {
             combatLogEntries.push_back("Physical Hit Chance: " + std::to_string(round(pet->getMeleeHitChance() * 100) / 100.0) + "%");
-            combatLogEntries.push_back("Physical Crit Chance: " + std::to_string(round(pet->getMeleeCritChance() * 100) / 100.0) + "%");
+            combatLogEntries.push_back("Physical Crit Chance: " + std::to_string(round(pet->getMeleeCritChance() * 100) / 100.0) + "% (" + truncateTrailingZeros(std::to_string(pet->critSuppression), 2) + "% Crit Suppression Applied)");
             combatLogEntries.push_back("Glancing Blow Chance: " + std::to_string(round(pet->glancingBlowChance * 100) / 100.0) + "%");
         }
-        else if (pet->pet == PetName::IMP || pet->pet == PetName::SUCCUBUS)
+        if (pet->pet == PetName::IMP || pet->pet == PetName::SUCCUBUS)
         {
             combatLogEntries.push_back("Spell Hit Chance: " + std::to_string(round(pet->getSpellHitChance() * 100) / 100.0) + "%");
             combatLogEntries.push_back("Spell Crit Chance: " + std::to_string(round(pet->getSpellCritChance() * 100) / 100.0) + "%");
         }
-        combatLogEntries.push_back("Damage Modifier: " + std::to_string(round(pet->stats->damageModifier * 100) / 100.0) + "%");
+        combatLogEntries.push_back("Damage Modifier: " + std::to_string(round(pet->stats->damageModifier * 100)) + "%");
     }
     combatLogEntries.push_back("---------------- Enemy stats ----------------");
     combatLogEntries.push_back("Level: " + std::to_string(settings->enemyLevel));

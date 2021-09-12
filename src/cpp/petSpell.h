@@ -24,6 +24,7 @@ struct PetSpell
     PetSpell(Pet* pet);
     bool ready();
     void setup();
+    void reset();
     virtual double getBaseDamage();
     double getCastTime();
     virtual double getCooldown();

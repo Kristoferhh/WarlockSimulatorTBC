@@ -46,6 +46,11 @@ double PetSpell::getCooldown()
 
 void PetSpell::tick(double t)
 {
+    if (pet->player->shouldWriteToCombatLog() && cooldownRemaining > 0 && cooldownRemaining - t <= 0)
+    {
+        pet->player->combatLog(pet->name + "'s " + name + " off cooldown");
+    }
+
     cooldownRemaining -= t;
 
     if (casting && pet->castTimeRemaining <= 0)
@@ -73,14 +78,15 @@ void PetSpell::startCast()
     }
 }
 
+void PetSpell::reset()
+{
+    cooldownRemaining = 0;
+    casting = false;
+}
+
 void PetSpell::cast()
 {
     cooldownRemaining = getCooldown();
-
-    if (manaCost > 0)
-    {
-        pet->fiveSecondRuleTimerRemaining = 5;
-    }
 
     std::string combatLogMsg = pet->name;
     if (pet->player->shouldWriteToCombatLog())
@@ -93,9 +99,9 @@ void PetSpell::cast()
         {
             combatLogMsg.append(" casts " + name);
 
-            if (varName == "melee")
+            if (this == pet->spells->Melee)
             {
-                combatLogMsg.append(" - Attack Speed: " + truncateTrailingZeros(std::to_string(pet->spells->Melee->getCooldown()), 2) + " (" + std::to_string(round(pet->stats->hastePercent * 10000) / 10000.0) + "% haste at a base attack speed of " + truncateTrailingZeros(std::to_string(pet->spells->Melee->cooldown), 2));
+                combatLogMsg.append(" - Attack Speed: " + truncateTrailingZeros(std::to_string(pet->spells->Melee->getCooldown()), 2) + " (" + std::to_string(round(pet->stats->hastePercent * 10000) / 10000.0) + "% haste at a base attack speed of " + truncateTrailingZeros(std::to_string(pet->spells->Melee->cooldown), 2) + ")");
             }
         }
     }
@@ -103,6 +109,7 @@ void PetSpell::cast()
     if (manaCost > 0 && !pet->player->settings->infinitePetMana)
     {
         pet->stats->mana -= manaCost;
+        pet->fiveSecondRuleTimerRemaining = 5;
 
         if (pet->player->shouldWriteToCombatLog())
         {
@@ -135,7 +142,8 @@ void PetSpell::cast()
 
         // Check whether the roll is a crit, dodge, miss, glancing, or just a normal hit.
         //todo should maybe give the pet its own random generator object
-        int attackRoll = pet->player->getRand() * pet->player->critChanceMultiplier;
+        int attackRoll = pet->player->getRand();
+        
         // Crit
         if (attackRoll <= critChance)
         {

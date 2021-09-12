@@ -322,11 +322,13 @@ void Pet::reset()
     fiveSecondRuleTimerRemaining = 5;
     spiritTickTimerRemaining = 2;
     castTimeRemaining = 0;
-    // Reset melee swing timer
-    if (petType == PetType::MELEE)
-    {
-        spells->Melee->cooldownRemaining = 0;
-    }
+
+    // Reset spells
+    if (spells->Melee != NULL) spells->Melee->reset();
+    if (spells->Firebolt != NULL) spells->Firebolt->reset();
+    if (spells->LashOfPain != NULL) spells->LashOfPain->reset();
+    if (spells->Cleave != NULL) spells->Cleave->reset();
+
     // End Auras
     if (auras->BlackBook != NULL && auras->BlackBook->active) auras->BlackBook->fade(true);
     if (auras->DemonicFrenzy != NULL && auras->DemonicFrenzy->active) auras->DemonicFrenzy->fade(true);
@@ -336,7 +338,7 @@ void Pet::reset()
 
 double Pet::getMeleeCritChance()
 {
-    return stats->spellCritChance - critSuppression;
+    return stats->meleeCritChance - critSuppression;
 }
 
 double Pet::getSpellCritChance()
@@ -348,11 +350,11 @@ bool Pet::isCrit(AttackType type)
 {
     if (type == AttackType::PHYSICAL)
     {
-        return player->getRand() * player->critChanceMultiplier <= getMeleeCritChance() * player->critChanceMultiplier;
+        return player->getRand() <= getMeleeCritChance() * player->critChanceMultiplier;
     }
     else if (type == AttackType::MAGICAL)
     {
-        return player->getRand() * player->critChanceMultiplier <= getSpellCritChance() * player->critChanceMultiplier;
+        return player->getRand() <= getSpellCritChance() * player->critChanceMultiplier;
     }
 
     return false;
@@ -365,18 +367,18 @@ double Pet::getMeleeHitChance()
 
 double Pet::getSpellHitChance()
 {
-    return stats->spellHitChance;
+    return std::min(99.0, stats->spellHitChance);
 }
 
 bool Pet::isHit(AttackType type)
 {
     if (type == AttackType::PHYSICAL)
     {
-        return player->getRand() * player->critChanceMultiplier <= getMeleeHitChance() * player->critChanceMultiplier;
+        return player->getRand() <= getMeleeHitChance() * player->critChanceMultiplier;
     }
     else
     {
-        return player->getRand() * player->critChanceMultiplier <= std::min(99.0 * player->critChanceMultiplier, getSpellHitChance() * player->critChanceMultiplier);
+        return player->getRand() <= getSpellHitChance() * player->critChanceMultiplier;
     }
 }
 
