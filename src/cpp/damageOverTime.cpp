@@ -114,7 +114,7 @@ double DamageOverTime::getModifier()
     return dmgModifier;
 }
 
-double* DamageOverTime::getConstantDamage()
+std::vector<double> DamageOverTime::getConstantDamage()
 {
     double spellPower = this->spellPower;
     // If the DoT isn't currently active then this.spellPower will be 0, so use the player's current Spell Power
@@ -133,13 +133,13 @@ double* DamageOverTime::getConstantDamage()
     dmg += spellPower * coefficient;
     dmg *= modifier * partialResistMultiplier;
 
-    return new double[4] {dmg, spellPower, modifier, partialResistMultiplier};
+    return std::vector<double> { dmg, spellPower, modifier, partialResistMultiplier };
 }
 
 // Predicts how much damage the dot will do over its full duration
 double DamageOverTime::predictDamage()
 {
-    double* constantDamage = getConstantDamage();
+    std::vector<double> constantDamage = getConstantDamage();
     double dmg = constantDamage[0];
     // If it's Corruption or Immolate then divide by the original duration (18s and 15s) and multiply by the durationTotal property
     // This is just for the t4 4pc bonus since their durationTotal property is increased by 3 seconds to include another tick
@@ -150,7 +150,6 @@ double DamageOverTime::predictDamage()
         dmg *= duration;
     }
     
-    delete[] constantDamage;
     return dmg;
 }
 
@@ -160,7 +159,7 @@ void DamageOverTime::tick(double t)
 
     if (tickTimerRemaining <= 0)
     {
-        double* constantDamage = getConstantDamage();
+        std::vector<double> constantDamage = getConstantDamage();
         double dmg = constantDamage[0] / (originalDuration / tickTimerTotal);
         double spellPower = constantDamage[1];
         double modifier = constantDamage[2];
@@ -206,8 +205,6 @@ void DamageOverTime::tick(double t)
         {
             fade();
         }
-
-        delete[] constantDamage;
     }
 }
 

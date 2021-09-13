@@ -3,7 +3,7 @@
 #include "common.h"
 #include <iomanip>
 
-Spell::Spell(Player* player, Aura* aura, DamageOverTime* dot) : player(player), auraEffect(aura), dotEffect(dot)
+Spell::Spell(Player* player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot) : player(player), auraEffect(aura), dotEffect(dot)
 {
     modifier = 1;
     coefficient = 0;
@@ -222,7 +222,7 @@ double Spell::getModifier()
 
 void Spell::damage(bool isCrit)
 {
-    double* constantDamage = getConstantDamage();
+    std::vector<double> constantDamage = getConstantDamage();
     double baseDamage = constantDamage[0];
     double totalDamage = constantDamage[1];
     double dmgModifier = constantDamage[2];
@@ -280,13 +280,11 @@ void Spell::damage(bool isCrit)
             player->auras->Immolate->t5BonusModifier *= 1.1;
         }
     }
-
-    delete[] constantDamage;
 }
 
 // Returns the non-RNG damage of the spell (basically just the base damage + spell power + damage modifiers, no crit/miss etc.)
 // todo: investigate this noRng variable
-double* Spell::getConstantDamage(bool noRng)
+std::vector<double> Spell::getConstantDamage(bool noRng)
 {
     double totalDmg = player->settings->randomizeValues && minDmg > 0 && maxDmg > 0 && !noRng ? random(minDmg, maxDmg) : dmg;
     double baseDamage = totalDmg;
@@ -310,7 +308,7 @@ double* Spell::getConstantDamage(bool noRng)
     totalDmg *= dmgModifier;
     totalDmg *= partialResistMultiplier;
 
-    return new double[5] {baseDamage, totalDmg  , dmgModifier, partialResistMultiplier, spellPower};
+    return std::vector<double> {baseDamage, totalDmg  , dmgModifier, partialResistMultiplier, spellPower};
 }
 
 double Spell::getCritMultiplier(double critMult)
@@ -336,7 +334,7 @@ double Spell::getCritMultiplier(double critMult)
 
 double Spell::predictDamage()
 {
-    double* constantDamage = getConstantDamage();
+    std::vector<double> constantDamage = getConstantDamage();
     double normalDamage = constantDamage[1];
     double critDamage = 0;
     double critChance = 0;
@@ -374,7 +372,6 @@ double Spell::predictDamage()
         }
     }
 
-    delete[] constantDamage;
     return (estimatedDamage * hitChance) / std::max(player->getGcdValue(varName), getCastTime());
 }
 
@@ -781,7 +778,7 @@ void DarkPact::cast()
 
 }
 
-Corruption::Corruption(Player* player, Aura* aura, DamageOverTime* dot) : Spell(player, aura, dot)
+Corruption::Corruption(Player* player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot) : Spell(player, aura, dot)
 {
     name = "Corruption";
     manaCost = 370;
@@ -792,7 +789,7 @@ Corruption::Corruption(Player* player, Aura* aura, DamageOverTime* dot) : Spell(
     setup();
 }
 
-UnstableAffliction::UnstableAffliction(Player* player, Aura* aura, DamageOverTime* dot) : Spell(player, aura, dot)
+UnstableAffliction::UnstableAffliction(Player* player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot) : Spell(player, aura, dot)
 {
     name = "Unstable Affliction";
     manaCost = 400;
@@ -803,7 +800,7 @@ UnstableAffliction::UnstableAffliction(Player* player, Aura* aura, DamageOverTim
     setup();
 }
 
-SiphonLife::SiphonLife(Player* player, Aura* aura, DamageOverTime* dot) : Spell(player, aura, dot)
+SiphonLife::SiphonLife(Player* player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot) : Spell(player, aura, dot)
 {
     name = "Siphon Life";
     manaCost = 410;
@@ -813,7 +810,7 @@ SiphonLife::SiphonLife(Player* player, Aura* aura, DamageOverTime* dot) : Spell(
     setup();
 }
 
-Immolate::Immolate(Player* player, Aura* aura, DamageOverTime* dot) : Spell(player, aura, dot)
+Immolate::Immolate(Player* player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot) : Spell(player, aura, dot)
 {
     name = "Immolate";
     manaCost = 445 * (1 - 0.01 * player->talents->cataclysm);
@@ -839,7 +836,7 @@ double Immolate::getModifier()
     return modifier;
 }
 
-CurseOfAgony::CurseOfAgony(Player* player, Aura* aura, DamageOverTime* dot) : Spell(player, aura, dot)
+CurseOfAgony::CurseOfAgony(Player* player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot) : Spell(player, aura, dot)
 {
     name = "Curse of Agony";
     manaCost = 265;
@@ -849,7 +846,7 @@ CurseOfAgony::CurseOfAgony(Player* player, Aura* aura, DamageOverTime* dot) : Sp
     setup();
 }
 
-CurseOfTheElements::CurseOfTheElements(Player* player, Aura* aura) : Spell(player, aura)
+CurseOfTheElements::CurseOfTheElements(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Curse of the Elements";
     manaCost = 260;
@@ -858,7 +855,7 @@ CurseOfTheElements::CurseOfTheElements(Player* player, Aura* aura) : Spell(playe
     setup();
 }
 
-CurseOfRecklessness::CurseOfRecklessness(Player* player, Aura* aura) : Spell(player, aura)
+CurseOfRecklessness::CurseOfRecklessness(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Curse of Recklessness";
     manaCost = 160;
@@ -867,7 +864,7 @@ CurseOfRecklessness::CurseOfRecklessness(Player* player, Aura* aura) : Spell(pla
     setup();
 }
 
-CurseOfDoom::CurseOfDoom(Player* player, Aura* aura, DamageOverTime* dot) : Spell(player, aura, dot)
+CurseOfDoom::CurseOfDoom(Player* player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot) : Spell(player, aura, dot)
 {
     name = "Curse of Doom";
     manaCost = 380;
@@ -902,7 +899,7 @@ void Conflagrate::startCast()
     }*/
 }
 
-DestructionPotion::DestructionPotion(Player* player, Aura* aura) : Spell(player, aura)
+DestructionPotion::DestructionPotion(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Destruction Potion";
     cooldown = 120;
@@ -966,7 +963,7 @@ void DemonicRune::cast()
     }
 }
 
-FlameCap::FlameCap(Player* player, Aura* aura) : Spell(player, aura)
+FlameCap::FlameCap(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Flame Cap";
     cooldown = 180;
@@ -976,7 +973,7 @@ FlameCap::FlameCap(Player* player, Aura* aura) : Spell(player, aura)
     setup();
 }
 
-BloodFury::BloodFury(Player* player, Aura* aura) : Spell(player, aura)
+BloodFury::BloodFury(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Blood Fury";
     cooldown = 120;
@@ -985,7 +982,7 @@ BloodFury::BloodFury(Player* player, Aura* aura) : Spell(player, aura)
     setup();
 }
 
-Bloodlust::Bloodlust(Player* player, Aura* aura) : Spell(player, aura)
+Bloodlust::Bloodlust(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Bloodlust";
     cooldown = 600;
@@ -996,7 +993,7 @@ Bloodlust::Bloodlust(Player* player, Aura* aura) : Spell(player, aura)
     setup();
 }
 
-DrumsOfBattle::DrumsOfBattle(Player* player, Aura* aura) : Spell(player, aura)
+DrumsOfBattle::DrumsOfBattle(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Drums of Battle";
     cooldown = 120;
@@ -1012,7 +1009,7 @@ bool DrumsOfBattle::ready()
     return cooldownRemaining <= 0;
 }
 
-DrumsOfWar::DrumsOfWar(Player* player, Aura* aura) : Spell(player, aura)
+DrumsOfWar::DrumsOfWar(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Drums of War";
     cooldown = 120;
@@ -1028,7 +1025,7 @@ bool DrumsOfWar::ready()
     return cooldownRemaining <= 0;
 }
 
-DrumsOfRestoration::DrumsOfRestoration(Player* player, Aura* aura) : Spell(player, aura)
+DrumsOfRestoration::DrumsOfRestoration(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Drums of Restoration";
     cooldown = 120;
@@ -1085,7 +1082,7 @@ void MarkOfDefiance::cast()
     }
 }
 
-TheLightningCapacitor::TheLightningCapacitor(Player* player, Aura* aura) : Spell(player, aura)
+TheLightningCapacitor::TheLightningCapacitor(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "The Lightning Capacitor";
     cooldown = 2.5;
@@ -1111,7 +1108,7 @@ void TheLightningCapacitor::startCast(double predictedDamage)
     }
 }
 
-BladeOfWizardry::BladeOfWizardry(Player* player, Aura* aura) : Spell(player, aura)
+BladeOfWizardry::BladeOfWizardry(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Blade of Wizardry";
     cooldown = 50;
@@ -1122,7 +1119,7 @@ BladeOfWizardry::BladeOfWizardry(Player* player, Aura* aura) : Spell(player, aur
     setup();
 }
 
-ShatteredSunPendantOfAcumen::ShatteredSunPendantOfAcumen(Player* player, Aura* aura) : Spell(player, aura)
+ShatteredSunPendantOfAcumen::ShatteredSunPendantOfAcumen(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Shattered Sun Pendant of Acumen";
     cooldown = 45;
@@ -1143,7 +1140,7 @@ ShatteredSunPendantOfAcumen::ShatteredSunPendantOfAcumen(Player* player, Aura* a
     setup();
 }
 
-RobeOfTheElderScribes::RobeOfTheElderScribes(Player* player, Aura* aura) : Spell(player, aura)
+RobeOfTheElderScribes::RobeOfTheElderScribes(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Robe of the Elder Scribes";
     cooldown = 50;
@@ -1155,7 +1152,7 @@ RobeOfTheElderScribes::RobeOfTheElderScribes(Player* player, Aura* aura) : Spell
     setup();
 }
 
-QuagmirransEye::QuagmirransEye(Player* player, Aura* aura) : Spell(player, aura)
+QuagmirransEye::QuagmirransEye(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Quagmirran's Eye";
     cooldown = 45;
@@ -1166,7 +1163,7 @@ QuagmirransEye::QuagmirransEye(Player* player, Aura* aura) : Spell(player, aura)
     setup();
 }
 
-ShiffarsNexusHorn::ShiffarsNexusHorn(Player* player, Aura* aura) : Spell(player, aura)
+ShiffarsNexusHorn::ShiffarsNexusHorn(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Shiffar's Nexus-Horn";
     cooldown = 45;
@@ -1177,7 +1174,7 @@ ShiffarsNexusHorn::ShiffarsNexusHorn(Player* player, Aura* aura) : Spell(player,
     setup();
 }
 
-SextantOfUnstableCurrents::SextantOfUnstableCurrents(Player* player, Aura* aura) : Spell(player, aura)
+SextantOfUnstableCurrents::SextantOfUnstableCurrents(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Sextant of Unstable Currents";
     cooldown = 45;
@@ -1188,7 +1185,7 @@ SextantOfUnstableCurrents::SextantOfUnstableCurrents(Player* player, Aura* aura)
     setup();
 }
 
-BandOfTheEternalSage::BandOfTheEternalSage(Player* player, Aura* aura) : Spell(player, aura)
+BandOfTheEternalSage::BandOfTheEternalSage(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Band of the Eternal Sage";
     cooldown = 60;
@@ -1199,7 +1196,7 @@ BandOfTheEternalSage::BandOfTheEternalSage(Player* player, Aura* aura) : Spell(p
     setup();
 }
 
-MysticalSkyfireDiamond::MysticalSkyfireDiamond(Player* player, Aura* aura) : Spell(player, aura)
+MysticalSkyfireDiamond::MysticalSkyfireDiamond(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Mystical Skyfire Diamond";
     cooldown = 35;
@@ -1236,7 +1233,7 @@ void InsightfulEarthstormDiamond::cast()
     }
 }
 
-AmplifyCurse::AmplifyCurse(Player* player, Aura* aura) : Spell(player, aura)
+AmplifyCurse::AmplifyCurse(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Amplify Curse";
     cooldown = 180;
@@ -1245,7 +1242,7 @@ AmplifyCurse::AmplifyCurse(Player* player, Aura* aura) : Spell(player, aura)
     setup();
 }
 
-PowerInfusion::PowerInfusion(Player* player, Aura* aura) : Spell(player, aura)
+PowerInfusion::PowerInfusion(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Power Infusion";
     cooldown = 180;
@@ -1255,7 +1252,7 @@ PowerInfusion::PowerInfusion(Player* player, Aura* aura) : Spell(player, aura)
     setup();
 }
 
-Innervate::Innervate(Player* player, Aura* aura) : Spell(player, aura)
+Innervate::Innervate(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Innervate";
     cooldown = 360;

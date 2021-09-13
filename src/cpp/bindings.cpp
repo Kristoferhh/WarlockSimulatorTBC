@@ -259,18 +259,6 @@ void freePlayerSettings(PlayerSettings* settings)
 EMSCRIPTEN_KEEPALIVE
 void freePlayer(Player* player)
 {
-    delete player->spells;
-    delete player->auras;
-    if (player->pet != NULL)
-    {
-        delete player->pet->spells;
-        delete player->pet->auras;
-        delete player->pet->baseStats;
-        delete player->pet->buffStats;
-        delete player->pet->debuffStats;
-        delete player->pet->stats;
-        delete player->pet;
-    }
     delete player;
 }
 

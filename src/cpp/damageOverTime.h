@@ -33,7 +33,7 @@ struct DamageOverTime
     virtual double getModifier();
     void fade(bool endOfIteration = false);
     void tick(double time);
-    double* getConstantDamage();
+    std::vector<double> getConstantDamage();
     double predictDamage();
 };
 

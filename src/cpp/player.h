@@ -27,20 +27,20 @@ struct Player
   const double healthPerStamina = 10;
   const double critPerInt = 1 / 81.95; // Crit % per point of intellect
   const double baseCritChancePercent = 1.701;
-  Pet* pet;
+  std::unique_ptr<Pet> pet;
   Auras* selectedAuras;
   Talents* talents;
   Sets* sets;
   CharacterStats* stats;
   Items* items;
   PlayerSettings* settings;
-  PlayerSpells* spells;
-  PlayerAuras* auras;
+  std::unique_ptr<PlayerSpells> spells;
+  std::unique_ptr<PlayerAuras> auras;
   std::string filler;
   std::string curse;
-  std::vector<Trinket*> trinkets;
+  std::vector<std::unique_ptr<Trinket>> trinkets;
   std::vector<std::string> combatLogEntries;
-  std::map<std::string, CombatLogBreakdown*> combatLogBreakdown;
+  std::map<std::string, std::unique_ptr<CombatLogBreakdown>> combatLogBreakdown;
   uint32_t iterationDamage;
   int critChanceMultiplier = 1000;
   std::mt19937 gen;
@@ -61,9 +61,9 @@ struct Player
   double critMultiplier;
 
   Player(PlayerSettings* settings);
-  Aura* getCurseAura();
-  Spell* getCurseSpell();
-  Spell* getFiller();
+  std::shared_ptr<Aura> getCurseAura();
+  std::shared_ptr<Spell> getCurseSpell();
+  std::shared_ptr<Spell> getFiller();
   void initialize();
   void reset();
   void throwError(std::string error);

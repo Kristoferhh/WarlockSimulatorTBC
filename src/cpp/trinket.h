@@ -7,7 +7,7 @@ struct Player;
 struct Trinket
 {
     Player* player;
-    AuraStats* stats;
+    std::unique_ptr<AuraStats> stats;
     int duration;
     double durationRemaining;
     int cooldown;

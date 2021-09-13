@@ -111,7 +111,7 @@ void PetSpell::cast()
         {
             combatLogMsg.append(" casts " + name);
 
-            if (this == pet->spells->Melee)
+            if (pet->spells->Melee != NULL && varName == pet->spells->Melee->varName)
             {
                 combatLogMsg.append(" - Attack Speed: " + truncateTrailingZeros(std::to_string(pet->spells->Melee->getCooldown()), 2) + " (" + std::to_string(round(pet->stats->hastePercent * 10000) / 10000.0) + "% haste at a base attack speed of " + truncateTrailingZeros(std::to_string(pet->spells->Melee->cooldown), 2) + ")");
             }

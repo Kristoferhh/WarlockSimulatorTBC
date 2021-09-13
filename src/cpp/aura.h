@@ -7,7 +7,7 @@ struct Player;
 struct Aura
 {
     Player* player;
-    AuraStats* stats;
+    std::unique_ptr<AuraStats> stats;
     std::string name;
     std::string varName;
     int duration;
