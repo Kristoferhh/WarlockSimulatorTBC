@@ -150,7 +150,7 @@ double DamageOverTime::predictDamage()
         dmg *= duration;
     }
     
-    delete constantDamage;
+    delete[] constantDamage;
     return dmg;
 }
 
@@ -207,7 +207,7 @@ void DamageOverTime::tick(double t)
             fade();
         }
 
-        delete constantDamage;
+        delete[] constantDamage;
     }
 }
 

@@ -215,9 +215,9 @@ Simulation* allocSim(Player* player, SimulationSettings* simulationSettings)
 }
 
 EMSCRIPTEN_KEEPALIVE
-void freeUnsignedInt(unsigned int* arr)
+void freeUnsignedIntArr(unsigned int* arr)
 {
-    delete arr;
+    delete[] arr;
 }
 
 EMSCRIPTEN_KEEPALIVE

@@ -281,7 +281,7 @@ void Spell::damage(bool isCrit)
         }
     }
 
-    delete constantDamage;
+    delete[] constantDamage;
 }
 
 // Returns the non-RNG damage of the spell (basically just the base damage + spell power + damage modifiers, no crit/miss etc.)
@@ -374,7 +374,7 @@ double Spell::predictDamage()
         }
     }
 
-    delete constantDamage;
+    delete[] constantDamage;
     return (estimatedDamage * hitChance) / std::max(player->getGcdValue(varName), getCastTime());
 }
 

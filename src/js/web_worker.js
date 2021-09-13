@@ -199,7 +199,7 @@ onmessage = function (e) {
     let simSettings = module._allocSimSettings(e.data.simulation.iterations, e.data.simulation.minTime, e.data.simulation.maxTime, randomSeeds)
     let sim = module._allocSim(player, simSettings)
     module._startSimulation(sim)
-    module._freeUnsignedInt(randomSeeds)
+    module._freeUnsignedIntArr(randomSeeds)
     module._freeItems(equippedItems)
     module._freeAuras(auras)
     module._freeTalents(talents)

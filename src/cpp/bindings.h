@@ -49,7 +49,7 @@ extern "C"
     Player* allocPlayer(PlayerSettings* settings);
     SimulationSettings* allocSimSettings(int iterations, int minTime, int maxTime, unsigned int* randomSeeds);
     Simulation* allocSim(Player* player, SimulationSettings* simulationSettings);
-    void freeUnsignedInt(unsigned int* num);
+    void freeUnsignedIntArr(unsigned int* arr);
     void freeItems(Items* items);
     void freeAuras(Auras* auras);
     void freeTalents(Talents* talents);

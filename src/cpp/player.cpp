@@ -796,7 +796,7 @@ void Player::throwError(std::string error)
 
 bool Player::shouldWriteToCombatLog()
 {
-    return iteration == 1;
+    return iteration == 10;
 }
 
 void Player::combatLog(const std::string &entry)
