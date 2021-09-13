@@ -69,9 +69,7 @@ void Spell::startCast(double predictedDamage)
         // Error: Casting a spell while GCD is active
         if (player->gcdRemaining > 0)
         {
-            std::string msg = "Attempting to cast " + name + " while player's GCD is at " + std::to_string(player->gcdRemaining) + " seconds remaining";
-            std::cout << msg << std::endl;
-            throw std::runtime_error(msg);
+            player->throwError("Attempting to cast " + name + " while player's GCD is at " + std::to_string(player->gcdRemaining) + " seconds remaining");
         }
         player->gcdRemaining = player->getGcdValue(varName);
     }
@@ -79,17 +77,13 @@ void Spell::startCast(double predictedDamage)
     // Error: Starting to cast a spell while casting another spell
     if (player->castTimeRemaining > 0 && !isNonWarlockAbility)
     {
-        std::string msg = "Attempting to cast " + name + " while player's cast time remaining is at " + std::to_string(player->castTimeRemaining) + " sec";
-        std::cout << msg << std::endl;
-        throw std::runtime_error(msg);
+        player->throwError("Attempting to cast " + name + " while player's cast time remaining is at " + std::to_string(player->castTimeRemaining) + " sec");
     }
 
     // Error: Casting a spell while it's on cooldown
     if (cooldown > 0 && cooldownRemaining > 0)
     {
-        std::string msg = "Attempting to cast " + name + " while it's still on cooldown (" + std::to_string(cooldownRemaining) + " seconds remaining)";
-        std::cout << msg << std::endl;
-        throw std::runtime_error(msg);
+        player->throwError("Attempting to cast " + name + " while it's still on cooldown (" + std::to_string(cooldownRemaining) + " seconds remaining)");
     }
 
     std::string combatLogMsg = "";

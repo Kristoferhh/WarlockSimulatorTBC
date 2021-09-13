@@ -66,6 +66,7 @@ struct Player
   Spell* getFiller();
   void initialize();
   void reset();
+  void throwError(std::string error);
   double getGcdValue(std::string varName);
   double getSpellPower(SpellSchool school = SpellSchool::NO_SCHOOL);
   double getHastePercent();

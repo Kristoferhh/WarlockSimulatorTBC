@@ -199,9 +199,7 @@ void Pet::calculateStatsFromAuras()
     }
     if (player->selectedAuras->petStrengthOfEarthTotem)
     {
-        std::cout << buffStats->strength << std::endl;
         buffStats->strength += 86;
-        std::cout << buffStats->strength << std::endl;
     }
     if (player->selectedAuras->petGraceOfAirTotem)
     {

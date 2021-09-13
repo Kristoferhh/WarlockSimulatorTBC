@@ -262,14 +262,11 @@ void Simulation::start()
     // Send the combat log breakdown info
     for (std::map<std::string, CombatLogBreakdown*>::iterator it = player->combatLogBreakdown.begin(); it != player->combatLogBreakdown.end(); it++)
     {
-        postCombatLogBreakdown(it->second->name.c_str(), it->second->casts, it->second->crits, it->second->misses, it->second->manaGain, it->second->damage, it->second->count, it->second->uptime);
+        postCombatLogBreakdown(it->second->name.c_str(), it->second->casts, it->second->crits, it->second->misses, it->second->manaGain, it->second->damage,
+                                it->second->count, it->second->uptime, it->second->dodge, it->second->glancingBlows);
         delete it->second;
     }
     simulationEnd(median(dpsVector), minDps, maxDps, elapsedTime, player->settings->itemId, settings->iterations, player->totalDuration, player->totalManaRegenerated);
-
-    // Free spells and auras
-    delete player->spells;
-    delete player->auras;
 }
 
 double Simulation::passTime()
@@ -543,7 +540,7 @@ double Simulation::passTime()
     if (time <= 0)
     {
         std::cout << "Iteration " << std::to_string(player->iteration) << " fightTime: " << std::to_string(player->fightTime) << " passTime() returned " << std::to_string(time) << std::endl;
-        throw std::runtime_error("The simulation got stuck in an endless loop. If you'd like to help with fixing this bug then please export your current settings and send it to Kristofer#8003 on Discord.");
+        player->throwError("The simulation got stuck in an endless loop. If you'd like to help with fixing this bug then please export your current settings and send it to Kristofer#8003 on Discord.");
     }
 
     return time;

@@ -11,7 +11,21 @@
 #define EMSCRIPTEN_KEEPALIVE
 #endif
 
-void postCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, uint32_t misses, uint32_t manaGain, uint32_t damage, uint32_t count, double uptime)
+void errorCallback(const char* errorMsg)
+{
+#ifdef EMSCRIPTEN
+    EM_ASM({
+        postMessage({
+            event: "errorCallback",
+            data: {
+                errorMsg: UTF8ToString($0)
+            }
+        })
+    }, errorMsg);
+#endif
+}
+
+void postCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, uint32_t misses, uint32_t manaGain, uint32_t damage, uint32_t count, double uptime, uint32_t dodges, uint32_t glancingBlows)
 {
 #ifdef EMSCRIPTEN
     EM_ASM({
@@ -25,10 +39,12 @@ void postCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, ui
                 manaGain: $4,
                 damage: $5,
                 count: $6,
-                uptime: $7
+                uptime: $7,
+                dodges: $8,
+                glancingBlows: $9
             }
         })
-    }, name, casts, crits, misses, manaGain, damage, count, uptime);
+    }, name, casts, crits, misses, manaGain, damage, count, uptime, dodges, glancingBlows);
 #endif
 }
 
@@ -243,6 +259,18 @@ void freePlayerSettings(PlayerSettings* settings)
 EMSCRIPTEN_KEEPALIVE
 void freePlayer(Player* player)
 {
+    delete player->spells;
+    delete player->auras;
+    if (player->pet != NULL)
+    {
+        delete player->pet->spells;
+        delete player->pet->auras;
+        delete player->pet->baseStats;
+        delete player->pet->buffStats;
+        delete player->pet->debuffStats;
+        delete player->pet->stats;
+        delete player->pet;
+    }
     delete player;
 }
 

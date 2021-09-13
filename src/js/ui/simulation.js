@@ -33,6 +33,7 @@ function simDPS (items) {
   let simIndex = 0
   let combatLog = []
   let combatLogBreakdownArr = []
+  let playerHasMeleePet = false
 
   if (items.length > 1) {
     $('.item-dps').text('')
@@ -42,6 +43,10 @@ function simDPS (items) {
     multiSimInfo.push([items[i], 0])
 
     simulations.push(new SimWorker(
+      // Error callback
+      (errorCallback) => {
+        alert("Error: " + errorCallback.errorMsg + "\nPost in #tbc-sim-report on the TBC Warlock Discord or contact Kristofer#8003 on Discord.")
+      },
       // Combat Log Update callback
       (combatLogUpdate) => {
         combatLog.push(combatLogUpdate.combatLogEntry);
@@ -49,6 +54,10 @@ function simDPS (items) {
       // Combat Log Breakdown callback
       (combatLogBreakdown) => {
         combatLogBreakdownArr.push(combatLogBreakdown)
+
+        if (combatLogBreakdown.name == "Melee" && combatLogBreakdown.damage > 0) {
+          playerHasMeleePet = true
+        }
       },
       // Simulation End callback
       (simulationEnd) => {
@@ -105,10 +114,10 @@ function simDPS (items) {
                   const percentDamage = (~~((s.damage / totalSimDamage) * 10000) / 100).toFixed(2)
                   var tableRow = "<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterationAmount) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ('(' + ~~(s.dotDamage / s.casts) + ')') : '') + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td>"
 
-                  // Only add the dodge and glancing cells if the player has a pet and it's not an imp
-                  /*if (simulationEnd.damageBreakdown.melee) {
+                  // Only add the dodge and glancing cells if the player has a melee pet
+                  if (playerHasMeleePet) {
                     tableRow += "<td class='number'>" + (~~(((s.dodges / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.glancingBlows / s.casts) * 100) * 100) / 100).toFixed(2) + "</td>"
-                  }*/
+                  }
                   tableRow += "<td class='number'>" + (Math.round((s.damage / simulationEnd.totalDuration) * 100) / 100 || 0) + '</td></tr>'
                   $('#damage-breakdown-table tbody').append(tableRow)
                 }
@@ -132,7 +141,7 @@ function simDPS (items) {
             $('.breakdown-table tbody').trigger('update')
             $('.breakdown-section').css('display', 'inline-block')
             // Hide the Glancing and Dodge columns if not using a melee pet
-            if (false && simulationEnd.damageBreakdown.melee) {
+            if (playerHasMeleePet) {
               $('#damage-breakdown-dodge').show()
               $('#damage-breakdown-glancing').show()
             } else {

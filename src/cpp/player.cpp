@@ -3,6 +3,7 @@
 #include "common.h"
 #include "emscripten.h"
 #include "damageOverTime.h"
+#include "bindings.h"
 
 Player::Player(PlayerSettings* playerSettings)
     : selectedAuras(playerSettings->auras), talents(playerSettings->talents), sets(playerSettings->sets), stats(playerSettings->stats), items(playerSettings->items), settings(playerSettings)
@@ -243,7 +244,7 @@ Player::Player(PlayerSettings* playerSettings)
         combatLogEntries.push_back("Strength: " + truncateTrailingZeros(std::to_string(round((pet->baseStats->strength + pet->buffStats->strength + pet->stats->strength) * pet->stats->strengthModifier))));
         combatLogEntries.push_back("Agility: " + truncateTrailingZeros(std::to_string(round(pet->stats->agility * pet->stats->agilityModifier))));
         combatLogEntries.push_back("Spirit: " + truncateTrailingZeros(std::to_string(round((pet->baseStats->spirit + pet->buffStats->spirit + pet->stats->spirit) * pet->stats->spiritModifier))));
-        combatLogEntries.push_back("Attack Power: " + truncateTrailingZeros(std::to_string(round(pet->stats->attackPower * pet->stats->attackPowerModifier))));
+        combatLogEntries.push_back("Attack Power: " + truncateTrailingZeros(std::to_string(round(pet->stats->attackPower))) + " (without attack power % modifiers)");
         combatLogEntries.push_back("Spell Power: " + truncateTrailingZeros(std::to_string(pet->stats->spellPower)));
         combatLogEntries.push_back("Mana: " + truncateTrailingZeros(std::to_string(pet->stats->maxMana)));
         combatLogEntries.push_back("MP5: " + std::to_string(pet->stats->mp5));
@@ -252,6 +253,7 @@ Player::Player(PlayerSettings* playerSettings)
             combatLogEntries.push_back("Physical Hit Chance: " + truncateTrailingZeros(std::to_string(round(pet->getMeleeHitChance() * 100) / 100.0), 2) + "%");
             combatLogEntries.push_back("Physical Crit Chance: " + truncateTrailingZeros(std::to_string(round(pet->getMeleeCritChance() * 100) / 100.0), 2) + "% (" + truncateTrailingZeros(std::to_string(pet->critSuppression), 2) + "% Crit Suppression Applied)");
             combatLogEntries.push_back("Glancing Blow Chance: " + truncateTrailingZeros(std::to_string(round(pet->glancingBlowChance * 100) / 100.0), 2) + "%");
+            combatLogEntries.push_back("Attack Power Modifier: " + truncateTrailingZeros(std::to_string(round(pet->stats->attackPowerModifier * 10000) / 100.0), 2) + "%");
         }
         if (pet->pet == PetName::IMP || pet->pet == PetName::SUCCUBUS)
         {
@@ -784,6 +786,12 @@ double Player::getPartialResistMultiplier(SpellSchool school)
     }
 
     return 1;
+}
+
+void Player::throwError(std::string error)
+{
+    errorCallback(error.c_str());
+    throw std::runtime_error(error);
 }
 
 bool Player::shouldWriteToCombatLog()
