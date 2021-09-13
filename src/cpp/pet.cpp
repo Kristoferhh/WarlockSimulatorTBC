@@ -106,7 +106,9 @@ void Pet::calculateStatsFromAuras()
     if (player->selectedAuras->petMarkOfTheWild)
     {
         buffStats->stamina += 14;
-        buffStats->intellectModifier += 14;
+        buffStats->intellect += 14;
+        buffStats->strength += 14;
+        buffStats->agility += 14;
         stats->spirit += 14;
     }
     //todo improved imp
@@ -116,7 +118,7 @@ void Pet::calculateStatsFromAuras()
     }
     if (player->selectedAuras->petArcaneIntellect)
     {
-        buffStats->intellectModifier += 40;
+        buffStats->intellect += 40;
     }
     if (player->selectedAuras->petPrayerOfFortitude)
     {
@@ -195,9 +197,11 @@ void Pet::calculateStatsFromAuras()
     {
         buffStats->attackPower += 220;
     }
-    if (player->selectedAuras->petStrengthOfAirTotem)
+    if (player->selectedAuras->petStrengthOfEarthTotem)
     {
+        std::cout << buffStats->strength << std::endl;
         buffStats->strength += 86;
+        std::cout << buffStats->strength << std::endl;
     }
     if (player->selectedAuras->petGraceOfAirTotem)
     {

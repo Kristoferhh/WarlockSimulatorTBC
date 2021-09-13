@@ -168,11 +168,12 @@ onmessage = function (e) {
     let auras = module._allocAuras(a.felArmor, a.blessingOfKings, a.blessingOfWisdom, a.judgementOfWisdom, a.manaSpringTotem, a.wrathOfAirTotem, a.totemOfWrath, a.markOfTheWild, a.arcaneIntellect
       , a.prayerOfFortitude, a.prayerOfSpirit, a.bloodPact, a.inspiringPresence, a.moonkinAura, a.powerInfusion, a.powerOfTheGuardianWarlock, a.powerOfTheGuardianMage, a.eyeOfTheNight, a.chainOfTheTwilightOwl
       , a.jadePendantOfBlasting, a.idolOfTheRavenGoddess, a.drumsOfBattle, a.drumsOfWar, a.drumsOfRestoration, a.bloodlust, a.ferociousInspiration, a.innervate, a.curseOfTheElements, a.shadowWeaving
-      , a.improvedScorch, a.misery, a.judgementOfTheCrusader, a.vampiricTouch, a.flaskOfPureDeath, a.elixirOfMajorShadowPower, a.elixirOfMajorFirepower, a.greaterArcaneElixir, a.adeptsElixir
-      , a.elixirOfDraenicWisdom, a.elixirOfMajorMageblood, a.superManaPotion, a.destructionPotion, a.brilliantWizardOil, a.superiorWizardOil, a.blessedWizardOil, a.demonicRune, a.flameCap, a.rumseyRumBlackLabel
-      , a.kreegsStoutBeatdown, a.blackenedBasilisk, a.skullfishSoup, a.veryBerryCream, a.midsummerSausage, a.bloodthistle, a.blessingOfKingsPet, a.blessingOfWisdomPet, a.blessingOfMight, a.arcaneIntellectPet
-      , a.markOfTheWildPet, a.prayerOfFortitudePet, a.prayerOfSpiritPet, a.kiblersBits, a.heroicPresence, a.strengthOfAirTotem, a.graceOfAirTotem, a.battleShout, a.trueshotAura, a.leaderOfThePack
-      , a.unleashedRage, a.scrollOfStaminaV, a.scrollOfIntellectV, a.scrollOfStrengthV, a.scrollOfAgilityV, a.scrollOfSpiritV)
+      , a.improvedScorch, a.misery, a.judgementOfTheCrusader, a.vampiricTouch, a.faerieFire, a.sunderArmor, a.exposeArmor, a.curseOfRecklessness, a.bloodFrenzy, a.exposeWeakness, a.annihilator, a.improvedHuntersMark
+      , a.flaskOfPureDeath, a.elixirOfMajorShadowPower, a.elixirOfMajorFirepower, a.greaterArcaneElixir, a.adeptsElixir, a.elixirOfDraenicWisdom, a.elixirOfMajorMageblood, a.superManaPotion, a.destructionPotion
+      , a.brilliantWizardOil, a.superiorWizardOil, a.blessedWizardOil, a.demonicRune, a.flameCap, a.rumseyRumBlackLabel, a.kreegsStoutBeatdown, a.blackenedBasilisk, a.skullfishSoup, a.veryBerryCream
+      , a.midsummerSausage, a.bloodthistle, a.blessingOfKingsPet, a.blessingOfWisdomPet, a.blessingOfMight, a.arcaneIntellectPet, a.markOfTheWildPet, a.prayerOfFortitudePet, a.prayerOfSpiritPet, a.kiblersBits
+      , a.heroicPresence, a.strengthOfEarthTotem, a.graceOfAirTotem, a.battleShout, a.trueshotAura, a.leaderOfThePack, a.unleashedRage, a.scrollOfStaminaV, a.scrollOfIntellectV, a.scrollOfStrengthV
+      , a.scrollOfAgilityV, a.scrollOfSpiritV)
     // Talents
     let talents = module._allocTalents(t.suppression, t.improvedCorruption, t.improvedLifeTap, t.improvedCurseOfAgony, t.amplifyCurse, t.nightfall, t.empoweredCorruption, t.siphonLife, t.shadowMastery
       , t.contagion, t.darkPact, t.unstableAffliction, t.improvedImp, t.demonicEmbrace, t.felIntellect, t.felStamina, t.improvedSuccubus, t.demonicAegis, t.unholyPower, t.demonicSacrifice, t.manaFeed

@@ -85,7 +85,7 @@ void Spell::startCast(double predictedDamage)
     }
 
     // Error: Casting a spell while it's on cooldown
-    if (cooldownRemaining > 0)
+    if (cooldown > 0 && cooldownRemaining > 0)
     {
         std::string msg = "Attempting to cast " + name + " while it's still on cooldown (" + std::to_string(cooldownRemaining) + " seconds remaining)";
         std::cout << msg << std::endl;
