@@ -81,7 +81,7 @@ void Simulation::start()
                         double timeRemaining = fightLength - player->fightTime;
 
                         // Map of spells with their predicted damage as the value. This is used by the sim to determine what the best spell to cast is.
-                        std::map<Spell*, double> predictedDamageOfSpells;
+                        std::map<std::shared_ptr<Spell>, double> predictedDamageOfSpells;
 
                         // If the sim is choosing the rotation for the user then predict the damage of the three filler spells if they're available (maybe just skip Searing Pain to save time, there's no way it will ever be the best spell to cast)
                         if (player->settings->simChoosingRotation)
@@ -170,10 +170,10 @@ void Simulation::start()
                         // If the sim is choosing the rotation for the player then check now which spell would be the best to cast
                         if (player->settings->simChoosingRotation && player->gcdRemaining <= 0)
                         {
-                            Spell* maxDamageSpell;
+                            std::shared_ptr<Spell> maxDamageSpell;
                             double maxDamageSpellValue = 0;
 
-                            for (std::map<Spell*, double>::iterator it = predictedDamageOfSpells.begin(); it != predictedDamageOfSpells.end(); it++)
+                            for (std::map<std::shared_ptr<Spell>, double>::iterator it = predictedDamageOfSpells.begin(); it != predictedDamageOfSpells.end(); it++)
                             {
                                 if (it->second > maxDamageSpellValue)
                                 {
@@ -260,11 +260,10 @@ void Simulation::start()
         combatLogUpdate(value.c_str());
     }
     // Send the combat log breakdown info
-    for (std::map<std::string, CombatLogBreakdown*>::iterator it = player->combatLogBreakdown.begin(); it != player->combatLogBreakdown.end(); it++)
+    for (std::map<std::string, std::unique_ptr<CombatLogBreakdown>>::iterator it = player->combatLogBreakdown.begin(); it != player->combatLogBreakdown.end(); it++)
     {
         postCombatLogBreakdown(it->second->name.c_str(), it->second->casts, it->second->crits, it->second->misses, it->second->manaGain, it->second->damage,
                                 it->second->count, it->second->uptime, it->second->dodge, it->second->glancingBlows);
-        delete it->second;
     }
     simulationEnd(median(dpsVector), minDps, maxDps, elapsedTime, player->settings->itemId, settings->iterations, player->totalDuration, player->totalManaRegenerated);
 }
@@ -318,15 +317,15 @@ double Simulation::passTime()
     if (player->spells->ShiffarsNexusHorn != NULL && player->spells->ShiffarsNexusHorn->cooldownRemaining > 0 && player->spells->ShiffarsNexusHorn->cooldownRemaining < time) time = player->spells->ShiffarsNexusHorn->cooldownRemaining;
     if (player->spells->SextantOfUnstableCurrents != NULL && player->spells->SextantOfUnstableCurrents->cooldownRemaining > 0 && player->spells->SextantOfUnstableCurrents->cooldownRemaining < time) time = player->spells->SextantOfUnstableCurrents->cooldownRemaining;
     if (player->spells->BandOfTheEternalSage != NULL && player->spells->BandOfTheEternalSage->cooldownRemaining > 0 && player->spells->BandOfTheEternalSage->cooldownRemaining < time) time = player->spells->BandOfTheEternalSage->cooldownRemaining;
-    for (std::vector<Spell*>::iterator it = player->spells->PowerInfusion.begin(); it != player->spells->PowerInfusion.end(); it++)
+    for (std::vector<std::shared_ptr<Spell>>::iterator it = player->spells->PowerInfusion.begin(); it != player->spells->PowerInfusion.end(); it++)
     {
         if ((*it)->cooldownRemaining > 0 && (*it)->cooldownRemaining < time) time = (*it)->cooldownRemaining;
     }
-    for (std::vector<Spell*>::iterator it = player->spells->Bloodlust.begin(); it != player->spells->Bloodlust.end(); it++)
+    for (std::vector<std::shared_ptr<Spell>>::iterator it = player->spells->Bloodlust.begin(); it != player->spells->Bloodlust.end(); it++)
     {
         if ((*it)->cooldownRemaining > 0 && (*it)->cooldownRemaining < time) time = (*it)->cooldownRemaining;
     }
-    for (std::vector<Spell*>::iterator it = player->spells->Innervate.begin(); it != player->spells->Innervate.end(); it++)
+    for (std::vector<std::shared_ptr<Spell>>::iterator it = player->spells->Innervate.begin(); it != player->spells->Innervate.end(); it++)
     {
         if ((*it)->cooldownRemaining > 0 && (*it)->cooldownRemaining < time) time = (*it)->cooldownRemaining;
     }
@@ -376,15 +375,15 @@ double Simulation::passTime()
     }
 
     // Trinkets
-    for (int i = 0; i < player->trinkets.size(); i++)
+    for (auto& trinketPtr : player->trinkets)
     {
-        if (player->trinkets[i]->active && player->trinkets[i]->durationRemaining < time)
+        if (trinketPtr->active && trinketPtr->durationRemaining < time)
         {
-            time = player->trinkets[i]->durationRemaining;
+            time = trinketPtr->durationRemaining;
         }
-        if (player->trinkets[i]->cooldownRemaining > 0 && player->trinkets[i]->cooldownRemaining < time)
+        if (trinketPtr->cooldownRemaining > 0 && trinketPtr->cooldownRemaining < time)
         {
-            time = player->trinkets[i]->cooldownRemaining;
+            time = trinketPtr->cooldownRemaining;
         }
     }
 
@@ -471,15 +470,15 @@ double Simulation::passTime()
     if (player->spells->ShiffarsNexusHorn != NULL && (player->spells->ShiffarsNexusHorn->cooldownRemaining > 0 || player->spells->ShiffarsNexusHorn->casting)) player->spells->ShiffarsNexusHorn->tick(time);
     if (player->spells->SextantOfUnstableCurrents != NULL && (player->spells->SextantOfUnstableCurrents->cooldownRemaining > 0 || player->spells->SextantOfUnstableCurrents->casting)) player->spells->SextantOfUnstableCurrents->tick(time);
     if (player->spells->BandOfTheEternalSage != NULL && (player->spells->BandOfTheEternalSage->cooldownRemaining > 0 || player->spells->BandOfTheEternalSage->casting)) player->spells->BandOfTheEternalSage->tick(time);
-    for (std::vector<Spell*>::iterator it = player->spells->PowerInfusion.begin(); it != player->spells->PowerInfusion.end(); it++)
+    for (std::vector<std::shared_ptr<Spell>>::iterator it = player->spells->PowerInfusion.begin(); it != player->spells->PowerInfusion.end(); it++)
     {
         if ((*it)->cooldownRemaining > 0) (*it)->tick(time);
     }
-    for (std::vector<Spell*>::iterator it = player->spells->Bloodlust.begin(); it != player->spells->Bloodlust.end(); it++)
+    for (std::vector<std::shared_ptr<Spell>>::iterator it = player->spells->Bloodlust.begin(); it != player->spells->Bloodlust.end(); it++)
     {
         if ((*it)->cooldownRemaining > 0) (*it)->tick(time);
     }
-    for (std::vector<Spell*>::iterator it = player->spells->Innervate.begin(); it != player->spells->Innervate.end(); it++)
+    for (std::vector<std::shared_ptr<Spell>>::iterator it = player->spells->Innervate.begin(); it != player->spells->Innervate.end(); it++)
     {
         if ((*it)->cooldownRemaining > 0) (*it)->tick(time);
     }
@@ -547,7 +546,7 @@ double Simulation::passTime()
 }
 
 // Handle the logic for when a spell is selected to be cast
-void Simulation::selectedSpellHandler(Spell* spell, std::map<Spell*, double>& predictedDamageOfSpells)
+void Simulation::selectedSpellHandler(std::shared_ptr<Spell> spell, std::map<std::shared_ptr<Spell>, double>& predictedDamageOfSpells)
 {
     // If the sim is choosing the rotation for the player then predict the damage of the spell and put it in the map
     if (player->settings->simChoosingRotation)

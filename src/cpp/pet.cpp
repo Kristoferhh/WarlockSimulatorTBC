@@ -3,12 +3,12 @@
 
 Pet::Pet(Player* player) : player(player)
 {
-    spells = new PetSpells();
-    auras = new PetAuras();
-    baseStats = new PetStats();
-    buffStats = new PetStats();
-    debuffStats = new PetStats();
-    stats = new PetStats(player);
+    spells = std::make_unique<PetSpells>();
+    auras = std::make_unique<PetAuras>();
+    baseStats = std::make_unique<PetStats>();
+    buffStats = std::make_unique<PetStats>();
+    debuffStats = std::make_unique<PetStats>();
+    stats = std::make_unique<PetStats>(player);
     enemyDodgeChance = 6.5;
     castTimeRemaining = 0;
     fiveSecondRuleTimerRemaining = 5;
@@ -24,19 +24,19 @@ void Pet::initialize()
 {
     if (pet == PetName::IMP)
     {
-        spells->Firebolt = new ImpFirebolt(this);
+        spells->Firebolt = std::make_unique<ImpFirebolt>(this);
     }
     else
     {
-        spells->Melee = new Melee(this);
+        spells->Melee = std::make_unique<Melee>(this);
         
         if (pet == PetName::SUCCUBUS)
         {
-            spells->LashOfPain = new SuccubusLashOfPain(this);
+            spells->LashOfPain = std::make_unique<SuccubusLashOfPain>(this);
         }
         else if (pet == PetName::FELGUARD)
         {
-            spells->Cleave = new FelguardCleave(this);
+            spells->Cleave = std::make_unique<FelguardCleave>(this);
         }
     }
 }

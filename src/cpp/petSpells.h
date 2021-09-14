@@ -4,8 +4,8 @@
 
 struct PetSpells
 {
-    PetSpell* Melee;
-    PetSpell* Firebolt;
-    PetSpell* LashOfPain;
-    PetSpell* Cleave;
+    std::unique_ptr<PetSpell> Melee;
+    std::unique_ptr<PetSpell> Firebolt;
+    std::unique_ptr<PetSpell> LashOfPain;
+    std::unique_ptr<PetSpell> Cleave;
 };

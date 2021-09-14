@@ -10,12 +10,12 @@ struct Player;
 struct Pet
 {
     Player* player;
-    PetSpells* spells;
-    PetAuras* auras;
-    PetStats* baseStats;
-    PetStats* buffStats; // Certain stats from buffs need to be separated from the main stat so we can re-calculate the pet's stats in calculateStatsFromPlayer().
-    PetStats* debuffStats;
-    PetStats* stats;
+    std::unique_ptr<PetSpells> spells;
+    std::unique_ptr<PetAuras> auras;
+    std::unique_ptr<PetStats> baseStats;
+    std::unique_ptr<PetStats> buffStats; // Certain stats from buffs need to be separated from the main stat so we can re-calculate the pet's stats in calculateStatsFromPlayer().
+    std::unique_ptr<PetStats> debuffStats;
+    std::unique_ptr<PetStats> stats;
     PetName pet;
     PetMode mode;
     PetType petType;

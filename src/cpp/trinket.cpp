@@ -118,7 +118,7 @@ RestrainedEssenceOfSapphiron::RestrainedEssenceOfSapphiron(Player* player) : Tri
     name = "Restrained Essence of Sapphiron";
     cooldown = 120;
     duration = 20;
-    Trinket::stats = new AuraStats(130, 0, 0, 0, 0, 0);
+    Trinket::stats = std::make_unique<AuraStats>(130, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -127,7 +127,7 @@ ShiftingNaaruSliver::ShiftingNaaruSliver(Player* player) : Trinket(player)
     name = "Shifting Naaru Sliver";
     cooldown = 90;
     duration = 15;
-    Trinket::stats = new AuraStats(320, 0, 0, 0, 0, 0);
+    Trinket::stats = std::make_unique<AuraStats>(320, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -136,7 +136,7 @@ SkullOfGuldan::SkullOfGuldan(Player* player) : Trinket(player)
     name = "Skull of Gul'dan";
     cooldown = 120;
     duration = 20;
-    Trinket::stats = new AuraStats(0, 0, 0, 175, 0, 0);
+    Trinket::stats = std::make_unique<AuraStats>(0, 0, 0, 175, 0, 0);
     setup();
 }
 
@@ -145,7 +145,7 @@ HexShrunkenHead::HexShrunkenHead(Player* player) : Trinket(player)
     name = "Hex Shrunken Head";
     cooldown = 120;
     duration = 20;
-    Trinket::stats = new AuraStats(211, 0, 0, 0, 0, 0);
+    Trinket::stats = std::make_unique<AuraStats>(211, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -154,7 +154,7 @@ IconOfTheSilverCrescent::IconOfTheSilverCrescent(Player* player) : Trinket(playe
     name = "Icon of the Silver Crescent";
     cooldown = 120;
     duration = 20;
-    Trinket::stats = new AuraStats(155, 0, 0, 0, 0, 0);
+    Trinket::stats = std::make_unique<AuraStats>(155, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -163,7 +163,7 @@ ScryersBloodgem::ScryersBloodgem(Player* player) : Trinket(player)
     name = "Scryer's Bloodgem";
     cooldown = 90;
     duration = 15;
-    Trinket::stats = new AuraStats(150, 0, 0, 0, 0, 0);
+    Trinket::stats = std::make_unique<AuraStats>(150, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -172,7 +172,7 @@ AncientCrystalTalisman::AncientCrystalTalisman(Player* player) : Trinket(player)
     name = "Ancient Crystal Talisman";
     cooldown = 120;
     duration = 20;
-    Trinket::stats = new AuraStats(104, 0, 0, 0, 0, 0);
+    Trinket::stats = std::make_unique<AuraStats>(104, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -181,7 +181,7 @@ ArcanistsStone::ArcanistsStone(Player* player) : Trinket(player)
     name = "Arcanist's Stone";
     cooldown = 120;
     duration = 20;
-    Trinket::stats = new AuraStats(167, 0, 0, 0, 0, 0);
+    Trinket::stats = std::make_unique<AuraStats>(167, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -190,7 +190,7 @@ TerokkarTabletOfVim::TerokkarTabletOfVim(Player* player) : Trinket(player)
     name = "Terokkar Table of Vim";
     cooldown = 90;
     duration = 15;
-    Trinket::stats = new AuraStats(84, 0, 0, 0, 0, 0);
+    Trinket::stats = std::make_unique<AuraStats>(84, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -199,7 +199,7 @@ XirisGift::XirisGift(Player* player) : Trinket(player)
     name = "Xi'ri's Gift";
     cooldown = 90;
     duration = 15;
-    Trinket::stats = new AuraStats(150, 0, 0, 0, 0, 0);
+    Trinket::stats = std::make_unique<AuraStats>(150, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -208,7 +208,7 @@ VengeanceOfTheIllidari::VengeanceOfTheIllidari(Player* player) : Trinket(player)
     name = "Vengeance of the Illidari";
     cooldown = 90;
     duration = 15;
-    Trinket::stats = new AuraStats(120, 0, 0, 0, 0, 0);
+    Trinket::stats = std::make_unique<AuraStats>(120, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -217,7 +217,7 @@ FigurineLivingRubySerpent::FigurineLivingRubySerpent(Player* player) : Trinket(p
     name = "Figurine: Living Ruby Serpent";
     cooldown = 300;
     duration = 20;
-    Trinket::stats = new AuraStats(150, 0, 0, 0, 0, 0);
+    Trinket::stats = std::make_unique<AuraStats>(150, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -227,7 +227,7 @@ EssenceOfTheMartyr::EssenceOfTheMartyr(Player* player) : Trinket(player)
     cooldown = 120;
     duration = 20;
     sharesCooldown = false;
-    Trinket::stats = new AuraStats(99, 0, 0, 0, 0, 0);
+    Trinket::stats = std::make_unique<AuraStats>(99, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -236,6 +236,6 @@ StarkillersBauble::StarkillersBauble(Player* player) : Trinket(player)
     name = "Starkiller's Bauble";
     cooldown = 90;
     duration = 15;
-    Trinket::stats = new AuraStats(125, 0, 0, 0, 0, 0);
+    Trinket::stats = std::make_unique<AuraStats>(125, 0, 0, 0, 0, 0);
     setup();
 }

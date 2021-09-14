@@ -287,7 +287,7 @@ FlameshadowAura::FlameshadowAura(Player* player) : Aura(player)
     name = "Flameshadow";
     duration = 15;
     procChance = 5;
-    Aura::stats = new AuraStats(0, 135, 0, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(0, 135, 0, 0, 0, 0);
     setup();
 }
 
@@ -296,7 +296,7 @@ ShadowflameAura::ShadowflameAura(Player* player) : Aura(player)
     name = "Shadowflame";
     duration = 15;
     procChance = 5;
-    Aura::stats = new AuraStats(0, 0, 135, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(0, 0, 135, 0, 0, 0);
     setup();
 }
 
@@ -305,7 +305,7 @@ SpellstrikeAura::SpellstrikeAura(Player* player) : Aura(player)
     name = "Spellstrike";
     duration = 10;
     procChance = 5;
-    Aura::stats = new AuraStats(92, 0, 0, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(92, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -313,7 +313,7 @@ PowerInfusionAura::PowerInfusionAura(Player* player) : Aura(player)
 {
     name = "Power Infusion";
     duration = 15;
-    Aura::stats = new AuraStats(0, 0, 0, 0, 20, 0.8);
+    Aura::stats = std::make_unique<AuraStats>(0, 0, 0, 0, 20, 0.8);
     setup();
 }
 
@@ -321,7 +321,7 @@ EyeOfMagtheridonAura::EyeOfMagtheridonAura(Player* player) : Aura(player)
 {
     name = "Eye of Magtheridon";
     duration = 10;
-    Aura::stats = new AuraStats(170, 0, 0, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(170, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -329,7 +329,7 @@ SextantOfUnstableCurrentsAura::SextantOfUnstableCurrentsAura(Player* player) : A
 {
     name = "Sextant of Unstable Currents";
     duration = 15;
-    Aura::stats = new AuraStats(190, 0, 0, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(190, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -337,7 +337,7 @@ QuagmirransEyeAura::QuagmirransEyeAura(Player* player) : Aura(player)
 {
     name = "Quagmirran's Eye";
     duration = 6;
-    Aura::stats = new AuraStats(0, 0, 0, 320, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(0, 0, 0, 320, 0, 0);
     setup();  
 }
 
@@ -345,7 +345,7 @@ ShiffarsNexusHornAura::ShiffarsNexusHornAura(Player* player) : Aura(player)
 {
     name = "Shiffar's Nexus-Horn";
     duration = 10;
-    Aura::stats = new AuraStats(225, 0, 0, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(225, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -354,7 +354,7 @@ ManaEtched4SetAura::ManaEtched4SetAura(Player* player) : Aura(player)
     name = "Mana-Etched 4-Set Bonus";
     duration = 15;
     procChance = 2;
-    Aura::stats = new AuraStats(110, 0, 0, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(110, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -413,7 +413,7 @@ FlameCapAura::FlameCapAura(Player* player) : Aura(player)
 {
     name = "Flame Cap";
     duration = 60;
-    Aura::stats = new AuraStats(0, 0, 80, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(0, 0, 80, 0, 0, 0);
     setup();
 }
 
@@ -421,7 +421,7 @@ BloodFuryAura::BloodFuryAura(Player* player) : Aura(player)
 {
     name = "Blood Fury";
     duration = 15;
-    Aura::stats = new AuraStats(140, 0, 0, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(140, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -430,7 +430,7 @@ BloodlustAura::BloodlustAura(Player* player) : Aura(player)
     name = "Bloodlust";
     duration = 40;
     groupWide = true;
-    Aura::stats = new AuraStats(0, 0, 0, 0, 30, 0);
+    Aura::stats = std::make_unique<AuraStats>(0, 0, 0, 0, 30, 0);
     setup();
 }
 
@@ -439,7 +439,7 @@ DrumsOfBattleAura::DrumsOfBattleAura(Player* player) : Aura(player)
     name = "Drums of Battle";
     duration = 30;
     groupWide = true;
-    Aura::stats = new AuraStats(0, 0, 0, 80, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(0, 0, 0, 80, 0, 0);
     setup();
 }
 
@@ -448,7 +448,7 @@ DrumsOfWarAura::DrumsOfWarAura(Player* player) : Aura(player)
     name = "Drums of War";
     duration = 30;
     groupWide = true;
-    Aura::stats = new AuraStats(30, 0, 0, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(30, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -502,7 +502,7 @@ AshtongueTalismanOfShadowsAura::AshtongueTalismanOfShadowsAura(Player* player) :
     name = "Ashtongue Talisman of Shadows";
     duration = 5;
     procChance = 20;
-    Aura::stats = new AuraStats(220, 0, 0, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(220, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -589,7 +589,7 @@ BandOfTheEternalSageAura::BandOfTheEternalSageAura(Player* player) : Aura(player
 {
     name = "Band of the Eternal Sage";
     duration = 10;
-    Aura::stats = new AuraStats(95, 0, 0, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(95, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -598,7 +598,7 @@ BladeOfWizardryAura::BladeOfWizardryAura(Player* player) : Aura(player)
     name = "Blade of Wizardry";
     duration = 6;
     procChance = 15;
-    Aura::stats = new AuraStats(0, 0, 0, 280, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(0, 0, 0, 280, 0, 0);
     setup();
 }
 
@@ -606,7 +606,7 @@ ShatteredSunPendantOfAcumenAura::ShatteredSunPendantOfAcumenAura(Player* player)
 {
     name = "Shattered Sun Pendant of Acumen (Aldor)";
     duration = 10;
-    Aura::stats = new AuraStats(120, 0, 0, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(120, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -614,7 +614,7 @@ RobeOfTheElderScribesAura::RobeOfTheElderScribesAura(Player* player) : Aura(play
 {
     name = "Robe of the Elder Scribes";
     duration = 10;
-    Aura::stats = new AuraStats(130, 0, 0, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(130, 0, 0, 0, 0, 0);
     setup();
 }
 
@@ -622,7 +622,7 @@ MysticalSkyfireDiamondAura::MysticalSkyfireDiamondAura(Player* player) : Aura(pl
 {
     name = "Mystical Skyfire Diamond";
     duration = 4;
-    Aura::stats = new AuraStats(0, 0, 0, 320, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(0, 0, 0, 320, 0, 0);
     setup();
 }
 
@@ -638,7 +638,7 @@ WrathOfCenariusAura::WrathOfCenariusAura(Player* player) : Aura(player)
     name = "Wrath of Cenarius";
     duration = 10;
     procChance = 5;
-    Aura::stats = new AuraStats(132, 0, 0, 0, 0, 0);
+    Aura::stats = std::make_unique<AuraStats>(132, 0, 0, 0, 0, 0);
     setup();
 }
 

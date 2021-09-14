@@ -4,6 +4,6 @@
 
 struct PetAuras
 {
-    PetAura* DemonicFrenzy;
-    PetAura* BlackBook;
+    std::unique_ptr<PetAura> DemonicFrenzy;
+    std::unique_ptr<PetAura> BlackBook;
 };
