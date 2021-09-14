@@ -455,7 +455,7 @@ void Spell::onHitProcs()
         player->auras->ManaEtched4Set->apply();
     }
     // Mark of Defiance
-    if (player->spells->MarkOfDefiance != NULL && player->getRand() <= player->spells->MarkOfDefiance->procChance * player->critChanceMultiplier)
+    if (player->spells->MarkOfDefiance != NULL && player->spells->MarkOfDefiance->ready() && player->getRand() <= player->spells->MarkOfDefiance->procChance * player->critChanceMultiplier)
     {
         player->spells->MarkOfDefiance->startCast();
     }
@@ -1101,9 +1101,9 @@ void TheLightningCapacitor::startCast(double predictedDamage)
         player->auras->TheLightningCapacitor->apply();
         if (player->auras->TheLightningCapacitor->stacks == 3)
         {
+            Spell::startCast();
             cooldownRemaining = cooldown;
             player->auras->TheLightningCapacitor->fade();
-            Spell::startCast();
         }
     }
 }
