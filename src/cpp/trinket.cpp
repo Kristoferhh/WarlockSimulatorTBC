@@ -24,10 +24,9 @@ void Trinket::reset()
 
 void Trinket::setup()
 {
-    varName = camelCase(name);
-    if (player->combatLogBreakdown.count(varName) == 0)
+    if (player->combatLogBreakdown.count(name) == 0)
     {
-        player->combatLogBreakdown.insert(std::make_pair(varName, new CombatLogBreakdown(name)));
+        player->combatLogBreakdown.insert(std::make_pair(name, new CombatLogBreakdown(name)));
     }
 }
 
@@ -39,8 +38,8 @@ void Trinket::use()
         std::string msg = name + " used";
         player->combatLog(msg);
     }
-    player->combatLogBreakdown.at(varName)->appliedAt = player->fightTime;
-    player->combatLogBreakdown.at(varName)->count++;
+    player->combatLogBreakdown.at(name)->appliedAt = player->fightTime;
+    player->combatLogBreakdown.at(name)->count++;
 
     if (duration > 0)
     {
@@ -94,8 +93,8 @@ void Trinket::fade(bool endOfIteration)
     }*/
 
     active = false;
-    double auraUptime = player->fightTime - player->combatLogBreakdown.at(varName)->appliedAt;
-    player->combatLogBreakdown.at(varName)->uptime += auraUptime;
+    double auraUptime = player->fightTime - player->combatLogBreakdown.at(name)->appliedAt;
+    player->combatLogBreakdown.at(name)->uptime += auraUptime;
 }
 
 void Trinket::tick(double t)

@@ -101,6 +101,7 @@ function simDPS (items) {
         localStorage.savedItemDps = JSON.stringify(savedItemDps)
 
         if (simulationsFinished === itemAmount) {
+          console.log(combatLogBreakdownArr)
           let totalSimDuration = (performance.now() - startTime) / 1000
           $('#sim-length-result').text(Math.round(totalSimDuration * 10000) / 10000 + 's')
           // Remove the background coloring (progress bar)
@@ -115,7 +116,7 @@ function simDPS (items) {
 
               // Damage
               if (s.casts > 0) {
-                if (spellDamageDict[s.name] > 0) {
+                if (spellDamageDict[s.name] > 0 || s.misses > 0 || s.crits > 0 || s.glancingBlows > 0 || s.dodges > 0) {
                   const percentDamage = (~~((spellDamageDict[s.name] / totalDamageDone) * 10000) / 100).toFixed(2)
                   var tableRow = "<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterationAmount) + "</td><td class='number'>" + ~~(spellDamageDict[s.name] / s.casts) + (s.dotDamage ? ('(' + ~~(s.dotDamage / s.casts) + ')') : '') + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td>"
 

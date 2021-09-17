@@ -17,10 +17,9 @@ PetSpell::PetSpell(Pet* pet) : pet(pet)
 
 void PetSpell::setup()
 {
-    varName = camelCase(name);
-    if (pet->player->combatLogBreakdown.count(varName) == 0)
+    if (pet->player->combatLogBreakdown.count(name) == 0)
     {
-        pet->player->combatLogBreakdown.insert(std::make_pair(varName, new CombatLogBreakdown(name)));
+        pet->player->combatLogBreakdown.insert(std::make_pair(name, new CombatLogBreakdown(name)));
     }
 }
 
@@ -94,6 +93,7 @@ void PetSpell::reset()
 {
     cooldownRemaining = 0;
     casting = false;
+    pet->player->postIterationDamageAndMana(name);
 }
 
 void PetSpell::cast()
@@ -111,7 +111,7 @@ void PetSpell::cast()
         {
             combatLogMsg.append(" casts " + name);
 
-            if (pet->spells->Melee != NULL && varName == pet->spells->Melee->varName)
+            if (pet->spells->Melee != NULL && name == pet->spells->Melee->name)
             {
                 combatLogMsg.append(" - Attack Speed: " + truncateTrailingZeros(std::to_string(pet->spells->Melee->getCooldown()), 2) + " (" + std::to_string(round(pet->stats->hastePercent * 10000) / 10000.0) + "% haste at a base attack speed of " + truncateTrailingZeros(std::to_string(pet->spells->Melee->cooldown), 2) + ")");
             }
@@ -129,7 +129,7 @@ void PetSpell::cast()
         }
     }
 
-    pet->player->combatLogBreakdown.at(varName)->casts++;
+    pet->player->combatLogBreakdown.at(name)->casts++;
 
     if (pet->player->shouldWriteToCombatLog())
     {
@@ -147,7 +147,7 @@ void PetSpell::cast()
         double glancingChance = missChance;
 
         // Only check for a glancing if it's a normal melee attack
-        if (pet->spells->Melee != NULL && varName == pet->spells->Melee->varName)
+        if (pet->spells->Melee != NULL && name == pet->spells->Melee->name)
         {
             glancingChance += pet->glancingBlowChance * pet->player->critChanceMultiplier;
         }
@@ -159,13 +159,13 @@ void PetSpell::cast()
         // Crit
         if (attackRoll <= critChance)
         {
-            pet->player->combatLogBreakdown.at(varName)->crits++;
+            pet->player->combatLogBreakdown.at(name)->crits++;
             isCrit = true;
         }
         // Dodge
         else if (attackRoll <= dodgeChance)
         {
-            pet->player->combatLogBreakdown.at(varName)->dodge++;
+            pet->player->combatLogBreakdown.at(name)->dodge++;
             
             if (pet->player->shouldWriteToCombatLog())
             {
@@ -176,7 +176,7 @@ void PetSpell::cast()
         // Miss
         else if (attackRoll <= missChance)
         {
-            pet->player->combatLogBreakdown.at(varName)->misses++;
+            pet->player->combatLogBreakdown.at(name)->misses++;
 
             if (pet->player->shouldWriteToCombatLog())
             {
@@ -185,9 +185,9 @@ void PetSpell::cast()
             return;
         }
         // Glancing Blow
-        else if (attackRoll <= glancingChance && pet->spells->Melee != NULL && varName == pet->spells->Melee->varName)
+        else if (attackRoll <= glancingChance && pet->spells->Melee != NULL && name == pet->spells->Melee->name)
         {
-            pet->player->combatLogBreakdown.at(varName)->glancingBlows++;
+            pet->player->combatLogBreakdown.at(name)->glancingBlows++;
             isGlancing = true;
         }
 
@@ -199,7 +199,7 @@ void PetSpell::cast()
         // Check for resist
         if (!pet->isHit(type))
         {
-            pet->player->combatLogBreakdown.at(varName)->misses++;
+            pet->player->combatLogBreakdown.at(name)->misses++;
             
             if (pet->player->shouldWriteToCombatLog())
             {
@@ -214,7 +214,7 @@ void PetSpell::cast()
             if (canCrit && pet->isCrit(type))
             {
                 isCrit = true;
-                pet->player->combatLogBreakdown.at(varName)->crits++;
+                pet->player->combatLogBreakdown.at(name)->crits++;
             }
 
             damage(isCrit, false);
@@ -320,7 +320,7 @@ void PetSpell::damage(bool isCrit, bool isGlancing)
         dmg *= partialResistMultiplier;
     }
 
-    pet->player->combatLogBreakdown.at(varName)->iterationDamage += dmg;
+    pet->player->combatLogBreakdown.at(name)->iterationDamage += dmg;
     pet->player->iterationDamage += dmg;
 
     if (pet->pet == PetName::FELGUARD)
@@ -382,7 +382,7 @@ double Melee::getBaseDamage()
 
 double Melee::getCooldown()
 {
-    return round((cooldown / (1 + pet->stats->hastePercent / 100.0)) * 10000) / 10000.0;
+    return round((cooldown / (1 + pet->stats->hastePercent)) * 10000) / 10000.0;
 }
 
 FelguardCleave::FelguardCleave(Pet* pet) : PetSpell(pet)

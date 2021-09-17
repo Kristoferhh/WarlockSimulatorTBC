@@ -524,8 +524,8 @@ double Simulation::passTime()
 
             int manaGained = player->stats->mana - currentPlayerMana;
             player->totalManaRegenerated += manaGained;
-            player->combatLogBreakdown.at("mp5")->casts++;
-            player->combatLogBreakdown.at("mp5")->iterationManaGain += manaGained;
+            player->combatLogBreakdown.at("Mp5")->casts++;
+            player->combatLogBreakdown.at("Mp5")->iterationManaGain += manaGained;
 
             if (player->shouldWriteToCombatLog())
             {

@@ -8,7 +8,6 @@ struct PetAura
 {
     Pet* pet;
     std::string name;
-    std::string varName;
     int duration;
     double durationRemaining;
     bool active;

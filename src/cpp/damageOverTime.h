@@ -25,7 +25,6 @@ struct DamageOverTime
     bool amplified; // Applied while the Amplify Curse aura was active
     bool isbActive; // Siphon Life
     std::string name;
-    std::string varName;
 
     DamageOverTime(Player* player);
     void setup();

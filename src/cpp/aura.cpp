@@ -15,10 +15,9 @@ Aura::Aura(Player* player) : player(player)
 
 void Aura::setup()
 {
-    varName = camelCase(name);
-    if (player->combatLogBreakdown.count(varName) == 0)
+    if (player->combatLogBreakdown.count(name) == 0)
     {
-        player->combatLogBreakdown.insert(std::make_pair(varName, new CombatLogBreakdown(name)));
+        player->combatLogBreakdown.insert(std::make_pair(name, new CombatLogBreakdown(name)));
     }
 }
 
@@ -44,7 +43,7 @@ void Aura::apply()
     else if (!active)
     {
         bool recalculatePetStats = false;
-        player->combatLogBreakdown.at(varName)->appliedAt = player->fightTime;
+        player->combatLogBreakdown.at(name)->appliedAt = player->fightTime;
 
         if (stats != NULL && stats->spellPower > 0)
         {
@@ -99,7 +98,10 @@ void Aura::apply()
                 player->combatLog(msg);
             }
             player->stats->hastePercent += (stats->hastePercent / 100.0);
-            recalculatePetStats = true;
+            if (player->pet != NULL && groupWide)
+            {
+                player->pet->stats->hastePercent += (stats->hastePercent / 100.0);
+            }
         }
         if (stats != NULL && stats->manaCostModifier > 0)
         {
@@ -115,7 +117,7 @@ void Aura::apply()
         
         if (recalculatePetStats)
         {
-            //player->pet->calculateStatsFromPlayer();
+            player->pet->calculateStatsFromPlayer();
         }
         if (player->shouldWriteToCombatLog())
         {
@@ -126,7 +128,7 @@ void Aura::apply()
         active = true;
     }
 
-    player->combatLogBreakdown.at(varName)->count++;
+    player->combatLogBreakdown.at(name)->count++;
     durationRemaining = duration;
 }
 
@@ -146,7 +148,6 @@ void Aura::fade(bool endOfIteration)
 
         player->stats->spellPower -= stats->spellPower;
         recalculatePetStats = true;
-        //todo remove stats from pet
     }
     if (stats != NULL && stats->shadowPower > 0)
     {
@@ -190,6 +191,10 @@ void Aura::fade(bool endOfIteration)
             player->combatLog(msg);
         }
         player->stats->hastePercent -= (stats->hastePercent / 100.0);
+        if (player->pet != NULL && groupWide)
+        {
+            player->pet->stats->hastePercent -= (stats->hastePercent / 100.0);
+        }
         recalculatePetStats = true;
     }
     if (stats != NULL && stats->manaCostModifier > 0)
@@ -208,7 +213,7 @@ void Aura::fade(bool endOfIteration)
     {
         if (recalculatePetStats)
         {
-            //player->pet->calculateStatsFromPlayer();
+            player->pet->calculateStatsFromPlayer();
         }
         if (player->shouldWriteToCombatLog())
         {
@@ -217,8 +222,8 @@ void Aura::fade(bool endOfIteration)
         }
     }
 
-    double auraUptime = player->fightTime - player->combatLogBreakdown.at(varName)->appliedAt;
-    player->combatLogBreakdown.at(varName)->uptime += auraUptime;
+    double auraUptime = player->fightTime - player->combatLogBreakdown.at(name)->appliedAt;
+    player->combatLogBreakdown.at(name)->uptime += auraUptime;
 }
 
 void Aura::decrementStacks() {}
@@ -258,7 +263,7 @@ void ImprovedShadowBoltAura::decrementStacks()
 void ImprovedShadowBoltAura::fade(bool endOfIteration)
 {
     Aura::fade(endOfIteration);
-    uptimeSoFar = player->combatLogBreakdown.at(varName)->uptime / player->totalDuration;
+    uptimeSoFar = player->combatLogBreakdown.at(name)->uptime / player->totalDuration;
 }
 
 CurseOfTheElementsAura::CurseOfTheElementsAura(Player* player) : Aura(player)
@@ -379,10 +384,10 @@ void DestructionPotionAura::apply()
         }
         player->stats->spellPower += 120;
         player->stats->critChance += 2;
-        /*if (player->pet != NULL)
+        if (player->pet != NULL)
         {
             player->pet->calculateStatsFromPlayer();
-        }*/
+        }
     }
     Aura::apply();
 }
@@ -401,10 +406,10 @@ void DestructionPotionAura::fade(bool endOfIteration)
         }
         player->stats->spellPower -= 120;
         player->stats->critChance -= 2;
-        /*if (!endOfIteration && player->pet != NULL)
+        if (player->pet != NULL)
         {
             player->pet->calculateStatsFromPlayer();
-        }*/
+        }
     }
     Aura::fade(endOfIteration);
 }
@@ -478,8 +483,8 @@ void DrumsOfRestorationAura::tick(double t)
         int currentMana = player->stats->mana;
         player->stats->mana = std::min(player->stats->maxMana, player->stats->mana + manaGain);
         int manaGained = player->stats->mana - currentMana;
-        player->combatLogBreakdown.at(varName)->casts++;
-        player->combatLogBreakdown.at(varName)->iterationManaGain += manaGained;
+        player->combatLogBreakdown.at(name)->casts++;
+        player->combatLogBreakdown.at(name)->iterationManaGain += manaGained;
         if (player->shouldWriteToCombatLog())
         {
             std::string msg = "Player gains " + std::to_string(manaGained) + " mana from Drums of Restoration (" + std::to_string(currentMana) + " -> " + std::to_string(player->stats->mana) + ")" + ")";
@@ -528,10 +533,10 @@ void DarkmoonCardCrusadeAura::apply()
         }
         player->stats->spellPower += spellPowerPerStack;
         stacks++;
-        /*if (player->pet != NULL)
+        if (player->pet != NULL)
         {
             player->pet->calculateStatsFromPlayer();
-        }*/
+        }
     }
     Aura::apply();
 }
@@ -546,10 +551,10 @@ void DarkmoonCardCrusadeAura::fade(bool endOfIteration)
             std::string msg = "Spell Power - " + std::to_string(spellPowerPerStack) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower - spellPowerPerStack) +  + ")"")";
             player->combatLog(msg);
         }
-        /*if (player->pet != NULL)
+        if (player->pet != NULL)
         {
             player->pet->calculateStatsFromPlayer();
-        }*/
+        }
     }
     player->stats->spellPower -= spellPowerPerStack * stacks;
     stacks = 0;

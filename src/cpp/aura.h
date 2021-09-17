@@ -9,7 +9,6 @@ struct Aura
     Player* player;
     std::unique_ptr<AuraStats> stats;
     std::string name;
-    std::string varName;
     int duration;
     double durationRemaining;
     int procChance;

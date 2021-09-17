@@ -10,7 +10,6 @@ struct PetSpell
     SpellSchool school;
     AttackType type;
     std::string name;
-    std::string varName;
     double dmg;
     bool casting;
     bool canCrit;

@@ -24,12 +24,11 @@ void Spell::reset()
 {
     cooldownRemaining = 0;
     casting = false;
-    player->postIterationDamageAndMana(varName);
+    player->postIterationDamageAndMana(name);
 }
 
 void Spell::setup()
 {
-    varName = camelCase(name);
     if (minDmg > 0 && maxDmg > 0)
     {
       dmg = (minDmg + maxDmg) / 2;
@@ -38,9 +37,9 @@ void Spell::setup()
     {
       avgManaValue = (minMana + maxMana) / 2;
     }
-    if (player->combatLogBreakdown.count(varName) == 0)
+    if (player->combatLogBreakdown.count(name) == 0)
     {
-        player->combatLogBreakdown.insert(std::make_pair(varName, new CombatLogBreakdown(name)));
+        player->combatLogBreakdown.insert(std::make_pair(name, new CombatLogBreakdown(name)));
     }
 }
 
@@ -73,7 +72,7 @@ void Spell::startCast(double predictedDamage)
         {
             player->throwError("Attempting to cast " + name + " while player's GCD is at " + std::to_string(player->gcdRemaining) + " seconds remaining");
         }
-        player->gcdRemaining = player->getGcdValue(varName);
+        player->gcdRemaining = player->getGcdValue(shared_from_this());
     }
 
     // Error: Starting to cast a spell while casting another spell
@@ -140,7 +139,7 @@ void Spell::cast()
 {
     if (!isAura)
     {
-        player->combatLogBreakdown.at(varName)->casts++;
+        player->combatLogBreakdown.at(name)->casts++;
     }
     const int currentMana = player->stats->mana;
     if (manaCost > 0 && !player->settings->infinitePlayerMana)
@@ -165,18 +164,18 @@ void Spell::cast()
         if (isCrit)
         {
             // Increment the crit counter whether the spell hits or not so that the crit % on the damage breakdown is correct. Otherwise the crit % will be lower due to lost crits when the spell misses.
-            player->combatLogBreakdown.at(varName)->crits++;
+            player->combatLogBreakdown.at(name)->crits++;
         }
     }
 
-    if (((!isItem && !isNonWarlockAbility && varName != "amplifyCurse") || doesDamage) && !player->isHit(type))
+    if (((!isItem && !isNonWarlockAbility && name != "amplifyCurse") || doesDamage) && !player->isHit(type))
     {
         if (player->shouldWriteToCombatLog())
         {
             std::string msg = name + " *resist*";
             player->combatLog(msg);
         }
-        player->combatLogBreakdown.at(varName)->misses++;
+        player->combatLogBreakdown.at(name)->misses++;
         return;
     }
 
@@ -195,7 +194,7 @@ void Spell::cast()
     }
 
     // If it's an item such as mana potion, demonic rune, destruction potion, or if it's a proc with a hidden cooldown like Blade of Wizardry or Robe of the Elder Scribes then don't check for on-hit procs
-    if (!isItem && !isProc && !isNonWarlockAbility && varName != "amplifyCurse")
+    if (!isItem && !isProc && !isNonWarlockAbility && name != "amplifyCurse")
     {
         onHitProcs();
     }
@@ -247,7 +246,7 @@ void Spell::damage(bool isCrit)
     player->iterationDamage += totalDamage;
 
     // Combat Log
-    player->combatLogBreakdown.at(varName)->iterationDamage += totalDamage;
+    player->combatLogBreakdown.at(name)->iterationDamage += totalDamage;
     if (player->shouldWriteToCombatLog())
     {
         std::string msg = name + " ";
@@ -272,11 +271,11 @@ void Spell::damage(bool isCrit)
     //T5 4pc
     if (player->sets->t5 >= 4)
     {
-        if (varName == "shadowBolt" && player->auras->Corruption != NULL && player->auras->Corruption->active)
+        if (name == "ShadowBolt" && player->auras->Corruption != NULL && player->auras->Corruption->active)
         {
             player->auras->Corruption->t5BonusModifier *= 1.1;
         }
-        else if (varName == "incinerate" && player->auras->Immolate != NULL && player->auras->Immolate->active)
+        else if (name == "Incinerate" && player->auras->Immolate != NULL && player->auras->Immolate->active)
         {
 
             player->auras->Immolate->t5BonusModifier *= 1.1;
@@ -295,7 +294,7 @@ std::vector<double> Spell::getConstantDamage(bool noRng)
     double partialResistMultiplier = player->getPartialResistMultiplier(school);
 
     // If casting Incinerate and Immolate is up, add the bonus damage
-    if (varName == "incinerate" && player->auras->Immolate != NULL && player->auras->Immolate->active)
+    if (name == "Incinerate" && player->auras->Immolate != NULL && player->auras->Immolate->active)
     {
         totalDmg += player->settings->randomizeValues && noRng ? random(bonusDamageFromImmolateMin, bonusDamageFromImmolateMax) : bonusDamageFromImmolate;
     }
@@ -374,13 +373,13 @@ double Spell::predictDamage()
         }
     }
 
-    return (estimatedDamage * hitChance) / std::max(player->getGcdValue(varName), getCastTime());
+    return (estimatedDamage * hitChance) / std::max(player->getGcdValue(shared_from_this()), getCastTime());
 }
 
 void Spell::onCritProcs()
 {
     // ISB
-    if (varName == "shadowBolt" && !player->settings->usingCustomIsbUptime && player->talents->improvedShadowBolt > 0)
+    if (name == "ShadowBolt" && !player->settings->usingCustomIsbUptime && player->talents->improvedShadowBolt > 0)
     {
         player->auras->ImprovedShadowBolt->apply();
     }
@@ -421,8 +420,8 @@ void Spell::onHitProcs()
         int manaGained = std::min(player->stats->maxMana - currentMana, manaVal);
         player->stats->mana += manaGained;
         player->totalManaRegenerated += manaGained;
-        player->combatLogBreakdown.at("judgementOfWisdom")->casts++;
-        player->combatLogBreakdown.at("judgementOfWisdom")->iterationManaGain += manaGained;
+        player->combatLogBreakdown.at("Judgement of Wisdom")->casts++;
+        player->combatLogBreakdown.at("Judgement of Wisdom")->iterationManaGain += manaGained;
         if (player->shouldWriteToCombatLog())
         {
             std::string msg = "Player gains " + std::to_string(manaGained) + " mana from Judgement of Wisdom (" + std::to_string(currentMana) + " -> " + std::to_string(player->stats->mana) + ")";
@@ -561,8 +560,8 @@ void LifeTap::cast()
 {
     const int manaGain = this->manaGain();
     player->totalManaRegenerated += manaGain;
-    player->combatLogBreakdown.at(varName)->casts++;
-    player->combatLogBreakdown.at(varName)->iterationManaGain += manaGain;
+    player->combatLogBreakdown.at(name)->casts++;
+    player->combatLogBreakdown.at(name)->iterationManaGain += manaGain;
     
     if (player->shouldWriteToCombatLog() && player->stats->mana + manaGain > player->stats->maxMana)
     {
@@ -750,11 +749,11 @@ void SeedOfCorruption::damage()
         std::string msg = name + " " + std::to_string(round(totalSeedDamage)) + " (" + std::to_string(enemyAmount) + " Enemies (" + std::to_string(resistAmount) + " Resists & " + std::to_string(critAmount) + " Crits) - " + std::to_string(baseDamage) + " Base Damage - " + std::to_string(coefficient) + " Coefficient - " + std::to_string(spellPower) + " Spell Power - " + std::to_string(round(modifier * 1000) / 1000) + "% Modifier - " + std::to_string(partialResistMultiplier) + " % Partial Resist Multiplier)";
         player->combatLog(msg);
     }
-    player->combatLogBreakdown.at(varName)->iterationDamage += totalSeedDamage;
-    player->combatLogBreakdown.at(varName)->crits += critAmount;
-    player->combatLogBreakdown.at(varName)->misses += resistAmount;
+    player->combatLogBreakdown.at(name)->iterationDamage += totalSeedDamage;
+    player->combatLogBreakdown.at(name)->crits += critAmount;
+    player->combatLogBreakdown.at(name)->misses += resistAmount;
     // the cast() function already adds 1 to the amount of casts so we only need to add enemiesHit - 1 to the cast amount
-    player->combatLogBreakdown.at(varName)->casts += (enemiesHit - 1);
+    player->combatLogBreakdown.at(name)->casts += (enemiesHit - 1);
 }
 
 DarkPact::DarkPact(Player* player) : Spell(player)
@@ -929,7 +928,7 @@ void SuperManaPotion::cast()
     //todo check for the randomize values option
     const int manaGain = random(minMana, maxMana);
     player->totalManaRegenerated += manaGain;
-    player->combatLogBreakdown.at(varName)->iterationManaGain += manaGain;
+    player->combatLogBreakdown.at(name)->iterationManaGain += manaGain;
     player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
     {
@@ -956,7 +955,7 @@ void DemonicRune::cast()
     //todo check for the randomize values option
     const int manaGain = random(minMana, maxMana);
     player->totalManaRegenerated += manaGain;
-    player->combatLogBreakdown.at(varName)->iterationManaGain += manaGain;
+    player->combatLogBreakdown.at(name)->iterationManaGain += manaGain;
     player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
     {

@@ -7,7 +7,7 @@ struct Player;
 #include "enums.h"
 #include "damageOverTime.h"
 
-struct Spell
+struct Spell : std::enable_shared_from_this<Spell>
 {
     Player* player;
     std::shared_ptr<Aura> auraEffect;
@@ -42,7 +42,6 @@ struct Spell
     bool isAura;
     bool onGcd;
     bool isProc;
-    std::string varName; // Same as 'name' except it's written in camelCase
     std::string name;
     std::string breakdownTable;
 

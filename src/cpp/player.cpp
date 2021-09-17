@@ -34,10 +34,10 @@ Player::Player(PlayerSettings* playerSettings)
     stats->maxMana = (stats->mana + (stats->intellect * stats->intellectModifier) * manaPerInt) * (1 + (0.01 * static_cast<double>(talents->felIntellect)));
     stats->shadowModifier *= (1 + (0.02 * talents->shadowMastery));
 
-    combatLogBreakdown.insert(std::make_pair("mp5", std::make_unique<CombatLogBreakdown>("Mp5")));
+    combatLogBreakdown.insert(std::make_pair("Mp5", std::make_unique<CombatLogBreakdown>("Mp5")));
     if (selectedAuras->judgementOfWisdom)
     {
-        combatLogBreakdown.insert(std::make_pair("judgementOfWisdom", std::make_unique<CombatLogBreakdown>("Judgement of Wisdom")));
+        combatLogBreakdown.insert(std::make_pair("Judgement of Wisdom", std::make_unique<CombatLogBreakdown>("Judgement of Wisdom")));
     }
 
     // Crit chance
@@ -423,13 +423,25 @@ void Player::reset()
     }
 
     // Reset spells
-    postIterationDamageAndMana(spells->LifeTap->varName);
+    if (spells->LifeTap != NULL) spells->LifeTap->reset();
+    if (spells->SeedOfCorruption != NULL) spells->SeedOfCorruption->reset();
+    if (spells->ShadowBolt != NULL) spells->ShadowBolt->reset();
+    if (spells->Incinerate != NULL) spells->Incinerate->reset();
+    if (spells->SearingPain != NULL) spells->SearingPain->reset();
+    if (spells->Corruption != NULL) spells->Corruption->reset();
+    if (spells->UnstableAffliction != NULL) spells->UnstableAffliction->reset();
+    if (spells->SiphonLife != NULL) spells->SiphonLife->reset();
+    if (spells->Immolate != NULL) spells->Immolate->reset();
+    if (spells->CurseOfAgony != NULL) spells->CurseOfAgony->reset();
+    if (spells->CurseOfTheElements != NULL) spells->CurseOfTheElements->reset();
+    if (spells->CurseOfRecklessness != NULL) spells->CurseOfRecklessness->reset();
     if (spells->CurseOfDoom != NULL) spells->CurseOfDoom->reset();
     if (spells->Conflagrate != NULL) spells->Conflagrate->reset();
     if (spells->Shadowburn != NULL) spells->Shadowburn->reset();
     if (spells->DeathCoil != NULL) spells->DeathCoil->reset();
     if (spells->Shadowfury != NULL) spells->Shadowfury->reset();
     if (spells->AmplifyCurse != NULL) spells->AmplifyCurse->reset();
+    if (spells->DarkPact != NULL) spells->DarkPact->reset();
     if (spells->DestructionPotion != NULL) spells->DestructionPotion->reset();
     if (spells->SuperManaPotion != NULL) spells->SuperManaPotion->reset();
     if (spells->DemonicRune != NULL) spells->DemonicRune->reset();
@@ -492,7 +504,7 @@ void Player::reset()
     if (auras->DrumsOfWar != NULL && auras->DrumsOfWar->active) auras->DrumsOfWar->fade(true);
     if (auras->DrumsOfRestoration != NULL)
     {
-        postIterationDamageAndMana(auras->DrumsOfRestoration->varName);
+        postIterationDamageAndMana(auras->DrumsOfRestoration->name);
         if (auras->DrumsOfRestoration->active)
         {
             auras->DrumsOfRestoration->fade(true);
@@ -515,6 +527,9 @@ void Player::reset()
     if (auras->Shadowflame != NULL && auras->Shadowflame->active) auras->Shadowflame->fade(true);
     if (auras->Spellstrike != NULL && auras->Spellstrike->active) auras->Spellstrike->fade(true);
     if (auras->ManaEtched4Set != NULL && auras->ManaEtched4Set->active) auras->ManaEtched4Set->fade(true);
+
+    postIterationDamageAndMana("Judgement of Wisdom");
+    postIterationDamageAndMana("Mp5");
 }
 
 double Player::getHastePercent()
@@ -522,9 +537,9 @@ double Player::getHastePercent()
     return stats->hastePercent + (stats->hasteRating / hasteRatingPerPercent / 100.0);
 }
 
-double Player::getGcdValue(std::string varName)
+double Player::getGcdValue(std::shared_ptr<Spell> spell)
 {
-    if (varName != "shadowfury" || spells->Shadowfury == NULL)
+    if (spells->Shadowfury == NULL || spell != spells->Shadowfury)
     {
         return std::max(minimumGcdValue, round((gcdValue / getHastePercent()) * 10000) / 10000);
     }

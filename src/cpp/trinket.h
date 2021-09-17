@@ -15,7 +15,6 @@ struct Trinket
     bool active;
     bool sharesCooldown;
     std::string name;
-    std::string varName;
 
     Trinket(Player* player);
     bool ready();

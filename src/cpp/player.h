@@ -67,7 +67,7 @@ struct Player
   void initialize();
   void reset();
   void throwError(std::string error);
-  double getGcdValue(std::string varName);
+  double getGcdValue(std::shared_ptr<Spell> spell);
   double getSpellPower(SpellSchool school = SpellSchool::NO_SCHOOL);
   double getHastePercent();
   bool isCrit(SpellType spellType, double extraCrit = 0);
