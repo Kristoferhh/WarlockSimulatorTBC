@@ -168,7 +168,7 @@ void Simulation::start()
                         }
 
                         // If the sim is choosing the rotation for the player then check now which spell would be the best to cast
-                        if (player->settings->simChoosingRotation && player->gcdRemaining <= 0)
+                        if (player->settings->simChoosingRotation && player->gcdRemaining <= 0 && player->castTimeRemaining <= 0)
                         {
                             std::shared_ptr<Spell> maxDamageSpell;
                             double maxDamageSpellValue = 0;
@@ -262,8 +262,7 @@ void Simulation::start()
     // Send the combat log breakdown info
     for (std::map<std::string, std::unique_ptr<CombatLogBreakdown>>::iterator it = player->combatLogBreakdown.begin(); it != player->combatLogBreakdown.end(); it++)
     {
-        postCombatLogBreakdown(it->second->name.c_str(), it->second->casts, it->second->crits, it->second->misses, it->second->manaGain, it->second->damage,
-                                it->second->count, it->second->uptime, it->second->dodge, it->second->glancingBlows);
+        postCombatLogBreakdown(it->second->name.c_str(), it->second->casts, it->second->crits, it->second->misses, it->second->count, it->second->uptime, it->second->dodge, it->second->glancingBlows);
     }
     simulationEnd(median(dpsVector), minDps, maxDps, elapsedTime, player->settings->itemId, settings->iterations, player->totalDuration, player->totalManaRegenerated);
 }
@@ -526,7 +525,7 @@ double Simulation::passTime()
             int manaGained = player->stats->mana - currentPlayerMana;
             player->totalManaRegenerated += manaGained;
             player->combatLogBreakdown.at("mp5")->casts++;
-            player->combatLogBreakdown.at("mp5")->manaGain += manaGained;
+            player->combatLogBreakdown.at("mp5")->iterationManaGain += manaGained;
 
             if (player->shouldWriteToCombatLog())
             {

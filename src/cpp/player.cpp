@@ -278,7 +278,7 @@ Player::Player(PlayerSettings* playerSettings)
 void Player::initialize()
 {
     // Trinkets
-    std::vector<int> trinketIds {items->trinket1, items->trinket2};
+    std::vector<int> trinketIds { items->trinket1, items->trinket2 };
     if (std::find(trinketIds.begin(), trinketIds.end(), 32483) != trinketIds.end()) trinkets.push_back(std::make_unique<SkullOfGuldan>(this));
     if (std::find(trinketIds.begin(), trinketIds.end(), 34429) != trinketIds.end()) trinkets.push_back(std::make_unique<ShiftingNaaruSliver>(this));
     if (std::find(trinketIds.begin(), trinketIds.end(), 33829) != trinketIds.end()) trinkets.push_back(std::make_unique<HexShrunkenHead>(this));
@@ -507,6 +507,13 @@ void Player::reset()
     if (auras->Shadowflame != NULL && auras->Shadowflame->active) auras->Shadowflame->fade(true);
     if (auras->Spellstrike != NULL && auras->Spellstrike->active) auras->Spellstrike->fade(true);
     if (auras->ManaEtched4Set != NULL && auras->ManaEtched4Set->active) auras->ManaEtched4Set->fade(true);
+
+    for (std::map<std::string, std::unique_ptr<CombatLogBreakdown>>::iterator it = combatLogBreakdown.begin(); it != combatLogBreakdown.end(); it++)
+    {
+        postCombatLogBreakdownVector(it->second->name.c_str(), it->second->iterationManaGain, it->second->iterationDamage);
+        it->second->iterationDamage = 0;
+        it->second->iterationManaGain = 0;
+    }
 }
 
 double Player::getHastePercent()

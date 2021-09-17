@@ -320,7 +320,7 @@ void PetSpell::damage(bool isCrit, bool isGlancing)
         dmg *= partialResistMultiplier;
     }
 
-    pet->player->combatLogBreakdown.at(varName)->damage += dmg;
+    pet->player->combatLogBreakdown.at(varName)->iterationDamage += dmg;
     pet->player->iterationDamage += dmg;
 
     if (pet->pet == PetName::FELGUARD)

@@ -34,6 +34,10 @@ function simDPS (items) {
   let combatLog = []
   let combatLogBreakdownArr = []
   let playerHasMeleePet = false
+  let totalManaRegenerated = 0
+  let totalDamageDone = 0
+  let spellDamageDict = {}
+  let spellManaGainDict = {}
 
   if (items.length > 1) {
     $('.item-dps').text('')
@@ -43,6 +47,13 @@ function simDPS (items) {
     multiSimInfo.push([items[i], 0])
 
     simulations.push(new SimWorker(
+      // Combat Log Vector callback
+      (combatLogVector) => {
+        spellDamageDict[combatLogVector.name] = spellDamageDict[combatLogVector.name] + combatLogVector.damage || combatLogVector.damage
+        spellManaGainDict[combatLogVector.name] = spellManaGainDict[combatLogVector.name] + combatLogVector.manaGain || combatLogVector.manaGain
+        totalManaRegenerated += combatLogVector.manaGain
+        totalDamageDone += combatLogVector.damage
+      },
       // Error callback
       (errorCallback) => {
         alert("Error: " + errorCallback.errorMsg + "\nPost in #tbc-sim-report on the TBC Warlock Discord or contact Kristofer#8003 on Discord.")
@@ -55,7 +66,7 @@ function simDPS (items) {
       (combatLogBreakdown) => {
         combatLogBreakdownArr.push(combatLogBreakdown)
 
-        if (combatLogBreakdown.name == "Melee" && combatLogBreakdown.damage > 0) {
+        if (combatLogBreakdown.name == "Melee") {
           playerHasMeleePet = true
         }
       },
@@ -90,42 +101,34 @@ function simDPS (items) {
         localStorage.savedItemDps = JSON.stringify(savedItemDps)
 
         if (simulationsFinished === itemAmount) {
-          console.log(combatLogBreakdownArr)
           // Remove the background coloring (progress bar)
           $('.btn').css('background', '')
 
           if (itemAmount === 1 && $('#automatically-open-sim-details').children('select').val() === 'yes') {
             // Setup the damage breakdown table (showing avg damage, avg cast etc. for each spell)
             $('.spell-damage-information').remove()
-            
-            // Get the total amount of damage done
-            let totalSimDamage = 0
-            for (const e in combatLogBreakdownArr) {
-              totalSimDamage += combatLogBreakdownArr[e].damage
-            }
-            console.log(simulationEnd)
 
             for (const combatLogBreakdown in combatLogBreakdownArr) {
               const s = combatLogBreakdownArr[combatLogBreakdown]
 
               // Damage
               if (s.casts > 0) {
-                if (s.damage > 0) {
-                  const percentDamage = (~~((s.damage / totalSimDamage) * 10000) / 100).toFixed(2)
-                  var tableRow = "<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterationAmount) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ('(' + ~~(s.dotDamage / s.casts) + ')') : '') + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td>"
+                if (spellDamageDict[s.name] > 0) {
+                  const percentDamage = (~~((spellDamageDict[s.name] / totalDamageDone) * 10000) / 100).toFixed(2)
+                  var tableRow = "<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterationAmount) + "</td><td class='number'>" + ~~(spellDamageDict[s.name] / s.casts) + (s.dotDamage ? ('(' + ~~(s.dotDamage / s.casts) + ')') : '') + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td>"
 
                   // Only add the dodge and glancing cells if the player has a melee pet
                   if (playerHasMeleePet) {
                     tableRow += "<td class='number'>" + (~~(((s.dodges / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.glancingBlows / s.casts) * 100) * 100) / 100).toFixed(2) + "</td>"
                   }
-                  tableRow += "<td class='number'>" + (Math.round((s.damage / simulationEnd.totalDuration) * 100) / 100 || 0) + '</td></tr>'
+                  tableRow += "<td class='number'>" + (Math.round((spellDamageDict[s.name] / simulationEnd.totalDuration) * 100) / 100 || 0) + '</td></tr>'
                   $('#damage-breakdown-table tbody').append(tableRow)
                 }
 
                 // Mana Gain
-                if (s.manaGain > 0) {
-                  const percentOfGain = (~~((s.manaGain / simulationEnd.totalManaRegenerated) * 10000) / 100).toFixed(2)
-                  $('#mana-gain-breakdown-table tbody').append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentOfGain + "' min='0' max='100'></meter> " + percentOfGain + '</td><td>' + Math.ceil(s.casts / simulationEnd.iterationAmount) + '</td><td>' + ~~(s.manaGain / s.casts) + '</td<</tr>')
+                if (spellManaGainDict[s.name] > 0) {
+                  const percentOfGain = (~~((spellManaGainDict[s.name] / totalManaRegenerated) * 10000) / 100).toFixed(2)
+                  $('#mana-gain-breakdown-table tbody').append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentOfGain + "' min='0' max='100'></meter> " + percentOfGain + '</td><td>' + Math.ceil(s.casts / simulationEnd.iterationAmount) + '</td><td>' + ~~(spellManaGainDict[s.name] / s.casts) + '</td<</tr>')
                 }
               }
 

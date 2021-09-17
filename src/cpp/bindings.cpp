@@ -25,7 +25,23 @@ void errorCallback(const char* errorMsg)
 #endif
 }
 
-void postCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, uint32_t misses, uint32_t manaGain, uint32_t damage, uint32_t count, double uptime, uint32_t dodges, uint32_t glancingBlows)
+void postCombatLogBreakdownVector(const char* name, uint32_t manaGain, uint32_t damage)
+{
+#ifdef EMSCRIPTEN
+    EM_ASM({
+        postMessage({
+            event: "combatLogVector",
+            data: {
+                name: UTF8ToString($0),
+                manaGain: $1,
+                damage: $2
+            }
+        })
+    }, name, manaGain, damage);
+#endif
+}
+
+void postCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, uint32_t misses, uint32_t count, double uptime, uint32_t dodges, uint32_t glancingBlows)
 {
 #ifdef EMSCRIPTEN
     EM_ASM({
@@ -36,15 +52,15 @@ void postCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, ui
                 casts: $1,
                 crits: $2,
                 misses: $3,
-                manaGain: $4,
-                damage: $5,
-                count: $6,
-                uptime: $7,
-                dodges: $8,
-                glancingBlows: $9
+                count: $4,
+                uptime: $5,
+                dodges: $6,
+                glancingBlows: $7,
+                damage: 0,
+                manaGain: 0
             }
         })
-    }, name, casts, crits, misses, manaGain, damage, count, uptime, dodges, glancingBlows);
+    }, name, casts, crits, misses, count, uptime, dodges, glancingBlows);
 #endif
 }
 
