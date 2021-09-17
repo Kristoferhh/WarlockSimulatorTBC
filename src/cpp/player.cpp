@@ -423,6 +423,7 @@ void Player::reset()
     }
 
     // Reset spells
+    postIterationDamageAndMana(spells->LifeTap->varName);
     if (spells->CurseOfDoom != NULL) spells->CurseOfDoom->reset();
     if (spells->Conflagrate != NULL) spells->Conflagrate->reset();
     if (spells->Shadowburn != NULL) spells->Shadowburn->reset();
@@ -489,7 +490,14 @@ void Player::reset()
     if (auras->Bloodlust != NULL && auras->Bloodlust->active) auras->Bloodlust->fade(true);
     if (auras->DrumsOfBattle != NULL && auras->DrumsOfBattle->active) auras->DrumsOfBattle->fade(true);
     if (auras->DrumsOfWar != NULL && auras->DrumsOfWar->active) auras->DrumsOfWar->fade(true);
-    if (auras->DrumsOfRestoration != NULL && auras->DrumsOfRestoration->active) auras->DrumsOfRestoration->fade(true);
+    if (auras->DrumsOfRestoration != NULL)
+    {
+        postIterationDamageAndMana(auras->DrumsOfRestoration->varName);
+        if (auras->DrumsOfRestoration->active)
+        {
+            auras->DrumsOfRestoration->fade(true);
+        }
+    }
     if (auras->BandOfTheEternalSage != NULL && auras->BandOfTheEternalSage->active) auras->BandOfTheEternalSage->fade(true);
     if (auras->WrathOfCenarius != NULL && auras->WrathOfCenarius->active) auras->WrathOfCenarius->fade(true);
     if (auras->BladeOfWizardry != NULL && auras->BladeOfWizardry->active) auras->BladeOfWizardry->fade(true);
@@ -507,13 +515,6 @@ void Player::reset()
     if (auras->Shadowflame != NULL && auras->Shadowflame->active) auras->Shadowflame->fade(true);
     if (auras->Spellstrike != NULL && auras->Spellstrike->active) auras->Spellstrike->fade(true);
     if (auras->ManaEtched4Set != NULL && auras->ManaEtched4Set->active) auras->ManaEtched4Set->fade(true);
-
-    for (std::map<std::string, std::unique_ptr<CombatLogBreakdown>>::iterator it = combatLogBreakdown.begin(); it != combatLogBreakdown.end(); it++)
-    {
-        postCombatLogBreakdownVector(it->second->name.c_str(), it->second->iterationManaGain, it->second->iterationDamage);
-        it->second->iterationDamage = 0;
-        it->second->iterationManaGain = 0;
-    }
 }
 
 double Player::getHastePercent()
@@ -793,6 +794,16 @@ double Player::getPartialResistMultiplier(SpellSchool school)
     }
 
     return 1;
+}
+
+void Player::postIterationDamageAndMana(std::string spellName)
+{
+    if (combatLogBreakdown.count(spellName) != 0 && (combatLogBreakdown.at(spellName)->iterationDamage > 0 || combatLogBreakdown.at(spellName)->iterationManaGain > 0))
+    {
+        postCombatLogBreakdownVector(spellName.c_str(), combatLogBreakdown.at(spellName)->iterationManaGain, combatLogBreakdown.at(spellName)->iterationDamage);
+        combatLogBreakdown.at(spellName)->iterationDamage = 0;
+        combatLogBreakdown.at(spellName)->iterationManaGain = 0;
+    }
 }
 
 void Player::throwError(std::string error)

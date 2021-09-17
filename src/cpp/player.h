@@ -81,5 +81,6 @@ struct Player
   int getRand();
   void castLifeTapOrDarkPact();
   bool shouldWriteToCombatLog();
+  void postIterationDamageAndMana(std::string spellName);
   void combatLog(const std::string& entry);
 };

@@ -2,6 +2,7 @@
 #include "player.h"
 #include "common.h"
 #include <iomanip>
+#include "bindings.h"
 
 Spell::Spell(Player* player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot) : player(player), auraEffect(aura), dotEffect(dot)
 {
@@ -23,6 +24,7 @@ void Spell::reset()
 {
     cooldownRemaining = 0;
     casting = false;
+    player->postIterationDamageAndMana(varName);
 }
 
 void Spell::setup()
