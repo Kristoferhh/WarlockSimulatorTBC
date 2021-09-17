@@ -31,6 +31,7 @@ function simDPS (items) {
   const multiSimInfo = []
   const simulations = []
   let simIndex = 0
+  let startTime = performance.now()
 
   if (items.length > 1) {
     $('.item-dps').text('')
@@ -54,7 +55,6 @@ function simDPS (items) {
           $('#avg-dps').text(simulationEnd.medianDps)
           $('#min-dps').text(minDps)
           $('#max-dps').text(maxDps)
-          $('#sim-length-result').text(Math.round(simulationEnd.length * 10000) / 10000 + 's')
           $('#sim-dps').text('Simulate')
 
           // Populate the combat log
@@ -62,16 +62,18 @@ function simDPS (items) {
           for (const entry in simulationEnd.combatlog) {
             $('#combat-log').append('<p>' + simulationEnd.combatlog[entry] + '</p>')
           }
-        } else if (simulationsFinished == itemAmount) {
-          $('#sim-all-items').text('Simulate All Items')
         }
+
         savedItemDps[itemSlot + itemSubSlot] = savedItemDps[itemSlot + itemSubSlot] || {}
         savedItemDps[itemSlot + itemSubSlot][simulationEnd.itemId] = simulationEnd.medianDps
         localStorage.savedItemDps = JSON.stringify(savedItemDps)
 
         if (simulationsFinished === itemAmount) {
+          let totalSimDuration = (performance.now() - startTime) / 1000
+          $('#sim-length-result').text(Math.round(totalSimDuration * 10000) / 10000 + 's')
           // Remove the background coloring (progress bar)
           $('.btn').css('background', '')
+          $('#sim-all-items').text('Simulate All Items')
 
           if (itemAmount === 1) {
             if ($('#automatically-open-sim-details').children('select').val() === 'yes') {
