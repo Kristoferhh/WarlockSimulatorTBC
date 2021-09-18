@@ -11,11 +11,11 @@
 #include "combatLogBreakdown.h"
 
 void errorCallback(const char* errorMsg);
-void postCombatLogBreakdownVector(const char* name, uint32_t manaGain, uint32_t damage);
-void postCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, uint32_t misses, uint32_t count, double uptime, uint32_t dodges, uint32_t glancingBlows);
+void postCombatLogBreakdownVector(const char* name, int manaGain, int damage);
+void postCombatLogBreakdown(const char* name, int casts, int crits, int misses, int count, double uptime, int dodges, int glancingBlows);
 void combatLogUpdate(const char* combatLogEntry);
 void simulationUpdate(int iteration, int iterationAmount, double medianDps, int itemId);
-void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::duration<double> duration, int itemId, int iterationAmount, uint32_t totalDuration, uint32_t totalManaRegenerated);
+void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::duration<double> duration, int itemId, int iterationAmount, int totalDuration);
 
 extern "C"
 {

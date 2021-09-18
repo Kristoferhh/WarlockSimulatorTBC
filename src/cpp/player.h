@@ -46,7 +46,6 @@ struct Player
   std::mt19937 gen;
   std::uniform_int_distribution<> randomNum{1, 100 * critChanceMultiplier};
   double castTimeRemaining;
-  double totalManaRegenerated;
   double gcdRemaining;
   double gcdValue;
   double spellDelay;
@@ -81,7 +80,7 @@ struct Player
   int getRand();
   void castLifeTapOrDarkPact();
   bool shouldWriteToCombatLog();
-  void addIterationDamageAndMana(std::string spellName, uint32_t manaGain, uint32_t damage);
+  void addIterationDamageAndMana(std::string spellName, int manaGain, int damage);
   void postIterationDamageAndMana(std::string spellName);
   void combatLog(const std::string& entry);
 };

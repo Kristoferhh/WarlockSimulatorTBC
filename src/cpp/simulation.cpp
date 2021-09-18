@@ -268,7 +268,7 @@ void Simulation::start()
         }
         postCombatLogBreakdown(it->second->name.c_str(), it->second->casts, it->second->crits, it->second->misses, it->second->count, it->second->uptime, it->second->dodge, it->second->glancingBlows);
     }
-    simulationEnd(median(dpsVector), minDps, maxDps, elapsedTime, player->settings->itemId, settings->iterations, player->totalDuration, player->totalManaRegenerated);
+    simulationEnd(median(dpsVector), minDps, maxDps, elapsedTime, player->settings->itemId, settings->iterations, player->totalDuration);
 }
 
 double Simulation::passTime()
@@ -527,7 +527,6 @@ double Simulation::passTime()
             }
 
             int manaGained = player->stats->mana - currentPlayerMana;
-            player->totalManaRegenerated += manaGained;
             player->combatLogBreakdown.at("Mp5")->casts++;
             player->addIterationDamageAndMana("Mp5", manaGained, 0);
 

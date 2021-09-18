@@ -16,7 +16,6 @@ Player::Player(PlayerSettings* playerSettings)
     combatLogEntries = {};
     level = 70;
     castTimeRemaining = 0;
-    totalManaRegenerated = 0;
     gcdRemaining = 0;
     gcdValue = 1.5;
     // Increases the cast time of spells by a very small amount to e.g. make it so that if Immolate has 1.5 seconds remaining, the sim can start precasting Immolate and it won't refresh before it expires.
@@ -801,18 +800,18 @@ double Player::getPartialResistMultiplier(SpellSchool school)
     return 1;
 }
 
-void Player::addIterationDamageAndMana(std::string spellName, uint32_t manaGain, uint32_t damage)
+void Player::addIterationDamageAndMana(std::string spellName, int manaGain, int damage)
 {
     if (combatLogBreakdown.count(spellName) == 0)
     {
         return;
     }
 
-    uint32_t iterationManaGain = combatLogBreakdown.at(spellName)->iterationManaGain;
-    uint32_t iterationDamage = combatLogBreakdown.at(spellName)->iterationDamage;
+    int iterationManaGain = combatLogBreakdown.at(spellName)->iterationManaGain;
+    int iterationDamage = combatLogBreakdown.at(spellName)->iterationDamage;
 
     // Check for integer overflow
-    if (iterationManaGain + manaGain < iterationManaGain || iterationDamage + damage < iterationDamage)
+    if (iterationManaGain + manaGain < 0 || iterationDamage + damage < 0)
     {
         postIterationDamageAndMana(spellName);
     }

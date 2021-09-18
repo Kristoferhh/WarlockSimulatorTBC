@@ -25,7 +25,7 @@ void errorCallback(const char* errorMsg)
 #endif
 }
 
-void postCombatLogBreakdownVector(const char* name, uint32_t manaGain, uint32_t damage)
+void postCombatLogBreakdownVector(const char* name, int manaGain, int damage)
 {
 #ifdef EMSCRIPTEN
     EM_ASM({
@@ -41,7 +41,7 @@ void postCombatLogBreakdownVector(const char* name, uint32_t manaGain, uint32_t 
 #endif
 }
 
-void postCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, uint32_t misses, uint32_t count, double uptime, uint32_t dodges, uint32_t glancingBlows)
+void postCombatLogBreakdown(const char* name, int casts, int crits, int misses, int count, double uptime, int dodges, int glancingBlows)
 {
 #ifdef EMSCRIPTEN
     EM_ASM({
@@ -97,7 +97,7 @@ void simulationUpdate(int iteration, int iterationAmount, double medianDps, int 
 #endif
 }
 
-void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::duration<double> duration, int itemId, int iterationAmount, uint32_t totalDuration, uint32_t totalManaRegenerated)
+void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::duration<double> duration, int itemId, int iterationAmount, int totalDuration)
 {
 #ifdef EMSCRIPTEN
     EM_ASM({
@@ -111,10 +111,9 @@ void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::
                 itemId: $4,
                 iterationAmount: $5,
                 totalDuration: $6,
-                totalManaRegenerated: $7
             }
         })
-    }, medianDps, minDps, maxDps, duration.count(), itemId, iterationAmount, totalDuration, totalManaRegenerated);
+    }, medianDps, minDps, maxDps, duration.count(), itemId, iterationAmount, totalDuration);
 #else
     std::cout << "Median DPS: " << std::to_string(medianDps) << ". Min DPS: " << std::to_string(minDps) << ". Max DPS: " << std::to_string(maxDps) << ". Time: " << std::to_string(duration.count()) << std::endl;
 #endif

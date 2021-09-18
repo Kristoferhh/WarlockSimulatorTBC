@@ -418,7 +418,6 @@ void Spell::onHitProcs()
         int currentMana = player->stats->mana;
         int manaGained = std::min(player->stats->maxMana - currentMana, manaVal);
         player->stats->mana += manaGained;
-        player->totalManaRegenerated += manaGained;
         player->combatLogBreakdown.at("Judgement of Wisdom")->casts++;
         player->addIterationDamageAndMana("Judgement of Wisdom", manaGained, 0);
         if (player->shouldWriteToCombatLog())
@@ -558,7 +557,6 @@ int LifeTap::manaGain()
 void LifeTap::cast()
 {
     const int manaGain = this->manaGain();
-    player->totalManaRegenerated += manaGain;
     player->combatLogBreakdown.at(name)->casts++;
     player->addIterationDamageAndMana(name, manaGain, 0);
     
@@ -926,7 +924,6 @@ void SuperManaPotion::cast()
     const int currentPlayerMana = player->stats->mana;
     //todo check for the randomize values option
     const int manaGain = random(minMana, maxMana);
-    player->totalManaRegenerated += manaGain;
     player->addIterationDamageAndMana(name, manaGain, 0);
     player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
@@ -953,7 +950,6 @@ void DemonicRune::cast()
     const int currentPlayerMana = player->stats->mana;
     //todo check for the randomize values option
     const int manaGain = random(minMana, maxMana);
-    player->totalManaRegenerated += manaGain;
     player->addIterationDamageAndMana(name, manaGain, 0);
     player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
@@ -1071,7 +1067,6 @@ void MarkOfDefiance::cast()
     if (cooldownRemaining <= 0)
     {
         const int currentPlayerMana = player->stats->mana;
-        player->totalManaRegenerated += avgManaValue;
         player->stats->mana = std::min(static_cast<double>(player->stats->maxMana), currentPlayerMana + avgManaValue);
         if (player->shouldWriteToCombatLog())
         {
@@ -1224,7 +1219,6 @@ void InsightfulEarthstormDiamond::cast()
 {
     Spell::cast();
     const int currentPlayerMana = player->stats->mana;
-    player->totalManaRegenerated += manaGain;
     player->stats->mana = std::min(static_cast<double>(player->stats->maxMana), currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
     {
