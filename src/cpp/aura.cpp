@@ -93,14 +93,13 @@ void Aura::apply()
         {
             if (player->shouldWriteToCombatLog())
             {
-                double currentHastePercent = player->stats->hastePercent * 100;
-                std::string msg = "Haste % + " + std::to_string(stats->hastePercent) + " (" + std::to_string(currentHastePercent) + " -> " + std::to_string(currentHastePercent + stats->hastePercent) + ")";
+                std::string msg = "Haste % * " + std::to_string(stats->hastePercent) + " (" + std::to_string(player->stats->hastePercent) + " -> " + std::to_string(player->stats->hastePercent * (1 + stats->hastePercent) * 10) + ")";
                 player->combatLog(msg);
             }
-            player->stats->hastePercent += (stats->hastePercent / 100.0);
+            player->stats->hastePercent *= (1 + stats->hastePercent / 100.0);
             if (player->pet != NULL && groupWide)
             {
-                player->pet->stats->hastePercent += (stats->hastePercent / 100.0);
+                player->pet->stats->hastePercent *= (1 + stats->hastePercent / 100.0);
             }
         }
         if (stats != NULL && stats->manaCostModifier > 0)
@@ -186,14 +185,13 @@ void Aura::fade(bool endOfIteration)
     {
         if (!endOfIteration && player->shouldWriteToCombatLog())
         {
-            double currentHastePercent = player->stats->hastePercent * 100.0;
-            std::string msg = "Haste % - " + std::to_string(stats->hastePercent) + "% (" + std::to_string(currentHastePercent) + " -> " + std::to_string(currentHastePercent - stats->hastePercent) + ")";
+            std::string msg = "Haste % / " + std::to_string(stats->hastePercent) + "% (" + std::to_string(player->stats->hastePercent) + " -> " + std::to_string(player->stats->hastePercent / (1 + stats->hastePercent) * 10) + ")";
             player->combatLog(msg);
         }
-        player->stats->hastePercent -= (stats->hastePercent / 100.0);
+        player->stats->hastePercent /= (1 + stats->hastePercent / 100.0);
         if (player->pet != NULL && groupWide)
         {
-            player->pet->stats->hastePercent -= (stats->hastePercent / 100.0);
+            player->pet->stats->hastePercent /= (1 + stats->hastePercent / 100.0);
         }
         recalculatePetStats = true;
     }
@@ -206,7 +204,6 @@ void Aura::fade(bool endOfIteration)
             player->combatLog(msg);
         }
         player->stats->manaCostModifier /= stats->manaCostModifier;
-        recalculatePetStats = true;
     }
 
     if (!endOfIteration)

@@ -502,14 +502,7 @@ void Player::reset()
     if (auras->Bloodlust != NULL && auras->Bloodlust->active) auras->Bloodlust->fade(true);
     if (auras->DrumsOfBattle != NULL && auras->DrumsOfBattle->active) auras->DrumsOfBattle->fade(true);
     if (auras->DrumsOfWar != NULL && auras->DrumsOfWar->active) auras->DrumsOfWar->fade(true);
-    if (auras->DrumsOfRestoration != NULL)
-    {
-        postIterationDamageAndMana(auras->DrumsOfRestoration->name);
-        if (auras->DrumsOfRestoration->active)
-        {
-            auras->DrumsOfRestoration->fade(true);
-        }
-    }
+    if (auras->DrumsOfRestoration != NULL && auras->DrumsOfRestoration->active) auras->DrumsOfRestoration->fade(true);
     if (auras->BandOfTheEternalSage != NULL && auras->BandOfTheEternalSage->active) auras->BandOfTheEternalSage->fade(true);
     if (auras->WrathOfCenarius != NULL && auras->WrathOfCenarius->active) auras->WrathOfCenarius->fade(true);
     if (auras->BladeOfWizardry != NULL && auras->BladeOfWizardry->active) auras->BladeOfWizardry->fade(true);
@@ -534,7 +527,7 @@ void Player::reset()
 
 double Player::getHastePercent()
 {
-    return stats->hastePercent + (stats->hasteRating / hasteRatingPerPercent / 100.0);
+    return stats->hastePercent * (1 + stats->hasteRating / hasteRatingPerPercent / 100.0);
 }
 
 double Player::getGcdValue(std::shared_ptr<Spell> spell)

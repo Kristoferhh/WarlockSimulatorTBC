@@ -102,6 +102,7 @@ function simDPS (items) {
 
         if (simulationsFinished === itemAmount) {
           console.log(combatLogBreakdownArr)
+          console.log(spellManaGainDict)
           let totalSimDuration = (performance.now() - startTime) / 1000
           $('#sim-length-result').text(Math.round(totalSimDuration * 10000) / 10000 + 's')
           // Remove the background coloring (progress bar)

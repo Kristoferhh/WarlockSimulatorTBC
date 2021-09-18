@@ -113,7 +113,7 @@ void PetSpell::cast()
 
             if (pet->spells->Melee != NULL && name == pet->spells->Melee->name)
             {
-                combatLogMsg.append(" - Attack Speed: " + truncateTrailingZeros(std::to_string(pet->spells->Melee->getCooldown()), 2) + " (" + std::to_string(round(pet->stats->hastePercent * 10000) / 10000.0) + "% haste at a base attack speed of " + truncateTrailingZeros(std::to_string(pet->spells->Melee->cooldown), 2) + ")");
+                combatLogMsg.append(" - Attack Speed: " + truncateTrailingZeros(std::to_string(pet->spells->Melee->getCooldown()), 2) + " (" + truncateTrailingZeros(std::to_string(round(pet->stats->hastePercent * 10000) / 100.0 - 100), 4) + "% haste at a base attack speed of " + truncateTrailingZeros(std::to_string(pet->spells->Melee->cooldown), 2) + ")");
             }
         }
     }
@@ -382,7 +382,7 @@ double Melee::getBaseDamage()
 
 double Melee::getCooldown()
 {
-    return round((cooldown / (1 + pet->stats->hastePercent)) * 10000) / 10000.0;
+    return round((cooldown / pet->stats->hastePercent) * 10000) / 10000.0;
 }
 
 FelguardCleave::FelguardCleave(Pet* pet) : PetSpell(pet)
