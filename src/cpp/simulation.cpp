@@ -349,7 +349,7 @@ double Simulation::passTime()
     if (player->auras->Bloodlust != NULL && player->auras->Bloodlust->active && player->auras->Bloodlust->durationRemaining < time) time = player->auras->Bloodlust->durationRemaining;
     if (player->auras->DrumsOfBattle != NULL && player->auras->DrumsOfBattle->active && player->auras->DrumsOfBattle->durationRemaining < time) time = player->auras->DrumsOfBattle->durationRemaining;
     if (player->auras->DrumsOfWar != NULL && player->auras->DrumsOfWar->active && player->auras->DrumsOfWar->durationRemaining < time) time = player->auras->DrumsOfWar->durationRemaining;
-    if (player->auras->DrumsOfRestoration != NULL && player->auras->DrumsOfRestoration->active && player->auras->DrumsOfRestoration->durationRemaining < time) time = player->auras->DrumsOfRestoration->durationRemaining;
+    if (player->auras->DrumsOfRestoration != NULL && player->auras->DrumsOfRestoration->active && player->auras->DrumsOfRestoration->tickTimerRemaining < time) time = player->auras->DrumsOfRestoration->tickTimerRemaining;
     if (player->auras->BandOfTheEternalSage != NULL && player->auras->BandOfTheEternalSage->active && player->auras->BandOfTheEternalSage->durationRemaining < time) time = player->auras->BandOfTheEternalSage->durationRemaining;
     if (player->auras->WrathOfCenarius != NULL && player->auras->WrathOfCenarius->active && player->auras->WrathOfCenarius->durationRemaining < time) time = player->auras->WrathOfCenarius->durationRemaining;
     if (player->auras->BladeOfWizardry != NULL && player->auras->BladeOfWizardry->active && player->auras->BladeOfWizardry->durationRemaining < time) time = player->auras->BladeOfWizardry->durationRemaining;

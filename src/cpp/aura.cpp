@@ -475,7 +475,9 @@ void DrumsOfRestorationAura::apply()
 
 void DrumsOfRestorationAura::tick(double t)
 {
-    if (tickTimerRemaining == 0)
+    tickTimerRemaining -= t;
+    
+    if (tickTimerRemaining <= 0)
     {
         int currentMana = player->stats->mana;
         player->stats->mana = std::min(player->stats->maxMana, player->stats->mana + manaGain);

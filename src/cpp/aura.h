@@ -32,7 +32,7 @@ struct Aura
 
     Aura(Player* player);
     void setup();
-    void tick(double time);
+    virtual void tick(double time);
     virtual void apply();
     virtual void fade(bool endOfIteration = false);
     void decrementStacks(); // ISB
