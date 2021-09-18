@@ -1,7 +1,7 @@
 // Convertion calculations
-const hitRatingPerPercent = 12.6
+const hitRatingPerPercent = 12.62
 const critRatingPerPercent = 22.08
-const hasteRatingPerPercent = 15.77 // confirm, maybe 15.7?
+const hasteRatingPerPercent = 15.77
 const manaPerInt = 15
 const healthPerStamina = 10
 const critPerInt = 1 / 81.95 // Crit % per point of intellect

@@ -128,8 +128,10 @@ class Pet {
     }
     // todo implement improved motw
     if (this.playerAuras.markOfTheWildPet) {
-      this.stats.buffsstamina += 14
+      this.stats.buffs.stamina += 14
       this.stats.buffs.intellect += 14
+      this.stats.buffs.strength += 14
+      this.stats.buffs.agility += 14
       this.stats.spirit += 14
     }
     // todo implement improved imp

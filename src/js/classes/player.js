@@ -204,8 +204,6 @@ class Player {
       }
     }
 
-    this.stats.health = (this.stats.health + (this.stats.stamina * this.stats.staminaModifier) * healthPerStamina) * (1 + (0.01 * settings.talents.felStamina))
-    this.stats.maxMana = (this.stats.mana + (this.stats.intellect * this.stats.intellectModifier) * manaPerInt) * (1 + (0.01 * settings.talents.felIntellect))
     this.stats.shadowModifier *= (1 + (0.02 * settings.talents.shadowMastery))
     this.spellTravelTime = 1
 
@@ -285,7 +283,7 @@ class Player {
       this.stats.stamina += 70 * (0.1 * settings.simSettings.improvedImp)
     }
     // Add stamina from Demonic Embrace
-    this.stats.stamina *= 1 + (0.03 * this.talents.demonicEmbrace)
+    this.stats.staminaModifier *= 1 + (0.03 * this.talents.demonicEmbrace)
     // Add mp5 from Vampiric Touch (add 25% instead of 5% since we're adding it to the mana per 5 seconds variable)
     if (settings.auras.vampiricTouch) {
       this.stats.mp5 += settings.simSettings.shadowPriestDps * 0.25
@@ -301,6 +299,9 @@ class Player {
     if (settings.auras.curseOfRecklessness) this.enemy.armor -= 800
     if (settings.auras.annihilator) this.enemy.armor -= 600
     this.enemy.armor = Math.max(0, this.enemy.armor)
+
+    this.stats.health = (this.stats.health + (this.stats.stamina * this.stats.staminaModifier) * healthPerStamina) * (1 + (0.01 * settings.talents.felStamina))
+    this.stats.maxMana = (this.stats.mana + (this.stats.intellect * this.stats.intellectModifier) * manaPerInt) * (1 + (0.01 * settings.talents.felIntellect))
 
     // Assign the filler spell.
     this.filler = null
@@ -540,6 +541,9 @@ class Player {
   }
 
   cast (spell, predictedDamage = 0) {
+    if (this.gcdRemaining > 0 && this.spells[spell].onGcd) {
+      throw 'Attempting to cast a spell (' + spell + ') on GCD with ' + this.gcdRemaining + ' cooldown remaining.'
+    }
     this.spells[spell].startCast(predictedDamage)
   }
 
