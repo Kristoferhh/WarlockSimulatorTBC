@@ -29,10 +29,7 @@ Player::Player(PlayerSettings* playerSettings)
     settings->enemyShadowResist = std::max(static_cast<double>(settings->enemyShadowResist), enemyBaseResistance);
     settings->enemyFireResist = std::max(static_cast<double>(settings->enemyFireResist), enemyBaseResistance);
 
-    stats->health = (stats->health + (stats->stamina * stats->staminaModifier) * healthPerStamina) * (1 + (0.01 * static_cast<double>(talents->felStamina)));
-    stats->maxMana = (stats->mana + (stats->intellect * stats->intellectModifier) * manaPerInt) * (1 + (0.01 * static_cast<double>(talents->felIntellect)));
     stats->shadowModifier *= (1 + (0.02 * talents->shadowMastery));
-
     combatLogBreakdown.insert(std::make_pair("Mp5", std::make_unique<CombatLogBreakdown>("Mp5")));
     if (selectedAuras->judgementOfWisdom)
     {
@@ -153,15 +150,17 @@ Player::Player(PlayerSettings* playerSettings)
     // Add extra stamina from Blood Pact from Improved Imp
     if (selectedAuras->bloodPact)
     {
-        double staminaGain = 70;
-        if (settings->petIsImp)
+        int improvedImpPoints = settings->improvedImp;
+
+        if (settings->petIsImp && (!settings->sacrificingPet || talents->demonicSacrifice == 0) && talents->improvedImp > improvedImpPoints)
         {
-            staminaGain += 0.1 * settings->improvedImp;
+            improvedImpPoints = talents->improvedImp;
         }
-        stats->stamina += staminaGain;
+
+        stats->stamina += 70 * 0.1 * improvedImpPoints;
     }
     // Add stamina from Demonic Embrace
-    stats->stamina *= 1 + (0.03 * talents->demonicEmbrace);
+    stats->staminaModifier *= 1 + (0.03 * talents->demonicEmbrace);
     // Add mp5 from Vampiric Touch (add 25% instead of 5% since we're adding it to the mana per 5 seconds variable)
     if (selectedAuras->vampiricTouch)
     {
@@ -199,6 +198,10 @@ Player::Player(PlayerSettings* playerSettings)
     }
     settings->enemyArmor = std::max(0, settings->enemyArmor);
 
+    // Health & Mana
+    stats->health = (stats->health + (stats->stamina * stats->staminaModifier) * healthPerStamina) * (1 + (0.01 * static_cast<double>(talents->felStamina)));
+    stats->maxMana = (stats->mana + (stats->intellect * stats->intellectModifier) * manaPerInt) * (1 + (0.01 * static_cast<double>(talents->felIntellect)));
+
     // Assign the filler spell
     if (settings->hasShadowBolt) filler = "shadowBolt";
     else if (settings->hasIncinerate) filler = "incinerate";
@@ -215,16 +218,25 @@ Player::Player(PlayerSettings* playerSettings)
     demonicKnowledgeSpellPower = 0;
     if (!settings->sacrificingPet || talents->demonicSacrifice == 0)
     {
-        if (settings->petIsImp) pet = std::make_unique<Imp>(this);
-        else if (settings->petIsSuccubus) pet = std::make_unique<Succubus>(this);
-        else if (settings->petIsFelguard) pet = std::make_unique<Felguard>(this);
+        if (settings->petIsImp)
+        {
+            pet = std::make_unique<Imp>(this);
+        }
+        else if (settings->petIsSuccubus)
+        {
+            pet = std::make_unique<Succubus>(this);
+        }
+        else if (settings->petIsFelguard)
+        {
+            pet = std::make_unique<Felguard>(this);
+        }
     }
 
     combatLogEntries.push_back("---------------- Player stats ----------------");
     combatLogEntries.push_back("Health: " + truncateTrailingZeros(std::to_string(round(stats->health))));
     combatLogEntries.push_back("Mana: " + truncateTrailingZeros(std::to_string(round(stats->maxMana))));
-    combatLogEntries.push_back("Stamina: " + truncateTrailingZeros(std::to_string(round(stats->stamina) * stats->staminaModifier)));
-    combatLogEntries.push_back("Intellect: " + truncateTrailingZeros(std::to_string(round(stats->intellect) * stats->intellectModifier)));
+    combatLogEntries.push_back("Stamina: " + truncateTrailingZeros(std::to_string(round(stats->stamina * stats->staminaModifier))));
+    combatLogEntries.push_back("Intellect: " + truncateTrailingZeros(std::to_string(round(stats->intellect * stats->intellectModifier))));
     combatLogEntries.push_back("Spell Power: " + truncateTrailingZeros(std::to_string(round(getSpellPower()))));
     combatLogEntries.push_back("Shadow Power: " + std::to_string(stats->shadowPower));
     combatLogEntries.push_back("Fire Power: " + std::to_string(stats->firePower));
