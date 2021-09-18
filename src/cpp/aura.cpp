@@ -114,7 +114,7 @@ void Aura::apply()
             recalculatePetStats = true;
         }
         
-        if (recalculatePetStats)
+        if (recalculatePetStats && player->pet != NULL)
         {
             player->pet->calculateStatsFromPlayer();
         }
@@ -208,7 +208,7 @@ void Aura::fade(bool endOfIteration)
 
     if (!endOfIteration)
     {
-        if (recalculatePetStats)
+        if (recalculatePetStats && player->pet != NULL)
         {
             player->pet->calculateStatsFromPlayer();
         }
