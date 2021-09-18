@@ -93,7 +93,6 @@ void PetSpell::reset()
 {
     cooldownRemaining = 0;
     casting = false;
-    pet->player->postIterationDamageAndMana(name);
 }
 
 void PetSpell::cast()
@@ -320,7 +319,7 @@ void PetSpell::damage(bool isCrit, bool isGlancing)
         dmg *= partialResistMultiplier;
     }
 
-    pet->player->combatLogBreakdown.at(name)->iterationDamage += dmg;
+    pet->player->addIterationDamageAndMana(name, 0, dmg);
     pet->player->iterationDamage += dmg;
 
     if (pet->pet == PetName::FELGUARD)

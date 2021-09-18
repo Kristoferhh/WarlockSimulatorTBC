@@ -483,7 +483,7 @@ void DrumsOfRestorationAura::tick(double t)
         player->stats->mana = std::min(player->stats->maxMana, player->stats->mana + manaGain);
         int manaGained = player->stats->mana - currentMana;
         player->combatLogBreakdown.at(name)->casts++;
-        player->combatLogBreakdown.at(name)->iterationManaGain += manaGained;
+        player->addIterationDamageAndMana(name, manaGained, 0);
         if (player->shouldWriteToCombatLog())
         {
             std::string msg = "Player gains " + std::to_string(manaGained) + " mana from Drums of Restoration (" + std::to_string(currentMana) + " -> " + std::to_string(player->stats->mana) + ")" + ")";

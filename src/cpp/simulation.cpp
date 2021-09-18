@@ -262,6 +262,10 @@ void Simulation::start()
     // Send the combat log breakdown info
     for (std::map<std::string, std::unique_ptr<CombatLogBreakdown>>::iterator it = player->combatLogBreakdown.begin(); it != player->combatLogBreakdown.end(); it++)
     {
+        if (it->second->iterationDamage > 0 || it->second->iterationManaGain > 0)
+        {
+            player->postIterationDamageAndMana(it->first);
+        }
         postCombatLogBreakdown(it->second->name.c_str(), it->second->casts, it->second->crits, it->second->misses, it->second->count, it->second->uptime, it->second->dodge, it->second->glancingBlows);
     }
     simulationEnd(median(dpsVector), minDps, maxDps, elapsedTime, player->settings->itemId, settings->iterations, player->totalDuration, player->totalManaRegenerated);
@@ -525,7 +529,7 @@ double Simulation::passTime()
             int manaGained = player->stats->mana - currentPlayerMana;
             player->totalManaRegenerated += manaGained;
             player->combatLogBreakdown.at("Mp5")->casts++;
-            player->combatLogBreakdown.at("Mp5")->iterationManaGain += manaGained;
+            player->addIterationDamageAndMana("Mp5", manaGained, 0);
 
             if (player->shouldWriteToCombatLog())
             {

@@ -173,7 +173,7 @@ void DamageOverTime::tick(double t)
             }
         }
 
-        player->combatLogBreakdown.at(name)->iterationDamage += dmg;
+        player->addIterationDamageAndMana(name, 0, dmg);
         player->iterationDamage += dmg;
         ticksRemaining--;
         tickTimerRemaining = tickTimerTotal;

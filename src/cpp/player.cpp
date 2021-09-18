@@ -520,9 +520,6 @@ void Player::reset()
     if (auras->Shadowflame != NULL && auras->Shadowflame->active) auras->Shadowflame->fade(true);
     if (auras->Spellstrike != NULL && auras->Spellstrike->active) auras->Spellstrike->fade(true);
     if (auras->ManaEtched4Set != NULL && auras->ManaEtched4Set->active) auras->ManaEtched4Set->fade(true);
-
-    postIterationDamageAndMana("Judgement of Wisdom");
-    postIterationDamageAndMana("Mp5");
 }
 
 double Player::getHastePercent()
@@ -804,14 +801,31 @@ double Player::getPartialResistMultiplier(SpellSchool school)
     return 1;
 }
 
+void Player::addIterationDamageAndMana(std::string spellName, uint32_t manaGain, uint32_t damage)
+{
+    if (combatLogBreakdown.count(spellName) == 0)
+    {
+        return;
+    }
+
+    uint32_t iterationManaGain = combatLogBreakdown.at(spellName)->iterationManaGain;
+    uint32_t iterationDamage = combatLogBreakdown.at(spellName)->iterationDamage;
+
+    // Check for integer overflow
+    if (iterationManaGain + manaGain < iterationManaGain || iterationDamage + damage < iterationDamage)
+    {
+        postIterationDamageAndMana(spellName);
+    }
+
+    combatLogBreakdown.at(spellName)->iterationManaGain += manaGain;
+    combatLogBreakdown.at(spellName)->iterationDamage += damage;
+}
+
 void Player::postIterationDamageAndMana(std::string spellName)
 {
-    if (combatLogBreakdown.count(spellName) != 0 && (combatLogBreakdown.at(spellName)->iterationDamage > 0 || combatLogBreakdown.at(spellName)->iterationManaGain > 0))
-    {
-        postCombatLogBreakdownVector(spellName.c_str(), combatLogBreakdown.at(spellName)->iterationManaGain, combatLogBreakdown.at(spellName)->iterationDamage);
-        combatLogBreakdown.at(spellName)->iterationDamage = 0;
-        combatLogBreakdown.at(spellName)->iterationManaGain = 0;
-    }
+    postCombatLogBreakdownVector(spellName.c_str(), combatLogBreakdown.at(spellName)->iterationManaGain, combatLogBreakdown.at(spellName)->iterationDamage);
+    combatLogBreakdown.at(spellName)->iterationDamage = 0;
+    combatLogBreakdown.at(spellName)->iterationManaGain = 0;
 }
 
 void Player::throwError(std::string error)

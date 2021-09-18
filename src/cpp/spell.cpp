@@ -24,7 +24,6 @@ void Spell::reset()
 {
     cooldownRemaining = 0;
     casting = false;
-    player->postIterationDamageAndMana(name);
 }
 
 void Spell::setup()
@@ -246,7 +245,7 @@ void Spell::damage(bool isCrit)
     player->iterationDamage += totalDamage;
 
     // Combat Log
-    player->combatLogBreakdown.at(name)->iterationDamage += totalDamage;
+    player->addIterationDamageAndMana(name, 0, totalDamage);
     if (player->shouldWriteToCombatLog())
     {
         std::string msg = name + " ";
@@ -421,7 +420,7 @@ void Spell::onHitProcs()
         player->stats->mana += manaGained;
         player->totalManaRegenerated += manaGained;
         player->combatLogBreakdown.at("Judgement of Wisdom")->casts++;
-        player->combatLogBreakdown.at("Judgement of Wisdom")->iterationManaGain += manaGained;
+        player->addIterationDamageAndMana("Judgement of Wisdom", manaGained, 0);
         if (player->shouldWriteToCombatLog())
         {
             std::string msg = "Player gains " + std::to_string(manaGained) + " mana from Judgement of Wisdom (" + std::to_string(currentMana) + " -> " + std::to_string(player->stats->mana) + ")";
@@ -561,7 +560,7 @@ void LifeTap::cast()
     const int manaGain = this->manaGain();
     player->totalManaRegenerated += manaGain;
     player->combatLogBreakdown.at(name)->casts++;
-    player->combatLogBreakdown.at(name)->iterationManaGain += manaGain;
+    player->addIterationDamageAndMana(name, manaGain, 0);
     
     if (player->shouldWriteToCombatLog() && player->stats->mana + manaGain > player->stats->maxMana)
     {
@@ -749,7 +748,7 @@ void SeedOfCorruption::damage()
         std::string msg = name + " " + std::to_string(round(totalSeedDamage)) + " (" + std::to_string(enemyAmount) + " Enemies (" + std::to_string(resistAmount) + " Resists & " + std::to_string(critAmount) + " Crits) - " + std::to_string(baseDamage) + " Base Damage - " + std::to_string(coefficient) + " Coefficient - " + std::to_string(spellPower) + " Spell Power - " + std::to_string(round(modifier * 1000) / 1000) + "% Modifier - " + std::to_string(partialResistMultiplier) + " % Partial Resist Multiplier)";
         player->combatLog(msg);
     }
-    player->combatLogBreakdown.at(name)->iterationDamage += totalSeedDamage;
+    player->addIterationDamageAndMana(name, 0, totalSeedDamage);
     player->combatLogBreakdown.at(name)->crits += critAmount;
     player->combatLogBreakdown.at(name)->misses += resistAmount;
     // the cast() function already adds 1 to the amount of casts so we only need to add enemiesHit - 1 to the cast amount
@@ -928,7 +927,7 @@ void SuperManaPotion::cast()
     //todo check for the randomize values option
     const int manaGain = random(minMana, maxMana);
     player->totalManaRegenerated += manaGain;
-    player->combatLogBreakdown.at(name)->iterationManaGain += manaGain;
+    player->addIterationDamageAndMana(name, manaGain, 0);
     player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
     {
@@ -955,7 +954,7 @@ void DemonicRune::cast()
     //todo check for the randomize values option
     const int manaGain = random(minMana, maxMana);
     player->totalManaRegenerated += manaGain;
-    player->combatLogBreakdown.at(name)->iterationManaGain += manaGain;
+    player->addIterationDamageAndMana(name, manaGain, 0);
     player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
     {
