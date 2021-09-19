@@ -113,18 +113,22 @@ void Simulation::start()
                             }
                         }
 
+                        // Cast Conflagrate if there's not enough time for another filler and Immolate is up
                         if (notEnoughTimeForFiller && player->spells->Conflagrate != NULL && player->auras->Immolate != NULL && player->spells->Conflagrate->canCast() && player->auras->Immolate->active)
                         {
                             selectedSpellHandler(player->spells->Conflagrate, predictedDamageOfSpells);
                         }
+                        // Cast Shadowburn if there's not enough time for another filler
                         if (player->gcdRemaining <= 0 && notEnoughTimeForFiller && player->spells->Shadowburn != NULL && player->spells->Shadowburn->canCast())
                         {
                             selectedSpellHandler(player->spells->Shadowburn, predictedDamageOfSpells);
                         }
+                        // Cast Death Coil if there's not enough time for another filler
                         if (player->gcdRemaining <= 0 && notEnoughTimeForFiller && player->spells->DeathCoil != NULL && player->spells->DeathCoil->canCast())
                         {
                             selectedSpellHandler(player->spells->DeathCoil, predictedDamageOfSpells);
                         }
+                        // Cast Curse of the Elements or Curse of Recklessness if they're the selected curse and they're not active
                         if (player->gcdRemaining <= 0 && (player->curseSpell == player->spells->CurseOfRecklessness || player->curseSpell == player->spells->CurseOfTheElements) && !player->curseAura->active && player->curseSpell->canCast())
                         {
                             if (player->curseSpell->hasEnoughMana())
@@ -136,7 +140,7 @@ void Simulation::start()
                                 player->castLifeTapOrDarkPact();
                             }
                         }
-                        // Cast Curse of Doom if there's more than 60 seconds remaining
+                        // Cast Curse of Doom if it's the selected curse and there's more than 60 seconds remaining
                         if (player->gcdRemaining <= 0 && timeRemaining > 60 && player->curseSpell == player->spells->CurseOfDoom && !player->auras->CurseOfDoom->active && player->spells->CurseOfDoom->canCast())
                         {
                             selectedSpellHandler(player->spells->CurseOfDoom, predictedDamageOfSpells);
