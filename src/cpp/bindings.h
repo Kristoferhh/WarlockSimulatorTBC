@@ -15,7 +15,7 @@ void postCombatLogBreakdownVector(const char* name, int manaGain, int damage);
 void postCombatLogBreakdown(const char* name, int casts, int crits, int misses, int count, double uptime, int dodges, int glancingBlows);
 void combatLogUpdate(const char* combatLogEntry);
 void simulationUpdate(int iteration, int iterationAmount, double medianDps, int itemId);
-void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::duration<double> duration, int itemId, int iterationAmount, int totalDuration);
+void simulationEnd(double medianDps, double minDps, double maxDps, int itemId, int iterationAmount, int totalDuration);
 
 extern "C"
 {

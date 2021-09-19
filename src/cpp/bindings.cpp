@@ -97,7 +97,7 @@ void simulationUpdate(int iteration, int iterationAmount, double medianDps, int 
 #endif
 }
 
-void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::duration<double> duration, int itemId, int iterationAmount, int totalDuration)
+void simulationEnd(double medianDps, double minDps, double maxDps, int itemId, int iterationAmount, int totalDuration)
 {
 #ifdef EMSCRIPTEN
     EM_ASM({
@@ -107,15 +107,14 @@ void simulationEnd(double medianDps, double minDps, double maxDps, std::chrono::
                 medianDps: $0,
                 minDps: $1,
                 maxDps: $2,
-                duration: $3,
-                itemId: $4,
-                iterationAmount: $5,
-                totalDuration: $6,
+                itemId: $3,
+                iterationAmount: $4,
+                totalDuration: $5,
             }
         })
-    }, medianDps, minDps, maxDps, duration.count(), itemId, iterationAmount, totalDuration);
+    }, medianDps, minDps, maxDps, itemId, iterationAmount, totalDuration);
 #else
-    std::cout << "Median DPS: " << std::to_string(medianDps) << ". Min DPS: " << std::to_string(minDps) << ". Max DPS: " << std::to_string(maxDps) << ". Time: " << std::to_string(duration.count()) << std::endl;
+    std::cout << "Median DPS: " << std::to_string(medianDps) << ". Min DPS: " << std::to_string(minDps) << ". Max DPS: " << std::to_string(maxDps) << std::endl;
 #endif
 }
 

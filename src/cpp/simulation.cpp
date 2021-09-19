@@ -19,7 +19,6 @@ void Simulation::start()
     player->initialize();
     double minDps = 99999;
     double maxDps = 0;
-    auto startTime = std::chrono::high_resolution_clock::now();
     std::mt19937 gen;
     std::uniform_int_distribution<> randomFightLength(settings->minTime, settings->maxTime);
 
@@ -281,8 +280,6 @@ void Simulation::start()
         }
     }
 
-    auto finishTime = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsedTime = finishTime - startTime;
     // Send the contents of the combat log to the web worker
     for (const auto& value: player->combatLogEntries)
     {
@@ -297,7 +294,7 @@ void Simulation::start()
         }
         postCombatLogBreakdown(it->second->name.c_str(), it->second->casts, it->second->crits, it->second->misses, it->second->count, it->second->uptime, it->second->dodge, it->second->glancingBlows);
     }
-    simulationEnd(median(dpsVector), minDps, maxDps, elapsedTime, player->settings->itemId, settings->iterations, player->totalDuration);
+    simulationEnd(median(dpsVector), minDps, maxDps, player->settings->itemId, settings->iterations, player->totalDuration);
 }
 
 double Simulation::passTime()
