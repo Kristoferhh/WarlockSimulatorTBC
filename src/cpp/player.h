@@ -36,9 +36,10 @@ struct Player
   PlayerSettings* settings;
   std::unique_ptr<PlayerSpells> spells;
   std::unique_ptr<PlayerAuras> auras;
-  std::string filler;
-  std::string curse;
   std::vector<std::unique_ptr<Trinket>> trinkets;
+  std::shared_ptr<Spell> filler;
+  std::shared_ptr<Spell> curseSpell;
+  std::shared_ptr<Aura> curseAura;
   std::vector<std::string> combatLogEntries;
   std::map<std::string, std::unique_ptr<CombatLogBreakdown>> combatLogBreakdown;
   uint32_t iterationDamage;
@@ -60,9 +61,6 @@ struct Player
   double critMultiplier;
 
   Player(PlayerSettings* settings);
-  std::shared_ptr<Aura> getCurseAura();
-  std::shared_ptr<Spell> getCurseSpell();
-  std::shared_ptr<Spell> getFiller();
   void initialize();
   void reset();
   void throwError(std::string error);

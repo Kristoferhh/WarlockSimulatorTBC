@@ -11,8 +11,6 @@ Player::Player(PlayerSettings* playerSettings)
     std::cout << playerSettings->metaGemId << std::endl;
     spells = std::make_unique<PlayerSpells>();
     auras = std::make_unique<PlayerAuras>();
-    filler = "";
-    curse = "";
     combatLogEntries = {};
     level = 70;
     castTimeRemaining = 0;
@@ -202,17 +200,6 @@ Player::Player(PlayerSettings* playerSettings)
     // Health & Mana
     stats->health = (stats->health + (stats->stamina * stats->staminaModifier) * healthPerStamina) * (1 + (0.01 * static_cast<double>(talents->felStamina)));
     stats->maxMana = (stats->mana + (stats->intellect * stats->intellectModifier) * manaPerInt) * (1 + (0.01 * static_cast<double>(talents->felIntellect)));
-
-    // Assign the filler spell
-    if (settings->hasShadowBolt) filler = "shadowBolt";
-    else if (settings->hasIncinerate) filler = "incinerate";
-    else if (settings->hasSearingPain) filler = "searingPain";
-
-    // Assign the curse (if selected)
-    if (settings->hasCurseOfRecklessness) curse = "curseOfRecklessness";
-    else if (settings->hasCurseOfTheElements) curse = "curseOfTheElements";
-    else if (settings->hasCurseOfDoom) curse = "curseOfDoom";
-    else if (settings->hasCurseOfAgony) curse = "curseOfAgony";
 
     // Pet
     // Spell Power from the Demonic Knowledge talent
@@ -417,6 +404,40 @@ void Player::initialize()
         {
             spells->Innervate.push_back(std::make_shared<Innervate>(this, auras->Innervate));
         }
+    }
+
+    // Set the filler property
+    if (settings->hasIncinerate)
+    {
+        filler = spells->Incinerate;
+    }
+    else if (settings->hasSearingPain)
+    {
+        filler = spells->SearingPain;
+    }
+    else
+    {
+        filler = spells->ShadowBolt;
+    }
+
+    // Set the curseSpell and curseAura properties
+    if (spells->CurseOfTheElements != NULL)
+    {
+        curseSpell = spells->CurseOfTheElements;
+        curseAura = auras->CurseOfTheElements;
+    }
+    else if (spells->CurseOfRecklessness != NULL)
+    {
+        curseSpell = spells->CurseOfRecklessness;
+        curseAura = auras->CurseOfRecklessness;
+    }
+    else if (spells->CurseOfDoom != NULL)
+    {
+        curseSpell = spells->CurseOfDoom;
+    }
+    else if (spells->CurseOfAgony != NULL)
+    {
+        curseSpell = spells->CurseOfAgony;
     }
 }
 
@@ -678,17 +699,6 @@ bool Player::areAnyCooldownsReady()
 
 void Player::useCooldowns()
 {
-    if (!spells->Bloodlust.empty() && !auras->Bloodlust->active)
-    {
-        for (int i = 0; i < settings->bloodlustAmount; i++)
-        {
-            if (spells->Bloodlust[i]->ready())
-            {
-                spells->Bloodlust[i]->startCast();
-                break;
-            }
-        }
-    }
     if (!spells->PowerInfusion.empty() && !auras->PowerInfusion->active)
     {
         for (int i = 0; i < settings->powerInfusionAmount; i++)
@@ -737,54 +747,6 @@ void Player::useCooldowns()
             }
         }
     }
-}
-
-std::shared_ptr<Aura> Player::getCurseAura()
-{
-    if (auras->CurseOfTheElements != NULL)
-    {
-        return auras->CurseOfTheElements;
-    }
-    else if (auras->CurseOfRecklessness != NULL)
-    {
-        return auras->CurseOfRecklessness;
-    }
-    else
-    {
-        return nullptr;
-    }
-}
-
-std::shared_ptr<Spell> Player::getCurseSpell()
-{
-    if (spells->CurseOfDoom != NULL)
-    {
-        return spells->CurseOfDoom;
-    }
-    else if (spells->CurseOfTheElements != NULL)
-    {
-        return spells->CurseOfTheElements;
-    }
-    else if (spells->CurseOfRecklessness != NULL)
-    {
-        return spells->CurseOfRecklessness;
-    }
-    else if (spells->CurseOfAgony != NULL)
-    {
-        return spells->CurseOfAgony;
-    }
-    else
-    {
-        return nullptr;
-    }
-}
-
-std::shared_ptr<Spell> Player::getFiller()
-{
-    if (spells->ShadowBolt != NULL) return spells->ShadowBolt;
-    else if (spells->Incinerate != NULL) return spells->Incinerate;
-    else if (spells->SearingPain != NULL) return spells->SearingPain;
-    else return nullptr;
 }
 
 void Player::castLifeTapOrDarkPact()
