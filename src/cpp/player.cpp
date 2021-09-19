@@ -29,7 +29,6 @@ Player::Player(PlayerSettings* playerSettings)
     settings->enemyShadowResist = std::max(static_cast<double>(settings->enemyShadowResist), enemyBaseResistance);
     settings->enemyFireResist = std::max(static_cast<double>(settings->enemyFireResist), enemyBaseResistance);
 
-    stats->shadowModifier *= (1 + (0.02 * talents->shadowMastery));
     combatLogBreakdown.insert(std::make_pair("Mp5", std::make_unique<CombatLogBreakdown>("Mp5")));
     if (selectedAuras->judgementOfWisdom)
     {
@@ -114,6 +113,8 @@ Player::Player(PlayerSettings* playerSettings)
             }
         }
     }
+    // Shadow Mastery
+    stats->shadowModifier *= (1 + (0.02 * talents->shadowMastery));
     // Ferocious Inspiration
     if (selectedAuras->ferociousInspiration)
     {

@@ -42,6 +42,7 @@ struct Spell : std::enable_shared_from_this<Spell>
     bool isAura;
     bool onGcd;
     bool isProc;
+    bool isFinisher;
     std::string name;
     std::string breakdownTable;
 

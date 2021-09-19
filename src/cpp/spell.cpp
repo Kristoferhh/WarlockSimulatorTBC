@@ -18,6 +18,7 @@ Spell::Spell(Player* player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageO
     isAura = false;
     onGcd = true;
     isProc = false;
+    isFinisher = false;
 }
 
 void Spell::reset()
@@ -632,6 +633,7 @@ Shadowburn::Shadowburn(Player* player) : Spell(player)
     maxDmg = 665;
     doesDamage = true;
     canCrit = true;
+    isFinisher = true;
     school = SpellSchool::SHADOW;
     type = SpellType::DESTRUCTION;
     setup();
@@ -645,6 +647,7 @@ DeathCoil::DeathCoil(Player* player) : Spell(player)
     coefficient = 0.4286;
     dmg = 526;
     doesDamage = true;
+    isFinisher = true;
     school = SpellSchool::SHADOW;
     type = SpellType::AFFLICTION;
     setup();
@@ -882,6 +885,7 @@ Conflagrate::Conflagrate(Player* player) : Spell(player)
     maxDmg = 721;
     coefficient = 1.5 / 3.5;
     doesDamage = true;
+    isFinisher = true;
     canCrit = true;
     school = SpellSchool::FIRE;
     type = SpellType::DESTRUCTION;
