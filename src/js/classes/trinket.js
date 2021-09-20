@@ -158,6 +158,19 @@ class IconOfTheSilverCrescent extends Trinket {
   }
 }
 
+class DarkIronSmokingPipe extends Trinket {
+  constructor (player) {
+    super(player)
+    this.name = 'Dark Iron Smoking Pipe'
+    this.cooldown = 120
+    this.duration = 20
+    this.stats = {
+      spellPower: 155
+    }
+    this.setup()
+  }
+}
+
 class ScryersBloodgem extends Trinket {
   constructor (player) {
     super(player)

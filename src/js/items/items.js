@@ -4359,6 +4359,13 @@ const items = {
       source: 'Ashtongue Deathsworn - Exalted',
       phase: 3
     },
+    darkIronSmokingPipe: {
+      name: "Dark Iron Smoking Pipe",
+      spellPower: 43,
+      id: 38290,
+      source: "Blackrock Depths",
+      phase: 2
+    },
     sextantOfUnstableCurrents: {
       name: 'Sextant of Unstable Currents',
       critRating: 40,
