@@ -190,7 +190,7 @@ void DamageOverTime::tick(double t)
         }
 
         // Ashtongue Talisman of Shadows
-        if (name == "Corruption" && player->auras->AshtongueTalismanOfShadows != NULL && player->getRand() <= player->auras->AshtongueTalismanOfShadows->procChance * player->critChanceMultiplier)
+        if (player->spells->Corruption != NULL && name == player->spells->Corruption->name && player->auras->AshtongueTalismanOfShadows != NULL && player->getRand() <= player->auras->AshtongueTalismanOfShadows->procChance * player->critChanceMultiplier)
         {
             player->auras->AshtongueTalismanOfShadows->apply();
         }

@@ -76,7 +76,7 @@ void Spell::startCast(double predictedDamage)
     }
 
     // Error: Starting to cast a spell while casting another spell
-    if (player->castTimeRemaining > 0 && !isNonWarlockAbility)
+    if (player->castTimeRemaining > 0 && !isNonWarlockAbility && !isProc)
     {
         player->throwError("Attempting to cast " + name + " while player's cast time remaining is at " + std::to_string(player->castTimeRemaining) + " sec");
     }
@@ -523,15 +523,15 @@ void ShadowBolt::startCast(double predictedDamage = 0)
 
     if (hasShadowTrance && player->auras->ShadowTrance->active)
     {
-      castTime = 0;
+        castTime = 0;
     }
 
     Spell::startCast();
     
     if (hasShadowTrance && player->auras->ShadowTrance->active)
     {
-      castTime = calculateCastTime();
-      player->auras->ShadowTrance->fade();
+        castTime = calculateCastTime();
+        player->auras->ShadowTrance->fade();
     }
 }
 
@@ -1050,6 +1050,7 @@ TimbalsFocusingCrystal::TimbalsFocusingCrystal(Player* player) : Spell(player)
     minDmg = 285;
     maxDmg = 475;
     doesDamage = true;
+    isProc = true;
     school = SpellSchool::SHADOW;
     canCrit = true;
     setup();
