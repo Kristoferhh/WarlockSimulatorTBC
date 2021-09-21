@@ -52,7 +52,14 @@ class Spell {
   }
 
   getCastTime () {
-    return Math.round((this.castTime / (1 + ((this.player.stats.hasteRating / hasteRatingPerPercent + this.player.stats.hastePercent) / 100))) * 10000) / 10000 + this.player.spellDelay
+    let hastePercent = this.player.stats.hastePercent
+    
+    // If both Bloodlust and Power Infusion are active then remove the 20% bonus from Power Infusion since they don't stack
+    if (this.player.auras.powerInfusion && this.player.auras.bloodlust && this.player.auras.powerInfusion.active && this.player.auras.bloodlust.active) {
+      hastePercent /= 1.2
+    }
+
+    return Math.round(this.castTime / ((1 + (this.player.stats.hasteRating / hasteRatingPerPercent / 100)) * hastePercent) * 10000) / 10000 + this.player.spellDelay
   }
 
   startCast (predictedDamage = 0) {
@@ -65,7 +72,7 @@ class Spell {
       this.casting = true
       this.player.castTimeRemaining = this.getCastTime()
       if (!this.isProc) {
-        combatLogMsg += 'Started casting ' + this.name + ' - Cast time: ' + (this.player.castTimeRemaining - this.player.spellDelay) + ' (' + Math.round((this.player.stats.hasteRating / hasteRatingPerPercent + this.player.stats.hastePercent) * 10000) / 10000 + '% haste at a base cast speed of ' + this.castTime + ').'
+        combatLogMsg += 'Started casting ' + this.name + ' - Cast time: ' + (this.player.castTimeRemaining - this.player.spellDelay) + ' (' + Math.round((((1 + (this.player.stats.hasteRating / hasteRatingPerPercent / 100)) * this.player.stats.hastePercent) - 1) * 10000) / 100 + '% haste at a base cast speed of ' + this.castTime + ').'
       }
     } else {
       if (!this.isProc) {

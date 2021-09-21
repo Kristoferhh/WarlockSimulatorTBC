@@ -36,7 +36,7 @@ class Aura {
       // Add stats from the aura if it has any
       for (const stat in this.stats) {
         if (this.player.stats.hasOwnProperty(stat)) {
-          if (stat.toLowerCase().includes('modifier')) {
+          if (stat.toLowerCase().includes('modifier') || stat == "hastePercent") {
             this.player.combatLog(stat + ' * ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat] * 100) / 100 + ' -> ' + Math.round(this.player.stats[stat] * this.stats[stat] * 100) / 100 + ')')
             this.player.stats[stat] *= this.stats[stat]
           } else {
@@ -77,7 +77,7 @@ class Aura {
       let recalculatePetStats = false
       for (const stat in this.stats) {
         if (this.player.stats.hasOwnProperty(stat)) {
-          if (stat.toLowerCase().includes('modifier')) {
+          if (stat.toLowerCase().includes('modifier') || stat == "hastePercent") {
             if (!endOfIteration) {
               this.player.combatLog(stat + ' / ' + this.stats[stat] + ' (' + Math.round(this.player.stats[stat] * 100) / 100 + ' -> ' + Math.round((this.player.stats[stat] / this.stats[stat]) * 100) / 100 + ')')
             }
@@ -228,7 +228,7 @@ class PowerInfusionAura extends Aura {
     this.durationTotal = 15
     this.isImportant = true
     this.stats = {
-      hastePercent: 20,
+      hastePercent: 1.2,
       manaCostModifier: 0.8
     }
     this.setup()
@@ -376,7 +376,7 @@ class BloodlustAura extends Aura {
     this.groupWide = true
     this.hasteModifier = 30
     this.stats = {
-      hastePercent: 30
+      hastePercent: 1.3
     }
     this.setup()
   }
