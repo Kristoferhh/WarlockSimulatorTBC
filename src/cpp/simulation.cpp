@@ -185,7 +185,7 @@ void Simulation::start()
                             selectedSpellHandler(player->spells->Shadowfury, predictedDamageOfSpells);
                         }
                         // Cast filler spell if sim is not choosing the rotation for the user
-                        if (player->gcdRemaining <= 0 && !player->settings->simChoosingRotation && player->filler->canCast())
+                        if (timeRemaining >= player->filler->getCastTime() && player->gcdRemaining <= 0 && !player->settings->simChoosingRotation && player->filler->canCast())
                         {
                             selectedSpellHandler(player->filler, predictedDamageOfSpells);
                         }
@@ -259,6 +259,11 @@ void Simulation::start()
             }
 
             passTime();
+        }
+
+        if (player->shouldWriteToCombatLog())
+        {
+            player->combatLog("Fight end");
         }
 
         player->totalDuration += fightLength;
