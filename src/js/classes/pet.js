@@ -148,6 +148,7 @@ class Pet {
     if (this.playerAuras.chainOfTheTwilightOwl) this.stats.buffs.spellCritChance += 2
     if (this.playerAuras.jadePendantOfBlasting) this.stats.buffs.spellPower += 15
     if (this.playerAuras.idolOfTheRavenGoddess) this.stats.buffs.spellCritRating += 20
+    if (this.playerAuras.wrathOfAirTotem && this.player.simSettings.improvedWrathOfAirTotem == "yes") this.stats.buffs.spellPower += 20
     // Atiesh auras
     // Add 33sp if the player has Atiesh equipped since the aura's spell power is just added to the item itself
     if (this.player.items.twohand == 22630) this.stats.buffs.spellPower += 33
