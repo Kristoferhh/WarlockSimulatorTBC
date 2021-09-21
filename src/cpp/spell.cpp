@@ -519,20 +519,20 @@ ShadowBolt::ShadowBolt(Player* player) : Spell(player)
 
 void ShadowBolt::startCast(double predictedDamage = 0)
 {
-    //bool hasShadowTrance = player->getAura("shadowTrance") != NULL;
+    bool hasShadowTrance = player->auras->ShadowTrance != NULL;
 
-    /*if (hasShadowTrance && player->auras["shadowTrance"].active)
+    if (hasShadowTrance && player->auras->ShadowTrance->active)
     {
       castTime = 0;
-    }*/
+    }
 
     Spell::startCast();
     
-    /*if (hasShadowTrance && player->auras["shadowTrance"].active)
+    if (hasShadowTrance && player->auras->ShadowTrance->active)
     {
       castTime = calculateCastTime();
-      player->auras["shadowTrance"].fade();
-    }*/
+      player->auras->ShadowTrance->fade();
+    }
 }
 
 double ShadowBolt::calculateCastTime()

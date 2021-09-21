@@ -586,7 +586,7 @@ double Simulation::passTime()
 void Simulation::selectedSpellHandler(std::shared_ptr<Spell> spell, std::map<std::shared_ptr<Spell>, double>& predictedDamageOfSpells)
 {
     // If the sim is choosing the rotation for the player (or if it's a finisher spell) then predict the damage of the spell and put it in the map
-    if (player->settings->simChoosingRotation || spell->isFinisher)
+    if ((player->settings->simChoosingRotation || spell->isFinisher) && predictedDamageOfSpells.count(spell) == 0)
     {
         predictedDamageOfSpells.insert(std::make_pair(spell, spell->predictDamage()));
     }
