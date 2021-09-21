@@ -638,7 +638,14 @@ class Player {
   getGcdValue(spellVarName = '') {
     // As far as I know, Shadowfury doesn't trigger a global cooldown
     if (!this.spells.shadowfury || this.spells.shadowfury.varName !== spellVarName) {
-      return Math.max(this.minimumGcdValue, Math.round((this.gcdValue / (1 + ((this.stats.hasteRating / hasteRatingPerPercent + this.stats.hastePercent) / 100))) * 10000) / 10000)
+      let hastePercent = this.stats.hastePercent
+
+      // If both Bloodlust and Power Infusion are active then remove the 20% bonus from Power Infusion since they don't stack
+      if (this.auras.powerInfusion && this.auras.bloodlust && this.auras.powerInfusion.active && this.auras.bloodlust.active) {
+        hastePercent /= 1.2
+      }
+
+      return Math.max(this.minimumGcdValue, Math.round(this.gcdValue / ((1 + (this.stats.hasteRating / hasteRatingPerPercent / 100)) * hastePercent) * 10000) / 10000)
     }
     return 0
   }
