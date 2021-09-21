@@ -557,7 +557,15 @@ void Player::reset()
 
 double Player::getHastePercent()
 {
-    return stats->hastePercent * (1 + stats->hasteRating / hasteRatingPerPercent / 100.0);
+    double hastePercent = stats->hastePercent;
+
+    // If both Bloodlust and Power Infusion are active then remove the 20% PI bonus since they don't stack
+    if (auras->Bloodlust != NULL && auras->PowerInfusion != NULL && auras->Bloodlust->active && auras->PowerInfusion->active)
+    {
+        hastePercent /= (1 + auras->PowerInfusion->stats->hastePercent / 100);
+    }
+
+    return hastePercent * (1 + stats->hasteRating / hasteRatingPerPercent / 100.0);
 }
 
 double Player::getGcdValue(std::shared_ptr<Spell> spell)
@@ -699,7 +707,8 @@ bool Player::areAnyCooldownsReady()
 
 void Player::useCooldowns()
 {
-    if (!spells->PowerInfusion.empty() && !auras->PowerInfusion->active)
+    // Only use PI if Bloodlust isn't selected or if Bloodlust isn't active since they don't stack
+    if (!spells->PowerInfusion.empty() && !auras->PowerInfusion->active && (spells->Bloodlust.empty() || !auras->Bloodlust->active))
     {
         for (int i = 0; i < settings->powerInfusionAmount; i++)
         {

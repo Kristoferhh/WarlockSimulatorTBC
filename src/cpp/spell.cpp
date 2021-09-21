@@ -94,7 +94,7 @@ void Spell::startCast(double predictedDamage)
         player->castTimeRemaining = getCastTime();
         if (!isProc && player->shouldWriteToCombatLog())
         {
-            combatLogMsg.append("Started casting " + name + " - Cast time: " + truncateTrailingZeros(std::to_string(player->castTimeRemaining - player->spellDelay), 4) + " (" + truncateTrailingZeros(std::to_string(player->getHastePercent() * 100), 4) + "% haste at a base cast speed of " + truncateTrailingZeros(std::to_string(castTime), 2) + ")");
+            combatLogMsg.append("Started casting " + name + " - Cast time: " + truncateTrailingZeros(std::to_string(player->castTimeRemaining - player->spellDelay), 4) + " (" + truncateTrailingZeros(std::to_string((player->getHastePercent() - 1) * 100), 4) + "% haste at a base cast speed of " + truncateTrailingZeros(std::to_string(castTime), 2) + ")");
         }
     }
     else
