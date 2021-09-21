@@ -22,6 +22,7 @@ class Player {
 
   constructor (settings, customItemSlot, customItemSubSlot, customItemId, customStat, customStatValue) {
     this.stats = JSON.parse(JSON.stringify(settings.stats)) // Create a deep-copy of the character's stats since we need to modify the values.
+    this.stats.hastePercent += 1
     this.items = JSON.parse(JSON.stringify(settings.items))
     this.enemy = settings.enemy
     this.rotation = settings.rotation
@@ -417,6 +418,7 @@ class Player {
     if (this.trinketIds.includes(24126)) this.trinkets.push(new FigurineLivingRubySerpent(this))
     if (this.trinketIds.includes(29376)) this.trinkets.push(new EssenceOfTheMartyr(this))
     if (this.trinketIds.includes(30340)) this.trinkets.push(new StarkillersBauble(this))
+    if (this.trinketIds.includes(38290)) this.trinkets.push(new DarkIronSmokingPipe(this))
 
     // Spells
     this.spells = {
@@ -587,7 +589,8 @@ class Player {
         }
       }
     }
-    if (this.spells.powerInfusion && !this.auras.powerInfusion.active) {
+    // Only use Power Infusion if Bloodlust wasn't chosen or if Bloodlust isn't active since they don't stack together
+    if (this.spells.powerInfusion && !this.auras.powerInfusion.active && (!this.auras.bloodlust || !this.auras.bloodlust.active)) {
       for (let i = 0; i < this.spells.powerInfusion.length; i++) {
         if (this.spells.powerInfusion[i].ready()) {
           this.spells.powerInfusion[i].startCast()
