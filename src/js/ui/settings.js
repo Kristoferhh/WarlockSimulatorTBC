@@ -246,4 +246,10 @@ function updateSimulationSettingsVisibility () {
     $('#shattrathFaction').hide()
     $('#shattrathFactionReputation').hide()
   }
+
+  if (auras.wrathOfAirTotem) {
+    $('#improvedWrathOfAirTotem').show()
+  } else {
+    $('#improvedWrathOfAirTotem').hide()
+  }
 }

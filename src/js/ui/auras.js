@@ -6,7 +6,7 @@ $(document).on('click', '.aura', function () {
   $(this).attr('data-checked', !checkedVal)
   auras[$(this).attr('name')] = !checkedVal
   
-  if (auraName == 'bloodPact' || auraName == 'innervate' || auraName == 'powerInfusion' || auraName == 'ferociousInspiration' || auraName == 'faerieFire' || auraName == 'vampiricTouch' || auraName == 'exposeArmor' || auraName == 'exposeWeakness' || auraName == 'totemOfWrath' || auraName == 'curseOfTheElements' || auraName == 'prayerOfSpirit' || auraName == 'powerOfTheGuardianWarlock' || auraName == 'powerOfTheGuardianMage' || auraName == 'drumsOfBattle' || auraName == 'drumsOfWar' || auraName == 'drumsOfRestoration' || auraName == 'bloodlust') {
+  if (auraName == 'wrathOfAirTotem' || auraName == 'bloodPact' || auraName == 'innervate' || auraName == 'powerInfusion' || auraName == 'ferociousInspiration' || auraName == 'faerieFire' || auraName == 'vampiricTouch' || auraName == 'exposeArmor' || auraName == 'exposeWeakness' || auraName == 'totemOfWrath' || auraName == 'curseOfTheElements' || auraName == 'prayerOfSpirit' || auraName == 'powerOfTheGuardianWarlock' || auraName == 'powerOfTheGuardianMage' || auraName == 'drumsOfBattle' || auraName == 'drumsOfWar' || auraName == 'drumsOfRestoration' || auraName == 'bloodlust') {
     updateSimulationSettingsVisibility()
   }
   if (!$(this).hasClass('petBuff')) {

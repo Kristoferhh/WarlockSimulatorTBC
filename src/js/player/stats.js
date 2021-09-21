@@ -162,6 +162,8 @@ function refreshCharacterStats () {
   if (auras.powerOfTheGuardianWarlock) spellPower += 33 * $("select[name='warlockAtieshAmount']").val()
   // Spellfire 3-set bonus
   if (localStorage.setBonuses && JSON.parse(localStorage.setBonuses)['552'] >= 3) spellPower += (characterStats.intellect * characterStats.intellectModifier * 0.07)
+  // Elemental Shaman T4 2pc bonus
+  if (auras.wrathOfAirTotem && $('select[name="improvedWrathOfAirTotem"]').val() == 'yes') spellPower += 20
   spellPower = Math.round(spellPower)
 
   // MP5

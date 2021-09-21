@@ -279,6 +279,8 @@ class Player {
     if (settings.auras.prayerOfSpirit && settings.simSettings.improvedDivineSpirit) {
       this.stats.spellPower += (this.stats.spirit * this.stats.spiritModifier * (0 + (settings.simSettings.improvedDivineSpirit / 20)))
     }
+    // Elemental Shaman T4 2pc bonus
+    if (settings.auras.wrathOfAirTotem && settings.simSettings.improvedWrathOfAirTotem == "yes") this.stats.spellPower += 20
     // Add extra stamina from Blood Pact from Improved Imp
     if (settings.auras.bloodPact) {
       this.stats.stamina += 70 * (0.1 * settings.simSettings.improvedImp)
