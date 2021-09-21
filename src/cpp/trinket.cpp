@@ -48,18 +48,26 @@ void Trinket::use()
             if (player->shouldWriteToCombatLog())
             {
                 int currentSpellPower = player->getSpellPower();
-                std::string msg = "Spell Power + " + std::to_string(stats->spellPower) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower + stats->spellPower) + ")";
-                player->combatLog(msg);
+                player->combatLog("Spell Power + " + std::to_string(stats->spellPower) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower + stats->spellPower) + ")");
             }
             player->stats->spellPower += stats->spellPower;
             recalculatePetStats = true;
         }
+        if (stats->hasteRating > 0)
+        {
+            if (player->shouldWriteToCombatLog())
+            {
+                int currentHasteRating = player->stats->hasteRating;
+                player->combatLog("Haste Rating + " + std::to_string(stats->hasteRating) + " (" + std::to_string(currentHasteRating) + " -> " + std::to_string(currentHasteRating + stats->hasteRating) + ")");
+            }
+            player->stats->hasteRating +=  stats->hasteRating;
+        }
     }
 
-    /*if (recalculatePetStats && player->pet != null)
+    if (recalculatePetStats && player->pet != NULL)
     {
         player->pet->calculateStatsFromPlayer();
-    }*/
+    }
     
     active = true;
     durationRemaining = duration;
@@ -86,11 +94,20 @@ void Trinket::fade(bool endOfIteration)
         player->stats->spellPower -= stats->spellPower;
         recalculatePetStats = true;
     }
+    if (stats->hasteRating > 0)
+    {
+        if (player->shouldWriteToCombatLog())
+        {
+            int currentHasteRating = player->stats->hasteRating;
+            player->combatLog("Haste Rating - " + std::to_string(stats->hasteRating) + " (" + std::to_string(currentHasteRating) + " -> " + std::to_string(currentHasteRating - stats->hasteRating) + ")");
+        }
+        player->stats->hasteRating -=  stats->hasteRating;
+    }
 
-    /*if (recalculatePetStats && player->pet != null)
+    if (recalculatePetStats && player->pet != NULL)
     {
         player->pet->calculateStatsFromPlayer();
-    }*/
+    }
 
     active = false;
     double auraUptime = player->fightTime - player->combatLogBreakdown.at(name)->appliedAt;

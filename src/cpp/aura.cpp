@@ -87,7 +87,6 @@ void Aura::apply()
                 player->combatLog(msg);
             }
             player->stats->hasteRating += stats->hasteRating;
-            recalculatePetStats = true;
         }
         if (stats != NULL && stats->hastePercent > 0)
         {
@@ -111,7 +110,6 @@ void Aura::apply()
                 player->combatLog(msg);
             }
             player->stats->manaCostModifier *= stats->manaCostModifier;
-            recalculatePetStats = true;
         }
         
         if (recalculatePetStats && player->pet != NULL)
@@ -179,7 +177,6 @@ void Aura::fade(bool endOfIteration)
             player->combatLog(msg);
         }
         player->stats->hasteRating -= stats->hasteRating;
-        recalculatePetStats = true;
     }
     if (stats != NULL && stats->hastePercent > 0)
     {
@@ -193,7 +190,6 @@ void Aura::fade(bool endOfIteration)
         {
             player->pet->stats->hastePercent /= (1 + stats->hastePercent / 100.0);
         }
-        recalculatePetStats = true;
     }
     if (stats != NULL && stats->manaCostModifier > 0)
     {
