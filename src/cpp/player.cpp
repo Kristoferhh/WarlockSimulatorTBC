@@ -297,6 +297,7 @@ void Player::initialize()
     if (std::find(trinketIds.begin(), trinketIds.end(), 24126) != trinketIds.end()) trinkets.push_back(std::make_unique<FigurineLivingRubySerpent>(this));
     if (std::find(trinketIds.begin(), trinketIds.end(), 29376) != trinketIds.end()) trinkets.push_back(std::make_unique<EssenceOfTheMartyr>(this));
     if (std::find(trinketIds.begin(), trinketIds.end(), 30340) != trinketIds.end()) trinkets.push_back(std::make_unique<StarkillersBauble>(this));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 38290) != trinketIds.end()) trinkets.push_back(std::make_unique<DarkIronSmokingPipe>(this));
 
     // Auras
     if (settings->isSingleTarget)

@@ -255,3 +255,12 @@ StarkillersBauble::StarkillersBauble(Player* player) : Trinket(player)
     Trinket::stats = std::make_unique<AuraStats>(125, 0, 0, 0, 0, 0);
     setup();
 }
+
+DarkIronSmokingPipe::DarkIronSmokingPipe(Player* player) : Trinket(player)
+{
+    name = "Dark Iron Smoking Pipe";
+    cooldown = 120;
+    duration = 20;
+    Trinket::stats = std::make_unique<AuraStats>(155, 0, 0, 0, 0, 0);
+    setup();
+}

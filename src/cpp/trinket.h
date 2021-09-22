@@ -94,3 +94,8 @@ struct StarkillersBauble : public Trinket
 {
     StarkillersBauble(Player* player);
 };
+
+struct DarkIronSmokingPipe : public Trinket
+{
+    DarkIronSmokingPipe(Player* player);
+};
