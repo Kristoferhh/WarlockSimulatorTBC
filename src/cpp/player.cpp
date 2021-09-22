@@ -146,6 +146,11 @@ Player::Player(PlayerSettings* playerSettings)
     {
         stats->spellPower += (stats->spirit * stats->spiritModifier * (0 + (static_cast<double>(settings->improvedDivineSpirit) / 20.0)));
     }
+    // Elemental shaman t4 2pc bonus
+    if (selectedAuras->wrathOfAirTotem && settings->hasElementalShamanT4Bonus)
+    {
+        stats->spellPower += 20;
+    }
     // Add extra stamina from Blood Pact from Improved Imp
     if (selectedAuras->bloodPact)
     {

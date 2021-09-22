@@ -162,6 +162,10 @@ void Pet::calculateStatsFromAuras()
     {
         buffStats->spellPower += 33 * player->settings->warlockAtieshAmount;
     }
+    if (player->selectedAuras->wrathOfAirTotem && player->settings->hasElementalShamanT4Bonus)
+    {
+        buffStats->spellPower += 20;
+    }
     // todo: do pets even get crit from crit rating buffs?
     if (player->selectedAuras->powerOfTheGuardianMage)
     {

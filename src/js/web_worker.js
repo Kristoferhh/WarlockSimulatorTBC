@@ -194,7 +194,7 @@ onmessage = function (e) {
       , c.improvedFaerieFire === "yes", c.infinitePlayerMana === "yes", c.infinitePetMana === "yes", c.lashOfPainUsage === "onCooldown", c.petMode === "1", c.prepopBlackBook === "yes"
       , c.randomizeValues === "yes", c.rotationOption === "simChooses", c.shattrathFactionReputation === "yes", parseInt(c.survivalHunterAgility), d.dot.immolate, d.dot.corruption
       , d.dot.siphonLife, d.dot.unstableAffliction, d.filler.searingPain, d.filler.shadowBolt, d.filler.incinerate, d.curse.curseOfRecklessness, d.curse.curseOfTheElements, d.curse.curseOfAgony
-      , d.curse.curseOfDoom, d.finisher.deathCoil, d.finisher.shadowburn, d.finisher.conflagrate, d.other.shadowfury, d.other.amplifyCurse, d.other.darkPact)
+      , d.curse.curseOfDoom, d.finisher.deathCoil, d.finisher.shadowburn, d.finisher.conflagrate, d.other.shadowfury, d.other.amplifyCurse, d.other.darkPact, c.improvedWrathOfAirTotem === "yes")
     let player = module._allocPlayer(playerSettings)
     let simSettings = module._allocSimSettings(e.data.simulation.iterations, e.data.simulation.minTime, e.data.simulation.maxTime, randomSeeds)
     let sim = module._allocSim(player, simSettings)

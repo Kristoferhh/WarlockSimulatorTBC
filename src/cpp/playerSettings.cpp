@@ -12,7 +12,7 @@ PlayerSettings::PlayerSettings(Auras* auras, Talents* talents, Sets* sets, Chara
     , bool usingLashOfPainOnCooldown, bool petIsAggressive, bool prepopBlackBook, bool randomizeValues, bool simChoosingRotation, bool exaltedWithShattrathFaction, int survivalHunterAgility
     , bool hasImmolate, bool hasCorruption, bool hasSiphonLife, bool hasUnstableAffliction, bool hasSearingPain, bool hasShadowBolt, bool hasIncinerate, bool hasCurseOfRecklessness
     , bool hasCurseOfTheElements, bool hasCurseOfAgony, bool hasCurseOfDoom, bool hasDeathCoil, bool hasShadowburn, bool hasConflagrate, bool hasShadowfury, bool hasAmplifyCurse
-    , bool hasDarkPact)
+    , bool hasDarkPact, bool hasElementalShamanT4Bonus)
   : auras(auras), talents(talents), sets(sets), stats(stats), items(items), itemId(itemId), metaGemId(metaGemId), isAldor(isAldor), enemyLevel(enemyLevel), enemyShadowResist(enemyShadowResist), enemyFireResist(enemyFireResist),
   mageAtieshAmount(mageAtieshAmount), totemOfWrathAmount(totemOfWrathAmount), sacrificingPet(sacrificingPet), petIsImp(petIsImp), petIsSuccubus(petIsSuccubus), petIsFelguard(petIsFelguard),
   ferociousInspirationAmount(ferociousInspirationAmount), improvedCurseOfTheElements(improvedCurseOfTheElements), usingCustomIsbUptime(usingCustomIsbUptime), customIsbUptimeValue(customIsbUptimeValue),
@@ -23,4 +23,4 @@ PlayerSettings::PlayerSettings(Auras* auras, Talents* talents, Sets* sets, Chara
   survivalHunterAgility(survivalHunterAgility), hasImmolate(hasImmolate), hasCorruption(hasCorruption), hasSiphonLife(hasSiphonLife), hasUnstableAffliction(hasUnstableAffliction), hasSearingPain(hasSearingPain),
   hasShadowBolt(hasShadowBolt), hasIncinerate(hasIncinerate), hasCurseOfRecklessness(hasCurseOfRecklessness), hasCurseOfTheElements(hasCurseOfTheElements), hasCurseOfAgony(hasCurseOfAgony),
   hasCurseOfDoom(hasCurseOfDoom), hasDeathCoil(hasDeathCoil), hasShadowburn(hasShadowburn), hasConflagrate(hasConflagrate), hasShadowfury(hasShadowfury), hasAmplifyCurse(hasAmplifyCurse),
-  hasDarkPact(hasDarkPact) {}
+  hasDarkPact(hasDarkPact), hasElementalShamanT4Bonus(hasElementalShamanT4Bonus) {}
