@@ -159,6 +159,11 @@ onmessage = function (e) {
     // This is required for items that are on-use or have a proc such as Band of the Eternal Sage since they check if the item's ID is equipped.
     i[customItemSlot + customItemSubSlot] = customItemId
 
+    // Add/remove stats if doing a stat weight sim
+    if (e.data.customStat && e.data.customStatValue) {
+      b[e.data.customStat] += e.data.customStatValue
+    }
+
     // Mamma mia somebody clean up this mess please
     // Random seeds
     let randomSeeds = module._allocRandomSeeds(e.data.simulation.iterations)

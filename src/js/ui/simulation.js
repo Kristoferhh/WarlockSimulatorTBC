@@ -268,12 +268,12 @@ function simStatWeights () {
     (combatLogBreakdown) => {},
     (simulationEnd) => {
       simsFinished++
-      normalSimMedianDps = Math.round(simulationEnd.medianDps * 100) / 100
-      $('#avg-dps').text(normalSimMedianDps)
+      normalSimMedianDps = simulationEnd.medianDps
+      $('#avg-dps').text(Math.round(normalSimMedianDps * 100) / 100)
     },
     (simulationUpdate) => {
-      normalSimMedianDps = Math.round(simulationUpdate.medianDps * 100) / 100
-      $('#avg-dps').text(normalSimMedianDps)
+      normalSimMedianDps = simulationUpdate.medianDps
+      $('#avg-dps').text(Math.round(normalSimMedianDps * 100) / 100)
     },
     {
       player: Player.getSettings(),

@@ -8,7 +8,6 @@
 Player::Player(PlayerSettings* playerSettings)
     : selectedAuras(playerSettings->auras), talents(playerSettings->talents), sets(playerSettings->sets), stats(playerSettings->stats), items(playerSettings->items), settings(playerSettings)
 {
-    std::cout << playerSettings->metaGemId << std::endl;
     spells = std::make_unique<PlayerSpells>();
     auras = std::make_unique<PlayerAuras>();
     combatLogEntries = {};

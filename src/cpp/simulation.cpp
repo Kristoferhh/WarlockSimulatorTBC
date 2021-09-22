@@ -13,7 +13,6 @@ Simulation::Simulation(Player* _player, SimulationSettings* simulationSettings)
 
 void Simulation::start()
 {
-    std::cout << settings->randomSeeds[0] << std::endl;
     std::vector<double> dpsVector;
     player->totalDuration = 0;
     player->initialize();
@@ -284,7 +283,7 @@ void Simulation::start()
             simulationUpdate(player->iteration, settings->iterations, median(dpsVector), player->settings->itemId,
                 player->settings->simmingIntellect ? "intellect" : player->settings->simmingSpellPower ? "spellPower" : player->settings->simmingShadowPower ? "shadowPower" : 
                 player->settings->simmingFirePower ? "firePower" : player->settings->simmingCritRating ? "critRating" : player->settings->simmingHitRating ? "hitRating" :
-                player->settings->simmingHasteRating ? "hasteRating" : player->settings->simmingMp5 ? "mp5" : "");
+                player->settings->simmingHasteRating ? "hasteRating" : player->settings->simmingMp5 ? "mp5" : "normal");
         }
     }
 
@@ -305,7 +304,7 @@ void Simulation::start()
     simulationEnd(median(dpsVector), minDps, maxDps, player->settings->itemId, settings->iterations, player->totalDuration,
         player->settings->simmingIntellect ? "intellect" : player->settings->simmingSpellPower ? "spellPower" : player->settings->simmingShadowPower ? "shadowPower" :
         player->settings->simmingFirePower ? "firePower" : player->settings->simmingCritRating ? "critRating" : player->settings->simmingHitRating ? "hitRating" :
-        player->settings->simmingHasteRating ? "hasteRating" : player->settings->simmingMp5 ? "mp5" : "");
+        player->settings->simmingHasteRating ? "hasteRating" : player->settings->simmingMp5 ? "mp5" : "normal");
 }
 
 double Simulation::passTime()
