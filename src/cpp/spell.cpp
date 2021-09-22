@@ -684,7 +684,7 @@ SeedOfCorruption::SeedOfCorruption(Player* player) : Spell(player)
     setup();
 };
 
-void SeedOfCorruption::damage()
+void SeedOfCorruption::damage(bool isCrit)
 {
     int baseDamage = player->settings->randomizeValues && minDmg && maxDmg ? random(minDmg, maxDmg) : dmg;
     int enemyAmount = player->settings->enemyAmount - 1; // Minus one because the enemy that Seed is being cast on doesn't get hit
@@ -746,7 +746,7 @@ void SeedOfCorruption::damage()
 
     if (player->shouldWriteToCombatLog())
     {
-        std::string msg = name + " " + std::to_string(round(totalSeedDamage)) + " (" + std::to_string(enemyAmount) + " Enemies (" + std::to_string(resistAmount) + " Resists & " + std::to_string(critAmount) + " Crits) - " + std::to_string(baseDamage) + " Base Damage - " + std::to_string(coefficient) + " Coefficient - " + std::to_string(spellPower) + " Spell Power - " + std::to_string(round(modifier * 1000) / 1000) + "% Modifier - " + std::to_string(partialResistMultiplier) + " % Partial Resist Multiplier)";
+        std::string msg = name + " " + truncateTrailingZeros(std::to_string(round(totalSeedDamage))) + " (" + std::to_string(enemyAmount) + " Enemies (" + std::to_string(resistAmount) + " Resists & " + std::to_string(critAmount) + " Crits) - " + std::to_string(baseDamage) + " Base Damage - " + truncateTrailingZeros(std::to_string(coefficient), 3) + " Coefficient - " + std::to_string(spellPower) + " Spell Power - " + truncateTrailingZeros(std::to_string(round(modifier * 1000) / 10), 3) + "% Modifier - " + truncateTrailingZeros(std::to_string(round(partialResistMultiplier * 1000) / 10), 3) + " % Partial Resist Multiplier)";
         player->combatLog(msg);
     }
     player->addIterationDamageAndMana(name, 0, totalSeedDamage);
