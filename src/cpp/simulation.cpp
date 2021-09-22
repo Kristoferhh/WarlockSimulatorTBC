@@ -128,7 +128,7 @@ void Simulation::start()
                             selectedSpellHandler(player->spells->DeathCoil, predictedDamageOfSpells);
                         }
                         // Cast Curse of the Elements or Curse of Recklessness if they're the selected curse and they're not active
-                        if (player->gcdRemaining <= 0 && (player->curseSpell == player->spells->CurseOfRecklessness || player->curseSpell == player->spells->CurseOfTheElements) && !player->curseAura->active && player->curseSpell->canCast())
+                        if (timeRemaining >= 10 && player->gcdRemaining <= 0 && (player->curseSpell == player->spells->CurseOfRecklessness || player->curseSpell == player->spells->CurseOfTheElements) && !player->curseAura->active && player->curseSpell->canCast())
                         {
                             if (player->curseSpell->hasEnoughMana())
                             {
@@ -267,7 +267,7 @@ void Simulation::start()
         }
 
         player->totalDuration += fightLength;
-        double dps = player->iterationDamage / fightLength;
+        double dps = player->iterationDamage / static_cast<double>(fightLength);
         if (dps > maxDps)
         {
             maxDps = dps;
@@ -281,7 +281,10 @@ void Simulation::start()
         //todo remove hard-coding
         if (player->iteration % static_cast<int>(std::floor(settings->iterations / 100.0)) == 0)
         {
-            simulationUpdate(player->iteration, settings->iterations, median(dpsVector), player->settings->itemId);
+            simulationUpdate(player->iteration, settings->iterations, median(dpsVector), player->settings->itemId,
+                player->settings->simmingIntellect ? "intellect" : player->settings->simmingSpellPower ? "spellPower" : player->settings->simmingShadowPower ? "shadowPower" : 
+                player->settings->simmingFirePower ? "firePower" : player->settings->simmingCritRating ? "critRating" : player->settings->simmingHitRating ? "hitRating" :
+                player->settings->simmingHasteRating ? "hasteRating" : player->settings->simmingMp5 ? "mp5" : "");
         }
     }
 
@@ -299,7 +302,10 @@ void Simulation::start()
         }
         postCombatLogBreakdown(it->second->name.c_str(), it->second->casts, it->second->crits, it->second->misses, it->second->count, it->second->uptime, it->second->dodge, it->second->glancingBlows);
     }
-    simulationEnd(median(dpsVector), minDps, maxDps, player->settings->itemId, settings->iterations, player->totalDuration);
+    simulationEnd(median(dpsVector), minDps, maxDps, player->settings->itemId, settings->iterations, player->totalDuration,
+        player->settings->simmingIntellect ? "intellect" : player->settings->simmingSpellPower ? "spellPower" : player->settings->simmingShadowPower ? "shadowPower" :
+        player->settings->simmingFirePower ? "firePower" : player->settings->simmingCritRating ? "critRating" : player->settings->simmingHitRating ? "hitRating" :
+        player->settings->simmingHasteRating ? "hasteRating" : player->settings->simmingMp5 ? "mp5" : "");
 }
 
 double Simulation::passTime()

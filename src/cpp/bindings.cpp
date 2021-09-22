@@ -78,7 +78,7 @@ void combatLogUpdate(const char* combatLogEntry)
 #endif
 }
 
-void simulationUpdate(int iteration, int iterationAmount, double medianDps, int itemId)
+void simulationUpdate(int iteration, int iterationAmount, double medianDps, int itemId, const char* customStat)
 {
 #ifdef EMSCRIPTEN
     EM_ASM({
@@ -88,16 +88,17 @@ void simulationUpdate(int iteration, int iterationAmount, double medianDps, int 
                 medianDps: $0,
                 iteration: $1,
                 iterationAmount: $2,
-                itemId: $3
+                itemId: $3,
+                customStat: UTF8ToString($4)
             }
         })
-    }, medianDps, iteration, iterationAmount, itemId);
+    }, medianDps, iteration, iterationAmount, itemId, customStat);
 #else
     std::cout << "Iteration: " << std::to_string(iteration) << "/" << std::to_string(iterationAmount) << ". Median DPS: " << std::to_string(medianDps) << std::endl;
 #endif
 }
 
-void simulationEnd(double medianDps, double minDps, double maxDps, int itemId, int iterationAmount, int totalDuration)
+void simulationEnd(double medianDps, double minDps, double maxDps, int itemId, int iterationAmount, int totalDuration, const char* customStat)
 {
 #ifdef EMSCRIPTEN
     EM_ASM({
@@ -110,9 +111,10 @@ void simulationEnd(double medianDps, double minDps, double maxDps, int itemId, i
                 itemId: $3,
                 iterationAmount: $4,
                 totalDuration: $5,
+                customStat: UTF8ToString($6)
             }
         })
-    }, medianDps, minDps, maxDps, itemId, iterationAmount, totalDuration);
+    }, medianDps, minDps, maxDps, itemId, iterationAmount, totalDuration, customStat);
 #else
     std::cout << "Median DPS: " << std::to_string(medianDps) << ". Min DPS: " << std::to_string(minDps) << ". Max DPS: " << std::to_string(maxDps) << std::endl;
 #endif
@@ -194,17 +196,19 @@ CharacterStats* allocStats(int health, int mana, double stamina, double intellec
 }
 
 EMSCRIPTEN_KEEPALIVE
-PlayerSettings* allocPlayerSettings(Auras* auras, Talents* talents, Sets* sets, CharacterStats* stats, Items* items, int itemId, int metaGemId, bool isAldor, int enemyLevel, int enemyShadowResist, int enemyFireResist
-        , int mageAtieshAmount, int totemOfWrathAmount, bool sacrificingPet, bool petIsImp, bool petIsSuccubus, bool petIsFelguard, int ferociousInspirationAmount, int improvedCurseOfTheElements
-        , bool usingCustomIsbUptime, int customIsbUptimeValue, int improvedDivineSpirit, int improvedImp, int shadowPriestDps, int warlockAtieshAmount, int improvedExposeArmor, bool isSingleTarget, int enemyAmount
-        , bool isOrc, int powerInfusionAmount, bool bloodlustAmount, bool innervateAmount, int enemyArmor, int exposeWeaknessUptime, bool improvedFaerieFire, bool infinitePlayerMana, bool infinitePetMana
-        , bool usingLashOfPainOnCooldown, bool petIsAggressive, bool prepopBlackBook, bool randomizeValues, bool userChoosingRotation, bool exaltedWithShattrathFaction, int survivalHunterAgility, bool hasImmolate
-        , bool hasCorruption, bool hasSiphonLife, bool hasUnstableAffliction, bool hasSearingPain, bool hasShadowBolt, bool hasIncinerate, bool hasCurseOfRecklessness, bool hasCurseOfTheElements, bool hasCurseOfAgony
-        , bool hasCurseOfDoom, bool hasDeathCoil, bool hasShadowburn, bool hasConflagrate, bool hasShadowfury, bool hasAmplifyCurse, bool hasDarkPact, bool hasElementalShamanT4Bonus)
+PlayerSettings* allocPlayerSettings(Auras* auras, Talents* talents, Sets* sets, CharacterStats* stats, Items* items, int itemId, int metaGemId, bool simmingIntellect, bool simmingSpellPower
+    , bool simmingShadowPower, bool simmingFirePower, bool simmingHitRating, bool simmingCritRating, bool simmingHasteRating, bool simmingMp5, bool isAldor, int enemyLevel, int enemyShadowResist, int enemyFireResist
+    , int mageAtieshAmount, int totemOfWrathAmount, bool sacrificingPet, bool petIsImp, bool petIsSuccubus, bool petIsFelguard, int ferociousInspirationAmount, int improvedCurseOfTheElements
+    , bool usingCustomIsbUptime, int customIsbUptimeValue, int improvedDivineSpirit, int improvedImp, int shadowPriestDps, int warlockAtieshAmount, int improvedExposeArmor, bool isSingleTarget, int enemyAmount
+    , bool isOrc, int powerInfusionAmount, bool bloodlustAmount, bool innervateAmount, int enemyArmor, int exposeWeaknessUptime, bool improvedFaerieFire, bool infinitePlayerMana, bool infinitePetMana
+    , bool usingLashOfPainOnCooldown, bool petIsAggressive, bool prepopBlackBook, bool randomizeValues, bool userChoosingRotation, bool exaltedWithShattrathFaction, int survivalHunterAgility, bool hasImmolate
+    , bool hasCorruption, bool hasSiphonLife, bool hasUnstableAffliction, bool hasSearingPain, bool hasShadowBolt, bool hasIncinerate, bool hasCurseOfRecklessness, bool hasCurseOfTheElements, bool hasCurseOfAgony
+    , bool hasCurseOfDoom, bool hasDeathCoil, bool hasShadowburn, bool hasConflagrate, bool hasShadowfury, bool hasAmplifyCurse, bool hasDarkPact, bool hasElementalShamanT4Bonus)
 {
-    return new PlayerSettings(auras, talents, sets, stats, items, itemId, metaGemId, isAldor, enemyLevel, enemyShadowResist, enemyFireResist, mageAtieshAmount, totemOfWrathAmount, sacrificingPet, petIsImp, petIsSuccubus
-        , petIsFelguard, ferociousInspirationAmount, improvedCurseOfTheElements, usingCustomIsbUptime, customIsbUptimeValue, improvedDivineSpirit, improvedImp, shadowPriestDps, warlockAtieshAmount
-        , improvedExposeArmor, isSingleTarget, enemyAmount, isOrc, powerInfusionAmount, bloodlustAmount, innervateAmount, enemyArmor, exposeWeaknessUptime, improvedFaerieFire, infinitePlayerMana, infinitePetMana
+    return new PlayerSettings(auras, talents, sets, stats, items, itemId, metaGemId, simmingIntellect, simmingSpellPower, simmingShadowPower, simmingFirePower, simmingHitRating, simmingCritRating
+        , simmingHasteRating, simmingMp5, isAldor, enemyLevel, enemyShadowResist, enemyFireResist, mageAtieshAmount, totemOfWrathAmount, sacrificingPet, petIsImp, petIsSuccubus, petIsFelguard
+        , ferociousInspirationAmount, improvedCurseOfTheElements, usingCustomIsbUptime, customIsbUptimeValue, improvedDivineSpirit, improvedImp, shadowPriestDps, warlockAtieshAmount, improvedExposeArmor
+        , isSingleTarget, enemyAmount, isOrc, powerInfusionAmount, bloodlustAmount, innervateAmount, enemyArmor, exposeWeaknessUptime, improvedFaerieFire, infinitePlayerMana, infinitePetMana
         , usingLashOfPainOnCooldown, petIsAggressive, prepopBlackBook, randomizeValues, userChoosingRotation, exaltedWithShattrathFaction, survivalHunterAgility, hasImmolate, hasCorruption, hasSiphonLife
         , hasUnstableAffliction, hasSearingPain, hasShadowBolt, hasIncinerate, hasCurseOfRecklessness, hasCurseOfTheElements, hasCurseOfAgony, hasCurseOfDoom, hasDeathCoil, hasShadowburn, hasConflagrate
         , hasShadowfury, hasAmplifyCurse, hasDarkPact, hasElementalShamanT4Bonus);
