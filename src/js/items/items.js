@@ -3941,7 +3941,7 @@ const items = {
       unique: true,
       id: 29302,
       source: 'The Scale of the Sands - Friendly',
-      phase: 3
+      phase: 2
     },
     veteransBandOfDominance: {
       name: "Veteran's Band of Dominance",
