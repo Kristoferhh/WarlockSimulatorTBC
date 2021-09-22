@@ -82,7 +82,6 @@ function simDPS (items) {
           localStorage.medianDps = simulationEnd.medianDps
           localStorage.minDps = minDps
           localStorage.maxDps = maxDps
-          localStorage.simulationDuration = simulationEnd.duration
           $('#avg-dps').text(simulationEnd.medianDps)
           $('#min-dps').text(minDps)
           $('#max-dps').text(maxDps)
@@ -103,7 +102,8 @@ function simDPS (items) {
         if (simulationsFinished === itemAmount) {
           console.log(combatLogBreakdownArr)
           let totalSimDuration = (performance.now() - startTime) / 1000
-          $('#sim-length-result').text(Math.round(totalSimDuration * 10000) / 10000 + 's')
+          localStorage.simulationDuration = Math.round(totalSimDuration * 10000) / 10000
+          $('#sim-length-result').text(localStorage.simulationDuration + 's')
           // Remove the background coloring (progress bar)
           $('.btn').css('background', '')
 
