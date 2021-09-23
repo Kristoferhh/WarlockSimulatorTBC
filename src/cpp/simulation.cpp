@@ -297,13 +297,16 @@ void Simulation::start()
         combatLogUpdate(value.c_str());
     }
     // Send the combat log breakdown info
-    for (std::map<std::string, std::unique_ptr<CombatLogBreakdown>>::iterator it = player->combatLogBreakdown.begin(); it != player->combatLogBreakdown.end(); it++)
+    if (player->settings->recordingCombatLogBreakdown)
     {
-        if (it->second->iterationDamage > 0 || it->second->iterationManaGain > 0)
+        for (std::map<std::string, std::unique_ptr<CombatLogBreakdown>>::iterator it = player->combatLogBreakdown.begin(); it != player->combatLogBreakdown.end(); it++)
         {
-            player->postIterationDamageAndMana(it->first);
+            if (it->second->iterationDamage > 0 || it->second->iterationManaGain > 0)
+            {
+                player->postIterationDamageAndMana(it->first);
+            }
+            postCombatLogBreakdown(it->second->name.c_str(), it->second->casts, it->second->crits, it->second->misses, it->second->count, it->second->uptime, it->second->dodge, it->second->glancingBlows);
         }
-        postCombatLogBreakdown(it->second->name.c_str(), it->second->casts, it->second->crits, it->second->misses, it->second->count, it->second->uptime, it->second->dodge, it->second->glancingBlows);
     }
     simulationEnd(median(dpsVector), minDps, maxDps, player->settings->itemId, settings->iterations, player->totalDuration,
         player->settings->simmingIntellect ? "intellect" : player->settings->simmingSpellPower ? "spellPower" : player->settings->simmingShadowPower ? "shadowPower" :

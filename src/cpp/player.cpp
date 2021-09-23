@@ -791,7 +791,7 @@ double Player::getPartialResistMultiplier(SpellSchool school)
 
 void Player::addIterationDamageAndMana(std::string spellName, int manaGain, int damage)
 {
-    if (combatLogBreakdown.count(spellName) == 0)
+    if (combatLogBreakdown.count(spellName) == 0 || !settings->recordingCombatLogBreakdown)
     {
         return;
     }
@@ -811,6 +811,11 @@ void Player::addIterationDamageAndMana(std::string spellName, int manaGain, int 
 
 void Player::postIterationDamageAndMana(std::string spellName)
 {
+    if (!settings->recordingCombatLogBreakdown)
+    {
+        return;
+    }
+    
     postCombatLogBreakdownVector(spellName.c_str(), combatLogBreakdown.at(spellName)->iterationManaGain, combatLogBreakdown.at(spellName)->iterationDamage);
     combatLogBreakdown.at(spellName)->iterationDamage = 0;
     combatLogBreakdown.at(spellName)->iterationManaGain = 0;
