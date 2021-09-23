@@ -64,7 +64,7 @@ class Pet {
       spirit: 0,
       stamina: 0,
       intellect: 0,
-      hastePercent: 0,
+      hastePercent: 1,
       staminaModifier: 1 + (0.05 * player.talents.felStamina),
       intellectModifier: 1 + (0.05 * player.talents.felIntellect),
       strengthModifier: 1,

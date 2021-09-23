@@ -26,8 +26,7 @@ class PetSpell {
   }
 
   getCastTime() {
-    // todo: figure out how much haste % pets get from each haste rating point
-    return Math.round((this.castTime / (1 + this.pet.stats.hastePercent / 100)) * 10000) / 10000
+    return Math.round((this.castTime / this.pet.stats.hastePercent) * 10000) / 10000
   }
 
   getCooldown() {
@@ -268,7 +267,7 @@ class Melee extends PetSpell {
   }
 
   getCooldown() {
-    return Math.round((this.cooldown / (1 + this.pet.stats.hastePercent / 100)) * 10000) / 10000
+    return Math.round((this.cooldown / this.pet.stats.hastePercent) * 10000) / 10000
   }
 }
 

@@ -46,7 +46,11 @@ class Aura {
           // Add stats to pet
           if (this.player.pet) {
             if (this.player.pet.stats.hasOwnProperty(stat) && this.groupWide) {
-              this.player.pet.stats[stat] += this.stats[stat]
+              if (stat == "hastePercent") {
+                this.player.pet.stats[stat] *= this.stats[stat]
+              } else {
+                this.player.pet.stats[stat] += this.stats[stat]
+              }
             }
             if (this.player.pet.stats.buffs.hasOwnProperty(stat)) {
               recalculatePetStats = true
@@ -91,7 +95,11 @@ class Aura {
           // Remove stats from pet
           if (this.player.pet) {
             if (this.player.pet.stats.hasOwnProperty(stat) && this.groupWide) {
-              this.player.pet.stats[stat] -= this.stats[stat]
+              if (stat == "hastePercent") {
+                this.player.pet.stats[stat] /= this.stats[stat]
+              } else {
+                this.player.pet.stats[stat] -= this.stats[stat]
+              }
             }
             if (!endOfIteration && this.player.pet.stats.buffs.hasOwnProperty(stat)) {
               recalculatePetStats = true
