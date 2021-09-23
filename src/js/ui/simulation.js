@@ -171,7 +171,7 @@ function simDPS (items) {
       (simulationUpdate) => {
         let medianDps = Math.round(simulationUpdate.medianDps * 100) / 100
 
-        if (simulationUpdate.itemId == equippedItemId) {
+        if (simulationUpdate.itemId == equippedItemId || itemAmount == 1) {
           $('#avg-dps').text(medianDps)
         }
         if (itemAmount === 1) {
