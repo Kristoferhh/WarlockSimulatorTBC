@@ -183,8 +183,8 @@ void Simulation::start()
                         {
                             selectedSpellHandler(player->spells->Shadowfury, predictedDamageOfSpells);
                         }
-                        // Cast filler spell if sim is not choosing the rotation for the user
-                        if (player->gcdRemaining <= 0 && (timeRemaining >= player->filler->getCastTime() || (predictedDamageOfSpells.size() == 0)) && !player->settings->simChoosingRotation && player->filler->canCast())
+                        // Cast filler spell if sim is not choosing the rotation for the user or if the predictedDamageOfSpells map is empty
+                        if (player->gcdRemaining <= 0 && ((!notEnoughTimeForFiller && !player->settings->simChoosingRotation) || predictedDamageOfSpells.size() == 0) && player->filler->canCast())
                         {
                             selectedSpellHandler(player->filler, predictedDamageOfSpells);
                         }
@@ -257,7 +257,11 @@ void Simulation::start()
                 }
             }
 
-            passTime();
+            if (passTime() <= 0)
+            {
+                std::cout << "Iteration " << std::to_string(player->iteration) << " fightTime: " << std::to_string(player->fightTime) << "/" << std::to_string(fightLength) << " passTime() returned <= 0" << std::endl;
+                player->throwError("The simulation got stuck in an endless loop. If you'd like to help with fixing this bug then please export your current settings and send it to Kristofer#8003 on Discord.");
+            }
         }
 
         if (player->shouldWriteToCombatLog())
@@ -576,12 +580,6 @@ double Simulation::passTime()
                 player->combatLog(msg);
             }
         }
-    }
-
-    if (time <= 0)
-    {
-        std::cout << "Iteration " << std::to_string(player->iteration) << " fightTime: " << std::to_string(player->fightTime) << " passTime() returned " << std::to_string(time) << std::endl;
-        player->throwError("The simulation got stuck in an endless loop. If you'd like to help with fixing this bug then please export your current settings and send it to Kristofer#8003 on Discord.");
     }
 
     return time;
