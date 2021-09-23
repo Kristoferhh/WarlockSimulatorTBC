@@ -168,7 +168,7 @@ void Spell::cast()
         }
     }
 
-    if (((!isItem && !isNonWarlockAbility && name != "amplifyCurse") || doesDamage) && !player->isHit(type))
+    if (((!isItem && !isNonWarlockAbility && (!player->auras->AmplifyCurse || name != player->auras->AmplifyCurse->name)) || doesDamage) && !player->isHit(type))
     {
         if (player->shouldWriteToCombatLog())
         {
@@ -194,7 +194,7 @@ void Spell::cast()
     }
 
     // If it's an item such as mana potion, demonic rune, destruction potion, or if it's a proc with a hidden cooldown like Blade of Wizardry or Robe of the Elder Scribes then don't check for on-hit procs
-    if (!isItem && !isProc && !isNonWarlockAbility && name != "amplifyCurse")
+    if (!isItem && !isProc && !isNonWarlockAbility && (!player->auras->AmplifyCurse || name != player->auras->AmplifyCurse->name))
     {
         onHitProcs();
     }
@@ -208,7 +208,7 @@ double Spell::getModifier()
         dmgModifier *= player->stats->shadowModifier;
         
         // Improved Shadow Bolt
-        if (player->auras->ImprovedShadowBolt != NULL && player->auras->ImprovedShadowBolt->active && !player->settings->usingCustomIsbUptime)
+        if (!player->settings->usingCustomIsbUptime && player->auras->ImprovedShadowBolt != NULL && player->auras->ImprovedShadowBolt->active)
         {
             dmgModifier *= player->auras->ImprovedShadowBolt->modifier;
         }
@@ -271,11 +271,11 @@ void Spell::damage(bool isCrit)
     //T5 4pc
     if (player->sets->t5 >= 4)
     {
-        if (name == "ShadowBolt" && player->auras->Corruption != NULL && player->auras->Corruption->active)
+        if (player->spells->ShadowBolt != NULL && name == player->spells->ShadowBolt->name && player->auras->Corruption != NULL && player->auras->Corruption->active)
         {
             player->auras->Corruption->t5BonusModifier *= 1.1;
         }
-        else if (name == "Incinerate" && player->auras->Immolate != NULL && player->auras->Immolate->active)
+        else if (player->spells->Incinerate != NULL && name == player->spells->Incinerate->name && player->auras->Immolate != NULL && player->auras->Immolate->active)
         {
 
             player->auras->Immolate->t5BonusModifier *= 1.1;
@@ -294,18 +294,13 @@ std::vector<double> Spell::getConstantDamage(bool noRng)
     double partialResistMultiplier = player->getPartialResistMultiplier(school);
 
     // If casting Incinerate and Immolate is up, add the bonus damage
-    if (name == "Incinerate" && player->auras->Immolate != NULL && player->auras->Immolate->active)
+    if (player->spells->Incinerate != NULL && name == player->spells->Incinerate->name && player->auras->Immolate != NULL && player->auras->Immolate->active)
     {
         totalDmg += player->settings->randomizeValues && noRng ? random(bonusDamageFromImmolateMin, bonusDamageFromImmolateMax) : bonusDamageFromImmolate;
     }
     // Add damage from Spell Power
     totalDmg += spellPower * coefficient;
-    // Improved Shadow Bolt
-    if (school == SpellSchool::SHADOW && player->auras->ImprovedShadowBolt != NULL && player->auras->ImprovedShadowBolt->active && !player->settings->usingCustomIsbUptime)
-    {
-        dmgModifier *= player->auras->ImprovedShadowBolt->modifier;
-    }
-
+    // Modifier & Partial Resist
     totalDmg *= dmgModifier;
     totalDmg *= partialResistMultiplier;
 
@@ -379,7 +374,7 @@ double Spell::predictDamage()
 void Spell::onCritProcs()
 {
     // ISB
-    if (name == "ShadowBolt" && !player->settings->usingCustomIsbUptime && player->talents->improvedShadowBolt > 0)
+    if (player->spells->ShadowBolt != NULL && name == player->spells->ShadowBolt->name && !player->settings->usingCustomIsbUptime && player->talents->improvedShadowBolt > 0)
     {
         player->auras->ImprovedShadowBolt->apply();
     }
@@ -423,8 +418,7 @@ void Spell::onHitProcs()
         player->addIterationDamageAndMana("Judgement of Wisdom", manaGained, 0);
         if (player->shouldWriteToCombatLog())
         {
-            std::string msg = "Player gains " + std::to_string(manaGained) + " mana from Judgement of Wisdom (" + std::to_string(currentMana) + " -> " + std::to_string(player->stats->mana) + ")";
-            player->combatLog(msg);
+            player->combatLog("Player gains " + std::to_string(manaGained) + " mana from Judgement of Wisdom (" + std::to_string(currentMana) + " -> " + std::to_string(player->stats->mana) + ")");
         }
     }
     // T4 2pc
@@ -546,7 +540,6 @@ LifeTap::LifeTap(Player* player) : Spell(player)
     manaReturn = 582;
     coefficient = 0.8;
     modifier = 1 * (1 + 0.1 * player->talents->improvedLifeTap);
-    breakdownTable = "manaGain";
     setup();
 }
 
@@ -563,8 +556,7 @@ void LifeTap::cast()
     
     if (player->shouldWriteToCombatLog() && player->stats->mana + manaGain > player->stats->maxMana)
     {
-        std::string combatLogEntry = "Life Tap used at too high mana (mana wasted)";
-        player->combatLog(combatLogEntry);
+        player->combatLog("Life Tap used at too high mana (mana wasted)");
     }
     player->stats->mana = std::min(player->stats->maxMana, player->stats->mana + manaGain);
 }
