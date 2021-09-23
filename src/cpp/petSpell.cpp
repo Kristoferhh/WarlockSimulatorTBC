@@ -35,7 +35,7 @@ double PetSpell::getBaseDamage()
 
 double PetSpell::getCastTime()
 {
-    return round((castTime / (1 + pet->stats->hastePercent / 100.0)) * 10000) / 10000;
+    return round((castTime / pet->stats->hastePercent) * 10000) / 10000;
 }
 
 double PetSpell::getCooldown()
