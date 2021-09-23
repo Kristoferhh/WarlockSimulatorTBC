@@ -184,7 +184,7 @@ void Simulation::start()
                             selectedSpellHandler(player->spells->Shadowfury, predictedDamageOfSpells);
                         }
                         // Cast filler spell if sim is not choosing the rotation for the user
-                        if (timeRemaining >= player->filler->getCastTime() && player->gcdRemaining <= 0 && !player->settings->simChoosingRotation && player->filler->canCast())
+                        if (player->gcdRemaining <= 0 && (timeRemaining >= player->filler->getCastTime() || (predictedDamageOfSpells.size() == 0)) && !player->settings->simChoosingRotation && player->filler->canCast())
                         {
                             selectedSpellHandler(player->filler, predictedDamageOfSpells);
                         }
