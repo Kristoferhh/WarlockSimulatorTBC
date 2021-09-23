@@ -104,7 +104,6 @@ function simDPS (items) {
         localStorage.savedItemDps = JSON.stringify(savedItemDps)
 
         if (simulationsFinished === itemAmount) {
-          console.log(combatLogBreakdownArr)
           let totalSimDuration = (performance.now() - startTime) / 1000
           localStorage.simulationDuration = Math.round(totalSimDuration * 10000) / 10000
           $('#sim-length-result').text(localStorage.simulationDuration + 's')

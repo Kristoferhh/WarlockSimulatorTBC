@@ -18,16 +18,19 @@ struct PetAura
     PetAura(Pet* pet);
     void tick(double time);
     virtual void apply();
-    void fade(bool endOfIteration = false);
+    virtual void fade(bool endOfIteration = false);
 };
 
 struct DemonicFrenzy : public PetAura
 {
     DemonicFrenzy(Pet* pet);
+    void apply();
+    void fade(bool endOfIteration = false);
 };
 
 struct BlackBook : public PetAura
 {
     BlackBook(Pet* pet);
     void apply(bool announceInCombatLog = true);
+    void fade(bool endOfIteration = false);
 };

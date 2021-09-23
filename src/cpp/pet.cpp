@@ -37,7 +37,13 @@ void Pet::initialize()
         else if (pet == PetName::FELGUARD)
         {
             spells->Cleave = std::make_unique<FelguardCleave>(this);
+            auras->DemonicFrenzy = std::make_unique<DemonicFrenzy>(this);
         }
+    }
+
+    if (player->settings->prepopBlackBook)
+    {
+        auras->BlackBook = std::make_unique<BlackBook>(this);
     }
 }
 
