@@ -26,11 +26,19 @@ function simDPS (items) {
   const itemSlot = item.attr('data-slot')
   const itemSubSlot = item.attr('data-subslot') || ''
   const itemAmount = items.length
+  const equippedItemId = $('.item-row[data-selected="true"]').data('wowhead-id')
   let simulationsRunning = 0
   let simulationsFinished = 0
   const multiSimInfo = []
   const simulations = []
   let simIndex = 0
+  let combatLog = []
+  let combatLogBreakdownArr = []
+  let playerHasMeleePet = false
+  let totalManaRegenerated = 0
+  let totalDamageDone = 0
+  let spellDamageDict = {}
+  let spellManaGainDict = {}
   let startTime = performance.now()
 
   if (items.length > 1) {
@@ -41,107 +49,142 @@ function simDPS (items) {
     multiSimInfo.push([items[i], 0])
 
     simulations.push(new SimWorker(
-      (simulationEnd) => {
-        let minDps = simulationEnd.minDps
-        let maxDps = simulationEnd.maxDps
-        simulationsFinished++
+      // Combat Log Vector callback
+      (combatLogVector) => {
+        spellDamageDict[combatLogVector.name] = spellDamageDict[combatLogVector.name] + combatLogVector.damage || combatLogVector.damage
+        spellManaGainDict[combatLogVector.name] = spellManaGainDict[combatLogVector.name] + combatLogVector.manaGain || combatLogVector.manaGain
+        totalManaRegenerated += combatLogVector.manaGain
+        totalDamageDone += combatLogVector.damage
+      },
+      // Error callback
+      (errorCallback) => {
+        errorCallbackHandler(errorCallback)
+      },
+      // Combat Log Update callback
+      (combatLogUpdate) => {
+        combatLog.push(combatLogUpdate.combatLogEntry);
+      },
+      // Combat Log Breakdown callback
+      (combatLogBreakdown) => {
+        combatLogBreakdownArr.push(combatLogBreakdown)
 
-        // DPS information on the sidebar
-        if (itemAmount === 1) {
-          localStorage.medianDps = simulationEnd.medianDps
+        if (combatLogBreakdown.name == "Melee") {
+          playerHasMeleePet = true
+        }
+      },
+      // Simulation End callback
+      (simulationEnd) => {
+        let minDps = Math.round(simulationEnd.minDps * 100) / 100
+        let maxDps = Math.round(simulationEnd.maxDps * 100) / 100
+        let medianDps = Math.round(simulationEnd.medianDps * 100) / 100
+        simulationsFinished++
+        
+        if (simulationEnd.itemId == equippedItemId || itemAmount === 1) {
+          localStorage.medianDps = medianDps
           localStorage.minDps = minDps
           localStorage.maxDps = maxDps
-          localStorage.simulationDuration = simulationEnd.length
-          $('#avg-dps').text(simulationEnd.medianDps)
+          $('#avg-dps').text(medianDps)
           $('#min-dps').text(minDps)
           $('#max-dps').text(maxDps)
+        }
+        // DPS information on the sidebar
+        if (itemAmount === 1) {
           $('#sim-dps').text('Simulate')
 
           // Populate the combat log
           $('#combat-log p').remove()
-          for (const entry in simulationEnd.combatlog) {
-            $('#combat-log').append('<p>' + simulationEnd.combatlog[entry] + '</p>')
+          for (const entry in combatLog) {
+            $('#combat-log').append('<p>' + combatLog[entry] + '</p>')
           }
+        } else if (simulationsFinished == itemAmount) {
+          $('#sim-all-items').text('Simulate All Items')
         }
-
         savedItemDps[itemSlot + itemSubSlot] = savedItemDps[itemSlot + itemSubSlot] || {}
-        savedItemDps[itemSlot + itemSubSlot][simulationEnd.itemId] = simulationEnd.medianDps
+        savedItemDps[itemSlot + itemSubSlot][simulationEnd.itemId] = medianDps
         localStorage.savedItemDps = JSON.stringify(savedItemDps)
 
         if (simulationsFinished === itemAmount) {
           let totalSimDuration = (performance.now() - startTime) / 1000
-          $('#sim-length-result').text(Math.round(totalSimDuration * 10000) / 10000 + 's')
+          localStorage.simulationDuration = Math.round(totalSimDuration * 10000) / 10000
+          $('#sim-length-result').text(localStorage.simulationDuration + 's')
           // Remove the background coloring (progress bar)
           $('.btn').css('background', '')
-          $('#sim-all-items').text('Simulate All Items')
 
-          if (itemAmount === 1) {
-            if ($('#automatically-open-sim-details').children('select').val() === 'yes') {
-              // Setup the damage breakdown table (showing avg damage, avg cast etc. for each spell)
-              $('.spell-damage-information').remove()
-              let hasPet = simulationEnd.damageBreakdown.melee && simulationEnd.damageBreakdown.melee.casts > 0
+          if (itemAmount === 1 && $('#automatically-open-sim-details').children('select').val() === 'yes') {
+            // Setup the damage breakdown table (showing avg damage, avg cast etc. for each spell)
+            $('.spell-damage-information').remove()
 
-              for (const spell in simulationEnd.damageBreakdown) {
-                const s = simulationEnd.damageBreakdown[spell]
-                const percentDamage = (~~((s.damage / simulationEnd.totalDamage) * 10000) / 100).toFixed(2)
-                if (s.damage > 0 || s.casts > 0) {
-                  var tableRow = "<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterations) + "</td><td class='number'>" + ~~(s.damage / s.casts) + (s.dotDamage ? ('(' + ~~(s.dotDamage / s.casts) + ')') : '') + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td>"
-                  // Only add the dodge and glancing cells if the player has a pet and it's not an imp
-                  if (hasPet) {
+            for (const combatLogBreakdown in combatLogBreakdownArr) {
+              const s = combatLogBreakdownArr[combatLogBreakdown]
+
+              // Damage
+              if (s.casts > 0) {
+                if (spellDamageDict[s.name] > 0 || s.misses > 0 || s.crits > 0 || s.glancingBlows > 0 || s.dodges > 0) {
+                  const percentDamage = (~~((spellDamageDict[s.name] / totalDamageDone) * 10000) / 100).toFixed(2)
+                  var tableRow = "<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentDamage + "' min='0' max='100'></meter> " + percentDamage + "%</td><td class='number'>" + Math.ceil(s.casts / simulationEnd.iterationAmount) + "</td><td class='number'>" + ~~(spellDamageDict[s.name] / s.casts) + (s.dotDamage ? ('(' + ~~(s.dotDamage / s.casts) + ')') : '') + "</td><td class='number'>" + ((~~(((s.crits / s.casts) * 100) * 100)) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.misses / s.casts) * 100) * 100) / 100).toFixed(2) + "</td>"
+
+                  // Only add the dodge and glancing cells if the player has a melee pet
+                  if (playerHasMeleePet) {
                     tableRow += "<td class='number'>" + (~~(((s.dodges / s.casts) * 100) * 100) / 100).toFixed(2) + "</td><td class='number'>" + (~~(((s.glancingBlows / s.casts) * 100) * 100) / 100).toFixed(2) + "</td>"
                   }
-                  tableRow += "<td class='number'>" + (Math.round((s.damage / simulationEnd.totalDuration) * 100) / 100 || 0) + '</td></tr>'
+                  tableRow += "<td class='number'>" + (Math.round((spellDamageDict[s.name] / simulationEnd.totalDuration) * 100) / 100 || 0) + '</td></tr>'
                   $('#damage-breakdown-table tbody').append(tableRow)
                 }
-              }
-              // Setup the aura breakdown table
-              for (const aura in simulationEnd.auraBreakdown) {
-                const a = simulationEnd.auraBreakdown[aura]
-                const percentUptime = (~~((a.uptime / simulationEnd.totalDuration) * 10000) / 100).toFixed(2)
-                if (a.count > 0) {
-                  $('#aura-breakdown-table tbody').append("<tr class='spell-damage-information'><td>" + a.name + '</td><td>' + Math.ceil(a.count / simulationEnd.iterations) + "</td><td><meter value='" + percentUptime + "' min='0' max='100'></meter> " + percentUptime + '%</td></tr>')
+
+                // Mana Gain
+                if (spellManaGainDict[s.name] > 0) {
+                  const percentOfGain = (~~((spellManaGainDict[s.name] / totalManaRegenerated) * 10000) / 100).toFixed(2)
+                  $('#mana-gain-breakdown-table tbody').append("<tr class='spell-damage-information'><td>" + s.name + "</td><td><meter value='" + percentOfGain + "' min='0' max='100'></meter> " + percentOfGain + '</td><td>' + Math.ceil(s.casts / simulationEnd.iterationAmount) + '</td><td>' + ~~(spellManaGainDict[s.name] / s.casts) + '</td<</tr>')
                 }
               }
-              // Setup the mana gain breakdown table
-              for (const element in simulationEnd.manaGainBreakdown) {
-                const e = simulationEnd.manaGainBreakdown[element]
-                const percentOfGain = (~~((e.manaGain / simulationEnd.totalManaRegenerated) * 10000) / 100).toFixed(2)
-                if (e.casts > 0) {
-                  $('#mana-gain-breakdown-table tbody').append("<tr class='spell-damage-information'><td>" + e.name + "</td><td><meter value='" + percentOfGain + "' min='0' max='100'></meter> " + percentOfGain + '</td><td>' + Math.ceil(e.casts / simulationEnd.iterations) + '</td><td>' + ~~(e.manaGain / e.casts) + '</td<</tr>')
-                }
-              }
-              $('.breakdown-section').css('display', 'inline-block')
-              // Hide the Glancing and Dodge columns if not using a melee pet
-              if (hasPet) {
-                $('#damage-breakdown-dodge').show()
-                $('#damage-breakdown-glancing').show()
-              } else {
-                $('#damage-breakdown-dodge').hide()
-                $('#damage-breakdown-glancing').hide()
+
+              // Aura
+              if (s.count > 0) {
+                const percentUptime = (~~((s.uptime / simulationEnd.totalDuration) * 10000) / 100).toFixed(2)
+                $('#aura-breakdown-table tbody').append("<tr class='spell-damage-information'><td>" + s.name + '</td><td>' + Math.ceil(s.count / simulationEnd.iterationAmount) + "</td><td><meter value='" + percentUptime + "' min='0' max='100'></meter> " + percentUptime + '%</td></tr>')
               }
 
               $(".breakdown-table").trigger('update')
             }
+
+            $('.breakdown-table tbody').trigger('update')
+            $('.breakdown-section').css('display', 'inline-block')
+            // Hide the Glancing and Dodge columns if not using a melee pet
+            if (playerHasMeleePet) {
+              $('#damage-breakdown-dodge').show()
+              $('#damage-breakdown-glancing').show()
+            } else {
+              $('#damage-breakdown-dodge').hide()
+              $('#damage-breakdown-glancing').hide()
+            }
           }
         }
+
+        updateItemRowDps(simulationEnd.itemId, medianDps)
 
         // Start a new simulation that's waiting in the queue if there are any remaining
         if (simulationsRunning - simulationsFinished < maxWorkers && simIndex < simulations.length) {
           simulations[simIndex++].start()
         }
       },
+      // Simulation Update callback
       (simulationUpdate) => {
+        let medianDps = Math.round(simulationUpdate.medianDps * 100) / 100
+
+        if (simulationUpdate.itemId == equippedItemId) {
+          $('#avg-dps').text(medianDps)
+        }
         if (itemAmount === 1) {
-          $('#avg-dps').text(simulationUpdate.medianDps)
+          let progressPercent = Math.ceil((simulationUpdate.iteration / simulationUpdate.iterationAmount) * 100)
           // Uses the sim button as a progress bar by coloring it based on how many iterations are done with
-          $('#sim-dps').css('background', 'linear-gradient(to right, #9482C9 ' + simulationUpdate.percent + '%, transparent ' + simulationUpdate.percent + '%)')
-          $('#sim-dps').text(Math.round(simulationUpdate.percent) + '%')
+          $('#sim-dps').css('background', 'linear-gradient(to right, #9482C9 ' + progressPercent + '%, transparent ' + progressPercent + '%)')
+          $('#sim-dps').text(Math.round(progressPercent) + '%')
         } else {
           // multiSimInfo tracks the % progress of each simulation and the average simulation progress % is used for the multi-item simulation progress bar
           let totalProgress = 0
           for (let i = 0; i < multiSimInfo.length; i++) {
             if (multiSimInfo[i][0] == simulationUpdate.itemId) {
-              multiSimInfo[i][1] = simulationUpdate.percent
+              multiSimInfo[i][1] = Math.ceil((simulationUpdate.iteration / simulationUpdate.iterationAmount) * 100)
             }
             totalProgress += multiSimInfo[i][1]
           }
@@ -151,8 +194,7 @@ function simDPS (items) {
           $('#sim-all-items').text(averageProgress + '%')
         }
         // Set the DPS value on the item in the item selection list
-        $(".item-row[data-wowhead-id='" + simulationUpdate.itemId + "']").find('.item-dps').text(simulationUpdate.medianDps)
-        $('#item-selection-table').trigger('update')
+        updateItemRowDps(simulationUpdate.itemId, medianDps)
       },
       {
         player: Player.getSettings(),
@@ -209,17 +251,28 @@ function simStatWeights () {
   const simInfo = []
   let normalSimMedianDps = 0
   let simsFinished = 0
-
   const simStart = performance.now()
+
+  // Normal sim with no added or removed stats
   sims.push(new SimWorker(
+    // Combat Log Vector callback
+    (combatLogVector) => {},
+    // Error callback
+    (errorCallback) => {
+      errorCallbackHandler(errorCallback)
+    },
+    // Combat Log Update callback
+    (combatLogUpdate) => {},
+    // Combat Log Breakdown callback
+    (combatLogBreakdown) => {},
     (simulationEnd) => {
       simsFinished++
       normalSimMedianDps = simulationEnd.medianDps
-      $('#avg-dps').text(normalSimMedianDps)
+      $('#avg-dps').text(Math.round(normalSimMedianDps * 100) / 100)
     },
     (simulationUpdate) => {
       normalSimMedianDps = simulationUpdate.medianDps
-      $('#avg-dps').text(normalSimMedianDps)
+      $('#avg-dps').text(Math.round(normalSimMedianDps * 100) / 100)
     },
     {
       player: Player.getSettings(),
@@ -229,10 +282,20 @@ function simStatWeights () {
 
   for (const stat in stats) {
     sims.push(new SimWorker(
+      // Combat Log Vector callback
+      (combatLogVector) => {},
+      // Error callback
+      (errorCallback) => {
+        errorCallbackHandler(errorCallback)
+      },
+      // Combat Log Update callback
+      (combatLogUpdate) => {},
+      // Combat Log Breakdown callback
+      (combatLogBreakdown) => {},
       (simulationEnd) => {
         // Round to 3 decimals
-        const statValue = Math.round((((simulationEnd.medianDps - normalSimMedianDps) / stats[simulationEnd.customStat.stat]) * 1000)) / 1000
-        updateStatWeight(simulationEnd.customStat.stat, statValue)
+        const statValue = Math.round((((simulationEnd.medianDps - normalSimMedianDps) / stats[simulationEnd.customStat]) * 1000)) / 1000
+        updateStatWeight(simulationEnd.customStat, statValue)
         simsFinished++
 
         if (simsFinished == sims.length) {
@@ -251,15 +314,17 @@ function simStatWeights () {
         }
       },
       (simulationUpdate) => {
-        const statValue = Math.round((((simulationUpdate.medianDps - normalSimMedianDps) / stats[simulationUpdate.customStat.stat]) * 1000)) / 1000
-        updateStatWeight(simulationUpdate.customStat.stat, statValue)
+        const statValue = Math.round((((simulationUpdate.medianDps - normalSimMedianDps) / stats[simulationUpdate.customStat]) * 1000)) / 1000
+        updateStatWeight(simulationUpdate.customStat, statValue)
 
         let smallestValue = 100
         for (let i = 0; i < simInfo.length; i++) {
-          if (simInfo[i][0] == simulationUpdate.customStat.stat) {
-            simInfo[i][1] = simulationUpdate.percent
+          if (simInfo[i][0] == simulationUpdate.customStat) {
+            simInfo[i][1] = Math.ceil((simulationUpdate.iteration / simulationUpdate.iterationAmount) * 100)
           }
-          if (simInfo[i][1] < smallestValue) smallestValue = simInfo[i][1]
+          if (simInfo[i][1] < smallestValue) {
+            smallestValue = simInfo[i][1]
+          }
         }
 
         $('#sim-stat-weights').css('background', 'linear-gradient(to right, #9482C9 ' + smallestValue + '%, transparent ' + smallestValue + '%)')
@@ -276,4 +341,13 @@ function simStatWeights () {
   }
 
   $('#stat-weights-section').show()
+}
+
+function errorCallbackHandler(errorCallback) {
+  alert("Error: " + errorCallback.errorMsg + "\nPost in #tbc-sim-report on the TBC Warlock Discord or contact Kristofer#8003 on Discord.")
+}
+
+function updateItemRowDps(itemId, medianDps) {
+  $(".item-row[data-wowhead-id='" + itemId + "']").find('.item-dps').text(medianDps)
+  $('#item-selection-table').trigger('update')
 }
