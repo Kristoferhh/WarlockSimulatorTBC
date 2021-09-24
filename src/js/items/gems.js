@@ -392,6 +392,13 @@ const gems = {
       iconName: 'inv_jewelcrafting_shadowsongamethyst_02',
       phase: 3
     },
+    31116: {
+      name: "Infused Amethyst",
+      stamina: 6,
+      spellPower: 6,
+      iconName: "inv_jewelcrafting_nightseye_03",
+      phase: 1
+    },
     30600: {
       name: 'Fluorescent Tanzanite',
       spellPower: 6,

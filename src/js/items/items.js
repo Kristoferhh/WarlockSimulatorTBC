@@ -1457,6 +1457,35 @@ var items = {
     }
   },
   chest: {
+    tormentedDemonsoulRobes: {
+      name: "Tormented Demonsoul Robes",
+      stamina: 39,
+      intellect: 38,
+      yellow: 1,
+      socketBonus: {
+        spellPower: 2
+      },
+      critRating: 50,
+      spellPower: 62,
+      id: 34936,
+      source: "100 Badge of Justice - G'eras",
+      phase: 5
+    },
+    shroudOfTheLorenial: {
+      name: "Shroud of the Lore`nial",
+      stamina: 34,
+      intellect: 35,
+      spirit: 33,
+      yellow: 1,
+      socketBonus: {
+        spellPower: 2
+      },
+      hitRating: 29,
+      spellPower: 61,
+      id: 34917,
+      source: "100 Badge of Justice - G'eras",
+      phase: 5
+    },
     sunfireRobe: {
       name: 'Sunfire Robe',
       stamina: 36,
@@ -2074,6 +2103,19 @@ var items = {
       source: 'Hyjal Summit',
       phase: 3
     },
+    crystalweaveBracers: {
+      name: "Crystalweave Bracers",
+      intellect: 16,
+      red: 1,
+      socketBonus: {
+        spellPower: 2
+      },
+      critRating: 12,
+      spellPower: 23,
+      id: 32655,
+      source: "50 Apexis Shards",
+      phase: 2
+    },
     mindstormWristbands: {
       name: 'Mindstorm Wristbands',
       stamina: 13,
@@ -2300,6 +2342,35 @@ var items = {
     }
   },
   gloves: {
+    enslavedDoomguardSoulgrips: {
+      name: "Enslaved Doomguard Soulgrips",
+      stamina: 33,
+      intellect: 27,
+      yellow: 1,
+      socketBonus: {
+        spellPower: 2
+      },
+      critRating: 30,
+      spellPower: 47,
+      id: 34938,
+      source: "75 Badge of Justice - G'eras",
+      phase: 5
+    },
+    barbedGlovesOfTheSage: {
+      name: "Barbed Gloves of the Sage",
+      stamina: 28,
+      intellect: 30,
+      spirit: 25,
+      yellow: 1,
+      socketBonus: {
+        spellPower: 2
+      },
+      hitRating: 15,
+      spellPower: 45,
+      id: 34904,
+      source: "75 Badge of Justice - G'eras",
+      phase: 5
+    },
     sunfireHandwraps: {
       name: 'Sunfire Handwraps',
       stamina: 33,
@@ -2651,6 +2722,20 @@ var items = {
     }
   },
   belt: {
+    aftershockWaistguard: {
+      name: "Aftershock Waistguard",
+      stamina: 27,
+      intellect: 27,
+      yellow: 1,
+      socketBonus: {
+        stamina: 3
+      },
+      hasteRating: 34,
+      spellPower: 47,
+      id: 34935,
+      source: "75 Badge of Justice - G'eras",
+      phase: 5
+    },
     beltOfTheMalefic: {
       name: 'Belt of the Malefic',
       stamina: 25,
@@ -3023,6 +3108,37 @@ var items = {
     }
   },
   legs: {
+    legwrapsOfSwelteringFlame: {
+      name: "Legwraps of Sweltering Flame",
+      stamina: 37,
+      intellect: 36,
+      spirit: 30,
+      yellow: 1,
+      blue: 1,
+      socketBonus: {
+        spellPower: 4
+      },
+      hitRating: 25,
+      spellPower: 63,
+      id: 34918,
+      source: "100 Badge of Justice - G'eras",
+      phase: 5
+    },
+    corruptedSoulclothPantaloons: {
+      name: "Corrupted Soulcloth Pantaloons",
+      stamina: 37,
+      intellect: 33,
+      yellow: 1,
+      blue: 1,
+      socketBonus: {
+        spellPower: 4
+      },
+      critRating: 43,
+      spellPower: 62,
+      id: 32937,
+      source: "100 Badge of Justice - G'eras",
+      phase: 5
+    },
     pantaloonsOfGrowingStrife: {
       name: 'Pantaloons of Growing Strife',
       stamina: 29,
@@ -3424,6 +3540,21 @@ var items = {
     }
   },
   boots: {
+    bootsOfIncantations: {
+      name: "Boots of Incantations",
+      stamina: 37,
+      intellect: 26,
+      spirit: 23,
+      yellow: 1,
+      socketBonus: {
+        spellPower: 2
+      },
+      hitRating: 17,
+      spellPower: 48,
+      id: 34919,
+      source: "75 Badge of Justice - G'eras",
+      phase: 5
+    },
     bootsOfTheMalefic: {
       name: 'Boots of the Malefic',
       stamina: 24,
@@ -3794,6 +3925,16 @@ var items = {
     }
   },
   ring: {
+    fusedNethergonBand: {
+      name: "Fused Nethergon Band",
+      stamina: 27,
+      intellect: 19,
+      hitRating: 28,
+      spellPower: 36,
+      id: 34889,
+      source: "60 Badge of Justice - G'eras",
+      phase: 5
+    },
     loopOfForgedPower: {
       name: 'Loop of Forged Power',
       stamina: 27,
