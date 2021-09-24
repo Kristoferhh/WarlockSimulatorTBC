@@ -19,6 +19,7 @@ Spell::Spell(Player* player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageO
     onGcd = true;
     isProc = false;
     isFinisher = false;
+    castTime = 0;
 }
 
 void Spell::reset()

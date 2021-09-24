@@ -823,13 +823,22 @@ void Player::postIterationDamageAndMana(std::string spellName)
 
 void Player::throwError(std::string error)
 {
+    sendCombatLogEntries();
     errorCallback(error.c_str());
     throw std::runtime_error(error);
 }
 
 bool Player::shouldWriteToCombatLog()
 {
-    return iteration == 10;
+    return iteration == 0;
+}
+
+void Player::sendCombatLogEntries()
+{
+    for (const auto& value: combatLogEntries)
+    {
+        combatLogUpdate(value.c_str());
+    }
 }
 
 void Player::combatLog(const std::string &entry)

@@ -58,10 +58,12 @@ function simDPS (items) {
       },
       // Error callback
       (errorCallback) => {
+        populateCombatLog(combatLog)
         errorCallbackHandler(errorCallback)
       },
       // Combat Log Update callback
       (combatLogUpdate) => {
+        console.log(combatLogUpdate.combatLogEntry)
         combatLog.push(combatLogUpdate.combatLogEntry);
       },
       // Combat Log Breakdown callback
@@ -91,11 +93,7 @@ function simDPS (items) {
         if (itemAmount === 1) {
           $('#sim-dps').text('Simulate')
 
-          // Populate the combat log
-          $('#combat-log p').remove()
-          for (const entry in combatLog) {
-            $('#combat-log').append('<p>' + combatLog[entry] + '</p>')
-          }
+          populateCombatLog(combatLog)
         } else if (simulationsFinished == itemAmount) {
           $('#sim-all-items').text('Simulate All Items')
         }
@@ -350,4 +348,11 @@ function errorCallbackHandler(errorCallback) {
 function updateItemRowDps(itemId, medianDps) {
   $(".item-row[data-wowhead-id='" + itemId + "']").find('.item-dps').text(medianDps)
   $('#item-selection-table').trigger('update')
+}
+
+function populateCombatLog(combatLog) {
+  $('#combat-log p').remove()
+  for (const entry in combatLog) {
+    $('#combat-log').append('<p>' + combatLog[entry] + '</p>')
+  }
 }

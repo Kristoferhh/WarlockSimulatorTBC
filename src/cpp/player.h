@@ -80,5 +80,6 @@ struct Player
   bool shouldWriteToCombatLog();
   void addIterationDamageAndMana(std::string spellName, int manaGain, int damage);
   void postIterationDamageAndMana(std::string spellName);
+  void sendCombatLogEntries();
   void combatLog(const std::string& entry);
 };

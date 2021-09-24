@@ -281,7 +281,6 @@ void Simulation::start()
         }
         dpsVector.push_back(dps);
 
-        //todo remove hard-coding
         if (player->iteration % static_cast<int>(std::floor(settings->iterations / 100.0)) == 0)
         {
             simulationUpdate(player->iteration, settings->iterations, median(dpsVector), player->settings->itemId,
@@ -292,10 +291,8 @@ void Simulation::start()
     }
 
     // Send the contents of the combat log to the web worker
-    for (const auto& value: player->combatLogEntries)
-    {
-        combatLogUpdate(value.c_str());
-    }
+    player->sendCombatLogEntries();
+    
     // Send the combat log breakdown info
     if (player->settings->recordingCombatLogBreakdown)
     {
