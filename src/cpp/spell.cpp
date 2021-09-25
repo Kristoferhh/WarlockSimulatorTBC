@@ -673,7 +673,7 @@ SeedOfCorruption::SeedOfCorruption(Player* player) : Spell(player)
     doesDamage = true;
     school = SpellSchool::SHADOW;
     type = SpellType::AFFLICTION;
-    coefficient = 0.22;
+    coefficient = 0.214;
     setup();
 };
 
@@ -684,7 +684,8 @@ void SeedOfCorruption::damage(bool isCrit)
     int resistAmount = 0;
     int critAmount = 0;
     int spellPower = player->getSpellPower(school);
-    double modifier = player->stats->shadowModifier; //todo debuffs increase dmg past the aoe cap
+    double modifier = getModifier(); //todo debuffs increase dmg past the aoe cap
+    double critMultiplier = 0;
 
     for (int i = 0; i < enemyAmount; i++)
     {
@@ -728,9 +729,13 @@ void SeedOfCorruption::damage(bool isCrit)
         totalSeedDamage = individualSeedDamage * enemiesHit;
     }
     // Add damage from Seed crits
-    double individualSeedCrit = individualSeedDamage * getCritMultiplier(player->critMultiplier);
-    double bonusDamageFromCrit = individualSeedCrit - individualSeedDamage;
-    totalSeedDamage += bonusDamageFromCrit * critAmount;
+    if (critAmount > 0)
+    {
+        critMultiplier = getCritMultiplier(player->critMultiplier);
+        double individualSeedCrit = individualSeedDamage * critMultiplier;
+        double bonusDamageFromCrit = individualSeedCrit - individualSeedDamage;
+        totalSeedDamage += bonusDamageFromCrit * critAmount;
+    }
     // Partial resists (probably need to calculate a partial resist for each seed hit, not sure how it interacts for the aoe cap)
     double partialResistMultiplier = player->getPartialResistMultiplier(school);
     totalSeedDamage *= partialResistMultiplier;
@@ -739,7 +744,12 @@ void SeedOfCorruption::damage(bool isCrit)
 
     if (player->shouldWriteToCombatLog())
     {
-        std::string msg = name + " " + truncateTrailingZeros(std::to_string(round(totalSeedDamage))) + " (" + std::to_string(enemyAmount) + " Enemies (" + std::to_string(resistAmount) + " Resists & " + std::to_string(critAmount) + " Crits) - " + std::to_string(baseDamage) + " Base Damage - " + truncateTrailingZeros(std::to_string(coefficient), 3) + " Coefficient - " + std::to_string(spellPower) + " Spell Power - " + truncateTrailingZeros(std::to_string(round(modifier * 1000) / 10), 3) + "% Modifier - " + truncateTrailingZeros(std::to_string(round(partialResistMultiplier * 1000) / 10), 3) + " % Partial Resist Multiplier)";
+        std::string msg = name + " " + truncateTrailingZeros(std::to_string(round(totalSeedDamage))) + " (" + std::to_string(enemyAmount) + " Enemies (" + std::to_string(resistAmount) + " Resists & " + std::to_string(critAmount) + " Crits) - " + std::to_string(baseDamage) + " Base Damage - " + truncateTrailingZeros(std::to_string(coefficient), 3) + " Coefficient - " + std::to_string(spellPower) + " Spell Power - " + truncateTrailingZeros(std::to_string(round(modifier * 1000) / 10), 1) + "% Modifier - ";
+        if (critAmount > 0)
+        {
+            msg += truncateTrailingZeros(std::to_string(critMultiplier), 3) + "% Crit Multiplier";
+        }
+        msg += " - " + truncateTrailingZeros(std::to_string(round(partialResistMultiplier * 1000) / 10)) + "% Partial Resist Multiplier)";
         player->combatLog(msg);
     }
     player->addIterationDamageAndMana(name, 0, totalSeedDamage);
