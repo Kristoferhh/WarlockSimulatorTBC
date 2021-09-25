@@ -63,7 +63,6 @@ function simDPS (items) {
       },
       // Combat Log Update callback
       (combatLogUpdate) => {
-        console.log(combatLogUpdate.combatLogEntry)
         combatLog.push(combatLogUpdate.combatLogEntry);
       },
       // Combat Log Breakdown callback
