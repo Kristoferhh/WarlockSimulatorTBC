@@ -116,6 +116,7 @@ struct SeedOfCorruption : public Spell
     int dmgCap;
     SeedOfCorruption(Player* player);
     void damage(bool isCrit = false);
+    double getModifier();
 };
 
 struct DarkPact : public Spell

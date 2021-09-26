@@ -759,6 +759,19 @@ void SeedOfCorruption::damage(bool isCrit)
     player->combatLogBreakdown.at(name)->casts += (enemiesHit - 1);
 }
 
+double SeedOfCorruption::getModifier()
+{
+    double modifier = Spell::getModifier();
+    if (player->talents->shadowMastery > 0 && player->talents->contagion > 0)
+    {
+        // Divide away the bonus from Shadow Mastery
+        modifier /= (1 + (player->talents->shadowMastery * 0.02));
+        // Multiply the modifier with the bonus from Shadow Mastery + Contagion
+        modifier *= (1 * (1 + ((player->talents->shadowMastery * 0.02) + (player->talents->contagion / 100.0))));
+    }
+    return modifier;
+}
+
 DarkPact::DarkPact(Player* player) : Spell(player)
 {
     name = "Dark Pact";
