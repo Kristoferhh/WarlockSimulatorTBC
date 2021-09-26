@@ -325,7 +325,7 @@ void Pet::setup()
 {
     initialize();
     calculateStatsFromAuras();
-    calculateStatsFromPlayer();
+    calculateStatsFromPlayer(false);
 }
 
 void Pet::reset()
@@ -345,7 +345,7 @@ void Pet::reset()
     if (auras->BlackBook != NULL && auras->BlackBook->active) auras->BlackBook->fade(true);
     if (auras->DemonicFrenzy != NULL && auras->DemonicFrenzy->active) auras->DemonicFrenzy->fade(true);
     
-    calculateStatsFromPlayer();
+    calculateStatsFromPlayer(false);
 }
 
 double Pet::getMeleeCritChance()

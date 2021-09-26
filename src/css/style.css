@@ -320,14 +320,17 @@ ul {
 
 #combat-log {
 	top: 5%;
-	height: 90%;
+	max-height: 90%;
 	overflow: auto;
 	background-color: black;
 	position: absolute;
 	display: none;
-	min-width: 1450px;
 	padding: 1px 10px 1px 10px;
 	line-height: 5px;
+}
+
+#combat-log p {
+	white-space: nowrap;
 }
 
 #import-export-window {

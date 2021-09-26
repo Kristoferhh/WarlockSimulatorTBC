@@ -331,10 +331,10 @@ void PetSpell::damage(bool isCrit, bool isGlancing)
     if (pet->player->shouldWriteToCombatLog())
     {
         if (isCrit) combatLogMsg.append("*");
-        combatLogMsg.append(std::to_string(dmg));
+        combatLogMsg.append(truncateTrailingZeros(std::to_string(round(dmg))));
         if (isCrit) combatLogMsg.append("*");
         if (isGlancing) combatLogMsg.append(" Glancing");
-        combatLogMsg.append(" (" + std::to_string(baseDamage) + " Base Damage");
+        combatLogMsg.append(" (" + truncateTrailingZeros(std::to_string(round(baseDamage))) + " Base Damage");
         if (type == AttackType::MAGICAL)
         {
             combatLogMsg.append(" - " + std::to_string(round(coefficient * 1000) / 1000.0) + " Coefficient");
@@ -343,12 +343,12 @@ void PetSpell::damage(bool isCrit, bool isGlancing)
         }
         else if (type == AttackType::PHYSICAL)
         {
-            if (isGlancing) combatLogMsg.append(" - " + std::to_string(pet->glancingBlowMultiplier * 100) + "% Glancing Blow Multiplier");
-            combatLogMsg.append(" - " + std::to_string(round(pet->getAttackPower())) + " Attack Power");
-            combatLogMsg.append(" - " + std::to_string(round(pet->armorMultiplier * 10000) / 100.0) + "% Damage Modifier (Armor)");
+            if (isGlancing) combatLogMsg.append(" - " + truncateTrailingZeros(std::to_string(pet->glancingBlowMultiplier * 100), 1) + "% Glancing Blow Multiplier");
+            combatLogMsg.append(" - " + truncateTrailingZeros(std::to_string(round(pet->getAttackPower()))) + " Attack Power");
+            combatLogMsg.append(" - " + truncateTrailingZeros(std::to_string(round(pet->armorMultiplier * 10000) / 100.0), 2) + "% Damage Modifier (Armor)");
         }
-        if (isCrit) combatLogMsg.append(" - " + std::to_string(pet->critMultiplier * 100) + "% Crit Multiplier");
-        combatLogMsg.append(" - " + std::to_string(round(dmgModifier * 10000) / 100.0) + "% Damage Modifier");
+        if (isCrit) combatLogMsg.append(" - " + truncateTrailingZeros(std::to_string(pet->critMultiplier * 100), 1) + "% Crit Multiplier");
+        combatLogMsg.append(" - " + truncateTrailingZeros(std::to_string(round(dmgModifier * 10000) / 100.0), 2) + "% Damage Modifier");
         combatLogMsg.append(")");
         pet->player->combatLog(combatLogMsg);
     }
