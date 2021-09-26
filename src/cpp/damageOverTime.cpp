@@ -20,7 +20,7 @@ void DamageOverTime::setup()
 {
     originalDuration = duration;
     // T4 4pc
-    if ((name == "Immolate" || name == "Corruption") && player->sets->t4 >= 4)
+    if (((player->spells->Immolate != NULL && name == player->spells->Immolate->name) || (player->spells->Corruption != NULL && name == player->spells->Corruption->name)) && player->sets->t4 >= 4)
     {
         duration += 3;
     }
@@ -57,12 +57,12 @@ void DamageOverTime::apply()
         player->combatLog(msg);
     }
     // Siphon Life snapshots the presence of ISB. So if ISB isn't up when it's cast, it doesn't get the benefit even if it comes up later during the duration.
-    if (name == "siphonLife")
+    if (player->spells->SiphonLife != NULL && name == player->spells->SiphonLife->name)
     {
         isbActive = !player->settings->usingCustomIsbUptime && player->auras->ImprovedShadowBolt != NULL && player->auras->ImprovedShadowBolt->active;
     }
     // Amplify Curse
-    if ((name == "curseOfAgony" || name == "curseOfDoom") && player->auras->AmplifyCurse != NULL && player->auras->AmplifyCurse->active)
+    if (((player->spells->CurseOfAgony != NULL && name == player->spells->CurseOfAgony->name) || (player->spells->CurseOfDoom != NULL && name == player->spells->CurseOfDoom->name)) && player->auras->AmplifyCurse != NULL && player->auras->AmplifyCurse->active)
     {
         amplified = true;
         player->auras->AmplifyCurse->fade();
@@ -106,7 +106,7 @@ double DamageOverTime::getModifier()
         dmgModifier *= 1.5;
     }
     // Improved Shadow Bolt
-    if ((school == SpellSchool::SHADOW && player->auras->ImprovedShadowBolt != NULL && player->auras->ImprovedShadowBolt->active && name != "siphonLife") || (name == "siphonLife" && isbActive))
+    if ((school == SpellSchool::SHADOW && player->auras->ImprovedShadowBolt != NULL && player->auras->ImprovedShadowBolt->active && (player->spells->SiphonLife == NULL || name != player->spells->SiphonLife->name)) || (player->spells->SiphonLife != NULL && name == player->spells->SiphonLife->name && isbActive))
     {
         dmgModifier *= player->auras->ImprovedShadowBolt->modifier;
     }
@@ -125,7 +125,7 @@ std::vector<double> DamageOverTime::getConstantDamage()
     double partialResistMultiplier = player->getPartialResistMultiplier(school);
     double dmg = this->dmg;
     // Add the t5 4pc bonus modifier to the base damage
-    if ((name == "Corruption" || name == "Immolate") && player->sets->t5 >= 4)
+    if (((player->spells->Corruption != NULL && name == player->spells->Corruption->name) || (player->spells->Immolate != NULL && name == player->spells->Immolate->name)) && player->sets->t5 >= 4)
     {
         dmg *= t5BonusModifier;
     }
@@ -143,7 +143,7 @@ double DamageOverTime::predictDamage()
     // If it's Corruption or Immolate then divide by the original duration (18s and 15s) and multiply by the durationTotal property
     // This is just for the t4 4pc bonus since their durationTotal property is increased by 3 seconds to include another tick
     // but the damage they do stays the same which assumes the normal duration without the bonus
-    if (name == "Corruption" || name == "Immolate")
+    if ((player->spells->Corruption != NULL && name == player->spells->Corruption->name) || (player->spells->Immolate != NULL && name == player->spells->Immolate->name))
     {
         dmg /= originalDuration;
         dmg *= duration;
@@ -165,7 +165,7 @@ void DamageOverTime::tick(double t)
         double partialResistMultiplier = constantDamage[3];
 
         // Check for Nightfall proc
-        if (name == "Corruption" && player->talents->nightfall > 0)
+        if (player->spells->Corruption != NULL && name == player->spells->Corruption->name && player->talents->nightfall > 0)
         {
             if (player->getRand() <= player->talents->nightfall * 2 * player->critChanceMultiplier)
             {

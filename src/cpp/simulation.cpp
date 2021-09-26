@@ -207,8 +207,7 @@ void Simulation::start()
                             // If a max damage spell was not found or if the max damage spell isn't ready (no mana), then cast Life Tap
                             if (maxDamageSpell != NULL && maxDamageSpell->hasEnoughMana())
                             {
-                                player->useCooldowns();
-                                maxDamageSpell->startCast();
+                                selectedSpellStartCast(maxDamageSpell);
                             }
                             else
                             {
@@ -596,18 +595,23 @@ void Simulation::selectedSpellHandler(std::shared_ptr<Spell> spell, std::map<std
     // Else if the player is choosing the rotation themselves then just cast the spell right away if they have enough mana
     else if (spell->hasEnoughMana())
     {
-        player->useCooldowns();
-
-        // Cast Amplify Curse if it's selected and the spell we're casting is either CoA or CoD
-        if (player->spells->AmplifyCurse != NULL && player->spells->AmplifyCurse->ready() && ((player->spells->CurseOfAgony != NULL && spell == player->spells->CurseOfAgony) || (player->spells->CurseOfDoom != NULL && spell == player->spells->CurseOfDoom)))
-        {
-            player->spells->AmplifyCurse->startCast();
-        }
-
-        spell->startCast();
+        selectedSpellStartCast(spell);
     }
     else
     {
         player->castLifeTapOrDarkPact();
     }
+}
+
+void Simulation::selectedSpellStartCast(std::shared_ptr<Spell> spell)
+{
+    player->useCooldowns();
+
+    // Cast Amplify Curse if it's selected and the spell we're casting is either CoA or CoD
+    if (player->spells->AmplifyCurse != NULL && player->spells->AmplifyCurse->ready() && ((player->spells->CurseOfAgony != NULL && spell == player->spells->CurseOfAgony) || (player->spells->CurseOfDoom != NULL && spell == player->spells->CurseOfDoom)))
+    {
+        player->spells->AmplifyCurse->startCast();
+    }
+
+    spell->startCast();
 }
