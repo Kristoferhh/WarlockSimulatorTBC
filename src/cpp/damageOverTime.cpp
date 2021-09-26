@@ -322,3 +322,16 @@ CurseOfDoomDot::CurseOfDoomDot(Player* player) : DamageOverTime(player)
     minimumDuration = 60;
     setup();
 }
+
+double CurseOfDoomDot::getModifier()
+{
+    double modifier = DamageOverTime::getModifier();
+
+    // CoD doesn't benefit from SM
+    if (player->talents->shadowMastery > 0)
+    {
+        modifier /= (1 + (0.02 * player->talents->shadowMastery));
+    }
+
+    return modifier;
+}

@@ -207,7 +207,7 @@ void Simulation::start()
                             // If a max damage spell was not found or if the max damage spell isn't ready (no mana), then cast Life Tap
                             if (maxDamageSpell != NULL && maxDamageSpell->hasEnoughMana())
                             {
-                                selectedSpellStartCast(maxDamageSpell);
+                                castSelectedSpell(maxDamageSpell);
                             }
                             else
                             {
@@ -595,7 +595,7 @@ void Simulation::selectedSpellHandler(std::shared_ptr<Spell> spell, std::map<std
     // Else if the player is choosing the rotation themselves then just cast the spell right away if they have enough mana
     else if (spell->hasEnoughMana())
     {
-        selectedSpellStartCast(spell);
+        castSelectedSpell(spell);
     }
     else
     {
@@ -603,7 +603,7 @@ void Simulation::selectedSpellHandler(std::shared_ptr<Spell> spell, std::map<std
     }
 }
 
-void Simulation::selectedSpellStartCast(std::shared_ptr<Spell> spell)
+void Simulation::castSelectedSpell(std::shared_ptr<Spell> spell)
 {
     player->useCooldowns();
 
