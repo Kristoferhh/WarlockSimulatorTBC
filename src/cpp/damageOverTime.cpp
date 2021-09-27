@@ -100,11 +100,6 @@ double DamageOverTime::getModifier()
     {
         dmgModifier *= player->stats->fireModifier;
     }
-    // Amplify Curse
-    if (amplified)
-    {
-        dmgModifier *= 1.5;
-    }
     // Improved Shadow Bolt
     if ((school == SpellSchool::SHADOW && player->auras->ImprovedShadowBolt != NULL && player->auras->ImprovedShadowBolt->active && (player->spells->SiphonLife == NULL || name != player->spells->SiphonLife->name)) || (player->spells->SiphonLife != NULL && name == player->spells->SiphonLife->name && isbActive))
     {
@@ -123,23 +118,29 @@ std::vector<double> DamageOverTime::getConstantDamage()
     }
     double modifier = getModifier();
     double partialResistMultiplier = player->getPartialResistMultiplier(school);
-    double dmg = this->dmg;
+    double baseDamage = dmg;
+    // Amplify Curse
+    if (amplified)
+    {
+        baseDamage *= 1.5;
+    }
     // Add the t5 4pc bonus modifier to the base damage
     if (((player->spells->Corruption != NULL && name == player->spells->Corruption->name) || (player->spells->Immolate != NULL && name == player->spells->Immolate->name)) && player->sets->t5 >= 4)
     {
-        dmg *= t5BonusModifier;
+        baseDamage *= t5BonusModifier;
     }
-    dmg += spellPower * coefficient;
-    dmg *= modifier * partialResistMultiplier;
+    double totalDamage = baseDamage;
+    totalDamage += spellPower * coefficient;
+    totalDamage *= modifier * partialResistMultiplier;
 
-    return std::vector<double> { dmg, spellPower, modifier, partialResistMultiplier };
+    return std::vector<double> { baseDamage, totalDamage, spellPower, modifier, partialResistMultiplier };
 }
 
 // Predicts how much damage the dot will do over its full duration
 double DamageOverTime::predictDamage()
 {
     std::vector<double> constantDamage = getConstantDamage();
-    double dmg = constantDamage[0];
+    double dmg = constantDamage[1];
     // If it's Corruption or Immolate then divide by the original duration (18s and 15s) and multiply by the durationTotal property
     // This is just for the t4 4pc bonus since their durationTotal property is increased by 3 seconds to include another tick
     // but the damage they do stays the same which assumes the normal duration without the bonus
@@ -159,10 +160,11 @@ void DamageOverTime::tick(double t)
     if (tickTimerRemaining <= 0)
     {
         std::vector<double> constantDamage = getConstantDamage();
-        double dmg = constantDamage[0] / (originalDuration / tickTimerTotal);
-        double spellPower = constantDamage[1];
-        double modifier = constantDamage[2];
-        double partialResistMultiplier = constantDamage[3];
+        double baseDamage = constantDamage[0];
+        double dmg = constantDamage[1] / (originalDuration / tickTimerTotal);
+        double spellPower = constantDamage[2];
+        double modifier = constantDamage[3];
+        double partialResistMultiplier = constantDamage[4];
 
         // Check for Nightfall proc
         if (player->spells->Corruption != NULL && name == player->spells->Corruption->name && player->talents->nightfall > 0)
@@ -180,7 +182,7 @@ void DamageOverTime::tick(double t)
 
         if (player->shouldWriteToCombatLog())
         {
-            std::string msg = name + " Tick " + truncateTrailingZeros(std::to_string(round(dmg))) + " (" + truncateTrailingZeros(std::to_string(this->dmg)) + " Base Damage - " + truncateTrailingZeros(std::to_string(player->getSpellPower(school))) + " Spell Power - " + truncateTrailingZeros(std::to_string(coefficient), 3) + " Coefficient - " + truncateTrailingZeros(std::to_string(round(modifier * 10000) / 100), 3) + "% Damage Modifier - " + truncateTrailingZeros(std::to_string(round(partialResistMultiplier * 1000) / 10)) + "% Partial Resist Multiplier";
+            std::string msg = name + " Tick " + truncateTrailingZeros(std::to_string(round(dmg))) + " (" + truncateTrailingZeros(std::to_string(baseDamage)) + " Base Damage - " + truncateTrailingZeros(std::to_string(spellPower)) + " Spell Power - " + truncateTrailingZeros(std::to_string(coefficient), 3) + " Coefficient - " + truncateTrailingZeros(std::to_string(round(modifier * 10000) / 100), 3) + "% Damage Modifier - " + truncateTrailingZeros(std::to_string(round(partialResistMultiplier * 1000) / 10)) + "% Partial Resist Multiplier";
             if (t5BonusModifier > 1)
             {
                 msg += " - " + std::to_string(round(t5BonusModifier * 10000) / 100) + "% Base Dmg Modifier (T5 4pc bonus)";
