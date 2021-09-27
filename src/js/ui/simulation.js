@@ -297,7 +297,9 @@ function simStatWeights () {
         simsFinished++
 
         if (simsFinished == sims.length) {
-          const pawnString = '( Pawn: v1: "' + (localStorage.selectedProfile || 'Warlock') + '": Class=Warlock, Spec=Affliction, Intellect=' + $('#stat-weight-intellect').text() +
+          const pawnString = '( Pawn: v1: "' + (localStorage.selectedProfile || 'Warlock') + '": Class=Warlock, Spec=Affliction' +
+          ', Stamina=' + $('#stat-weight-stamina').text() +
+          ', Intellect=' + $('#stat-weight-intellect').text() +
           ', SpellCritRating=' + $('#stat-weight-critRating').text() +
           ', SpellHitRating=' + $('#stat-weight-hitRating').text() +
           ', FireSpellDamage=' + $('#stat-weight-firePower').text() +
