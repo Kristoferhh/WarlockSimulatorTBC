@@ -19,12 +19,15 @@ DamageOverTime::DamageOverTime(Player* player) : player(player)
 void DamageOverTime::setup()
 {
     originalDuration = duration;
+
     // T4 4pc
-    if (((player->spells->Immolate != NULL && name == player->spells->Immolate->name) || (player->spells->Corruption != NULL && name == player->spells->Corruption->name)) && player->sets->t4 >= 4)
+    if ((name == "Corruption" || name == "Immolate") && player->sets->t4 >= 4)
     {
         duration += 3;
     }
+
     ticksTotal = duration / tickTimerTotal;
+    
     if (player->combatLogBreakdown.count(name) == 0)
     {
         player->combatLogBreakdown.insert(std::make_pair(name, new CombatLogBreakdown(name)));
