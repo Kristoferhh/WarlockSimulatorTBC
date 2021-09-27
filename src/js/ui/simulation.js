@@ -220,6 +220,7 @@ function simStatWeights () {
   const statAmount = 100
   const stats = {
     normal: 0,
+    stamina: statAmount,
     intellect: statAmount,
     spellPower: statAmount,
     shadowPower: statAmount,

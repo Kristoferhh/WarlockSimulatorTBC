@@ -81,7 +81,9 @@ onmessage = function (e) {
                     }
                   }
                 }
-              } else { // No gem in this socket
+              }
+              // No gem in this socket
+              else {
                 socketBonusActive = false
               }
             }
@@ -192,7 +194,7 @@ onmessage = function (e) {
       , b.natureResist, b.arcaneResist, b.fireResist, b.frostResist, b.shadowResist)
     // Player settings
     let playerSettings = module._allocPlayerSettings(auras, talents, sets, stats, equippedItems, e.data.itemId, (metaGemIds[0] || -1), c["automatically-open-sim-details"] === "yes"
-    , e.data.customStat === "intellect", e.data.customStat === "spellPower", e.data.customStat === "shadowPower", e.data.customStat === "firePower", e.data.customStat === "hitRating"
+    , e.data.customStat === "stamina", e.data.customStat === "intellect", e.data.customStat === "spellPower", e.data.customStat === "shadowPower", e.data.customStat === "firePower", e.data.customStat === "hitRating"
     , e.data.customStat === "critRating", e.data.customStat === "hasteRating", e.data.customStat === "mp5", c.shattrathFaction === "Aldor", parseInt(c['target-level']), parseInt(c['target-shadow-resistance'])
     , parseInt(c['target-fire-resistance']), parseInt(c.mageAtieshAmount), parseInt(c.totemOfWrathAmount), c.sacrificePet === "yes", c.petChoice === "0", c.petChoice === "2", c.petChoice === "4"
     , parseInt(c.ferociousInspirationAmount), parseInt(c.improvedCurseOfTheElements), c.customIsbUptime === "yes", parseInt(c.customIsbUptimeValue), parseInt(c.improvedDivineSpirit), parseInt(c.improvedImp)
