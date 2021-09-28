@@ -63,8 +63,8 @@ struct Player
   Player(PlayerSettings* settings);
   void initialize();
   void reset();
-  void throwError(std::string error);
-  double getGcdValue(std::shared_ptr<Spell> spell);
+  void throwError(const std::string& error);
+  double getGcdValue(const std::shared_ptr<Spell>& spell);
   double getSpellPower(SpellSchool school = SpellSchool::NO_SCHOOL);
   double getHastePercent();
   bool isCrit(SpellType spellType, double extraCrit = 0);
@@ -73,13 +73,12 @@ struct Player
   double getHitChance(SpellType spellType);
   double getPartialResistMultiplier(SpellSchool school);
   double getBaseHitChance(int playerLevel, int enemyLevel);
-  bool areAnyCooldownsReady();
   void useCooldowns();
   int getRand();
   void castLifeTapOrDarkPact();
   bool shouldWriteToCombatLog();
-  void addIterationDamageAndMana(std::string spellName, int manaGain, int damage);
-  void postIterationDamageAndMana(std::string spellName);
+  void addIterationDamageAndMana(const std::string& spellName, int manaGain, int damage);
+  void postIterationDamageAndMana(const std::string& spellName);
   void sendCombatLogEntries();
   void combatLog(const std::string& entry);
 };

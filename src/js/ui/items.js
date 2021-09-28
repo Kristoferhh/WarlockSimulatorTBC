@@ -117,6 +117,10 @@ $('#show-combat-log').click(function () {
   $('#combat-log').toggle()
 })
 
+$('#show-histogram').click(function() {
+  $('#dps-histogram').toggle()
+})
+
 // User left-clicks on one of the item's gem sockets
 $('#item-selection-table tbody').on('click', '.gem', function (event) {
   const socketColor = $(this).attr('data-color')

@@ -205,7 +205,7 @@ onmessage = function (e) {
     , d.curse.curseOfTheElements, d.curse.curseOfAgony, d.curse.curseOfDoom, d.finisher.deathCoil, d.finisher.shadowburn, d.finisher.conflagrate, d.other.shadowfury, d.other.amplifyCurse, d.other.darkPact
     , c.improvedWrathOfAirTotem === "yes")
     let player = module._allocPlayer(playerSettings)
-    let simSettings = module._allocSimSettings(e.data.simulation.iterations, e.data.simulation.minTime, e.data.simulation.maxTime, randomSeeds)
+    let simSettings = module._allocSimSettings(e.data.simulation.iterations, e.data.simulation.minTime, e.data.simulation.maxTime, randomSeeds, e.data.itemAmount > 1)
     let sim = module._allocSim(player, simSettings)
     module._startSimulation(sim)
     module._freeUnsignedIntArr(randomSeeds)

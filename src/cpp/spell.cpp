@@ -112,7 +112,7 @@ void Spell::startCast(double predictedDamage)
     }
     if (predictedDamage > 0 && player->shouldWriteToCombatLog())
     {
-        combatLogMsg.append(" - Estimated damage / Cast time: " + std::to_string(round(predictedDamage)));
+        combatLogMsg.append(" - Estimated damage / Cast time: " + truncateTrailingZeros(std::to_string(round(predictedDamage))));
     }
 
     if (player->shouldWriteToCombatLog())
@@ -138,19 +138,21 @@ void Spell::tick(double t)
 
 void Spell::cast()
 {
+    int currentMana = player->stats->mana;
+    bool isCrit = false;
+    cooldownRemaining = cooldown;
+    casting = false;
+
     if (!isAura)
     {
         player->combatLogBreakdown.at(name)->casts++;
     }
-    const int currentMana = player->stats->mana;
+
     if (manaCost > 0 && !player->settings->infinitePlayerMana)
     {
         player->stats->mana -= manaCost * player->stats->manaCostModifier;
         player->fiveSecondRuleTimer = 5;
     }
-
-    cooldownRemaining = cooldown;
-    casting = false;
 
     if (castTime > 0 && player->shouldWriteToCombatLog())
     {
@@ -158,7 +160,6 @@ void Spell::cast()
         player->combatLog(msg);
     }
 
-    bool isCrit = false;
     if (canCrit)
     {
         isCrit = player->isCrit(type, bonusCrit);

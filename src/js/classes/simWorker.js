@@ -1,9 +1,11 @@
 class SimWorker {
-  constructor (combatLogVector, errorCallback, combatLogUpdate, combatLogBreakdown, simulationEnd, simulationUpdate, workerParams) {
+  constructor (dpsUpdate, combatLogVector, errorCallback, combatLogUpdate, combatLogBreakdown, simulationEnd, simulationUpdate, workerParams) {
     this.worker = new Worker('./src/js/web_worker.js')
     this.workerParams = workerParams
     this.worker.onmessage = function (e) {
-      if (e.data.event == "errorCallback") {
+      if (e.data.event == "dpsUpdate") {
+        dpsUpdate(e.data.data)
+      } else if (e.data.event == "errorCallback") {
         errorCallback(e.data.data)
       } else if (e.data.event == "combatLogUpdate") {
         combatLogUpdate(e.data.data)

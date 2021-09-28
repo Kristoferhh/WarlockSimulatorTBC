@@ -573,7 +573,7 @@ double Player::getHastePercent()
     return hastePercent * (1 + stats->hasteRating / hasteRatingPerPercent / 100.0);
 }
 
-double Player::getGcdValue(std::shared_ptr<Spell> spell)
+double Player::getGcdValue(const std::shared_ptr<Spell>& spell)
 {
     if (spells->Shadowfury == NULL || spell != spells->Shadowfury)
     {
@@ -659,67 +659,16 @@ double Player::getBaseHitChance(int playerLevel, int enemyLevel)
     return 0;
 }
 
-bool Player::areAnyCooldownsReady()
-{
-    if (!spells->Bloodlust.empty() && !auras->Bloodlust->active)
-    {
-        for (int i = 0; i < settings->bloodlustAmount; i++)
-        {
-            if (spells->Bloodlust[i]->ready())
-            {
-                return true;
-            }
-        }
-    }
-    if (!spells->PowerInfusion.empty() && !auras->PowerInfusion->active)
-    {
-        for (int i = 0; i < settings->powerInfusionAmount; i++)
-        {
-            if (spells->PowerInfusion[i]->ready())
-            {
-                return true;
-            }
-        }
-    }
-    if (!spells->Innervate.empty() && !auras->Innervate->active)
-    {
-        for (int i = 0; i < settings->innervateAmount; i++)
-        {
-            if (spells->Innervate[i]->ready())
-            {
-                return true;
-            }
-        }
-    }
-    if (spells->DestructionPotion != NULL && spells->DestructionPotion->ready())
-    {
-        return true;
-    }
-    if (spells->BloodFury != NULL && spells->BloodFury->ready())
-    {
-        return true;
-    }
-    for (auto& trinketPtr : trinkets)
-    {
-        if (trinketPtr->ready())
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 void Player::useCooldowns()
 {
     // Only use PI if Bloodlust isn't selected or if Bloodlust isn't active since they don't stack
     if (!spells->PowerInfusion.empty() && !auras->PowerInfusion->active && (spells->Bloodlust.empty() || !auras->Bloodlust->active))
     {
-        for (int i = 0; i < settings->powerInfusionAmount; i++)
+        for (auto pi : spells->PowerInfusion)
         {
-            if (spells->PowerInfusion[i]->ready())
+            if (pi->ready())
             {
-                spells->PowerInfusion[i]->startCast();
+                pi->startCast();
                 break;
             }
         }
@@ -727,11 +676,11 @@ void Player::useCooldowns()
     //todo don't use innervate until x% mana
     if (!spells->Innervate.empty() && !auras->Innervate->active)
     {
-        for (int i = 0; i < settings->innervateAmount; i++)
+        for (auto innervate : spells->Innervate)
         {
-            if (spells->Innervate[i]->ready())
+            if (innervate->ready())
             {
-                spells->Innervate[i]->startCast();
+                innervate->startCast();
                 break;
             }
         }
@@ -789,7 +738,7 @@ double Player::getPartialResistMultiplier(SpellSchool school)
     return 1;
 }
 
-void Player::addIterationDamageAndMana(std::string spellName, int manaGain, int damage)
+void Player::addIterationDamageAndMana(const std::string& spellName, int manaGain, int damage)
 {
     if (combatLogBreakdown.count(spellName) == 0 || !settings->recordingCombatLogBreakdown)
     {
@@ -809,7 +758,7 @@ void Player::addIterationDamageAndMana(std::string spellName, int manaGain, int 
     combatLogBreakdown.at(spellName)->iterationDamage += damage;
 }
 
-void Player::postIterationDamageAndMana(std::string spellName)
+void Player::postIterationDamageAndMana(const std::string& spellName)
 {
     if (!settings->recordingCombatLogBreakdown)
     {
@@ -821,7 +770,7 @@ void Player::postIterationDamageAndMana(std::string spellName)
     combatLogBreakdown.at(spellName)->iterationManaGain = 0;
 }
 
-void Player::throwError(std::string error)
+void Player::throwError(const std::string& error)
 {
     sendCombatLogEntries();
     errorCallback(error.c_str());

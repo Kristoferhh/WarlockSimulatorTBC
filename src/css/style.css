@@ -333,6 +333,12 @@ ul {
 	white-space: nowrap;
 }
 
+#dps-histogram {
+	background-color: black;
+	position: absolute;
+	top: 0;
+}
+
 #import-export-window {
 	background-color: black;
 	padding: 50px;
@@ -463,7 +469,7 @@ ul {
 	cursor: pointer;
 	border-radius: 4px;
 	width: 40%;
-	height: 18px;
+	height: 14px;
 	display: inline-block;
 	padding: 15px 0px 15px 0px;
 	user-select: none;
@@ -842,7 +848,7 @@ body {
 	}
 }
 
-@media screen and (max-height: 850px) {
+@media screen and (max-height: 880px) {
 	#sidebar {
 		font-size: 0.95em;
 	}
@@ -852,19 +858,19 @@ body {
 	}
 }
 
-@media screen and (max-height: 800px) {
+@media screen and (max-height: 830px) {
 	.character-stats li {
 		line-height: 8px;
 	}
 }
 
-@media screen and (max-height: 775px) {
+@media screen and (max-height: 790px) {
 	.character-stats li {
 		line-height: 6px;
 	}
 }
 
-@media screen and (max-height: 750px) {
+@media screen and (max-height: 770px) {
 	.character-stats li {
 		line-height: 0px;
 	}

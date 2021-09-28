@@ -11,6 +11,20 @@
 #define EMSCRIPTEN_KEEPALIVE
 #endif
 
+void dpsUpdate(double dps)
+{
+#ifdef EMSCRIPTEN
+    EM_ASM({
+        postMessage({
+            event: "dpsUpdate",
+            data: {
+                dps: $0
+            }
+        })
+    }, dps);
+#endif
+}
+
 void errorCallback(const char* errorMsg)
 {
 #ifdef EMSCRIPTEN
@@ -221,9 +235,9 @@ Player* allocPlayer(PlayerSettings* settings)
 }
 
 EMSCRIPTEN_KEEPALIVE
-SimulationSettings* allocSimSettings(int iterations, int minTime, int maxTime, unsigned int* randomSeeds)
+SimulationSettings* allocSimSettings(int iterations, int minTime, int maxTime, unsigned int* randomSeeds, bool multiItemSimulation)
 {
-    return new SimulationSettings(iterations, minTime, maxTime, randomSeeds);
+    return new SimulationSettings(iterations, minTime, maxTime, randomSeeds, multiItemSimulation);
 }
 
 EMSCRIPTEN_KEEPALIVE
