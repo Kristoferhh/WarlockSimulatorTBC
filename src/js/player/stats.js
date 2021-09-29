@@ -53,8 +53,8 @@ const raceStats = {
   },
   human: {
     stamina: 76,
-    intellect: 129,
-    spirit: 132,
+    intellect: 133,
+    spirit: 139,
     spiritModifier: 1.1
   },
   orc: {
