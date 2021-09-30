@@ -59,8 +59,8 @@ const raceStats = {
   },
   orc: {
     stamina: 78,
-    intellect: 126,
-    spirit: 134,
+    intellect: 130,
+    spirit: 142,
     petDamageModifier: 1.05
   },
   undead: {
@@ -71,8 +71,8 @@ const raceStats = {
   },
   bloodElf: {
     stamina: 74,
-    intellect: 133,
-    spirit: 130,
+    intellect: 137,
+    spirit: 138,
     fireResist: 5,
     frostResist: 5,
     shadowResist: 5,
