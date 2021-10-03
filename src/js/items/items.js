@@ -5311,6 +5311,16 @@ var items = {
       source: 'PVP',
       phase: 2
     },
+    staffOfDisintegration: {
+      name: "Staff of Disintegration",
+      stamina: 75,
+      intellect: 50,
+      critRating: 75,
+      spellPower: 325,
+      id: 30313,
+      source: "Kael'Thas (only during encounter)",
+      phase: 2
+    },
     theNexusKey: {
       name: 'The Nexus Key',
       stamina: 76,
