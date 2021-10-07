@@ -1,7 +1,6 @@
 #include "player.h"
 #include "spell.h"
 #include "common.h"
-#include "emscripten.h"
 #include "damageOverTime.h"
 #include "bindings.h"
 

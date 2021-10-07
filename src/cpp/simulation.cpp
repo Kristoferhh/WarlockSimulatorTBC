@@ -6,7 +6,6 @@
 #include "spell.h"
 #include <algorithm>
 #include <chrono>
-#include <emscripten/val.h>
 
 Simulation::Simulation(Player* _player, SimulationSettings* simulationSettings)
     : player(_player), settings(simulationSettings) {}

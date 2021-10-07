@@ -4,7 +4,6 @@
 #include <random>
 
 #ifdef EMSCRIPTEN
-#include <emscripten/bind.h>
 #include "emscripten.h"
 #else
 #include <iostream>
