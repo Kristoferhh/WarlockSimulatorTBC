@@ -400,7 +400,7 @@ double FelguardCleave::getBaseDamage()
 
 SuccubusLashOfPain::SuccubusLashOfPain(Pet* pet) : PetSpell(pet)
 {
-    cooldown = 12;
+    cooldown = 12 - 3 * pet->player->talents->improvedLashOfPain;
     manaCost = 190;
     name = "Lash of Pain";
     dmg = 123;
@@ -408,5 +408,6 @@ SuccubusLashOfPain::SuccubusLashOfPain(Pet* pet) : PetSpell(pet)
     coefficient = 0.429;
     type = AttackType::MAGICAL;
     canCrit = true;
+    modifier *= 1 + pet->player->talents->improvedSuccubus / 10.0;
     setup();
 }
