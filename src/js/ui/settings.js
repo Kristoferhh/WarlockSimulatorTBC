@@ -98,9 +98,9 @@ function updateSimulationSettingsVisibility () {
   if ($('#sacrificePet').children('select').val() == 'no' || !$('#sacrificePet').is(':visible')) {
     $('#petBuffs-heading').show()
     $('.petBuffs').show()
-    if ($('#petMode').children('select').val() == PetMode.AGGRESSIVE) {
+    if ($('#petMode').children('select').val() == 1) {
       $('#prepopBlackBook').show()
-      if ($('#petChoice').children('select').val() != PetName.IMP) {
+      if ($('#petChoice').children('select').val() != 0) {
         $('#enemyArmor').show()
         $('#enemy-armor-val').closest('li').show()
       } else {
@@ -123,7 +123,7 @@ function updateSimulationSettingsVisibility () {
     $('.petDebuff').hide()
   }
 
-  if ($('#petChoice').children('select').val() == PetName.SUCCUBUS && $('#petMode').children('select').val() == PetMode.AGGRESSIVE && (talents.demonicSacrifice == 0 || $('#sacrificePet').children('select').val() === 'no')) {
+  if ($('#petChoice').children('select').val() == 2 && $('#petMode').children('select').val() == 1 && (talents.demonicSacrifice == 0 || $('#sacrificePet').children('select').val() === 'no')) {
     $('#lashOfPainUsage').show()
   } else {
     $('#lashOfPainUsage').hide()
