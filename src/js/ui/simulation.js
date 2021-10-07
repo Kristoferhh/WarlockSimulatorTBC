@@ -266,6 +266,7 @@ function simStatWeights () {
     normal: 0,
     stamina: statAmount,
     intellect: statAmount,
+    spirit: statAmount,
     spellPower: statAmount,
     shadowPower: statAmount,
     firePower: statAmount,
@@ -348,6 +349,7 @@ function simStatWeights () {
           const pawnString = '( Pawn: v1: "' + (localStorage.selectedProfile || 'Warlock') + '": Class=Warlock, Spec=Affliction' +
           ', Stamina=' + $('#stat-weight-stamina').text() +
           ', Intellect=' + $('#stat-weight-intellect').text() +
+          ', Spirit=' + $('#stat-weight-spirit').text() +
           ', SpellCritRating=' + $('#stat-weight-critRating').text() +
           ', SpellHitRating=' + $('#stat-weight-hitRating').text() +
           ', FireSpellDamage=' + $('#stat-weight-firePower').text() +

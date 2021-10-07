@@ -5,7 +5,7 @@
 #include "characterStats.h"
 #include "items.h"
 
-PlayerSettings::PlayerSettings(Auras* auras, Talents* talents, Sets* sets, CharacterStats* stats, Items* items, int itemId, int metaGemId, bool recordingCombatLogBreakdown, bool simmingStamina, bool simmingIntellect, bool simmingSpellPower
+PlayerSettings::PlayerSettings(Auras* auras, Talents* talents, Sets* sets, CharacterStats* stats, Items* items, int itemId, int metaGemId, bool recordingCombatLogBreakdown, bool simmingStamina, bool simmingIntellect, bool simmingSpirit, bool simmingSpellPower
     , bool simmingShadowPower, bool simmingFirePower, bool simmingHitRating, bool simmingCritRating, bool simmingHasteRating, bool simmingMp5, bool isAldor, int enemyLevel, int enemyShadowResist
     , int enemyFireResist, int mageAtieshAmount, int totemOfWrathAmount, bool sacrificingPet, bool petIsImp, bool petIsSuccubus, bool petIsFelguard, int ferociousInspirationAmount, int improvedCurseOfTheElements
     , bool usingCustomIsbUptime, int customIsbUptimeValue, int improvedDivineSpirit, int improvedImp, int shadowPriestDps, int warlockAtieshAmount, int improvedExposeArmor, bool isSingleTarget, int enemyAmount
@@ -15,7 +15,7 @@ PlayerSettings::PlayerSettings(Auras* auras, Talents* talents, Sets* sets, Chara
     , bool hasCurseOfTheElements, bool hasCurseOfAgony, bool hasCurseOfDoom, bool hasDeathCoil, bool hasShadowburn, bool hasConflagrate, bool hasShadowfury, bool hasAmplifyCurse
     , bool hasDarkPact, bool hasElementalShamanT4Bonus)
   : auras(auras), talents(talents), sets(sets), stats(stats), items(items), itemId(itemId), metaGemId(metaGemId), recordingCombatLogBreakdown(recordingCombatLogBreakdown), simmingStamina(simmingStamina), simmingIntellect(simmingIntellect)
-    , simmingSpellPower(simmingSpellPower), simmingShadowPower(simmingShadowPower), simmingFirePower(simmingFirePower), simmingHitRating(simmingHitRating), simmingCritRating(simmingCritRating)
+    , simmingSpirit(simmingSpirit), simmingSpellPower(simmingSpellPower), simmingShadowPower(simmingShadowPower), simmingFirePower(simmingFirePower), simmingHitRating(simmingHitRating), simmingCritRating(simmingCritRating)
     , simmingHasteRating(simmingHasteRating), simmingMp5(simmingMp5), isAldor(isAldor), enemyLevel(enemyLevel), enemyShadowResist(enemyShadowResist), enemyFireResist(enemyFireResist)
     , mageAtieshAmount(mageAtieshAmount), totemOfWrathAmount(totemOfWrathAmount), sacrificingPet(sacrificingPet), petIsImp(petIsImp), petIsSuccubus(petIsSuccubus), petIsFelguard(petIsFelguard)
     , ferociousInspirationAmount(ferociousInspirationAmount), improvedCurseOfTheElements(improvedCurseOfTheElements), usingCustomIsbUptime(usingCustomIsbUptime), customIsbUptimeValue(customIsbUptimeValue)
