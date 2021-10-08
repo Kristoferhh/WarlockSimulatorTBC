@@ -69,7 +69,7 @@ const gems = {
       iconName: 'inv_jewelcrafting_crimsonspinel_02',
       phase: 3
     },
-    38549: {
+    28118: {
       name: 'Runed Ornate Ruby',
       spellPower: 12,
       iconName: 'inv_misc_gem_bloodstone_01',

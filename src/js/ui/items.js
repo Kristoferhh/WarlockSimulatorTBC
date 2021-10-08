@@ -213,7 +213,7 @@ $('#show-equipped-items').click(function () {
     $('#currently-equipped-items tbody tr').remove()
 
     // Loop through the equipped items and insert a new row for each slot
-    for (const itemSlot in selectedItems) {
+    for (const itemSlot in items) {
       let itemSlotWithoutSubSlot = ['1','2'].includes(itemSlot.charAt(itemSlot.length - 1)) ? itemSlot.slice(0, itemSlot.length - 1) : itemSlot
       if (selectedItems[itemSlot]) {
         let itemId = selectedItems[itemSlot]
