@@ -570,34 +570,20 @@ var items = {
       source: "Zul'Aman",
       phase: 4
     },
-    veteransPendantOfConquest: {
-      name: "Veteran's Pendant of Conquest",
-      stamina: 27,
-      intellect: 12,
-      yellow: 1,
-      socketBonus: {
-        stamina: 3
-      },
-      spellPower: 21,
-      critRating: 18,
-      resilienceRating: 18,
-      id: 33067,
-      source: 'PVP',
-      phase: 2
-    },
-    veteransPendantOfDominance: {
-      name: "Veteran's Pendant of Dominance",
+    vindicatorsPendantOfSubjugation: {
+      name: "Vindicator's Pendant of Subjugation",
       stamina: 31,
-      intellect: 16,
+      intellect: 15,
       yellow: 1,
       socketBonus: {
         stamina: 3
       },
-      spellPower: 26,
+      hasteRating: 21,
       resilienceRating: 18,
-      id: 33065,
-      source: 'PVP',
-      phase: 2
+      spellPower: 25,
+      id: 35319,
+      source: "PVP",
+      phase: 3
     },
     translucentSpellthreadNecklace: {
       name: 'Translucent Spellthread Necklace',
@@ -629,6 +615,35 @@ var items = {
       id: 32370,
       source: 'Black Temple',
       phase: 3
+    },
+    veteransPendantOfConquest: {
+      name: "Veteran's Pendant of Conquest",
+      stamina: 27,
+      intellect: 12,
+      yellow: 1,
+      socketBonus: {
+        stamina: 3
+      },
+      spellPower: 21,
+      critRating: 18,
+      resilienceRating: 18,
+      id: 33067,
+      source: 'PVP',
+      phase: 2
+    },
+    veteransPendantOfDominance: {
+      name: "Veteran's Pendant of Dominance",
+      stamina: 31,
+      intellect: 16,
+      yellow: 1,
+      socketBonus: {
+        stamina: 3
+      },
+      spellPower: 26,
+      resilienceRating: 18,
+      id: 33065,
+      source: 'PVP',
+      phase: 2
     },
     theSunKingsTalisman: {
       name: "The Sun King's Talisman",
