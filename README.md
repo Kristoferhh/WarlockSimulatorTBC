@@ -3,12 +3,10 @@
  Warlock simulator for WoW TBCC written in C++ & Javascript
  
  ## Building Locally
- ### Requirements:
- [nvm-windows](https://github.com/coreybutler/nvm-windows/releases)  
- [Emscripten SDK to compile the C++ code with Makefile](https://github.com/emscripten-core/emsdk)  
- `nvm install 14.15.5`  
- `nvm use 14.15.5`  
- `npm install`
+ ### Requirements:  
+ [Emscripten SDK to compile the C++ code with Makefile](https://github.com/emscripten-core/emsdk)    
+ `npm install`  
+ `npm install -g gulp`
  ### Run
  Run Frontend: `gulp`  
  Compile C++: `make`
