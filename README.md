@@ -5,6 +5,7 @@
  ## Building Locally
  ### Requirements:
  [nvm-windows](https://github.com/coreybutler/nvm-windows/releases)  
+ [Emscripten SDK to compile the C++ code with Makefile](https://github.com/emscripten-core/emsdk)  
  `nvm install 14.15.5`  
  `nvm use 14.15.5`  
  `npm install`
