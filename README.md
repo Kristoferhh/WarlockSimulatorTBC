@@ -4,7 +4,7 @@
  
  ## Building Locally
  ### Requirements:  
- [Emscripten SDK to compile the C++ code with Makefile](https://github.com/emscripten-core/emsdk)    
+ [Emscripten SDK to compile the C++ code with Makefile](https://emscripten.org/docs/getting_started/downloads.html)    
  `npm install`  
  `npm install -g gulp`
  ### Run
