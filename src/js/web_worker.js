@@ -70,13 +70,16 @@ onmessage = function (e) {
                     if (gemColor == 'meta') {
                       if (metaGemIds.includes(gemId)) {
                         metaGemIds.splice(metaGemIds.indexOf(gemId), 1)
-                        console.log("removing meta gem id " + gemId)
                       }
                     }
                     // Loop through the gem's stats and remove them from the player
                     for (const stat in gems[gemColor][gemId]) {
                       if (b.hasOwnProperty(stat)) {
-                        b[stat] -= gems[gemColor][gemId][stat]
+                        if (stat.toLowerCase().includes('modifier')) {
+                          b[stat] /= gems[gemColor][gemId][stat]
+                        } else {
+                          b[stat] -= gems[gemColor][gemId][stat]
+                        }
                       }
                     }
                   }
@@ -92,8 +95,6 @@ onmessage = function (e) {
               for (const stat in items[customItemSlot][item].socketBonus) {
                 if (b.hasOwnProperty(stat)) {
                   b[stat] -= items[customItemSlot][item].socketBonus[stat]
-                } else {
-                  console.log("Can't remove stat '" + stat + "' from player (trying to remove socket bonus)")
                 }
               }
             }
@@ -122,7 +123,6 @@ onmessage = function (e) {
                 // Check for meta gem
                 if (customItemSlot == 'head' && gems.meta[gemId]) {
                   metaGemIds.push(gemId)
-                  console.log("adding meta gem id " + gemId)
                 }
                 // Find the gem's color since it might not match the socket color
                 for (const gemColor in gems) {
@@ -133,7 +133,9 @@ onmessage = function (e) {
                     }
                     // Add stats from the gem equipped in this socket
                     for (const stat in gems[gemColor][gemId]) {
-                      if (b.hasOwnProperty(stat)) {
+                      if (stat.toLowerCase().includes('modifier')) {
+                        b[stat] *= gems[gemColor][gemId][stat]
+                      } else {
                         b[stat] += gems[gemColor][gemId][stat]
                       }
                     }
@@ -148,8 +150,6 @@ onmessage = function (e) {
               for (const stat in items[customItemSlot][item].socketBonus) {
                 if (b.hasOwnProperty(stat)) {
                   b[stat] += items[customItemSlot][item].socketBonus[stat]
-                } else {
-                  console.log("Can't add stat '" + stat + "' to player (trying to add socket bonus)")
                 }
               }
             }
