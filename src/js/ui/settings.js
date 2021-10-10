@@ -202,9 +202,9 @@ function updateSimulationSettingsVisibility () {
   }
 
   if (auras.bloodPact) {
-    $('#improvedImp').show()
+    $('#improvedImpSetting').show()
   } else {
-    $('#improvedImp').hide()
+    $('#improvedImpSetting').hide()
   }
 
   if ($('#faerieFire').is(':visible') && auras.faerieFire) {

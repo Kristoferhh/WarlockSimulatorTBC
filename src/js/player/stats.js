@@ -89,7 +89,7 @@ function refreshCharacterStats () {
 
   // Stamina
   if (auras.bloodPact) {
-    stamina += _auras.buffs.auras.bloodPact.stamina * (0.1 * $('select[name="improvedImp"]').val())
+    stamina += _auras.buffs.auras.bloodPact.stamina * (0.1 * $('select[name="improvedImpSetting"]').val())
   }
 
   // Crit
