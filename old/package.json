@@ -1,0 +1,23 @@
+{
+  "name": "warlocksimulatortbc",
+  "version": "1.0.0",
+  "description": "Warlock DPS Simulator 2.4.3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kristoferhh/WarlockSimulatorTBC.git"
+  },
+  "author": "Kristoferhh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kristoferhh/WarlockSimulatorTBC/issues"
+  },
+  "homepage": "https://github.com/Kristoferhh/WarlockSimulatorTBC#readme",
+  "devDependencies": {
+    "browser-sync": "^2.27.5",
+    "gulp": "^4.0.2"
+  }
+}
