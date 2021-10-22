@@ -1,6 +1,6 @@
 import { TalentTree, Talent } from "../Types";
 
-interface TalentTreeStruct {
+export interface TalentTreeStruct {
   name: TalentTree,
   rows: Talent[][]
 }

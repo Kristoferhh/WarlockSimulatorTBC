@@ -15,10 +15,12 @@ export default function EquippedItemsDisplay() {
             <col style={{width: '32%'}} />
           </colgroup>
           <thead>
-            <th>Slot</th>
-            <th>Name</th>
-            <th></th>
-            <th>Enchant</th>
+            <tr>
+              <th>Slot</th>
+              <th>Name</th>
+              <th></th>
+              <th>Enchant</th>
+            </tr>
           </thead>
           <tbody></tbody>
         </table>

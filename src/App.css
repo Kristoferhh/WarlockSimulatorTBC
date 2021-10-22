@@ -20,6 +20,18 @@ ul {
 	vertical-align: top;
 }
 
+.maxed-talent {
+	color: #ffcd45;
+}
+
+.half-full-talent {
+	color: #7FFF00;
+}
+
+.empty-talent {
+	display: none;
+}
+
 #character-race, #character-level {
 	text-align: center;
 	line-height: 10px;

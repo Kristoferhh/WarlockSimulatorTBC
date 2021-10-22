@@ -3,8 +3,38 @@ import { ItemSlot } from '../Types';
 import { useState } from 'react';
 import { Enchants } from '../Data/Enchants';
 
+const itemSlotInformation: {name: string, itemSlot: ItemSlot, subSlot?: 1|2}[] = [
+  { name: 'Main Hand', itemSlot: ItemSlot.Mainhand },
+  { name: 'Off Hand', itemSlot: ItemSlot.Offhand },
+  { name: 'Two Hand', itemSlot: ItemSlot.Twohand },
+  { name: 'Head', itemSlot: ItemSlot.Head },
+  { name: 'Neck', itemSlot: ItemSlot.Neck },
+  { name: 'Shoulders', itemSlot: ItemSlot.Shoulders },
+  { name: 'Back', itemSlot: ItemSlot.Back },
+  { name: 'Chest', itemSlot: ItemSlot.Chest },
+  { name: 'Bracer', itemSlot: ItemSlot.Bracer },
+  { name: 'Gloves', itemSlot: ItemSlot.Gloves },
+  { name: 'Belt', itemSlot: ItemSlot.Belt },
+  { name: 'Legs', itemSlot: ItemSlot.Legs },
+  { name: 'Boots', itemSlot: ItemSlot.Boots },
+  { name: 'Ring 1', itemSlot: ItemSlot.Ring, subSlot: 1 },
+  { name: 'Ring 2', itemSlot: ItemSlot.Ring, subSlot: 2 },
+  { name: 'Trinket 1', itemSlot: ItemSlot.Trinket, subSlot: 1 },
+  { name: 'Trinket 2', itemSlot: ItemSlot.Trinket, subSlot: 2 },
+  { name: 'Wand', itemSlot: ItemSlot.Wand}
+]
+
 export default function ItemSelection() {
-  const [itemSlot, setItemSlot] = useState<ItemSlot>(ItemSlot.Mainhand);
+  const [itemSlot, setItemSlot] = useState<ItemSlot>(JSON.parse(localStorage.getItem('selectedItemSlot') || '{}'));
+  const [itemSubSlot, setItemSubSlot] = useState<number | undefined>(Number(localStorage.getItem('selectedItemSubSlot')));
+
+  function itemSlotClickHandler(slot: ItemSlot, subSlot?: number) {
+    setItemSlot(slot);
+    setItemSubSlot(subSlot);
+    localStorage.setItem('selectedItemSlot', JSON.stringify(slot));
+    localStorage.setItem('selectedItemSubSlot', JSON.stringify(subSlot));
+    console.log(localStorage.getItem('selectedItemSlot'));
+  }
 
   return(
     <div id="item-selection-container">
@@ -40,37 +70,24 @@ export default function ItemSelection() {
       </div>
 
       <ul id="item-slot-selection-list">
-        <li data-slot="mainhand">Main Hand</li>
-        <li data-slot="offhand">Off Hand</li>
-        <li data-slot="twohand">Two Hand</li>
-        <li data-slot='head'>Head</li>
-        <li data-slot="neck">Neck</li>
-        <li data-slot="shoulders">Shoulders</li>
-        <li data-slot="back">Back</li>
-        <li data-slot="chest">Chest</li>
-        <li data-slot="bracer">Bracer</li>
-        <li data-slot="gloves">Gloves</li>
-        <li data-slot="belt">Belt</li>
-        <li data-slot="legs">Legs</li>
-        <li data-slot="boots">Boots</li>
-        <li data-slot="ring" data-subslot='1'>Ring 1</li>
-        <li data-slot="ring" data-subslot='2'>Ring 2</li>
-        <li data-slot="trinket" data-subslot='1'>Trinket 1</li>
-        <li data-slot="trinket" data-subslot='2'>Trinket 2</li>
-        <li data-slot="wand">Wand</li>
+        {
+          itemSlotInformation.map((slot, i) =>
+            <li key={i} onClick={() => itemSlotClickHandler(slot.itemSlot, slot.subSlot)}>{slot.name}</li>
+          )
+        }
       </ul>
       <button id='hide-show-items-btn'>Hide / Show Items</button>
       <button id='gem-options-button'>Fill Item Sockets</button>
       <button id='show-equipped-items'>Show Equipped Items</button>
       <div id='gem-options-window'>
         <div id='gem-options-window-replacement-options'>
-          <input type="radio" name='gem-replacement-option' value='emptySockets' checked />
+          <input type="radio" name='gem-replacement-option' value='emptySockets' defaultChecked />
           <label htmlFor='emptySockets'>Fill empty sockets</label>
           <input type="radio" name='gem-replacement-option' value='allSockets' />
           <label htmlFor='allSockets'>Fill all sockets (replaces equipped gems)</label>
         </div>
         <div id='gem-options-window-item-slot'>
-          <input type='radio' name='item-slot' value='currentSlot' checked />
+          <input type='radio' name='item-slot' value='currentSlot' defaultChecked />
           <label htmlFor='currentSlot'>Current item slot</label>
           <input type='radio' name='item-slot' value='allItems' />
           <label htmlFor='allItems'>All item slots</label>
@@ -78,7 +95,7 @@ export default function ItemSelection() {
         <div id='gem-options-window-socket-selection'>
           <input type="radio" name="socket-selection" value='meta' />
           <label htmlFor='metaSockets'>Meta Sockets</label>
-          <input type="radio" name="socket-selection" value='red' checked />
+          <input type="radio" name="socket-selection" value='red' defaultChecked />
           <label htmlFor='redSockets'>Red Sockets</label>
           <input type="radio" name="socket-selection" value='blue' />
           <label htmlFor='blueSockets'>Blue Sockets</label>

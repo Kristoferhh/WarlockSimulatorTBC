@@ -5,7 +5,7 @@ export default function Settings() {
     <section id="sim-settings">
       <fieldset>
         <legend>Rotation Options</legend>
-        <input type='radio' name='rotationOption' value='simChooses' checked />
+        <input type='radio' name='rotationOption' value='simChooses' defaultChecked />
         <label htmlFor='simChooses'>Simulation chooses spells for me</label>
         <br/>
         <input type='radio' name='rotationOption' value='userChooses'/>
@@ -24,27 +24,27 @@ export default function Settings() {
         </li>
         <li>
           <span className="settings-left">Iterations</span>
-          <input id="iterations" value="10000" step='1000' min="1000" type="number" name="iterations" className="settings-right" />
+          <input id="iterations" defaultValue="10000" step='1000' min="1000" type="number" name="iterations" className="settings-right" />
         </li>
         <li>
           <span className="settings-left">Min Fight Length</span>
-          <input id="min-fight-length" value="150" type="number" name="min-fight-length" className="settings-right" />
+          <input id="min-fight-length" defaultValue="150" type="number" name="min-fight-length" className="settings-right" />
         </li>
         <li>
           <span className="settings-left">Max Fight Length</span>
-          <input id="max-fight-length" value="210" type="number" name="max-fight-length" className="settings-right" />
+          <input id="max-fight-length" defaultValue="210" type="number" name="max-fight-length" className="settings-right" />
         </li>
         <li>
           <span className="settings-left">Target Level</span>
-          <input id="target-level" value="73" type="number" name="target-level" className="settings-right" />
+          <input id="target-level" defaultValue="73" type="number" name="target-level" className="settings-right" />
         </li>
         <li>
           <span className="settings-left">Target Shadow Resistance</span>
-          <input id="target-shadow-resistance" value="0" type="number" name="target-shadow-resistance" className="settings-right" />
+          <input id="target-shadow-resistance" defaultValue="0" type="number" name="target-shadow-resistance" className="settings-right" />
         </li>
         <li>
           <span className="settings-left">Target Fire Resistance</span>
-          <input id="target-fire-resistance" value="0" type="number" name="target-fire-resistance" className="settings-right" />
+          <input id="target-fire-resistance" defaultValue="0" type="number" name="target-fire-resistance" className="settings-right" />
         </li>
         <li>
           <span className="settings-left">Fight Type</span>
@@ -55,7 +55,7 @@ export default function Settings() {
         </li>
         <li id="enemy-amount" title="Including the target you're casting Seed of Corruption on">
           <span className="settings-left">Enemy Amount</span>
-          <input name="enemyAmount" className="settings-right" value="5" step="1" min="1" type="number" />
+          <input name="enemyAmount" className="settings-right" defaultValue="5" step="1" min="1" type="number" />
         </li>
         <li id='automatically-open-sim-details'>
           <label className="settings-left" htmlFor="automatically-open-sim-details">Show Damage & Aura Tables</label>
@@ -137,7 +137,7 @@ export default function Settings() {
         </li>
         <li id="enemyArmor">
           <label className="settings-left" htmlFor="enemyArmor">Enemy Armor</label>
-          <input className="settings-right" value="7700" type="number" min='0' max='10000' name="enemyArmor" />
+          <input className="settings-right" defaultValue="7700" type="number" min='0' max='10000' name="enemyArmor" />
         </li>
         <li id="improvedCurseOfTheElements">
           <label className="settings-left">Malediction?</label>
@@ -269,7 +269,7 @@ export default function Settings() {
         </li>
         <li id='shadowPriestDps'>
           <label className="settings-left" htmlFor="shadowPriestDps">Shadow Priest Dps</label>
-          <input className='settings-right' value="1000" type="number" min='0' name="shadowPriestDps" />
+          <input className='settings-right' defaultValue="1000" type="number" min='0' name="shadowPriestDps" />
         </li>
         <li id='improvedImpSetting'>
           <label className='settings-left' htmlFor="improvedImpSetting">Improved Imp?</label>
@@ -297,11 +297,11 @@ export default function Settings() {
         </li>
         <li id='survivalHunterAgility'>
           <label className="settings-left" htmlFor="survivalHunterAgility">Survival Hunter Agility</label>
-          <input className='settings-right' value="1000" type="number" min='0' name="survivalHunterAgility" />
+          <input className='settings-right' defaultValue="1000" type="number" min='0' name="survivalHunterAgility" />
         </li>
         <li id='exposeWeaknessUptime'>
           <label className="settings-left" htmlFor="exposeWeaknessUptime">Expose Weakness Uptime %</label>
-          <input className='settings-right' value="90" type="number" min='0' name="exposeWeaknessUptime" />
+          <input className='settings-right' defaultValue="90" type="number" min='0' name="exposeWeaknessUptime" />
         </li>
         <li id="customIsbUptime">
           <label className="settings-left" htmlFor="customIsbUptime">Use custom ISB uptime %?</label>
@@ -312,7 +312,7 @@ export default function Settings() {
         </li>
         <li id="custom-isb-uptime-value">
           <span className="settings-left">Custom ISB Uptime %</span>
-          <input id="customIsbUptimeValue" value="70" type="number" name="customIsbUptimeValue" className="settings-right" />
+          <input id="customIsbUptimeValue" defaultValue="70" type="number" name="customIsbUptimeValue" className="settings-right" />
         </li>
       </ul>
     </section>
