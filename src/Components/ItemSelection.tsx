@@ -22,10 +22,10 @@ const itemSlotInformation: {name: string, itemSlot: ItemSlot, subSlot?: 1|2}[] =
   { name: 'Trinket 1', itemSlot: ItemSlot.Trinket, subSlot: 1 },
   { name: 'Trinket 2', itemSlot: ItemSlot.Trinket, subSlot: 2 },
   { name: 'Wand', itemSlot: ItemSlot.Wand}
-]
+];
 
 export default function ItemSelection() {
-  const [itemSlot, setItemSlot] = useState<ItemSlot>(JSON.parse(localStorage.getItem('selectedItemSlot') || '{}'));
+  const [itemSlot, setItemSlot] = useState<ItemSlot>(JSON.parse(localStorage.getItem('selectedItemSlot') || JSON.stringify('mainhand')));
   const [itemSubSlot, setItemSubSlot] = useState<number | undefined>(Number(localStorage.getItem('selectedItemSubSlot')));
 
   function itemSlotClickHandler(slot: ItemSlot, subSlot?: number) {
@@ -72,7 +72,7 @@ export default function ItemSelection() {
       <ul id="item-slot-selection-list">
         {
           itemSlotInformation.map((slot, i) =>
-            <li key={i} onClick={() => itemSlotClickHandler(slot.itemSlot, slot.subSlot)}>{slot.name}</li>
+            <li key={i} onClick={() => itemSlotClickHandler(slot.itemSlot, slot.subSlot)} data-selected={itemSlot === slot.itemSlot && (!slot.subSlot || itemSubSlot === slot.subSlot)}>{slot.name}</li>
           )
         }
       </ul>
