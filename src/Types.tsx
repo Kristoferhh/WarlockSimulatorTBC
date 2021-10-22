@@ -68,7 +68,6 @@ export interface Enchant {
   spirit?: number,
   shadowPower?: number,
   firePower?: number,
-  
 }
 
 export interface SocketBonus {
@@ -80,6 +79,25 @@ export interface SocketBonus {
   critRating?: number,
   mp5?: number,
   intellect?: number,
+}
+
+export interface Talent {
+  name?: string,
+  varName?: string,
+  rankIDs?: number[],
+  iconName?: string,
+  requirement?: TalentRequirement
+}
+
+export interface TalentRequirement {
+  name: string,
+  points: number
+}
+
+export enum TalentTree {
+  Affliction = "Affliction",
+  Demonology = "Demonology",
+  Destruction = "Destruction"
 }
 
 export enum ItemSource {

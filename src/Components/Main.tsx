@@ -1,7 +1,7 @@
 import Auras from './Auras';
 import Settings from './Settings';
 import Rotation from './Rotation';
-import Talents from './Talents';
+import TalentTrees from './TalentTrees';
 import StatWeights from './StatWeights';
 import BreakdownTables from './BreakdownTables';
 import EquippedItemsDisplay from './EquippedItemsDisplay';
@@ -19,7 +19,7 @@ export default function Main() {
         <Auras />
         <Rotation />
         <Settings />
-        <Talents />
+        <TalentTrees />
         <StatWeights />
         <BreakdownTables />
       </div>
