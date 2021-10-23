@@ -60,7 +60,12 @@ export const PlayerSlice = createSlice({
       localStorage.setItem('talents', JSON.stringify(state.talents));
     },
     setItemInItemSlot: (state, item: PayloadAction<{id: number, itemSlot: ItemSlot, subSlot: SubSlotValue}>) => {
-      state.selectedItems[item.payload.itemSlot + item.payload.subSlot] = item.payload.id;
+      if (state.selectedItems[item.payload.itemSlot + item.payload.subSlot] === item.payload.id) {
+        state.selectedItems[item.payload.itemSlot + item.payload.subSlot] = 0;
+      } else {
+        state.selectedItems[item.payload.itemSlot + item.payload.subSlot] = item.payload.id;        
+      }
+      
       localStorage.setItem('selectedItems', JSON.stringify(state.selectedItems));
     },
     setEnchantInItemSlot: (state, item: PayloadAction<{id: number, itemSlot: ItemSlot, subSlot: SubSlotValue}>) => {
