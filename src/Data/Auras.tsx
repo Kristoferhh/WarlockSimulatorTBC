@@ -9,7 +9,10 @@ export const Auras: AuraGroup[] = [
         name: 'Fel Armor',
         varName: 'felArmor',
         iconName: 'spell_shadow_felarmour',
-        id: 28189
+        id: 28189,
+        stats: {
+          spellPower: 100
+        }
       },
       {
         name: 'Blessing of Kings',
