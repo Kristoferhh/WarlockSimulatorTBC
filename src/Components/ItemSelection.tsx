@@ -57,6 +57,10 @@ export default function ItemSelection() {
     localStorage.setItem('selectedItemSubSlot', JSON.stringify(subSlot));
   }
 
+  function getEnchantLookupKey(): ItemSlot {
+    return itemSlot === ItemSlot.Twohand ? ItemSlot.Mainhand : itemSlot;
+  }
+
   return(
     <div id="item-selection-container">
       <div id="profiles-and-sources">
@@ -190,60 +194,63 @@ export default function ItemSelection() {
         }
         </tbody>
       </table>
-      <table id="enchant-selection-table" data-type="mainhand">
-        <colgroup id="item-selection-colgroup">
-          <col style={{width: '20%'}} />
-          <col style={{width: '9%'}} />
-          <col style={{width: '10%'}} />
-          <col style={{width: '9%'}} />
-          <col style={{width: '9%'}} />
-          <col style={{width: '9%'}} />
-          <col style={{width: '6%'}} />
-          <col style={{width: '6%'}} />
-          <col style={{width: '6%'}} />
-          <col style={{width: '6%'}} />
-          <col style={{width: '10%'}} />
-        </colgroup>
-        <thead>
-          <tr id="item-selection-header">
-            <th id="header-enchant-name">Enchant</th>
-            <th id="header-enchant-spell-power">Spell Power</th>
-            <th id="header-enchant-shadow-power">Shadow Power</th>
-            <th id="header-enchant-fire-power">Fire Power</th>
-            <th id="header-enchant-hit-rating">Hit Rating</th>
-            <th id="header-enchant-crit-rating">Crit Rating</th>
-            <th id="header-enchant-stamina">Stamina</th>
-            <th id="header-enchant-intellect">Intellect</th>
-            <th id="header-enchant-mp5">MP5</th>
-            <th id="header-enchant-spell-penetration">Spell Pen</th>
-            <th id="header-enchant-dps">DPS</th>
-          </tr>
-        </thead>
-        <tbody aria-live='polite'>
-          {
-            Enchants[itemSlot] != null &&
-              Enchants[itemSlot].map((enchant, i) =>
-                <tr
-                  key={i}
-                  className="enchant-row"
-                  data-selected={enchantStore[itemSlot + itemSubSlot] === enchant.id}
-                  onClick={() => enchantClickHandler(enchant.id, itemSlot, itemSubSlot)}>
-                  <td><a href={'https://tbc.wowhead.com/spell=' + enchant.id} onClick={(e) => e.preventDefault()}>{enchant.name}</a></td>
-                  <td>{enchant.spellPower}</td>
-                  <td>{enchant.shadowPower}</td>
-                  <td>{enchant.firePower}</td>
-                  <td>{enchant.hitRating}</td>
-                  <td>{enchant.critRating}</td>
-                  <td>{enchant.stamina}</td>
-                  <td>{enchant.intellect}</td>
-                  <td>{enchant.mp5}</td>
-                  <td>{enchant.spellPenetration}</td>
-                  <td></td>
-                </tr>
-              )
-          }
-        </tbody>
-      </table>
+      {
+        Enchants[getEnchantLookupKey()] != null &&
+          <table id="enchant-selection-table" data-type="mainhand">
+          <colgroup id="item-selection-colgroup">
+            <col style={{width: '20%'}} />
+            <col style={{width: '9%'}} />
+            <col style={{width: '10%'}} />
+            <col style={{width: '9%'}} />
+            <col style={{width: '9%'}} />
+            <col style={{width: '9%'}} />
+            <col style={{width: '6%'}} />
+            <col style={{width: '6%'}} />
+            <col style={{width: '6%'}} />
+            <col style={{width: '6%'}} />
+            <col style={{width: '10%'}} />
+          </colgroup>
+          <thead>
+            <tr id="item-selection-header">
+              <th id="header-enchant-name">Enchant</th>
+              <th id="header-enchant-spell-power">Spell Power</th>
+              <th id="header-enchant-shadow-power">Shadow Power</th>
+              <th id="header-enchant-fire-power">Fire Power</th>
+              <th id="header-enchant-hit-rating">Hit Rating</th>
+              <th id="header-enchant-crit-rating">Crit Rating</th>
+              <th id="header-enchant-stamina">Stamina</th>
+              <th id="header-enchant-intellect">Intellect</th>
+              <th id="header-enchant-mp5">MP5</th>
+              <th id="header-enchant-spell-penetration">Spell Pen</th>
+              <th id="header-enchant-dps">DPS</th>
+            </tr>
+          </thead>
+          <tbody aria-live='polite'>
+            {
+              Enchants[getEnchantLookupKey()] != null &&
+                Enchants[getEnchantLookupKey()]!!.map((enchant, i) =>
+                  <tr
+                    key={i}
+                    className="enchant-row"
+                    data-selected={enchantStore[getEnchantLookupKey() + itemSubSlot] === enchant.id}
+                    onClick={() => enchantClickHandler(enchant.id, getEnchantLookupKey(), itemSubSlot)}>
+                    <td><a href={'https://tbc.wowhead.com/spell=' + enchant.id} onClick={(e) => e.preventDefault()}>{enchant.name}</a></td>
+                    <td>{enchant.spellPower}</td>
+                    <td>{enchant.shadowPower}</td>
+                    <td>{enchant.firePower}</td>
+                    <td>{enchant.hitRating}</td>
+                    <td>{enchant.critRating}</td>
+                    <td>{enchant.stamina}</td>
+                    <td>{enchant.intellect}</td>
+                    <td>{enchant.mp5}</td>
+                    <td>{enchant.spellPenetration}</td>
+                    <td></td>
+                  </tr>
+                )
+            }
+          </tbody>
+        </table>
+      }
     </div>
   )
 }
