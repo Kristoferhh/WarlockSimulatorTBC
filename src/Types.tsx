@@ -1,4 +1,4 @@
-export enum ItemSlot {
+export enum ItemSlotKey {
   Head = "head",
   Neck = "neck",
   Shoulders = "shoulders",
@@ -15,6 +15,27 @@ export enum ItemSlot {
   Offhand = "offhand",
   Twohand = "twohand",
   Wand = "wand"
+}
+
+export enum ItemSlot {
+  head = 'head',
+  neck = 'neck',
+  shoulders = 'shoulders',
+  back = 'back',
+  chest = 'chest',
+  bracer = 'bracer',
+  gloves = 'gloves',
+  belt = 'belt',
+  legs = 'legs',
+  boots = 'boots',
+  ring1 = 'ring1',
+  ring2 = 'ring2',
+  trinket1 = 'trinket1',
+  trinket2 = 'trinket2',
+  mainhand = 'mainhand',
+  offhand = 'offhand',
+  twohand = 'twohand',
+  wand = 'wand',
 }
 
 export interface Item {
@@ -75,38 +96,16 @@ export interface Aura {
   varName: string,
   id: number,
   iconName: string,
-  staminaModifier?: number,
-  intellectModifier?: number,
-  spiritModifier?: number,
-  mp5?: number,
-  spellPower?: number,
-  stamina?: number,
-  intellect?: number,
-  spirit?: number,
-  arcaneResist?: number,
-  shadowResist?: number,
-  fireResist?: number,
-  frostResist?: number,
-  natureResist?: number,
-  critRating?: number,
+  stats?: {[key in Stat]?: number},
   drums?: boolean,
-  spellPenetration?: number,
-  shadowModifier?: number,
-  fireModifier?: number,
-  arcaneModifier?: number,
-  frostModifier?: number,
-  natureModifier?: number,
-  forPet?: boolean,
-  shadowPower?: number,
-  firePower?: number,
-  frostPower?: number,
-  battleElixir?: boolean,
-  guardianElixir?: boolean,
-  potion?: boolean,
   weaponOil?: boolean,
-  demonicRune?: boolean,
-  alcohol?: boolean,
   foodBuff?: boolean,
+  forPet?: boolean,
+  demonicRune?: boolean,
+  guardianElixir?: boolean,
+  battleElixir?: boolean,
+  potion?: boolean,
+  alcohol?: boolean,
 }
 
 export interface Spell {
@@ -171,7 +170,12 @@ export enum Stat {
   fireResist = 'fireResist',
   frostResist = 'frostResist',
   natureResist = 'natureResist',
-  staminaModifier = 'staminaModifier'
+  staminaModifier = 'staminaModifier',
+  arcaneModifier = 'arcaneModifier',
+  frostModifier = 'frostModifier',
+  natureModifier = 'natureModifier',
+  frostPower = 'frostPower',
+  spellPenetration = 'spellPenetration',
 }
 
 export type PlayerStats = {[key in keyof typeof Stat]: number}
@@ -186,7 +190,7 @@ export const InitialSettings: Settings = {
 
 export interface TalentStore {[key: string]: number}
 
-export type ItemAndEnchantStruct = {[key: string]: number}
+export type ItemAndEnchantStruct = {[key in ItemSlot]: number}
 
 export const InitialSelectedItemsAndEnchants: ItemAndEnchantStruct = {
   head: 0,
@@ -207,6 +211,27 @@ export const InitialSelectedItemsAndEnchants: ItemAndEnchantStruct = {
   offhand: 0,
   twohand: 0,
   wand: 0
+}
+
+export const StringToItemSlot: {[key in keyof typeof InitialSelectedItemsAndEnchants]: ItemSlotKey} = {
+  head: ItemSlotKey.Head,
+  neck: ItemSlotKey.Neck,
+  shoulders: ItemSlotKey.Shoulders,
+  back: ItemSlotKey.Back,
+  chest: ItemSlotKey.Chest,
+  bracer: ItemSlotKey.Bracer,
+  gloves: ItemSlotKey.Gloves,
+  belt: ItemSlotKey.Belt,
+  legs: ItemSlotKey.Legs,
+  boots: ItemSlotKey.Boots,
+  ring1: ItemSlotKey.Ring,
+  ring2: ItemSlotKey.Ring,
+  trinket1: ItemSlotKey.Trinket,
+  trinket2: ItemSlotKey.Trinket,
+  mainhand: ItemSlotKey.Mainhand,
+  offhand: ItemSlotKey.Offhand,
+  twohand: ItemSlotKey.Twohand,
+  wand: ItemSlotKey.Wand
 }
 
 export const InitialPlayerStats: PlayerStats = {
@@ -230,10 +255,15 @@ export const InitialPlayerStats: PlayerStats = {
   intellectModifier: 1,
   spiritModifier: 1,
   petDamageModifier: 1,
+  arcaneModifier: 1,
+  frostModifier: 1,
+  natureModifier: 1,
   shadowResist: 0,
   fireResist: 0,
   frostResist: 0,
   natureResist: 0,
+  frostPower: 0,
+  spellPenetration: 0,
 }
 
 export interface PlayerState {
@@ -454,4 +484,14 @@ export enum TalentNames {
   soulLeech = 'soulLeech',
   shadowAndFlame = 'shadowAndFlame',
   shadowfury = 'shadowfury'
+}
+
+export const StatConstant = {
+  healthPerStamina: 10,
+  manaPerIntellect: 15,
+  hitRatingPerPercent: 12.62,
+  critRatingPerPercent: 22.08,
+  hasteRatingPerPercent: 15.77,
+  critPercentPerIntellect: 1 / 81.95,
+  baseCritChancePercent: 1.701,
 }

@@ -14,18 +14,22 @@ export const Auras: AuraGroup[] = [
       {
         name: 'Blessing of Kings',
         varName: 'blessingOfKings',
-        staminaModifier: 1.1,
-        intellectModifier: 1.1,
-        spiritModifier: 1.1,
         iconName: 'spell_magic_greaterblessingofkings',
-        id: 25898
+        id: 25898,
+        stats: {
+          staminaModifier: 1.1,
+          intellectModifier: 1.1,
+          spiritModifier: 1.1,
+        }
       },
       {
         name: 'Blessing of Wisdom',
         varName: 'blessingOfWisdom',
-        mp5: 41,
         iconName: 'spell_holy_greaterblessingofwisdom',
-        id: 27143
+        id: 27143,
+        stats: {
+          mp5: 41,
+        }
       },
       {
         name: 'Judgement of Wisdom',
@@ -36,16 +40,20 @@ export const Auras: AuraGroup[] = [
       {
         name: 'Mana Spring Totem',
         varName: 'manaSpringTotem',
-        mp5: 50,
         iconName: 'spell_nature_manaregentotem',
-        id: 25570
+        id: 25570,
+        stats: {
+          mp5: 50,
+        }
       },
       {
         name: 'Wrath of Air Totem',
         varName: 'wrathOfAirTotem',
-        spellPower: 101,
         iconName: 'spell_nature_slowingtotem',
-        id: 3738
+        id: 3738,
+        stats: {
+          spellPower: 101,
+        }
       },
       {
         name: 'Totem of Wrath',
@@ -56,43 +64,53 @@ export const Auras: AuraGroup[] = [
       {
         name: 'Mark of the Wild',
         varName: 'markOfTheWild',
-        stamina: 14,
-        intellect: 14,
-        arcaneResist: 25,
-        shadowResist: 25,
-        frostResist: 25,
-        fireResist: 25,
-        natureResist: 25,
         iconName: 'spell_nature_regeneration',
-        id: 26990
+        id: 26990,
+        stats: {
+          stamina: 14,
+          intellect: 14,
+          arcaneResist: 25,
+          shadowResist: 25,
+          frostResist: 25,
+          fireResist: 25,
+          natureResist: 25,
+        }
       },
       {
         name: 'Arcane Intellect',
         varName: 'arcaneIntellect',
-        intellect: 40,
         iconName: 'spell_holy_arcaneintellect',
-        id: 27127
+        id: 27127,
+        stats: {
+          intellect: 40,
+        }
       },
       {
         name: 'Prayer of Fortitude',
         varName: 'prayerOfFortitude',
-        stamina: 79,
         iconName: 'spell_holy_prayeroffortitude',
-        id: 25392
+        id: 25392,
+        stats: {
+          stamina: 79,
+        }
       },
       {
         name: 'Prayer of Spirit',
         varName: 'prayerOfSpirit',
-        spirit: 50,
         iconName: 'spell_holy_prayerofspirit',
-        id: 32999
+        id: 32999,
+        stats: {
+          spirit: 50,
+        }
       },
       {
         name: 'Blood Pact',
         varName: 'bloodPact',
-        stamina: 70,
         iconName: 'spell_shadow_bloodboil',
-        id: 27268
+        id: 27268,
+        stats: {
+          stamina: 70,
+        }
       },
       {
         name: 'Inspiring Presence',
@@ -127,9 +145,11 @@ export const Auras: AuraGroup[] = [
       {
         name: 'Eye of The Night',
         varName: 'eyeOfTheNight',
-        spellPower: 34,
         iconName: 'inv_jewelry_necklace_28',
-        id: 31033
+        id: 31033,
+        stats: {
+          spellPower: 34,
+        }
       },
       {
         name: 'Chain of the Twilight Owl',
@@ -140,16 +160,20 @@ export const Auras: AuraGroup[] = [
       {
         name: 'Jade Pendant of Blasting',
         varName: 'jadePendantOfBlasting',
-        spellPower: 15,
         iconName: 'inv_jewelry_necklace_01',
-        id: 25607
+        id: 25607,
+        stats: {
+          spellPower: 15,
+        }
       },
       {
         name: 'Idol of the Raven Goddess',
         varName: 'idolOfTheRavenGoddess',
-        critRating: 20,
         iconName: 'inv-mount_raven_54',
-        id: 39926
+        id: 39926,
+        stats: {
+          critRating: 20,
+        }
       },
       {
         name: 'Drums of Battle',
@@ -199,34 +223,42 @@ export const Auras: AuraGroup[] = [
       {
         name: 'Curse of the Elements',
         varName: 'curseOfTheElements',
-        spellPenetration: 88,
         iconName: 'spell_shadow_chilltouch',
-        id: 27228
+        id: 27228,
+        stats: {
+          spellPenetration: 88,
+        }
       },
       {
         name: 'Shadow Weaving',
         varName: 'shadowWeaving',
-        shadowModifier: 1.1,
         iconName: 'spell_shadow_blackplague',
-        id: 15334
+        id: 15334,
+        stats: {
+          shadowModifier: 1.1,
+        }
       },
       {
         name: 'Improved Scorch',
         varName: 'improvedScorch',
-        fireModifier: 1.15,
         iconName: 'spell_fire_soulburn',
-        id: 12873
+        id: 12873,
+        stats: {
+          fireModifier: 1.15,
+        }
       },
       {
         name: 'Misery',
         varName: 'misery',
-        shadowModifier: 1.05,
-        fireModifier: 1.05,
-        arcaneModifier: 1.05,
-        frostModifier: 1.05,
-        natureModifier: 1.05,
         iconName: 'Spell_shadow_misery',
-        id: 33195
+        id: 33195,
+        stats: {
+          shadowModifier: 1.05,
+          fireModifier: 1.05,
+          arcaneModifier: 1.05,
+          frostModifier: 1.05,
+          natureModifier: 1.05,
+        }
       },
       {
         name: 'Judgement of the Crusader',
@@ -305,63 +337,77 @@ export const Auras: AuraGroup[] = [
       {
         name: 'Flask of Pure Death',
         varName: 'flaskOfPureDeath',
-        shadowPower: 80,
-        firePower: 80,
-        frostPower: 80,
         iconName: 'inv_potion_115',
         id: 22866,
         battleElixir: true,
-        guardianElixir: true
+        guardianElixir: true,
+        stats: {
+          shadowPower: 80,
+          firePower: 80,
+          frostPower: 80,
+        }
       },
       {
         name: 'Elixir of Major Shadow Power',
         varName: 'elixirOfMajorShadowPower',
-        shadowPower: 55,
         iconName: 'inv_potion_145',
         id: 22835,
-        battleElixir: true
+        battleElixir: true,
+        stats: {
+          shadowPower: 55,
+        }
       },
       {
         name: 'Elixir of Major Firepower',
         varName: 'elixirOfMajorFirepower',
-        firePower: 55,
         iconName: 'inv_potion_146',
         id: 22833,
-        battleElixir: true
+        battleElixir: true,
+        stats: {
+          firePower: 55,
+        }
       },
       {
         name: 'Greater Arcane Elixir',
         varName: 'greaterArcaneElixir',
-        spellPower: 35,
         iconName: 'inv_potion_25',
         id: 13454,
-        battleElixir: true
+        battleElixir: true,
+        stats: {
+          spellPower: 35,
+        }
       },
       {
         name: "Adept's Elixir",
         varName: 'adeptsElixir',
-        spellPower: 24,
-        critRating: 24,
         iconName: 'inv_potion_96',
         id: 28103,
-        battleElixir: true
+        battleElixir: true,
+        stats: {
+          spellPower: 24,
+          critRating: 24,
+        }
       },
       {
         name: 'Elixir of Draenic Wisdom',
         varName: 'elixirOfDraenicWisdom',
-        intellect: 30,
-        spirit: 30,
         iconName: 'inv_potion_155',
         id: 32067,
-        guardianElixir: true
+        guardianElixir: true,
+        stats: {
+          intellect: 30,
+          spirit: 30,
+        }
       },
       {
         name: 'Elixir of Major Mageblood',
         varName: 'elixirOfMajorMageblood',
-        mp5: 16,
         iconName: 'inv_potion_151',
         id: 22840,
-        guardianElixir: true
+        guardianElixir: true,
+        stats: {
+          mp5: 16,
+        }
       },
       {
         name: 'Super Mana Potion',
@@ -380,27 +426,33 @@ export const Auras: AuraGroup[] = [
       {
         name: 'Brilliant Wizard Oil',
         varName: 'brilliantWizardOil',
-        spellPower: 36,
-        critRating: 14,
         iconName: 'inv_potion_105',
         id: 20749,
-        weaponOil: true
+        weaponOil: true,
+        stats: {
+          spellPower: 36,
+          critRating: 14,
+        }
       },
       {
         name: 'Superior Wizard Oil',
         varName: 'superiorWizardOil',
-        spellPower: 42,
         iconName: 'inv_potion_141',
         id: 22522,
-        weaponOil: true
+        weaponOil: true,
+        stats: {
+          spellPower: 42,
+        }
       },
       {
         name: 'Blessed Wizard Oil',
         varName: 'blessedWizardOil',
-        spellPower: 60,
         iconName: 'inv_potion_26',
         id: 23123,
-        weaponOil: true
+        weaponOil: true,
+        stats: {
+          spellPower: 60,
+        }
       },
       {
         name: 'Demonic Rune',
@@ -419,58 +471,72 @@ export const Auras: AuraGroup[] = [
       {
         name: 'Rumsey Rum Black Label',
         varName: 'rumseyRumBlackLabel',
-        stamina: 15,
         iconName: 'inv_drink_04',
         id: 21151,
-        alcohol: true
+        alcohol: true,
+        stats: {
+          stamina: 15,
+        }
       },
       {
         name: "Kreeg's Stout Beatdown",
         varName: 'kreegsStoutBeatdown',
-        spirit: 25,
-        intellect: -5,
         iconName: 'inv_drink_05',
         id: 18284,
-        alcohol: true
+        alcohol: true,
+        stats: {
+          spirit: 25,
+          intellect: -5,
+        }
       },
       {
         name: 'Blackened Basilisk',
         varName: 'blackenedBasilisk',
-        spellPower: 23,
-        spirit: 20,
         iconName: 'inv_misc_food_86_basilisk',
         id: 27657,
-        foodBuff: true
+        foodBuff: true,
+        stats: {
+          spellPower: 23,
+          spirit: 20,
+        }
       },
       {
         name: 'Skullfish Soup',
         varName: 'skullfishSoup',
-        critRating: 20,
-        spirit: 20,
         iconName: 'inv_misc_food_63',
         id: 33825,
-        foodBuff: true
+        foodBuff: true,
+        stats: {
+          critRating: 20,
+          spirit: 20,
+        }
       },
       {
         name: 'Very Berry Cream',
         varName: 'veryBerryCream',
-        spellPower: 23,
         iconName: 'inv_valentineschocolate02',
-        id: 22238
+        id: 22238,
+        stats: {
+          spellPower: 23,
+        }
       },
       {
         name: 'Midsummer Sausage',
         varName: 'midsummerSausage',
-        spellPower: 23,
         iconName: 'inv_misc_food_53',
-        id: 23326
+        id: 23326,
+        stats: {
+          spellPower: 23,
+        }
       },
       {
         name: "Bloodthistle",
         varName: 'bloodthistle',
-        spellPower: 10,
         iconName: "inv_misc_herb_11",
-        id: 22710
+        id: 22710,
+        stats: {
+          spellPower: 10,
+        }
       }
     ]
   },

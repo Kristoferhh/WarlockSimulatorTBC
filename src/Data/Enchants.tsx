@@ -1,6 +1,6 @@
-import { ItemSlot, Enchant, ItemSource } from '../Types';
+import { ItemSlotKey, Enchant, ItemSource } from '../Types';
 
-export const Enchants: {[key in ItemSlot]?: Enchant[]} = {
+export const Enchants: {[key in ItemSlotKey]?: Enchant[]} = {
   head: [
     {
       name: 'Glyph of Power',

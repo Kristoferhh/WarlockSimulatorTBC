@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux"
 import { Races } from "../Data/Races";
 import { RootState } from "../Store"
+import { StatConstant } from "../Types";
 
 
 export default function Sidebar() {
@@ -15,11 +16,11 @@ export default function Sidebar() {
         <ul className="character-stats">
           <li>
             <p className="character-stat">Health</p>
-            <p className="character-stat-val" id="character-health-val">{playerStore.stats.health}</p>
+            <p className="character-stat-val" id="character-health-val">{Math.round((playerStore.stats.health + (playerStore.stats.stamina * playerStore.stats.staminaModifier) * StatConstant.healthPerStamina) * (1 + (0.01 * playerStore.talents['felStamina'])))}</p>
           </li>
           <li>
             <p className="character-stat">Mana</p>
-            <p className="character-stat-val" id="character-mana-val">{playerStore.stats.mana}</p>
+            <p className="character-stat-val" id="character-mana-val">{Math.round((playerStore.stats.mana + (playerStore.stats.intellect * playerStore.stats.intellectModifier) * StatConstant.manaPerIntellect) * (1 + (0.01 * playerStore.talents['felIntellect'])))}</p>
           </li>
           <li>
             <p className="character-stat">Stamina</p>
@@ -39,27 +40,27 @@ export default function Sidebar() {
           </li>
           <li>
             <p className="character-stat">Shadow Power</p>
-            <p className="character-stat-val" id="character-shadow-power-val">{playerStore.stats.shadowPower}</p>
+            <p className="character-stat-val" id="character-shadow-power-val">{playerStore.stats.shadowPower} ({playerStore.stats.spellPower + playerStore.stats.shadowPower})</p>
           </li>
           <li>
             <p className="character-stat">Fire Power</p>
-            <p className="character-stat-val" id="character-fire-power-val">{playerStore.stats.firePower}</p>
+            <p className="character-stat-val" id="character-fire-power-val">{playerStore.stats.firePower} ({playerStore.stats.spellPower + playerStore.stats.firePower})</p>
           </li>
           <li>
             <p className="character-stat">Crit Rating</p>
-            <p className="character-stat-val" id="character-crit-val">{playerStore.stats.critRating}</p>
+            <p className="character-stat-val" id="character-crit-val">{Math.round(playerStore.stats.critRating)} ({Math.round((playerStore.stats.critRating / StatConstant.critRatingPerPercent + StatConstant.baseCritChancePercent) * 100) / 100 + (playerStore.talents['devastation'] || 0)}%)</p>
           </li>
           <li>
             <p className="character-stat">Hit Rating</p>
-            <p className="character-stat-val" id="character-hit-val">{playerStore.stats.hitRating}</p>
+            <p className="character-stat-val" id="character-hit-val">{playerStore.stats.hitRating} ({Math.round((playerStore.stats.hitRating / StatConstant.hitRatingPerPercent) * 100) / 100}%)</p>
           </li>
           <li>
             <p className="character-stat">Haste Rating</p>
-            <p className="character-stat-val" id="character-haste-val">{playerStore.stats.hasteRating}</p>
+            <p className="character-stat-val" id="character-haste-val">{playerStore.stats.hasteRating} ({Math.round((playerStore.stats.hasteRating / StatConstant.hasteRatingPerPercent) * 100) / 100}%)</p>
           </li>
           <li>
             <p className="character-stat">Shadow Dmg %</p>
-            <p className="character-stat-val" id="character-shadow-damage-modifier-val">{playerStore.stats.shadowModifier * 100}%</p>
+            <p className="character-stat-val" id="character-shadow-damage-modifier-val">{Math.round(playerStore.stats.shadowModifier * (1 + (0.02 * playerStore.talents['shadowMastery'])) * 100)}%</p>
           </li>
           <li>
             <p className="character-stat">Fire Dmg %</p>

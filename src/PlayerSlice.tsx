@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Aura, AuraGroup, ItemSlot, RotationGroup, SubSlotValue, TalentStore, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat } from "./Types";
+import { Aura, AuraGroup, ItemSlotKey, RotationGroup, SubSlotValue, TalentStore, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot } from "./Types";
 
 const initialPlayerState : PlayerState = {
   talents: JSON.parse(localStorage.getItem('talents') || '{}'),
@@ -25,17 +25,17 @@ export const PlayerSlice = createSlice({
       state.talentPointsRemaining = getRemainingTalentPoints(state.talents);
       localStorage.setItem('talents', JSON.stringify(state.talents));
     },
-    setItemInItemSlot: (state, item: PayloadAction<{id: number, itemSlot: ItemSlot, subSlot: SubSlotValue}>) => {
-      if (state.selectedItems[item.payload.itemSlot + item.payload.subSlot] === item.payload.id) {
-        state.selectedItems[item.payload.itemSlot + item.payload.subSlot] = 0;
+    setItemInItemSlot: (state, item: PayloadAction<{id: number, itemSlot: ItemSlot}>) => {
+      if (state.selectedItems[item.payload.itemSlot] === item.payload.id) {
+        state.selectedItems[item.payload.itemSlot] = 0;
       } else {
-        state.selectedItems[item.payload.itemSlot + item.payload.subSlot] = item.payload.id;        
+        state.selectedItems[item.payload.itemSlot] = item.payload.id;        
       }
 
       localStorage.setItem('selectedItems', JSON.stringify(state.selectedItems));
     },
-    setEnchantInItemSlot: (state, item: PayloadAction<{id: number, itemSlot: ItemSlot, subSlot: SubSlotValue}>) => {
-      state.selectedEnchants[item.payload.itemSlot + item.payload.subSlot] = item.payload.id;
+    setEnchantInItemSlot: (state, item: PayloadAction<{id: number, itemSlot: ItemSlot}>) => {
+      state.selectedEnchants[item.payload.itemSlot] = item.payload.id;
       localStorage.setItem('selectedEnchants', JSON.stringify(state.selectedEnchants));
     },
     toggleAuraSelection: (state, action: PayloadAction<{auraGroup: AuraGroup, aura: Aura}>) => {

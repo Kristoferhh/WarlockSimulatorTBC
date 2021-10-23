@@ -1,6 +1,6 @@
 // Made up item IDs that I use for items such as the bracers/boots from the Karazhan basement bosses where all the items use the same item id but they have different stats
 
-import { Item, ItemSlot, ItemSource } from "../Types"
+import { Item, ItemSlotKey, ItemSource } from "../Types"
 
 // But each item in the sim needs to have a unique ID so I just make one up here and use that
 const fakeItemIds = {
@@ -29,7 +29,7 @@ const fakeItemIds = {
   ravagersCuffsOfShadowWrath: -23
 }
 
-export const Items: {[key in ItemSlot]: Item[]} = {
+export const Items: {[key in ItemSlotKey]: Item[]} = {
   head: [
     {
       name: "Dark Conjuror's Collar",
