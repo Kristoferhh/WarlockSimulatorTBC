@@ -1,6 +1,10 @@
+import { useSelector } from "react-redux"
+import { RootState } from "../Store"
 
 
 export default function Settings() {
+  const playerStore = useSelector((state: RootState) => state.player);
+
   return(
     <section id="sim-settings">
       <fieldset>
@@ -114,20 +118,25 @@ export default function Settings() {
             <option value="yes">Yes</option>
           </select>
         </li>
-        <li id="shattrathFaction">
-          <label className="settings-left" htmlFor="shattrathFaction">Shattrath Faction</label>
-          <select className="settings-right" name="shattrathFaction">
-            <option value="Aldor">Aldor</option>
-            <option value="Scryers">Scryers</option>
-          </select>
-        </li>
-        <li id="shattrathFactionReputation">
-          <label className="settings-left" htmlFor="shattrathFactionReputation">Exalted with Shattrath Faction</label>
-          <select className="settings-right" name="shattrathFactionReputation">
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-          </select>
-        </li>
+        {
+          playerStore.selectedItems['neck'] === 34678 &&
+            <div>
+              <li id="shattrathFaction">
+                <label className="settings-left" htmlFor="shattrathFaction">Shattrath Faction</label>
+                <select className="settings-right" name="shattrathFaction">
+                  <option value="Aldor">Aldor</option>
+                  <option value="Scryers">Scryers</option>
+                </select>
+              </li>
+              <li id="shattrathFactionReputation">
+                <label className="settings-left" htmlFor="shattrathFactionReputation">Exalted with Shattrath Faction</label>
+                <select className="settings-right" name="shattrathFactionReputation">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+              </li>
+            </div>
+        }
         <li id="lashOfPainUsage">
           <label className='settings-left' htmlFor='lashOfPainUsage'>When to use Lash of Pain?</label>
           <select className='settings-right' name='lashOfPainUsage'>
@@ -148,161 +157,198 @@ export default function Settings() {
             <option value='3'>3/3</option>
           </select>
         </li>
-        <li id="powerInfusionAmount">
-          <label className="settings-left" htmlFor="powerInfusionAmount">Power Infusion amount</label>
-          <select className="settings-right" name="powerInfusionAmount">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-          </select>
-        </li>
-        <li id="bloodlustAmount">
-          <label className="settings-left" htmlFor="bloodlustAmount">Bloodlust amount</label>
-          <select className="settings-right" name="bloodlustAmount">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-          </select>
-        </li>
-        <li id="innervateAmount">
-          <label className="settings-left" htmlFor="innervateAmount">Innervate amount</label>
-          <select className="settings-right" name="innervateAmount">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-          </select>
-        </li>
-        <li id="improvedDivineSpirit">
-          <label className="settings-left" htmlFor="improvedDivineSpirit">Improved Divine Spirit?</label>
-          <select className="settings-right" name="improvedDivineSpirit">
-            <option value="0">No</option>
-            <option value="1">1/2</option>
-            <option value="2">2/2</option>
-          </select>
-        </li>
-        {/*<li id="conflagrateUse">
-          <label className="settings-left" htmlFor="conflagrateUse">When to use Conflagrate?</label>
-          <select className="settings-right" name="conflagrateUse">
-            <option value="onCooldown">As soon as it's ready</option>
-            <option value="immolateAlmostOut">When Immolate has almost run out</option>
-          </select>
-        </li>*/}
-        <li id="mageAtieshAmount">
-          <label className="settings-left" htmlFor="mageAtieshAmount">Mage Atiesh amount</label>
-          <select className="settings-right" name="mageAtieshAmount">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-          </select>
-        </li>
-        <li id="warlockAtieshAmount">
-          <label className="settings-left" htmlFor="warlockAtieshAmount">Warlock Atiesh amount</label>
-          <select className="settings-right" name="warlockAtieshAmount">
-            <option disabled={true} value="0">{'>> Do not count your own Atiesh <<'}</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-          </select>
-        </li>
-        <li id="totemOfWrathAmount">
-          <label className="settings-left" htmlFor="totemOfWrathAmount">Totem of Wrath amount</label>
-          <select className="settings-right" name="totemOfWrathAmount">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-          </select>
-        </li>
-        <li id="ferociousInspirationAmount">
-          <label className="settings-left" htmlFor="ferociousInspirationAmount">Ferocious Inspiration amount</label>
-          <select className="settings-right" name="ferociousInspirationAmount">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-          </select>
-        </li>
-        <li id="improvedWrathOfAirTotem">
-          <label className="settings-left" htmlFor="improvedWrathOfAirTotem">Elemental Shaman T4 2pc bonus?</label>
-          <select className="settings-right" name="improvedWrathOfAirTotem">
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-          </select>
-        </li>
-        <li id='shadowPriestDps'>
-          <label className="settings-left" htmlFor="shadowPriestDps">Shadow Priest Dps</label>
-          <input className='settings-right' defaultValue="1000" type="number" min='0' name="shadowPriestDps" />
-        </li>
-        <li id='improvedImpSetting'>
-          <label className='settings-left' htmlFor="improvedImpSetting">Improved Imp?</label>
-          <select className='settings-right' name='improvedImpSetting'>
-            <option value='0'>No</option>
-            <option value='1'>1/3</option>
-            <option value='2'>2/3</option>
-            <option value='3'>3/3</option>
-          </select>
-        </li>
-        <li id='improvedFaerieFire'>
-          <label className='settings-left' htmlFor="improvedFaerieFire">Improved Faerie Fire?</label>
-          <select className='settings-right' name='improvedFaerieFire'>
-            <option value='no'>No</option>
-            <option value='yes'>Yes</option>
-          </select>
-        </li>
-        <li id='improvedExposeArmor'>
-          <label className='settings-left' htmlFor="improvedExposeArmor">Improved Expose Armor?</label>
-          <select className='settings-right' name='improvedExposeArmor'>
-            <option value='0'>No</option>
-            <option value='1'>1/2</option>
-            <option value='2'>2/2</option>
-          </select>
-        </li>
-        <li id='survivalHunterAgility'>
-          <label className="settings-left" htmlFor="survivalHunterAgility">Survival Hunter Agility</label>
-          <input className='settings-right' defaultValue="1000" type="number" min='0' name="survivalHunterAgility" />
-        </li>
-        <li id='exposeWeaknessUptime'>
-          <label className="settings-left" htmlFor="exposeWeaknessUptime">Expose Weakness Uptime %</label>
-          <input className='settings-right' defaultValue="90" type="number" min='0' name="exposeWeaknessUptime" />
-        </li>
+        {
+          playerStore.auras['powerInfusion'] &&
+            <li id="powerInfusionAmount">
+              <label className="settings-left" htmlFor="powerInfusionAmount">Power Infusion amount</label>
+              <select className="settings-right" name="powerInfusionAmount">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+              </select>
+            </li>
+        }
+        {
+          playerStore.auras['bloodlust'] &&
+            <li id="bloodlustAmount">
+              <label className="settings-left" htmlFor="bloodlustAmount">Bloodlust amount</label>
+              <select className="settings-right" name="bloodlustAmount">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+              </select>
+            </li>
+        }
+        {
+          playerStore.auras['innervate'] &&
+            <li id="innervateAmount">
+              <label className="settings-left" htmlFor="innervateAmount">Innervate amount</label>
+              <select className="settings-right" name="innervateAmount">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+              </select>
+            </li>
+        }
+        {
+          playerStore.auras['prayerOfSpirit'] &&
+            <li id="improvedDivineSpirit">
+              <label className="settings-left" htmlFor="improvedDivineSpirit">Improved Divine Spirit?</label>
+              <select className="settings-right" name="improvedDivineSpirit">
+                <option value="0">No</option>
+                <option value="1">1/2</option>
+                <option value="2">2/2</option>
+              </select>
+            </li>
+        }
+        {
+          playerStore.auras['powerOfTheGuardianMage'] &&
+            <li id="mageAtieshAmount">
+              <label className="settings-left" htmlFor="mageAtieshAmount">Mage Atiesh amount</label>
+              <select className="settings-right" name="mageAtieshAmount">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </li>
+        }
+        {
+          playerStore.auras['powerOfTheGuardianWarlock'] &&
+            <li id="warlockAtieshAmount">
+              <label className="settings-left" htmlFor="warlockAtieshAmount">Warlock Atiesh amount</label>
+              <select className="settings-right" name="warlockAtieshAmount">
+                <option disabled={true} value="0">{'>> Do not count your own Atiesh <<'}</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </li>
+        }
+        {
+          playerStore.auras['totemOfWrath'] &&
+            <li id="totemOfWrathAmount">
+              <label className="settings-left" htmlFor="totemOfWrathAmount">Totem of Wrath amount</label>
+              <select className="settings-right" name="totemOfWrathAmount">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </li>
+        }
+        {
+          playerStore.auras['ferociousInspiration'] &&
+            <li id="ferociousInspirationAmount">
+              <label className="settings-left" htmlFor="ferociousInspirationAmount">Ferocious Inspiration amount</label>
+              <select className="settings-right" name="ferociousInspirationAmount">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </li>
+        }
+        {
+          playerStore.auras['wrathOfAirTotem'] &&
+            <li id="improvedWrathOfAirTotem">
+              <label className="settings-left" htmlFor="improvedWrathOfAirTotem">Elemental Shaman T4 2pc bonus?</label>
+              <select className="settings-right" name="improvedWrathOfAirTotem">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </li>
+        }
+        {
+          playerStore.auras['vampiricTouch'] &&
+            <li id='shadowPriestDps'>
+              <label className="settings-left" htmlFor="shadowPriestDps">Shadow Priest Dps</label>
+              <input className='settings-right' defaultValue="1000" type="number" min='0' name="shadowPriestDps" />
+            </li>
+        }
+        {
+          playerStore.auras['bloodPact'] &&
+            <li id='improvedImpSetting'>
+              <label className='settings-left' htmlFor="improvedImpSetting">Improved Imp?</label>
+              <select className='settings-right' name='improvedImpSetting'>
+                <option value='0'>No</option>
+                <option value='1'>1/3</option>
+                <option value='2'>2/3</option>
+                <option value='3'>3/3</option>
+              </select>
+            </li>
+        }
+        {
+          playerStore.auras['faerieFire'] &&
+            <li id='improvedFaerieFire'>
+              <label className='settings-left' htmlFor="improvedFaerieFire">Improved Faerie Fire?</label>
+              <select className='settings-right' name='improvedFaerieFire'>
+                <option value='no'>No</option>
+                <option value='yes'>Yes</option>
+              </select>
+            </li>
+        }
+        {
+          playerStore.auras['exposeArmor'] &&
+            <li id='improvedExposeArmor'>
+              <label className='settings-left' htmlFor="improvedExposeArmor">Improved Expose Armor?</label>
+              <select className='settings-right' name='improvedExposeArmor'>
+                <option value='0'>No</option>
+                <option value='1'>1/2</option>
+                <option value='2'>2/2</option>
+              </select>
+            </li>
+        }
+        {
+          playerStore.auras['exposeWeakness'] &&
+            <div>
+              <li id='survivalHunterAgility'>
+                <label className="settings-left" htmlFor="survivalHunterAgility">Survival Hunter Agility</label>
+                <input className='settings-right' defaultValue="1000" type="number" min='0' name="survivalHunterAgility" />
+              </li>
+              <li id='exposeWeaknessUptime'>
+                <label className="settings-left" htmlFor="exposeWeaknessUptime">Expose Weakness Uptime %</label>
+                <input className='settings-right' defaultValue="90" type="number" min='0' name="exposeWeaknessUptime" />
+              </li>
+            </div>
+        }
         <li id="customIsbUptime">
           <label className="settings-left" htmlFor="customIsbUptime">Use custom ISB uptime %?</label>
           <select className="settings-right" name="customIsbUptime">
