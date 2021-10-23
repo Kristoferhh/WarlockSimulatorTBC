@@ -1,49 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Aura, AuraGroup, ItemSlot, RotationGroup, SubSlotValue, Spell } from "./Types";
-
-export interface TalentStore {
-  [key: string]: number
-}
-
-type ItemAndEnchantStruct = {[key: string]: number}
-
-export interface PlayerState {
-  talents: TalentStore,
-  talentPointsRemaining: number,
-  selectedItems: ItemAndEnchantStruct,
-  selectedEnchants: ItemAndEnchantStruct,
-  auras: {[key: string]: boolean},
-  rotation: {[key: string]: {[key: string]: boolean}}
-}
-
-const initialSelectedItemsAndEnchants: ItemAndEnchantStruct = {
-  head: 0,
-  neck: 0,
-  shoulders: 0,
-  back: 0,
-  chest: 0,
-  bracer: 0,
-  gloves: 0,
-  belt: 0,
-  legs: 0,
-  boots: 0,
-  ring1: 0,
-  ring2: 0,
-  trinket1: 0,
-  trinket2: 0,
-  mainhand: 0,
-  offhand: 0,
-  twohand: 0,
-  wand: 0
-}
+import { Aura, AuraGroup, ItemSlot, RotationGroup, SubSlotValue, TalentStore, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat } from "./Types";
 
 const initialPlayerState : PlayerState = {
   talents: JSON.parse(localStorage.getItem('talents') || '{}'),
   talentPointsRemaining: getRemainingTalentPoints(JSON.parse(localStorage.getItem('talents') || '{}')),
-  selectedItems: JSON.parse(localStorage.getItem('selectedItems') || JSON.stringify(initialSelectedItemsAndEnchants)),
-  selectedEnchants: JSON.parse(localStorage.getItem('selectedEnchants') || JSON.stringify(initialSelectedItemsAndEnchants)),
+  selectedItems: JSON.parse(localStorage.getItem('selectedItems') || JSON.stringify(InitialSelectedItemsAndEnchants)),
+  selectedEnchants: JSON.parse(localStorage.getItem('selectedEnchants') || JSON.stringify(InitialSelectedItemsAndEnchants)),
   auras: JSON.parse(localStorage.getItem('auras') || '{}'),
   rotation: JSON.parse(localStorage.getItem('rotation') || '{}'),
+  stats: InitialPlayerStats,
+  settings: InitialSettings
 }
 
 function getRemainingTalentPoints(talents: TalentStore) {
@@ -65,7 +31,7 @@ export const PlayerSlice = createSlice({
       } else {
         state.selectedItems[item.payload.itemSlot + item.payload.subSlot] = item.payload.id;        
       }
-      
+
       localStorage.setItem('selectedItems', JSON.stringify(state.selectedItems));
     },
     setEnchantInItemSlot: (state, item: PayloadAction<{id: number, itemSlot: ItemSlot, subSlot: SubSlotValue}>) => {
@@ -110,9 +76,24 @@ export const PlayerSlice = createSlice({
       }
 
       localStorage.setItem('rotation', JSON.stringify(state.rotation));
+    },
+    modifyPlayerStat: (state, action: PayloadAction<{stat: Stat, value: number, action: 'add'|'remove'}>) => {
+      if (action.payload.action === 'add') {
+        if (action.payload.stat.includes('Modifier')) {
+          state.stats[action.payload.stat] *= action.payload.value;
+        } else {
+          state.stats[action.payload.stat] += action.payload.value;
+        }
+      } else {
+        if (action.payload.stat.includes('Modifier')) {
+          state.stats[action.payload.stat] /= action.payload.value;
+        } else {
+          state.stats[action.payload.stat] -= action.payload.value;
+        }
+      }
     }
   }
 });
 
-export const { setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection }  = PlayerSlice.actions;
+export const { setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection, modifyPlayerStat }  = PlayerSlice.actions;
 export default PlayerSlice.reducer;

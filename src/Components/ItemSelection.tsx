@@ -66,7 +66,7 @@ export default function ItemSelection() {
       <div id="profiles-and-sources">
         <fieldset id="profile-fieldset">
           <legend>Profile Options</legend>
-          <input placeholder='E.g. "Destruction (Fire)"' type="text" name="profileName" />
+          <input placeholder='E.g. "P3 Shadow BiS"' type="text" name="profileName" />
           <button id="save-new-profile-button">Save New Profile</button>
           <div id="update-profile-div">
             <button style={{display: 'none'}} id="save-profile-button">Save</button>

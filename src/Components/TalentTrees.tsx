@@ -16,7 +16,7 @@ export default function TalentTrees() {
    * @param {TalentTreeStruct} tree
    * @returns number
    */
-  function getAllocatedTalentsPointsInTree(tree: TalentTreeStruct) {
+  function getAllocatedTalentsPointsInTree(tree: TalentTreeStruct): number {
     let points = 0;
 
     for (const row in tree.rows) {

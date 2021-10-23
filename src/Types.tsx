@@ -139,6 +139,114 @@ export interface SocketBonus {
   intellect?: number,
 }
 
+export enum Race {
+  Gnome = 'gnome',
+  Human = 'human',
+  Orc = 'orc',
+  Undead = 'undead',
+  BloodElf = 'bloodElf'
+}
+
+export enum Stat {
+  health = 'health',
+  mana = 'mana',
+  stamina = 'stamina',
+  intellect = 'intellect',
+  spirit = 'spirit',
+  spellPower = 'spellPower',
+  shadowPower = 'shadowPower',
+  firePower = 'firePower',
+  critRating = 'critRating',
+  hitRating = 'hitRating',
+  hasteRating = 'hasteRating',
+  shadowModifier = 'shadowModifier',
+  fireModifier = 'fireModifier',
+  mp5 = 'mp5',
+  enemyArmor = 'enemyArmor',
+  arcaneResist = 'arcaneResist',
+  intellectModifier = 'intellectModifier',
+  spiritModifier = 'spiritModifier',
+  petDamageModifier = 'petDamageModifier',
+  shadowResist = 'shadowResist',
+  fireResist = 'fireResist',
+  frostResist = 'frostResist',
+  natureResist = 'natureResist',
+  staminaModifier = 'staminaModifier'
+}
+
+export type PlayerStats = {[key in keyof typeof Stat]: number}
+
+export interface Settings {
+  race: Race,
+}
+
+export const InitialSettings: Settings = {
+  race: Race.Gnome,
+}
+
+export interface TalentStore {[key: string]: number}
+
+export type ItemAndEnchantStruct = {[key: string]: number}
+
+export const InitialSelectedItemsAndEnchants: ItemAndEnchantStruct = {
+  head: 0,
+  neck: 0,
+  shoulders: 0,
+  back: 0,
+  chest: 0,
+  bracer: 0,
+  gloves: 0,
+  belt: 0,
+  legs: 0,
+  boots: 0,
+  ring1: 0,
+  ring2: 0,
+  trinket1: 0,
+  trinket2: 0,
+  mainhand: 0,
+  offhand: 0,
+  twohand: 0,
+  wand: 0
+}
+
+export const InitialPlayerStats: PlayerStats = {
+  health: 3310,
+  mana: 2335,
+  stamina: 0,
+  intellect: 0,
+  spirit: 0,
+  spellPower: 0,
+  shadowPower: 0,
+  firePower: 0,
+  critRating: 0,
+  hitRating: 0,
+  hasteRating: 0,
+  shadowModifier: 1,
+  fireModifier: 1,
+  mp5: 0,
+  enemyArmor: 0,
+  arcaneResist: 0,
+  staminaModifier: 1,
+  intellectModifier: 1,
+  spiritModifier: 1,
+  petDamageModifier: 1,
+  shadowResist: 0,
+  fireResist: 0,
+  frostResist: 0,
+  natureResist: 0,
+}
+
+export interface PlayerState {
+  talents: TalentStore,
+  talentPointsRemaining: number,
+  selectedItems: ItemAndEnchantStruct,
+  selectedEnchants: ItemAndEnchantStruct,
+  auras: {[key: string]: boolean},
+  rotation: {[key: string]: {[key: string]: boolean}},
+  stats: PlayerStats,
+  settings: Settings
+}
+
 export interface Talent {
   name?: string,
   varName?: string,

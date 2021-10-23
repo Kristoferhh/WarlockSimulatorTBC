@@ -1,74 +1,77 @@
+import { useSelector } from "react-redux"
+import { Races } from "../Data/Races";
+import { RootState } from "../Store"
 
 
 export default function Sidebar() {
-
+  const playerStore = useSelector((state: RootState) => state.player);
 
   return (
     <div id="sidebar">
       <section id="character-section">
-        <p id="character-race"><span id="race"></span> Warlock</p>
+        <p id="character-race"><span id="race">{Races.find(e => e.varName === playerStore.settings.race)?.name}</span> Warlock</p>
         <p id="character-level">Level <span>70</span></p>
 
         <ul className="character-stats">
           <li>
             <p className="character-stat">Health</p>
-            <p className="character-stat-val" id="character-health-val"></p>
+            <p className="character-stat-val" id="character-health-val">{playerStore.stats.health}</p>
           </li>
           <li>
             <p className="character-stat">Mana</p>
-            <p className="character-stat-val" id="character-mana-val"></p>
+            <p className="character-stat-val" id="character-mana-val">{playerStore.stats.mana}</p>
           </li>
           <li>
             <p className="character-stat">Stamina</p>
-            <p className="character-stat-val" id="character-stamina-val"></p>
+            <p className="character-stat-val" id="character-stamina-val">{Math.round(playerStore.stats.stamina * playerStore.stats.staminaModifier)}</p>
           </li>
           <li>
             <p className="character-stat">Intellect</p>
-            <p className="character-stat-val" id="character-intellect-val"></p>
+            <p className="character-stat-val" id="character-intellect-val">{Math.round(playerStore.stats.intellect  * playerStore.stats.intellectModifier)}</p>
           </li>
           <li>
             <p className="character-stat">Spirit</p>
-            <p className="character-stat-val" id="character-spirit-val"></p>
+            <p className="character-stat-val" id="character-spirit-val">{Math.round(playerStore.stats.spirit * playerStore.stats.spiritModifier)}</p>
           </li>
           <li>
             <p className="character-stat">Spell Power</p>
-            <p className="character-stat-val" id="character-spell-power-val"></p>
+            <p className="character-stat-val" id="character-spell-power-val">{playerStore.stats.spellPower}</p>
           </li>
           <li>
             <p className="character-stat">Shadow Power</p>
-            <p className="character-stat-val" id="character-shadow-power-val"></p>
+            <p className="character-stat-val" id="character-shadow-power-val">{playerStore.stats.shadowPower}</p>
           </li>
           <li>
             <p className="character-stat">Fire Power</p>
-            <p className="character-stat-val" id="character-fire-power-val"></p>
+            <p className="character-stat-val" id="character-fire-power-val">{playerStore.stats.firePower}</p>
           </li>
           <li>
             <p className="character-stat">Crit Rating</p>
-            <p className="character-stat-val" id="character-crit-val"></p>
+            <p className="character-stat-val" id="character-crit-val">{playerStore.stats.critRating}</p>
           </li>
           <li>
             <p className="character-stat">Hit Rating</p>
-            <p className="character-stat-val" id="character-hit-val"></p>
+            <p className="character-stat-val" id="character-hit-val">{playerStore.stats.hitRating}</p>
           </li>
           <li>
             <p className="character-stat">Haste Rating</p>
-            <p className="character-stat-val" id="character-haste-val"></p>
+            <p className="character-stat-val" id="character-haste-val">{playerStore.stats.hasteRating}</p>
           </li>
           <li>
             <p className="character-stat">Shadow Dmg %</p>
-            <p className="character-stat-val" id="character-shadow-damage-modifier-val"></p>
+            <p className="character-stat-val" id="character-shadow-damage-modifier-val">{playerStore.stats.shadowModifier * 100}%</p>
           </li>
           <li>
             <p className="character-stat">Fire Dmg %</p>
-            <p className="character-stat-val" id="character-fire-damage-modifier-val"></p>
+            <p className="character-stat-val" id="character-fire-damage-modifier-val">{playerStore.stats.fireModifier * 100}%</p>
           </li>
           <li>
             <p className="character-stat">MP5</p>
-            <p className="character-stat-val" id="character-mp5-val"></p>
+            <p className="character-stat-val" id="character-mp5-val">{playerStore.stats.mp5}</p>
           </li>
           <li>
             <p className="character-stat">Enemy Armor</p>
-            <p className="character-stat-val" id="enemy-armor-val"></p>
+            <p className="character-stat-val" id="enemy-armor-val">{playerStore.stats.enemyArmor}</p>
           </li>
           {/*<li>
             <p className="character-stat">Spell Penetration</p>
