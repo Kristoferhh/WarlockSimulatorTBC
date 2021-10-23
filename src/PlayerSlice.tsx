@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Aura, AuraGroup, RotationGroup, TalentStore, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot } from "./Types";
+import { Aura, AuraGroup, RotationGroup, TalentStore, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot, Settings } from "./Types";
 
 const initialPlayerState : PlayerState = {
   talents: JSON.parse(localStorage.getItem('talents') || '{}'),
@@ -9,7 +9,7 @@ const initialPlayerState : PlayerState = {
   auras: JSON.parse(localStorage.getItem('auras') || '{}'),
   rotation: JSON.parse(localStorage.getItem('rotation') || '{}'),
   stats: InitialPlayerStats,
-  settings: InitialSettings
+  settings: JSON.parse(localStorage.getItem('settings') || JSON.stringify(InitialSettings)),
 }
 
 function getRemainingTalentPoints(talents: TalentStore) {
@@ -40,7 +40,7 @@ export const PlayerSlice = createSlice({
       } else {
         state.selectedEnchants[item.payload.itemSlot] = item.payload.id;
       }
-      
+
       localStorage.setItem('selectedEnchants', JSON.stringify(state.selectedEnchants));
     },
     toggleAuraSelection: (state, action: PayloadAction<{auraGroup: AuraGroup, aura: Aura}>) => {
@@ -96,9 +96,13 @@ export const PlayerSlice = createSlice({
           state.stats[action.payload.stat] -= action.payload.value;
         }
       }
+    },
+    modifySettingValue: (state, action: PayloadAction<{setting: string, value: any}>) => {
+      state.settings[action.payload.setting] = action.payload.value;
+      localStorage.setItem('settings', JSON.stringify(state.settings));
     }
   }
 });
 
-export const { setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection, modifyPlayerStat }  = PlayerSlice.actions;
+export const { setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection, modifyPlayerStat, modifySettingValue }  = PlayerSlice.actions;
 export default PlayerSlice.reducer;

@@ -64,7 +64,7 @@ export default function Sidebar() {
           </li>
           <li>
             <p className="character-stat">Fire Dmg %</p>
-            <p className="character-stat-val" id="character-fire-damage-modifier-val">{playerStore.stats.fireModifier * 100}%</p>
+            <p className="character-stat-val" id="character-fire-damage-modifier-val">{Math.round(playerStore.stats.fireModifier * 100)}%</p>
           </li>
           <li>
             <p className="character-stat">MP5</p>

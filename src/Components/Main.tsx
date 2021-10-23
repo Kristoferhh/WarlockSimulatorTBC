@@ -1,5 +1,5 @@
 import AuraSelection from './AuraSelection';
-import Settings from './Settings';
+import SettingsDisplay from './SettingsDisplay';
 import RotationSelection from './RotationSelection';
 import TalentTrees from './TalentTrees';
 import StatWeights from './StatWeights';
@@ -18,7 +18,7 @@ export default function Main() {
       <div>
         <AuraSelection />
         <RotationSelection />
-        <Settings />
+        <SettingsDisplay />
         <TalentTrees />
         <StatWeights />
         <BreakdownTables />
