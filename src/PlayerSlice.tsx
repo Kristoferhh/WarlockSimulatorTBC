@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Aura, AuraGroup, ItemSlot, SubSlotValue } from "./Types";
+import { Aura, AuraGroup, ItemSlot, RotationGroup, SubSlotValue, Spell } from "./Types";
 
 export interface TalentStore {
   [key: string]: number
@@ -86,18 +86,22 @@ export const PlayerSlice = createSlice({
       state.auras[action.payload.aura.varName] = state.auras[action.payload.aura.varName] == null ? true : !state.auras[action.payload.aura.varName];
       localStorage.setItem('auras', JSON.stringify(state.auras));
     },
-    toggleRotationSpellSelection: (state, spell: PayloadAction<{rotationGroup: string, spellName: string, forceFalse?: boolean}>) => {
-      if (state.rotation[spell.payload.rotationGroup] == null) {
-        state.rotation[spell.payload.rotationGroup] = {};
+    toggleRotationSpellSelection: (state, action: PayloadAction<{rotationGroup: RotationGroup, spell: Spell}>) => {
+      if (state.rotation[action.payload.rotationGroup.varName] == null) {
+        state.rotation[action.payload.rotationGroup.varName] = {};
       }
-      if (spell.payload.forceFalse) {
-        state.rotation[spell.payload.rotationGroup][spell.payload.spellName] = false;
-      } else {
-        if (state.rotation[spell.payload.rotationGroup][spell.payload.spellName] == null) {
-          state.rotation[spell.payload.rotationGroup][spell.payload.spellName] = true;
-        } else {
-          state.rotation[spell.payload.rotationGroup][spell.payload.spellName] = !state.rotation[spell.payload.rotationGroup][spell.payload.spellName];
+      
+      const isSpellDisabled = state.rotation[action.payload.rotationGroup.varName][action.payload.spell.varName] == null || state.rotation[action.payload.rotationGroup.varName][action.payload.spell.varName] === false;
+      // If a filler/curse is being enabled then disable all other curses/fillers
+      if (isSpellDisabled) {
+        if (['filler', 'curse'].includes(action.payload.rotationGroup.varName)) {
+          action.payload.rotationGroup.spells.forEach((e) => state.rotation[action.payload.rotationGroup.varName][e.varName] = false);
         }
+      }
+      if (state.rotation[action.payload.rotationGroup.varName][action.payload.spell.varName] == null) {
+        state.rotation[action.payload.rotationGroup.varName][action.payload.spell.varName] = true;
+      } else {
+        state.rotation[action.payload.rotationGroup.varName][action.payload.spell.varName] = !state.rotation[action.payload.rotationGroup.varName][action.payload.spell.varName];
       }
 
       localStorage.setItem('rotation', JSON.stringify(state.rotation));
