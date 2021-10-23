@@ -17,8 +17,6 @@ export enum ItemSlot {
   Wand = "wand"
 }
 
-export type SubSlotValue = '' | '1' | '2';
-
 export interface Item {
   name: string,
   varName: string,
@@ -70,6 +68,64 @@ export interface Enchant {
   spirit?: number,
   shadowPower?: number,
   firePower?: number,
+}
+
+export interface Aura {
+  name: string,
+  varName: string,
+  id: number,
+  iconName: string,
+  staminaModifier?: number,
+  intellectModifier?: number,
+  spiritModifier?: number,
+  mp5?: number,
+  spellPower?: number,
+  stamina?: number,
+  intellect?: number,
+  spirit?: number,
+  arcaneResist?: number,
+  shadowResist?: number,
+  fireResist?: number,
+  frostResist?: number,
+  natureResist?: number,
+  critRating?: number,
+  drums?: boolean,
+  spellPenetration?: number,
+  shadowModifier?: number,
+  fireModifier?: number,
+  arcaneModifier?: number,
+  frostModifier?: number,
+  natureModifier?: number,
+  forPet?: boolean,
+  shadowPower?: number,
+  firePower?: number,
+  frostPower?: number,
+  battleElixir?: boolean,
+  guardianElixir?: boolean,
+  potion?: boolean,
+  weaponOil?: boolean,
+  demonicRune?: boolean,
+  alcohol?: boolean,
+  foodBuff?: boolean,
+}
+
+export interface Spell {
+  name: string,
+  varName: string,
+  iconName: string,
+  id: number,
+}
+
+export interface RotationGroup {
+  header: string,
+  varName: string,
+  spells: Spell[]
+}
+
+export interface AuraGroup {
+  heading: string,
+  type: 'spell'|'item',
+  auras: Aura[]
 }
 
 export interface SocketBonus {
@@ -222,6 +278,8 @@ export enum ItemSource {
 }
 
 export type Phase = 0|1|2|3|4|5;
+
+export type SubSlotValue = '' | '1' | '2';
 
 export enum TalentNames {
   suppression = 'suppression',

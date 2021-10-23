@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ItemSlot, SubSlotValue } from "./Types";
+import { Aura, AuraGroup, ItemSlot, SubSlotValue } from "./Types";
 
 export interface TalentStore {
   [key: string]: number
@@ -12,6 +12,8 @@ export interface PlayerState {
   talentPointsRemaining: number,
   selectedItems: ItemAndEnchantStruct,
   selectedEnchants: ItemAndEnchantStruct,
+  auras: {[key: string]: boolean},
+  rotation: {[key: string]: {[key: string]: boolean}}
 }
 
 const initialSelectedItemsAndEnchants: ItemAndEnchantStruct = {
@@ -40,6 +42,8 @@ const initialPlayerState : PlayerState = {
   talentPointsRemaining: getRemainingTalentPoints(JSON.parse(localStorage.getItem('talents') || '{}')),
   selectedItems: JSON.parse(localStorage.getItem('selectedItems') || JSON.stringify(initialSelectedItemsAndEnchants)),
   selectedEnchants: JSON.parse(localStorage.getItem('selectedEnchants') || JSON.stringify(initialSelectedItemsAndEnchants)),
+  auras: JSON.parse(localStorage.getItem('auras') || '{}'),
+  rotation: JSON.parse(localStorage.getItem('rotation') || '{}'),
 }
 
 function getRemainingTalentPoints(talents: TalentStore) {
@@ -63,8 +67,43 @@ export const PlayerSlice = createSlice({
       state.selectedEnchants[item.payload.itemSlot + item.payload.subSlot] = item.payload.id;
       localStorage.setItem('selectedEnchants', JSON.stringify(state.selectedEnchants));
     },
+    toggleAuraSelection: (state, action: PayloadAction<{auraGroup: AuraGroup, aura: Aura}>) => {
+      const isAuraDisabled = state.auras[action.payload.aura.varName] == null || state.auras[action.payload.aura.varName] === false;
+
+      // If the aura is being toggled on and it's a unique buff like potion/food buff, then disable all other auras with that unique property as true.
+      if (isAuraDisabled) {
+        if (action.payload.aura.potion)         action.payload.auraGroup.auras.filter((e) => e.potion).forEach((e)          => state.auras[e.varName] = false);
+        if (action.payload.aura.foodBuff)       action.payload.auraGroup.auras.filter((e) => e.foodBuff).forEach((e)        => state.auras[e.varName] = false);
+        if (action.payload.aura.weaponOil)      action.payload.auraGroup.auras.filter((e) => e.weaponOil).forEach((e)       => state.auras[e.varName] = false);
+        if (action.payload.aura.battleElixir)   action.payload.auraGroup.auras.filter((e) => e.battleElixir).forEach((e)    => state.auras[e.varName] = false);
+        if (action.payload.aura.guardianElixir) action.payload.auraGroup.auras.filter((e) => e.guardianElixir).forEach((e)  => state.auras[e.varName] = false);
+        if (action.payload.aura.alcohol)        action.payload.auraGroup.auras.filter((e) => e.alcohol).forEach((e)         => state.auras[e.varName] = false);
+        if (action.payload.aura.demonicRune)    action.payload.auraGroup.auras.filter((e) => e.demonicRune).forEach((e)     => state.auras[e.varName] = false);
+        if (action.payload.aura.drums)          action.payload.auraGroup.auras.filter((e) => e.drums).forEach((e)           => state.auras[e.varName] = false);
+      }
+
+      // Toggle the aura's bool property/initialize to true.
+      state.auras[action.payload.aura.varName] = state.auras[action.payload.aura.varName] == null ? true : !state.auras[action.payload.aura.varName];
+      localStorage.setItem('auras', JSON.stringify(state.auras));
+    },
+    toggleRotationSpellSelection: (state, spell: PayloadAction<{rotationGroup: string, spellName: string, forceFalse?: boolean}>) => {
+      if (state.rotation[spell.payload.rotationGroup] == null) {
+        state.rotation[spell.payload.rotationGroup] = {};
+      }
+      if (spell.payload.forceFalse) {
+        state.rotation[spell.payload.rotationGroup][spell.payload.spellName] = false;
+      } else {
+        if (state.rotation[spell.payload.rotationGroup][spell.payload.spellName] == null) {
+          state.rotation[spell.payload.rotationGroup][spell.payload.spellName] = true;
+        } else {
+          state.rotation[spell.payload.rotationGroup][spell.payload.spellName] = !state.rotation[spell.payload.rotationGroup][spell.payload.spellName];
+        }
+      }
+
+      localStorage.setItem('rotation', JSON.stringify(state.rotation));
+    }
   }
 });
 
-export const { setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot }  = PlayerSlice.actions;
+export const { setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection }  = PlayerSlice.actions;
 export default PlayerSlice.reducer;

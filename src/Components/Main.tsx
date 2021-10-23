@@ -1,6 +1,6 @@
-import Auras from './Auras';
+import AuraSelection from './AuraSelection';
 import Settings from './Settings';
-import Rotation from './Rotation';
+import RotationSelection from './RotationSelection';
 import TalentTrees from './TalentTrees';
 import StatWeights from './StatWeights';
 import BreakdownTables from './BreakdownTables';
@@ -16,8 +16,8 @@ export default function Main() {
     <div id="main">
       <p id="pet-wip-note">Please report bugs in the #tbc-sim-report channel on the Warlock TBC discord.</p>
       <div>
-        <Auras />
-        <Rotation />
+        <AuraSelection />
+        <RotationSelection />
         <Settings />
         <TalentTrees />
         <StatWeights />
