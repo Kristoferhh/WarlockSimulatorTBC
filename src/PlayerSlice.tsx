@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Aura, AuraGroup, ItemSlotKey, RotationGroup, SubSlotValue, TalentStore, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot } from "./Types";
+import { Aura, AuraGroup, RotationGroup, TalentStore, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot } from "./Types";
 
 const initialPlayerState : PlayerState = {
   talents: JSON.parse(localStorage.getItem('talents') || '{}'),
@@ -35,7 +35,12 @@ export const PlayerSlice = createSlice({
       localStorage.setItem('selectedItems', JSON.stringify(state.selectedItems));
     },
     setEnchantInItemSlot: (state, item: PayloadAction<{id: number, itemSlot: ItemSlot}>) => {
-      state.selectedEnchants[item.payload.itemSlot] = item.payload.id;
+      if (state.selectedEnchants[item.payload.itemSlot] === item.payload.id) {
+        state.selectedEnchants[item.payload.itemSlot] = 0;
+      } else {
+        state.selectedEnchants[item.payload.itemSlot] = item.payload.id;
+      }
+      
       localStorage.setItem('selectedEnchants', JSON.stringify(state.selectedEnchants));
     },
     toggleAuraSelection: (state, action: PayloadAction<{auraGroup: AuraGroup, aura: Aura}>) => {

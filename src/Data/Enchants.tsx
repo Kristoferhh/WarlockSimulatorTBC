@@ -1,6 +1,6 @@
 import { ItemSlotKey, Enchant, ItemSource } from '../Types';
 
-export const Enchants: {[key in ItemSlotKey]?: Enchant[]} = {
+export const Enchants: {[key in ItemSlotKey]: Enchant[]} = {
   head: [
     {
       name: 'Glyph of Power',
@@ -82,6 +82,7 @@ export const Enchants: {[key in ItemSlotKey]?: Enchant[]} = {
       phase: 0
     }
   ],
+  neck: [],
   shoulders: [
     {
       name: 'Greater Inscription of Discipline',
@@ -405,6 +406,7 @@ export const Enchants: {[key in ItemSlotKey]?: Enchant[]} = {
       phase: 1
     }
   ],
+  belt: [],
   legs: [
     {
       name: 'Runic Spellthread',
@@ -568,6 +570,7 @@ export const Enchants: {[key in ItemSlotKey]?: Enchant[]} = {
       phase: 1
     }
   ],
+  trinket: [],
   mainhand: [
     {
       name: 'Soulfrost',
@@ -610,4 +613,7 @@ export const Enchants: {[key in ItemSlotKey]?: Enchant[]} = {
       phase: 0
     }
   ],
+  offhand: [],
+  twohand: [],
+  wand: [],
 }
