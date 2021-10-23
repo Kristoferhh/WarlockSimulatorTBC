@@ -128,7 +128,7 @@ export default function TalentTrees() {
                 </tbody>
               </table>
               <div className='talent-tree-name'>
-                <h3 style={{display: 'inline-block'}}>{talentTree.name + ' ' + (getAllocatedTalentsPointsInTree(talentTree) > 0 ? getAllocatedTalentsPointsInTree(talentTree) : '')}</h3>
+                <h3 style={{display: 'inline-block'}}>{talentTree.name + ' ' + (getAllocatedTalentsPointsInTree(talentTree) > 0 ? '(' + getAllocatedTalentsPointsInTree(talentTree) + ')' : '')}</h3>
                 <span className='clear-talent-tree' onClick={() => clearTalentTree(talentTree)}>❌</span>
               </div>
             </div>

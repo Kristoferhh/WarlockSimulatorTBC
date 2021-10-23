@@ -17,6 +17,8 @@ export enum ItemSlot {
   Wand = "wand"
 }
 
+export type SubSlotValue = '' | '1' | '2';
+
 export interface Item {
   name: string,
   varName: string,

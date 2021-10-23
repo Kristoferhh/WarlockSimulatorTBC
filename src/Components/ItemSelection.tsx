@@ -1,39 +1,60 @@
 import { Items } from '../Data/Items';
-import { ItemSlot } from '../Types';
+import { ItemSlot, SubSlotValue } from '../Types';
 import { useState } from 'react';
 import { Enchants } from '../Data/Enchants';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../Store';
+import { setEnchantInItemSlot, setItemInItemSlot } from '../PlayerSlice';
 
-const itemSlotInformation: {name: string, itemSlot: ItemSlot, subSlot?: 1|2}[] = [
-  { name: 'Main Hand', itemSlot: ItemSlot.Mainhand },
-  { name: 'Off Hand', itemSlot: ItemSlot.Offhand },
-  { name: 'Two Hand', itemSlot: ItemSlot.Twohand },
-  { name: 'Head', itemSlot: ItemSlot.Head },
-  { name: 'Neck', itemSlot: ItemSlot.Neck },
-  { name: 'Shoulders', itemSlot: ItemSlot.Shoulders },
-  { name: 'Back', itemSlot: ItemSlot.Back },
-  { name: 'Chest', itemSlot: ItemSlot.Chest },
-  { name: 'Bracer', itemSlot: ItemSlot.Bracer },
-  { name: 'Gloves', itemSlot: ItemSlot.Gloves },
-  { name: 'Belt', itemSlot: ItemSlot.Belt },
-  { name: 'Legs', itemSlot: ItemSlot.Legs },
-  { name: 'Boots', itemSlot: ItemSlot.Boots },
-  { name: 'Ring 1', itemSlot: ItemSlot.Ring, subSlot: 1 },
-  { name: 'Ring 2', itemSlot: ItemSlot.Ring, subSlot: 2 },
-  { name: 'Trinket 1', itemSlot: ItemSlot.Trinket, subSlot: 1 },
-  { name: 'Trinket 2', itemSlot: ItemSlot.Trinket, subSlot: 2 },
-  { name: 'Wand', itemSlot: ItemSlot.Wand}
+const itemSlotInformation: {name: string, itemSlot: ItemSlot, subSlot: SubSlotValue}[] = [
+  { name: 'Main Hand', itemSlot: ItemSlot.Mainhand, subSlot: '' },
+  { name: 'Off Hand', itemSlot: ItemSlot.Offhand, subSlot: '' },
+  { name: 'Two Hand', itemSlot: ItemSlot.Twohand, subSlot: '' },
+  { name: 'Head', itemSlot: ItemSlot.Head, subSlot: '' },
+  { name: 'Neck', itemSlot: ItemSlot.Neck, subSlot: '' },
+  { name: 'Shoulders', itemSlot: ItemSlot.Shoulders, subSlot: '' },
+  { name: 'Back', itemSlot: ItemSlot.Back, subSlot: '' },
+  { name: 'Chest', itemSlot: ItemSlot.Chest, subSlot: '' },
+  { name: 'Bracer', itemSlot: ItemSlot.Bracer, subSlot: '' },
+  { name: 'Gloves', itemSlot: ItemSlot.Gloves, subSlot: '' },
+  { name: 'Belt', itemSlot: ItemSlot.Belt, subSlot: '' },
+  { name: 'Legs', itemSlot: ItemSlot.Legs, subSlot: '' },
+  { name: 'Boots', itemSlot: ItemSlot.Boots, subSlot: '' },
+  { name: 'Ring 1', itemSlot: ItemSlot.Ring, subSlot: '1' },
+  { name: 'Ring 2', itemSlot: ItemSlot.Ring, subSlot: '2' },
+  { name: 'Trinket 1', itemSlot: ItemSlot.Trinket, subSlot: '1' },
+  { name: 'Trinket 2', itemSlot: ItemSlot.Trinket, subSlot: '2' },
+  { name: 'Wand', itemSlot: ItemSlot.Wand, subSlot: ''}
 ];
 
 export default function ItemSelection() {
   const [itemSlot, setItemSlot] = useState<ItemSlot>(JSON.parse(localStorage.getItem('selectedItemSlot') || JSON.stringify('mainhand')));
-  const [itemSubSlot, setItemSubSlot] = useState<number | undefined>(Number(localStorage.getItem('selectedItemSubSlot')));
+  const [itemSubSlot, setItemSubSlot] = useState<SubSlotValue>(JSON.parse(localStorage.getItem('selectedItemSubSlot') || JSON.stringify('1')));
+  const itemStore = useSelector((state: RootState) => state.player.selectedItems);
+  const enchantStore = useSelector((state: RootState) => state.player.selectedEnchants);
+  const dispatch = useDispatch();
 
-  function itemSlotClickHandler(slot: ItemSlot, subSlot?: number) {
+  function itemClickHandler(id: number, slot: ItemSlot, subSlot: SubSlotValue) {
+    dispatch(setItemInItemSlot({
+      id: id,
+      itemSlot: slot,
+      subSlot: subSlot
+    }));
+  }
+
+  function enchantClickHandler(id: number, slot: ItemSlot, subSlot: SubSlotValue) {
+    dispatch(setEnchantInItemSlot({
+      id: id,
+      itemSlot: slot,
+      subSlot: subSlot
+    }));
+  } 
+
+  function itemSlotClickHandler(slot: ItemSlot, subSlot: SubSlotValue) {
     setItemSlot(slot);
     setItemSubSlot(subSlot);
     localStorage.setItem('selectedItemSlot', JSON.stringify(slot));
     localStorage.setItem('selectedItemSubSlot', JSON.stringify(subSlot));
-    console.log(localStorage.getItem('selectedItemSlot'));
   }
 
   return(
@@ -72,7 +93,12 @@ export default function ItemSelection() {
       <ul id="item-slot-selection-list">
         {
           itemSlotInformation.map((slot, i) =>
-            <li key={i} onClick={() => itemSlotClickHandler(slot.itemSlot, slot.subSlot)} data-selected={itemSlot === slot.itemSlot && (!slot.subSlot || itemSubSlot === slot.subSlot)}>{slot.name}</li>
+            <li
+              key={i}
+              onClick={() => itemSlotClickHandler(slot.itemSlot, slot.subSlot)}
+              data-selected={itemSlot === slot.itemSlot && (!slot.subSlot || itemSubSlot === slot.subSlot)}>
+              {slot.name}
+            </li>
           )
         }
       </ul>
@@ -141,7 +167,11 @@ export default function ItemSelection() {
         <tbody aria-live='polite'>
         {
           Items[itemSlot].map((item, i) =>
-            <tr key={i} className="item-row">
+            <tr
+              key={i}
+              className="item-row"
+              data-selected={itemStore[itemSlot + itemSubSlot] === item.id}
+              onClick={() => itemClickHandler(item.id, itemSlot, itemSubSlot)}>
               <td className="hide-item-btn">❌</td>
               <td><a href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)} onClick={(e) => e.preventDefault()}>{item.name}</a></td>
               <td></td>
@@ -193,7 +223,11 @@ export default function ItemSelection() {
           {
             Enchants[itemSlot] != null &&
               Enchants[itemSlot].map((enchant, i) =>
-                <tr key={i} className="enchant-row">
+                <tr
+                  key={i}
+                  className="enchant-row"
+                  data-selected={enchantStore[itemSlot + itemSubSlot] === enchant.id}
+                  onClick={() => enchantClickHandler(enchant.id, itemSlot, itemSubSlot)}>
                   <td><a href={'https://tbc.wowhead.com/spell=' + enchant.id} onClick={(e) => e.preventDefault()}>{enchant.name}</a></td>
                   <td>{enchant.spellPower}</td>
                   <td>{enchant.shadowPower}</td>
