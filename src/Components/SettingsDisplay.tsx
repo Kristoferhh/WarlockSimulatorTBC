@@ -63,10 +63,13 @@ export default function SettingsDisplay() {
             <option value="aoe">AoE (Seed of Corruption)</option>
           </select>
         </li>
-        <li id="enemy-amount" title="Including the target you're casting Seed of Corruption on">
-          <span className="settings-left">Enemy Amount</span>
-          <input name="enemyAmount" className="settings-right" onChange={(e) => settingModifiedHandler('enemyAmount', e.target.value)} value={playerStore.settings['enemyAmount']} step="1" min="1" type="number" />
-        </li>
+        {
+          playerStore.settings['fightType'] === 'aoe' &&
+            <li id="enemy-amount" title="Including the target you're casting Seed of Corruption on">
+              <span className="settings-left">Enemy Amount</span>
+              <input name="enemyAmount" className="settings-right" onChange={(e) => settingModifiedHandler('enemyAmount', e.target.value)} value={playerStore.settings['enemyAmount']} step="1" min="1" type="number" />
+            </li>
+        }
         <li id='automatically-open-sim-details'>
           <label className="settings-left" htmlFor="automatically-open-sim-details">Show Damage & Aura Tables</label>
           <select className="settings-right" name="automatically-open-sim-details" onChange={(e) => settingModifiedHandler('automatically-open-sim-details', e.target.value)} value={playerStore.settings['automatically-open-sim-details']}>
@@ -117,14 +120,18 @@ export default function SettingsDisplay() {
             <option value="1">Aggressive</option>
           </select>
         </li>
-        <li id="prepopBlackBook">
-          <label className="settings-left" htmlFor="prepopBlackBook">Prepop Black Book?</label>
-          <select className="settings-right" name="prepopBlackBook" onChange={(e) => settingModifiedHandler('prepopBlackBook', e.target.value)} value={playerStore.settings['prepopBlackBook']}>
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-          </select>
-        </li>
         {
+          playerStore.settings['petMode'] === '1' && (!playerStore.talents['demonicSacrifice'] || playerStore.settings['sacrificePet'] === 'no') &&
+            <li id="prepopBlackBook">
+              <label className="settings-left" htmlFor="prepopBlackBook">Prepop Black Book?</label>
+              <select className="settings-right" name="prepopBlackBook" onChange={(e) => settingModifiedHandler('prepopBlackBook', e.target.value)} value={playerStore.settings['prepopBlackBook']}>
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </li>
+        }
+        {
+          // Shattered Sun Pendant of Acumen equipped
           playerStore.selectedItems['neck'] === 34678 &&
             <div>
               <li id="shattrathFaction">
@@ -143,26 +150,33 @@ export default function SettingsDisplay() {
               </li>
             </div>
         }
-        <li id="lashOfPainUsage">
-          <label className='settings-left' htmlFor='lashOfPainUsage'>When to use Lash of Pain?</label>
-          <select className='settings-right' name='lashOfPainUsage' onChange={(e) => settingModifiedHandler('lashOfPainUsage', e.target.value)} value={playerStore.settings['lashOfPainUsage']}>
-            <option value='noISB'>When ISB is not up</option>
-            <option value='onCooldown'>On Cooldown</option>
-          </select>
-        </li>
+        {
+          // Display if pet is succubus, pet is aggressive, and pet is not being sacrificed.
+          playerStore.settings['petChoice'] === '2' && playerStore.settings['petMode'] === '1' && (!playerStore.talents['demonicSacrifice'] || playerStore.settings['sacrificePet'] === 'no') &&
+            <li id="lashOfPainUsage">
+              <label className='settings-left' htmlFor='lashOfPainUsage'>When to use Lash of Pain?</label>
+              <select className='settings-right' name='lashOfPainUsage' onChange={(e) => settingModifiedHandler('lashOfPainUsage', e.target.value)} value={playerStore.settings['lashOfPainUsage']}>
+                <option value='noISB'>When ISB is not up</option>
+                <option value='onCooldown'>On Cooldown</option>
+              </select>
+            </li>
+        }
         <li id="enemyArmor">
           <label className="settings-left" htmlFor="enemyArmor">Enemy Armor</label>
           <input className="settings-right" onChange={(e) => settingModifiedHandler('enemyArmor', e.target.value)} value={playerStore.settings['enemyArmor']} type="number" min='0' max='10000' name="enemyArmor" />
         </li>
-        <li id="improvedCurseOfTheElements">
-          <label className="settings-left">Malediction?</label>
-          <select className="settings-right" name="improvedCurseOfTheElements" onChange={(e) => settingModifiedHandler('improvedCurseOfTheElements', e.target.value)} value={playerStore.settings['improvedCurseOfTheElements']}>
-            <option value='0'>No</option>
-            <option value='1'>1/3</option>
-            <option value='2'>2/3</option>
-            <option value='3'>3/3</option>
-          </select>
-        </li>
+        {
+          playerStore.auras['curseOfTheElements'] === true &&
+            <li id="improvedCurseOfTheElements">
+              <label className="settings-left">Malediction?</label>
+              <select className="settings-right" name="improvedCurseOfTheElements" onChange={(e) => settingModifiedHandler('improvedCurseOfTheElements', e.target.value)} value={playerStore.settings['improvedCurseOfTheElements']}>
+                <option value='0'>No</option>
+                <option value='1'>1/3</option>
+                <option value='2'>2/3</option>
+                <option value='3'>3/3</option>
+              </select>
+            </li>
+        }
         {
           playerStore.auras['powerInfusion'] &&
             <li id="powerInfusionAmount">
@@ -362,10 +376,13 @@ export default function SettingsDisplay() {
             <option value="no">No</option>
           </select>
         </li>
-        <li id="custom-isb-uptime-value">
-          <span className="settings-left">Custom ISB Uptime %</span>
-          <input id="customIsbUptimeValue" onChange={(e) => settingModifiedHandler('customIsbUptimeValue', e.target.value)} value={playerStore.settings['customIsbUptimeValue']} type="number" name="customIsbUptimeValue" className="settings-right" />
-        </li>
+        {
+          playerStore.settings['customIsbUptime'] === 'yes' &&
+            <li id="custom-isb-uptime-value">
+              <span className="settings-left">Custom ISB Uptime %</span>
+              <input id="customIsbUptimeValue" onChange={(e) => settingModifiedHandler('customIsbUptimeValue', e.target.value)} value={playerStore.settings['customIsbUptimeValue']} type="number" name="customIsbUptimeValue" className="settings-right" />
+            </li>
+        }
       </ul>
     </section>
   )

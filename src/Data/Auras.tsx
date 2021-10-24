@@ -4,6 +4,7 @@ export const Auras: AuraGroup[] = [
   {
     heading: 'Buffs',
     type: 'spell',
+    varName: 'buffs',
     auras: [
       {
         name: 'Fel Armor',
@@ -221,6 +222,7 @@ export const Auras: AuraGroup[] = [
   },
   {
     heading: 'Debuffs',
+    varName: 'debuffs',
     type: 'spell',
     auras: [
       {
@@ -335,6 +337,7 @@ export const Auras: AuraGroup[] = [
   },
   {
     heading: 'Consumables',
+    varName: 'consumables',
     type: 'item',
     auras: [
       {
@@ -545,6 +548,7 @@ export const Auras: AuraGroup[] = [
   },
   {
     heading: 'Pet Buffs (your pet also inherits group-wide auras selected above)',
+    varName: 'petBuffs',
     type: 'spell',
     auras: [
       {

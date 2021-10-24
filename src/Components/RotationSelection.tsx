@@ -4,7 +4,7 @@ import { toggleRotationSpellSelection } from "../PlayerSlice";
 import { RootState } from "../Store"
 
 export default function RotationSelection() {
-  const rotationStore = useSelector((state: RootState) => state.player.rotation);
+  const playerStore = useSelector((state: RootState) => state.player);
   const dispatch = useDispatch();
 
   return(
@@ -13,13 +13,13 @@ export default function RotationSelection() {
       <ul id="rotation-list">
         {
           Rotation.map((rotationGroup, i) =>
-            <div key={i}>
+            <div key={i} style={{display: rotationGroup.varName !== 'curse' && playerStore.settings['rotationOption'] === 'userChooses' ? 'none' : ''}}>
               <h4>{rotationGroup.header}</h4>
               {
                 rotationGroup.spells.map((spell, j) =>
                   <li
                     key={j}
-                    data-checked={(rotationStore[rotationGroup.varName] && rotationStore[rotationGroup.varName][spell.varName] === true) || false}
+                    data-checked={(playerStore.rotation[rotationGroup.varName] && playerStore.rotation[rotationGroup.varName][spell.varName] === true) || false}
                     onClick={(e) => { dispatch(toggleRotationSpellSelection({rotationGroup: rotationGroup, spell: spell})); e.preventDefault(); }}>
                     <a href={`https://tbc.wowhead.com/spell=${spell.id}`}>
                       <img src={`${process.env.PUBLIC_URL}/img/${spell.iconName}.jpg`} alt={spell.name} />
