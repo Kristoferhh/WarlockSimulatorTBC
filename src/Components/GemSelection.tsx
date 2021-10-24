@@ -1,17 +1,19 @@
 import { useDispatch, useSelector } from "react-redux"
+import { ItemSlotKeyToItemSlot } from "../Common";
 import { GemColors } from "../Data/Gems";
 import { Items } from "../Data/Items";
-import { setItemSocketsValue } from "../Redux/PlayerSlice";
+import { modifyPlayerStat, setItemSocketsValue } from "../Redux/PlayerSlice";
 import { RootState } from "../Redux/Store"
 import { favoriteGem, hideGem, setGemSelectionTable } from "../Redux/UiSlice";
-import { GemColor, InitialGemSelectionTableValue, SocketColor } from "../Types";
+import { Gem, GemColor, InitialGemSelectionTableValue, SocketColor, Stat } from "../Types";
 
 export default function GemSelection() {
   const uiState = useSelector((state: RootState) => state.ui);
   const selectedGemsState = useSelector((state: RootState) => state.player.selectedGems);
+  const selectedItemsState = useSelector((state: RootState) => state.player.selectedItems);
   const dispatch = useDispatch();
 
-  function gemClickHandler(gemId: number, gemColor: GemColor) {
+  function gemClickHandler(gem: Gem, gemColor: GemColor) {
     let currentItemSocketArray = selectedGemsState[uiState.gemSelectionTable.itemSlot][uiState.gemSelectionTable.itemId];
     
     // If the item doesn't have a socket array yet then initialize it to an array of ['', 0] sub-arrays.
@@ -23,7 +25,16 @@ export default function GemSelection() {
       currentItemSocketArray = JSON.parse(JSON.stringify(currentItemSocketArray));
     }
 
-    currentItemSocketArray[uiState.gemSelectionTable.socketNumber] = [gemColor, gemId];
+    currentItemSocketArray[uiState.gemSelectionTable.socketNumber] = [gemColor, gem.id];
+    if (gem.stats && parseInt(uiState.gemSelectionTable.itemId) === selectedItemsState[ItemSlotKeyToItemSlot(false, uiState.gemSelectionTable.itemSlot, uiState.gemSelectionTable.itemSubSlot)]) {
+      for (const [stat, value] of Object.entries(gem.stats)) {
+        dispatch(modifyPlayerStat({
+          stat: stat as Stat,
+          value: value,
+          action: 'add'
+        }));
+      }
+    }
     
     dispatch(setItemSocketsValue({
       itemId: uiState.gemSelectionTable.itemId,
@@ -48,7 +59,7 @@ export default function GemSelection() {
                     data-favorited={uiState.gemPreferences.favorites.includes(gem.id)}
                     onClick={(e) => dispatch(favoriteGem(gem.id))}
                   >★</td>
-                  <td className='gem-info gem-name' onClick={(e) => { gemClickHandler(gem.id, gemColorArray.color); e.preventDefault(); }}>
+                  <td className='gem-info gem-name' onClick={(e) => { gemClickHandler(gem, gemColorArray.color); e.preventDefault(); }}>
                     <img src={`${process.env.PUBLIC_URL}/img/${gem.iconName}.jpg`} alt={gem.name + ' icon'} width={20} height={20} />
                     <a href={`https://tbc.wowhead.com/item=${gem.id}`}>{gem.name}</a>
                   </td>

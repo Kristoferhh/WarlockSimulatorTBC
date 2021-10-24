@@ -138,20 +138,44 @@ export default function ItemSelection() {
       itemId: itemId,
       itemSlot: itemSlot,
       socketNumber: socketNumber,
-      socketColor: socketColor
+      socketColor: socketColor,
+      itemSubSlot: itemSubSlot
     }));
   }
 
   function removeGemFromSocket(itemId: string, socketNumber: number) {
     if (playerStore.selectedGems[itemSlot][itemId]) {
       let currentItemSocketsValue = JSON.parse(JSON.stringify(playerStore.selectedGems[itemSlot][itemId]));
-      currentItemSocketsValue[socketNumber] = ['', 0];
 
-      dispatch(setItemSocketsValue({
-        itemId: itemId,
-        itemSlot: itemSlot,
-        value: currentItemSocketsValue
-      }));
+      // If the gem is in an equipped item then remove the gem's stats.
+      if (parseInt(itemId) === playerStore.selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot)]) {
+        GemColors.forEach((gemColor) => {
+          if (gemColor.color === currentItemSocketsValue[socketNumber][0]) {
+            const gem = gemColor.gems.find(e => e.id === currentItemSocketsValue[socketNumber][1])!!;
+            
+            if (gem.stats) {
+              for (const [stat, value] of Object.entries(gem.stats)) {
+                dispatch(modifyPlayerStat({
+                  stat: stat as Stat,
+                  value: value,
+                  action: 'remove'
+                }));
+              }
+            }
+          }
+        });
+      } else {
+
+      }
+
+      if (currentItemSocketsValue[socketNumber][1] !== 0) {
+        currentItemSocketsValue[socketNumber] = ['', 0];
+        dispatch(setItemSocketsValue({
+          itemId: itemId,
+          itemSlot: itemSlot,
+          value: currentItemSocketsValue
+        }));
+      }
     }
   }
 

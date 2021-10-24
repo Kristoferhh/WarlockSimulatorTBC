@@ -376,7 +376,8 @@ export interface GemSelectionTableStruct {
   socketNumber: number,
   itemSlot: ItemSlotKey,
   itemId: string,
-  socketColor: SocketColor
+  socketColor: SocketColor,
+  itemSubSlot?: string
 }
 
 export enum SocketColor {
