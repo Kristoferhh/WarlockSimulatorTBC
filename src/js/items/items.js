@@ -5024,6 +5024,16 @@ var items = {
       source: 'Sunwell Plateau',
       phase: 5
     },
+    fetishOfThePrimalGods: {
+      name: 'Fetish of the Primal Gods',
+      stamina: 24,
+      intellect: 17,
+      hasteRating: 17,
+      spellPower: 37,
+      id: 33334,
+      source: "Zul'Aman",
+      phase: 4
+    },
     chronicleOfDarkSecrets: {
       name: 'Chronicle of Dark Secrets',
       stamina: 16,
