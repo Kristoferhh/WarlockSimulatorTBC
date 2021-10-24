@@ -164,8 +164,6 @@ export default function ItemSelection() {
             }
           }
         });
-      } else {
-
       }
 
       if (currentItemSocketsValue[socketNumber][1] !== 0) {

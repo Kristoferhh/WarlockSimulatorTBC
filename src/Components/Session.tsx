@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { ItemSlotToItemSlotKey } from "../Common";
 import { Auras } from "../Data/Auras";
 import { Enchants } from "../Data/Enchants";
+import { GemColors } from "../Data/Gems";
 import { Items } from "../Data/Items";
 import { Races } from "../Data/Races";
 import { modifyPlayerStat } from "../Redux/PlayerSlice";
 import { RootState } from "../Redux/Store";
-import { ItemSlot, Stat } from "../Types";
+import { GemColor, ItemSlot, Stat } from "../Types";
 
 
 export default function Session() {
@@ -60,6 +61,13 @@ export default function Session() {
               }));
             }
           }
+
+          // Add stats from gems in the item
+          if (playerStore.selectedGems[ItemSlotToItemSlotKey(false, itemSlot as ItemSlot)][itemId]) {
+            playerStore.selectedGems[ItemSlotToItemSlotKey(false, itemSlot as ItemSlot)][itemId].forEach((gem) => {
+              addGemStats(gem[1]);
+            })
+          }
         }
       }
     }
@@ -82,6 +90,24 @@ export default function Session() {
           }
         }
       }
+    }
+
+    function addGemStats(gemId: number) {
+      GemColors.forEach((gemColor) => {
+        const gem = gemColor.gems.find(g => g.id === gemId);
+
+        if (gem) {
+          if (gem.stats) {
+            for (const [stat, value] of Object.entries(gem.stats)) {
+              dispatch(modifyPlayerStat({
+                stat: stat as Stat,
+                value: value,
+                action: 'add'
+              }));
+            }
+          }
+        }
+      })
     }
   }, []);
 
