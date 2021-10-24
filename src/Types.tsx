@@ -371,13 +371,12 @@ export interface UiState {
   gemPreferences: {hidden: number[], favorites: number[]}
 }
 
-export interface GemSelectionTableStruct {visible: boolean, socketNumber: number, itemSlot: ItemSlotKey, itemId: string}
-
-export const InitialGemSelectionTableValue = {
-  visible: false,
-  socketNumber: 0,
-  itemSlot: ItemSlotKey.Mainhand,
-  itemId: '0'
+export interface GemSelectionTableStruct {
+  visible: boolean,
+  socketNumber: number,
+  itemSlot: ItemSlotKey,
+  itemId: string,
+  socketColor: SocketColor
 }
 
 export enum SocketColor {
@@ -385,6 +384,14 @@ export enum SocketColor {
   Red = 'red',
   Yellow = 'yellow',
   Blue = 'blue'
+}
+
+export const InitialGemSelectionTableValue = {
+  visible: false,
+  socketNumber: 0,
+  itemSlot: ItemSlotKey.Mainhand,
+  itemId: '0',
+  socketColor: SocketColor.Meta
 }
 
 export enum GemColor {

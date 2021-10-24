@@ -4,7 +4,7 @@ import { Items } from "../Data/Items";
 import { setItemSocketsValue } from "../Redux/PlayerSlice";
 import { RootState } from "../Redux/Store"
 import { favoriteGem, hideGem, setGemSelectionTable } from "../Redux/UiSlice";
-import { GemColor, InitialGemSelectionTableValue } from "../Types";
+import { GemColor, InitialGemSelectionTableValue, SocketColor } from "../Types";
 
 export default function GemSelection() {
   const uiState = useSelector((state: RootState) => state.ui);
@@ -38,26 +38,28 @@ export default function GemSelection() {
       <tbody>
         {
           GemColors.map((gemColorArray, i) =>
-            gemColorArray.gems.map((gem, j) =>
-              <tr key={j} className='gem-row' data-hidden={false}>
-                <td
-                  className='gem-info gem-favorite-star'
-                  title={uiState.gemPreferences.favorites.includes(gem.id) ? 'Remove gem from favorites' : 'Add gem to favorites'}
-                  data-favorited={uiState.gemPreferences.favorites.includes(gem.id)}
-                  onClick={(e) => dispatch(favoriteGem(gem.id))}
-                >★</td>
-                <td className='gem-info gem-name' onClick={(e) => { gemClickHandler(gem.id, gemColorArray.color); e.preventDefault(); }}>
-                  <img src={`${process.env.PUBLIC_URL}/img/${gem.iconName}.jpg`} alt={gem.name + ' icon'} width={20} height={20} />
-                  <a href={`https://tbc.wowhead.com/item=${gem.id}`}>{gem.name}</a>
-                </td>
-                <td
-                  className='gem-info gem-hide'
-                  title={uiState.gemPreferences.hidden.includes(gem.id) ? 'Show Gem' : 'Hide Gem'}
-                  data-hidden={uiState.gemPreferences.hidden.includes(gem.id)}
-                  onClick={(e) => dispatch(hideGem(gem.id))}
-                >❌</td>
-              </tr>
-            )
+            // Only show the gems if they're meta gems and the socket is a meta socket or if they're not meta gems and the socket is not a meta socket.
+            ((uiState.gemSelectionTable.socketColor === SocketColor.Meta && gemColorArray.color === GemColor.Meta) || (uiState.gemSelectionTable.socketColor !== SocketColor.Meta && gemColorArray.color !== GemColor.Meta)) && 
+              gemColorArray.gems.map((gem, j) =>
+                <tr key={j} className='gem-row' data-hidden={false}>
+                  <td
+                    className='gem-info gem-favorite-star'
+                    title={uiState.gemPreferences.favorites.includes(gem.id) ? 'Remove gem from favorites' : 'Add gem to favorites'}
+                    data-favorited={uiState.gemPreferences.favorites.includes(gem.id)}
+                    onClick={(e) => dispatch(favoriteGem(gem.id))}
+                  >★</td>
+                  <td className='gem-info gem-name' onClick={(e) => { gemClickHandler(gem.id, gemColorArray.color); e.preventDefault(); }}>
+                    <img src={`${process.env.PUBLIC_URL}/img/${gem.iconName}.jpg`} alt={gem.name + ' icon'} width={20} height={20} />
+                    <a href={`https://tbc.wowhead.com/item=${gem.id}`}>{gem.name}</a>
+                  </td>
+                  <td
+                    className='gem-info gem-hide'
+                    title={uiState.gemPreferences.hidden.includes(gem.id) ? 'Show Gem' : 'Hide Gem'}
+                    data-hidden={uiState.gemPreferences.hidden.includes(gem.id)}
+                    onClick={(e) => dispatch(hideGem(gem.id))}
+                  >❌</td>
+                </tr>
+              )
           )
         }
       </tbody>

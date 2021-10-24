@@ -1,5 +1,5 @@
 import { Items } from '../Data/Items';
-import { Enchant, Item, ItemSlot, ItemSlotKey, Phase, Stat, SubSlotValue } from '../Types';
+import { Enchant, Item, ItemSlot, ItemSlotKey, Phase, SocketColor, Stat, SubSlotValue } from '../Types';
 import { useState } from 'react';
 import { Enchants } from '../Data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
@@ -132,12 +132,13 @@ export default function ItemSelection() {
     return itemSlot === ItemSlotKey.Twohand ? ItemSlotKey.Mainhand : itemSlot;
   }
 
-  function itemSocketClickHandler(itemId: string, socketNumber: number) {
+  function itemSocketClickHandler(itemId: string, socketNumber: number, socketColor: SocketColor) {
     dispatch(setGemSelectionTable({
       visible: true,
       itemId: itemId,
       itemSlot: itemSlot,
-      socketNumber: socketNumber
+      socketNumber: socketNumber,
+      socketColor: socketColor
     }));
   }
 
@@ -265,7 +266,7 @@ export default function ItemSelection() {
                         rel='noreferrer'
                         href={playerStore.selectedGems[itemSlot][item.id] && playerStore.selectedGems[itemSlot][item.id][j][1] !== 0 ? `https://tbc.wowhead.com/item=${playerStore.selectedGems[itemSlot][item.id][j][1]}` : ''}
                         key={j}
-                        onClick={(e) => { itemSocketClickHandler(item.id.toString(), j); e.preventDefault(); e.stopPropagation(); }}
+                        onClick={(e) => { itemSocketClickHandler(item.id.toString(), j, socket); e.preventDefault(); e.stopPropagation(); }}
                         onContextMenu={(e) => { removeGemFromSocket(item.id.toString(), j); e.preventDefault(); }}
                       >
                         <img
