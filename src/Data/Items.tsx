@@ -1,6 +1,6 @@
 // Made up item IDs that I use for items such as the bracers/boots from the Karazhan basement bosses where all the items use the same item id but they have different stats
 
-import { Item, ItemSlotKey, ItemSource } from "../Types"
+import { Item, ItemSlotKey, ItemSource, SocketColor } from "../Types"
 
 // But each item in the sim needs to have a unique ID so I just make one up here and use that
 const fakeItemIds = {
@@ -36,8 +36,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'darkConjurorsCollar',
       stamina: 51,
       intellect: 42,
-      meta: 1,
-      blue: 1,
+      sockets: [SocketColor.Meta, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -54,8 +53,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 51,
       intellect: 42,
       spirit: 38,
-      meta: 1,
-      red: 1,
+      sockets: [SocketColor.Meta, SocketColor.Red],
       socketBonus: {
         spellPower: 5
       },
@@ -71,8 +69,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 41,
       intellect: 37,
       critRating: 42,
-      meta: 1,
-      blue: 1,
+      sockets: [SocketColor.Meta, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -86,9 +83,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'hoodOfHexing',
       stamina: 24,
       intellect: 33,
-      red: 1,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -104,8 +99,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'vengefulGladiatorsFelweaveCowl',
       stamina: 67,
       intellect: 15,
-      meta: 1,
-      red: 1,
+      sockets: [SocketColor.Meta, SocketColor.Red],
       socketBonus: {
         resilienceRating: 4
       },
@@ -121,8 +115,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'vengefulGladiatorsDreadweaveHood',
       stamina: 73,
       intellect: 25,
-      meta: 1,
-      red: 1,
+      sockets: [SocketColor.Meta, SocketColor.Red],
       socketBonus: {
         resilienceRating: 4
       },
@@ -137,8 +130,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'cowlOfTheIllidariHighlord',
       stamina: 33,
       intellect: 31,
-      meta: 1,
-      blue: 1,
+      sockets: [SocketColor.Meta, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -154,8 +146,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'mercilessGladiatorsFelweaveCowl',
       stamina: 60,
       intellect: 11,
-      meta: 1,
-      red: 1,
+      sockets: [SocketColor.Meta, SocketColor.Red],
       socketBonus: {
         resilienceRating: 4
       },
@@ -171,8 +162,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'mercilessGladiatorsDreadweaveCowl',
       stamina: 66,
       intellect: 20,
-      meta: 1,
-      red: 1,
+      sockets: [SocketColor.Meta, SocketColor.Red],
       socketBonus: {
         resilienceRating: 4
       },
@@ -187,8 +177,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'hoodOfTheMalefic',
       stamina: 55,
       intellect: 36,
-      meta: 1,
-      yellow: 1,
+      sockets: [SocketColor.Meta, SocketColor.Yellow],
       socketBonus: {
         spellPower: 5
       },
@@ -205,8 +194,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'manabindersCowl',
       stamina: 38,
       intellect: 29,
-      meta: 1,
-      yellow: 1,
+      sockets: [SocketColor.Meta, SocketColor.Yellow],
       socketBonus: {
         spellPower: 5
       },
@@ -221,8 +209,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'destructionHologogs',
       stamina: 22,
       intellect: 24,
-      meta: 1,
-      blue: 1,
+      sockets: [SocketColor.Meta, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -237,8 +224,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'hoodOfTheCorruptor',
       stamina: 57,
       intellect: 33,
-      meta: 1,
-      blue: 1,
+      sockets: [SocketColor.Meta, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -254,8 +240,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'cowlOfTheGrandEngineer',
       stamina: 22,
       intellect: 27,
-      yellow: 2,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -304,8 +289,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'voidheartCrown',
       stamina: 39,
       intellect: 36,
-      meta: 1,
-      red: 1,
+      sockets: [SocketColor.Meta, SocketColor.Red],
       socketBonus: {
         hitRating: 4
       },
@@ -321,9 +305,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'spellstrikeHood',
       stamina: 16,
       intellect: 12,
-      red: 1,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         stamina: 6
       },
@@ -341,8 +323,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 15,
       intellect: 27,
       spirit: 17,
-      meta: 1,
-      yellow: 1,
+      sockets: [SocketColor.Meta, SocketColor.Yellow],
       socketBonus: {
         spirit: 4
       },
@@ -357,8 +338,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'gladiatorsFelweaveCowl',
       stamina: 54,
       intellect: 15,
-      meta: 1,
-      red: 1,
+      sockets: [SocketColor.Meta, SocketColor.Red],
       socketBonus: {
         resilienceRating: 4
       },
@@ -375,8 +355,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'gladiatorsDreadweaveHood',
       stamina: 60,
       intellect: 20,
-      meta: 1,
-      red: 1,
+      sockets: [SocketColor.Meta, SocketColor.Red],
       socketBonus: {
         resilienceRating: 4
       },
@@ -392,8 +371,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'manaEtchedCrown',
       stamina: 27,
       intellect: 20,
-      meta: 1,
-      red: 1,
+      sockets: [SocketColor.Meta, SocketColor.Red],
       socketBonus: {
         resilienceRating: 4
       },
@@ -409,8 +387,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'hoodOfOblivion',
       stamina: 27,
       intellect: 32,
-      meta: 1,
-      blue: 1,
+      sockets: [SocketColor.Meta, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -449,8 +426,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 12,
       intellect: 15,
       spirit: 8,
-      blue: 2,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -476,8 +452,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'hydromancersHeadwrap',
       stamina: 21,
       intellect: 27,
-      meta: 1,
-      blue: 1,
+      sockets: [SocketColor.Meta, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -518,7 +493,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'pendantOfSunfire',
       stamina: 27,
       intellect: 19,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -546,7 +521,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'sindoreiPendantOfConquest',
       stamina: 18,
       intellect: 19,
-      blue: 1,
+      sockets: [SocketColor.Blue],
       socketBonus: {
         spellPower: 2
       },
@@ -583,7 +558,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'vindicatorsPendantOfSubjugation',
       stamina: 31,
       intellect: 15,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         stamina: 3
       },
@@ -633,7 +608,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'veteransPendantOfConquest',
       stamina: 27,
       intellect: 12,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         stamina: 3
       },
@@ -649,7 +624,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'veteransPendantOfDominance',
       stamina: 31,
       intellect: 16,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         stamina: 3
       },
@@ -865,8 +840,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'amiceOfTheConvoker',
       stamina: 36,
       intellect: 28,
-      red: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow],
       socketBonus: {
         spellPower: 4
       },
@@ -883,8 +857,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 33,
       intellect: 33,
       spirit: 22,
-      red: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow],
       socketBonus: {
         spellPower: 4
       },
@@ -899,8 +872,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'felTingedMantle',
       stamina: 18,
       intellect: 20,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 4
       },
@@ -915,8 +887,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'duskhallowMantle',
       stamina: 12,
       intellect: 10,
-      red: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow],
       socketBonus: {
         spellPower: 4
       },
@@ -953,8 +924,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'hatefuryMantle',
       stamina: 15,
       intellect: 18,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         critRating: 3
       },
@@ -970,8 +940,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'mantleOfTheMalefic',
       stamina: 45,
       intellect: 22,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 4
       },
@@ -1000,8 +969,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'mercilessGladiatorsFelweaveAmice',
       stamina: 46,
       intellect: 10,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         resilienceRating: 3
       },
@@ -1018,8 +986,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'mercilessGladiatorsDreadweaveMantle',
       stamina: 45,
       intellect: 10,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         resilienceRating: 3
       },
@@ -1038,7 +1005,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       intellect: 24,
       spellPower: 41,
       hitRating: 18,
-      yellow: 2,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         spellPower: 4
       },
@@ -1065,7 +1032,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'illidariShoulderpads',
       stamina: 34,
       intellect: 23,
-      yellow: 2,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         spellPower: 4
       },
@@ -1080,8 +1047,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'voidheartMantle',
       stamina: 26,
       intellect: 22,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 4
       },
@@ -1097,8 +1063,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'HWLGMDreadweaveMantle',
       stamina: 19,
       intellect: 15,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         resilienceRating: 3
       },
@@ -1115,8 +1080,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'frozenShadoweaveShoulders',
       stamina: 21,
       intellect: 15,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         hitRating: 3
       },
@@ -1154,8 +1118,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'gladiatorsFelweaveAmice',
       stamina: 42,
       intellect: 14,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         resilienceRating: 3
       },
@@ -1172,8 +1135,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'gladiatorsDreadweaveMantle',
       stamina: 42,
       intellect: 14,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         resilienceRating: 3
       },
@@ -1202,8 +1164,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 24,
       intellect: 17,
       spirit: 16,
-      red: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow],
       socketBonus: {
         critRating: 3
       },
@@ -1217,8 +1178,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'manaEtchedSpaulders',
       stamina: 25,
       intellect: 17,
-      yellow: 1,
-      red: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow],
       socketBonus: {
         resilienceRating: 3
       },
@@ -1234,8 +1194,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'spauldersOfOblivion',
       stamina: 25,
       intellect: 17,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         hitRating: 3
       },
@@ -1297,7 +1256,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'tatteredCapeOfAntonidas',
       stamina: 25,
       intellect: 26,
-      red: 1,
+      sockets: [SocketColor.Red],
       socketBonus: {
         spellPower: 2
       },
@@ -1312,7 +1271,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'cloakOfTheBetrayed',
       stamina: 12,
       intellect: 12,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -1563,7 +1522,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'tormentedDemonsoulRobes',
       stamina: 39,
       intellect: 38,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -1579,7 +1538,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 34,
       intellect: 35,
       spirit: 33,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -1594,7 +1553,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'sunfireRobe',
       stamina: 36,
       intellect: 34,
-      red: 3,
+      sockets: [SocketColor.Red, SocketColor.Red, SocketColor.Red],
       socketBonus: {
         spellPower: 5
       },
@@ -1610,8 +1569,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'felConquererRemains',
       stamina: 60,
       intellect: 41,
-      red: 1,
-      yellow: 2,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         spellPower: 5
       },
@@ -1628,8 +1586,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 39,
       intellect: 40,
       spirit: 32,
-      red: 2,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Red, SocketColor.Yellow],
       socketBonus: {
         spellPower: 5
       },
@@ -1645,9 +1602,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'scarletSindoreiRobes',
       stamina: 31,
       intellect: 22,
-      red: 1,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -1686,8 +1641,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'robeOfTheMalefic',
       stamina: 66,
       intellect: 29,
-      yellow: 2,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -1715,8 +1669,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'mercilessGladiatorsFelweaveRaiment',
       stamina: 57,
       intellect: 12,
-      red: 1,
-      yellow: 2,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         critRating: 4
       },
@@ -1733,8 +1686,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'mercilessGladiatorsDreadweaveRobe',
       stamina: 69,
       intellect: 18,
-      red: 1,
-      yellow: 2,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         resilienceRating: 4
       },
@@ -1750,8 +1702,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'robeOfHatefulEchoes',
       stamina: 34,
       intellect: 36,
-      red: 1,
-      yellow: 2,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         stamina: 6
       },
@@ -1766,8 +1717,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'vestmentsOfTheSeaWitch',
       stamina: 28,
       intellect: 28,
-      yellow: 2,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -1783,7 +1733,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'robeOfTheCorruptor',
       stamina: 48,
       intellect: 33,
-      yellow: 3,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         spellPower: 5
       },
@@ -1817,8 +1767,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'voidheartRobe',
       stamina: 42,
       intellect: 33,
-      yellow: 2,
-      red: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         stamina: 6
       },
@@ -1834,8 +1783,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'frozenShadoweaveRobe',
       stamina: 30,
       intellect: 20,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         hitRating: 3
       },
@@ -1849,8 +1797,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       name: 'Spellfire Robe',
       varName: 'spellfireRobe',
       intellect: 17,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         stamina: 4
       },
@@ -1866,8 +1813,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'gladiatorsFelweaveRaiment',
       stamina: 51,
       intellect: 16,
-      red: 1,
-      yellow: 2,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         critRating: 4
       },
@@ -1884,8 +1830,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'gladiatorsDreadweaveRobe',
       stamina: 57,
       intellect: 19,
-      red: 1,
-      yellow: 2,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         resilienceRating: 4
       },
@@ -1911,9 +1856,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'warpInfusedDrape',
       stamina: 27,
       intellect: 28,
-      red: 1,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         critRating: 4
       },
@@ -1939,8 +1882,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 16,
       intellect: 38,
       spirit: 18,
-      yellow: 2,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         mp5: 2
       },
@@ -1965,9 +1907,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'manaEtchedVestments',
       stamina: 25,
       intellect: 25,
-      red: 1,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -2018,9 +1958,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 18,
       intellect: 18,
       spirit: 11,
-      red: 1,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         critRating: 4
       },
@@ -2033,8 +1971,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       name: "Auchenai Anchorite's Robe",
       varName: 'auchenaiAnchoritesRobe',
       intellect: 24,
-      red: 1,
-      yellow: 2,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         critRating: 4
       },
@@ -2049,9 +1986,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'robeOfOblivion',
       stamina: 30,
       intellect: 20,
-      red: 1,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         stamina: 6
       },
@@ -2067,8 +2002,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 24,
       intellect: 22,
       spirit: 22,
-      yellow: 2,
-      red: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         intellect: 4
       },
@@ -2120,7 +2054,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'bracersOfTheMalefic',
       stamina: 18,
       intellect: 22,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -2138,7 +2072,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 34,
       intellect: 20,
       spellPower: 29,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -2151,7 +2085,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'bindingsOfRagingFire',
       stamina: 9,
       intellect: 10,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -2167,7 +2101,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 12,
       intellect: 17,
       spirit: 16,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -2205,7 +2139,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 22,
       intellect: 20,
       spirit: 19,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         stamina: 3
       },
@@ -2221,7 +2155,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 15,
       intellect: 20,
       spirit: 28,
-      blue: 1,
+      sockets: [SocketColor.Blue],
       socketBonus: {
         spellPower: 2
       },
@@ -2234,7 +2168,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       name: "Crystalweave Bracers",
       varName: 'crystalweaveBracers',
       intellect: 16,
-      red: 1,
+      sockets: [SocketColor.Red],
       socketBonus: {
         spellPower: 2
       },
@@ -2260,7 +2194,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'veteransSilkCuffs',
       stamina: 25,
       intellect: 18,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -2276,7 +2210,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'veteransDreadweaveCuffs',
       stamina: 31,
       intellect: 16,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -2352,7 +2286,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'marshalsSilkCuffs',
       stamina: 22,
       intellect: 17,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -2379,7 +2313,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'marshalsDreadweaveCuffs',
       stamina: 25,
       intellect: 14,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -2413,7 +2347,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       name: 'Bracers of Havok',
       varName: 'bracersOfHavok',
       intellect: 12,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         critRating: 2
       },
@@ -2427,7 +2361,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'shattrathWraps',
       stamina: 15,
       intellect: 15,
-      red: 1,
+      sockets: [SocketColor.Red],
       socketBonus: {
         stamina: 3
       },
@@ -2496,7 +2430,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'enslavedDoomguardSoulgrips',
       stamina: 33,
       intellect: 27,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -2512,7 +2446,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 28,
       intellect: 30,
       spirit: 25,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -2539,8 +2473,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 33,
       intellect: 32,
       spirit: 27,
-      red: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow],
       socketBonus: {
         spellPower: 4
       },
@@ -2555,8 +2488,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'handguardsOfDefiledWorlds',
       stamina: 33,
       intellect: 32,
-      yellow: 1,
-      red: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow],
       socketBonus: {
         spellPower: 4
       },
@@ -2572,8 +2504,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'glovesOfArcaneAcuity',
       stamina: 16,
       intellect: 20,
-      red: 1,
-      blue: 1,
+      sockets: [SocketColor.Red, SocketColor.Blue],
       socketBonus: {
         spellPower: 4
       },
@@ -2588,7 +2519,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'glovesOfTheMalefic',
       stamina: 57,
       intellect: 27,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         hitRating: 2
       },
@@ -2666,8 +2597,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'soulEatersHandwraps',
       stamina: 31,
       intellect: 24,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 4
       },
@@ -2684,8 +2614,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       intellect: 22,
       spellPower: 35,
       hitRating: 14,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         hitRating: 3
       },
@@ -2697,8 +2626,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       name: 'Spellfire Gloves',
       varName: 'spellfireGloves',
       intellect: 10,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         stamina: 4
       },
@@ -2747,7 +2675,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
     {
       name: 'Anger-Spark Gloves',
       varName: 'angerSparkGloves',
-      red: 2,
+      sockets: [SocketColor.Red, SocketColor.Red],
       socketBonus: {
         critRating: 3
       },
@@ -2776,8 +2704,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 14,
       intellect: 14,
       spirit: 10,
-      red: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow],
       socketBonus: {
         critRating: 3
       },
@@ -2792,8 +2719,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'manaEtchedGloves',
       stamina: 25,
       intellect: 17,
-      red: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow],
       socketBonus: {
         resilienceRating: 1
       },
@@ -2822,7 +2748,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 10,
       intellect: 20,
       spirit: 6,
-      blue: 2,
+      sockets: [SocketColor.Blue, SocketColor.Blue],
       socketBonus: {
         critRating: 3
       },
@@ -2906,7 +2832,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'aftershockWaistguard',
       stamina: 27,
       intellect: 27,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         stamina: 3
       },
@@ -2921,7 +2847,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'beltOfTheMalefic',
       stamina: 25,
       intellect: 29,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -2939,8 +2865,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'anetheronsNoose',
       stamina: 22,
       intellect: 23,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 4
       },
@@ -3001,8 +2926,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       spellPower: 50,
       hitRating: 23,
       critRating: 30,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 4
       },
@@ -3015,7 +2939,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'cordOfScreamingTerrors',
       stamina: 34,
       intellect: 15,
-      yellow: 2,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         stamina: 4
       },
@@ -3102,8 +3026,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'beltOfDivineInspiration',
       stamina: 27,
       intellect: 26,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 4
       },
@@ -3137,8 +3060,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       name: 'Spellfire Belt',
       varName: 'spellfireBelt',
       intellect: 18,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         stamina: 4
       },
@@ -3154,8 +3076,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'girdleOfRuination',
       stamina: 18,
       intellect: 13,
-      red: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow],
       socketBonus: {
         stamina: 4
       },
@@ -3226,7 +3147,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'glyphLinedSash',
       stamina: 21,
       intellect: 23,
-      yellow: 2,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         spellPower: 4
       },
@@ -3263,8 +3184,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 10,
       intellect: 14,
       spirit: 8,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         hitRating: 3
       },
@@ -3327,8 +3247,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 37,
       intellect: 36,
       spirit: 30,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 4
       },
@@ -3343,8 +3262,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'corruptedSoulclothPantaloons',
       stamina: 37,
       intellect: 33,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 4
       },
@@ -3360,8 +3278,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 29,
       intellect: 36,
       spirit: 25,
-      red: 1,
-      yellow: 2,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         spellPower: 5
       },
@@ -3376,8 +3293,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'leggingsOfCalamity',
       stamina: 48,
       intellect: 41,
-      red: 2,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Red, SocketColor.Yellow],
       socketBonus: {
         spellPower: 5
       },
@@ -3394,8 +3310,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 25,
       intellect: 28,
       spirit: 28,
-      yellow: 2,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -3411,8 +3326,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'leggingsOfDevastation',
       stamina: 40,
       intellect: 42,
-      yellow: 2,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 3
       },
@@ -3427,7 +3341,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'leggingsOfTheMalefic',
       stamina: 55,
       intellect: 44,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         hitRating: 2
       },
@@ -3469,7 +3383,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'leggingsOfTheCorruptor',
       stamina: 48,
       intellect: 32,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         stamina: 3
       },
@@ -3487,8 +3401,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 33,
       intellect: 36,
       spirit: 22,
-      blue: 2,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -3515,9 +3428,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'spellstrikePants',
       stamina: 12,
       intellect: 8,
-      blue: 1,
-      red: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         stamina: 6
       },
@@ -3558,8 +3469,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       name: 'Leggings of the Seventh Circle',
       varName: 'leggingsOfTheSeventhCircle',
       intellect: 22,
-      red: 1,
-      yellow: 2,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         spellPower: 5
       },
@@ -3575,9 +3485,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'devilStitchedLegs',
       stamina: 32,
       intellect: 28,
-      red: 1,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -3603,9 +3511,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'aransSorcerousSlacks',
       stamina: 29,
       intellect: 28,
-      red: 1,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -3630,7 +3536,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'trialFireTrousers',
       stamina: 42,
       intellect: 40,
-      yellow: 3,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         spellPower: 5
       },
@@ -3644,8 +3550,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'breechesOfTheOccultist',
       stamina: 37,
       intellect: 22,
-      yellow: 2,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -3695,8 +3600,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 20,
       intellect: 22,
       spirit: 15,
-      blue: 2,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -3724,9 +3628,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 27,
       intellect: 29,
       spirit: 25,
-      red: 1,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         hitRating: 4
       },
@@ -3791,7 +3693,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 37,
       intellect: 26,
       spirit: 23,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -3806,7 +3708,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'bootsOfTheMalefic',
       stamina: 24,
       intellect: 26,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -3847,8 +3749,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 25,
       intellect: 18,
       spirit: 18,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 4
       },
@@ -3986,8 +3887,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'frozenShadoweaveBoots',
       stamina: 15,
       intellect: 9,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         hitRating: 3
       },
@@ -4012,8 +3912,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'bootsOfForetelling',
       stamina: 27,
       intellect: 23,
-      red: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow],
       socketBonus: {
         intellect: 3
       },
@@ -4073,8 +3972,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'shattrathJumpers',
       stamina: 25,
       intellect: 17,
-      blue: 1,
-      yellow: 1,
+      sockets: [SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         intellect: 3
       },
@@ -4099,8 +3997,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'sigilLacedBoots',
       stamina: 24,
       intellect: 18,
-      red: 1,
-      yellow: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow],
       socketBonus: {
         intellect: 3
       },
@@ -4181,8 +4078,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 10,
       intellect: 22,
       spirit: 15,
-      red: 1,
-      blue: 2,
+      sockets: [SocketColor.Red, SocketColor.Blue, SocketColor.Blue],
       socketBonus: {
         resilienceRating: 3
       },
@@ -4272,7 +4168,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'signetOfAncientMagics',
       stamina: 12,
       intellect: 17,
-      blue: 1,
+      sockets: [SocketColor.Blue],
       socketBonus: {
         spellPower: 2
       },
@@ -5175,7 +5071,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       name: 'Talon of the Tempest',
       varName: 'talonOfTheTempest',
       intellect: 10,
-      yellow: 2,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         intellect: 3
       },
@@ -5359,6 +5255,17 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       id: 34179,
       source: ItemSource.Sunwell,
       phase: 5
+    },
+    {
+      name: 'Fetish of the Primal Gods',
+      varName: 'fetishOfThePrimalGods',
+      stamina: 24,
+      intellect: 17,
+      hasteRating: 17,
+      spellPower: 37,
+      id: 33334,
+      source: ItemSource.ZulAman,
+      phase: 4,
     },
     {
       name: 'Chronicle of Dark Secrets',
@@ -5599,7 +5506,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'grandMagistersStaffOfTorrents',
       stamina: 57,
       intellect: 52,
-      yellow: 3,
+      sockets: [SocketColor.Yellow, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         spellPower: 5
       },
@@ -5615,8 +5522,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'suninfusedFocusStaff',
       stamina: 37,
       intellect: 27,
-      red: 1,
-      yellow: 2,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Yellow],
       socketBonus: {
         spellPower: 5
       },
@@ -5631,9 +5537,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'amaniDiviningStaff',
       stamina: 58,
       intellect: 47,
-      red: 1,
-      yellow: 1,
-      blue: 1,
+      sockets: [SocketColor.Red, SocketColor.Yellow, SocketColor.Blue],
       socketBonus: {
         spellPower: 5
       },
@@ -5858,7 +5762,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       varName: 'wandOfTheDemonsoul',
       stamina: 9,
       intellect: 10,
-      yellow: 1,
+      sockets: [SocketColor.Yellow],
       socketBonus: {
         spellPower: 2
       },
@@ -5874,7 +5778,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       stamina: 9,
       intellect: 15,
       spellPower: 18,
-      blue: 1,
+      sockets: [SocketColor.Blue],
       socketBonus: {
         spellPower: 2
       },
@@ -5961,7 +5865,7 @@ export const Items: {[key in ItemSlotKey]: Item[]} = {
       name: 'Illidari Rod of Discipline',
       varName: 'illidariRodOfDiscipline',
       stamina: 9,
-      blue: 1,
+      sockets: [SocketColor.Blue],
       socketBonus: {
         spellPower: 2
       },

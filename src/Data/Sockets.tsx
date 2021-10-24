@@ -1,18 +1,25 @@
-export const Sockets = {
-  meta: {
+import { SocketColor, GemColor } from "../Types";
+
+
+export const Sockets: {color: SocketColor, iconName: string, validColors: GemColor[]}[] = [
+  {
+    color: SocketColor.Meta,
     iconName: 'UI-EmptySocket-Meta',
-    gems: ['meta']
+    validColors: [GemColor.Meta]
   },
-  red: {
+  {
+    color: SocketColor.Red,
     iconName: 'UI-EmptySocket-Red',
-    gems: ['red', 'orange', 'purple']
+    validColors: [GemColor.Red, GemColor.Orange, GemColor.Purple]
   },
-  yellow: {
+  {
+    color: SocketColor.Yellow,
     iconName: 'UI-EmptySocket-Yellow',
-    gems: ['yellow', 'orange', 'green']
+    validColors: [GemColor.Yellow, GemColor.Orange, GemColor.Green]
   },
-  blue: {
+  {
+    color: SocketColor.Blue,
     iconName: 'UI-EmptySocket-Blue',
-    gems: ['blue', 'green', 'purple']
+    validColors: [GemColor.Blue, GemColor.Green, GemColor.Purple]
   }
-}
+]

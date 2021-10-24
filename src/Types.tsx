@@ -45,10 +45,7 @@ export interface Item {
   stamina?: number,
   intellect?: number,
   spirit?: number,
-  meta?: number,
-  blue?: number,
-  yellow?: number,
-  red?: number,
+  sockets?: SocketColor[],
   socketBonus?: SocketBonus,
   spellPower?: number,
   shadowPower?: number,
@@ -271,6 +268,8 @@ export interface TalentStore {[key: string]: number}
 
 export type ItemAndEnchantStruct = {[key in ItemSlot]: number}
 
+export type SelectedGemsStruct = {[key in ItemSlotKey]: {[key: string]: [string, number][]}}
+
 export const InitialSelectedItemsAndEnchants: ItemAndEnchantStruct = {
   head: 0,
   neck: 0,
@@ -290,27 +289,6 @@ export const InitialSelectedItemsAndEnchants: ItemAndEnchantStruct = {
   offhand: 0,
   twohand: 0,
   wand: 0
-}
-
-export const StringToItemSlot: {[key in keyof typeof InitialSelectedItemsAndEnchants]: ItemSlotKey} = {
-  head: ItemSlotKey.Head,
-  neck: ItemSlotKey.Neck,
-  shoulders: ItemSlotKey.Shoulders,
-  back: ItemSlotKey.Back,
-  chest: ItemSlotKey.Chest,
-  bracer: ItemSlotKey.Bracer,
-  gloves: ItemSlotKey.Gloves,
-  belt: ItemSlotKey.Belt,
-  legs: ItemSlotKey.Legs,
-  boots: ItemSlotKey.Boots,
-  ring1: ItemSlotKey.Ring,
-  ring2: ItemSlotKey.Ring,
-  trinket1: ItemSlotKey.Trinket,
-  trinket2: ItemSlotKey.Trinket,
-  mainhand: ItemSlotKey.Mainhand,
-  offhand: ItemSlotKey.Offhand,
-  twohand: ItemSlotKey.Twohand,
-  wand: ItemSlotKey.Wand
 }
 
 export const InitialPlayerStats: PlayerStats = {
@@ -345,19 +323,77 @@ export const InitialPlayerStats: PlayerStats = {
   spellPenetration: 0,
 }
 
+export const InitialSelectedGems: SelectedGemsStruct = {
+  head: {},
+  neck: {},
+  shoulders: {},
+  back: {},
+  chest: {},
+  bracer: {},
+  gloves: {},
+  belt: {},
+  legs: {},
+  boots: {},
+  ring: {},
+  trinket: {},
+  mainhand: {},
+  offhand: {},
+  twohand: {},
+  wand: {},
+}
+
+export interface Profile {
+  auras: {[key: string]: boolean},
+  selectedGems: {[key in ItemSlot]: {[key: string]: [string, number][]}},
+  selectedItems: {[key in ItemSlot]: number},
+  talents: TalentStore,
+  rotation: {[key: string]: {[key: string]: boolean}},
+  selectedEnchants: {[key in ItemSlot]: number},
+  settings: {[key: string]: string}
+}
+
 export interface PlayerState {
   talents: TalentStore,
   talentPointsRemaining: number,
   selectedItems: ItemAndEnchantStruct,
   selectedEnchants: ItemAndEnchantStruct,
+  selectedGems: SelectedGemsStruct,
   auras: {[key: string]: boolean},
   rotation: {[key: string]: {[key: string]: boolean}},
   stats: PlayerStats,
-  settings: {[key: string]: any}
+  settings: {[key: string]: any},
+  profiles: {[key: string]: Profile},
 }
 
 export interface UiState {
-  sources: {phases: {[key in Phase]: boolean}}
+  sources: {phases: {[key in Phase]: boolean}},
+  gemSelectionTable: {visible: boolean, socketNumber: number, itemSlot: ItemSlotKey}
+  gemPreferences: {hidden: number[], favorites: number[]}
+}
+
+export enum SocketColor {
+  Meta = 'meta',
+  Red = 'red',
+  Yellow = 'yellow',
+  Blue = 'blue'
+}
+
+export enum GemColor {
+  Meta = 'meta',
+  Red = 'red',
+  Yellow = 'yellow',
+  Blue = 'blue',
+  Orange = 'orange',
+  Green = 'green',
+  Purple = 'purple'
+}
+
+export interface Gem {
+  name: string,
+  id: number,
+  iconName: string,
+  phase: Phase,
+  stats?: {[key in Stat]?: number}
 }
 
 export interface Talent {

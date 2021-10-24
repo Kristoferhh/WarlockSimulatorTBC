@@ -1,15 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Aura, AuraGroup, RotationGroup, TalentStore, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot } from "../Types";
+import { Aura, AuraGroup, RotationGroup, TalentStore, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot, Profile, InitialSelectedGems } from "../Types";
 
 const initialPlayerState : PlayerState = {
   talents: JSON.parse(localStorage.getItem('talents') || '{}'),
   talentPointsRemaining: getRemainingTalentPoints(JSON.parse(localStorage.getItem('talents') || '{}')),
   selectedItems: JSON.parse(localStorage.getItem('selectedItems') || JSON.stringify(InitialSelectedItemsAndEnchants)),
   selectedEnchants: JSON.parse(localStorage.getItem('selectedEnchants') || JSON.stringify(InitialSelectedItemsAndEnchants)),
+  selectedGems: JSON.parse(localStorage.getItem('selectedGems') || JSON.stringify(InitialSelectedGems)),
   auras: JSON.parse(localStorage.getItem('auras') || '{}'),
   rotation: JSON.parse(localStorage.getItem('rotation') || '{}'),
   stats: InitialPlayerStats,
   settings: JSON.parse(localStorage.getItem('settings') || JSON.stringify(InitialSettings)),
+  profiles: JSON.parse(localStorage.getItem('profiles') || '{}'),
 }
 
 function getRemainingTalentPoints(talents: TalentStore) {
@@ -100,9 +102,12 @@ export const PlayerSlice = createSlice({
     modifySettingValue: (state, action: PayloadAction<{setting: string, value: any}>) => {
       state.settings[action.payload.setting] = action.payload.value;
       localStorage.setItem('settings', JSON.stringify(state.settings));
+    },
+    setProfile: (state, action: PayloadAction<{profile: Profile, name: string}>) => {
+      state.profiles[action.payload.name] = action.payload.profile;
     }
   }
 });
 
-export const { setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection, modifyPlayerStat, modifySettingValue } = PlayerSlice.actions;
+export const { setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection, modifyPlayerStat, modifySettingValue, setProfile } = PlayerSlice.actions;
 export default PlayerSlice.reducer;

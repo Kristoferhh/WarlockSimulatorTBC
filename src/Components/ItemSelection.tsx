@@ -6,7 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../Redux/Store';
 import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot } from '../Redux/PlayerSlice';
 import { ItemSlotKeyToItemSlot, ItemSlotToItemSlotKey } from '../Common';
-import { togglePhase } from '../Redux/UiSlice';
+import { setGemSelectionTableVisibility, togglePhase } from '../Redux/UiSlice';
+import Profiles from './Profiles';
+import { Sockets } from '../Data/Sockets';
 
 const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlotValue}[] = [
   { name: 'Main Hand', itemSlot: ItemSlotKey.Mainhand, subSlot: '' },
@@ -132,22 +134,7 @@ export default function ItemSelection() {
   return(
     <div id="item-selection-container">
       <div id="profiles-and-sources">
-        <fieldset id="profile-fieldset">
-          <legend>Profile Options</legend>
-          <input placeholder='E.g. "P3 Shadow BiS"' type="text" name="profileName" />
-          <button id="save-new-profile-button">Save New Profile</button>
-          <div id="update-profile-div">
-            <button style={{display: 'none'}} id="save-profile-button">Save</button>
-            <button style={{display: 'none'}} id="delete-profile-button">Delete</button>
-            <button style={{display: 'none'}} id="rename-profile-button">Rename</button>
-            <button id="import-export-button">Import/Export</button>
-          </div>
-        </fieldset>
-
-        <fieldset id="saved-profiles" style={{display: 'none'}}>
-          <legend>Saved Profiles</legend>
-          <ul></ul>
-        </fieldset>
+        <Profiles />
 
         <fieldset id="source-filters">
           <legend>Sources</legend>
@@ -246,7 +233,17 @@ export default function ItemSelection() {
               style={{display: uiStore.sources.phases[item.phase] === false ? 'none' : ''}}>
               <td className="hide-item-btn">❌</td>
               <td><a href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)} onClick={(e) => e.preventDefault()}>{item.name}</a></td>
-              <td></td>
+              <td>
+                <div>
+                  {
+                    item.sockets?.map((socket, j) =>
+                      <a target='_blank' rel='noreferrer' href={''} onClick={(e) => { dispatch(setGemSelectionTableVisibility(true)); e.preventDefault(); e.stopPropagation(); }}>
+                        <img data-color={socket} src={`${process.env.PUBLIC_URL}/img/${Sockets.find(s => s.color === socket)?.iconName}.jpg`} alt={socket + ' socket'} />
+                      </a>
+                    )
+                  }
+                </div>
+              </td>
               <td>{item.source}</td>
               <td>{item.stamina}</td>
               <td>{item.intellect}</td>
