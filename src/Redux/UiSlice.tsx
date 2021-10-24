@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ItemSlotKey, Phase, UiState } from "../Types";
+import { GemSelectionTableStruct, InitialGemSelectionTableValue, Phase, UiState } from "../Types";
 
 const initialUiState : UiState = {
   sources: JSON.parse(localStorage.getItem('sources') || JSON.stringify({ phases: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, } })),
-  gemSelectionTable: {visible: false, socketNumber: 0, itemSlot: ItemSlotKey.Mainhand},
+  gemSelectionTable: InitialGemSelectionTableValue,
   gemPreferences: JSON.parse(localStorage.getItem('gemPreferences') || JSON.stringify({hidden: [], favorites: []})),
 }
 
@@ -15,8 +15,8 @@ export const UiSlice = createSlice({
       state.sources.phases[action.payload] = !state.sources.phases[action.payload];
       localStorage.setItem('sources', JSON.stringify(state.sources));
     },
-    setGemSelectionTableVisibility: (state, action: PayloadAction<boolean>) => {
-      state.gemSelectionTable.visible = action.payload;
+    setGemSelectionTable: (state, action: PayloadAction<GemSelectionTableStruct>) => {
+      state.gemSelectionTable = action.payload;
     },
     favoriteGem: (state, action: PayloadAction<number>) => {
       if (state.gemPreferences.favorites.includes(action.payload)) {
@@ -39,5 +39,5 @@ export const UiSlice = createSlice({
   }
 });
 
-export const { togglePhase, setGemSelectionTableVisibility, favoriteGem, hideGem } = UiSlice.actions;
+export const { togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
 export default UiSlice.reducer;

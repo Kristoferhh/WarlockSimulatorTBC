@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Aura, AuraGroup, RotationGroup, TalentStore, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot, Profile, InitialSelectedGems } from "../Types";
+import { Aura, AuraGroup, RotationGroup, TalentStore, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot, Profile, InitialSelectedGems, ItemSlotKey } from "../Types";
 
 const initialPlayerState : PlayerState = {
   talents: JSON.parse(localStorage.getItem('talents') || '{}'),
@@ -105,9 +105,13 @@ export const PlayerSlice = createSlice({
     },
     setProfile: (state, action: PayloadAction<{profile: Profile, name: string}>) => {
       state.profiles[action.payload.name] = action.payload.profile;
+    },
+    setItemSocketsValue: (state, action: PayloadAction<{itemId: string, itemSlot: ItemSlotKey, value: [string, number][]}>) => {
+      state.selectedGems[action.payload.itemSlot][action.payload.itemId] = action.payload.value;
+      localStorage.setItem('selectedGems', JSON.stringify(state.selectedGems));
     }
   }
 });
 
-export const { setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection, modifyPlayerStat, modifySettingValue, setProfile } = PlayerSlice.actions;
+export const { setItemSocketsValue, setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection, modifyPlayerStat, modifySettingValue, setProfile } = PlayerSlice.actions;
 export default PlayerSlice.reducer;

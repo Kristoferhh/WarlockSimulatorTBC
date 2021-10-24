@@ -4,11 +4,12 @@ import { useState } from 'react';
 import { Enchants } from '../Data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../Redux/Store';
-import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot } from '../Redux/PlayerSlice';
+import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot, setItemSocketsValue } from '../Redux/PlayerSlice';
 import { ItemSlotKeyToItemSlot, ItemSlotToItemSlotKey } from '../Common';
-import { setGemSelectionTableVisibility, togglePhase } from '../Redux/UiSlice';
+import { togglePhase, setGemSelectionTable } from '../Redux/UiSlice';
 import Profiles from './Profiles';
 import { Sockets } from '../Data/Sockets';
+import { GemColors } from '../Data/Gems';
 
 const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlotValue}[] = [
   { name: 'Main Hand', itemSlot: ItemSlotKey.Mainhand, subSlot: '' },
@@ -131,6 +132,28 @@ export default function ItemSelection() {
     return itemSlot === ItemSlotKey.Twohand ? ItemSlotKey.Mainhand : itemSlot;
   }
 
+  function itemSocketClickHandler(itemId: string, socketNumber: number) {
+    dispatch(setGemSelectionTable({
+      visible: true,
+      itemId: itemId,
+      itemSlot: itemSlot,
+      socketNumber: socketNumber
+    }));
+  }
+
+  function removeGemFromSocket(itemId: string, socketNumber: number) {
+    if (playerStore.selectedGems[itemSlot][itemId]) {
+      let currentItemSocketsValue = JSON.parse(JSON.stringify(playerStore.selectedGems[itemSlot][itemId]));
+      currentItemSocketsValue[socketNumber] = ['', 0];
+
+      dispatch(setItemSocketsValue({
+        itemId: itemId,
+        itemSlot: itemSlot,
+        value: currentItemSocketsValue
+      }));
+    }
+  }
+
   return(
     <div id="item-selection-container">
       <div id="profiles-and-sources">
@@ -237,8 +260,21 @@ export default function ItemSelection() {
                 <div>
                   {
                     item.sockets?.map((socket, j) =>
-                      <a target='_blank' rel='noreferrer' href={''} onClick={(e) => { dispatch(setGemSelectionTableVisibility(true)); e.preventDefault(); e.stopPropagation(); }}>
-                        <img data-color={socket} src={`${process.env.PUBLIC_URL}/img/${Sockets.find(s => s.color === socket)?.iconName}.jpg`} alt={socket + ' socket'} />
+                      <a
+                        target='_blank'
+                        rel='noreferrer'
+                        href={playerStore.selectedGems[itemSlot][item.id] && playerStore.selectedGems[itemSlot][item.id][j][1] !== 0 ? `https://tbc.wowhead.com/item=${playerStore.selectedGems[itemSlot][item.id][j][1]}` : ''}
+                        key={j}
+                        onClick={(e) => { itemSocketClickHandler(item.id.toString(), j); e.preventDefault(); e.stopPropagation(); }}
+                        onContextMenu={(e) => { removeGemFromSocket(item.id.toString(), j); e.preventDefault(); }}
+                      >
+                        <img
+                          width={16}
+                          height={16}
+                          data-color={socket}
+                          src={playerStore.selectedGems[itemSlot][item.id] && playerStore.selectedGems[itemSlot][item.id][j][1] !== 0 ? `${process.env.PUBLIC_URL}/img/${GemColors.find(arr => arr.color === playerStore.selectedGems[itemSlot][item.id][j][0])?.gems.find(g => g.id === playerStore.selectedGems[itemSlot][item.id][j][1])?.iconName}.jpg` : `${process.env.PUBLIC_URL}/img/${Sockets.find(s => s.color === socket)?.iconName}.jpg`}
+                          alt={socket + ' socket'}
+                        />
                       </a>
                     )
                   }

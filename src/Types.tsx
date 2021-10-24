@@ -367,8 +367,17 @@ export interface PlayerState {
 
 export interface UiState {
   sources: {phases: {[key in Phase]: boolean}},
-  gemSelectionTable: {visible: boolean, socketNumber: number, itemSlot: ItemSlotKey}
+  gemSelectionTable: GemSelectionTableStruct,
   gemPreferences: {hidden: number[], favorites: number[]}
+}
+
+export interface GemSelectionTableStruct {visible: boolean, socketNumber: number, itemSlot: ItemSlotKey, itemId: string}
+
+export const InitialGemSelectionTableValue = {
+  visible: false,
+  socketNumber: 0,
+  itemSlot: ItemSlotKey.Mainhand,
+  itemId: '0'
 }
 
 export enum SocketColor {
