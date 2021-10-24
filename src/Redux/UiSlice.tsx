@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Phase, UiState } from "./Types";
+import { Phase, UiState } from "../Types";
 
 const initialUiState : UiState = {
   sources: JSON.parse(localStorage.getItem('sources') || JSON.stringify({ phases: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, } })),

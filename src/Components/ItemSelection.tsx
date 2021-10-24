@@ -3,10 +3,10 @@ import { Enchant, Item, ItemSlot, ItemSlotKey, Phase, Stat, SubSlotValue } from 
 import { useState } from 'react';
 import { Enchants } from '../Data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../Store';
-import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot } from '../PlayerSlice';
+import { RootState } from '../Redux/Store';
+import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot } from '../Redux/PlayerSlice';
 import { ItemSlotKeyToItemSlot, ItemSlotToItemSlotKey } from '../Common';
-import { togglePhase } from '../UiSlice';
+import { togglePhase } from '../Redux/UiSlice';
 
 const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlotValue}[] = [
   { name: 'Main Hand', itemSlot: ItemSlotKey.Mainhand, subSlot: '' },
