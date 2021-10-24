@@ -415,6 +415,10 @@ ul {
 	vertical-align: top;
 }
 
+.phase-btn {
+	margin-left: 3px;
+}
+
 #preset-talent-buttons {
 	text-align: center;
 }

@@ -1,11 +1,12 @@
 import { Items } from '../Data/Items';
-import { ItemSlot, ItemSlotKey, SubSlotValue } from '../Types';
+import { ItemSlot, ItemSlotKey, Phase, SubSlotValue } from '../Types';
 import { useState } from 'react';
 import { Enchants } from '../Data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../Store';
 import { setEnchantInItemSlot, setItemInItemSlot } from '../PlayerSlice';
 import { ItemSlotKeyToItemSlot } from '../Common';
+import { togglePhase } from '../UiSlice';
 
 const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlotValue}[] = [
   { name: 'Main Hand', itemSlot: ItemSlotKey.Mainhand, subSlot: '' },
@@ -28,11 +29,21 @@ const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlo
   { name: 'Wand', itemSlot: ItemSlotKey.Wand, subSlot: ''}
 ];
 
+const phases: {title: string, phase: Phase}[] = [
+  { title: 'Classic', phase: 0 },
+  { title: 'P1', phase: 1 },
+  { title: 'P2', phase: 2 },
+  { title: 'P3', phase: 3 },
+  { title: 'P4', phase: 4 },
+  { title: 'P5', phase: 5 },
+]
+
 export default function ItemSelection() {
   const [itemSlot, setItemSlot] = useState<ItemSlotKey>(JSON.parse(localStorage.getItem('selectedItemSlot') || JSON.stringify('mainhand')));
   const [itemSubSlot, setItemSubSlot] = useState<SubSlotValue>(JSON.parse(localStorage.getItem('selectedItemSubSlot') || JSON.stringify('1')));
   const itemStore = useSelector((state: RootState) => state.player.selectedItems);
   const enchantStore = useSelector((state: RootState) => state.player.selectedEnchants);
+  const uiStore = useSelector((state: RootState) => state.ui);
   const dispatch = useDispatch();
 
   function itemClickHandler(id: number, slot: ItemSlot) {
@@ -83,12 +94,11 @@ export default function ItemSelection() {
         <fieldset id="source-filters">
           <legend>Sources</legend>
           <ul>
-            <li data-checked='false' data-source='phase' data-value='0'>Classic</li>
-            <li data-checked='false' data-source='phase' data-value='1'>P1</li>
-            <li data-checked='false' data-source='phase' data-value='2'>P2</li>
-            <li data-checked='false' data-source='phase' data-value='3'>P3</li>
-            <li data-checked='false' data-source='phase' data-value='4'>P4</li>
-            <li data-checked='false' data-source='phase' data-value='5'>P5</li>
+            {
+              phases.map((phase, i) =>
+                <li key={i} data-checked={uiStore.sources.phases[phase.phase] === true} className='phase-btn' onClick={() => dispatch(togglePhase(phase.phase))}>{phase.title}</li>
+              )
+            }
           </ul>
         </fieldset>
       </div>
@@ -139,7 +149,7 @@ export default function ItemSelection() {
           <col id="hide-item-col" style={{width: '2%'}} />
           <col style={{width: '20%'}} />
           <col style={{width: '4%'}} />
-          <col style={{width: '13'}} />
+          <col style={{width: '13%'}} />
           <col style={{width: '3%'}} />
           <col style={{width: '3%'}} />
           <col style={{width: '6%'}} />
@@ -174,7 +184,8 @@ export default function ItemSelection() {
               key={i}
               className="item-row"
               data-selected={itemStore[ItemSlotKeyToItemSlot(itemSlot, itemSubSlot)] === item.id}
-              onClick={() => itemClickHandler(item.id, ItemSlotKeyToItemSlot(itemSlot, itemSubSlot))}>
+              onClick={() => itemClickHandler(item.id, ItemSlotKeyToItemSlot(itemSlot, itemSubSlot))}
+              style={{display: uiStore.sources.phases[item.phase] === false ? 'none' : ''}}>
               <td className="hide-item-btn">❌</td>
               <td><a href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)} onClick={(e) => e.preventDefault()}>{item.name}</a></td>
               <td></td>

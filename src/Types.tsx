@@ -356,6 +356,10 @@ export interface PlayerState {
   settings: {[key: string]: any}
 }
 
+export interface UiState {
+  sources: {phases: {[key in Phase]: boolean}}
+}
+
 export interface Talent {
   name?: string,
   varName?: string,
@@ -492,6 +496,10 @@ export enum ItemSource {
   TerokkarForestQuest = "Terokkar Forest Quest",
   ShatteredHallsQuest = "Shattered Halls Quest",
   NagrandQuestHordeOnly = 'Nagrand Quest (Horde)',
+}
+
+export interface Source {
+  phase: {[key in Phase]: boolean}
 }
 
 export type Phase = 0|1|2|3|4|5;
