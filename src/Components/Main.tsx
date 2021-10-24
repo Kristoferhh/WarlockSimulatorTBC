@@ -14,7 +14,7 @@ import ItemSelection from './ItemSelection';
 export default function Main() {
   return (
     <div id="main">
-      <p id="pet-wip-note">Please report bugs in the #tbc-sim-report channel on the Warlock TBC discord.</p>
+      <p id="pet-wip-note">Please report bugs in the #tbc-sim-report channel on the Warlock TBC discord. <a target='_blank' rel='noreferrer' href='https://discord.gg/5MX6j7nk7s'>Click here to join</a>.</p>
       <div>
         <AuraSelection />
         <RotationSelection />

@@ -1,6 +1,6 @@
 import { ItemSlot, ItemSlotKey } from "./Types";
 
-export function ItemSlotKeyToItemSlot(itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
+export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
   switch(itemSlot) {
     case ItemSlotKey.Head: return ItemSlot.head;
     case ItemSlotKey.Neck: return ItemSlot.neck;
@@ -16,12 +16,12 @@ export function ItemSlotKeyToItemSlot(itemSlot: ItemSlotKey, itemSubSlot?: strin
     case ItemSlotKey.Trinket: return itemSubSlot === '1' ? ItemSlot.trinket1 : ItemSlot.trinket2;
     case ItemSlotKey.Mainhand: return ItemSlot.mainhand;
     case ItemSlotKey.Offhand: return ItemSlot.offhand;
-    case ItemSlotKey.Twohand: return ItemSlot.twohand;
+    case ItemSlotKey.Twohand: return forEnchants ? ItemSlot.mainhand : ItemSlot.twohand;
     case ItemSlotKey.Wand: return ItemSlot.wand;
   }
 }
 
-export function ItemSlotToItemSlotKey(itemSlot: ItemSlot): ItemSlotKey {
+export function ItemSlotToItemSlotKey(forEnchants: boolean, itemSlot: ItemSlot): ItemSlotKey {
   switch(itemSlot) {
     case ItemSlot.head: return ItemSlotKey.Head;
     case ItemSlot.neck: return ItemSlotKey.Neck;
@@ -39,7 +39,7 @@ export function ItemSlotToItemSlotKey(itemSlot: ItemSlot): ItemSlotKey {
     case ItemSlot.trinket2: return ItemSlotKey.Trinket;
     case ItemSlot.mainhand: return ItemSlotKey.Mainhand;
     case ItemSlot.offhand: return ItemSlotKey.Offhand;
-    case ItemSlot.twohand: return ItemSlotKey.Twohand;
+    case ItemSlot.twohand: return forEnchants ? ItemSlotKey.Mainhand : ItemSlotKey.Twohand;
     case ItemSlot.wand: return ItemSlotKey.Wand;
   }
 }

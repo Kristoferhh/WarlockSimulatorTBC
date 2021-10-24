@@ -69,6 +69,10 @@ ul {
 	border-bottom: 1px solid gray;
 }
 
+#pet-wip-note a {
+	color: white;
+}
+
 #stat-weights {
 	width: 300px;
 	border-bottom: none;

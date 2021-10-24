@@ -1,11 +1,11 @@
 import { Items } from '../Data/Items';
-import { ItemSlot, ItemSlotKey, Phase, SubSlotValue } from '../Types';
+import { Enchant, Item, ItemSlot, ItemSlotKey, Phase, Stat, SubSlotValue } from '../Types';
 import { useState } from 'react';
 import { Enchants } from '../Data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../Store';
-import { setEnchantInItemSlot, setItemInItemSlot } from '../PlayerSlice';
-import { ItemSlotKeyToItemSlot } from '../Common';
+import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot } from '../PlayerSlice';
+import { ItemSlotKeyToItemSlot, ItemSlotToItemSlotKey } from '../Common';
 import { togglePhase } from '../UiSlice';
 
 const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlotValue}[] = [
@@ -41,21 +41,79 @@ const phases: {title: string, phase: Phase}[] = [
 export default function ItemSelection() {
   const [itemSlot, setItemSlot] = useState<ItemSlotKey>(JSON.parse(localStorage.getItem('selectedItemSlot') || JSON.stringify('mainhand')));
   const [itemSubSlot, setItemSubSlot] = useState<SubSlotValue>(JSON.parse(localStorage.getItem('selectedItemSubSlot') || JSON.stringify('1')));
-  const itemStore = useSelector((state: RootState) => state.player.selectedItems);
-  const enchantStore = useSelector((state: RootState) => state.player.selectedEnchants);
+  const playerStore = useSelector((state: RootState) => state.player);
   const uiStore = useSelector((state: RootState) => state.ui);
   const dispatch = useDispatch();
 
-  function itemClickHandler(id: number, slot: ItemSlot) {
+  function itemClickHandler(item: Item, slot: ItemSlot) {
+    // Remove stats from equipped item
+    if (playerStore.selectedItems[slot] !== 0) {
+      const itemObj = Items[ItemSlotToItemSlotKey(false, slot)].find(i => i.id === playerStore.selectedItems[slot]);
+
+      for (const [prop, value] of Object.entries(itemObj!!)) {
+        if (playerStore.stats.hasOwnProperty(prop)) {
+          dispatch(modifyPlayerStat({
+            stat: prop as Stat,
+            value: value,
+            action: 'remove'
+          }));
+        }
+      }
+    }
+
+    // If the item that was clicked on is the currently equipped item then don't add the stats since it's being unequipped
+    if (playerStore.selectedItems[slot] !== item.id) {
+      // Add stats from new item
+      for (const [prop, value] of Object.entries(item)) {
+        if (playerStore.stats.hasOwnProperty(prop)) {
+          dispatch(modifyPlayerStat({
+            stat: prop as Stat,
+            value: value,
+            action: 'add'
+          }));
+        }
+      }
+    }
+
     dispatch(setItemInItemSlot({
-      id: id,
+      id: item.id,
       itemSlot: slot,
     }));
   }
 
-  function enchantClickHandler(id: number, slot: ItemSlot) {
+  function enchantClickHandler(enchant: Enchant, slot: ItemSlot) {
+    // Remove stats from selected enchant
+    if (playerStore.selectedEnchants[slot] !== 0) {
+      const enchantsKey = ItemSlotToItemSlotKey(true, slot);
+      const enchantObj = Enchants[enchantsKey === 'twohand' ? 'mainhand' : enchantsKey].find(i => i.id === playerStore.selectedEnchants[slot]);
+
+      for (const [prop, value] of Object.entries(enchantObj!!)) {
+        if (playerStore.stats.hasOwnProperty(prop)) {
+          dispatch(modifyPlayerStat({
+            stat: prop as Stat,
+            value: value,
+            action: 'remove'
+          }));
+        }
+      }
+    }
+
+    // If the enchant that was clicked on is the currently selected enchant then don't add the stats since it's being removoed
+    if (playerStore.selectedEnchants[slot] !== enchant.id) {
+      // Add stats from new enchant
+      for (const [prop, value] of Object.entries(enchant)) {
+        if (playerStore.stats.hasOwnProperty(prop)) {
+          dispatch(modifyPlayerStat({
+            stat: prop as Stat,
+            value: value,
+            action: 'add'
+          }));
+        }
+      }
+    }
+
     dispatch(setEnchantInItemSlot({
-      id: id,
+      id: enchant.id,
       itemSlot: slot,
     }));
   } 
@@ -183,8 +241,8 @@ export default function ItemSelection() {
             <tr
               key={i}
               className="item-row"
-              data-selected={itemStore[ItemSlotKeyToItemSlot(itemSlot, itemSubSlot)] === item.id}
-              onClick={() => itemClickHandler(item.id, ItemSlotKeyToItemSlot(itemSlot, itemSubSlot))}
+              data-selected={playerStore.selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot)] === item.id}
+              onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot))}
               style={{display: uiStore.sources.phases[item.phase] === false ? 'none' : ''}}>
               <td className="hide-item-btn">❌</td>
               <td><a href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)} onClick={(e) => e.preventDefault()}>{item.name}</a></td>
@@ -242,8 +300,8 @@ export default function ItemSelection() {
                   <tr
                     key={i}
                     className="enchant-row"
-                    data-selected={enchantStore[ItemSlotKeyToItemSlot(itemSlot, itemSubSlot)] === enchant.id}
-                    onClick={() => enchantClickHandler(enchant.id, ItemSlotKeyToItemSlot(itemSlot, itemSubSlot))}>
+                    data-selected={playerStore.selectedEnchants[ItemSlotKeyToItemSlot(true, itemSlot, itemSubSlot)] === enchant.id}
+                    onClick={() => enchantClickHandler(enchant, ItemSlotKeyToItemSlot(true, itemSlot, itemSubSlot))}>
                     <td><a href={'https://tbc.wowhead.com/spell=' + enchant.id} onClick={(e) => e.preventDefault()}>{enchant.name}</a></td>
                     <td>{enchant.spellPower}</td>
                     <td>{enchant.shadowPower}</td>

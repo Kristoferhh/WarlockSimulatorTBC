@@ -51,13 +51,13 @@ export default function Session() {
     function addItemStats() {
       for (const [itemSlot, itemId] of Object.entries(playerStore.selectedItems)) {
         if (itemId !== 0) {
-          for (const [stat, value] of Object.entries(Items[ItemSlotToItemSlotKey(itemSlot as ItemSlot)].find(e => e.id === itemId)!!)) {
+          for (const [stat, value] of Object.entries(Items[ItemSlotToItemSlotKey(false, itemSlot as ItemSlot)].find(e => e.id === itemId)!!)) {
             if (playerStore.stats.hasOwnProperty(stat)) {
               dispatch(modifyPlayerStat({
                 stat: stat as Stat,
                 value: value,
                 action: 'add'
-              }))
+              }));
             }
           }
         }
@@ -67,8 +67,8 @@ export default function Session() {
     function addEnchantStats() {
       for (const [itemSlot, enchantId] of Object.entries(playerStore.selectedEnchants)) {
         if (enchantId !== 0) {
-          const enchantObj = Enchants[ItemSlotToItemSlotKey(itemSlot as ItemSlot)].find(e => e.id === enchantId);
-          
+          const enchantObj = Enchants[ItemSlotToItemSlotKey(true, itemSlot as ItemSlot)].find(e => e.id === enchantId);
+
           if (enchantObj) {
             for (const [stat, value] of Object.entries(enchantObj)) {
               if (playerStore.stats.hasOwnProperty(stat)) {

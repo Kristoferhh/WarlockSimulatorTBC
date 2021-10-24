@@ -89,7 +89,7 @@ export const PlayerSlice = createSlice({
         } else {
           state.stats[action.payload.stat] += action.payload.value;
         }
-      } else {
+      } else if (action.payload.action === 'remove') {
         if (action.payload.stat.includes('Modifier')) {
           state.stats[action.payload.stat] /= action.payload.value;
         } else {
