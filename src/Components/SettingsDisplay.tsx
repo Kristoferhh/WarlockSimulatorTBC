@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
-import { modifySettingValue } from "../Redux/PlayerSlice";
-import { RootState } from "../Redux/Store"
+import { modifySettingValue } from "../redux/PlayerSlice";
+import { RootState } from "../redux/Store"
 
 export default function SettingsDisplay() {
   const playerStore = useSelector((state: RootState) => state.player);

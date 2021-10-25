@@ -1,15 +1,15 @@
-import { Items } from '../Data/Items';
+import { Items } from '../data/Items';
 import { Enchant, Item, ItemSlot, ItemSlotKey, Phase, SocketColor, Stat, SubSlotValue } from '../Types';
 import { useState } from 'react';
-import { Enchants } from '../Data/Enchants';
+import { Enchants } from '../data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../Redux/Store';
-import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot, setItemSocketsValue } from '../Redux/PlayerSlice';
+import { RootState } from '../redux/Store';
+import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot, setItemSocketsValue } from '../redux/PlayerSlice';
 import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot, ItemSlotToItemSlotKey } from '../Common';
-import { togglePhase, setGemSelectionTable } from '../Redux/UiSlice';
+import { togglePhase, setGemSelectionTable } from '../redux/UiSlice';
 import Profiles from './Profiles';
-import { Sockets } from '../Data/Sockets';
-import { Gems } from '../Data/Gems';
+import { Sockets } from '../data/Sockets';
+import { Gems } from '../data/Gems';
 
 const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlotValue}[] = [
   { name: 'Main Hand', itemSlot: ItemSlotKey.Mainhand, subSlot: '' },

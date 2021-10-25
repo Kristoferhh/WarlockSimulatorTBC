@@ -1,7 +1,7 @@
 import './App.css';
-import Main from './Components/Main';
-import Sidebar from './Components/Sidebar';
-import Session from './Components/Session';
+import Main from './components/Main';
+import Sidebar from './components/Sidebar';
+import Session from './components/Session';
 
 export default function App() {
   return (

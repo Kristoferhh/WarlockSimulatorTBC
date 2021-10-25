@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setProfile } from "../Redux/PlayerSlice";
-import { RootState } from "../Redux/Store";
+import { setProfile } from "../redux/PlayerSlice";
+import { RootState } from "../redux/Store";
 
 
 export default function Profiles() {

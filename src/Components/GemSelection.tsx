@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux"
 import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from "../Common";
-import { Gems } from "../Data/Gems";
-import { Items } from "../Data/Items";
-import { modifyPlayerStat, setItemSocketsValue } from "../Redux/PlayerSlice";
-import { RootState } from "../Redux/Store"
-import { favoriteGem, hideGem, setGemSelectionTable } from "../Redux/UiSlice";
+import { Gems } from "../data/Gems";
+import { Items } from "../data/Items";
+import { modifyPlayerStat, setItemSocketsValue } from "../redux/PlayerSlice";
+import { RootState } from "../redux/Store"
+import { favoriteGem, hideGem, setGemSelectionTable } from "../redux/UiSlice";
 import { Gem, GemColor, InitialGemSelectionTableValue, SocketColor, Stat } from "../Types";
 
 export default function GemSelection() {

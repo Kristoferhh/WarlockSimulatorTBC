@@ -1,6 +1,6 @@
-import { Gems } from "./Data/Gems";
-import { Items } from "./Data/Items";
-import { Sockets } from "./Data/Sockets";
+import { Gems } from "./data/Gems";
+import { Items } from "./data/Items";
+import { Sockets } from "./data/Sockets";
 import { GemColor, ItemSlot, ItemSlotKey, SelectedGemsStruct } from "./Types";
 
 export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {

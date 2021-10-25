@@ -11,8 +11,8 @@ import ImportExport from './ImportExport';
 import GemSelection from './GemSelection';
 import ItemSelection from './ItemSelection';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../Redux/Store';
-import { setGemSelectionTable } from '../Redux/UiSlice';
+import { RootState } from '../redux/Store';
+import { setGemSelectionTable } from '../redux/UiSlice';
 import { InitialGemSelectionTableValue } from '../Types';
 
 export default function Main() {

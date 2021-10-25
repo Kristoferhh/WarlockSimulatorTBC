@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { itemMeetsSocketRequirements, ItemSlotToItemSlotKey } from "../Common";
-import { Auras } from "../Data/Auras";
-import { Enchants } from "../Data/Enchants";
-import { Gems } from "../Data/Gems";
-import { Items } from "../Data/Items";
-import { Races } from "../Data/Races";
-import { modifyPlayerStat } from "../Redux/PlayerSlice";
-import { RootState } from "../Redux/Store";
+import { Auras } from "../data/Auras";
+import { Enchants } from "../data/Enchants";
+import { Gems } from "../data/Gems";
+import { Items } from "../data/Items";
+import { Races } from "../data/Races";
+import { modifyPlayerStat } from "../redux/PlayerSlice";
+import { RootState } from "../redux/Store";
 import { ItemSlot, Stat } from "../Types";
 
 

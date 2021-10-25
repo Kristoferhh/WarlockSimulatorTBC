@@ -1,8 +1,8 @@
-import { Talents, TalentTreeStruct } from "../Data/Talents"
-import { RootState } from "../Redux/Store";
+import { Talents, TalentTreeStruct } from "../data/Talents"
+import { RootState } from "../redux/Store";
 import { useSelector, useDispatch } from "react-redux";
-import { setTalentPointValue } from "../Redux/PlayerSlice";
-import { PresetTalents } from "../Data/PresetTalents";
+import { setTalentPointValue } from "../redux/PlayerSlice";
+import { PresetTalents } from "../data/PresetTalents";
 import { Talent, TalentNames } from "../Types";
 
 export default function TalentTrees() {

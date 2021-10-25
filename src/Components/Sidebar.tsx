@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux"
-import { Races } from "../Data/Races";
-import { RootState } from "../Redux/Store"
+import { Races } from "../data/Races";
+import { RootState } from "../redux/Store"
 import { StatConstant } from "../Types";
 
 

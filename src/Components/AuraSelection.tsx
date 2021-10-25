@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Auras } from "../Data/Auras";
-import { RootState } from "../Redux/Store";
-import { modifyPlayerStat, toggleAuraSelection } from '../Redux/PlayerSlice';
+import { Auras } from "../data/Auras";
+import { RootState } from "../redux/Store";
+import { modifyPlayerStat, toggleAuraSelection } from '../redux/PlayerSlice';
 import { Aura, AuraGroup, Stat } from "../Types";
 
 export default function AuraSelection() {

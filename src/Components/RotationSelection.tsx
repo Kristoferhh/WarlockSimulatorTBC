@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
-import { Rotation } from "../Data/Rotation"
-import { toggleRotationSpellSelection } from "../Redux/PlayerSlice";
-import { RootState } from "../Redux/Store"
+import { Rotation } from "../data/Rotation"
+import { toggleRotationSpellSelection } from "../redux/PlayerSlice";
+import { RootState } from "../redux/Store"
 
 export default function RotationSelection() {
   const playerStore = useSelector((state: RootState) => state.player);
