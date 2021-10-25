@@ -32,7 +32,7 @@ const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlo
 ];
 
 export default function ItemSelection() {
-  const [itemSlot, setItemSlot] = useState<ItemSlotKey>(JSON.parse(localStorage.getItem('selectedItemSlot') || JSON.stringify('mainhand')));
+  const [itemSlot, setItemSlot] = useState<ItemSlotKey>(localStorage.getItem('selectedItemSlot') as ItemSlotKey || 'mainhand');
   const [itemSubSlot, setItemSubSlot] = useState<SubSlotValue>(JSON.parse(localStorage.getItem('selectedItemSubSlot') || JSON.stringify('1')));
   const playerStore = useSelector((state: RootState) => state.player);
   const uiStore = useSelector((state: RootState) => state.ui);
@@ -101,13 +101,15 @@ export default function ItemSelection() {
     if (playerStore.selectedEnchants[slot] !== 0) {
       const enchantObj = Enchants.find(i => i.id === playerStore.selectedEnchants[slot]);
 
-      for (const [prop, value] of Object.entries(enchantObj!!)) {
-        if (playerStore.stats.hasOwnProperty(prop)) {
-          dispatch(modifyPlayerStat({
-            stat: prop as Stat,
-            value: value,
-            action: 'remove'
-          }));
+      if (enchantObj) {
+        for (const [prop, value] of Object.entries(enchantObj)) {
+          if (playerStore.stats.hasOwnProperty(prop)) {
+            dispatch(modifyPlayerStat({
+              stat: prop as Stat,
+              value: value,
+              action: 'remove'
+            }));
+          }
         }
       }
     }
@@ -296,7 +298,7 @@ export default function ItemSelection() {
                       <a
                         target='_blank'
                         rel='noreferrer'
-                        href={playerStore.selectedGems[itemSlot][item.id] && playerStore.selectedGems[itemSlot][item.id][j][1] !== 0 ? `https://tbc.wowhead.com/item=${playerStore.selectedGems[itemSlot][item.id][j][1]}` : ''}
+                        href={playerStore.selectedGems[itemSlot] && playerStore.selectedGems[itemSlot][item.id] && playerStore.selectedGems[itemSlot][item.id][j][1] !== 0 ? `https://tbc.wowhead.com/item=${playerStore.selectedGems[itemSlot][item.id][j][1]}` : ''}
                         key={j}
                         onClick={(e) => { itemSocketClickHandler(item.id.toString(), j, socket); e.preventDefault(); e.stopPropagation(); }}
                         onContextMenu={(e) => { removeGemFromSocket(item.id.toString(), j); e.preventDefault(); }}
@@ -305,7 +307,7 @@ export default function ItemSelection() {
                           width={16}
                           height={16}
                           data-color={socket}
-                          src={playerStore.selectedGems[itemSlot][item.id] && ![null, 0].includes(playerStore.selectedGems[itemSlot][item.id][j][1]) ? `${process.env.PUBLIC_URL}/img/${Gems.find(e => e.id === playerStore.selectedGems[itemSlot][item.id][j][1])?.iconName}.jpg` : `${process.env.PUBLIC_URL}/img/${Sockets.find(s => s.color === socket)!!.iconName}.jpg`}
+                          src={playerStore.selectedGems[itemSlot] && playerStore.selectedGems[itemSlot][item.id] && ![null, 0].includes(playerStore.selectedGems[itemSlot][item.id][j][1]) ? `${process.env.PUBLIC_URL}/img/${Gems.find(e => e.id === playerStore.selectedGems[itemSlot][item.id][j][1])?.iconName}.jpg` : `${process.env.PUBLIC_URL}/img/${Sockets.find(s => s.color === socket)!!.iconName}.jpg`}
                           alt={socket + ' socket'}
                         />
                       </a>
