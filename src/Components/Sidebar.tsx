@@ -48,15 +48,15 @@ export default function Sidebar() {
           </li>
           <li>
             <p className="character-stat">Crit Rating</p>
-            <p className="character-stat-val" id="character-crit-val">{Math.round(playerStore.stats.critRating)} ({Math.round((playerStore.stats.critRating / StatConstant.critRatingPerPercent + StatConstant.baseCritChancePercent) * 100) / 100 + (playerStore.talents['devastation'] || 0)}%)</p>
+            <p className="character-stat-val" id="character-crit-val">{Math.round(playerStore.stats.critRating)} ({(Math.round((playerStore.stats.critRating / StatConstant.critRatingPerPercent + StatConstant.baseCritChancePercent) * 100) / 100 + (playerStore.talents['devastation'] || 0)).toFixed(2)}%)</p>
           </li>
           <li>
             <p className="character-stat">Hit Rating</p>
-            <p className="character-stat-val" id="character-hit-val">{playerStore.stats.hitRating} ({Math.round((playerStore.stats.hitRating / StatConstant.hitRatingPerPercent) * 100) / 100}%)</p>
+            <p className="character-stat-val" id="character-hit-val">{playerStore.stats.hitRating} ({(Math.round((playerStore.stats.hitRating / StatConstant.hitRatingPerPercent) * 100) / 100).toFixed(2)}%)</p>
           </li>
           <li>
             <p className="character-stat">Haste Rating</p>
-            <p className="character-stat-val" id="character-haste-val">{playerStore.stats.hasteRating} ({Math.round((playerStore.stats.hasteRating / StatConstant.hasteRatingPerPercent) * 100) / 100}%)</p>
+            <p className="character-stat-val" id="character-haste-val">{playerStore.stats.hasteRating} ({(Math.round((playerStore.stats.hasteRating / StatConstant.hasteRatingPerPercent) * 100) / 100).toFixed(2)}%)</p>
           </li>
           <li>
             <p className="character-stat">Shadow Dmg %</p>
