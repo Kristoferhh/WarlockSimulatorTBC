@@ -324,7 +324,7 @@ export default function ItemSelection() {
                           width={16}
                           height={16}
                           data-color={socket}
-                          src={playerStore.selectedGems[itemSlot][item.id] && ![null, 0].includes(playerStore.selectedGems[itemSlot][item.id][j][1]) ? `${process.env.PUBLIC_URL}/img/${Gems.find(e => e.id === playerStore.selectedGems[itemSlot][item.id][j][1])!!.iconName}.jpg` : `${process.env.PUBLIC_URL}/img/${Sockets.find(s => s.color === socket)!!.iconName}.jpg`}
+                          src={playerStore.selectedGems[itemSlot][item.id] && ![null, 0].includes(playerStore.selectedGems[itemSlot][item.id][j][1]) ? `${process.env.PUBLIC_URL}/img/${Gems.find(e => e.id === playerStore.selectedGems[itemSlot][item.id][j][1])?.iconName}.jpg` : `${process.env.PUBLIC_URL}/img/${Sockets.find(s => s.color === socket)!!.iconName}.jpg`}
                           alt={socket + ' socket'}
                         />
                       </a>
@@ -348,7 +348,7 @@ export default function ItemSelection() {
         </tbody>
       </table>
       {
-        Enchants[getEnchantLookupKey()] != null &&
+        Enchants[getEnchantLookupKey()].length > 0 &&
           <table id="enchant-selection-table" data-type="mainhand">
           <colgroup id="item-selection-colgroup">
             <col style={{width: '20%'}} />

@@ -50,9 +50,8 @@ export default function Session() {
     }
 
     function addItemStats() {
-      console.log(playerStore.selectedGems);
       for (const [itemSlot, itemId] of Object.entries(playerStore.selectedItems)) {
-        if (itemId !== 0) {
+        if (itemId !== 0 && itemId != null) {
           const itemObj = Items.find(e => e.id === itemId)!!;
 
           for (const [stat, value] of Object.entries(itemObj)) {
