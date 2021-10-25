@@ -14,6 +14,7 @@ export default function GemSelection() {
   const dispatch = useDispatch();
 
   function gemClickHandler(gem: Gem) {
+    const itemIsEquipped = parseInt(uiState.gemSelectionTable.itemId) === selectedItemsState[ItemSlotKeyToItemSlot(false, uiState.gemSelectionTable.itemSlot, uiState.gemSelectionTable.itemSubSlot)];
     let currentItemSocketArray = selectedGemsState[uiState.gemSelectionTable.itemSlot][uiState.gemSelectionTable.itemId];
     
     // If the item doesn't have a socket array yet then initialize it to an array of ['', 0] sub-arrays.
@@ -30,8 +31,42 @@ export default function GemSelection() {
       }
     }
 
+    // If a gem is already equipped then remove the stats from it and the socket bonus
+    if (itemIsEquipped && ![null, 0].includes(currentItemSocketArray[uiState.gemSelectionTable.socketNumber][1])) {
+      GemColors.forEach((gemColor) => {
+        const g = gemColor.gems.find(e => e.id === currentItemSocketArray[uiState.gemSelectionTable.socketNumber][1]);
+
+        if (g) {
+          for (const itemArr of Object.values(Items)) {
+            const item = itemArr.find(e => e.id === parseInt(uiState.gemSelectionTable.itemId));
+
+            if (item) {
+              for (const [stat, value] of Object.entries(item.socketBonus!!!)) {
+                dispatch(modifyPlayerStat({
+                  stat: stat as Stat,
+                  value: value,
+                  action: 'remove'
+                }));
+              }
+            }
+          }
+
+          if (g.stats) {
+            for (const [stat, value] of Object.entries(g.stats)) {
+              dispatch(modifyPlayerStat({
+                stat: stat as Stat,
+                value: value,
+                action: 'remove'
+              }));
+            }
+          }
+        }
+      })
+    }
+
     currentItemSocketArray[uiState.gemSelectionTable.socketNumber] = [uiState.gemSelectionTable.socketColor, gem.id];
-    if (gem.stats && parseInt(uiState.gemSelectionTable.itemId) === selectedItemsState[ItemSlotKeyToItemSlot(false, uiState.gemSelectionTable.itemSlot, uiState.gemSelectionTable.itemSubSlot)]) {
+    // Add stats from the gem if the item it's in is equipped
+    if (gem.stats && itemIsEquipped) {
       for (const [stat, value] of Object.entries(gem.stats)) {
         dispatch(modifyPlayerStat({
           stat: stat as Stat,
@@ -48,7 +83,7 @@ export default function GemSelection() {
     }));
 
     // Add socket bonus stats if the item meets the socket requirements
-    if (itemMeetsSocketRequirements({itemId: parseInt(uiState.gemSelectionTable.itemId), socketArray: currentItemSocketArray})) {
+    if (itemIsEquipped && itemMeetsSocketRequirements({itemId: parseInt(uiState.gemSelectionTable.itemId), socketArray: currentItemSocketArray})) {
       for (const [stat, value] of Object.entries(Items[uiState.gemSelectionTable.itemSlot].find(e => e.id === parseInt(uiState.gemSelectionTable.itemId))!!.socketBonus!!)) {
         dispatch(modifyPlayerStat({
           stat: stat as Stat,
