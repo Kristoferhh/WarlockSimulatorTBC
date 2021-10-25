@@ -50,6 +50,7 @@ export default function Session() {
     }
 
     function addItemStats() {
+      console.log(playerStore.selectedGems);
       for (const [itemSlot, itemId] of Object.entries(playerStore.selectedItems)) {
         if (itemId !== 0) {
           const itemObj = Items[ItemSlotToItemSlotKey(false, itemSlot as ItemSlot)].find(e => e.id === itemId)!!;
@@ -65,8 +66,9 @@ export default function Session() {
           }
 
           // Add stats from gems in the item
-          if (playerStore.selectedGems[ItemSlotToItemSlotKey(false, itemSlot as ItemSlot)][itemId]) {
-            playerStore.selectedGems[ItemSlotToItemSlotKey(false, itemSlot as ItemSlot)][itemId].forEach((gem) => {
+          const selectedGemsItemObj = playerStore.selectedGems[ItemSlotToItemSlotKey(false, itemSlot as ItemSlot)];
+          if (selectedGemsItemObj && selectedGemsItemObj[itemId]) {
+            selectedGemsItemObj[itemId].forEach((gem) => {
               addGemStats(gem[1]);
             });
             

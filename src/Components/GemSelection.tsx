@@ -13,19 +13,24 @@ export default function GemSelection() {
   const selectedItemsState = useSelector((state: RootState) => state.player.selectedItems);
   const dispatch = useDispatch();
 
-  function gemClickHandler(gem: Gem, gemColor: GemColor) {
+  function gemClickHandler(gem: Gem) {
     let currentItemSocketArray = selectedGemsState[uiState.gemSelectionTable.itemSlot][uiState.gemSelectionTable.itemId];
     
     // If the item doesn't have a socket array yet then initialize it to an array of ['', 0] sub-arrays.
-    // The first element is the gem color (not socket color) and the second element is the gem id.
+    // The first element is the socket color (not gem color) and the second element is the gem id.
     if (currentItemSocketArray == null) {
       const itemSocketAmount = Items[uiState.gemSelectionTable.itemSlot].find(i => i.id === parseInt(uiState.gemSelectionTable.itemId))?.sockets?.length;
       currentItemSocketArray = Array(itemSocketAmount).fill(['', 0]);
     } else {
       currentItemSocketArray = JSON.parse(JSON.stringify(currentItemSocketArray));
+
+      // Return if the clicked gem is the same as the already equipped gem
+      if (currentItemSocketArray[uiState.gemSelectionTable.socketNumber][1] === gem.id) {
+        return;
+      }
     }
 
-    currentItemSocketArray[uiState.gemSelectionTable.socketNumber] = [gemColor, gem.id];
+    currentItemSocketArray[uiState.gemSelectionTable.socketNumber] = [uiState.gemSelectionTable.socketColor, gem.id];
     if (gem.stats && parseInt(uiState.gemSelectionTable.itemId) === selectedItemsState[ItemSlotKeyToItemSlot(false, uiState.gemSelectionTable.itemSlot, uiState.gemSelectionTable.itemSubSlot)]) {
       for (const [stat, value] of Object.entries(gem.stats)) {
         dispatch(modifyPlayerStat({
@@ -52,8 +57,6 @@ export default function GemSelection() {
         }));
       }
     }
-
-    dispatch(setGemSelectionTable(InitialGemSelectionTableValue));
   }
 
   return(
@@ -71,7 +74,7 @@ export default function GemSelection() {
                     data-favorited={uiState.gemPreferences.favorites.includes(gem.id)}
                     onClick={(e) => dispatch(favoriteGem(gem.id))}
                   >★</td>
-                  <td className='gem-info gem-name' onClick={(e) => { gemClickHandler(gem, gemColorArray.color); e.preventDefault(); }}>
+                  <td className='gem-info gem-name' onClick={(e) => { gemClickHandler(gem); dispatch(setGemSelectionTable(InitialGemSelectionTableValue)); e.preventDefault(); }}>
                     <img src={`${process.env.PUBLIC_URL}/img/${gem.iconName}.jpg`} alt={gem.name + ' icon'} width={20} height={20} />
                     <a href={`https://tbc.wowhead.com/item=${gem.id}`}>{gem.name}</a>
                   </td>

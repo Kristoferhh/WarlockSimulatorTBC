@@ -1,11 +1,11 @@
 import { Items } from '../Data/Items';
-import { Enchant, Item, ItemSlot, ItemSlotKey, Phase, SocketColor, Stat, SubSlotValue } from '../Types';
+import { Enchant, GemColor, Item, ItemSlot, ItemSlotKey, Phase, SocketColor, Stat, SubSlotValue } from '../Types';
 import { useState } from 'react';
 import { Enchants } from '../Data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../Redux/Store';
 import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot, setItemSocketsValue } from '../Redux/PlayerSlice';
-import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot, ItemSlotToItemSlotKey } from '../Common';
+import { getGemIconPath, itemMeetsSocketRequirements, ItemSlotKeyToItemSlot, ItemSlotToItemSlotKey } from '../Common';
 import { togglePhase, setGemSelectionTable } from '../Redux/UiSlice';
 import Profiles from './Profiles';
 import { Sockets } from '../Data/Sockets';
@@ -172,17 +172,15 @@ export default function ItemSelection() {
       // If the gem is in an equipped item then remove the gem's stats.
       if (parseInt(itemId) === playerStore.selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot)]) {
         GemColors.forEach((gemColor) => {
-          if (gemColor.color === currentItemSocketsValue[socketNumber][0]) {
-            const gem = gemColor.gems.find(e => e.id === currentItemSocketsValue[socketNumber][1])!!;
+          const gem = gemColor.gems.find(e => e.id === currentItemSocketsValue[socketNumber][1]);
             
-            if (gem.stats) {
-              for (const [stat, value] of Object.entries(gem.stats)) {
-                dispatch(modifyPlayerStat({
-                  stat: stat as Stat,
-                  value: value,
-                  action: 'remove'
-                }));
-              }
+          if (gem && gem.stats) {
+            for (const [stat, value] of Object.entries(gem.stats)) {
+              dispatch(modifyPlayerStat({
+                stat: stat as Stat,
+                value: value,
+                action: 'remove'
+              }));
             }
           }
         });
@@ -328,7 +326,7 @@ export default function ItemSelection() {
                           width={16}
                           height={16}
                           data-color={socket}
-                          src={playerStore.selectedGems[itemSlot][item.id] && playerStore.selectedGems[itemSlot][item.id][j][1] !== 0 ? `${process.env.PUBLIC_URL}/img/${GemColors.find(arr => arr.color === playerStore.selectedGems[itemSlot][item.id][j][0])?.gems.find(g => g.id === playerStore.selectedGems[itemSlot][item.id][j][1])?.iconName}.jpg` : `${process.env.PUBLIC_URL}/img/${Sockets.find(s => s.color === socket)?.iconName}.jpg`}
+                          src={playerStore.selectedGems[itemSlot][item.id] && ![null, 0].includes(playerStore.selectedGems[itemSlot][item.id][j][1]) ? `${process.env.PUBLIC_URL}/img/${getGemIconPath(playerStore.selectedGems[itemSlot][item.id][j][1])}.jpg` : `${process.env.PUBLIC_URL}/img/${Sockets.find(s => s.color === socket)!!.iconName}.jpg`}
                           alt={socket + ' socket'}
                         />
                       </a>

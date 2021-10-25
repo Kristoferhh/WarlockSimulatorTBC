@@ -1,7 +1,7 @@
 import { GemColors } from "./Data/Gems";
 import { Items } from "./Data/Items";
 import { Sockets } from "./Data/Sockets";
-import { ItemSlot, ItemSlotKey, SelectedGemsStruct } from "./Types";
+import { GemColor, ItemSlot, ItemSlotKey, SelectedGemsStruct } from "./Types";
 
 export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
   switch(itemSlot) {
@@ -95,4 +95,16 @@ export function itemMeetsSocketRequirements(params: { itemId: number, selectedGe
   }
 
   return false;
+}
+
+export function getGemIconPath(gemId: number): string {
+  for (const value of Object.values(GemColors)) {
+    for (const gem of Object.values(value.gems)) {
+      if (gem.id === gemId) {
+        return gem.iconName;
+      }
+    }
+  }
+
+  return '';
 }
