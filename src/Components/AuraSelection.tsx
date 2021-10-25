@@ -2,14 +2,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { Auras } from "../data/Auras";
 import { RootState } from "../redux/Store";
 import { modifyPlayerStat, toggleAuraSelection } from '../redux/PlayerSlice';
-import { Aura, AuraGroup, Stat } from "../Types";
+import { Aura, AuraGroupKey, Stat } from "../Types";
+import { AuraGroups } from "../data/AuraGroups";
 
 export default function AuraSelection() {
   const playerStore = useSelector((state: RootState) => state.player);
   const dispatch = useDispatch();
 
-  function auraClickHandler(auraGroup: AuraGroup, aura: Aura) {
-    dispatch(toggleAuraSelection({auraGroup: auraGroup, aura: aura}));
+  function auraClickHandler(aura: Aura) {
+    dispatch(toggleAuraSelection(aura));
 
     if (aura.stats) {
       for (const [stat, value] of Object.entries(aura.stats)) {
@@ -25,20 +26,20 @@ export default function AuraSelection() {
   return(
     <section id="buffs-and-debuffs-section">
       {
-        Auras.map((auraGroup, i) =>
+        AuraGroups.map((auraGroup, i) =>
           <div
             key={i}
-            style={{display: auraGroup.varName !== 'petBuffs' || playerStore.talents['demonicSacrifice'] === 0 || playerStore.settings['sacrificePet'] === 'no' ? '' : 'none'}}>
+            style={{display: auraGroup.heading !== AuraGroupKey.PetBuffs || playerStore.talents['demonicSacrifice'] === 0 || playerStore.settings['sacrificePet'] === 'no' ? '' : 'none'}}>
             <h3 id='buffs-heading'>{auraGroup.heading}</h3>
             <ul>
               {
-                auraGroup.auras.map((aura, j) =>
+                Auras.filter((e) => e.group === auraGroup.heading).map((aura, j) =>
                   <li
                     key={j}
                     id={aura.varName}
                     className='buffs aura'
                     data-checked={playerStore.auras[aura.varName] === true}
-                    onClick={(e) => { auraClickHandler(auraGroup, aura); e.preventDefault() }}
+                    onClick={(e) => { auraClickHandler(aura); e.preventDefault() }}
                     style={{display: (!aura.forPet || (playerStore.settings['petMode'] === '1' && (!playerStore.talents['demonicSacrifice'] || playerStore.settings['sacrificePet'] === 'no'))) ? '' : 'none'}}>
                     <a href={`https://tbc.wowhead.com/${auraGroup.type}=${aura.id}`}>
                       <img src={`${process.env.PUBLIC_URL}/img/${aura.iconName}.jpg`} alt={aura.name} />

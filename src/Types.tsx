@@ -93,6 +93,7 @@ export interface Enchant {
 export interface Aura {
   name: string,
   varName: string,
+  group: AuraGroupKey,
   id: number,
   iconName: string,
   stats?: {[key in Stat]?: number},
@@ -121,10 +122,16 @@ export interface RotationGroup {
 }
 
 export interface AuraGroup {
-  heading: string,
+  heading: AuraGroupKey,
   varName: string,
-  type: 'spell'|'item',
-  auras: Aura[]
+  type: 'spell'|'item'
+}
+
+export enum AuraGroupKey {
+  Buffs = 'Buffs',
+  Debuffs = 'Debuffs',
+  Consumables = 'Consumables',
+  PetBuffs = 'Pet Buffs (your pet also inherits group-wide auras selected above)'
 }
 
 export interface SocketBonus {

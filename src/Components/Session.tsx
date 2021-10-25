@@ -34,18 +34,16 @@ export default function Session() {
     }
 
     function addAuraStats() {
-      Auras.forEach((auraGroup) => {
-        auraGroup.auras.forEach((aura) => {
-          if (playerStore.auras[aura.varName] === true) {
-            for (const stat in aura.stats) {
-              dispatch(modifyPlayerStat({
-                stat: stat as Stat,
-                value: aura.stats[stat as Stat]!!,
-                action: 'add'
-              }));
-            }
+      Auras.forEach((aura) => {
+        if (playerStore.auras[aura.varName] === true) {
+          for (const stat in aura.stats) {
+            dispatch(modifyPlayerStat({
+              stat: stat as Stat,
+              value: aura.stats[stat as Stat]!!,
+              action: 'add'
+            }));
           }
-        });
+        }
       })
     }
 

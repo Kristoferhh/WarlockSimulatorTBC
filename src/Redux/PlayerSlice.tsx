@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Auras } from "../data/Auras";
 import { Aura, AuraGroup, RotationGroup, TalentStore, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot, Profile, InitialSelectedGems, ItemSlotKey } from "../Types";
 
 const initialPlayerState : PlayerState = {
@@ -45,23 +46,23 @@ export const PlayerSlice = createSlice({
 
       localStorage.setItem('selectedEnchants', JSON.stringify(state.selectedEnchants));
     },
-    toggleAuraSelection: (state, action: PayloadAction<{auraGroup: AuraGroup, aura: Aura}>) => {
-      const isAuraDisabled = state.auras[action.payload.aura.varName] == null || state.auras[action.payload.aura.varName] === false;
+    toggleAuraSelection: (state, action: PayloadAction<Aura>) => {
+      const isAuraDisabled = state.auras[action.payload.varName] == null || state.auras[action.payload.varName] === false;
 
       // If the aura is being toggled on and it's a unique buff like potion/food buff, then disable all other auras with that unique property as true.
       if (isAuraDisabled) {
-        if (action.payload.aura.potion)         action.payload.auraGroup.auras.filter((e) => e.potion).forEach((e)          => state.auras[e.varName] = false);
-        if (action.payload.aura.foodBuff)       action.payload.auraGroup.auras.filter((e) => e.foodBuff).forEach((e)        => state.auras[e.varName] = false);
-        if (action.payload.aura.weaponOil)      action.payload.auraGroup.auras.filter((e) => e.weaponOil).forEach((e)       => state.auras[e.varName] = false);
-        if (action.payload.aura.battleElixir)   action.payload.auraGroup.auras.filter((e) => e.battleElixir).forEach((e)    => state.auras[e.varName] = false);
-        if (action.payload.aura.guardianElixir) action.payload.auraGroup.auras.filter((e) => e.guardianElixir).forEach((e)  => state.auras[e.varName] = false);
-        if (action.payload.aura.alcohol)        action.payload.auraGroup.auras.filter((e) => e.alcohol).forEach((e)         => state.auras[e.varName] = false);
-        if (action.payload.aura.demonicRune)    action.payload.auraGroup.auras.filter((e) => e.demonicRune).forEach((e)     => state.auras[e.varName] = false);
-        if (action.payload.aura.drums)          action.payload.auraGroup.auras.filter((e) => e.drums).forEach((e)           => state.auras[e.varName] = false);
+        if (action.payload.potion)         Auras.filter((e) => e.potion).forEach((e)         => state.auras[e.varName] = false);
+        if (action.payload.foodBuff)       Auras.filter((e) => e.foodBuff).forEach((e)       => state.auras[e.varName] = false);
+        if (action.payload.weaponOil)      Auras.filter((e) => e.weaponOil).forEach((e)      => state.auras[e.varName] = false);
+        if (action.payload.battleElixir)   Auras.filter((e) => e.battleElixir).forEach((e)   => state.auras[e.varName] = false);
+        if (action.payload.guardianElixir) Auras.filter((e) => e.guardianElixir).forEach((e) => state.auras[e.varName] = false);
+        if (action.payload.alcohol)        Auras.filter((e) => e.alcohol).forEach((e)        => state.auras[e.varName] = false);
+        if (action.payload.demonicRune)    Auras.filter((e) => e.demonicRune).forEach((e)    => state.auras[e.varName] = false);
+        if (action.payload.drums)          Auras.filter((e) => e.drums).forEach((e)          => state.auras[e.varName] = false);
       }
 
       // Toggle the aura's bool property/initialize to true.
-      state.auras[action.payload.aura.varName] = state.auras[action.payload.aura.varName] == null ? true : !state.auras[action.payload.aura.varName];
+      state.auras[action.payload.varName] = state.auras[action.payload.varName] == null ? true : !state.auras[action.payload.varName];
       localStorage.setItem('auras', JSON.stringify(state.auras));
     },
     toggleRotationSpellSelection: (state, action: PayloadAction<{rotationGroup: RotationGroup, spell: Spell}>) => {
