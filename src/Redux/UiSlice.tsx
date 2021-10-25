@@ -2,9 +2,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { GemSelectionTableStruct, InitialGemSelectionTableValue, Phase, UiState } from "../Types";
 
 const initialUiState : UiState = {
-  sources: JSON.parse(localStorage.getItem('sources') || JSON.stringify({ phases: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, } })),
+  sources: JSON.parse(localStorage.getItem('sources') || JSON.stringify({ phase: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, } })),
   gemSelectionTable: InitialGemSelectionTableValue,
   gemPreferences: JSON.parse(localStorage.getItem('gemPreferences') || JSON.stringify({hidden: [], favorites: []})),
+  selectedProfile: localStorage.getItem('selectedProfile') || '',
 }
 
 export const UiSlice = createSlice({
@@ -12,7 +13,7 @@ export const UiSlice = createSlice({
   initialState: initialUiState,
   reducers: {
     togglePhase: (state, action: PayloadAction<Phase>) => {
-      state.sources.phases[action.payload] = !state.sources.phases[action.payload];
+      state.sources.phase[action.payload] = !state.sources.phase[action.payload];
       localStorage.setItem('sources', JSON.stringify(state.sources));
     },
     setGemSelectionTable: (state, action: PayloadAction<GemSelectionTableStruct>) => {
@@ -35,9 +36,13 @@ export const UiSlice = createSlice({
       }
 
       localStorage.setItem('gemPreferences', JSON.stringify(state.gemPreferences));
+    },
+    setSelectedProfile: (state, action: PayloadAction<string>) => {
+      state.selectedProfile = action.payload;
+      localStorage.setItem('selectedProfile', action.payload);
     }
   }
 });
 
-export const { togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
+export const { setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
 export default UiSlice.reducer;

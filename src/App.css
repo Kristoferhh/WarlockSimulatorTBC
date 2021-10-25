@@ -561,7 +561,7 @@ img[data-color='meta'] {
 #profiles-and-sources {
 	display: flex;
 	align-items: center;
-	width: 100%;
+	padding: 0px 40px;
 }
 
 #profiles-and-sources fieldset ul {
@@ -576,10 +576,6 @@ img[data-color='meta'] {
 	border-radius: 3px;
 }
 
-/*#settings-fieldset {
-	min-width: 213px;
-}*/
-
 .saved-profile:nth-child(1) {
 	margin-left: 0px;
 }
@@ -590,7 +586,6 @@ img[data-color='meta'] {
 
 #source-filters {
 	margin-left: auto;
-	min-width: 250px;
 }
 
 #profiles-and-sources ul li[data-checked='true'] {

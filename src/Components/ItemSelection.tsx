@@ -1,13 +1,12 @@
 import { Items } from '../data/Items';
-import { Enchant, Item, ItemSlot, ItemSlotKey, Phase, SocketColor, Stat, SubSlotValue } from '../Types';
-import { useState } from 'react';
+import { Enchant, Item, ItemSlot, ItemSlotKey, SocketColor, Stat, SubSlotValue } from '../Types';
+import React, { useState } from 'react';
 import { Enchants } from '../data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/Store';
 import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot, setItemSocketsValue } from '../redux/PlayerSlice';
-import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot, ItemSlotToItemSlotKey } from '../Common';
-import { togglePhase, setGemSelectionTable } from '../redux/UiSlice';
-import Profiles from './Profiles';
+import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from '../Common';
+import { setGemSelectionTable } from '../redux/UiSlice';
 import { Sockets } from '../data/Sockets';
 import { Gems } from '../data/Gems';
 
@@ -31,15 +30,6 @@ const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlo
   { name: 'Trinket 2', itemSlot: ItemSlotKey.Trinket, subSlot: '2' },
   { name: 'Wand', itemSlot: ItemSlotKey.Wand, subSlot: ''}
 ];
-
-const phases: {title: string, phase: Phase}[] = [
-  { title: 'Classic', phase: 0 },
-  { title: 'P1', phase: 1 },
-  { title: 'P2', phase: 2 },
-  { title: 'P3', phase: 3 },
-  { title: 'P4', phase: 4 },
-  { title: 'P5', phase: 5 },
-]
 
 export default function ItemSelection() {
   const [itemSlot, setItemSlot] = useState<ItemSlotKey>(JSON.parse(localStorage.getItem('selectedItemSlot') || JSON.stringify('mainhand')));
@@ -207,21 +197,6 @@ export default function ItemSelection() {
 
   return(
     <div id="item-selection-container">
-      <div id="profiles-and-sources">
-        <Profiles />
-
-        <fieldset id="source-filters">
-          <legend>Sources</legend>
-          <ul>
-            {
-              phases.map((phase, i) =>
-                <li key={i} data-checked={uiStore.sources.phases[phase.phase] === true} className='phase-btn' onClick={() => dispatch(togglePhase(phase.phase))}>{phase.title}</li>
-              )
-            }
-          </ul>
-        </fieldset>
-      </div>
-
       <ul id="item-slot-selection-list">
         {
           itemSlotInformation.map((slot, i) =>
@@ -264,47 +239,54 @@ export default function ItemSelection() {
         <button id='gem-options-apply-button'>Apply</button>
       </div>
       <table id="item-selection-table" data-type="mainhand" className="tablesorter" data-sortlist='[[12,1]]'>
-        <colgroup id="item-selection-colgroup">
-          <col id="hide-item-col" style={{width: '2%'}} />
-          <col style={{width: '20%'}} />
-          <col style={{width: '4%'}} />
-          <col style={{width: '13%'}} />
-          <col style={{width: '3%'}} />
-          <col style={{width: '3%'}} />
-          <col style={{width: '6%'}} />
-          <col style={{width: '6.5%'}} />
-          <col style={{width: '5%'}} />
-          <col style={{width: '3%'}} />
-          <col style={{width: '3%'}} />
-          <col style={{width: '3%'}} />
-          <col style={{width: '8%'}} />
-        </colgroup>
-        <thead>
-          <tr id="item-selection-header">
-            <th id="header-hide-item"></th>
-            <th id="header-name">Name</th>
-            <th id="header-gems"></th>
-            <th id="header-source">Source</th>
-            <th id="header-stamina">Stam</th>
-            <th id="header-intellect">Int</th>
-            <th id="header-spell-power">Spell Power</th>
-            <th id="header-shadow-power">Shadow Power</th>
-            <th id="header-fire-power">Fire Power</th>
-            <th id="header-crit">Crit</th>
-            <th id="header-hit">Hit</th>
-            <th id="header-haste">Haste</th>
-            <th id="header-dps">DPS</th>
-          </tr>
-        </thead>
+        {
+          Items.filter((e) => e.itemSlot === itemSlot && uiStore.sources.phase[e.phase] === true).length > 0 ?
+            <>
+              <colgroup id="item-selection-colgroup">
+                <col id="hide-item-col" style={{width: '2%'}} />
+                <col style={{width: '20%'}} />
+                <col style={{width: '4%'}} />
+                <col style={{width: '13%'}} />
+                <col style={{width: '3%'}} />
+                <col style={{width: '3%'}} />
+                <col style={{width: '6%'}} />
+                <col style={{width: '6.5%'}} />
+                <col style={{width: '5%'}} />
+                <col style={{width: '3%'}} />
+                <col style={{width: '3%'}} />
+                <col style={{width: '3%'}} />
+                <col style={{width: '8%'}} />
+              </colgroup>
+              <thead>
+                <tr id="item-selection-header">
+                  <th id="header-hide-item"></th>
+                  <th id="header-name">Name</th>
+                  <th id="header-gems"></th>
+                  <th id="header-source">Source</th>
+                  <th id="header-stamina">Stam</th>
+                  <th id="header-intellect">Int</th>
+                  <th id="header-spell-power">Spell Power</th>
+                  <th id="header-shadow-power">Shadow Power</th>
+                  <th id="header-fire-power">Fire Power</th>
+                  <th id="header-crit">Crit</th>
+                  <th id="header-hit">Hit</th>
+                  <th id="header-haste">Haste</th>
+                  <th id="header-dps">DPS</th>
+                </tr>
+              </thead>
+            </>
+          :
+            <h3>No items found 😱 try selecting different item sources.</h3>
+        }
         <tbody aria-live='polite'>
         {
-          Items.filter((e) => e.itemSlot === itemSlot).map((item, i) =>
+          Items.filter((e) => e.itemSlot === itemSlot && uiStore.sources.phase[e.phase] === true).map((item, i) =>
             <tr
               key={i}
               className="item-row"
               data-selected={playerStore.selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot)] === item.id}
               onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot))}
-              style={{display: uiStore.sources.phases[item.phase] === false ? 'none' : ''}}>
+            >
               <td className="hide-item-btn">❌</td>
               <td><a href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)} onClick={(e) => e.preventDefault()}>{item.name}</a></td>
               <td>
@@ -379,26 +361,25 @@ export default function ItemSelection() {
           </thead>
           <tbody aria-live='polite'>
             {
-              Enchants.filter((e) => e.itemSlot === getEnchantLookupKey()) != null &&
-                Enchants.filter((e) => e.itemSlot === getEnchantLookupKey())!!.map((enchant, i) =>
-                  <tr
-                    key={i}
-                    className="enchant-row"
-                    data-selected={playerStore.selectedEnchants[ItemSlotKeyToItemSlot(true, itemSlot, itemSubSlot)] === enchant.id}
-                    onClick={() => enchantClickHandler(enchant, ItemSlotKeyToItemSlot(true, itemSlot, itemSubSlot))}>
-                    <td><a href={'https://tbc.wowhead.com/spell=' + enchant.id} onClick={(e) => e.preventDefault()}>{enchant.name}</a></td>
-                    <td>{enchant.spellPower}</td>
-                    <td>{enchant.shadowPower}</td>
-                    <td>{enchant.firePower}</td>
-                    <td>{enchant.hitRating}</td>
-                    <td>{enchant.critRating}</td>
-                    <td>{enchant.stamina}</td>
-                    <td>{enchant.intellect}</td>
-                    <td>{enchant.mp5}</td>
-                    <td>{enchant.spellPenetration}</td>
-                    <td></td>
-                  </tr>
-                )
+              Enchants.filter((e) => e.itemSlot === getEnchantLookupKey()).map((enchant, i) =>
+                <tr
+                  key={i}
+                  className="enchant-row"
+                  data-selected={playerStore.selectedEnchants[ItemSlotKeyToItemSlot(true, itemSlot, itemSubSlot)] === enchant.id}
+                  onClick={() => enchantClickHandler(enchant, ItemSlotKeyToItemSlot(true, itemSlot, itemSubSlot))}>
+                  <td><a href={'https://tbc.wowhead.com/spell=' + enchant.id} onClick={(e) => e.preventDefault()}>{enchant.name}</a></td>
+                  <td>{enchant.spellPower}</td>
+                  <td>{enchant.shadowPower}</td>
+                  <td>{enchant.firePower}</td>
+                  <td>{enchant.hitRating}</td>
+                  <td>{enchant.critRating}</td>
+                  <td>{enchant.stamina}</td>
+                  <td>{enchant.intellect}</td>
+                  <td>{enchant.mp5}</td>
+                  <td>{enchant.spellPenetration}</td>
+                  <td></td>
+                </tr>
+              )
             }
           </tbody>
         </table>

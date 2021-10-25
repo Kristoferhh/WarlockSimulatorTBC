@@ -10,13 +10,12 @@ import DpsHistogram from './DpsHistogram';
 import ImportExport from './ImportExport';
 import GemSelection from './GemSelection';
 import ItemSelection from './ItemSelection';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/Store';
+import { useDispatch } from 'react-redux';
 import { setGemSelectionTable } from '../redux/UiSlice';
 import { InitialGemSelectionTableValue } from '../Types';
+import ProfilesAndSources from './ProfilesAndSources';
 
 export default function Main() {
-  const uiStore = useSelector((state: RootState) => state.ui);
   const dispatch = useDispatch();
 
   return (
@@ -36,6 +35,7 @@ export default function Main() {
         <DpsHistogram />
         <ImportExport />
         <GemSelection />
+        <ProfilesAndSources />
         <ItemSelection />
       </div>  
     </div>

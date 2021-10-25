@@ -351,14 +351,28 @@ export const InitialSelectedGems: SelectedGemsStruct = {
   wand: {},
 }
 
+export interface RotationStruct {
+  [key: string]: {
+    [key: string]: boolean
+  }
+}
+
+export interface SettingsStruct {
+  [key: string]: any
+}
+
+export interface AurasStruct {
+  [key: string]: boolean
+}
+
 export interface Profile {
-  auras: {[key: string]: boolean},
-  selectedGems: {[key in ItemSlot]: {[key: string]: [string, number][]}},
-  selectedItems: {[key in ItemSlot]: number},
+  auras: AurasStruct,
+  selectedGems: SelectedGemsStruct,
+  selectedItems: ItemAndEnchantStruct,
   talents: TalentStore,
-  rotation: {[key: string]: {[key: string]: boolean}},
-  selectedEnchants: {[key in ItemSlot]: number},
-  settings: {[key: string]: string}
+  rotation: RotationStruct,
+  selectedEnchants: ItemAndEnchantStruct,
+  settings: SettingsStruct
 }
 
 export interface PlayerState {
@@ -367,17 +381,18 @@ export interface PlayerState {
   selectedItems: ItemAndEnchantStruct,
   selectedEnchants: ItemAndEnchantStruct,
   selectedGems: SelectedGemsStruct,
-  auras: {[key: string]: boolean},
-  rotation: {[key: string]: {[key: string]: boolean}},
+  auras: AurasStruct,
+  rotation: RotationStruct,
   stats: PlayerStats,
-  settings: {[key: string]: any},
+  settings: SettingsStruct,
   profiles: {[key: string]: Profile},
 }
 
 export interface UiState {
-  sources: {phases: {[key in Phase]: boolean}},
+  sources: {phase: {[key in Phase]: boolean}},
   gemSelectionTable: GemSelectionTableStruct,
-  gemPreferences: {hidden: number[], favorites: number[]}
+  gemPreferences: {hidden: number[], favorites: number[]},
+  selectedProfile: string,
 }
 
 export interface GemSelectionTableStruct {
