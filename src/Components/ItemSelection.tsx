@@ -109,8 +109,7 @@ export default function ItemSelection() {
   function enchantClickHandler(enchant: Enchant, slot: ItemSlot) {
     // Remove stats from selected enchant
     if (playerStore.selectedEnchants[slot] !== 0) {
-      const enchantsKey = ItemSlotToItemSlotKey(true, slot);
-      const enchantObj = Enchants[enchantsKey === 'twohand' ? 'mainhand' : enchantsKey].find(i => i.id === playerStore.selectedEnchants[slot]);
+      const enchantObj = Enchants.find(i => i.id === playerStore.selectedEnchants[slot]);
 
       for (const [prop, value] of Object.entries(enchantObj!!)) {
         if (playerStore.stats.hasOwnProperty(prop)) {
@@ -348,7 +347,7 @@ export default function ItemSelection() {
         </tbody>
       </table>
       {
-        Enchants[getEnchantLookupKey()].length > 0 &&
+        Enchants.filter((e) => e.itemSlot === getEnchantLookupKey()).length > 0 &&
           <table id="enchant-selection-table" data-type="mainhand">
           <colgroup id="item-selection-colgroup">
             <col style={{width: '20%'}} />
@@ -380,8 +379,8 @@ export default function ItemSelection() {
           </thead>
           <tbody aria-live='polite'>
             {
-              Enchants[getEnchantLookupKey()] != null &&
-                Enchants[getEnchantLookupKey()]!!.map((enchant, i) =>
+              Enchants.filter((e) => e.itemSlot === getEnchantLookupKey()) != null &&
+                Enchants.filter((e) => e.itemSlot === getEnchantLookupKey())!!.map((enchant, i) =>
                   <tr
                     key={i}
                     className="enchant-row"

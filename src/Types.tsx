@@ -67,6 +67,7 @@ export interface Item {
 export interface Enchant {
   name: string,
   varName: string,
+  itemSlot: ItemSlotKey,
   spellPower?: number,
   hitRating?: number,
   id: number,
