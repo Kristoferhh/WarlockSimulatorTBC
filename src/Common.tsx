@@ -74,14 +74,9 @@ export function itemMeetsSocketRequirements(params: { itemId: number, selectedGe
   
       // Find the item object to get access to the item's socket array to get the socket color
       const gemColor = Gems.find(e => e.id === currentGemId)!!.color;
-      for (const itemSlot of Object.values(Items)) {
-        const item = itemSlot.find(e => e.id === params.itemId);
-
-        if (item !== undefined) {
-          if (!Sockets.find(e => e.color === item.sockets!![parseInt(key)])!!.validColors.includes(gemColor)) {
-            return false;
-          } 
-        }
+      const item = Items.find(e => e.id === params.itemId)!!;
+      if (!Sockets.find(e => e.color === item.sockets!![parseInt(key)])!!.validColors.includes(gemColor)) {
+        return false;
       }
     }
   

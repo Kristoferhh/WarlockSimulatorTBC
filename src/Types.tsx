@@ -42,6 +42,7 @@ export interface Item {
   name: string,
   varName: string,
   id: number,
+  itemSlot: ItemSlotKey,
   stamina?: number,
   intellect?: number,
   spirit?: number,

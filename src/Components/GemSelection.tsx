@@ -20,7 +20,7 @@ export default function GemSelection() {
     // If the item doesn't have a socket array yet then initialize it to an array of ['', 0] sub-arrays.
     // The first element is the socket color (not gem color) and the second element is the gem id.
     if (currentItemSocketArray == null) {
-      const itemSocketAmount = Items[uiState.gemSelectionTable.itemSlot].find(i => i.id === parseInt(uiState.gemSelectionTable.itemId))?.sockets?.length;
+      const itemSocketAmount = Items.find(i => i.id === parseInt(uiState.gemSelectionTable.itemId))?.sockets?.length;
       currentItemSocketArray = Array(itemSocketAmount).fill(['', 0]);
     } else {
       currentItemSocketArray = JSON.parse(JSON.stringify(currentItemSocketArray));
@@ -33,18 +33,13 @@ export default function GemSelection() {
 
     // If a gem is already equipped then remove the stats from it and the socket bonus
     if (itemIsEquipped && ![null, 0].includes(currentItemSocketArray[uiState.gemSelectionTable.socketNumber][1])) {
-      for (const itemArr of Object.values(Items)) {
-        const item = itemArr.find(e => e.id === parseInt(uiState.gemSelectionTable.itemId));
-
-        if (item) {
-          for (const [stat, value] of Object.entries(item.socketBonus!!!)) {
-            dispatch(modifyPlayerStat({
-              stat: stat as Stat,
-              value: value,
-              action: 'remove'
-            }));
-          }
-        }
+      const item = Items.find(e => e.id === parseInt(uiState.gemSelectionTable.itemId))!!;
+      for (const [stat, value] of Object.entries(item.socketBonus!!!)) {
+        dispatch(modifyPlayerStat({
+          stat: stat as Stat,
+          value: value,
+          action: 'remove'
+        }));
       }
 
       const gemObj = Gems.find(e => e.id === currentItemSocketArray[uiState.gemSelectionTable.socketNumber][1])!!;
@@ -79,7 +74,7 @@ export default function GemSelection() {
 
     // Add socket bonus stats if the item meets the socket requirements
     if (itemIsEquipped && itemMeetsSocketRequirements({itemId: parseInt(uiState.gemSelectionTable.itemId), socketArray: currentItemSocketArray})) {
-      for (const [stat, value] of Object.entries(Items[uiState.gemSelectionTable.itemSlot].find(e => e.id === parseInt(uiState.gemSelectionTable.itemId))!!.socketBonus!!)) {
+      for (const [stat, value] of Object.entries(Items.find(e => e.id === parseInt(uiState.gemSelectionTable.itemId))!!.socketBonus!!)) {
         dispatch(modifyPlayerStat({
           stat: stat as Stat,
           value: value,

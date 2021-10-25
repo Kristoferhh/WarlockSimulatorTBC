@@ -53,7 +53,7 @@ export default function Session() {
       console.log(playerStore.selectedGems);
       for (const [itemSlot, itemId] of Object.entries(playerStore.selectedItems)) {
         if (itemId !== 0) {
-          const itemObj = Items[ItemSlotToItemSlotKey(false, itemSlot as ItemSlot)].find(e => e.id === itemId)!!;
+          const itemObj = Items.find(e => e.id === itemId)!!;
 
           for (const [stat, value] of Object.entries(itemObj)) {
             if (playerStore.stats.hasOwnProperty(stat)) {

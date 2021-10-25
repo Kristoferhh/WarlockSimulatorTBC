@@ -51,7 +51,7 @@ export default function ItemSelection() {
   function itemClickHandler(item: Item, slot: ItemSlot) {
     // Remove stats from equipped item
     if (playerStore.selectedItems[slot] !== 0) {
-      const itemObj = Items[ItemSlotToItemSlotKey(false, slot)].find(i => i.id === playerStore.selectedItems[slot]);
+      const itemObj = Items.find(i => i.id === playerStore.selectedItems[slot]);
 
       for (const [prop, value] of Object.entries(itemObj!!)) {
         if (playerStore.stats.hasOwnProperty(prop)) {
@@ -185,7 +185,7 @@ export default function ItemSelection() {
 
         // If the socket bonus is active then remove the stats since it won't be active anymore after removing the gem
         if (itemMeetsSocketRequirements({itemId: parseInt(itemId), selectedGems: playerStore.selectedGems})) {
-          for (const [stat, value] of Object.entries(Items[itemSlot].find(e => e.id === parseInt(itemId))!!.socketBonus!!)) {
+          for (const [stat, value] of Object.entries(Items.find(e => e.id === parseInt(itemId))!!.socketBonus!!)) {
             dispatch(modifyPlayerStat({
               stat: stat as Stat,
               value: value,
@@ -299,7 +299,7 @@ export default function ItemSelection() {
         </thead>
         <tbody aria-live='polite'>
         {
-          Items[itemSlot].map((item, i) =>
+          Items.filter((e) => e.itemSlot === itemSlot).map((item, i) =>
             <tr
               key={i}
               className="item-row"
