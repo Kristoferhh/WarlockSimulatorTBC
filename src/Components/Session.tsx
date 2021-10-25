@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { itemMeetsSocketRequirements, ItemSlotToItemSlotKey } from "../Common";
 import { Auras } from "../Data/Auras";
 import { Enchants } from "../Data/Enchants";
-import { GemColors } from "../Data/Gems";
+import { Gems } from "../Data/Gems";
 import { Items } from "../Data/Items";
 import { Races } from "../Data/Races";
 import { modifyPlayerStat } from "../Redux/PlayerSlice";
@@ -108,21 +108,17 @@ export default function Session() {
     }
 
     function addGemStats(gemId: number) {
-      GemColors.forEach((gemColor) => {
-        const gem = gemColor.gems.find(g => g.id === gemId);
-
-        if (gem) {
-          if (gem.stats) {
-            for (const [stat, value] of Object.entries(gem.stats)) {
-              dispatch(modifyPlayerStat({
-                stat: stat as Stat,
-                value: value,
-                action: 'add'
-              }));
-            }
-          }
+      const gem = Gems.find(e => e.id === gemId);
+      
+      if (gem && gem.stats) {
+        for (const [stat, value] of Object.entries(gem.stats)) {
+          dispatch(modifyPlayerStat({
+            stat: stat as Stat,
+            value: value,
+            action: 'add'
+          }));
         }
-      })
+      }
     }
   }, []);
 

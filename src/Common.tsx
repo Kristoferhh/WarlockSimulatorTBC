@@ -1,4 +1,4 @@
-import { GemColors } from "./Data/Gems";
+import { Gems } from "./Data/Gems";
 import { Items } from "./Data/Items";
 import { Sockets } from "./Data/Sockets";
 import { GemColor, ItemSlot, ItemSlotKey, SelectedGemsStruct } from "./Types";
@@ -72,21 +72,15 @@ export function itemMeetsSocketRequirements(params: { itemId: number, selectedGe
         return false;
       }
   
-      // Find the gem's color, then check if that gem color is a valid color for that socket.
-      for (const gemColor of Object.values(GemColors)) {
-        const gem = gemColor.gems.find(e => e.id === currentGemId);
-  
-        if (gem) {
-          // Find the item object to get access to the item's socket array to get the socket color
-          for (const itemSlot of Object.values(Items)) {
-            const item = itemSlot.find(e => e.id === params.itemId);
+      // Find the item object to get access to the item's socket array to get the socket color
+      const gemColor = Gems.find(e => e.id === currentGemId)!!.color;
+      for (const itemSlot of Object.values(Items)) {
+        const item = itemSlot.find(e => e.id === params.itemId);
 
-            if (item !== undefined) {
-              if (!Sockets.find(e => e.color === item.sockets!![parseInt(key)])!!.validColors.includes(gemColor.color)) {
-                return false;
-              } 
-            }
-          }
+        if (item !== undefined) {
+          if (!Sockets.find(e => e.color === item.sockets!![parseInt(key)])!!.validColors.includes(gemColor)) {
+            return false;
+          } 
         }
       }
     }
@@ -95,16 +89,4 @@ export function itemMeetsSocketRequirements(params: { itemId: number, selectedGe
   }
 
   return false;
-}
-
-export function getGemIconPath(gemId: number): string {
-  for (const value of Object.values(GemColors)) {
-    for (const gem of Object.values(value.gems)) {
-      if (gem.id === gemId) {
-        return gem.iconName;
-      }
-    }
-  }
-
-  return '';
 }

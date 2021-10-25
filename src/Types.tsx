@@ -408,6 +408,7 @@ export enum GemColor {
 export interface Gem {
   name: string,
   id: number,
+  color: GemColor,
   iconName: string,
   phase: Phase,
   stats?: {[key in Stat]?: number}
