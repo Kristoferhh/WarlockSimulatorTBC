@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ItemSlotToItemSlotKey } from "../Common";
+import { itemMeetsSocketRequirements, ItemSlotToItemSlotKey } from "../Common";
 import { Auras } from "../Data/Auras";
 import { Enchants } from "../Data/Enchants";
 import { GemColors } from "../Data/Gems";
@@ -8,7 +8,7 @@ import { Items } from "../Data/Items";
 import { Races } from "../Data/Races";
 import { modifyPlayerStat } from "../Redux/PlayerSlice";
 import { RootState } from "../Redux/Store";
-import { GemColor, ItemSlot, Stat } from "../Types";
+import { ItemSlot, Stat } from "../Types";
 
 
 export default function Session() {
@@ -52,7 +52,9 @@ export default function Session() {
     function addItemStats() {
       for (const [itemSlot, itemId] of Object.entries(playerStore.selectedItems)) {
         if (itemId !== 0) {
-          for (const [stat, value] of Object.entries(Items[ItemSlotToItemSlotKey(false, itemSlot as ItemSlot)].find(e => e.id === itemId)!!)) {
+          const itemObj = Items[ItemSlotToItemSlotKey(false, itemSlot as ItemSlot)].find(e => e.id === itemId)!!;
+
+          for (const [stat, value] of Object.entries(itemObj)) {
             if (playerStore.stats.hasOwnProperty(stat)) {
               dispatch(modifyPlayerStat({
                 stat: stat as Stat,
@@ -66,7 +68,18 @@ export default function Session() {
           if (playerStore.selectedGems[ItemSlotToItemSlotKey(false, itemSlot as ItemSlot)][itemId]) {
             playerStore.selectedGems[ItemSlotToItemSlotKey(false, itemSlot as ItemSlot)][itemId].forEach((gem) => {
               addGemStats(gem[1]);
-            })
+            });
+            
+            // Add stats from socket bonus
+            if (itemMeetsSocketRequirements({itemId: itemId, selectedGems: playerStore.selectedGems})) {
+              for (const [stat, value] of Object.entries(itemObj.socketBonus!!)) {
+                dispatch(modifyPlayerStat({
+                  stat: stat as Stat,
+                  value: value,
+                  action: 'add'
+                }));
+              }
+            }
           }
         }
       }

@@ -1,4 +1,7 @@
-import { ItemSlot, ItemSlotKey } from "./Types";
+import { GemColors } from "./Data/Gems";
+import { Items } from "./Data/Items";
+import { Sockets } from "./Data/Sockets";
+import { ItemSlot, ItemSlotKey, SelectedGemsStruct } from "./Types";
 
 export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
   switch(itemSlot) {
@@ -42,4 +45,54 @@ export function ItemSlotToItemSlotKey(forEnchants: boolean, itemSlot: ItemSlot):
     case ItemSlot.twohand: return forEnchants ? ItemSlotKey.Mainhand : ItemSlotKey.Twohand;
     case ItemSlot.wand: return ItemSlotKey.Wand;
   }
+}
+
+export function itemMeetsSocketRequirements(params: { itemId: number, selectedGems?: SelectedGemsStruct, socketArray?: [string, number][] }): boolean {
+  let socketArray = params.socketArray;
+
+  // If the socketArray parameter is undefined then find the array using the selectedGems parameter instead
+  if (socketArray === undefined && params.selectedGems !== undefined) {
+    for (const itemSlotKey of Object.keys(params.selectedGems)) {
+      const itemSlot = ItemSlotToItemSlotKey(false, itemSlotKey as ItemSlot);
+      const itemGemArrays = params.selectedGems[itemSlot];
+  
+      if (itemGemArrays && itemGemArrays[params.itemId]) {
+        socketArray = itemGemArrays[params.itemId];
+        break;
+      }
+    }
+  }
+
+  if (socketArray) {
+    // Loop through the gems in the item and if any of gems don't match the socket's color or if a gem isn't equipped then return false.
+    for (const [key, value] of Object.entries(socketArray)) {
+      const currentGemId = value[1];
+  
+      if (currentGemId === 0) {
+        return false;
+      }
+  
+      // Find the gem's color, then check if that gem color is a valid color for that socket.
+      for (const gemColor of Object.values(GemColors)) {
+        const gem = gemColor.gems.find(e => e.id === currentGemId);
+  
+        if (gem) {
+          // Find the item object to get access to the item's socket array to get the socket color
+          for (const itemSlot of Object.values(Items)) {
+            const item = itemSlot.find(e => e.id === params.itemId);
+
+            if (item !== undefined) {
+              if (!Sockets.find(e => e.color === item.sockets!![parseInt(key)])!!.validColors.includes(gemColor.color)) {
+                return false;
+              } 
+            }
+          }
+        }
+      }
+    }
+  
+    return true;
+  }
+
+  return false;
 }

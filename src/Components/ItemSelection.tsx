@@ -5,7 +5,7 @@ import { Enchants } from '../Data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../Redux/Store';
 import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot, setItemSocketsValue } from '../Redux/PlayerSlice';
-import { ItemSlotKeyToItemSlot, ItemSlotToItemSlotKey } from '../Common';
+import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot, ItemSlotToItemSlotKey } from '../Common';
 import { togglePhase, setGemSelectionTable } from '../Redux/UiSlice';
 import Profiles from './Profiles';
 import { Sockets } from '../Data/Sockets';
@@ -62,6 +62,17 @@ export default function ItemSelection() {
           }));
         }
       }
+
+      // Remove stats from socket bonus if it's active
+      if (itemMeetsSocketRequirements({itemId: itemObj!!.id, selectedGems: playerStore.selectedGems})) {
+        for (const [stat, value] of Object.entries(itemObj!!.socketBonus!!)) {
+          dispatch(modifyPlayerStat({
+            stat: stat as Stat,
+            value: value,
+            action: 'remove'
+          }));
+        }
+      }
     }
 
     // If the item that was clicked on is the currently equipped item then don't add the stats since it's being unequipped
@@ -71,6 +82,17 @@ export default function ItemSelection() {
         if (playerStore.stats.hasOwnProperty(prop)) {
           dispatch(modifyPlayerStat({
             stat: prop as Stat,
+            value: value,
+            action: 'add'
+          }));
+        }
+      }
+
+      // Add stats from the socket bonus
+      if (itemMeetsSocketRequirements({itemId: item.id, selectedGems: playerStore.selectedGems})) {
+        for (const [stat, value] of Object.entries(item.socketBonus!!)) {
+          dispatch(modifyPlayerStat({
+            stat: stat as Stat,
             value: value,
             action: 'add'
           }));
@@ -164,6 +186,17 @@ export default function ItemSelection() {
             }
           }
         });
+
+        // If the socket bonus is active then remove the stats since it won't be active anymore after removing the gem
+        if (itemMeetsSocketRequirements({itemId: parseInt(itemId), selectedGems: playerStore.selectedGems})) {
+          for (const [stat, value] of Object.entries(Items[itemSlot].find(e => e.id === parseInt(itemId))!!.socketBonus!!)) {
+            dispatch(modifyPlayerStat({
+              stat: stat as Stat,
+              value: value,
+              action: 'remove'
+            }));
+          }
+        }
       }
 
       if (currentItemSocketsValue[socketNumber][1] !== 0) {

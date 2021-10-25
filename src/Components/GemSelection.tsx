@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { ItemSlotKeyToItemSlot } from "../Common";
+import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from "../Common";
 import { GemColors } from "../Data/Gems";
 import { Items } from "../Data/Items";
 import { modifyPlayerStat, setItemSocketsValue } from "../Redux/PlayerSlice";
@@ -41,6 +41,18 @@ export default function GemSelection() {
       itemSlot: uiState.gemSelectionTable.itemSlot,
       value: currentItemSocketArray
     }));
+
+    // Add socket bonus stats if the item meets the socket requirements
+    if (itemMeetsSocketRequirements({itemId: parseInt(uiState.gemSelectionTable.itemId), socketArray: currentItemSocketArray})) {
+      for (const [stat, value] of Object.entries(Items[uiState.gemSelectionTable.itemSlot].find(e => e.id === parseInt(uiState.gemSelectionTable.itemId))!!.socketBonus!!)) {
+        dispatch(modifyPlayerStat({
+          stat: stat as Stat,
+          value: value,
+          action: 'add'
+        }));
+      }
+    }
+
     dispatch(setGemSelectionTable(InitialGemSelectionTableValue));
   }
 
