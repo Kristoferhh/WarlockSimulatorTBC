@@ -6,7 +6,7 @@ import { Enchants } from "../data/Enchants";
 import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
 import { Races } from "../data/Races";
-import { modifyPlayerStat } from "../redux/PlayerSlice";
+import { modifyPlayerStat, setItemSetCount } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store";
 import { ItemSlot, Stat } from "../Types";
 
@@ -48,10 +48,13 @@ export default function Session() {
     }
 
     function addItemStats() {
+      let itemSetCounts: {[key: string]: number} = {};
+
       for (const [itemSlot, itemId] of Object.entries(playerStore.selectedItems)) {
         if (itemId !== 0 && itemId != null) {
           const itemObj = Items.find(e => e.id === itemId)!!;
 
+          // Add stats from the item
           for (const [stat, value] of Object.entries(itemObj)) {
             if (playerStore.stats.hasOwnProperty(stat)) {
               dispatch(modifyPlayerStat({
@@ -80,7 +83,20 @@ export default function Session() {
               }
             }
           }
+
+          // Increment the set id counter if the item is part of a set
+          if (itemObj.setId) {
+            itemSetCounts[itemObj.setId.toString()] = itemSetCounts[itemObj.setId.toString()] + 1 || 1;
+          }
         }
+      }
+
+      // Update the item sets state in the player store
+      for (const [setId, count] of Object.entries(itemSetCounts)) {
+        dispatch(setItemSetCount({
+          setId: setId,
+          count: count
+        }));
       }
     }
 

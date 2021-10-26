@@ -386,6 +386,7 @@ export interface PlayerState {
   stats: PlayerStats,
   settings: SettingsStruct,
   profiles: {[key: string]: Profile},
+  sets: {[key: string]: number},
 }
 
 export interface UiState {

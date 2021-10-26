@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux"
 import { Races } from "../data/Races";
+import { Sets } from "../data/Sets";
 import { RootState } from "../redux/Store"
 import { StatConstant } from "../Types";
 
@@ -82,7 +83,15 @@ export default function Sidebar() {
 
         <ul id="sidebar-sets">
           <li><h3>Set Bonuses</h3></li>
-          <li className="sidebar-set-bonus">Plagueheart Raiment (4)</li>
+          {
+            Object.entries(playerStore.sets).map((set, i) =>
+              // Show the set only if at least one bonus is active from it
+              Sets.find(e => e.setId === parseInt(set[0])) != null && set[1] >= Sets.find(e => e.setId === parseInt(set[0]))!.bonuses[0] &&
+                <li key={i} className="sidebar-set-bonus">
+                  <a href={`https://tbc.wowhead.com/item-set=${Sets.find(e => e.setId === parseInt(set[0]))?.setId}`}>{Sets.find(e => e.setId === parseInt(set[0]))?.name} ({set[1]})</a>
+                </li>
+            )
+          }
         </ul>
 
         <div id="sidebar-simulation-selection">

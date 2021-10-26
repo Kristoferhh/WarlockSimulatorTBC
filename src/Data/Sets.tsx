@@ -1,52 +1,62 @@
-export const Sets = {
+export const Sets: {name: string, setId: number, bonuses: number[]}[] = [
   // T3
-  529: {
+  {
     name: 'Plagueheart Raiment',
+    setId: 529,
     bonuses: [2, 4, 6, 8]
   },
   // Spellfire (Tailoring)
-  552: {
+  {
     name: 'Wrath of Spellfire',
+    setId: 552,
     bonuses: [3]
   },
   // Frozen Shadoweave (Tailoring)
-  553: {
+  {
     name: "Shadow's Embrace",
+    setId: 553,
     bonuses: [3]
   },
   // Spellstrike (Tailoring)
-  559: {
+  {
     name: 'Spellstrike Infusion',
+    setId: 559,
     bonuses: [2]
   },
   // Dungeon Set
-  644: {
+  {
     name: 'Oblivion Raiment',
+    setId: 644,
     bonuses: [2, 4]
   },
   // T4
-  645: {
+  {
     name: 'Voidheart Raiment',
+    setId: 645,
     bonuses: [2, 4]
   },
   // T5
-  646: {
+  {
     name: 'Corruptor Raiment',
+    setId: 646,
     bonuses: [2, 4]
   },
   // Dungeon Set
-  658: {
+  {
     name: 'Mana-Etched Regalia',
+    setId: 658,
     bonuses: [2, 4]
   },
   // The Twin Stars
-  667: {
+  {
     name: 'The Twin Stars',
+    setId: 667,
     bonuses: [2]
   },
   // T6
-  670: {
+  {
     name: 'Malefic Raiment',
+    setId: 670,
     bonuses: [2, 4]
   }
-}
+]

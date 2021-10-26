@@ -13,6 +13,7 @@ const initialPlayerState : PlayerState = {
   stats: InitialPlayerStats,
   settings: JSON.parse(localStorage.getItem('settings') || JSON.stringify(InitialSettings)),
   profiles: JSON.parse(localStorage.getItem('profiles') || '{}'),
+  sets: {},
 }
 
 function getRemainingTalentPoints(talents: TalentStore) {
@@ -120,9 +121,12 @@ export const PlayerSlice = createSlice({
     setItemSocketsValue: (state, action: PayloadAction<{itemId: string, itemSlot: ItemSlotKey, value: [string, number][]}>) => {
       state.selectedGems[action.payload.itemSlot][action.payload.itemId] = action.payload.value;
       localStorage.setItem('selectedGems', JSON.stringify(state.selectedGems));
+    },
+    setItemSetCount: (state, action: PayloadAction<{setId: string, count: number}>) => {
+      state.sets[action.payload.setId] = action.payload.count;
     }
   }
 });
 
-export const { loadProfile, setItemSocketsValue, setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection, modifyPlayerStat, modifySettingValue, setProfile } = PlayerSlice.actions;
+export const { setItemSetCount, loadProfile, setItemSocketsValue, setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection, modifyPlayerStat, modifySettingValue, setProfile } = PlayerSlice.actions;
 export default PlayerSlice.reducer;
