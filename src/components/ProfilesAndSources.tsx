@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loadProfile, setProfile } from "../redux/PlayerSlice";
+import { deleteProfile, loadProfile, renameProfile, setProfile } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store";
 import { setSelectedProfile, togglePhase } from "../redux/UiSlice";
 import { Phase, Profile } from "../Types";
@@ -21,9 +21,11 @@ export default function ProfilesAndSources() {
   const dispatch = useDispatch();
   const [profileName, setProfileName] = useState('');
 
-  function callSetProfile() {
+  function callSetProfile(newProfile: boolean) {
+    const name = newProfile ? profileName.replaceAll("'", "") : selectedProfileState;
+
     dispatch(setProfile({
-      name: profileName,
+      name: name,
       profile: {
         auras: playerStore.auras,
         items: playerStore.selectedItems,
@@ -34,6 +36,11 @@ export default function ProfilesAndSources() {
         simSettings: playerStore.settings,
       }
     }));
+
+    if (newProfile) {
+      dispatch(setSelectedProfile(name));
+      setProfileName('');
+    }
   }
 
   function profileClickHandler(params: [string, Profile]) {
@@ -41,16 +48,50 @@ export default function ProfilesAndSources() {
     dispatch(loadProfile(params[1]));
   }
 
+  function deleteProfileHandler() {
+    if (window.confirm(`Are you sure you want to delete profile '${selectedProfileState}'?`)) {
+      dispatch(deleteProfile(selectedProfileState));
+    }
+  }
+
+  function renameProfileHandler() {
+    const newName = prompt(`Enter the new name for profile '${selectedProfileState}'`)?.replaceAll("'", "");
+
+    if (newName != null && newName.length > 0 && newName !== selectedProfileState) {
+      dispatch(renameProfile({
+        oldName: selectedProfileState,
+        newName: newName
+      }));
+      dispatch(setSelectedProfile(newName));
+    }
+  }
+
   return (
     <div id="profiles-and-sources">
       <fieldset id="profile-fieldset">
         <legend>Profile Options</legend>
-        <input placeholder='E.g. "P3 Shadow BiS"' type="text" onChange={(e) => setProfileName(e.target.value)} name="profileName" />
-        <button id="save-new-profile-button" onClick={(e) => callSetProfile()} disabled={profileName.length === 0}>Save New Profile</button>
+        <input placeholder='E.g. "P3 Shadow BiS"' type="text" value={profileName} onChange={(e) => setProfileName(e.target.value)} name="profileName" />
+        <button
+          id="save-new-profile-button"
+          onClick={(e) => callSetProfile(true)}
+          disabled={profileName.replaceAll("'", "").length === 0}
+        >Save New Profile</button>
         <div id="update-profile-div">
-          <button style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }} id="save-profile-button">Save</button>
-          <button style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }} id="delete-profile-button">Delete</button>
-          <button style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }} id="rename-profile-button">Rename</button>
+          <button
+            style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }}
+            id="save-profile-button"
+            onClick={(e) => callSetProfile(false)}
+          >Save</button>
+          <button
+            style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }}
+            id="delete-profile-button"
+            onClick={(e) => deleteProfileHandler()}
+          >Delete</button>
+          <button
+            style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }}
+            id="rename-profile-button"
+            onClick={(e) => renameProfileHandler()}
+          >Rename</button>
           <button id="import-export-button">Import/Export</button>
         </div>
       </fieldset>

@@ -103,8 +103,8 @@ export const PlayerSlice = createSlice({
       localStorage.setItem('settings', JSON.stringify(state.settings));
     },
     setProfile: (state, action: PayloadAction<{profile: Profile, name: string}>) => {
-      // Sanitize the name
       state.profiles[action.payload.name] = action.payload.profile;
+      localStorage.setItem('profiles', JSON.stringify(state.profiles));
     },
     loadProfile: (state, action: PayloadAction<Profile>) => {
       localStorage.setItem('auras', JSON.stringify(action.payload.auras));
@@ -122,9 +122,25 @@ export const PlayerSlice = createSlice({
     },
     setItemSetCount: (state, action: PayloadAction<{setId: string, count: number}>) => {
       state.sets[action.payload.setId] = action.payload.count;
+    },
+    deleteProfile: (state, action: PayloadAction<string>) => {
+      if (state.profiles[action.payload]) {
+        delete state.profiles[action.payload];
+        localStorage.setItem('profiles', JSON.stringify(state.profiles));
+        localStorage.removeItem('selectedProfile');
+      }
+    },
+    renameProfile: (state, action: PayloadAction<{oldName: string, newName: string}>) => {
+      if (state.profiles[action.payload.oldName]) {
+        // Create a copy of the old profile with the new name and delete the old profile.
+        state.profiles[action.payload.newName] = state.profiles[action.payload.oldName];
+        delete state.profiles[action.payload.oldName];
+        localStorage.setItem('profiles', JSON.stringify(state.profiles));
+        localStorage.setItem('selectedProfile', action.payload.newName);
+      }
     }
   }
 });
 
-export const { setItemSetCount, loadProfile, setItemSocketsValue, setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection, modifyPlayerStat, modifySettingValue, setProfile } = PlayerSlice.actions;
+export const { renameProfile, deleteProfile, setItemSetCount, loadProfile, setItemSocketsValue, setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection, modifyPlayerStat, modifySettingValue, setProfile } = PlayerSlice.actions;
 export default PlayerSlice.reducer;
