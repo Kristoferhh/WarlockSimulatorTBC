@@ -263,9 +263,9 @@ export default function ItemSelection() {
             <>
               <colgroup id="item-selection-colgroup">
                 <col id="hide-item-col" style={{width: '2%'}} />
-                <col style={{width: '20%'}} />
+                <col style={{width: '18%'}} />
                 <col style={{width: '4%'}} />
-                <col style={{width: '13%'}} />
+                <col style={{width: '15%'}} />
                 <col style={{width: '3%'}} />
                 <col style={{width: '3%'}} />
                 <col style={{width: '6%'}} />

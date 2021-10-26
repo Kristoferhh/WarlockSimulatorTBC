@@ -627,6 +627,7 @@ img[data-color='meta'] {
 #item-selection-table, #enchant-selection-table {
 	width: 100%;
 	border-spacing: 0px;
+	font-size: 16px;
 }
 
 #enchant-selection-table {
