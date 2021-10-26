@@ -10,14 +10,18 @@ export default function SettingsDisplay() {
     dispatch(modifySettingValue({setting: setting, value: value}));
   }
 
+  function shouldDisplayPetSetting(requiresAggressivePet: boolean) {
+    return (!playerStore.talents['demonicSacrifice'] || playerStore.settings['sacrificePet'] === 'no') && (!requiresAggressivePet || playerStore.settings['petMode'] === '1');
+  }
+
   return(
     <section id="sim-settings">
       <fieldset>
         <legend>Rotation Options</legend>
-        <input onChange={(e) => settingModifiedHandler('rotationOption', 'simChooses')} type='radio' name='rotationOption' value='simChooses' checked={playerStore.settings['rotationOption'] === 'simChooses'} />
+        <input onChange={(e) => settingModifiedHandler('rotationOption', e.target.value)} type='radio' name='rotationOption' value='simChooses' checked={playerStore.settings['rotationOption'] === 'simChooses'} />
         <label htmlFor='simChooses'>Simulation chooses spells for me</label>
         <br/>
-        <input onChange={(e) => settingModifiedHandler('rotationOption', 'userChooses')} type='radio' name='rotationOption' value='userChooses' checked={playerStore.settings['rotationOption'] === 'userChooses'} />
+        <input onChange={(e) => settingModifiedHandler('rotationOption', e.target.value)} type='radio' name='rotationOption' value='userChooses' checked={playerStore.settings['rotationOption'] === 'userChooses'} />
         <label htmlFor='userChooses'>Choose spells myself</label>
       </fieldset>
       <ul>
@@ -113,7 +117,7 @@ export default function SettingsDisplay() {
           </select>
         </li>
         {
-          (!playerStore.talents['demonicSacrifice'] || playerStore.settings['sacrificePet'] === 'no') &&
+          shouldDisplayPetSetting(false) &&
             <li id="petMode">
               <label className="settings-left" htmlFor="petMode">Pet mode</label>
               <select className="settings-right" name="petMode" onChange={(e) => settingModifiedHandler('petMode', e.target.value)} value={playerStore.settings['petMode']}>
@@ -123,7 +127,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.settings['petMode'] === '1' && (!playerStore.talents['demonicSacrifice'] || playerStore.settings['sacrificePet'] === 'no') &&
+          shouldDisplayPetSetting(true) &&
             <li id="prepopBlackBook">
               <label className="settings-left" htmlFor="prepopBlackBook">Prepop Black Book?</label>
               <select className="settings-right" name="prepopBlackBook" onChange={(e) => settingModifiedHandler('prepopBlackBook', e.target.value)} value={playerStore.settings['prepopBlackBook']}>
@@ -154,7 +158,7 @@ export default function SettingsDisplay() {
         }
         {
           // Display if pet is succubus, pet is aggressive, and pet is not being sacrificed.
-          playerStore.settings['petChoice'] === '2' && playerStore.settings['petMode'] === '1' && (!playerStore.talents['demonicSacrifice'] || playerStore.settings['sacrificePet'] === 'no') &&
+          shouldDisplayPetSetting(true) && playerStore.settings['petChoice'] === '2' &&
             <li id="lashOfPainUsage">
               <label className='settings-left' htmlFor='lashOfPainUsage'>When to use Lash of Pain?</label>
               <select className='settings-right' name='lashOfPainUsage' onChange={(e) => settingModifiedHandler('lashOfPainUsage', e.target.value)} value={playerStore.settings['lashOfPainUsage']}>
@@ -164,7 +168,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          (!playerStore.talents['demonicSacrifice'] || playerStore.settings['sacrificePet'] === 'no') && playerStore.settings['petMode'] === '1' &&
+          shouldDisplayPetSetting(true) &&
             <li id="enemyArmor">
               <label className="settings-left" htmlFor="enemyArmor">Enemy Armor</label>
               <input className="settings-right" onChange={(e) => settingModifiedHandler('enemyArmor', e.target.value)} value={playerStore.settings['enemyArmor']} type="number" min='0' max='10000' name="enemyArmor" />
@@ -341,7 +345,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['faerieFire'] &&
+          playerStore.auras['faerieFire'] && shouldDisplayPetSetting(true) &&
             <li id='improvedFaerieFire'>
               <label className='settings-left' htmlFor="improvedFaerieFire">Improved Faerie Fire?</label>
               <select className='settings-right' name='improvedFaerieFire' onChange={(e) => settingModifiedHandler('improvedFaerieFire', e.target.value)} value={playerStore.settings['improvedFaerieFire']}>
@@ -351,7 +355,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['exposeArmor'] &&
+          playerStore.auras['exposeArmor'] && shouldDisplayPetSetting(true) &&
             <li id='improvedExposeArmor'>
               <label className='settings-left' htmlFor="improvedExposeArmor">Improved Expose Armor?</label>
               <select className='settings-right' name='improvedExposeArmor' onChange={(e) => settingModifiedHandler('improvedExposeArmor', e.target.value)} value={playerStore.settings['improvedExposeArmor']}>
@@ -362,7 +366,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['exposeWeakness'] &&
+          playerStore.auras['exposeWeakness'] && shouldDisplayPetSetting(true) &&
             <div>
               <li id='survivalHunterAgility'>
                 <label className="settings-left" htmlFor="survivalHunterAgility">Survival Hunter Agility</label>

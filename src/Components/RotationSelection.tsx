@@ -13,7 +13,7 @@ export default function RotationSelection() {
       <ul id="rotation-list">
         {
           Rotation.map((rotationGroup, i) =>
-            <div key={i} style={{display: rotationGroup.varName !== 'curse' && playerStore.settings['rotationOption'] === 'userChooses' ? 'none' : ''}}>
+            <div key={i} style={{display: rotationGroup.varName !== 'curse' && playerStore.settings['rotationOption'] === 'simChooses' ? 'none' : ''}}>
               <h4>{rotationGroup.header}</h4>
               {
                 rotationGroup.spells.map((spell, j) =>
