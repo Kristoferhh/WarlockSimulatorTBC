@@ -6,6 +6,7 @@ const initialUiState : UiState = {
   gemSelectionTable: InitialGemSelectionTableValue,
   gemPreferences: JSON.parse(localStorage.getItem('gemPreferences') || JSON.stringify({hidden: [], favorites: []})),
   selectedProfile: localStorage.getItem('selectedProfile') || '',
+  importExportWindowVisible: false,
 }
 
 export const UiSlice = createSlice({
@@ -40,9 +41,12 @@ export const UiSlice = createSlice({
     setSelectedProfile: (state, action: PayloadAction<string>) => {
       state.selectedProfile = action.payload;
       localStorage.setItem('selectedProfile', action.payload);
+    },
+    setImportExportWindowVisibility: (state, action: PayloadAction<boolean>) => {
+      state.importExportWindowVisible = action.payload;
     }
   }
 });
 
-export const { setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
+export const { setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
 export default UiSlice.reducer;

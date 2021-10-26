@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProfile, loadProfile, renameProfile, setProfile } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store";
-import { setSelectedProfile, togglePhase } from "../redux/UiSlice";
+import { setImportExportWindowVisibility, setSelectedProfile, togglePhase } from "../redux/UiSlice";
 import { Phase, Profile } from "../Types";
 
 const phases: {title: string, phase: Phase}[] = [
@@ -92,7 +92,7 @@ export default function ProfilesAndSources() {
             id="rename-profile-button"
             onClick={(e) => renameProfileHandler()}
           >Rename</button>
-          <button id="import-export-button">Import/Export</button>
+          <button id="import-export-button" onClick={(e) => dispatch(setImportExportWindowVisibility(true))}>Import/Export</button>
         </div>
       </fieldset>
       <fieldset id="saved-profiles" style={{ display: Object.keys(playerStore.profiles).length === 0 ? 'none' : '' }}>

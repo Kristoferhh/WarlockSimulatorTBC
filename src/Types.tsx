@@ -404,6 +404,7 @@ export interface UiState {
   gemSelectionTable: GemSelectionTableStruct,
   gemPreferences: {hidden: number[], favorites: number[]},
   selectedProfile: string,
+  importExportWindowVisible: boolean,
 }
 
 export interface GemSelectionTableStruct {
