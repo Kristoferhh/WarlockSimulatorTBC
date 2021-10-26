@@ -112,13 +112,16 @@ export default function SettingsDisplay() {
             <option value="yes">Yes</option>
           </select>
         </li>
-        <li id="petMode">
-          <label className="settings-left" htmlFor="petMode">Pet mode</label>
-          <select className="settings-right" name="petMode" onChange={(e) => settingModifiedHandler('petMode', e.target.value)} value={playerStore.settings['petMode']}>
-            <option value="0">Passive</option>
-            <option value="1">Aggressive</option>
-          </select>
-        </li>
+        {
+          (!playerStore.talents['demonicSacrifice'] || playerStore.settings['sacrificePet'] === 'no') &&
+            <li id="petMode">
+              <label className="settings-left" htmlFor="petMode">Pet mode</label>
+              <select className="settings-right" name="petMode" onChange={(e) => settingModifiedHandler('petMode', e.target.value)} value={playerStore.settings['petMode']}>
+                <option value="0">Passive</option>
+                <option value="1">Aggressive</option>
+              </select>
+            </li>
+        }
         {
           playerStore.settings['petMode'] === '1' && (!playerStore.talents['demonicSacrifice'] || playerStore.settings['sacrificePet'] === 'no') &&
             <li id="prepopBlackBook">
@@ -160,10 +163,13 @@ export default function SettingsDisplay() {
               </select>
             </li>
         }
-        <li id="enemyArmor">
-          <label className="settings-left" htmlFor="enemyArmor">Enemy Armor</label>
-          <input className="settings-right" onChange={(e) => settingModifiedHandler('enemyArmor', e.target.value)} value={playerStore.settings['enemyArmor']} type="number" min='0' max='10000' name="enemyArmor" />
-        </li>
+        {
+          (!playerStore.talents['demonicSacrifice'] || playerStore.settings['sacrificePet'] === 'no') && playerStore.settings['petMode'] === '1' &&
+            <li id="enemyArmor">
+              <label className="settings-left" htmlFor="enemyArmor">Enemy Armor</label>
+              <input className="settings-right" onChange={(e) => settingModifiedHandler('enemyArmor', e.target.value)} value={playerStore.settings['enemyArmor']} type="number" min='0' max='10000' name="enemyArmor" />
+            </li>
+        }
         {
           playerStore.auras['curseOfTheElements'] === true &&
             <li id="improvedCurseOfTheElements">

@@ -71,10 +71,13 @@ export default function Sidebar() {
             <p className="character-stat">MP5</p>
             <p className="character-stat-val" id="character-mp5-val">{playerStore.stats.mp5}</p>
           </li>
-          <li>
-            <p className="character-stat">Enemy Armor</p>
-            <p className="character-stat-val" id="enemy-armor-val">{playerStore.stats.enemyArmor}</p>
-          </li>
+          {
+            (!playerStore.talents['demonicSacrifice'] || playerStore.settings['sacrificePet'] === 'no') && playerStore.settings['petMode'] === '1' &&
+              <li>
+                <p className="character-stat">Enemy Armor</p>
+                <p className="character-stat-val" id="enemy-armor-val">{playerStore.stats.enemyArmor}</p>
+              </li>
+          }
           {/*<li>
             <p className="character-stat">Spell Penetration</p>
             <p className="character-stat-val" id="character-spell-pen-val"></p>
@@ -88,7 +91,7 @@ export default function Sidebar() {
               // Show the set only if at least one bonus is active from it
               Sets.find(e => e.setId === parseInt(set[0])) != null && set[1] >= Sets.find(e => e.setId === parseInt(set[0]))!.bonuses[0] &&
                 <li key={i} className="sidebar-set-bonus">
-                  <a href={`https://tbc.wowhead.com/item-set=${Sets.find(e => e.setId === parseInt(set[0]))?.setId}`}>{Sets.find(e => e.setId === parseInt(set[0]))?.name} ({set[1]})</a>
+                  <a target='_blank' rel='noreferrer' href={`https://tbc.wowhead.com/item-set=${Sets.find(e => e.setId === parseInt(set[0]))?.setId}`}>{Sets.find(e => e.setId === parseInt(set[0]))?.name} ({set[1]})</a>
                 </li>
             )
           }
