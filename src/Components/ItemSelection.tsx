@@ -263,14 +263,14 @@ export default function ItemSelection() {
             <>
               <colgroup id="item-selection-colgroup">
                 <col id="hide-item-col" style={{width: '2%'}} />
-                <col style={{width: '18%'}} />
-                <col style={{width: '4%'}} />
-                <col style={{width: '15%'}} />
-                <col style={{width: '3%'}} />
-                <col style={{width: '3%'}} />
-                <col style={{width: '6%'}} />
-                <col style={{width: '6.5%'}} />
+                <col />
                 <col style={{width: '5%'}} />
+                <col style={{width: '20%'}} />
+                <col style={{width: '3%'}} />
+                <col style={{width: '3%'}} />
+                <col style={{width: '8%'}} />
+                <col style={{width: '4%'}} />
+                <col style={{width: '4%'}} />
                 <col style={{width: '3%'}} />
                 <col style={{width: '3%'}} />
                 <col style={{width: '3%'}} />
@@ -285,8 +285,8 @@ export default function ItemSelection() {
                   <th id="header-stamina">Stam</th>
                   <th id="header-intellect">Int</th>
                   <th id="header-spell-power">Spell Power</th>
-                  <th id="header-shadow-power">Shadow Power</th>
-                  <th id="header-fire-power">Fire Power</th>
+                  <th id="header-shadow-power">Shadow</th>
+                  <th id="header-fire-power">Fire</th>
                   <th id="header-crit">Crit</th>
                   <th id="header-hit">Hit</th>
                   <th id="header-haste">Haste</th>
@@ -309,12 +309,12 @@ export default function ItemSelection() {
                 onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot))}
               >
                 <td className="hide-item-btn">❌</td>
-                <td>
+                <td className={item.quality + ' item-row-name'}>
                   <a
                     href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)}
                     onClick={(e) => e.preventDefault()}
-                    className={item.quality}
-                  >{item.name}</a>
+                  ></a>
+                  {item.name}
                 </td>
                 <td>
                   <div>
@@ -394,12 +394,12 @@ export default function ItemSelection() {
                   className="enchant-row"
                   data-selected={playerStore.selectedEnchants[ItemSlotKeyToItemSlot(true, itemSlot, itemSubSlot)] === enchant.id}
                   onClick={() => enchantClickHandler(enchant, ItemSlotKeyToItemSlot(true, itemSlot, itemSubSlot))}>
-                  <td>
+                  <td className={enchant.quality + ' enchant-row-name'}>
                     <a
                       href={'https://tbc.wowhead.com/spell=' + enchant.id}
                       onClick={(e) => e.preventDefault()}
-                      className={enchant.quality}
-                    >{enchant.name}</a>
+                    ></a>
+                    {enchant.name}
                     </td>
                   <td>{enchant.spellPower}</td>
                   <td>{enchant.shadowPower}</td>
