@@ -309,7 +309,13 @@ export default function ItemSelection() {
                 onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot))}
               >
                 <td className="hide-item-btn">❌</td>
-                <td><a href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)} onClick={(e) => e.preventDefault()}>{item.name}</a></td>
+                <td>
+                  <a
+                    href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)}
+                    onClick={(e) => e.preventDefault()}
+                    className={item.quality}
+                  >{item.name}</a>
+                </td>
                 <td>
                   <div>
                     {
@@ -388,7 +394,13 @@ export default function ItemSelection() {
                   className="enchant-row"
                   data-selected={playerStore.selectedEnchants[ItemSlotKeyToItemSlot(true, itemSlot, itemSubSlot)] === enchant.id}
                   onClick={() => enchantClickHandler(enchant, ItemSlotKeyToItemSlot(true, itemSlot, itemSubSlot))}>
-                  <td><a href={'https://tbc.wowhead.com/spell=' + enchant.id} onClick={(e) => e.preventDefault()}>{enchant.name}</a></td>
+                  <td>
+                    <a
+                      href={'https://tbc.wowhead.com/spell=' + enchant.id}
+                      onClick={(e) => e.preventDefault()}
+                      className={enchant.quality}
+                    >{enchant.name}</a>
+                    </td>
                   <td>{enchant.spellPower}</td>
                   <td>{enchant.shadowPower}</td>
                   <td>{enchant.firePower}</td>

@@ -697,9 +697,14 @@ img[data-color='meta'] {
 }
 
 .item-row a, .enchant-row a, .sidebar-set-bonus a {
-	color: #fff;
 	text-decoration: none;
 }
+
+.legendary 	{ color: #ff8000 }
+.epic 		{ color: #a335ee }
+.rare 		{ color: #0070dd }
+.uncommon 	{ color: #1eff00 }
+.common 	{ color: #ffffff }
 
 table.dataTable tbody tr {
 	background-color: #272727 !important;
@@ -778,7 +783,7 @@ body {
 	margin: 0px !important;
 	padding: 0px !important;
 	color: white;
-	font-family: Open Sans,sans-serif;
+	font-family: Open Sans, sans-serif;
 }
 
 @media screen and (max-width: 1830px) {

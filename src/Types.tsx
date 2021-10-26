@@ -43,6 +43,7 @@ export interface Item {
   varName: string,
   id: number,
   itemSlot: ItemSlotKey,
+  quality: Quality,
   stamina?: number,
   intellect?: number,
   spirit?: number,
@@ -68,6 +69,7 @@ export interface Enchant {
   name: string,
   varName: string,
   itemSlot: ItemSlotKey,
+  quality: Quality,
   spellPower?: number,
   hitRating?: number,
   id: number,
@@ -397,6 +399,14 @@ export interface PlayerState {
   settings: SettingsStruct,
   profiles: {[key: string]: Profile},
   sets: {[key: string]: number},
+}
+
+export enum Quality {
+  Legendary = 'legendary',
+  Epic = 'epic',
+  Rare = 'rare',
+  Uncommon = 'uncommon',
+  Common = 'common'
 }
 
 export interface UiState {
