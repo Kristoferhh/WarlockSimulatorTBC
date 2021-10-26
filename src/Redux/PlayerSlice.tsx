@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { getRemainingTalentPoints } from "../Common";
 import { Auras } from "../data/Auras";
-import { Aura, RotationGroup, TalentStore, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot, Profile, InitialSelectedGems, ItemSlotKey } from "../Types";
+import { Aura, RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot, Profile, InitialSelectedGems, ItemSlotKey } from "../Types";
 
 const initialPlayerState : PlayerState = {
   talents: JSON.parse(localStorage.getItem('talents') || '{}'),
@@ -14,10 +15,6 @@ const initialPlayerState : PlayerState = {
   settings: JSON.parse(localStorage.getItem('settings') || JSON.stringify(InitialSettings)),
   profiles: JSON.parse(localStorage.getItem('profiles') || '{}'),
   sets: {},
-}
-
-function getRemainingTalentPoints(talents: TalentStore) {
-  return 61 - Object.values<number>(talents).reduce((a, b) => a + b, 0); // 61 available talent points at lvl 70
 }
 
 export const PlayerSlice = createSlice({
@@ -110,13 +107,14 @@ export const PlayerSlice = createSlice({
       state.profiles[action.payload.name] = action.payload.profile;
     },
     loadProfile: (state, action: PayloadAction<Profile>) => {
-      state.auras = action.payload.auras;
-      state.rotation = action.payload.rotation;
-      state.selectedItems = action.payload.selectedItems;
-      state.selectedGems = action.payload.selectedGems;
-      state.selectedEnchants = action.payload.selectedEnchants;
-      state.settings = action.payload.settings;
-      state.talents = action.payload.talents;
+      localStorage.setItem('auras', JSON.stringify(action.payload.auras));
+      localStorage.setItem('rotation', JSON.stringify(action.payload.rotation));
+      localStorage.setItem('selectedItems', JSON.stringify(action.payload.items));
+      localStorage.setItem('selectedGems', JSON.stringify(action.payload.gems));
+      localStorage.setItem('selectedEnchants', JSON.stringify(action.payload.enchants));
+      localStorage.setItem('settings', JSON.stringify(action.payload.simSettings));
+      localStorage.setItem('talents', JSON.stringify(action.payload.talents));
+      window.location.reload();
     },
     setItemSocketsValue: (state, action: PayloadAction<{itemId: string, itemSlot: ItemSlotKey, value: [string, number][]}>) => {
       state.selectedGems[action.payload.itemSlot][action.payload.itemId] = action.payload.value;

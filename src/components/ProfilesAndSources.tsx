@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setProfile } from "../redux/PlayerSlice";
+import { loadProfile, setProfile } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store";
 import { setSelectedProfile, togglePhase } from "../redux/UiSlice";
 import { Phase, Profile } from "../Types";
@@ -26,18 +26,19 @@ export default function ProfilesAndSources() {
       name: profileName,
       profile: {
         auras: playerStore.auras,
-        selectedItems: playerStore.selectedItems,
-        selectedEnchants: playerStore.selectedEnchants,
-        selectedGems: playerStore.selectedGems,
+        items: playerStore.selectedItems,
+        enchants: playerStore.selectedEnchants,
+        gems: playerStore.selectedGems,
         talents: playerStore.talents,
         rotation: playerStore.rotation,
-        settings: playerStore.settings
+        simSettings: playerStore.settings,
       }
     }));
   }
 
   function profileClickHandler(params: [string, Profile]) {
     dispatch(setSelectedProfile(params[0]));
+    dispatch(loadProfile(params[1]));
   }
 
   return (
@@ -47,18 +48,25 @@ export default function ProfilesAndSources() {
         <input placeholder='E.g. "P3 Shadow BiS"' type="text" onChange={(e) => setProfileName(e.target.value)} name="profileName" />
         <button id="save-new-profile-button" onClick={(e) => callSetProfile()} disabled={profileName.length === 0}>Save New Profile</button>
         <div id="update-profile-div">
-          <button style={{display: 'none'}} id="save-profile-button">Save</button>
-          <button style={{display: 'none'}} id="delete-profile-button">Delete</button>
-          <button style={{display: 'none'}} id="rename-profile-button">Rename</button>
+          <button style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }} id="save-profile-button">Save</button>
+          <button style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }} id="delete-profile-button">Delete</button>
+          <button style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }} id="rename-profile-button">Rename</button>
           <button id="import-export-button">Import/Export</button>
         </div>
       </fieldset>
-      <fieldset id="saved-profiles" style={{display: Object.keys(playerStore.profiles).length === 0 ? 'none' : ''}}>
+      <fieldset id="saved-profiles" style={{ display: Object.keys(playerStore.profiles).length === 0 ? 'none' : '' }}>
         <legend>Saved Profiles</legend>
         <ul>
           {
             Object.entries(playerStore.profiles).map((profile, i) =>
-              <li key={i} className='saved-profile' data-checked={selectedProfileState === profile[0]} onClick={(e) => profileClickHandler(profile)}>{profile[0]}</li>
+              <li
+                key={i}
+                className='saved-profile'
+                data-checked={selectedProfileState === profile[0]}
+                onClick={(e) => profileClickHandler(profile)}
+              >
+                {profile[0]}
+              </li>
             )
           }
         </ul>

@@ -101,8 +101,8 @@ export default function Session() {
     }
 
     function addEnchantStats() {
-      for (const enchantId of Object.values(playerStore.selectedEnchants)) {
-        if (enchantId !== 0) {
+      for (const [itemSlot, enchantId] of Object.entries(playerStore.selectedEnchants)) {
+        if (enchantId !== 0 && Object.values(ItemSlot).includes(itemSlot as ItemSlot)) {
           const enchantObj = Enchants.find(e => e.id === enchantId);
 
           if (enchantObj) {

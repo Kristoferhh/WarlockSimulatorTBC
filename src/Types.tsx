@@ -185,7 +185,9 @@ export enum Stat {
   spellPenetration = 'spellPenetration',
 }
 
-export type PlayerStats = {[key in keyof typeof Stat]: number}
+export type PlayerStats = {
+  [key in keyof typeof Stat]: number
+}
 
 export interface Settings {
   race: Race,
@@ -273,11 +275,19 @@ export const InitialSettings: {[key: string]: string} = {
   improvedWrathOfAirTotem: 'no',
 }
 
-export interface TalentStore {[key: string]: number}
+export interface TalentStore {
+  [key: string]: number
+}
 
-export type ItemAndEnchantStruct = {[key in ItemSlot]: number}
+export type ItemAndEnchantStruct = {
+  [key in ItemSlot]: number
+}
 
-export type SelectedGemsStruct = {[key in ItemSlotKey]: {[key: string]: [string, number][]}}
+export type SelectedGemsStruct = {
+  [key in ItemSlotKey]: {
+    [key: string]: [string, number][]
+  }
+}
 
 export const InitialSelectedItemsAndEnchants: ItemAndEnchantStruct = {
   head: 0,
@@ -367,12 +377,12 @@ export interface AurasStruct {
 
 export interface Profile {
   auras: AurasStruct,
-  selectedGems: SelectedGemsStruct,
-  selectedItems: ItemAndEnchantStruct,
+  gems: SelectedGemsStruct,
+  items: ItemAndEnchantStruct,
   talents: TalentStore,
   rotation: RotationStruct,
-  selectedEnchants: ItemAndEnchantStruct,
-  settings: SettingsStruct
+  enchants: ItemAndEnchantStruct,
+  simSettings: SettingsStruct,
 }
 
 export interface PlayerState {

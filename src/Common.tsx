@@ -1,7 +1,7 @@
 import { Gems } from "./data/Gems";
 import { Items } from "./data/Items";
 import { Sockets } from "./data/Sockets";
-import { GemColor, ItemSlot, ItemSlotKey, SelectedGemsStruct } from "./Types";
+import { GemColor, ItemSlot, ItemSlotKey, SelectedGemsStruct, TalentStore } from "./Types";
 
 export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
   switch(itemSlot) {
@@ -84,4 +84,8 @@ export function itemMeetsSocketRequirements(params: { itemId: number, selectedGe
   }
 
   return false;
+}
+
+export function getRemainingTalentPoints(talents: TalentStore) {
+  return 61 - Object.values<number>(talents).reduce((a, b) => a + b, 0); // 61 available talent points at lvl 70
 }
