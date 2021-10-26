@@ -300,49 +300,51 @@ export default function ItemSelection() {
         <tbody aria-live='polite'>
         {
           Items.filter((e) => e.itemSlot === itemSlot && uiStore.sources.phase[e.phase] === true).map((item, i) =>
-            <tr
-              key={i}
-              className="item-row"
-              data-selected={playerStore.selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot)] === item.id}
-              onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot))}
-            >
-              <td className="hide-item-btn">❌</td>
-              <td><a href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)} onClick={(e) => e.preventDefault()}>{item.name}</a></td>
-              <td>
-                <div>
-                  {
-                    item.sockets?.map((socket, j) =>
-                      <a
-                        target='_blank'
-                        rel='noreferrer'
-                        href={playerStore.selectedGems[itemSlot] && playerStore.selectedGems[itemSlot][item.id] && playerStore.selectedGems[itemSlot][item.id][j][1] !== 0 ? `https://tbc.wowhead.com/item=${playerStore.selectedGems[itemSlot][item.id][j][1]}` : ''}
-                        key={j}
-                        onClick={(e) => { itemSocketClickHandler(item.id.toString(), j, socket); e.preventDefault(); e.stopPropagation(); }}
-                        onContextMenu={(e) => { removeGemFromSocket(item.id.toString(), j); e.preventDefault(); }}
-                      >
-                        <img
-                          width={16}
-                          height={16}
-                          data-color={socket}
-                          src={playerStore.selectedGems[itemSlot] && playerStore.selectedGems[itemSlot][item.id] && ![null, 0].includes(playerStore.selectedGems[itemSlot][item.id][j][1]) ? `${process.env.PUBLIC_URL}/img/${Gems.find(e => e.id === playerStore.selectedGems[itemSlot][item.id][j][1])?.iconName}.jpg` : `${process.env.PUBLIC_URL}/img/${Sockets.find(s => s.color === socket)!.iconName}.jpg`}
-                          alt={socket + ' socket'}
-                        />
-                      </a>
-                    )
-                  }
-                </div>
-              </td>
-              <td>{item.source}</td>
-              <td>{item.stamina}</td>
-              <td>{item.intellect}</td>
-              <td>{item.spellPower}</td>
-              <td>{item.shadowPower}</td>
-              <td>{item.firePower}</td>
-              <td>{item.critRating}</td>
-              <td>{item.hitRating}</td>
-              <td>{item.hasteRating}</td>
-              <td></td>
-            </tr>
+            // Show the item if it's not unique or if it is unique but the other item slot (ring or trinket) isn't equipped with the item
+            (!item.unique || (playerStore.selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot === '1' ? '2' : '1')] !== item.id)) &&
+              <tr
+                key={i}
+                className="item-row"
+                data-selected={playerStore.selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot)] === item.id}
+                onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot))}
+              >
+                <td className="hide-item-btn">❌</td>
+                <td><a href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)} onClick={(e) => e.preventDefault()}>{item.name}</a></td>
+                <td>
+                  <div>
+                    {
+                      item.sockets?.map((socket, j) =>
+                        <a
+                          target='_blank'
+                          rel='noreferrer'
+                          href={playerStore.selectedGems[itemSlot] && playerStore.selectedGems[itemSlot][item.id] && playerStore.selectedGems[itemSlot][item.id][j][1] !== 0 ? `https://tbc.wowhead.com/item=${playerStore.selectedGems[itemSlot][item.id][j][1]}` : ''}
+                          key={j}
+                          onClick={(e) => { itemSocketClickHandler(item.id.toString(), j, socket); e.preventDefault(); e.stopPropagation(); }}
+                          onContextMenu={(e) => { removeGemFromSocket(item.id.toString(), j); e.preventDefault(); }}
+                        >
+                          <img
+                            width={16}
+                            height={16}
+                            data-color={socket}
+                            src={playerStore.selectedGems[itemSlot] && playerStore.selectedGems[itemSlot][item.id] && ![null, 0].includes(playerStore.selectedGems[itemSlot][item.id][j][1]) ? `${process.env.PUBLIC_URL}/img/${Gems.find(e => e.id === playerStore.selectedGems[itemSlot][item.id][j][1])?.iconName}.jpg` : `${process.env.PUBLIC_URL}/img/${Sockets.find(s => s.color === socket)!.iconName}.jpg`}
+                            alt={socket + ' socket'}
+                          />
+                        </a>
+                      )
+                    }
+                  </div>
+                </td>
+                <td>{item.source}</td>
+                <td>{item.stamina}</td>
+                <td>{item.intellect}</td>
+                <td>{item.spellPower}</td>
+                <td>{item.shadowPower}</td>
+                <td>{item.firePower}</td>
+                <td>{item.critRating}</td>
+                <td>{item.hitRating}</td>
+                <td>{item.hasteRating}</td>
+                <td></td>
+              </tr>
           )
         }
         </tbody>

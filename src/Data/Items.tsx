@@ -421,7 +421,7 @@ export const Items: Item[] = [
   { name: "The Skull of Gul'dan", varName: 'theSkullOfGuldan', itemSlot: ItemSlotKey.Trinket, hitRating: 25, spellPower: 55, unique: true, id: 32483, source: ItemSource.BlackTemple, phase: 3 },
   { name: 'Ashtongue Talisman of Shadows', varName: 'ashtongueTalismanOfShadows', itemSlot: ItemSlotKey.Trinket, unique: true, id: 32493, source: ItemSource.AshtongueDeathswornExalted, phase: 3 },
   { name: 'Darkmoon Card: Crusade', varName: 'darkmoonCardCrusade', itemSlot: ItemSlotKey.Trinket, unique: true, id: 31856, source: ItemSource.BlessingsDeck, phase: 3 },
-  { name: "Dark Iron Smoking Pipe", varName: 'darkIronSmokingPipe', itemSlot: ItemSlotKey.Trinket, spellPower: 43, id: 38290, source: ItemSource.BlackrockDepths, phase: 2 },
+  { name: "Dark Iron Smoking Pipe", varName: 'darkIronSmokingPipe', itemSlot: ItemSlotKey.Trinket, unique: true, spellPower: 43, id: 38290, source: ItemSource.BlackrockDepths, phase: 2 },
   { name: 'Sextant of Unstable Currents', varName: 'sextantOfUnstableCurrents', itemSlot: ItemSlotKey.Trinket, critRating: 40, unique: true, id: 30626, source: ItemSource.SerpentshrineCavern, phase: 2 },
   { name: 'Voidstar Talisman', varName: 'voidStarTalisman', itemSlot: ItemSlotKey.Trinket, spellPower: 48, unique: true, id: 30449, source: ItemSource.TempestKeep, phase: 2 },
   { name: 'Eye of Magtheridon', varName: 'eyeOfMagtheridon', itemSlot: ItemSlotKey.Trinket, spellPower: 54, unique: true, id: 28789, source: ItemSource.MagtheridonsLair, phase: 1 },
