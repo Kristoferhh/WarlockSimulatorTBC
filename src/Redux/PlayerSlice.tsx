@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getRemainingTalentPoints } from "../Common";
 import { Auras } from "../data/Auras";
-import { Aura, RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot, Profile, InitialSelectedGems, ItemSlotKey, TalentName, Setting } from "../Types";
+import { Aura, RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot, Profile, InitialSelectedGems, ItemSlotKey, TalentName, Setting, ItemSet } from "../Types";
 
 const initialPlayerState : PlayerState = {
   talents: JSON.parse(localStorage.getItem('talents') || '{}'),
@@ -14,7 +14,7 @@ const initialPlayerState : PlayerState = {
   stats: InitialPlayerStats,
   settings: JSON.parse(localStorage.getItem('settings') || JSON.stringify(InitialSettings)),
   profiles: JSON.parse(localStorage.getItem('profiles') || '{}'),
-  sets: {},
+  sets: {'529': 0, '552': 0, '553': 0, '559': 0, '568': 0, '592': 0, '615': 0, '644': 0, '645': 0, '646': 0, '647': 0, '658': 0, '667': 0, '670': 0, '702': 0, '704': 0, '734': 0, '735': 0},
 }
 
 export const PlayerSlice = createSlice({
@@ -120,7 +120,7 @@ export const PlayerSlice = createSlice({
       state.selectedGems[action.payload.itemSlot][action.payload.itemId] = action.payload.value;
       localStorage.setItem('selectedGems', JSON.stringify(state.selectedGems));
     },
-    setItemSetCount: (state, action: PayloadAction<{setId: string, count: number}>) => {
+    setItemSetCount: (state, action: PayloadAction<{setId: ItemSet, count: number}>) => {
       state.sets[action.payload.setId] = action.payload.count;
     },
     deleteProfile: (state, action: PayloadAction<string>) => {

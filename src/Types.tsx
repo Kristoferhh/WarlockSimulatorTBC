@@ -58,7 +58,7 @@ export interface Item {
   resilienceRating?: number,
   spellPenetration?: number,
   mp5?: number,
-  setId?: number,
+  setId?: ItemSet,
   displayId?: number,
   unique?: boolean,
   source: ItemSource
@@ -295,6 +295,27 @@ export type SelectedGemsStruct = {
   }
 }
 
+export enum ItemSet {
+  T3 = '529',
+  VengefulGladiatorsFelshroud = '735',
+  VengefulGladiatorsDreadgear = '734',
+  MercilessGladiatorsFelshroud = '704',
+  MercilessGladiatorsDreadgear = '702',
+  Spellfire = '552',
+  FrozenShadoweave = '553',
+  Spellstrike = '559',
+  Oblivion = '644',
+  T4 = '645',
+  T5 = '646',
+  ManaEtchedRegalia = '658',
+  IncantersRegalia = '647',
+  TwinStars = '667',
+  T6 = '670',
+  GladiatorsFelshroud = '615',
+  GladiatorsDreadgear = '568',
+  HighWarlordsDreadgear = '592',
+}
+
 export const InitialSelectedItemsAndEnchants: ItemAndEnchantStruct = {
   head: 0,
   neck: 0,
@@ -398,7 +419,7 @@ export interface PlayerState {
   stats: PlayerStats,
   settings: Settings,
   profiles: {[key: string]: Profile},
-  sets: {[key: string]: number},
+  sets: {[key in ItemSet]: number},
 }
 
 export enum Quality {

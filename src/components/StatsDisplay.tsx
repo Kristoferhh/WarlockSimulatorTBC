@@ -2,7 +2,7 @@ import { useSelector } from "react-redux"
 import { shouldDisplayPetSetting } from "../Common";
 import { Auras } from "../data/Auras";
 import { RootState } from "../redux/Store"
-import { StatConstant } from "../Types";
+import { ItemSet, StatConstant } from "../Types";
 
 
 export default function StatsDisplay() {
@@ -62,8 +62,7 @@ export default function StatsDisplay() {
     if (playerState.auras.prayerOfSpirit) {
       spellPower += getSpirit() * 0.05 * parseInt(playerState.settings.improvedDivineSpirit);
     }
-    // Spellfire 3pc
-    if (playerState.sets['552'] && playerState.sets['552'] === 3) {
+    if (playerState.sets[ItemSet.Spellfire] === 3) {
       spellPower += getIntellect() * 0.07;
     }
     if (playerState.auras.wrathOfAirTotem && playerState.settings.improvedWrathOfAirTotem === 'yes') {
@@ -106,8 +105,7 @@ export default function StatsDisplay() {
 
   function getHit(): string {
     let hitRating = playerState.stats.hitRating;
-    // Mana-Etched 2pc
-    if (playerState.sets['658'] && playerState.sets['658'] >= 2) hitRating += 35;
+    if (playerState.sets[ItemSet.ManaEtchedRegalia] >= 2) hitRating += 35;
 
     let hitPercent = Math.round((hitRating / StatConstant.hitRatingPerPercent) * 100) / 100;
     if (playerState.auras.inspiringPresence) hitPercent++;

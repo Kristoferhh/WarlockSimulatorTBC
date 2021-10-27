@@ -67,7 +67,7 @@ export default function ItemSelection() {
       // Lower the item set counter by 1 if the item is part of a set
       if (itemObj!.setId && playerStore.sets[itemObj!.setId] && playerStore.sets[itemObj!.setId] > 0) {
         dispatch(setItemSetCount({
-          setId: itemObj!.setId.toString(),
+          setId: itemObj!.setId,
           count: playerStore.sets[itemObj!.setId] - 1
         }));
       }
@@ -100,7 +100,7 @@ export default function ItemSelection() {
       // Increment the item set counter if the item is part of a set
       if (item.setId) {
         dispatch(setItemSetCount({
-          setId: item.setId.toString(),
+          setId: item.setId,
           count: playerStore.sets[item.setId] == null ? 1 : playerStore.sets[item.setId] + 1
         }));
       }

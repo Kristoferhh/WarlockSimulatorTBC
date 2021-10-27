@@ -8,7 +8,7 @@ import { Items } from "../data/Items";
 import { Races } from "../data/Races";
 import { modifyPlayerStat, setItemSetCount } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store";
-import { ItemSlot, Stat } from "../Types";
+import { ItemSet, ItemSlot, Stat } from "../Types";
 
 
 export default function Session() {
@@ -94,7 +94,7 @@ export default function Session() {
       // Update the item sets state in the player store
       for (const [setId, count] of Object.entries(itemSetCounts)) {
         dispatch(setItemSetCount({
-          setId: setId,
+          setId: setId as ItemSet,
           count: count
         }));
       }
