@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getRemainingTalentPoints } from "../Common";
 import { Auras } from "../data/Auras";
-import { Aura, RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot, Profile, InitialSelectedGems, ItemSlotKey } from "../Types";
+import { Aura, RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot, Profile, InitialSelectedGems, ItemSlotKey, TalentName } from "../Types";
 
 const initialPlayerState : PlayerState = {
   talents: JSON.parse(localStorage.getItem('talents') || '{}'),
@@ -21,7 +21,7 @@ export const PlayerSlice = createSlice({
   name: 'player',
   initialState: initialPlayerState,
   reducers: {
-    setTalentPointValue: (state, talent: PayloadAction<{name: string, points: number}>) => {
+    setTalentPointValue: (state, talent: PayloadAction<{name: TalentName, points: number}>) => {
       state.talents[talent.payload.name] = talent.payload.points;
       state.talentPointsRemaining = getRemainingTalentPoints(state.talents);
       localStorage.setItem('talents', JSON.stringify(state.talents));

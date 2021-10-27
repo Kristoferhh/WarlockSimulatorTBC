@@ -17,13 +17,13 @@ export default function StatsDisplay() {
 
       // If the player is using an imp, the imp is active, and the player has more points in the Improved Imp talent than the improved imp setting then use that instead
       if (shouldDisplayPetSetting(playerState.talents, playerState.settings, false) && playerState.settings['petChoice'] === '0') {
-        bloodPactModifier = Math.max(bloodPactModifier, playerState.talents['improvedImp']);
+        bloodPactModifier = Math.max(bloodPactModifier, playerState.talents.improvedImp);
       }
 
       stamina += 70 * (0.1 * bloodPactModifier);
     }
 
-    staminaModifier *= 1 + (0.03 * playerState.talents['demonicEmbrace']);
+    staminaModifier *= 1 + (0.03 * playerState.talents.demonicEmbrace);
 
     return stamina * staminaModifier;
   }
@@ -35,26 +35,26 @@ export default function StatsDisplay() {
   function getSpirit(): number {
     let spiritModifier = playerState.stats.spiritModifier
 
-    if (playerState.talents['demonicEmbrace'] > 0) {
-      spiritModifier *= 1 - 0.01 * playerState.talents['demonicEmbrace'];
+    if (playerState.talents.demonicEmbrace > 0) {
+      spiritModifier *= 1 - 0.01 * playerState.talents.demonicEmbrace;
     }
 
     return playerState.stats.spirit * spiritModifier;
   }
 
   function getHealth(): number {
-    return (playerState.stats.health + getStamina() * StatConstant.healthPerStamina) * (1 + (0.01 * playerState.talents['felStamina']));
+    return (playerState.stats.health + getStamina() * StatConstant.healthPerStamina) * (1 + (0.01 * playerState.talents.felStamina));
   }
 
   function getMana(): number {
-    return (playerState.stats.mana + getIntellect() * StatConstant.manaPerIntellect) * (1 + (0.01 * playerState.talents['felIntellect']));
+    return (playerState.stats.mana + getIntellect() * StatConstant.manaPerIntellect) * (1 + (0.01 * playerState.talents.felIntellect));
   }
 
   function getSpellPower(): number {
     let spellPower = playerState.stats.spellPower;
 
     if (playerState.auras['felArmor']) {
-      spellPower += 100 * (0.1 * playerState.talents['demonicAegis']);
+      spellPower += 100 * (0.1 * playerState.talents.demonicAegis);
     }
     if (playerState.auras['powerOfTheGuardianWarlock']) {
       spellPower += 33 * playerState.settings['warlockAtieshAmount'];
@@ -92,9 +92,9 @@ export default function StatsDisplay() {
     }
 
     let critPercent = Math.round((critRating / StatConstant.critRatingPerPercent + StatConstant.baseCritChancePercent) * 100) / 100;
-    critPercent += playerState.talents['devastation'];
-    critPercent += playerState.talents['backlash'];
-    critPercent += playerState.talents['demonicTactics'];
+    critPercent += playerState.talents.devastation;
+    critPercent += playerState.talents.backlash;
+    critPercent += playerState.talents.demonicTactics;
     critPercent += getIntellect() * StatConstant.critPercentPerIntellect;
     if (playerState.auras['moonkinAura']) critPercent += 5;
     if (playerState.auras['judgementOfTheCrusader']) critPercent += 3;
@@ -131,19 +131,19 @@ export default function StatsDisplay() {
     }
 
     // Master Demonologist & Soul Link
-    if (playerState.talents['demonicSacrifice'] === 0 || playerState.settings['sacrificePet'] === 'no') {
-      if (playerState.talents['masterDemonologist'] > 0) {
+    if (playerState.talents.demonicSacrifice === 0 || playerState.settings['sacrificePet'] === 'no') {
+      if (playerState.talents.masterDemonologist > 0) {
         switch (playerState.settings['petChoice']) {
           case '2': // Succubus
-            modifier *= 1.1;
+            modifier *= (1 + (0.02 * playerState.talents.masterDemonologist));
             break;
           case '4': // Felguard
-            modifier *= 1.05;
+            modifier *= (1 + (0.01 * playerState.talents.masterDemonologist));
             break;
         }
       }
 
-      if (playerState.talents['soulLink'] === 1) {
+      if (playerState.talents.soulLink === 1) {
         modifier *= 1.05;
       }
     }
@@ -156,9 +156,9 @@ export default function StatsDisplay() {
   }
 
   function getShadowModifier(): string {
-    let modifier = playerState.stats.shadowModifier * getShadowAndFireModifier() * (1 + (0.02 * playerState.talents['shadowMastery']));
+    let modifier = playerState.stats.shadowModifier * getShadowAndFireModifier() * (1 + (0.02 * playerState.talents.shadowMastery));
 
-    if (playerState.talents['demonicSacrifice'] === 1 && playerState.settings['sacrificePet'] === 'yes') {
+    if (playerState.talents.demonicSacrifice === 1 && playerState.settings['sacrificePet'] === 'yes') {
       switch (playerState.settings['petChoice']) {
         case '2': // Succubus
           modifier *= 1.15;
@@ -175,11 +175,11 @@ export default function StatsDisplay() {
   function getFireModifier(): string {
     let modifier = playerState.stats.fireModifier * getShadowAndFireModifier();
 
-    if (playerState.talents['demonicSacrifice'] === 1 && playerState.settings['sacrificePet'] === 'yes' && playerState.settings['petChoice'] === '0') {
+    if (playerState.talents.demonicSacrifice === 1 && playerState.settings['sacrificePet'] === 'yes' && playerState.settings['petChoice'] === '0') {
       modifier *= 1.15;
     }
 
-    modifier *= 1 + (0.02 * playerState.talents['emberstorm']);
+    modifier *= 1 + (0.02 * playerState.talents.emberstorm);
 
     return `${Math.round(modifier * 100)}%`;
   }

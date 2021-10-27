@@ -1,6 +1,6 @@
-import { TalentNames } from "../Types";
+import { TalentName } from "../Types";
 
-export const PresetTalents: {name: string, talents: {[key in keyof typeof TalentNames]?: number}}[] = [
+export const PresetTalents: {name: string, talents: {[key in keyof typeof TalentName]?: number}}[] = [
   {
     name: "Affli/UA",
     talents: {

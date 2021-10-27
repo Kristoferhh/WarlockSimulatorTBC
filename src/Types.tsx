@@ -277,8 +277,8 @@ export const InitialSettings: {[key: string]: string} = {
   improvedWrathOfAirTotem: 'no',
 }
 
-export interface TalentStore {
-  [key: string]: number
+export type TalentStore = {
+  [key in TalentName]: number
 }
 
 export type ItemAndEnchantStruct = {
@@ -462,7 +462,7 @@ export interface Gem {
 
 export interface Talent {
   name?: string,
-  varName?: string,
+  varName?: TalentName,
   rankIDs?: number[],
   iconName?: string,
   requirement?: TalentRequirement
@@ -606,7 +606,7 @@ export type Phase = 0|1|2|3|4|5;
 
 export type SubSlotValue = '' | '1' | '2';
 
-export enum TalentNames {
+export enum TalentName {
   suppression = 'suppression',
   improvedCorruption = 'improvedCorruption',
   improvedCurseOfWeakness = 'improvedCurseOfWeakness',
@@ -642,7 +642,7 @@ export enum TalentNames {
   unholyPower = 'unholyPower',
   improvedEnslaveDemon = 'improvedEnslaveDemon',
   demonicSacrifice = 'demonicSacrifice',
-  masterConjuror = 'masterConjuror',
+  improvedFirestone = 'improvedFirestone',
   manaFeed = 'manaFeed',
   masterDemonologist = 'masterDemonologist',
   demonicResilience = 'demonicResilience',

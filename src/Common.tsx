@@ -91,5 +91,5 @@ export function getRemainingTalentPoints(talents: TalentStore) {
 }
 
 export function shouldDisplayPetSetting(talents: TalentStore, settings: SettingsStruct, requiresAggressivePet: boolean) {
-  return (!talents['demonicSacrifice'] || settings['sacrificePet'] === 'no') && (!requiresAggressivePet || settings['petMode'] === '1');
+  return (!talents.demonicSacrifice || settings['sacrificePet'] === 'no') && (!requiresAggressivePet || settings['petMode'] === '1');
 }

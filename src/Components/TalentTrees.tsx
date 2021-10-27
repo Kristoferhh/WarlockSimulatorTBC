@@ -3,7 +3,7 @@ import { RootState } from "../redux/Store";
 import { useSelector, useDispatch } from "react-redux";
 import { setTalentPointValue } from "../redux/PlayerSlice";
 import { PresetTalents } from "../data/PresetTalents";
-import { Talent, TalentNames } from "../Types";
+import { Talent, TalentName } from "../Types";
 
 export default function TalentTrees() {
   const talentStore = useSelector((state: RootState) => state.player.talents);
@@ -32,16 +32,16 @@ export default function TalentTrees() {
     return points;
   }
 
-  function applyTalentTemplate(talentTemplate: {[key in keyof typeof TalentNames]?: number}) {
-    for (const talentKey in TalentNames) {
+  function applyTalentTemplate(talentTemplate: {[key in TalentName]?: number}) {
+    for (const talentKey in TalentName) {
       dispatch(setTalentPointValue({
-        name: talentKey,
+        name: talentKey as TalentName,
         points: 0
       }));
     }
     for (const [talentKey, points] of Object.entries(talentTemplate)) {
       dispatch(setTalentPointValue({
-        name: talentKey,
+        name: talentKey as TalentName,
         points: points
       }));
     }
