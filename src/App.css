@@ -529,6 +529,7 @@ ul {
 	padding: 10px;
 	background: #363636;
 	border-radius: .4em;
+	z-index: 4;
 }
 
 .gem-row td {
@@ -711,6 +712,10 @@ img[data-color='meta'] {
 
 .item-row a, .enchant-row a, .sidebar-set-bonus a {
 	text-decoration: none;
+}
+
+.sidebar-set-bonus a {
+	color: white;
 }
 
 .legendary 	{ color: #ff8000 }

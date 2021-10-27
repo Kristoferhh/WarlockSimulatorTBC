@@ -13,7 +13,7 @@ export const Auras: Aura[] = [
   { name: 'Arcane Intellect', varName: 'arcaneIntellect', group: AuraGroupKey.Buffs, iconName: 'spell_holy_arcaneintellect', id: 27127, stats: { intellect: 40, } },
   { name: 'Prayer of Fortitude', varName: 'prayerOfFortitude', group: AuraGroupKey.Buffs, iconName: 'spell_holy_prayeroffortitude', id: 25392, stats: { stamina: 79, } },
   { name: 'Prayer of Spirit', varName: 'prayerOfSpirit', group: AuraGroupKey.Buffs, iconName: 'spell_holy_prayerofspirit', id: 32999, stats: { spirit: 50, } },
-  { name: 'Blood Pact', varName: 'bloodPact', group: AuraGroupKey.Buffs, iconName: 'spell_shadow_bloodboil', id: 27268, stats: { stamina: 70, } },
+  { name: 'Blood Pact', varName: 'bloodPact', group: AuraGroupKey.Buffs, iconName: 'spell_shadow_bloodboil', id: 27268 },
   { name: 'Inspiring Presence', varName: 'inspiringPresence', group: AuraGroupKey.Buffs, iconName: 'inv_staff_23', id: 28878 },
   { name: 'Moonkin Aura', varName: 'moonkinAura', group: AuraGroupKey.Buffs, iconName: 'spell_nature_moonglow', id: 24907 },
   { name: 'Power Infusion', varName: 'powerInfusion', group: AuraGroupKey.Buffs, iconName: 'spell_holy_powerinfusion', id: 10060 },

@@ -89,3 +89,7 @@ export function itemMeetsSocketRequirements(params: { itemId: number, selectedGe
 export function getRemainingTalentPoints(talents: TalentStore) {
   return 61 - Object.values<number>(talents).reduce((a, b) => a + b, 0); // 61 available talent points at lvl 70
 }
+
+export function shouldDisplayPetSetting(talents: TalentStore, settings: SettingsStruct, requiresAggressivePet: boolean) {
+  return (!talents['demonicSacrifice'] || settings['sacrificePet'] === 'no') && (!requiresAggressivePet || settings['petMode'] === '1');
+}
