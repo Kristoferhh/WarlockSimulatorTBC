@@ -12,7 +12,7 @@ export default function StatsDisplay() {
     let stamina = playerState.stats.stamina;
     let staminaModifier = playerState.stats.staminaModifier;
 
-    if (playerState.auras['bloodPact']) {
+    if (playerState.auras.bloodPact) {
       let bloodPactModifier = parseInt(playerState.settings.improvedImpSetting);
 
       // If the player is using an imp, the imp is active, and the player has more points in the Improved Imp talent than the improved imp setting then use that instead
@@ -53,20 +53,20 @@ export default function StatsDisplay() {
   function getSpellPower(): number {
     let spellPower = playerState.stats.spellPower;
 
-    if (playerState.auras['felArmor']) {
+    if (playerState.auras.felArmor) {
       spellPower += 100 * (0.1 * playerState.talents.demonicAegis);
     }
-    if (playerState.auras['powerOfTheGuardianWarlock']) {
+    if (playerState.auras.powerOfTheGuardianWarlock) {
       spellPower += 33 * parseInt(playerState.settings.warlockAtieshAmount);
     }
-    if (playerState.auras['prayerOfSpirit']) {
+    if (playerState.auras.prayerOfSpirit) {
       spellPower += getSpirit() * 0.05 * parseInt(playerState.settings.improvedDivineSpirit);
     }
     // Spellfire 3pc
     if (playerState.sets['552'] && playerState.sets['552'] === 3) {
       spellPower += getIntellect() * 0.07;
     }
-    if (playerState.auras['wrathOfAirTotem'] && playerState.settings.improvedWrathOfAirTotem === 'yes') {
+    if (playerState.auras.wrathOfAirTotem && playerState.settings.improvedWrathOfAirTotem === 'yes') {
       spellPower += 20;
     }
 
@@ -87,7 +87,7 @@ export default function StatsDisplay() {
 
   function getCrit(): string {
     let critRating = Math.round(playerState.stats.critRating);
-    if (playerState.auras['powerOfTheGuardianMage']) {
+    if (playerState.auras.powerOfTheGuardianMage) {
       critRating += 28 * parseInt(playerState.settings.mageAtieshAmount);
     }
 
@@ -96,10 +96,10 @@ export default function StatsDisplay() {
     critPercent += playerState.talents.backlash;
     critPercent += playerState.talents.demonicTactics;
     critPercent += getIntellect() * StatConstant.critPercentPerIntellect;
-    if (playerState.auras['moonkinAura']) critPercent += 5;
-    if (playerState.auras['judgementOfTheCrusader']) critPercent += 3;
-    if (playerState.auras['totemOfWrath']) critPercent += 3 * parseInt(playerState.settings.totemOfWrathAmount);
-    if (playerState.auras['chainOfTheTwilightOwl']) critPercent += 2;
+    if (playerState.auras.moonkinAura) critPercent += 5;
+    if (playerState.auras.judgementOfTheCrusader) critPercent += 3;
+    if (playerState.auras.totemOfWrath) critPercent += 3 * parseInt(playerState.settings.totemOfWrathAmount);
+    if (playerState.auras.chainOfTheTwilightOwl) critPercent += 2;
 
     return `${critRating} (${critPercent.toFixed(2)}%)`;
   }
@@ -110,8 +110,8 @@ export default function StatsDisplay() {
     if (playerState.sets['658'] && playerState.sets['658'] >= 2) hitRating += 35;
 
     let hitPercent = Math.round((hitRating / StatConstant.hitRatingPerPercent) * 100) / 100;
-    if (playerState.auras['inspiringPresence']) hitPercent++;
-    if (playerState.auras['totemOfWrath']) hitPercent += 3 * parseInt(playerState.settings.totemOfWrathAmount);
+    if (playerState.auras.inspiringPresence) hitPercent++;
+    if (playerState.auras.totemOfWrath) hitPercent += 3 * parseInt(playerState.settings.totemOfWrathAmount);
 
     return `${hitRating} (${hitPercent.toFixed(2)}%)`;
   }
@@ -126,7 +126,7 @@ export default function StatsDisplay() {
   function getShadowAndFireModifier(): number {
     let modifier = 1;
 
-    if (playerState.auras['curseOfTheElements']) {
+    if (playerState.auras.curseOfTheElements) {
       modifier *= (1.1 + (0.01 * parseInt(playerState.settings.improvedCurseOfTheElements)));
     }
 
@@ -148,7 +148,7 @@ export default function StatsDisplay() {
       }
     }
 
-    if (playerState.auras['ferociousInspiration']) {
+    if (playerState.auras.ferociousInspiration) {
       modifier *= Math.pow(1.03, parseInt(playerState.settings.ferociousInspirationAmount));
     }
 
@@ -187,7 +187,7 @@ export default function StatsDisplay() {
   function getMp5(): number {
     let mp5 = playerState.stats.mp5;
 
-    if (playerState.auras['vampiricTouch']) {
+    if (playerState.auras.vampiricTouch) {
       mp5 += parseInt(playerState.settings.shadowPriestDps) * 0.25;
     }
 
@@ -197,11 +197,11 @@ export default function StatsDisplay() {
   function getEnemyArmor(): number {
     let armor = parseInt(playerState.settings.enemyArmor);
 
-    if (playerState.auras['faerieFire']) armor -= 610;
-    if ((playerState.auras['sunderArmor'] && playerState.auras['exposeArmor'] && playerState.settings.improvedExposeArmor === '2') || (playerState.auras['exposeArmor'] && !playerState.auras['sunderArmor'])) armor -= 2050 * (1 + 0.25 * parseInt(playerState.settings.improvedExposeArmor));
-    else if (playerState.auras['sunderArmor']) armor -= 520 * 5;
-    if (playerState.auras['curseOfRecklessness']) armor -= 800;
-    if (playerState.auras['annihilator']) armor -= 600;
+    if (playerState.auras.faerieFire) armor -= 610;
+    if ((playerState.auras.sunderArmor && playerState.auras.exposeArmor && playerState.settings.improvedExposeArmor === '2') || (playerState.auras.exposeArmor && !playerState.auras.sunderArmor)) armor -= 2050 * (1 + 0.25 * parseInt(playerState.settings.improvedExposeArmor));
+    else if (playerState.auras.sunderArmor) armor -= 520 * 5;
+    if (playerState.auras.curseOfRecklessness) armor -= 800;
+    if (playerState.auras.annihilator) armor -= 600;
 
     return Math.max(0, armor);
   }

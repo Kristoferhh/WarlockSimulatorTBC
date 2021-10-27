@@ -136,7 +136,7 @@ export default function SettingsDisplay() {
         }
         {
           // Shattered Sun Pendant of Acumen equipped
-          playerStore.selectedItems['neck'] === 34678 &&
+          playerStore.selectedItems.neck === 34678 &&
             <div>
               <li id="shattrathFaction">
                 <label className="settings-left" htmlFor="shattrathFaction">Shattrath Faction</label>
@@ -173,7 +173,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['curseOfTheElements'] === true &&
+          playerStore.auras.curseOfTheElements === true &&
             <li id="improvedCurseOfTheElements">
               <label className="settings-left">Malediction?</label>
               <select className="settings-right" name="improvedCurseOfTheElements" onChange={(e) => settingModifiedHandler(Setting.improvedCurseOfTheElements, e.target.value)} value={playerStore.settings.improvedCurseOfTheElements}>
@@ -185,7 +185,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['powerInfusion'] &&
+          playerStore.auras.powerInfusion &&
             <li id="powerInfusionAmount">
               <label className="settings-left" htmlFor="powerInfusionAmount">Power Infusion amount</label>
               <select className="settings-right" name="powerInfusionAmount" onChange={(e) => settingModifiedHandler(Setting.powerInfusionAmount, e.target.value)} value={playerStore.settings.powerInfusionAmount}>
@@ -205,7 +205,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['bloodlust'] &&
+          playerStore.auras.bloodlust &&
             <li id="bloodlustAmount">
               <label className="settings-left" htmlFor="bloodlustAmount">Bloodlust amount</label>
               <select className="settings-right" name="bloodlustAmount" onChange={(e) => settingModifiedHandler(Setting.bloodlustAmount, e.target.value)} value={playerStore.settings.bloodlustAmount}>
@@ -228,7 +228,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['innervate'] &&
+          playerStore.auras.innervate &&
             <li id="innervateAmount">
               <label className="settings-left" htmlFor="innervateAmount">Innervate amount</label>
               <select className="settings-right" name="innervateAmount" onChange={(e) => settingModifiedHandler(Setting.innervateAmount, e.target.value)} value={playerStore.settings.innervateAmount}>
@@ -254,7 +254,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['prayerOfSpirit'] &&
+          playerStore.auras.prayerOfSpirit &&
             <li id="improvedDivineSpirit">
               <label className="settings-left" htmlFor="improvedDivineSpirit">Improved Divine Spirit?</label>
               <select className="settings-right" name="improvedDivineSpirit" onChange={(e) => settingModifiedHandler(Setting.improvedDivineSpirit, e.target.value)} value={playerStore.settings.improvedDivineSpirit}>
@@ -265,7 +265,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['powerOfTheGuardianMage'] &&
+          playerStore.auras.powerOfTheGuardianMage &&
             <li id="mageAtieshAmount">
               <label className="settings-left" htmlFor="mageAtieshAmount">Mage Atiesh amount</label>
               <select className="settings-right" name="mageAtieshAmount" onChange={(e) => settingModifiedHandler(Setting.mageAtieshAmount, e.target.value)} value={playerStore.settings.mageAtieshAmount}>
@@ -277,7 +277,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['powerOfTheGuardianWarlock'] &&
+          playerStore.auras.powerOfTheGuardianWarlock &&
             <li id="warlockAtieshAmount">
               <label className="settings-left" htmlFor="warlockAtieshAmount">Warlock Atiesh amount</label>
               <select className="settings-right" name="warlockAtieshAmount" onChange={(e) => settingModifiedHandler(Setting.warlockAtieshAmount, e.target.value)} value={playerStore.settings.warlockAtieshAmount}>
@@ -290,7 +290,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['totemOfWrath'] &&
+          playerStore.auras.totemOfWrath &&
             <li id="totemOfWrathAmount">
               <label className="settings-left" htmlFor="totemOfWrathAmount">Totem of Wrath amount</label>
               <select className="settings-right" name="totemOfWrathAmount" onChange={(e) => settingModifiedHandler(Setting.totemOfWrathAmount, e.target.value)} value={playerStore.settings.totemOfWrathAmount}>
@@ -302,7 +302,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['ferociousInspiration'] &&
+          playerStore.auras.ferociousInspiration &&
             <li id="ferociousInspirationAmount">
               <label className="settings-left" htmlFor="ferociousInspirationAmount">Ferocious Inspiration amount</label>
               <select className="settings-right" name="ferociousInspirationAmount" onChange={(e) => settingModifiedHandler(Setting.ferociousInspirationAmount, e.target.value)} value={playerStore.settings.ferociousInspirationAmount}>
@@ -314,7 +314,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['wrathOfAirTotem'] &&
+          playerStore.auras.wrathOfAirTotem &&
             <li id="improvedWrathOfAirTotem">
               <label className="settings-left" htmlFor="improvedWrathOfAirTotem">Elemental Shaman T4 2pc bonus?</label>
               <select className="settings-right" name="improvedWrathOfAirTotem" onChange={(e) => settingModifiedHandler(Setting.improvedWrathOfAirTotem, e.target.value)} value={playerStore.settings.improvedWrathOfAirTotem}>
@@ -324,14 +324,14 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['vampiricTouch'] &&
+          playerStore.auras.vampiricTouch &&
             <li id='shadowPriestDps'>
               <label className="settings-left" htmlFor="shadowPriestDps">Shadow Priest Dps</label>
               <input className='settings-right' onChange={(e) => settingModifiedHandler(Setting.shadowPriestDps, e.target.value)} value={playerStore.settings.shadowPriestDps} type="number" min='0' name="shadowPriestDps" />
             </li>
         }
         {
-          playerStore.auras['bloodPact'] &&
+          playerStore.auras.bloodPact &&
             <li id='improvedImpSetting'>
               <label className='settings-left' htmlFor="improvedImpSetting">Improved Imp?</label>
               <select className='settings-right' name='improvedImpSetting' onChange={(e) => settingModifiedHandler(Setting.improvedImpSetting, e.target.value)} value={playerStore.settings.improvedImpSetting}>
@@ -343,7 +343,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['faerieFire'] && shouldDisplayPetSetting(playerStore.talents, playerStore.settings, true) &&
+          playerStore.auras.faerieFire && shouldDisplayPetSetting(playerStore.talents, playerStore.settings, true) &&
             <li id='improvedFaerieFire'>
               <label className='settings-left' htmlFor="improvedFaerieFire">Improved Faerie Fire?</label>
               <select className='settings-right' name='improvedFaerieFire' onChange={(e) => settingModifiedHandler(Setting.improvedFaerieFire, e.target.value)} value={playerStore.settings.improvedFaerieFire}>
@@ -353,7 +353,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['exposeArmor'] && shouldDisplayPetSetting(playerStore.talents, playerStore.settings, true) &&
+          playerStore.auras.exposeArmor && shouldDisplayPetSetting(playerStore.talents, playerStore.settings, true) &&
             <li id='improvedExposeArmor'>
               <label className='settings-left' htmlFor="improvedExposeArmor">Improved Expose Armor?</label>
               <select className='settings-right' name='improvedExposeArmor' onChange={(e) => settingModifiedHandler(Setting.improvedExposeArmor, e.target.value)} value={playerStore.settings.improvedExposeArmor}>
@@ -364,7 +364,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras['exposeWeakness'] && shouldDisplayPetSetting(playerStore.talents, playerStore.settings, true) &&
+          playerStore.auras.exposeWeakness && shouldDisplayPetSetting(playerStore.talents, playerStore.settings, true) &&
             <div>
               <li id='survivalHunterAgility'>
                 <label className="settings-left" htmlFor="survivalHunterAgility">Survival Hunter Agility</label>
