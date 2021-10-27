@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/Store';
 import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot, setItemSetCount, setItemSocketsValue } from '../redux/PlayerSlice';
 import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from '../Common';
-import { setGemSelectionTable } from '../redux/UiSlice';
+import { setGemSelectionTable, toggleHiddenItemId } from '../redux/UiSlice';
 import { Sockets } from '../data/Sockets';
 import { Gems } from '../data/Gems';
 
@@ -34,6 +34,7 @@ const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlo
 export default function ItemSelection() {
   const [itemSlot, setItemSlot] = useState<ItemSlotKey>(localStorage.getItem('selectedItemSlot') as ItemSlotKey || ItemSlotKey.Mainhand);
   const [itemSubSlot, setItemSubSlot] = useState<SubSlotValue>(localStorage.getItem('selectedItemSubSlot') as SubSlotValue || '1');
+  const [hidingItems, setHidingItems]  = useState(false);
   const playerStore = useSelector((state: RootState) => state.player);
   const uiStore = useSelector((state: RootState) => state.ui);
   const dispatch = useDispatch();
@@ -227,7 +228,7 @@ export default function ItemSelection() {
           )
         }
       </ul>
-      <button id='hide-show-items-btn'>Hide / Show Items</button>
+      <button id='hide-show-items-btn' onClick={(e) => setHidingItems(!hidingItems)}>Hide / Show Items</button>
       <button id='gem-options-button'>Fill Item Sockets</button>
       <button id='show-equipped-items'>Show Equipped Items</button>
       <div id='gem-options-window'>
@@ -262,7 +263,7 @@ export default function ItemSelection() {
           Items.filter((e) => e.itemSlot === itemSlot && uiStore.sources.phase[e.phase] === true).length > 0 ?
             <>
               <colgroup id="item-selection-colgroup">
-                <col id="hide-item-col" style={{width: '2%'}} />
+                <col style={{width: '2%', display: hidingItems ? '' : 'none'}} />
                 <col />
                 <col style={{width: '5%'}} />
                 <col style={{width: '20%'}} />
@@ -278,7 +279,7 @@ export default function ItemSelection() {
               </colgroup>
               <thead>
                 <tr id="item-selection-header">
-                  <th id="header-hide-item"></th>
+                  <th style={{display: hidingItems ? '' : 'none'}}></th>
                   <th id="header-name">Name</th>
                   <th id="header-gems"></th>
                   <th id="header-source">Source</th>
@@ -299,16 +300,22 @@ export default function ItemSelection() {
         }
         <tbody aria-live='polite'>
         {
-          Items.filter((e) => e.itemSlot === itemSlot && uiStore.sources.phase[e.phase] === true).map((item, i) =>
+          Items.filter((e) => e.itemSlot === itemSlot && uiStore.sources.phase[e.phase] === true && (!uiStore.hiddenItems.includes(e.id) || hidingItems)).map((item, i) =>
             // Show the item if it's not unique or if it is unique but the other item slot (ring or trinket) isn't equipped with the item
             (!item.unique || (playerStore.selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot === '1' ? '2' : '1')] !== item.id)) &&
               <tr
                 key={i}
                 className="item-row"
                 data-selected={playerStore.selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot)] === item.id}
+                data-hidden={uiStore.hiddenItems.includes(item.id)}
                 onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot))}
               >
-                <td className="hide-item-btn">❌</td>
+                <td
+                  className="hide-item-btn"
+                  style={{display: hidingItems ? 'table-cell' : 'none'}}
+                  title={uiStore.hiddenItems.includes(item.id) ? 'Show Item' : 'Hide Item'}
+                  onClick={(e) => { dispatch(toggleHiddenItemId(item.id)); e.stopPropagation(); }}
+                >❌</td>
                 <td className={item.quality + ' item-row-name'}>
                   <a
                     href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)}

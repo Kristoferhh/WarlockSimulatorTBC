@@ -649,10 +649,6 @@ img[data-color='meta'] {
 	padding-bottom: 100px;
 }
 
-#hide-item-col, #hide-enchant-col {
-	display: none;
-}
-
 #header-name, #header-enchant-name {
 	text-align: left;
 }
@@ -660,10 +656,6 @@ img[data-color='meta'] {
 .item-row:hover, .enchant-row:hover, .gem-name:hover, .gem-options-gem:hover {
 	cursor: pointer;
 	background-color: rgba(104, 105, 163, 0.3);
-}
-
-#header-hide-item {
-	display: none;
 }
 
 .hide-item-btn {
