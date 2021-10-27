@@ -1,3 +1,10 @@
+body {
+	margin: 0px !important;
+	padding: 0px !important;
+	color: white;
+	font-family: Open Sans, sans-serif;
+}
+
 ul {
 	list-style: none;
 }
@@ -635,6 +642,10 @@ img[data-color='meta'] {
 	position: relative;
 }
 
+.item-row-name, .enchant-row-name {
+	font-family: Verdana;
+}
+
 .item-row-name a, .enchant-row-name a {
 	position: absolute;
 	width: 100%;
@@ -787,13 +798,6 @@ table.dataTable thead th, table.dataTable.no-footer {
 
 .item-row td:nth-child(2), .enchant-row td:first-child {
 	text-align: left;
-}
-
-body {
-	margin: 0px !important;
-	padding: 0px !important;
-	color: white;
-	font-family: Open Sans, sans-serif;
 }
 
 @media screen and (max-width: 1830px) {
