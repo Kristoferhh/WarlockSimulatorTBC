@@ -1,7 +1,7 @@
 import { Gems } from "./data/Gems";
 import { Items } from "./data/Items";
 import { Sockets } from "./data/Sockets";
-import { GemColor, ItemSlot, ItemSlotKey, SelectedGemsStruct, SettingsStruct, TalentStore } from "./Types";
+import { ItemSlot, ItemSlotKey, SelectedGemsStruct, Settings, TalentStore } from "./Types";
 
 export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
   switch(itemSlot) {
@@ -90,6 +90,6 @@ export function getRemainingTalentPoints(talents: TalentStore) {
   return 61 - Object.values<number>(talents).reduce((a, b) => a + b, 0); // 61 available talent points at lvl 70
 }
 
-export function shouldDisplayPetSetting(talents: TalentStore, settings: SettingsStruct, requiresAggressivePet: boolean) {
-  return (!talents.demonicSacrifice || settings['sacrificePet'] === 'no') && (!requiresAggressivePet || settings['petMode'] === '1');
+export function shouldDisplayPetSetting(talents: TalentStore, settings: Settings, requiresAggressivePet: boolean) {
+  return (!talents.demonicSacrifice || settings.sacrificePet === 'no') && (!requiresAggressivePet || settings.petMode === '1');
 }

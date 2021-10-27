@@ -13,10 +13,10 @@ export default function StatsDisplay() {
     let staminaModifier = playerState.stats.staminaModifier;
 
     if (playerState.auras['bloodPact']) {
-      let bloodPactModifier = playerState.settings['improvedImpSetting'];
+      let bloodPactModifier = parseInt(playerState.settings.improvedImpSetting);
 
       // If the player is using an imp, the imp is active, and the player has more points in the Improved Imp talent than the improved imp setting then use that instead
-      if (shouldDisplayPetSetting(playerState.talents, playerState.settings, false) && playerState.settings['petChoice'] === '0') {
+      if (shouldDisplayPetSetting(playerState.talents, playerState.settings, false) && playerState.settings.petChoice === '0') {
         bloodPactModifier = Math.max(bloodPactModifier, playerState.talents.improvedImp);
       }
 
@@ -57,16 +57,16 @@ export default function StatsDisplay() {
       spellPower += 100 * (0.1 * playerState.talents.demonicAegis);
     }
     if (playerState.auras['powerOfTheGuardianWarlock']) {
-      spellPower += 33 * playerState.settings['warlockAtieshAmount'];
+      spellPower += 33 * parseInt(playerState.settings.warlockAtieshAmount);
     }
     if (playerState.auras['prayerOfSpirit']) {
-      spellPower += getSpirit() * 0.05 * playerState.settings['improvedDivineSpirit'];
+      spellPower += getSpirit() * 0.05 * parseInt(playerState.settings.improvedDivineSpirit);
     }
     // Spellfire 3pc
     if (playerState.sets['552'] && playerState.sets['552'] === 3) {
       spellPower += getIntellect() * 0.07;
     }
-    if (playerState.auras['wrathOfAirTotem'] && playerState.settings['improvedWrathOfAirTotem'] === 'yes') {
+    if (playerState.auras['wrathOfAirTotem'] && playerState.settings.improvedWrathOfAirTotem === 'yes') {
       spellPower += 20;
     }
 
@@ -88,7 +88,7 @@ export default function StatsDisplay() {
   function getCrit(): string {
     let critRating = Math.round(playerState.stats.critRating);
     if (playerState.auras['powerOfTheGuardianMage']) {
-      critRating += 28 * playerState.settings['mageAtieshAmount'];
+      critRating += 28 * parseInt(playerState.settings.mageAtieshAmount);
     }
 
     let critPercent = Math.round((critRating / StatConstant.critRatingPerPercent + StatConstant.baseCritChancePercent) * 100) / 100;
@@ -98,7 +98,7 @@ export default function StatsDisplay() {
     critPercent += getIntellect() * StatConstant.critPercentPerIntellect;
     if (playerState.auras['moonkinAura']) critPercent += 5;
     if (playerState.auras['judgementOfTheCrusader']) critPercent += 3;
-    if (playerState.auras['totemOfWrath']) critPercent += 3 * playerState.settings['totemOfWrathAmount'];
+    if (playerState.auras['totemOfWrath']) critPercent += 3 * parseInt(playerState.settings.totemOfWrathAmount);
     if (playerState.auras['chainOfTheTwilightOwl']) critPercent += 2;
 
     return `${critRating} (${critPercent.toFixed(2)}%)`;
@@ -111,7 +111,7 @@ export default function StatsDisplay() {
 
     let hitPercent = Math.round((hitRating / StatConstant.hitRatingPerPercent) * 100) / 100;
     if (playerState.auras['inspiringPresence']) hitPercent++;
-    if (playerState.auras['totemOfWrath']) hitPercent += 3 * playerState.settings['totemOfWrathAmount'];
+    if (playerState.auras['totemOfWrath']) hitPercent += 3 * parseInt(playerState.settings.totemOfWrathAmount);
 
     return `${hitRating} (${hitPercent.toFixed(2)}%)`;
   }
@@ -127,13 +127,13 @@ export default function StatsDisplay() {
     let modifier = 1;
 
     if (playerState.auras['curseOfTheElements']) {
-      modifier *= (1.1 + (0.01 * playerState.settings['improvedCurseOfTheElements']));
+      modifier *= (1.1 + (0.01 * parseInt(playerState.settings.improvedCurseOfTheElements)));
     }
 
     // Master Demonologist & Soul Link
-    if (playerState.talents.demonicSacrifice === 0 || playerState.settings['sacrificePet'] === 'no') {
+    if (playerState.talents.demonicSacrifice === 0 || playerState.settings.sacrificePet === 'no') {
       if (playerState.talents.masterDemonologist > 0) {
-        switch (playerState.settings['petChoice']) {
+        switch (playerState.settings.petChoice) {
           case '2': // Succubus
             modifier *= (1 + (0.02 * playerState.talents.masterDemonologist));
             break;
@@ -149,7 +149,7 @@ export default function StatsDisplay() {
     }
 
     if (playerState.auras['ferociousInspiration']) {
-      modifier *= Math.pow(1.03, playerState.settings['ferociousInspirationAmount']);
+      modifier *= Math.pow(1.03, parseInt(playerState.settings.ferociousInspirationAmount));
     }
 
     return modifier;
@@ -158,8 +158,8 @@ export default function StatsDisplay() {
   function getShadowModifier(): string {
     let modifier = playerState.stats.shadowModifier * getShadowAndFireModifier() * (1 + (0.02 * playerState.talents.shadowMastery));
 
-    if (playerState.talents.demonicSacrifice === 1 && playerState.settings['sacrificePet'] === 'yes') {
-      switch (playerState.settings['petChoice']) {
+    if (playerState.talents.demonicSacrifice === 1 && playerState.settings.sacrificePet === 'yes') {
+      switch (playerState.settings.petChoice) {
         case '2': // Succubus
           modifier *= 1.15;
           break;
@@ -175,7 +175,7 @@ export default function StatsDisplay() {
   function getFireModifier(): string {
     let modifier = playerState.stats.fireModifier * getShadowAndFireModifier();
 
-    if (playerState.talents.demonicSacrifice === 1 && playerState.settings['sacrificePet'] === 'yes' && playerState.settings['petChoice'] === '0') {
+    if (playerState.talents.demonicSacrifice === 1 && playerState.settings.sacrificePet === 'yes' && playerState.settings.petChoice === '0') {
       modifier *= 1.15;
     }
 
@@ -188,17 +188,17 @@ export default function StatsDisplay() {
     let mp5 = playerState.stats.mp5;
 
     if (playerState.auras['vampiricTouch']) {
-      mp5 += playerState.settings['shadowPriestDps'] * 0.25;
+      mp5 += parseInt(playerState.settings.shadowPriestDps) * 0.25;
     }
 
     return mp5;
   }
 
   function getEnemyArmor(): number {
-    let armor = playerState.settings['enemyArmor'];
+    let armor = parseInt(playerState.settings.enemyArmor);
 
     if (playerState.auras['faerieFire']) armor -= 610;
-    if ((playerState.auras['sunderArmor'] && playerState.auras['exposeArmor'] && playerState.settings['improvedExposeArmor'] === '2') || (playerState.auras['exposeArmor'] && !playerState.auras['sunderArmor'])) armor -= 2050 * (1 + 0.25 * parseInt(playerState.settings['improvedExposeArmor']));
+    if ((playerState.auras['sunderArmor'] && playerState.auras['exposeArmor'] && playerState.settings.improvedExposeArmor === '2') || (playerState.auras['exposeArmor'] && !playerState.auras['sunderArmor'])) armor -= 2050 * (1 + 0.25 * parseInt(playerState.settings.improvedExposeArmor));
     else if (playerState.auras['sunderArmor']) armor -= 520 * 5;
     if (playerState.auras['curseOfRecklessness']) armor -= 800;
     if (playerState.auras['annihilator']) armor -= 600;

@@ -191,50 +191,54 @@ export type PlayerStats = {
   [key in keyof typeof Stat]: number
 }
 
-export interface Settings {
-  race: Race,
-  improvedDivineSpirit: string,
-  improvedCurseOfTheElements: string,
-  iterations: string,
-  'min-fight-length': string,
-  'max-fight-length': string,
-  'target-level': string,
-  petChoice: string,
-  totemOfWrathAmount: string,
-  petMode: string,
-  sacrificePet: string,
-  enemyArmor: string,
-  mageAtieshAmount: string,
-  warlockAtieshAmount: string,
-  'target-shadow-resistance': string,
-  'target-fire-resistance': string,
-  improvedExposeArmor: string,
-  improvedFaerieFire: string,
-  bloodlustAmount: string,
-  shadowPriestDps: string,
-  survivalHunterAgility: string,
-  exposeWeaknessUptime: string,
-  lashOfPainUsage: string,
-  shattrathFaction: string,
-  shattrathFactionReputation: string,
-  'automatically-open-sim-details': string,
-  customIsbUptime: string,
-  customIsbUptimeValue: string,
-  randomizeValues: string,
-  infinitePlayerMana: string,
-  infinitePetMana: string,
-  prepopBlackBook: string,
-  rotationOption: string,
-  fightType: string,
-  enemyAmount: string,
-  powerInfusionAmount: string,
-  innervateAmount: string,
-  ferociousInspirationAmount: string,
-  improvedImpSetting: string,
-  improvedWrathOfAirTotem: string,
+export enum Setting {
+  race = 'race',
+  improvedDivineSpirit = 'improvedDivineSpirit',
+  improvedCurseOfTheElements = 'improvedCurseOfTheElements',
+  iterations = 'iterations',
+  'min-fight-length' = 'min-fight-length',
+  'max-fight-length' = 'max-fight-length',
+  'target-level' = 'target-level',
+  petChoice = 'petChoice',
+  totemOfWrathAmount = 'totemOfWrathAmount',
+  petMode = 'petMode',
+  sacrificePet = 'sacrificePet',
+  enemyArmor = 'enemyArmor',
+  mageAtieshAmount = 'mageAtieshAmount',
+  warlockAtieshAmount = 'warlockAtieshAmount',
+  'target-shadow-resistance' = 'target-shadow-resistance',
+  'target-fire-resistance' = 'target-fire-resistance',
+  improvedExposeArmor = 'improvedExposeArmor',
+  improvedFaerieFire = 'improvedFaerieFire',
+  bloodlustAmount = 'bloodlustAmount',
+  shadowPriestDps = 'shadowPriestDps',
+  survivalHunterAgility = 'survivalHunterAgility',
+  exposeWeaknessUptime = 'exposeWeaknessUptime',
+  lashOfPainUsage = 'lashOfPainUsage',
+  shattrathFaction = 'shattrathFaction',
+  shattrathFactionReputation = 'shattrathFactionReputation',
+  'automatically-open-sim-details' = 'automatically-open-sim-details',
+  customIsbUptime = 'customIsbUptime',
+  customIsbUptimeValue = 'customIsbUptimeValue',
+  randomizeValues = 'randomizeValues',
+  infinitePlayerMana = 'infinitePlayerMana',
+  infinitePetMana = 'infinitePetMana',
+  prepopBlackBook = 'prepopBlackBook',
+  rotationOption = 'rotationOption',
+  fightType = 'fightType',
+  enemyAmount = 'enemyAmount',
+  powerInfusionAmount = 'powerInfusionAmount',
+  innervateAmount = 'innervateAmount',
+  ferociousInspirationAmount = 'ferociousInspirationAmount',
+  improvedImpSetting = 'improvedImpSetting',
+  improvedWrathOfAirTotem = 'improvedWrathOfAirTotem',
 }
 
-export const InitialSettings: {[key: string]: string} = {
+export type Settings = {
+  [key in Setting]: string
+}
+
+export const InitialSettings: {[key in Setting]: string} = {
   race: Race.Gnome,
   improvedDivineSpirit: '0',
   improvedCurseOfTheElements: '0',
@@ -265,7 +269,7 @@ export const InitialSettings: {[key: string]: string} = {
   customIsbUptimeValue: '70',
   randomizeValues: 'no',
   infinitePlayerMana: 'no',
-  infinintePetMana: 'no',
+  infinitePetMana: 'no',
   prepopBlackBook: 'no',
   rotationOption: 'simChooses',
   fightType: 'singleTarget',
@@ -369,10 +373,6 @@ export interface RotationStruct {
   }
 }
 
-export interface SettingsStruct {
-  [key: string]: any
-}
-
 export interface AurasStruct {
   [key: string]: boolean
 }
@@ -384,7 +384,7 @@ export interface Profile {
   talents: TalentStore,
   rotation: RotationStruct,
   enchants: ItemAndEnchantStruct,
-  simSettings: SettingsStruct,
+  simSettings: Settings,
 }
 
 export interface PlayerState {
@@ -396,7 +396,7 @@ export interface PlayerState {
   auras: AurasStruct,
   rotation: RotationStruct,
   stats: PlayerStats,
-  settings: SettingsStruct,
+  settings: Settings,
   profiles: {[key: string]: Profile},
   sets: {[key: string]: number},
 }
