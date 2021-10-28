@@ -95,7 +95,7 @@ export default function GemSelection() {
           <td id='show-hidden-gems-button' onClick={(e) => setShowingHiddenGems(!showingHiddenGems)}>{(showingHiddenGems ? 'Hide' : 'Show') + ' Hidden Gems'}</td>
         </tr>
         {
-          Gems.map((gem, i) =>
+          Gems.sort(function(a, b) { return Number(uiState.gemPreferences.favorites.includes(b.id)) - Number(uiState.gemPreferences.favorites.includes(a.id)); }).map((gem, i) =>
             // Only show the gems if they're meta gems and the socket is a meta socket or if they're not meta gems and the socket is not a meta socket.
             ((uiState.gemSelectionTable.socketColor === SocketColor.Meta && gem.color === GemColor.Meta) || (uiState.gemSelectionTable.socketColor !== SocketColor.Meta && gem.color !== GemColor.Meta)) &&
               <tr
