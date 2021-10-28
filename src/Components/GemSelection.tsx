@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from "../Common";
 import { Gems } from "../data/Gems";
@@ -12,6 +13,7 @@ export default function GemSelection() {
   const selectedGemsState = useSelector((state: RootState) => state.player.selectedGems);
   const selectedItemsState = useSelector((state: RootState) => state.player.selectedItems);
   const dispatch = useDispatch();
+  const [showingHiddenGems, setShowingHiddenGems] = useState(false);
 
   function gemClickHandler(gem: Gem) {
     const itemIsEquipped = parseInt(uiState.gemSelectionTable.itemId) === selectedItemsState[ItemSlotKeyToItemSlot(false, uiState.gemSelectionTable.itemSlot, uiState.gemSelectionTable.itemSubSlot)];
@@ -32,10 +34,10 @@ export default function GemSelection() {
       }
     }
 
-    // If a gem is already equipped then remove the stats from it and the socket bonus
+    // If another gem is already equipped then remove the stats from it and the socket bonus
     if (itemIsEquipped && ![null, 0].includes(currentItemSocketArray[uiState.gemSelectionTable.socketNumber][1])) {
-      const item = Items.find(e => e.id === parseInt(uiState.gemSelectionTable.itemId))!!;
-      for (const [stat, value] of Object.entries(item.socketBonus!!!)) {
+      const item = Items.find(e => e.id === parseInt(uiState.gemSelectionTable.itemId))!;
+      for (const [stat, value] of Object.entries(item.socketBonus!)) {
         dispatch(modifyPlayerStat({
           stat: stat as Stat,
           value: value,
@@ -43,7 +45,7 @@ export default function GemSelection() {
         }));
       }
 
-      const gemObj = Gems.find(e => e.id === currentItemSocketArray[uiState.gemSelectionTable.socketNumber][1])!!;
+      const gemObj = Gems.find(e => e.id === currentItemSocketArray[uiState.gemSelectionTable.socketNumber][1])!;
       if (gemObj.stats) {
         for (const [stat, value] of Object.entries(gemObj.stats)) {
           dispatch(modifyPlayerStat({
@@ -75,7 +77,7 @@ export default function GemSelection() {
 
     // Add socket bonus stats if the item meets the socket requirements
     if (itemIsEquipped && itemMeetsSocketRequirements({itemId: parseInt(uiState.gemSelectionTable.itemId), socketArray: currentItemSocketArray})) {
-      for (const [stat, value] of Object.entries(Items.find(e => e.id === parseInt(uiState.gemSelectionTable.itemId))!!.socketBonus!!)) {
+      for (const [stat, value] of Object.entries(Items.find(e => e.id === parseInt(uiState.gemSelectionTable.itemId))!.socketBonus!)) {
         dispatch(modifyPlayerStat({
           stat: stat as Stat,
           value: value,
@@ -88,11 +90,20 @@ export default function GemSelection() {
   return(
     <table id="gem-selection-table" cellSpacing={0} data-color='none' style={{display: uiState.gemSelectionTable.visible ? '' : 'none'}} onClick={(e) => e.stopPropagation()}>
       <tbody>
+        <tr>
+          <td></td>
+          <td id='show-hidden-gems-button' onClick={(e) => setShowingHiddenGems(!showingHiddenGems)}>{(showingHiddenGems ? 'Hide' : 'Show') + ' Hidden Gems'}</td>
+        </tr>
         {
           Gems.map((gem, i) =>
             // Only show the gems if they're meta gems and the socket is a meta socket or if they're not meta gems and the socket is not a meta socket.
             ((uiState.gemSelectionTable.socketColor === SocketColor.Meta && gem.color === GemColor.Meta) || (uiState.gemSelectionTable.socketColor !== SocketColor.Meta && gem.color !== GemColor.Meta)) &&
-              <tr key={i} className='gem-row' data-hidden={false}>
+              <tr
+                key={i}
+                className='gem-row'
+                data-hidden={false}
+                style={{display: uiState.gemPreferences.hidden.includes(gem.id) && !showingHiddenGems ? 'none' : ''}}
+              >
                 <td
                   className='gem-info gem-favorite-star'
                   title={uiState.gemPreferences.favorites.includes(gem.id) ? 'Remove gem from favorites' : 'Add gem to favorites'}
