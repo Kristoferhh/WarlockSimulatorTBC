@@ -107,6 +107,10 @@ export const PlayerSlice = createSlice({
       window.location.reload();
     },
     setItemSocketsValue: (state, action: PayloadAction<{itemId: string, itemSlot: ItemSlotKey, value: [string, number][]}>) => {
+      if (!state.selectedGems[action.payload.itemSlot]) {
+        state.selectedGems[action.payload.itemSlot] = {};
+      }
+      
       state.selectedGems[action.payload.itemSlot][action.payload.itemId] = action.payload.value;
       localStorage.setItem('selectedGems', JSON.stringify(state.selectedGems));
     },

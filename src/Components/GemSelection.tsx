@@ -15,10 +15,11 @@ export default function GemSelection() {
 
   function gemClickHandler(gem: Gem) {
     const itemIsEquipped = parseInt(uiState.gemSelectionTable.itemId) === selectedItemsState[ItemSlotKeyToItemSlot(false, uiState.gemSelectionTable.itemSlot, uiState.gemSelectionTable.itemSubSlot)];
-    let currentItemSocketArray = selectedGemsState[uiState.gemSelectionTable.itemSlot][uiState.gemSelectionTable.itemId];
-    
+    let selectedGemsInItemSlot = selectedGemsState[uiState.gemSelectionTable.itemSlot] || {};
+
     // If the item doesn't have a socket array yet then initialize it to an array of ['', 0] sub-arrays.
     // The first element is the socket color (not gem color) and the second element is the gem id.
+    let currentItemSocketArray = selectedGemsInItemSlot[uiState.gemSelectionTable.itemId];
     if (currentItemSocketArray == null) {
       const itemSocketAmount = Items.find(i => i.id === parseInt(uiState.gemSelectionTable.itemId))?.sockets?.length;
       currentItemSocketArray = Array(itemSocketAmount).fill(['', 0]);
