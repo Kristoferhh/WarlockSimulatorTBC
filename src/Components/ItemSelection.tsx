@@ -6,9 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/Store';
 import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot, setItemSetCount, setItemSocketsValue } from '../redux/PlayerSlice';
 import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from '../Common';
-import { setGemSelectionTable, toggleHiddenItemId } from '../redux/UiSlice';
+import { setEquippedItemsWindowVisibility, setGemSelectionTable, toggleHiddenItemId } from '../redux/UiSlice';
 import { Sockets } from '../data/Sockets';
 import { Gems } from '../data/Gems';
+import ItemSocketDisplay from './ItemSocketDisplay';
 
 const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlotValue}[] = [
   { name: 'Main Hand', itemSlot: ItemSlotKey.Mainhand, subSlot: '' },
@@ -44,34 +45,41 @@ export default function ItemSelection() {
     if (playerStore.selectedItems[slot] !== 0) {
       const itemObj = Items.find(i => i.id === playerStore.selectedItems[slot]);
 
-      for (const [prop, value] of Object.entries(itemObj!)) {
-        if (playerStore.stats.hasOwnProperty(prop)) {
-          dispatch(modifyPlayerStat({
-            stat: prop as Stat,
-            value: value,
-            action: 'remove'
+      if (itemObj) {
+        for (const [prop, value] of Object.entries(itemObj)) {
+          if (playerStore.stats.hasOwnProperty(prop)) {
+            dispatch(modifyPlayerStat({
+              stat: prop as Stat,
+              value: value,
+              action: 'remove'
+            }));
+          }
+        }
+
+        // Remove stats from socket bonus if it's active
+        if (itemMeetsSocketRequirements({itemId: itemObj!.id, selectedGems: playerStore.selectedGems})) {
+          for (const [stat, value] of Object.entries(itemObj!.socketBonus!)) {
+            dispatch(modifyPlayerStat({
+              stat: stat as Stat,
+              value: value,
+              action: 'remove'
+            }));
+          }
+        }
+
+        // Lower the item set counter by 1 if the item is part of a set
+        if (itemObj!.setId && playerStore.sets[itemObj!.setId] && playerStore.sets[itemObj!.setId] > 0) {
+          dispatch(setItemSetCount({
+            setId: itemObj!.setId,
+            count: playerStore.sets[itemObj!.setId] - 1
           }));
         }
       }
 
-      // Remove stats from socket bonus if it's active
-      if (itemMeetsSocketRequirements({itemId: itemObj!.id, selectedGems: playerStore.selectedGems})) {
-        for (const [stat, value] of Object.entries(itemObj!.socketBonus!)) {
-          dispatch(modifyPlayerStat({
-            stat: stat as Stat,
-            value: value,
-            action: 'remove'
-          }));
-        }
-      }
-
-      // Lower the item set counter by 1 if the item is part of a set
-      if (itemObj!.setId && playerStore.sets[itemObj!.setId] && playerStore.sets[itemObj!.setId] > 0) {
-        dispatch(setItemSetCount({
-          setId: itemObj!.setId,
-          count: playerStore.sets[itemObj!.setId] - 1
-        }));
-      }
+      dispatch(setItemInItemSlot({
+        id: 0,
+        itemSlot: slot,
+      }));
     }
 
     // If the item that was clicked on is the currently equipped item then don't add the stats since it's being unequipped
@@ -105,12 +113,12 @@ export default function ItemSelection() {
           count: playerStore.sets[item.setId] == null ? 1 : playerStore.sets[item.setId] + 1
         }));
       }
-    }
 
-    dispatch(setItemInItemSlot({
-      id: item.id,
-      itemSlot: slot,
-    }));
+      dispatch(setItemInItemSlot({
+        id: item.id,
+        itemSlot: slot,
+      }));
+    }
   }
 
   function enchantClickHandler(enchant: Enchant, slot: ItemSlot) {
@@ -129,6 +137,11 @@ export default function ItemSelection() {
           }
         }
       }
+
+      dispatch(setEnchantInItemSlot({
+        id: 0,
+        itemSlot: slot,
+      }));
     }
 
     // If the enchant that was clicked on is the currently selected enchant then don't add the stats since it's being removoed
@@ -143,12 +156,12 @@ export default function ItemSelection() {
           }));
         }
       }
-    }
 
-    dispatch(setEnchantInItemSlot({
-      id: enchant.id,
-      itemSlot: slot,
-    }));
+      dispatch(setEnchantInItemSlot({
+        id: enchant.id,
+        itemSlot: slot,
+      }));
+    }
   }
 
   function itemSlotClickHandler(slot: ItemSlotKey, subSlot: SubSlotValue) {
@@ -230,7 +243,7 @@ export default function ItemSelection() {
       </ul>
       <button id='hide-show-items-btn' onClick={(e) => setHidingItems(!hidingItems)}>Hide / Show Items</button>
       <button id='gem-options-button'>Fill Item Sockets</button>
-      <button id='show-equipped-items'>Show Equipped Items</button>
+      <button id='show-equipped-items' onClick={(e) => dispatch(setEquippedItemsWindowVisibility(!uiStore.equippedItemsWindowVisible))}>Show Equipped Items</button>
       <div id='gem-options-window'>
         <div id='gem-options-window-replacement-options'>
           <input type="radio" name='gem-replacement-option' value='emptySockets' defaultChecked />
@@ -324,28 +337,13 @@ export default function ItemSelection() {
                   {item.name}
                 </td>
                 <td>
-                  <div>
-                    {
-                      item.sockets?.map((socket, j) =>
-                        <a
-                          target='_blank'
-                          rel='noreferrer'
-                          href={playerStore.selectedGems[itemSlot] && playerStore.selectedGems[itemSlot][item.id] && playerStore.selectedGems[itemSlot][item.id][j][1] !== 0 ? `https://tbc.wowhead.com/item=${playerStore.selectedGems[itemSlot][item.id][j][1]}` : ''}
-                          key={j}
-                          onClick={(e) => { itemSocketClickHandler(item.id.toString(), j, socket); e.preventDefault(); e.stopPropagation(); }}
-                          onContextMenu={(e) => { removeGemFromSocket(item.id.toString(), j); e.preventDefault(); }}
-                        >
-                          <img
-                            width={16}
-                            height={16}
-                            data-color={socket}
-                            src={playerStore.selectedGems[itemSlot] && playerStore.selectedGems[itemSlot][item.id] && ![null, 0].includes(playerStore.selectedGems[itemSlot][item.id][j][1]) ? `${process.env.PUBLIC_URL}/img/${Gems.find(e => e.id === playerStore.selectedGems[itemSlot][item.id][j][1])?.iconName}.jpg` : `${process.env.PUBLIC_URL}/img/${Sockets.find(s => s.color === socket)!.iconName}.jpg`}
-                            alt={socket + ' socket'}
-                          />
-                        </a>
-                      )
-                    }
-                  </div>
+                  {
+                    <ItemSocketDisplay
+                      item={item}
+                      itemSlot={itemSlot}
+                      itemSocketClickHandler={itemSocketClickHandler}
+                      removeGemFromSocket={removeGemFromSocket} />
+                  }
                 </td>
                 <td>{item.source}</td>
                 <td>{item.stamina}</td>

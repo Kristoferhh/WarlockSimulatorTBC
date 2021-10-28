@@ -27,21 +27,11 @@ export const PlayerSlice = createSlice({
       localStorage.setItem('talents', JSON.stringify(state.talents));
     },
     setItemInItemSlot: (state, item: PayloadAction<{id: number, itemSlot: ItemSlot}>) => {
-      if (state.selectedItems[item.payload.itemSlot] === item.payload.id) {
-        state.selectedItems[item.payload.itemSlot] = 0;
-      } else {
-        state.selectedItems[item.payload.itemSlot] = item.payload.id;        
-      }
-
+      state.selectedItems[item.payload.itemSlot] = item.payload.id;
       localStorage.setItem('selectedItems', JSON.stringify(state.selectedItems));
     },
-    setEnchantInItemSlot: (state, item: PayloadAction<{id: number, itemSlot: ItemSlot}>) => {
-      if (state.selectedEnchants[item.payload.itemSlot] === item.payload.id) {
-        state.selectedEnchants[item.payload.itemSlot] = 0;
-      } else {
-        state.selectedEnchants[item.payload.itemSlot] = item.payload.id;
-      }
-
+    setEnchantInItemSlot: (state, enchant: PayloadAction<{id: number, itemSlot: ItemSlot}>) => {
+      state.selectedEnchants[enchant.payload.itemSlot] = enchant.payload.id;
       localStorage.setItem('selectedEnchants', JSON.stringify(state.selectedEnchants));
     },
     toggleAuraSelection: (state, action: PayloadAction<Aura>) => {

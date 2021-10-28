@@ -298,7 +298,6 @@ ul {
 	position: absolute;
 	left: 50%;
 	top: 10%;
-	display: none;
 	margin: 0 auto;
 }
 
@@ -638,7 +637,7 @@ img[data-color='meta'] {
 	font-size: 17px;
 }
 
-.item-row td, .enchant-row td {
+.item-row td, .enchant-row td, .equipped-item-row td {
 	position: relative;
 }
 
@@ -646,7 +645,7 @@ img[data-color='meta'] {
 	font-family: Verdana;
 }
 
-.item-row-name a, .enchant-row-name a {
+.item-row-name a, .enchant-row-name a, .equipped-item-name a, .equipped-item-enchant-name a {
 	position: absolute;
 	width: 100%;
 	top: 0;

@@ -436,6 +436,7 @@ export interface UiState {
   gemPreferences: {hidden: number[], favorites: number[]},
   selectedProfile: string,
   importExportWindowVisible: boolean,
+  equippedItemsWindowVisible: boolean,
   hiddenItems: number[],
 }
 

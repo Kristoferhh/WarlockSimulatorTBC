@@ -7,6 +7,7 @@ const initialUiState : UiState = {
   gemPreferences: JSON.parse(localStorage.getItem('gemPreferences') || JSON.stringify({hidden: [], favorites: []})),
   selectedProfile: localStorage.getItem('selectedProfile') || '',
   importExportWindowVisible: false,
+  equippedItemsWindowVisible: false,
   hiddenItems: JSON.parse(localStorage.getItem('hiddenItems') || JSON.stringify([])),
 }
 
@@ -46,6 +47,9 @@ export const UiSlice = createSlice({
     setImportExportWindowVisibility: (state, action: PayloadAction<boolean>) => {
       state.importExportWindowVisible = action.payload;
     },
+    setEquippedItemsWindowVisibility: (state, action: PayloadAction<boolean>) => {
+      state.equippedItemsWindowVisible = action.payload;
+    },
     toggleHiddenItemId: (state, action: PayloadAction<number>) => {
       if (state.hiddenItems.includes(action.payload)) {
         state.hiddenItems = state.hiddenItems.filter((e) => e !== action.payload);
@@ -58,5 +62,5 @@ export const UiSlice = createSlice({
   }
 });
 
-export const { toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
+export const { setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
 export default UiSlice.reducer;
