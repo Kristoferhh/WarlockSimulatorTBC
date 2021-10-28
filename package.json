@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Kristoferhh/WarlockSimulatorTBC#readme",
   "devDependencies": {
-    "browser-sync": "^2.27.6",
+    "browser-sync": "^2.27.7",
     "gulp": "^4.0.2"
   }
 }
