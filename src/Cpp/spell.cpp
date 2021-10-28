@@ -694,17 +694,16 @@ void SeedOfCorruption::damage(bool isCrit)
         if (!player->isHit(type))
         {
             resistAmount++;
-            continue;
         }
         else
         {
             onDamageProcs();
-        }
-        // Check for a crit
-        if (player->isCrit(type))
-        {
-            critAmount++;
-            onCritProcs();
+            // Check for a crit
+            if (player->isCrit(type))
+            {
+                critAmount++;
+                onCritProcs();
+            }
         }
     }
 
