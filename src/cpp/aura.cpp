@@ -226,7 +226,7 @@ ImprovedShadowBoltAura::ImprovedShadowBoltAura(Player* player) : Aura(player)
     name = "Improved Shadow Bolt";
     duration = 12;
     stacks = 0;
-    maxStacks = 0;
+    maxStacks = 4;
     Aura::modifier = 1 + player->talents->improvedShadowBolt * 0.04;
     uptimeSoFar = 0;
     setup();

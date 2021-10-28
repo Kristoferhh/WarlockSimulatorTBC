@@ -12,6 +12,9 @@ struct Aura
     int duration;
     double durationRemaining;
     int procChance;
+    bool active;
+    bool hasDuration;
+    bool groupWide; // true if it's an aura that applies to everyone in the group (will apply to pets as well then)
     // dots
     int tickTimerTotal;
     double tickTimerRemaining;
@@ -26,16 +29,13 @@ struct Aura
     double uptimeSoFar;
     // Bloodlust
     double hasteModifier;
-    bool active;
-    bool hasDuration;
-    bool groupWide; // true if it's an aura that applies to everyone in the group (will apply to pets as well then)
 
     Aura(Player* player);
     void setup();
     virtual void tick(double time);
     virtual void apply();
     virtual void fade(bool endOfIteration = false);
-    void decrementStacks(); // ISB
+    virtual void decrementStacks(); // ISB
 };
 
 struct ImprovedShadowBoltAura : public Aura
