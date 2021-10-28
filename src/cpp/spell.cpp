@@ -685,8 +685,29 @@ void SeedOfCorruption::damage(bool isCrit)
     int resistAmount = 0;
     int critAmount = 0;
     int spellPower = player->getSpellPower(school);
-    double modifier = getModifier(); //todo debuffs increase dmg past the aoe cap
     double critMultiplier = 0;
+    double internalModifier = getModifier();
+    double externalModifier = 1;
+
+    // Remove debuffs from the modifier since they ignore the AOE cap, so we'll add the debuff % modifiers after the damage has been calculated.
+    if (player->selectedAuras->curseOfTheElements)
+    {
+        double modifier = 1.1 + (0.01 * player->settings->improvedCurseOfTheElements);
+        internalModifier /= modifier;
+        externalModifier *= modifier;
+    }
+    if (player->selectedAuras->shadowWeaving)
+    {
+        double modifier = 1.1;
+        internalModifier /= modifier;
+        externalModifier *= modifier;
+    }
+    if (player->selectedAuras->misery)
+    {
+        double modifier = 1.05;
+        internalModifier /= modifier;
+        externalModifier *= modifier;
+    }
 
     for (int i = 0; i < enemyAmount; i++)
     {
@@ -713,7 +734,7 @@ void SeedOfCorruption::damage(bool isCrit)
     {
         individualSeedDamage += 180;
     }
-    individualSeedDamage *= modifier;
+    individualSeedDamage *= internalModifier;
 
     int enemiesHit = enemyAmount - resistAmount;
     double totalSeedDamage = individualSeedDamage * enemiesHit;
@@ -740,11 +761,14 @@ void SeedOfCorruption::damage(bool isCrit)
     double partialResistMultiplier = player->getPartialResistMultiplier(school);
     totalSeedDamage *= partialResistMultiplier;
 
+    // Add damage from debuffs
+    totalSeedDamage *= externalModifier;
+
     player->iterationDamage += totalSeedDamage;
 
     if (player->shouldWriteToCombatLog())
     {
-        std::string msg = name + " " + truncateTrailingZeros(std::to_string(round(totalSeedDamage))) + " (" + std::to_string(enemyAmount) + " Enemies (" + std::to_string(resistAmount) + " Resists & " + std::to_string(critAmount) + " Crits) - " + std::to_string(baseDamage) + " Base Damage - " + truncateTrailingZeros(std::to_string(coefficient), 3) + " Coefficient - " + std::to_string(spellPower) + " Spell Power - " + truncateTrailingZeros(std::to_string(round(modifier * 1000) / 10), 1) + "% Modifier - ";
+        std::string msg = name + " " + truncateTrailingZeros(std::to_string(round(totalSeedDamage))) + " (" + std::to_string(enemyAmount) + " Enemies (" + std::to_string(resistAmount) + " Resists & " + std::to_string(critAmount) + " Crits) - " + std::to_string(baseDamage) + " Base Damage - " + truncateTrailingZeros(std::to_string(coefficient), 3) + " Coefficient - " + std::to_string(spellPower) + " Spell Power - " + truncateTrailingZeros(std::to_string(round(internalModifier * externalModifier * 1000) / 10), 1) + "% Modifier - ";
         if (critAmount > 0)
         {
             msg += truncateTrailingZeros(std::to_string(critMultiplier), 3) + "% Crit Multiplier";
@@ -792,7 +816,7 @@ bool DarkPact::ready()
 
 void DarkPact::cast()
 {
-
+    
 }
 
 Corruption::Corruption(Player* player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot) : Spell(player, aura, dot)
