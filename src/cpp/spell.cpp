@@ -738,14 +738,17 @@ void SeedOfCorruption::damage(bool isCrit)
 
     int enemiesHit = enemyAmount - resistAmount;
     double totalSeedDamage = individualSeedDamage * enemiesHit;
+    // Because of the Seed bug explained below, we need to use this formula to calculate the actual aoe cap for the amount of mobs that will be hit by the spell.
+    // Explained by Tesram on the TBC Warlock discord https://discord.com/channels/253210018697052162/825310481358651432/903413703595143218
+    int trueDmgCap = (dmgCap * enemiesHit) / (enemiesHit + 1);
     // If the total damage goes above the aoe cap then we need to reduce the amount of each seed's damage
-    if (totalSeedDamage > dmgCap)
+    if (totalSeedDamage > trueDmgCap)
     {
-        // Set the damage of each individual seed to the aoe cap divided by the amount of enemies hit
+        // Set the damage of each individual seed to the "true" aoe cap divided by the amount of enemies hit
         // There's a bug with Seed of Corruption where if you hit the AoE cap,
         // the number used to divide here is 1 higher because it's including the enemy that Seed is being cast on,
         // even though that enemy doesn't actually get damaged by the Seed. Nice game :)
-        individualSeedDamage = dmgCap / (enemiesHit + 1);
+        individualSeedDamage = trueDmgCap / enemiesHit;
         // Re-calculate the total damage done by all seed hits
         totalSeedDamage = individualSeedDamage * enemiesHit;
     }
