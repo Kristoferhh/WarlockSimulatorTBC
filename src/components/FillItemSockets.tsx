@@ -5,9 +5,15 @@ import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
 import { setItemSocketsValue } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store"
-import { setFillItemSocketsWindowVisibility, setSelectedItemSlot } from "../redux/UiSlice";
+import { setFillItemSocketsWindowVisibility } from "../redux/UiSlice";
 import { Item, SocketColor } from "../Types";
 
+const socketOptions: {name: string, color: SocketColor}[] = [
+  { name: 'Meta Socket', color: SocketColor.Meta },
+  { name: 'Red Socket', color: SocketColor.Red },
+  { name: 'Yellow Socket', color: SocketColor.Yellow },
+  { name: 'Blue Socket', color: SocketColor.Blue }
+]
 
 export function FillItemSockets() {
   const uiState = useSelector((state: RootState) => state.ui);
@@ -67,26 +73,25 @@ export function FillItemSockets() {
   return (
     <div id='gem-options-window' style={{display: uiState.fillItemSocketsWindowVisible ? '' : 'none'}}>
       <div id='gem-options-window-replacement-options'>
-        <input type="radio" name='gem-replacement-option' value='emptySockets' onChange={(e) => setReplacingExistingGems(false)} checked={replacingExistingGems === false} />
         <label htmlFor='emptySockets'>Fill empty sockets</label>
-        <input type="radio" name='gem-replacement-option' value='allSockets' onChange={(e) => setReplacingExistingGems(true)} checked={replacingExistingGems === true} />
+        <input type="radio" name='gem-replacement-option' id='emptySockets' onChange={(e) => setReplacingExistingGems(false)} checked={replacingExistingGems === false} />
         <label htmlFor='allSockets'>Fill all sockets (replaces equipped gems)</label>
+        <input type="radio" name='gem-replacement-option' id='allSockets' onChange={(e) => setReplacingExistingGems(true)} checked={replacingExistingGems === true} />
       </div>
       <div id='gem-options-window-item-slot'>
-        <input type='radio' name='item-slot' value='currentSlot' onChange={(e) => setItemSlotToFill('currentSlot')} checked={itemSlotToFill === 'currentSlot'} />
         <label htmlFor='currentSlot'>Current item slot</label>
-        <input type='radio' name='item-slot' value='allSlots' onChange={(e) => setItemSlotToFill('allSlots')} checked={itemSlotToFill === 'allSlots'} />
+        <input type='radio' name='item-slot' id='currentSlot' onChange={(e) => setItemSlotToFill('currentSlot')} checked={itemSlotToFill === 'currentSlot'} />
         <label htmlFor='allSlots'>All item slots</label>
+        <input type='radio' name='item-slot' id='allSlots' onChange={(e) => setItemSlotToFill('allSlots')} checked={itemSlotToFill === 'allSlots'} />
       </div>
       <div id='gem-options-window-socket-selection'>
-        <input type="radio" name="socket-selection" value='meta' onChange={(e) => socketColorClickHandler(SocketColor.Meta)} checked={socketColor === SocketColor.Meta} />
-        <label>Meta Sockets</label>
-        <input type="radio" name="socket-selection" value='red' onChange={(e) => socketColorClickHandler(SocketColor.Red)} checked={socketColor === SocketColor.Red} />
-        <label>Red Sockets</label>
-        <input type="radio" name="socket-selection" value='blue' onChange={(e) => socketColorClickHandler(SocketColor.Blue)} checked={socketColor === SocketColor.Blue} />
-        <label>Blue Sockets</label>
-        <input type="radio" name="socket-selection" value='yellow' onChange={(e) => socketColorClickHandler(SocketColor.Yellow)} checked={socketColor === SocketColor.Yellow} />
-        <label>Yellow Sockets</label>
+        {
+          socketOptions.map((socket, i) =>
+            <label>{socket.name}
+              <input type='radio' name='socket-selection' onChange={(e) => socketColorClickHandler(socket.color)} checked={socketColor === socket.color}></input>
+            </label>          
+          )
+        }
       </div>
       <div id='gem-options-gem-list'>
         <div id='gem-options-gem-list'>

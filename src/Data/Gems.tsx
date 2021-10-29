@@ -17,26 +17,6 @@ export const Gems: Gem[] = [
   { name: 'Runed Living Ruby', id: 24030, color: GemColor.Red, iconName: 'inv_jewelcrafting_livingruby_03', phase: 2, stats: { spellPower: 9 } },
   { name: 'Runed Blood Garnet', id: 23096, color: GemColor.Red, iconName: 'inv_misc_gem_bloodgem_02', phase: 1, stats: { spellPower: 7 } },
 
-  // Yellow
-  { name: 'Quick Lionseye', id: 35761, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_lionseye_02', phase: 5, stats: { hasteRating: 10 } },
-  { name: 'Quick Dawnstone', id: 35315, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_dawnstone_03', phase: 5, stats: { hasteRating: 8 } },
-  { name: 'Great Bladestone', id: 33141, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_lionseye_02', phase: 3, stats: { hitRating: 12 } },
-  { name: 'Blood of Amber', id: 33140, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_lionseye_02', phase: 3, stats: { critRating: 12 } },
-  { name: 'Great Lionseye', id: 32210, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_lionseye_02', phase: 3, stats: { hitRating: 10 } },
-  { name: 'Gleaming Lionseye', id: 32207, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_lionseye_02', phase: 3, stats: { critRating: 10 } },
-  { name: 'Brilliant Lionseye', id: 32204, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_lionseye_02', phase: 3, stats: { intellect: 10 } },
-  { name: 'Great Dawnstone', id: 31861, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_dawnstone_03', phase: 2, stats: { hitRating: 8 } },
-  { name: 'Great Golden Draenite', id: 31860, color: GemColor.Yellow, iconName: 'inv_misc_gem_goldendraenite_02', phase: 2, stats: { hitRating: 6 } },
-  { name: 'Gleaming Dawnstone', id: 24050, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_dawnstone_03', phase: 2, stats: { critRating: 8 } },
-  { name: 'Brilliant Dawnstone', id: 24047, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_dawnstone_03', phase: 2, stats: { intellect: 8 } },
-  { name: 'Gleaming Golden Draenite', id: 23114, color: GemColor.Yellow, iconName: 'inv_misc_gem_goldendraenite_02', phase: 1, stats: { critRating: 6 } },
-  { name: 'Brilliant Golden Draenite', id: 23113, color: GemColor.Yellow, iconName: 'inv_misc_gem_goldendraenite_02', phase: 1, stats: { intellect: 6 } },
-
-  // Blue
-  { name: 'Stormy Empyrean Sapphire', id: 32203, color: GemColor.Blue, iconName: 'inv_jewelcrafting_empyreansapphire_02', phase: 3, stats: { spellPenetration: 13 } },
-  { name: 'Stormy Star of Elune', id: 24039, color: GemColor.Blue, iconName: 'inv_jewelcrafting_starofelune_03', phase: 2, stats: { spellPenetration: 10 } },
-  { name: 'Stormy Azure Moonstone', id: 23120, color: GemColor.Blue, iconName: 'inv_misc_gem_azuredraenite_02', phase: 1, stats: { spellPenetration: 8 } },
-
   // Orange
   { name: 'Reckless Pyrestone', id: 35760, color: GemColor.Orange, iconName: 'inv_jewelcrafting_pyrestone_02', phase: 5, stats: { spellPower: 6, hasteRating: 5 } },
   { name: 'Reckless Noble Topaz', id: 35316, color: GemColor.Orange, iconName: 'inv_jewelcrafting_nobletopaz_03', phase: 5, stats: { spellPower: 5, hasteRating: 4 } },
@@ -53,6 +33,34 @@ export const Gems: Gem[] = [
   { name: 'Potent Noble Topaz', id: 24059, color: GemColor.Orange, iconName: 'inv_jewelcrafting_nobletopaz_03', phase: 2, stats: { critRating: 4, spellPower: 5 } },
   { name: 'Potent Flame Spessarite', id: 23101, color: GemColor.Orange, iconName: 'inv_misc_gem_flamespessarite_02', phase: 1, stats: { spellPower: 4, critRating: 3 } },
 
+  // Yellow
+  { name: 'Quick Lionseye', id: 35761, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_lionseye_02', phase: 5, stats: { hasteRating: 10 } },
+  { name: 'Quick Dawnstone', id: 35315, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_dawnstone_03', phase: 5, stats: { hasteRating: 8 } },
+  { name: 'Great Bladestone', id: 33141, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_lionseye_02', phase: 3, stats: { hitRating: 12 } },
+  { name: 'Blood of Amber', id: 33140, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_lionseye_02', phase: 3, stats: { critRating: 12 } },
+  { name: 'Great Lionseye', id: 32210, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_lionseye_02', phase: 3, stats: { hitRating: 10 } },
+  { name: 'Gleaming Lionseye', id: 32207, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_lionseye_02', phase: 3, stats: { critRating: 10 } },
+  { name: 'Brilliant Lionseye', id: 32204, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_lionseye_02', phase: 3, stats: { intellect: 10 } },
+  { name: 'Great Dawnstone', id: 31861, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_dawnstone_03', phase: 2, stats: { hitRating: 8 } },
+  { name: 'Great Golden Draenite', id: 31860, color: GemColor.Yellow, iconName: 'inv_misc_gem_goldendraenite_02', phase: 2, stats: { hitRating: 6 } },
+  { name: 'Gleaming Dawnstone', id: 24050, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_dawnstone_03', phase: 2, stats: { critRating: 8 } },
+  { name: 'Brilliant Dawnstone', id: 24047, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_dawnstone_03', phase: 2, stats: { intellect: 8 } },
+  { name: 'Gleaming Golden Draenite', id: 23114, color: GemColor.Yellow, iconName: 'inv_misc_gem_goldendraenite_02', phase: 1, stats: { critRating: 6 } },
+  { name: 'Brilliant Golden Draenite', id: 23113, color: GemColor.Yellow, iconName: 'inv_misc_gem_goldendraenite_02', phase: 1, stats: { intellect: 6 } },
+
+  // Purple
+  { name: 'Glowing Shadowsong Amethyst', id: 32215, color: GemColor.Purple, iconName: 'inv_jewelcrafting_shadowsongamethyst_02', phase: 3, stats: { stamina: 7, spellPower: 6 } },
+  { name: 'Infused Amethyst', id: 31116, color: GemColor.Purple, iconName: 'inv_jewelcrafting_nightseye_03', phase: 1, stats: { stamina: 6, spellPower: 6 } },
+  { name: 'Fluorescent Tanzanite', id: 30600, color: GemColor.Purple, iconName: 'inv_jewelcrafting_nightseye_03', phase: 1, stats: { spellPower: 6, spirit: 4 } },
+  { name: 'Glowing Tanzanite', id: 30555, color: GemColor.Purple, iconName: 'inv_jewelcrafting_nightseye_03', phase: 1, stats: { stamina: 6, spellPower: 6 } },
+  { name: 'Glowing Nightseye', id: 24056, color: GemColor.Purple, iconName: 'inv_jewelcrafting_nightseye_03', phase: 2, stats: { stamina: 6, spellPower: 5 } },
+  { name: 'Glowing Shadow Draenite', id: 23108, color: GemColor.Purple, iconName: 'inv_misc_gem_ebondraenite_02', phase: 1, stats: { stamina: 4, spellPower: 4 } },
+
+  // Blue
+  { name: 'Stormy Empyrean Sapphire', id: 32203, color: GemColor.Blue, iconName: 'inv_jewelcrafting_empyreansapphire_02', phase: 3, stats: { spellPenetration: 13 } },
+  { name: 'Stormy Star of Elune', id: 24039, color: GemColor.Blue, iconName: 'inv_jewelcrafting_starofelune_03', phase: 2, stats: { spellPenetration: 10 } },
+  { name: 'Stormy Azure Moonstone', id: 23120, color: GemColor.Blue, iconName: 'inv_misc_gem_azuredraenite_02', phase: 1, stats: { spellPenetration: 8 } },
+
   // Green
   { name: 'Forceful Seaspray Emerald', id: 35759, color: GemColor.Green, iconName: 'inv_jewelcrafting_seasprayemerald_02', phase: 5, stats: { stamina: 7, hasteRating: 5 } },
   { name: 'Forceful Talasite', id: 35318, color: GemColor.Green, iconName: 'inv_jewelcrafting_talasite_03', phase: 5, stats: { stamina: 6, hasteRating: 4 } },
@@ -67,12 +75,4 @@ export const Gems: Gem[] = [
   { name: 'Notched Deep Peridot', id: 27785, color: GemColor.Green, iconName: 'inv_misc_gem_deepperidot_03', phase: 1, stats: { stamina: 3, critRating: 4 } },
   { name: 'Radiant Talasite', id: 24066, color: GemColor.Green, iconName: 'inv_jewelcrafting_talasite_03', phase: 2, stats: { critRating: 4, spellPenetration: 5 } },
   { name: 'Radiant Deep Peridot', id: 23103, color: GemColor.Green, iconName: 'inv_misc_gem_deepperidot_02', phase: 1, stats: { critRating: 3, spellPenetration: 4 } },
-
-  // Purple
-  { name: 'Glowing Shadowsong Amethyst', id: 32215, color: GemColor.Purple, iconName: 'inv_jewelcrafting_shadowsongamethyst_02', phase: 3, stats: { stamina: 7, spellPower: 6 } },
-  { name: 'Infused Amethyst', id: 31116, color: GemColor.Purple, iconName: 'inv_jewelcrafting_nightseye_03', phase: 1, stats: { stamina: 6, spellPower: 6 } },
-  { name: 'Fluorescent Tanzanite', id: 30600, color: GemColor.Purple, iconName: 'inv_jewelcrafting_nightseye_03', phase: 1, stats: { spellPower: 6, spirit: 4 } },
-  { name: 'Glowing Tanzanite', id: 30555, color: GemColor.Purple, iconName: 'inv_jewelcrafting_nightseye_03', phase: 1, stats: { stamina: 6, spellPower: 6 } },
-  { name: 'Glowing Nightseye', id: 24056, color: GemColor.Purple, iconName: 'inv_jewelcrafting_nightseye_03', phase: 2, stats: { stamina: 6, spellPower: 5 } },
-  { name: 'Glowing Shadow Draenite', id: 23108, color: GemColor.Purple, iconName: 'inv_misc_gem_ebondraenite_02', phase: 1, stats: { stamina: 4, spellPower: 4 } }
 ]

@@ -92,7 +92,13 @@ export default function GemSelection() {
       <tbody>
         <tr>
           <td></td>
-          <td id='show-hidden-gems-button' onClick={(e) => setShowingHiddenGems(!showingHiddenGems)}>{(showingHiddenGems ? 'Hide' : 'Show') + ' Hidden Gems'}</td>
+          <td
+            id='show-hidden-gems-button'
+            onClick={(e) => setShowingHiddenGems(!showingHiddenGems)}
+            style={{display: uiState.gemPreferences.hidden.length === 0 ? 'none' : ''}}
+          >
+            {(showingHiddenGems ? 'Hide' : 'Show') + ' Hidden Gems'}
+          </td>
         </tr>
         {
           // Sort gems by favorited gems first
