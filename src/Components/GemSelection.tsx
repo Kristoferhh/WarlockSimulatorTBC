@@ -6,7 +6,7 @@ import { Items } from "../data/Items";
 import { modifyPlayerStat, setItemSocketsValue } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store"
 import { favoriteGem, hideGem, setGemSelectionTable } from "../redux/UiSlice";
-import { Gem, GemColor, InitialGemSelectionTableValue, SocketColor, Stat } from "../Types";
+import { Gem, InitialGemSelectionTableValue, Stat } from "../Types";
 
 export default function GemSelection() {
   const uiState = useSelector((state: RootState) => state.ui);

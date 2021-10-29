@@ -5,8 +5,8 @@ import { Enchants } from '../data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/Store';
 import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot, setItemSetCount, setItemSocketsValue } from '../redux/PlayerSlice';
-import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from '../Common';
-import { setEquippedItemsWindowVisibility, setFillItemSocketsWindowVisibility, setGemSelectionTable, setSelectedItemSlot, toggleHiddenItemId } from '../redux/UiSlice';
+import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot, unequipItemSlot } from '../Common';
+import { setEquippedItemsWindowVisibility, setFillItemSocketsWindowVisibility, setGemSelectionTable, setSelectedItemSlot, setSelectedItemSubSlot, toggleHiddenItemId } from '../redux/UiSlice';
 import { Gems } from '../data/Gems';
 import ItemSocketDisplay from './ItemSocketDisplay';
 import { FillItemSockets } from './FillItemSockets';
@@ -33,51 +33,10 @@ const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlo
 ];
 
 export default function ItemSelection() {
-  const [itemSubSlot, setItemSubSlot] = useState<SubSlotValue>(localStorage.getItem('selectedItemSubSlot') as SubSlotValue || '1');
   const [hidingItems, setHidingItems]  = useState(false);
   const playerStore = useSelector((state: RootState) => state.player);
   const uiStore = useSelector((state: RootState) => state.ui);
   const dispatch = useDispatch();
-
-  function unequipItemSlot(slot: ItemSlot) {
-    const itemObj = Items.find(i => i.id === playerStore.selectedItems[slot]);
-
-    if (itemObj) {
-      for (const [prop, value] of Object.entries(itemObj)) {
-        if (playerStore.stats.hasOwnProperty(prop)) {
-          dispatch(modifyPlayerStat({
-            stat: prop as Stat,
-            value: value,
-            action: 'remove'
-          }));
-        }
-      }
-
-      // Remove stats from socket bonus if it's active
-      if (itemMeetsSocketRequirements({itemId: itemObj!.id, selectedGems: playerStore.selectedGems})) {
-        for (const [stat, value] of Object.entries(itemObj!.socketBonus!)) {
-          dispatch(modifyPlayerStat({
-            stat: stat as Stat,
-            value: value,
-            action: 'remove'
-          }));
-        }
-      }
-
-      // Lower the item set counter by 1 if the item is part of a set
-      if (itemObj!.setId && playerStore.sets[itemObj!.setId] && playerStore.sets[itemObj!.setId] > 0) {
-        dispatch(setItemSetCount({
-          setId: itemObj!.setId,
-          count: playerStore.sets[itemObj!.setId] - 1
-        }));
-      }
-    }
-
-    dispatch(setItemInItemSlot({
-      id: 0,
-      itemSlot: slot,
-    }));
-  }
 
   function equipItem(item: Item, slot: ItemSlot) {
     if (playerStore.selectedItems[slot] !== item.id) {
@@ -116,17 +75,17 @@ export default function ItemSelection() {
 
     // If equipping a two handed weapon then unequip main hand and offhand and vice versa
     if (slot === ItemSlot.twohand) {
-      unequipItemSlot(ItemSlot.mainhand);
-      unequipItemSlot(ItemSlot.offhand);
+      unequipItemSlot({playerObj: playerStore, itemSlot: ItemSlot.mainhand, updatingState: true})
+      unequipItemSlot({playerObj: playerStore, itemSlot: ItemSlot.offhand, updatingState: true});
     } else if ([ItemSlot.mainhand, ItemSlot.offhand].includes(slot)) {
-      unequipItemSlot(ItemSlot.twohand);
+      unequipItemSlot({playerObj: playerStore, itemSlot: ItemSlot.twohand, updatingState: true});
     }
   }
 
   function itemClickHandler(item: Item, slot: ItemSlot) {
     // Remove stats from equipped item
     if (playerStore.selectedItems[slot] !== 0) {
-      unequipItemSlot(slot);
+      unequipItemSlot({playerObj: playerStore, itemSlot: slot, updatingState: true});
     }
 
     // Add stats from the item if it's not the currently equipped item
@@ -180,8 +139,7 @@ export default function ItemSelection() {
 
   function itemSlotClickHandler(slot: ItemSlotKey, subSlot: SubSlotValue) {
     dispatch(setSelectedItemSlot(slot));
-    setItemSubSlot(subSlot);
-    localStorage.setItem('selectedItemSubSlot', subSlot);
+    dispatch(setSelectedItemSubSlot(subSlot));
   }
 
   function getEnchantLookupKey(): ItemSlotKey {
@@ -195,7 +153,7 @@ export default function ItemSelection() {
       itemSlot: uiStore.selectedItemSlot,
       socketNumber: socketNumber,
       socketColor: socketColor,
-      itemSubSlot: itemSubSlot
+      itemSubSlot: uiStore.selectedItemSubSlot
     }));
   }
 
@@ -204,7 +162,7 @@ export default function ItemSelection() {
       let currentItemSocketsValue = JSON.parse(JSON.stringify(playerStore.selectedGems[uiStore.selectedItemSlot][itemId]));
 
       // If the gem is in an equipped item then remove the gem's stats.
-      if (parseInt(itemId) === playerStore.selectedItems[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, itemSubSlot)]) {
+      if (parseInt(itemId) === playerStore.selectedItems[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)]) {
         const gem = Gems.find(e => e.id === currentItemSocketsValue[socketNumber][1]);
 
         if (gem && gem.stats) {
@@ -248,7 +206,7 @@ export default function ItemSelection() {
             <li
               key={i}
               onClick={() => itemSlotClickHandler(slot.itemSlot, slot.subSlot)}
-              data-selected={uiStore.selectedItemSlot === slot.itemSlot && (!slot.subSlot || itemSubSlot === slot.subSlot)}>
+              data-selected={uiStore.selectedItemSlot === slot.itemSlot && (!slot.subSlot || uiStore.selectedItemSubSlot === slot.subSlot)}>
               {slot.name}
             </li>
           )
@@ -303,13 +261,13 @@ export default function ItemSelection() {
         {
           Items.filter((e) => e.itemSlot === uiStore.selectedItemSlot && uiStore.sources.phase[e.phase] === true && (!uiStore.hiddenItems.includes(e.id) || hidingItems)).map((item, i) =>
             // Show the item if it's not unique or if it is unique but the other item slot (ring or trinket) isn't equipped with the item
-            (!item.unique || (playerStore.selectedItems[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, itemSubSlot === '1' ? '2' : '1')] !== item.id)) &&
+            (!item.unique || (playerStore.selectedItems[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot === '1' ? '2' : '1')] !== item.id)) &&
               <tr
                 key={i}
                 className="item-row"
-                data-selected={playerStore.selectedItems[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, itemSubSlot)] === item.id}
+                data-selected={playerStore.selectedItems[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)] === item.id}
                 data-hidden={uiStore.hiddenItems.includes(item.id)}
-                onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, itemSubSlot))}
+                onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot))}
               >
                 <td
                   className="hide-item-btn"
@@ -385,8 +343,8 @@ export default function ItemSelection() {
                 <tr
                   key={i}
                   className="enchant-row"
-                  data-selected={playerStore.selectedEnchants[ItemSlotKeyToItemSlot(true, uiStore.selectedItemSlot, itemSubSlot)] === enchant.id}
-                  onClick={() => enchantClickHandler(enchant, ItemSlotKeyToItemSlot(true, uiStore.selectedItemSlot, itemSubSlot))}>
+                  data-selected={playerStore.selectedEnchants[ItemSlotKeyToItemSlot(true, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)] === enchant.id}
+                  onClick={() => enchantClickHandler(enchant, ItemSlotKeyToItemSlot(true, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot))}>
                   <td className={enchant.quality + ' enchant-row-name'}>
                     <a
                       href={'https://tbc.wowhead.com/spell=' + enchant.id}

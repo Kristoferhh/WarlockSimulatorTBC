@@ -87,7 +87,7 @@ export function FillItemSockets() {
       <div id='gem-options-window-socket-selection'>
         {
           socketOptions.map((socket, i) =>
-            <label>{socket.name}
+            <label key={i}>{socket.name}
               <input type='radio' name='socket-selection' onChange={(e) => socketColorClickHandler(socket.color)} checked={socketColor === socket.color}></input>
             </label>          
           )

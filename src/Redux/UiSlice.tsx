@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { GemSelectionTableStruct, InitialGemSelectionTableValue, ItemSlotKey, Phase, UiState } from "../Types";
+import { GemSelectionTableStruct, InitialGemSelectionTableValue, ItemSlotKey, Phase, SubSlotValue, UiState } from "../Types";
 
 const initialUiState : UiState = {
   sources: JSON.parse(localStorage.getItem('sources') || JSON.stringify({ phase: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, } })),
@@ -10,7 +10,10 @@ const initialUiState : UiState = {
   equippedItemsWindowVisible: false,
   fillItemSocketsWindowVisible: false,
   hiddenItems: JSON.parse(localStorage.getItem('hiddenItems') || JSON.stringify([])),
-  selectedItemSlot: Object.values(ItemSlotKey).find(e => e === localStorage.getItem('selectedItemSlot')) || ItemSlotKey.Mainhand,
+  selectedItemSlot: localStorage.getItem('selectedItemSlot') as ItemSlotKey || ItemSlotKey.Mainhand,
+  selectedItemSubSlot: localStorage.getItem('selectedItemSubSlot') as SubSlotValue || '1',
+  medianDps: localStorage.getItem('medianDps') || '',
+  simulationProgressPercent: 0,
 }
 
 export const UiSlice = createSlice({
@@ -67,9 +70,20 @@ export const UiSlice = createSlice({
     setSelectedItemSlot: (state, action: PayloadAction<ItemSlotKey>) => {
       state.selectedItemSlot = action.payload;
       localStorage.setItem('selectedItemSlot', state.selectedItemSlot);
+    },
+    setSelectedItemSubSlot: (state, action: PayloadAction<SubSlotValue>) => {
+      state.selectedItemSubSlot = action.payload;
+      localStorage.setItem('selectedItemSubSlot', state.selectedItemSubSlot);
+    },
+    setMedianDps: (state, action: PayloadAction<string>) => {
+      state.medianDps = action.payload;
+      localStorage.setItem('medianDps', state.medianDps);
+    },
+    setSimulationProgressPercent: (state, action: PayloadAction<number>) => {
+      state.simulationProgressPercent = action.payload;
     }
   }
 });
 
-export const { setSelectedItemSlot, setFillItemSocketsWindowVisibility, setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
+export const { setSimulationProgressPercent, setMedianDps, setSelectedItemSubSlot, setSelectedItemSlot, setFillItemSocketsWindowVisibility, setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
 export default UiSlice.reducer;

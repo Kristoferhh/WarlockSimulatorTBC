@@ -419,7 +419,11 @@ export interface PlayerState {
   stats: PlayerStats,
   settings: Settings,
   profiles: {[key: string]: Profile},
-  sets: {[key in ItemSet]: number},
+  sets: SetsStruct,
+}
+
+export type SetsStruct = {
+  [key in ItemSet]: number
 }
 
 export enum Quality {
@@ -440,6 +444,31 @@ export interface UiState {
   fillItemSocketsWindowVisible: boolean,
   hiddenItems: number[],
   selectedItemSlot: ItemSlotKey,
+  selectedItemSubSlot: SubSlotValue,
+  medianDps: string,
+  simulationProgressPercent: number,
+}
+
+export interface WorkerParams {
+  playerSettings: {
+    auras: AurasStruct,
+    items: ItemAndEnchantStruct,
+    enchants: ItemAndEnchantStruct,
+    gems: SelectedGemsStruct,
+    talents: TalentStore,
+    rotation: RotationStruct,
+    stats: PlayerStats,
+    sets: SetsStruct,
+    simSettings: Settings,
+  },
+  simulationSettings: {
+    iterations: number,
+    minTime: number,
+    maxTime: number,
+  },
+  itemId: number,
+  itemAmount: number,
+  itemSubSlot: SubSlotValue,
 }
 
 export interface GemSelectionTableStruct {

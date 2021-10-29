@@ -7,8 +7,8 @@
 #include <algorithm>
 #include <chrono>
 
-Simulation::Simulation(Player* _player, SimulationSettings* simulationSettings)
-    : player(_player), settings(simulationSettings) {}
+Simulation::Simulation(Player* player, SimulationSettings* simulationSettings)
+    : player(player), settings(simulationSettings) {}
 
 void Simulation::start()
 {

@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux"
 import { shouldDisplayPetSetting } from "../Common";
-import { Auras } from "../data/Auras";
 import { RootState } from "../redux/Store"
 import { ItemSet, StatConstant } from "../Types";
 
