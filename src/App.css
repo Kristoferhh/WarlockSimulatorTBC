@@ -745,8 +745,8 @@ table.dataTable thead th, table.dataTable.no-footer {
 	text-align: center;
 	background-color: black;
 	padding: 20px;
-	display: none;
 	line-height: 30px;
+	z-index: 4;
 }
 
 #gem-options-gem-list {

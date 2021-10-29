@@ -6,9 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/Store';
 import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot, setItemSetCount, setItemSocketsValue } from '../redux/PlayerSlice';
 import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from '../Common';
-import { setEquippedItemsWindowVisibility, setGemSelectionTable, toggleHiddenItemId } from '../redux/UiSlice';
+import { setEquippedItemsWindowVisibility, setFillItemSocketsWindowVisibility, setGemSelectionTable, setSelectedItemSlot, toggleHiddenItemId } from '../redux/UiSlice';
 import { Gems } from '../data/Gems';
 import ItemSocketDisplay from './ItemSocketDisplay';
+import { FillItemSockets } from './FillItemSockets';
 
 const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlotValue}[] = [
   { name: 'Main Hand', itemSlot: ItemSlotKey.Mainhand, subSlot: '' },
@@ -32,7 +33,6 @@ const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlo
 ];
 
 export default function ItemSelection() {
-  const [itemSlot, setItemSlot] = useState<ItemSlotKey>(localStorage.getItem('selectedItemSlot') as ItemSlotKey || ItemSlotKey.Mainhand);
   const [itemSubSlot, setItemSubSlot] = useState<SubSlotValue>(localStorage.getItem('selectedItemSubSlot') as SubSlotValue || '1');
   const [hidingItems, setHidingItems]  = useState(false);
   const playerStore = useSelector((state: RootState) => state.player);
@@ -179,21 +179,20 @@ export default function ItemSelection() {
   }
 
   function itemSlotClickHandler(slot: ItemSlotKey, subSlot: SubSlotValue) {
-    setItemSlot(slot);
+    dispatch(setSelectedItemSlot(slot));
     setItemSubSlot(subSlot);
-    localStorage.setItem('selectedItemSlot', slot);
     localStorage.setItem('selectedItemSubSlot', subSlot);
   }
 
   function getEnchantLookupKey(): ItemSlotKey {
-    return itemSlot === ItemSlotKey.Twohand ? ItemSlotKey.Mainhand : itemSlot;
+    return uiStore.selectedItemSlot === ItemSlotKey.Twohand ? ItemSlotKey.Mainhand : uiStore.selectedItemSlot;
   }
 
   function itemSocketClickHandler(itemId: string, socketNumber: number, socketColor: SocketColor) {
     dispatch(setGemSelectionTable({
       visible: true,
       itemId: itemId,
-      itemSlot: itemSlot,
+      itemSlot: uiStore.selectedItemSlot,
       socketNumber: socketNumber,
       socketColor: socketColor,
       itemSubSlot: itemSubSlot
@@ -201,11 +200,11 @@ export default function ItemSelection() {
   }
 
   function removeGemFromSocket(itemId: string, socketNumber: number) {
-    if (playerStore.selectedGems[itemSlot][itemId]) {
-      let currentItemSocketsValue = JSON.parse(JSON.stringify(playerStore.selectedGems[itemSlot][itemId]));
+    if (playerStore.selectedGems[uiStore.selectedItemSlot][itemId]) {
+      let currentItemSocketsValue = JSON.parse(JSON.stringify(playerStore.selectedGems[uiStore.selectedItemSlot][itemId]));
 
       // If the gem is in an equipped item then remove the gem's stats.
-      if (parseInt(itemId) === playerStore.selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot)]) {
+      if (parseInt(itemId) === playerStore.selectedItems[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, itemSubSlot)]) {
         const gem = Gems.find(e => e.id === currentItemSocketsValue[socketNumber][1]);
 
         if (gem && gem.stats) {
@@ -234,7 +233,7 @@ export default function ItemSelection() {
         currentItemSocketsValue[socketNumber] = ['', 0];
         dispatch(setItemSocketsValue({
           itemId: itemId,
-          itemSlot: itemSlot,
+          itemSlot: uiStore.selectedItemSlot,
           value: currentItemSocketsValue
         }));
       }
@@ -249,45 +248,20 @@ export default function ItemSelection() {
             <li
               key={i}
               onClick={() => itemSlotClickHandler(slot.itemSlot, slot.subSlot)}
-              data-selected={itemSlot === slot.itemSlot && (!slot.subSlot || itemSubSlot === slot.subSlot)}>
+              data-selected={uiStore.selectedItemSlot === slot.itemSlot && (!slot.subSlot || itemSubSlot === slot.subSlot)}>
               {slot.name}
             </li>
           )
         }
       </ul>
       <button id='hide-show-items-btn' onClick={(e) => setHidingItems(!hidingItems)}>Hide / Show Items</button>
-      <button id='gem-options-button'>Fill Item Sockets</button>
+      <button id='gem-options-button' onClick={(e) => dispatch(setFillItemSocketsWindowVisibility(!uiStore.fillItemSocketsWindowVisible))}>Fill Item Sockets</button>
       <button id='show-equipped-items' onClick={(e) => dispatch(setEquippedItemsWindowVisibility(!uiStore.equippedItemsWindowVisible))}>Show Equipped Items</button>
-      <div id='gem-options-window'>
-        <div id='gem-options-window-replacement-options'>
-          <input type="radio" name='gem-replacement-option' value='emptySockets' defaultChecked />
-          <label htmlFor='emptySockets'>Fill empty sockets</label>
-          <input type="radio" name='gem-replacement-option' value='allSockets' />
-          <label htmlFor='allSockets'>Fill all sockets (replaces equipped gems)</label>
-        </div>
-        <div id='gem-options-window-item-slot'>
-          <input type='radio' name='item-slot' value='currentSlot' defaultChecked />
-          <label htmlFor='currentSlot'>Current item slot</label>
-          <input type='radio' name='item-slot' value='allItems' />
-          <label htmlFor='allItems'>All item slots</label>
-        </div>
-        <div id='gem-options-window-socket-selection'>
-          <input type="radio" name="socket-selection" value='meta' />
-          <label htmlFor='metaSockets'>Meta Sockets</label>
-          <input type="radio" name="socket-selection" value='red' defaultChecked />
-          <label htmlFor='redSockets'>Red Sockets</label>
-          <input type="radio" name="socket-selection" value='blue' />
-          <label htmlFor='blueSockets'>Blue Sockets</label>
-          <input type="radio" name="socket-selection" value='yellow' />
-          <label htmlFor='yellowSockets'>Yellow Sockets</label>
-        </div>
-        <div id='gem-options-gem-list'></div>
-        <button id='gem-options-apply-button'>Apply</button>
-      </div>
+      <FillItemSockets />
       <table id="item-selection-table" data-type="mainhand" className="tablesorter" data-sortlist='[[12,1]]'>
         {
           // If no items are found by the filter then don't display the item table headers
-          Items.filter((e) => e.itemSlot === itemSlot && uiStore.sources.phase[e.phase] === true).length > 0 ?
+          Items.filter((e) => e.itemSlot === uiStore.selectedItemSlot && uiStore.sources.phase[e.phase] === true).length > 0 ?
             <>
               <colgroup id="item-selection-colgroup">
                 <col style={{width: '2%', display: hidingItems ? '' : 'none'}} />
@@ -327,15 +301,15 @@ export default function ItemSelection() {
         }
         <tbody aria-live='polite'>
         {
-          Items.filter((e) => e.itemSlot === itemSlot && uiStore.sources.phase[e.phase] === true && (!uiStore.hiddenItems.includes(e.id) || hidingItems)).map((item, i) =>
+          Items.filter((e) => e.itemSlot === uiStore.selectedItemSlot && uiStore.sources.phase[e.phase] === true && (!uiStore.hiddenItems.includes(e.id) || hidingItems)).map((item, i) =>
             // Show the item if it's not unique or if it is unique but the other item slot (ring or trinket) isn't equipped with the item
-            (!item.unique || (playerStore.selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot === '1' ? '2' : '1')] !== item.id)) &&
+            (!item.unique || (playerStore.selectedItems[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, itemSubSlot === '1' ? '2' : '1')] !== item.id)) &&
               <tr
                 key={i}
                 className="item-row"
-                data-selected={playerStore.selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot)] === item.id}
+                data-selected={playerStore.selectedItems[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, itemSubSlot)] === item.id}
                 data-hidden={uiStore.hiddenItems.includes(item.id)}
-                onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot))}
+                onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, itemSubSlot))}
               >
                 <td
                   className="hide-item-btn"
@@ -354,7 +328,7 @@ export default function ItemSelection() {
                   {
                     <ItemSocketDisplay
                       item={item}
-                      itemSlot={itemSlot}
+                      itemSlot={uiStore.selectedItemSlot}
                       itemSocketClickHandler={itemSocketClickHandler}
                       removeGemFromSocket={removeGemFromSocket} />
                   }
@@ -411,8 +385,8 @@ export default function ItemSelection() {
                 <tr
                   key={i}
                   className="enchant-row"
-                  data-selected={playerStore.selectedEnchants[ItemSlotKeyToItemSlot(true, itemSlot, itemSubSlot)] === enchant.id}
-                  onClick={() => enchantClickHandler(enchant, ItemSlotKeyToItemSlot(true, itemSlot, itemSubSlot))}>
+                  data-selected={playerStore.selectedEnchants[ItemSlotKeyToItemSlot(true, uiStore.selectedItemSlot, itemSubSlot)] === enchant.id}
+                  onClick={() => enchantClickHandler(enchant, ItemSlotKeyToItemSlot(true, uiStore.selectedItemSlot, itemSubSlot))}>
                   <td className={enchant.quality + ' enchant-row-name'}>
                     <a
                       href={'https://tbc.wowhead.com/spell=' + enchant.id}

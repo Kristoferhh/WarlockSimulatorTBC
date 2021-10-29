@@ -437,7 +437,9 @@ export interface UiState {
   selectedProfile: string,
   importExportWindowVisible: boolean,
   equippedItemsWindowVisible: boolean,
+  fillItemSocketsWindowVisible: boolean,
   hiddenItems: number[],
+  selectedItemSlot: ItemSlotKey,
 }
 
 export interface GemSelectionTableStruct {

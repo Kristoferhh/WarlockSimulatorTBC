@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { GemSelectionTableStruct, InitialGemSelectionTableValue, Phase, UiState } from "../Types";
+import { GemSelectionTableStruct, InitialGemSelectionTableValue, ItemSlotKey, Phase, UiState } from "../Types";
 
 const initialUiState : UiState = {
   sources: JSON.parse(localStorage.getItem('sources') || JSON.stringify({ phase: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, } })),
@@ -8,7 +8,9 @@ const initialUiState : UiState = {
   selectedProfile: localStorage.getItem('selectedProfile') || '',
   importExportWindowVisible: false,
   equippedItemsWindowVisible: false,
+  fillItemSocketsWindowVisible: false,
   hiddenItems: JSON.parse(localStorage.getItem('hiddenItems') || JSON.stringify([])),
+  selectedItemSlot: Object.values(ItemSlotKey).find(e => e === localStorage.getItem('selectedItemSlot')) || ItemSlotKey.Mainhand,
 }
 
 export const UiSlice = createSlice({
@@ -50,6 +52,9 @@ export const UiSlice = createSlice({
     setEquippedItemsWindowVisibility: (state, action: PayloadAction<boolean>) => {
       state.equippedItemsWindowVisible = action.payload;
     },
+    setFillItemSocketsWindowVisibility: (state, action: PayloadAction<boolean>) => {
+      state.fillItemSocketsWindowVisible = action.payload;
+    },
     toggleHiddenItemId: (state, action: PayloadAction<number>) => {
       if (state.hiddenItems.includes(action.payload)) {
         state.hiddenItems = state.hiddenItems.filter((e) => e !== action.payload);
@@ -58,9 +63,13 @@ export const UiSlice = createSlice({
       }
 
       localStorage.setItem('hiddenItems', JSON.stringify(state.hiddenItems));
+    },
+    setSelectedItemSlot: (state, action: PayloadAction<ItemSlotKey>) => {
+      state.selectedItemSlot = action.payload;
+      localStorage.setItem('selectedItemSlot', state.selectedItemSlot);
     }
   }
 });
 
-export const { setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
+export const { setSelectedItemSlot, setFillItemSocketsWindowVisibility, setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
 export default UiSlice.reducer;

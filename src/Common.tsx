@@ -1,7 +1,7 @@
 import { Gems } from "./data/Gems";
 import { Items } from "./data/Items";
 import { Sockets } from "./data/Sockets";
-import { ItemSlot, ItemSlotKey, SelectedGemsStruct, Settings, TalentStore } from "./Types";
+import { GemColor, ItemSlot, ItemSlotKey, SelectedGemsStruct, Settings, SocketColor, TalentStore } from "./Types";
 
 export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
   switch(itemSlot) {
@@ -95,4 +95,8 @@ export function getRemainingTalentPoints(talents: TalentStore) {
 
 export function shouldDisplayPetSetting(talents: TalentStore, settings: Settings, requiresAggressivePet: boolean) {
   return (!talents.demonicSacrifice || settings.sacrificePet === 'no') && (!requiresAggressivePet || settings.petMode === '1');
+}
+
+export function shouldDisplayGemOfSocketColor(socketColor: SocketColor, gemColor: GemColor): boolean {
+  return (socketColor === SocketColor.Meta && gemColor === GemColor.Meta) || (socketColor !== SocketColor.Meta && gemColor !== GemColor.Meta);
 }

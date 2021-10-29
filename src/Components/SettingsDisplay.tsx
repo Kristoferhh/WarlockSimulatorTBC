@@ -189,18 +189,11 @@ export default function SettingsDisplay() {
             <li id="powerInfusionAmount">
               <label className="settings-left" htmlFor="powerInfusionAmount">Power Infusion amount</label>
               <select className="settings-right" name="powerInfusionAmount" onChange={(e) => settingModifiedHandler(Setting.powerInfusionAmount, e.target.value)} value={playerStore.settings.powerInfusionAmount}>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
+                {
+                  Array.from(Array(12), (e, i) => i + 1).map((number, i) =>
+                    <option value={number} key={i}>{number}</option>
+                  )
+                }
               </select>
             </li>
         }
@@ -209,21 +202,11 @@ export default function SettingsDisplay() {
             <li id="bloodlustAmount">
               <label className="settings-left" htmlFor="bloodlustAmount">Bloodlust amount</label>
               <select className="settings-right" name="bloodlustAmount" onChange={(e) => settingModifiedHandler(Setting.bloodlustAmount, e.target.value)} value={playerStore.settings.bloodlustAmount}>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
+                {
+                  Array.from(Array(15), (e, i) => i + 1).map((number, i) =>
+                    <option value={number} key={i}>{number}</option>
+                  )
+                }
               </select>
             </li>
         }
@@ -232,24 +215,11 @@ export default function SettingsDisplay() {
             <li id="innervateAmount">
               <label className="settings-left" htmlFor="innervateAmount">Innervate amount</label>
               <select className="settings-right" name="innervateAmount" onChange={(e) => settingModifiedHandler(Setting.innervateAmount, e.target.value)} value={playerStore.settings.innervateAmount}>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
+                {
+                  Array.from(Array(18), (e, i) => i + 1).map((number, i) =>
+                    <option value={number} key={i}>{number}</option>
+                  )
+                }
               </select>
             </li>
         }
