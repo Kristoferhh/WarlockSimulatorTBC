@@ -685,8 +685,29 @@ void SeedOfCorruption::damage(bool isCrit)
     int resistAmount = 0;
     int critAmount = 0;
     int spellPower = player->getSpellPower(school);
-    double modifier = getModifier(); //todo debuffs increase dmg past the aoe cap
     double critMultiplier = 0;
+    double internalModifier = getModifier();
+    double externalModifier = 1;
+
+    // Remove debuffs from the modifier since they ignore the AOE cap, so we'll add the debuff % modifiers after the damage has been calculated.
+    if (player->selectedAuras->curseOfTheElements)
+    {
+        double modifier = 1.1 + (0.01 * player->settings->improvedCurseOfTheElements);
+        internalModifier /= modifier;
+        externalModifier *= modifier;
+    }
+    if (player->selectedAuras->shadowWeaving)
+    {
+        double modifier = 1.1;
+        internalModifier /= modifier;
+        externalModifier *= modifier;
+    }
+    if (player->selectedAuras->misery)
+    {
+        double modifier = 1.05;
+        internalModifier /= modifier;
+        externalModifier *= modifier;
+    }
 
     for (int i = 0; i < enemyAmount; i++)
     {
@@ -713,18 +734,21 @@ void SeedOfCorruption::damage(bool isCrit)
     {
         individualSeedDamage += 180;
     }
-    individualSeedDamage *= modifier;
+    individualSeedDamage *= internalModifier;
 
     int enemiesHit = enemyAmount - resistAmount;
     double totalSeedDamage = individualSeedDamage * enemiesHit;
+    // Because of the Seed bug explained below, we need to use this formula to calculate the actual aoe cap for the amount of mobs that will be hit by the spell.
+    // Explained by Tesram on the TBC Warlock discord https://discord.com/channels/253210018697052162/825310481358651432/903413703595143218
+    int trueDmgCap = (dmgCap * enemiesHit) / (enemiesHit + 1);
     // If the total damage goes above the aoe cap then we need to reduce the amount of each seed's damage
-    if (totalSeedDamage > dmgCap)
+    if (totalSeedDamage > trueDmgCap)
     {
-        // Set the damage of each individual seed to the aoe cap divided by the amount of enemies hit
+        // Set the damage of each individual seed to the "true" aoe cap divided by the amount of enemies hit
         // There's a bug with Seed of Corruption where if you hit the AoE cap,
         // the number used to divide here is 1 higher because it's including the enemy that Seed is being cast on,
         // even though that enemy doesn't actually get damaged by the Seed. Nice game :)
-        individualSeedDamage = dmgCap / (enemiesHit + 1);
+        individualSeedDamage = trueDmgCap / enemiesHit;
         // Re-calculate the total damage done by all seed hits
         totalSeedDamage = individualSeedDamage * enemiesHit;
     }
@@ -740,11 +764,14 @@ void SeedOfCorruption::damage(bool isCrit)
     double partialResistMultiplier = player->getPartialResistMultiplier(school);
     totalSeedDamage *= partialResistMultiplier;
 
+    // Add damage from debuffs
+    totalSeedDamage *= externalModifier;
+
     player->iterationDamage += totalSeedDamage;
 
     if (player->shouldWriteToCombatLog())
     {
-        std::string msg = name + " " + truncateTrailingZeros(std::to_string(round(totalSeedDamage))) + " (" + std::to_string(enemyAmount) + " Enemies (" + std::to_string(resistAmount) + " Resists & " + std::to_string(critAmount) + " Crits) - " + std::to_string(baseDamage) + " Base Damage - " + truncateTrailingZeros(std::to_string(coefficient), 3) + " Coefficient - " + std::to_string(spellPower) + " Spell Power - " + truncateTrailingZeros(std::to_string(round(modifier * 1000) / 10), 1) + "% Modifier - ";
+        std::string msg = name + " " + truncateTrailingZeros(std::to_string(round(totalSeedDamage))) + " (" + std::to_string(enemyAmount) + " Enemies (" + std::to_string(resistAmount) + " Resists & " + std::to_string(critAmount) + " Crits) - " + std::to_string(baseDamage) + " Base Damage - " + truncateTrailingZeros(std::to_string(coefficient), 3) + " Coefficient - " + std::to_string(spellPower) + " Spell Power - " + truncateTrailingZeros(std::to_string(round(internalModifier * externalModifier * 1000) / 10), 1) + "% Modifier - ";
         if (critAmount > 0)
         {
             msg += truncateTrailingZeros(std::to_string(critMultiplier), 3) + "% Crit Multiplier";
@@ -792,7 +819,7 @@ bool DarkPact::ready()
 
 void DarkPact::cast()
 {
-
+    
 }
 
 Corruption::Corruption(Player* player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot) : Spell(player, aura, dot)
