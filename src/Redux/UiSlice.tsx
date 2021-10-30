@@ -13,7 +13,10 @@ const initialUiState : UiState = {
   selectedItemSlot: localStorage.getItem('selectedItemSlot') as ItemSlotKey || ItemSlotKey.Mainhand,
   selectedItemSubSlot: localStorage.getItem('selectedItemSubSlot') as SubSlotValue || '1',
   medianDps: localStorage.getItem('medianDps') || '',
+  minDps: localStorage.getItem('minDps') || '',
+  maxDps: localStorage.getItem('maxDps') || '',
   simulationProgressPercent: 0,
+  simulationDuration: localStorage.getItem('simulationDuration') || '',
 }
 
 export const UiSlice = createSlice({
@@ -79,11 +82,23 @@ export const UiSlice = createSlice({
       state.medianDps = action.payload;
       localStorage.setItem('medianDps', state.medianDps);
     },
+    setMinDps: (state, action: PayloadAction<string>) => {
+      state.minDps = action.payload;
+      localStorage.setItem('minDps', state.minDps);
+    },
+    setMaxDps: (state, action: PayloadAction<string>) => {
+      state.maxDps = action.payload;
+      localStorage.setItem('maxDps', state.maxDps);
+    },
     setSimulationProgressPercent: (state, action: PayloadAction<number>) => {
       state.simulationProgressPercent = action.payload;
+    },
+    setSimulationDuration: (state, action: PayloadAction<string>) => {
+      state.simulationDuration = action.payload + 's';
+      localStorage.setItem('simulationDuration', state.simulationDuration);
     }
   }
 });
 
-export const { setSimulationProgressPercent, setMedianDps, setSelectedItemSubSlot, setSelectedItemSlot, setFillItemSocketsWindowVisibility, setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
+export const { setSimulationDuration, setMinDps, setMaxDps, setSimulationProgressPercent, setMedianDps, setSelectedItemSubSlot, setSelectedItemSlot, setFillItemSocketsWindowVisibility, setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
 export default UiSlice.reducer;

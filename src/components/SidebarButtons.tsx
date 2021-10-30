@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { ItemSlotKeyToItemSlot } from "../Common";
 import { Items } from "../data/Items";
 import { RootState } from "../redux/Store"
-import { setMedianDps, setSimulationProgressPercent } from "../redux/UiSlice";
+import { setMaxDps, setMedianDps, setMinDps, setSimulationDuration, setSimulationProgressPercent } from "../redux/UiSlice";
 import { SimWorker } from "../SimWorker.js";
 import { Item, Stat, WorkerParams } from "../Types";
 
@@ -14,13 +14,23 @@ interface SimulationUpdate {
   customStat: Stat
 }
 
+interface SimulationEnd {
+  customStat: string,
+  itemId: number,
+  iterationAmount: number,
+  totalDuration: number,
+  maxDps:  number,
+  minDps: number,
+  medianDps: number
+}
+
 export function SidebarButtons() {
   const playerState = useSelector((state: RootState) => state.player);
   const uiState = useSelector((state: RootState) => state.ui);
   const dispatch = useDispatch();
 
   function getWorkerParams(itemId: number, itemAmount: number): WorkerParams {
-    return {
+    let params = {
       playerSettings: {
         auras: playerState.auras,
         items: playerState.selectedItems,
@@ -41,14 +51,22 @@ export function SidebarButtons() {
       itemAmount: itemAmount,
       itemSubSlot: uiState.selectedItemSubSlot
     }
+
+    //todo remove/add stats here
+
+    return params;
   }
 
   function simulate(itemsToSim: Item[]) {
-    const simWorkers = [];
+    const maxWorkers = window.navigator.hardwareConcurrency || 8; // Maximum amount of web workers that can be run concurrently.
+    const simulations: SimWorker[] = [];
     const equippedItemId = playerState.selectedItems[ItemSlotKeyToItemSlot(false, uiState.selectedItemSlot, uiState.selectedItemSubSlot)];
+    let simulationsFinished = 0;
+    let simulationsRunning = 0;
+    let simIndex = 0;
 
     itemsToSim.forEach(item => {
-      simWorkers.push(new SimWorker(
+      simulations.push(new SimWorker(
         (dpsUpdate: () => void) => {
 
         },
@@ -64,11 +82,34 @@ export function SidebarButtons() {
         (combatLogBreakdown: () => void) => {
 
         },
-        (simulationEnd: () => void) => {
+        (params: SimulationEnd) => {
+          console.log(params);
+          const minDps = Math.round(params.minDps * 100) / 100;
+          const maxDps = Math.round(params.maxDps * 100) / 100;
+          const medianDps = Math.round(params.medianDps * 100) / 100;
+          simulationsFinished++;
 
+          // Callback for the currently equipped item
+          if (itemsToSim.length === 1 || params.itemId === equippedItemId) {
+            dispatch(setMedianDps(medianDps.toString()));
+            dispatch(setMinDps(minDps.toString()));
+            dispatch(setMaxDps(maxDps.toString()));
+          }
+
+          // All simulations finished
+          if (simulationsFinished === itemsToSim.length) {
+            const totalSimDuration = (performance.now() - startTime) / 1000;
+            dispatch(setSimulationDuration((Math.round(totalSimDuration * 10000) / 10000).toString()));
+            dispatch(setSimulationProgressPercent(0));
+          }
+
+          // Start a new simulation that's waiting in the queue if there are any remaining
+          if (simulationsRunning - simulationsFinished < maxWorkers && simIndex < simulations.length) {
+            simulations[simIndex++].start();
+            simulationsRunning++;
+          }
         },
         (params: SimulationUpdate) => {
-          console.log(params);
           let medianDps = Math.round(params.medianDps * 100) / 100;
 
           if (itemsToSim.length === 1 || params.itemId ===  equippedItemId) {
@@ -81,8 +122,14 @@ export function SidebarButtons() {
           }
         },
         getWorkerParams(item.id, itemsToSim.length)
-      ).start());
+      ));
     });
+
+    const startTime = performance.now();
+    while (simulationsRunning < maxWorkers && simIndex < simulations.length) {
+      simulations[simIndex++].start();
+      simulationsRunning++;
+    }
   }
 
   return(
@@ -90,8 +137,8 @@ export function SidebarButtons() {
       <div
         className='btn'
         onClick={() => simulate(Items.filter(item => item.id === playerState.selectedItems[ItemSlotKeyToItemSlot(false, uiState.selectedItemSlot, uiState.selectedItemSubSlot)]))}
-        style={{background: uiState.simulationProgressPercent > 0 && uiState.simulationProgressPercent < 100 ? `linear-gradient(to right, #9482C9 ${uiState.simulationProgressPercent}%, transparent ${uiState.simulationProgressPercent}%)` : ''}}
-      >{uiState.simulationProgressPercent > 0 && uiState.simulationProgressPercent < 100 ? `${uiState.simulationProgressPercent}%` : 'Simulate'}</div>
+        style={{background: uiState.simulationProgressPercent > 0 ? `linear-gradient(to right, #9482C9 ${uiState.simulationProgressPercent}%, transparent ${uiState.simulationProgressPercent}%)` : ''}}
+      >{uiState.simulationProgressPercent > 0 ? `${uiState.simulationProgressPercent}%` : 'Simulate'}</div>
       <div
         className='btn'
         onClick={() => simulate(Items.filter(item => item.itemSlot === uiState.selectedItemSlot))}

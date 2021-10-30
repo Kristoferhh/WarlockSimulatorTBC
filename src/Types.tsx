@@ -446,7 +446,10 @@ export interface UiState {
   selectedItemSlot: ItemSlotKey,
   selectedItemSubSlot: SubSlotValue,
   medianDps: string,
+  minDps: string,
+  maxDps: string,
   simulationProgressPercent: number,
+  simulationDuration: string,
 }
 
 export interface WorkerParams {
