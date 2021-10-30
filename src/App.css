@@ -346,7 +346,6 @@ ul {
 	overflow: auto;
 	background-color: black;
 	position: absolute;
-	display: none;
 	padding: 1px 10px 1px 10px;
 	line-height: 5px;
 }

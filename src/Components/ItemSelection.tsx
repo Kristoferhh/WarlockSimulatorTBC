@@ -5,7 +5,7 @@ import { Enchants } from '../data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/Store';
 import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot, setItemSetCount, setItemSocketsValue } from '../redux/PlayerSlice';
-import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from '../Common';
+import { getItemTableItems, itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from '../Common';
 import { setEquippedItemsWindowVisibility, setFillItemSocketsWindowVisibility, setGemSelectionTable, setSelectedItemSlot, setSelectedItemSubSlot, toggleHiddenItemId } from '../redux/UiSlice';
 import { Gems } from '../data/Gems';
 import ItemSocketDisplay from './ItemSocketDisplay';
@@ -299,49 +299,47 @@ export default function ItemSelection() {
         }
         <tbody aria-live='polite'>
         {
-          Items.filter((e) => e.itemSlot === uiStore.selectedItemSlot && uiStore.sources.phase[e.phase] === true && (!uiStore.hiddenItems.includes(e.id) || hidingItems)).map((item, i) =>
-            // Show the item if it's not unique or if it is unique but the other item slot (ring or trinket) isn't equipped with the item
-            (!item.unique || (playerStore.selectedItems[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot === '1' ? '2' : '1')] !== item.id)) &&
-              <tr
-                key={i}
-                className="item-row"
-                data-selected={playerStore.selectedItems[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)] === item.id}
-                data-hidden={uiStore.hiddenItems.includes(item.id)}
-                onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot))}
-              >
-                <td
-                  className="hide-item-btn"
-                  style={{display: hidingItems ? 'table-cell' : 'none'}}
-                  title={uiStore.hiddenItems.includes(item.id) ? 'Show Item' : 'Hide Item'}
-                  onClick={(e) => { dispatch(toggleHiddenItemId(item.id)); e.stopPropagation(); }}
-                >❌</td>
-                <td className={item.quality + ' item-row-name'}>
-                  <a
-                    href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)}
-                    onClick={(e) => e.preventDefault()}
-                  ></a>
-                  {item.name}
-                </td>
-                <td>
-                  {
-                    <ItemSocketDisplay
-                      item={item}
-                      itemSlot={uiStore.selectedItemSlot}
-                      itemSocketClickHandler={itemSocketClickHandler}
-                      removeGemFromSocket={removeGemFromSocket} />
-                  }
-                </td>
-                <td>{item.source}</td>
-                <td>{item.stamina}</td>
-                <td>{item.intellect}</td>
-                <td>{item.spellPower}</td>
-                <td>{item.shadowPower}</td>
-                <td>{item.firePower}</td>
-                <td>{item.critRating}</td>
-                <td>{item.hitRating}</td>
-                <td>{item.hasteRating}</td>
-                <td></td>
-              </tr>
+          getItemTableItems(uiStore.selectedItemSlot, uiStore.selectedItemSubSlot, playerStore.selectedItems, uiStore.sources, uiStore.hiddenItems, hidingItems).map((item, i) =>
+            <tr
+              key={i}
+              className="item-row"
+              data-selected={playerStore.selectedItems[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)] === item.id}
+              data-hidden={uiStore.hiddenItems.includes(item.id)}
+              onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot))}
+            >
+              <td
+                className="hide-item-btn"
+                style={{display: hidingItems ? 'table-cell' : 'none'}}
+                title={uiStore.hiddenItems.includes(item.id) ? 'Show Item' : 'Hide Item'}
+                onClick={(e) => { dispatch(toggleHiddenItemId(item.id)); e.stopPropagation(); }}
+              >❌</td>
+              <td className={item.quality + ' item-row-name'}>
+                <a
+                  href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)}
+                  onClick={(e) => e.preventDefault()}
+                ></a>
+                {item.name}
+              </td>
+              <td>
+                {
+                  <ItemSocketDisplay
+                    item={item}
+                    itemSlot={uiStore.selectedItemSlot}
+                    itemSocketClickHandler={itemSocketClickHandler}
+                    removeGemFromSocket={removeGemFromSocket} />
+                }
+              </td>
+              <td>{item.source}</td>
+              <td>{item.stamina}</td>
+              <td>{item.intellect}</td>
+              <td>{item.spellPower}</td>
+              <td>{item.shadowPower}</td>
+              <td>{item.firePower}</td>
+              <td>{item.critRating}</td>
+              <td>{item.hitRating}</td>
+              <td>{item.hasteRating}</td>
+              <td>{uiStore.savedItemDps[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)] ? uiStore.savedItemDps[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)][item.id] : ''}</td>
+            </tr>
           )
         }
         </tbody>

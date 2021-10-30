@@ -1,9 +1,7 @@
 import { Gems } from "./data/Gems";
 import { Items } from "./data/Items";
 import { Sockets } from "./data/Sockets";
-import { GemColor, ItemSlot, ItemSlotKey, PlayerState, SelectedGemsStruct, Settings, SocketColor, TalentStore } from "./Types";
-import { Store } from "./redux/Store";
-import { modifyPlayerStat, setItemInItemSlot, setItemSetCount } from "./redux/PlayerSlice";
+import { GemColor, Item, ItemAndEnchantStruct, ItemSlot, ItemSlotKey, SelectedGemsStruct, Settings, SocketColor, SourcesStruct, SubSlotValue, TalentStore } from "./Types";
 
 export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
   switch(itemSlot) {
@@ -100,5 +98,21 @@ export function shouldDisplayPetSetting(talents: TalentStore, settings: Settings
 }
 
 export function shouldDisplayGemOfSocketColor(socketColor: SocketColor, gemColor: GemColor): boolean {
-  return (socketColor === SocketColor.Meta && gemColor === GemColor.Meta) || (socketColor == SocketColor.Meta && gemColor == GemColor.Meta);
+  return (socketColor === SocketColor.Meta && gemColor === GemColor.Meta) || (socketColor !== SocketColor.Meta && gemColor !== GemColor.Meta);
+}
+
+/**
+ * Returns an array of items meeting the criteria to be displayed in the item selection table.
+ * The item needs to be of the specified item slot, the item's phase needs to be selected, it needs to not be hidden unless the player is showing hidden items
+ * and the item needs to not be unique unless it is not equipped in the other item slot (only applicable to rings and trinkets).
+ * @param itemSlot 
+ * @param itemSubSlot 
+ * @param selectedItems 
+ * @param sources 
+ * @param hiddenItems 
+ * @param hidingItems 
+ * @returns Item[]
+ */
+export function getItemTableItems(itemSlot: ItemSlotKey, itemSubSlot: SubSlotValue, selectedItems: ItemAndEnchantStruct, sources: SourcesStruct, hiddenItems: number[], hidingItems: boolean): Item[] {
+  return Items.filter((e) => e.itemSlot === itemSlot && sources.phase[e.phase] === true && (!hiddenItems.includes(e.id) || hidingItems) && (!e.unique || (selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot === '1' ? '2' : '1')] !== e.id)));
 }

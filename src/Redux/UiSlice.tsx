@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { GemSelectionTableStruct, InitialGemSelectionTableValue, ItemSlotKey, Phase, SubSlotValue, UiState } from "../Types";
+import { GemSelectionTableStruct, InitialGemSelectionTableValue, ItemSlot, ItemSlotKey, Phase, SubSlotValue, UiState } from "../Types";
 
 const initialUiState : UiState = {
   sources: JSON.parse(localStorage.getItem('sources') || JSON.stringify({ phase: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, } })),
@@ -17,6 +17,8 @@ const initialUiState : UiState = {
   maxDps: localStorage.getItem('maxDps') || '',
   simulationProgressPercent: 0,
   simulationDuration: localStorage.getItem('simulationDuration') || '',
+  savedItemDps: JSON.parse(localStorage.getItem('savedItemDps') || '{}'),
+  combatLog: {visible: false, data: []},
 }
 
 export const UiSlice = createSlice({
@@ -96,9 +98,25 @@ export const UiSlice = createSlice({
     setSimulationDuration: (state, action: PayloadAction<string>) => {
       state.simulationDuration = action.payload + 's';
       localStorage.setItem('simulationDuration', state.simulationDuration);
+    },
+    setSavedItemDps: (state, action: PayloadAction<{itemSlot: ItemSlot, itemId: number, dps: number, saveLocalStorage: boolean}>) => {
+      if (!state.savedItemDps[action.payload.itemSlot])  {
+        state.savedItemDps[action.payload.itemSlot] = {};
+      }
+
+      state.savedItemDps[action.payload.itemSlot][action.payload.itemId] = action.payload.dps;
+      if (action.payload.saveLocalStorage) {
+        localStorage.setItem('savedItemDps', JSON.stringify(state.savedItemDps));
+      }
+    },
+    setCombatLogVisibility: (state, action: PayloadAction<boolean>) => {
+      state.combatLog.visible = action.payload;
+    },
+    setCombatLogData: (state, action: PayloadAction<string[]>) => {
+      state.combatLog.data = action.payload;
     }
   }
 });
 
-export const { setSimulationDuration, setMinDps, setMaxDps, setSimulationProgressPercent, setMedianDps, setSelectedItemSubSlot, setSelectedItemSlot, setFillItemSocketsWindowVisibility, setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
+export const { setCombatLogData, setCombatLogVisibility, setSavedItemDps, setSimulationDuration, setMinDps, setMaxDps, setSimulationProgressPercent, setMedianDps, setSelectedItemSubSlot, setSelectedItemSlot, setFillItemSocketsWindowVisibility, setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
 export default UiSlice.reducer;

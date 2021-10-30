@@ -434,8 +434,14 @@ export enum Quality {
   Common = 'common'
 }
 
+export type SourcesStruct = {
+  phase: {
+    [key in Phase]: boolean
+  }
+}
+
 export interface UiState {
-  sources: {phase: {[key in Phase]: boolean}},
+  sources: SourcesStruct,
   gemSelectionTable: GemSelectionTableStruct,
   gemPreferences: {hidden: number[], favorites: number[]},
   selectedProfile: string,
@@ -450,6 +456,8 @@ export interface UiState {
   maxDps: string,
   simulationProgressPercent: number,
   simulationDuration: string,
+  savedItemDps: {[key in ItemSlot]: {[key: number]: number}},
+  combatLog: {visible: boolean, data: string[]},
 }
 
 export interface WorkerParams {
@@ -463,6 +471,7 @@ export interface WorkerParams {
     stats: PlayerStats,
     sets: SetsStruct,
     simSettings: Settings,
+    metaGemId: number,
   },
   simulationSettings: {
     iterations: number,
