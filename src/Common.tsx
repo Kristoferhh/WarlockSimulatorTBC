@@ -1,9 +1,9 @@
 import { Gems } from "./data/Gems";
 import { Items } from "./data/Items";
 import { Sockets } from "./data/Sockets";
-import { GemColor, ItemSlot, ItemSlotKey, PlayerState, SelectedGemsStruct, Settings, SocketColor, Stat, TalentStore } from "./Types";
+import { GemColor, ItemSlot, ItemSlotKey, PlayerState, SelectedGemsStruct, Settings, SocketColor, TalentStore } from "./Types";
+import { Store } from "./redux/Store";
 import { modifyPlayerStat, setItemInItemSlot, setItemSetCount } from "./redux/PlayerSlice";
-import { WritableDraft } from "@reduxjs/toolkit/node_modules/immer/dist/internal";
 
 export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
   switch(itemSlot) {
@@ -91,7 +91,7 @@ export function itemMeetsSocketRequirements(params: { itemId: number, selectedGe
   return false;
 }
 
-export function getRemainingTalentPoints(talents: TalentStore) {
+export function getRemainingTalentPoints(talents: TalentStore): number {
   return 61 - Object.values<number>(talents).reduce((a, b) => a + b, 0); // 61 available talent points at lvl 70
 }
 
@@ -100,59 +100,5 @@ export function shouldDisplayPetSetting(talents: TalentStore, settings: Settings
 }
 
 export function shouldDisplayGemOfSocketColor(socketColor: SocketColor, gemColor: GemColor): boolean {
-  return (socketColor === SocketColor.Meta && gemColor === GemColor.Meta) || (socketColor === SocketColor.Meta && gemColor === GemColor.Meta);
-}
-
-export function unequipItemSlot(params: {playerObj: WritableDraft<PlayerState>, itemSlot: ItemSlot, updatingState: boolean}) {
-  const itemObj = Items.find(i => i.id === params.playerObj.selectedItems[params.itemSlot]);
-
-  if (itemObj) {
-    for (const [stat, value] of Object.entries(itemObj)) {
-      if (params.playerObj.stats.hasOwnProperty(stat)) {
-        if (params.updatingState) {
-          Store.dispatch(modifyPlayerStat({
-            stat: stat as Stat,
-            value: value,
-            action: 'remove'
-          }));
-        } else {
-          params.playerObj.stats[stat as Stat] -= value;
-        }
-      }
-    }
-
-    // Remove stats from socket bonus if it's active
-    if (itemMeetsSocketRequirements({itemId: itemObj.id, selectedGems: params.playerObj.selectedGems}) && itemObj.socketBonus) {
-      for (const [stat, value] of Object.entries(itemObj.socketBonus)) {
-        if (params.updatingState) {
-          Store.dispatch(modifyPlayerStat({
-            stat: stat as Stat,
-            value: value,
-            action: 'remove'
-          }));
-        } else {
-          params.playerObj.stats[stat as Stat] -= value;
-        }
-      }
-    }
-
-    // Lower the item set counter by 1 if the item is part of a set
-    if (itemObj.setId && params.playerObj.sets[itemObj.setId] && params.playerObj.sets[itemObj.setId] > 0) {
-      if (params.updatingState) {
-        Store.dispatch(setItemSetCount({
-          setId: itemObj.setId,
-          count: params.playerObj.sets[itemObj.setId] - 1
-        }));
-      } else {
-        params.playerObj.sets[itemObj.setId] -= 1;
-      }
-    }
-  }
-
-  if (params.updatingState) {
-    Store.dispatch(setItemInItemSlot({
-      id: 0,
-      itemSlot: params.itemSlot,
-    }));
-  }
+  return (socketColor === SocketColor.Meta && gemColor === GemColor.Meta) || (socketColor == SocketColor.Meta && gemColor == GemColor.Meta);
 }

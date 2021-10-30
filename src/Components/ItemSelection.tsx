@@ -5,7 +5,7 @@ import { Enchants } from '../data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/Store';
 import { modifyPlayerStat, setEnchantInItemSlot, setItemInItemSlot, setItemSetCount, setItemSocketsValue } from '../redux/PlayerSlice';
-import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot, unequipItemSlot } from '../Common';
+import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from '../Common';
 import { setEquippedItemsWindowVisibility, setFillItemSocketsWindowVisibility, setGemSelectionTable, setSelectedItemSlot, setSelectedItemSubSlot, toggleHiddenItemId } from '../redux/UiSlice';
 import { Gems } from '../data/Gems';
 import ItemSocketDisplay from './ItemSocketDisplay';
@@ -37,6 +37,46 @@ export default function ItemSelection() {
   const playerStore = useSelector((state: RootState) => state.player);
   const uiStore = useSelector((state: RootState) => state.ui);
   const dispatch = useDispatch();
+
+  function unequipItemSlot(slot: ItemSlot) {
+    const itemObj = Items.find(i => i.id === playerStore.selectedItems[slot]);
+
+    if (itemObj) {
+      for (const [prop, value] of Object.entries(itemObj)) {
+        if (playerStore.stats.hasOwnProperty(prop)) {
+          dispatch(modifyPlayerStat({
+            stat: prop as Stat,
+            value: value,
+            action: 'remove'
+          }));
+        }
+      }
+
+      // Remove stats from socket bonus if it's active
+      if (itemMeetsSocketRequirements({itemId: itemObj!.id, selectedGems: playerStore.selectedGems})) {
+        for (const [stat, value] of Object.entries(itemObj!.socketBonus!)) {
+          dispatch(modifyPlayerStat({
+            stat: stat as Stat,
+            value: value,
+            action: 'remove'
+          }));
+        }
+      }
+
+      // Lower the item set counter by 1 if the item is part of a set
+      if (itemObj!.setId && playerStore.sets[itemObj!.setId] && playerStore.sets[itemObj!.setId] > 0) {
+        dispatch(setItemSetCount({
+          setId: itemObj!.setId,
+          count: playerStore.sets[itemObj!.setId] - 1
+        }));
+      }
+    }
+
+    dispatch(setItemInItemSlot({
+      id: 0,
+      itemSlot: slot,
+    }));
+  }
 
   function equipItem(item: Item, slot: ItemSlot) {
     if (playerStore.selectedItems[slot] !== item.id) {
@@ -75,17 +115,17 @@ export default function ItemSelection() {
 
     // If equipping a two handed weapon then unequip main hand and offhand and vice versa
     if (slot === ItemSlot.twohand) {
-      unequipItemSlot({playerObj: playerStore, itemSlot: ItemSlot.mainhand, updatingState: true})
-      unequipItemSlot({playerObj: playerStore, itemSlot: ItemSlot.offhand, updatingState: true});
+      unequipItemSlot(ItemSlot.mainhand);
+      unequipItemSlot(ItemSlot.offhand);
     } else if ([ItemSlot.mainhand, ItemSlot.offhand].includes(slot)) {
-      unequipItemSlot({playerObj: playerStore, itemSlot: ItemSlot.twohand, updatingState: true});
+      unequipItemSlot(ItemSlot.twohand);
     }
   }
 
   function itemClickHandler(item: Item, slot: ItemSlot) {
     // Remove stats from equipped item
     if (playerStore.selectedItems[slot] !== 0) {
-      unequipItemSlot({playerObj: playerStore, itemSlot: slot, updatingState: true});
+      unequipItemSlot(slot);
     }
 
     // Add stats from the item if it's not the currently equipped item

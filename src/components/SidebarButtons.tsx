@@ -3,7 +3,7 @@ import { ItemSlotKeyToItemSlot } from "../Common";
 import { Items } from "../data/Items";
 import { RootState } from "../redux/Store"
 import { setMedianDps, setSimulationProgressPercent } from "../redux/UiSlice";
-import { SimWorker } from "../SimWorker";
+import { SimWorker } from "../SimWorker.js";
 import { Item, Stat, WorkerParams } from "../Types";
 
 interface SimulationUpdate {
@@ -49,25 +49,26 @@ export function SidebarButtons() {
 
     itemsToSim.forEach(item => {
       simWorkers.push(new SimWorker(
-        (dpsUpdate) => {
+        (dpsUpdate: () => void) => {
 
         },
-        (combatLogVector) => {
+        (combatLogVector: () => void) => {
 
         },
-        (errorCallback) => {
+        (errorCallback: () => void) => {
 
         },
-        (combatLogUpdate) => {
+        (combatLogUpdate: () => void) => {
 
         },
-        (combatLogBreakdown) => {
+        (combatLogBreakdown: () => void) => {
 
         },
-        (simulationEnd) => {
+        (simulationEnd: () => void) => {
 
         },
         (params: SimulationUpdate) => {
+          console.log(params);
           let medianDps = Math.round(params.medianDps * 100) / 100;
 
           if (itemsToSim.length === 1 || params.itemId ===  equippedItemId) {
@@ -80,7 +81,7 @@ export function SidebarButtons() {
           }
         },
         getWorkerParams(item.id, itemsToSim.length)
-      ));
+      ).start());
     });
   }
 
@@ -89,7 +90,8 @@ export function SidebarButtons() {
       <div
         className='btn'
         onClick={() => simulate(Items.filter(item => item.id === playerState.selectedItems[ItemSlotKeyToItemSlot(false, uiState.selectedItemSlot, uiState.selectedItemSubSlot)]))}
-      >Simulate</div>
+        style={{background: uiState.simulationProgressPercent > 0 && uiState.simulationProgressPercent < 100 ? `linear-gradient(to right, #9482C9 ${uiState.simulationProgressPercent}%, transparent ${uiState.simulationProgressPercent}%)` : ''}}
+      >{uiState.simulationProgressPercent > 0 && uiState.simulationProgressPercent < 100 ? `${uiState.simulationProgressPercent}%` : 'Simulate'}</div>
       <div
         className='btn'
         onClick={() => simulate(Items.filter(item => item.itemSlot === uiState.selectedItemSlot))}
