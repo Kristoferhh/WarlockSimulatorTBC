@@ -481,6 +481,7 @@ export interface WorkerParams {
   itemId: number,
   itemAmount: number,
   itemSubSlot: SubSlotValue,
+  customStat: string,
 }
 
 export interface GemSelectionTableStruct {

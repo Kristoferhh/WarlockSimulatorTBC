@@ -37,7 +37,7 @@ export default function Sidebar() {
 
         <div id="sidebar-simulation-selection">
           <div id="sim-result-dps-div">
-            <p><span id="avg-dps"></span>{uiState.medianDps}<span> DPS</span> <span id="dps-stdev"></span></p>
+            <p><span id="avg-dps">{uiState.medianDps}</span><span> DPS</span> <span id="dps-stdev"></span></p>
             <p>Min: <span id="min-dps">{uiState.minDps}</span> Max: <span id="max-dps">{uiState.maxDps}</span></p>
           </div>
           <SidebarButtons />

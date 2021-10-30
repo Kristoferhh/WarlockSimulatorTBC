@@ -52,7 +52,8 @@ export function SidebarButtons() {
       },
       itemId: itemId,
       itemAmount: itemAmount,
-      itemSubSlot: uiState.selectedItemSubSlot
+      itemSubSlot: uiState.selectedItemSubSlot,
+      customStat: "normal",
     }
     let equippedMetaGemId = -1;
     let customItemMetaGemId = -1;
@@ -125,14 +126,22 @@ export function SidebarButtons() {
     let simulationsFinished = 0;
     let simulationsRunning = 0;
     let simIndex = 0;
+    let dpsArray: number[] = [];
+    let dpsCount: {[key: string]: number} = {};
+    let totalManaRegenerated = 0
+    let totalDamageDone = 0;
+    let spellDamageDict = {};
+    let spellManaGainDict = {};
     combatLogEntries = [];
 
     itemIdsToSim.forEach(itemId => {
       simulations.push(new SimWorker(
-        (dpsUpdate: () => void) => {
-
+        (dpsUpdate: {dps: number}) => {
+          dpsArray.push(dpsUpdate.dps);
+          const dps: string = Math.round(dpsUpdate.dps).toString();
+          dpsCount[dps] = Math.round(dpsCount[dps]) + 1 || 1;
         },
-        (combatLogVector: () => void) => {
+        (combatLogVector: { name: string, damage: number, manaGain: number }) => {
 
         },
         (errorCallback: () => void) => {
@@ -150,6 +159,7 @@ export function SidebarButtons() {
           const maxDps = Math.round(params.maxDps * 100) / 100;
           const medianDps = Math.round(params.medianDps * 100) / 100;
           simulationsFinished++;
+          console.log(dpsArray);
 
           // Callback for the currently equipped item
           if (itemIdsToSim.length === 1 || params.itemId === equippedItemId) {

@@ -18,7 +18,7 @@ Player::Player(PlayerSettings* playerSettings)
     spellDelay = 0.0001;
     // Multiply hit and crit percent by this number to get rid of the decimals when calling random() since we need integers
     critChanceMultiplier = 1000;
-    minimumGcdValue = 1; //todo change to 0.75 // TBCC is bugged cause Blizzard is a shit company so the minimum gcd value as of 2021/9/4 is 0.75s instead of 1s
+    minimumGcdValue = 1;
     critMultiplier = 1.5;
     // I don't know if this formula only works for bosses or not, so for the moment I'm only using it for lvl >=73 targets.
     const double enemyBaseResistance = settings->enemyLevel >= 73 ? (6 * level * 5) / 75.0 : 0;
