@@ -1,3 +1,4 @@
+import { nanoid } from "@reduxjs/toolkit";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProfile, loadProfile, renameProfile, setProfile } from "../redux/PlayerSlice";
@@ -99,9 +100,9 @@ export default function ProfilesAndSources() {
         <legend>Saved Profiles</legend>
         <ul>
           {
-            Object.entries(playerStore.profiles).map((profile, i) =>
+            Object.entries(playerStore.profiles).map(profile =>
               <li
-                key={i}
+                key={nanoid()}
                 className='saved-profile'
                 data-checked={selectedProfileState === profile[0]}
                 onClick={(e) => profileClickHandler(profile)}
@@ -117,9 +118,9 @@ export default function ProfilesAndSources() {
         <legend>Sources</legend>
         <ul>
           {
-            phases.map((phase, i) =>
+            phases.map(phase =>
               <li
-                key={i}
+                key={phase.phase}
                 data-checked={sourcesState.phase[phase.phase] === true}
                 className='phase-btn'
                 onClick={() => dispatch(togglePhase(phase.phase))}

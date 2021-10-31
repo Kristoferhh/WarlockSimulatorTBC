@@ -1,3 +1,4 @@
+import { nanoid } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux"
 import { RootState } from "../redux/Store"
 
@@ -7,8 +8,8 @@ export default function CombatLog() {
   return(
     <div id="combat-log" style={{display: uiState.combatLog.visible ? '' : 'none'}}>
       {
-        uiState.combatLog.data.map((entry, i) =>
-          <p key={i}>{entry}</p>
+        uiState.combatLog.data.map(entry =>
+          <p key={nanoid()}>{entry}</p>
         )
       }
     </div>

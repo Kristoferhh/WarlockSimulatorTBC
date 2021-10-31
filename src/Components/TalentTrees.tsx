@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setTalentPointValue } from "../redux/PlayerSlice";
 import { PresetTalents } from "../data/PresetTalents";
 import { Talent, TalentName } from "../Types";
+import { nanoid } from "nanoid";
 
 export default function TalentTrees() {
   const talentStore = useSelector((state: RootState) => state.player.talents);
@@ -79,15 +80,15 @@ export default function TalentTrees() {
     <div id="talents-container">
       <div id="preset-talent-buttons">
         {
-          PresetTalents.map((talentTemplate, i) =>
-            <button key={i} onClick={() => applyTalentTemplate(talentTemplate.talents)}>{talentTemplate.name}</button>
+          PresetTalents.map(talentTemplate =>
+            <button key={nanoid()} onClick={() => applyTalentTemplate(talentTemplate.talents)}>{talentTemplate.name}</button>
           )
         }
       </div>
       <section id="talents-section">
         {
-          Talents.map((talentTree, i) =>
-            <div key={i} className="talent-tree-div">
+          Talents.map(talentTree =>
+            <div key={talentTree.name} className="talent-tree-div">
               <img src={`${process.env.PUBLIC_URL}/img/talent_tree_background_${talentTree.name}.jpg`} alt={talentTree.name} style={{position: 'absolute', height: '430px', width: '206px'}} />
               <table id={'talent-table-' + talentTree.name} className='talent-tree-table'>
                 <tbody>

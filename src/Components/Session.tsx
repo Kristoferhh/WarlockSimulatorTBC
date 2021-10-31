@@ -20,7 +20,7 @@ export default function Session() {
     addAuraStats();
     addItemStats();
     addEnchantStats();
-    $('.tablesorter').tablesorter();
+    ($('.tablesorter') as any).tablesorter();
 
     function addRaceStats() {
       const selectedRace = Races.find(e => e.varName === playerStore.settings.race);

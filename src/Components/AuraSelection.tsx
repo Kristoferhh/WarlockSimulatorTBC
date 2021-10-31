@@ -4,6 +4,7 @@ import { RootState } from "../redux/Store";
 import { Aura, AuraGroupKey, Stat } from "../Types";
 import { AuraGroups } from "../data/AuraGroups";
 import { modifyPlayerStat, toggleAuraSelection } from "../redux/PlayerSlice";
+import { nanoid } from "nanoid";
 
 export default function AuraSelection() {
   const playerState = useSelector((state: RootState) => state.player);
@@ -26,9 +27,9 @@ export default function AuraSelection() {
   return(
     <section id="buffs-and-debuffs-section">
       {
-        AuraGroups.map((auraGroup, i) =>
+        AuraGroups.map(auraGroup =>
           <div
-            key={i}
+            key={nanoid()}
             style={{display: auraGroup.heading !== AuraGroupKey.PetBuffs || playerState.talents.demonicSacrifice === 0 || playerState.settings.sacrificePet === 'no' ? '' : 'none'}}>
             <h3 id='buffs-heading'>{auraGroup.heading}</h3>
             <ul>

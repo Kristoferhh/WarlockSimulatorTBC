@@ -1,3 +1,4 @@
+import { nanoid } from "@reduxjs/toolkit";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { canGemColorBeInsertedIntoSocketColor } from "../Common";
@@ -86,8 +87,8 @@ export function FillItemSockets() {
       </div>
       <div id='gem-options-window-socket-selection'>
         {
-          socketOptions.map((socket, i) =>
-            <label key={i}>{socket.name}
+          socketOptions.map(socket =>
+            <label key={nanoid()}>{socket.name}
               <input type='radio' name='socket-selection' onChange={(e) => socketColorClickHandler(socket.color)} checked={socketColor === socket.color}></input>
             </label>          
           )
@@ -96,17 +97,16 @@ export function FillItemSockets() {
       <div id='gem-options-gem-list'>
         <div id='gem-options-gem-list'>
           {
-            Gems.map((gem, i) =>
-              canGemColorBeInsertedIntoSocketColor(socketColor, gem.color) &&
-                <div
-                  className='gem-options-gem'
-                  key={i}
-                  onClick={(e) => { setSelectedGemId(gem.id); e.preventDefault(); }}
-                  data-checked={selectedGemId === gem.id}
-                >
-                  <img src={`${process.env.PUBLIC_URL}/img/${gem.iconName}.jpg`} alt={gem.name} />
-                  <a href={`https://tbc.wowhead.com/item=${gem.id}`}>{gem.name}</a>
-                </div>
+            Gems.filter(e => canGemColorBeInsertedIntoSocketColor(socketColor, e.color)).map(gem =>
+              <div
+                className='gem-options-gem'
+                key={gem.id}
+                onClick={(e) => { setSelectedGemId(gem.id); e.preventDefault(); }}
+                data-checked={selectedGemId === gem.id}
+              >
+                <img src={`${process.env.PUBLIC_URL}/img/${gem.iconName}.jpg`} alt={gem.name} />
+                <a href={`https://tbc.wowhead.com/item=${gem.id}`}>{gem.name}</a>
+              </div>
             )
           }
         </div>

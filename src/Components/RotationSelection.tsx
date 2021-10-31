@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { useDispatch, useSelector } from "react-redux"
 import { Rotation } from "../data/Rotation"
 import { toggleRotationSpellSelection } from "../redux/PlayerSlice";
@@ -12,8 +13,8 @@ export default function RotationSelection() {
       <h3>Rotation</h3>
       <ul id="rotation-list">
         {
-          Rotation.map((rotationGroup, i) =>
-            <div key={i} style={{display: rotationGroup.varName !== 'curse' && playerStore.settings.rotationOption === 'simChooses' ? 'none' : ''}}>
+          Rotation.map(rotationGroup =>
+            <div key={nanoid()} style={{display: rotationGroup.varName !== 'curse' && playerStore.settings.rotationOption === 'simChooses' ? 'none' : ''}}>
               <h4>{rotationGroup.header}</h4>
               {
                 rotationGroup.spells.map((spell, j) =>

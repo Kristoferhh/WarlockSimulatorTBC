@@ -10,6 +10,7 @@ import { setEquippedItemsWindowVisibility, setFillItemSocketsWindowVisibility, s
 import { Gems } from '../data/Gems';
 import ItemSocketDisplay from './ItemSocketDisplay';
 import { FillItemSockets } from './FillItemSockets';
+import { nanoid } from '@reduxjs/toolkit';
 
 const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlotValue}[] = [
   { name: 'Main Hand', itemSlot: ItemSlotKey.Mainhand, subSlot: '' },
@@ -242,9 +243,9 @@ export default function ItemSelection() {
     <div id="item-selection-container">
       <ul id="item-slot-selection-list">
         {
-          itemSlotInformation.map((slot, i) =>
+          itemSlotInformation.map(slot =>
             <li
-              key={i}
+              key={nanoid()}
               onClick={() => itemSlotClickHandler(slot.itemSlot, slot.subSlot)}
               data-selected={uiStore.selectedItemSlot === slot.itemSlot && (!slot.subSlot || uiStore.selectedItemSubSlot === slot.subSlot)}>
               {slot.name}
@@ -299,47 +300,48 @@ export default function ItemSelection() {
         }
         <tbody aria-live='polite'>
         {
-          getItemTableItems(uiStore.selectedItemSlot, uiStore.selectedItemSubSlot, playerStore.selectedItems, uiStore.sources, uiStore.hiddenItems, hidingItems).map((item, i) =>
-            <tr
-              key={i}
-              className="item-row"
-              data-selected={playerStore.selectedItems[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)] === item.id}
-              data-hidden={uiStore.hiddenItems.includes(item.id)}
-              onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot))}
-            >
-              <td
-                className="hide-item-btn"
-                style={{display: hidingItems ? 'table-cell' : 'none'}}
-                title={uiStore.hiddenItems.includes(item.id) ? 'Show Item' : 'Hide Item'}
-                onClick={(e) => { dispatch(toggleHiddenItemId(item.id)); e.stopPropagation(); }}
-              >❌</td>
-              <td className={item.quality + ' item-row-name'}>
-                <a
-                  href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)}
-                  onClick={(e) => e.preventDefault()}
-                ></a>
-                {item.name}
-              </td>
-              <td>
-                {
-                  <ItemSocketDisplay
-                    item={item}
-                    itemSlot={uiStore.selectedItemSlot}
-                    itemSocketClickHandler={itemSocketClickHandler}
-                    removeGemFromSocket={removeGemFromSocket} />
-                }
-              </td>
-              <td>{item.source}</td>
-              <td>{item.stamina}</td>
-              <td>{item.intellect}</td>
-              <td>{item.spellPower}</td>
-              <td>{item.shadowPower}</td>
-              <td>{item.firePower}</td>
-              <td>{item.critRating}</td>
-              <td>{item.hitRating}</td>
-              <td>{item.hasteRating}</td>
-              <td>{uiStore.savedItemDps[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)] ? uiStore.savedItemDps[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)][item.id] : ''}</td>
-            </tr>
+          getItemTableItems(uiStore.selectedItemSlot, uiStore.selectedItemSubSlot, playerStore.selectedItems, uiStore.sources, uiStore.hiddenItems, hidingItems)
+            .map(item =>
+              <tr
+                key={item.id}
+                className="item-row"
+                data-selected={playerStore.selectedItems[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)] === item.id}
+                data-hidden={uiStore.hiddenItems.includes(item.id)}
+                onClick={() => itemClickHandler(item, ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot))}
+              >
+                <td
+                  className="hide-item-btn"
+                  style={{display: hidingItems ? 'table-cell' : 'none'}}
+                  title={uiStore.hiddenItems.includes(item.id) ? 'Show Item' : 'Hide Item'}
+                  onClick={(e) => { dispatch(toggleHiddenItemId(item.id)); e.stopPropagation(); }}
+                >❌</td>
+                <td className={item.quality + ' item-row-name'}>
+                  <a
+                    href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)}
+                    onClick={(e) => e.preventDefault()}
+                  ></a>
+                  {item.name}
+                </td>
+                <td>
+                  {
+                    <ItemSocketDisplay
+                      item={item}
+                      itemSlot={uiStore.selectedItemSlot}
+                      itemSocketClickHandler={itemSocketClickHandler}
+                      removeGemFromSocket={removeGemFromSocket} />
+                  }
+                </td>
+                <td>{item.source}</td>
+                <td>{item.stamina}</td>
+                <td>{item.intellect}</td>
+                <td>{item.spellPower}</td>
+                <td>{item.shadowPower}</td>
+                <td>{item.firePower}</td>
+                <td>{item.critRating}</td>
+                <td>{item.hitRating}</td>
+                <td>{item.hasteRating}</td>
+                <td>{uiStore.savedItemDps[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)] ? uiStore.savedItemDps[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)][item.id] : ''}</td>
+              </tr>
           )
         }
         </tbody>
@@ -377,9 +379,9 @@ export default function ItemSelection() {
           </thead>
           <tbody aria-live='polite'>
             {
-              Enchants.filter((e) => e.itemSlot === getEnchantLookupKey()).map((enchant, i) =>
+              Enchants.filter((e) => e.itemSlot === getEnchantLookupKey()).map(enchant =>
                 <tr
-                  key={i}
+                  key={enchant.id}
                   className="enchant-row"
                   data-selected={playerStore.selectedEnchants[ItemSlotKeyToItemSlot(true, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)] === enchant.id}
                   onClick={() => enchantClickHandler(enchant, ItemSlotKeyToItemSlot(true, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot))}>

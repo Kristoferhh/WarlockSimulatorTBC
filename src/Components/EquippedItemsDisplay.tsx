@@ -1,3 +1,4 @@
+import { nanoid } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { ItemSlotToItemSlotKey } from "../Common";
 import { Enchants } from "../data/Enchants";
@@ -50,9 +51,11 @@ export default function EquippedItemsDisplay() {
           </thead>
           <tbody>
             {
-              Object.values(ItemSlot).map((slot, i) =>
-                (![ItemSlot.mainhand, ItemSlot.offhand, ItemSlot.twohand].includes(slot) || (([ItemSlot.mainhand, ItemSlot.offhand].includes(slot) && (!playerState.selectedItems[ItemSlot.twohand] || playerState.selectedItems[ItemSlot.twohand] === 0)) || (slot === ItemSlot.twohand && (!playerState.selectedItems[ItemSlot.mainhand] || playerState.selectedItems[ItemSlot.mainhand] === 0) && (!playerState.selectedItems[ItemSlot.offhand] || playerState.selectedItems[ItemSlot.offhand] === 0)))) &&
-                  <tr key={i} className='equipped-item-row'>
+              Object.values(ItemSlot)
+                // Filter for choosing whether to display mainhand + offhand or twohand. If a two hand is equipped then it shows two hand, otherwise it shows the mainhand + offhand
+                .filter(slot => (![ItemSlot.mainhand, ItemSlot.offhand, ItemSlot.twohand].includes(slot) || (([ItemSlot.mainhand, ItemSlot.offhand].includes(slot) && (!playerState.selectedItems[ItemSlot.twohand] || playerState.selectedItems[ItemSlot.twohand] === 0)) || (slot === ItemSlot.twohand && (!playerState.selectedItems[ItemSlot.mainhand] || playerState.selectedItems[ItemSlot.mainhand] === 0) && (!playerState.selectedItems[ItemSlot.offhand] || playerState.selectedItems[ItemSlot.offhand] === 0)))))
+                .map(slot =>
+                  <tr key={nanoid()} className='equipped-item-row'>
                     <td>{slot}</td>
                     <td className={'equipped-item-name ' + (playerState.selectedItems[slot] != null ? getItemInItemSlot(slot)?.quality : '')}>
                       {

@@ -102,11 +102,12 @@ export default function GemSelection() {
         </tr>
         {
           // Sort gems by favorited gems first
-          Gems.sort(function(a, b) { return Number(uiState.gemPreferences.favorites.includes(b.id)) - Number(uiState.gemPreferences.favorites.includes(a.id)); }).map((gem, i) =>
-            // Only show the gems if they're meta gems and the socket is a meta socket or if they're not meta gems and the socket is not a meta socket.
-            canGemColorBeInsertedIntoSocketColor(uiState.gemSelectionTable.socketColor, gem.color) &&
+          Gems
+            .filter(gem => canGemColorBeInsertedIntoSocketColor(uiState.gemSelectionTable.socketColor, gem.color))
+            .sort(function(a, b) { return Number(uiState.gemPreferences.favorites.includes(b.id)) - Number(uiState.gemPreferences.favorites.includes(a.id)); })
+            .map(gem =>
               <tr
-                key={i}
+                key={gem.id}
                 className='gem-row'
                 data-hidden={false}
                 style={{display: uiState.gemPreferences.hidden.includes(gem.id) && !showingHiddenGems ? 'none' : ''}}

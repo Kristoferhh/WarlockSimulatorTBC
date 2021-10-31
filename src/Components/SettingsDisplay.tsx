@@ -190,8 +190,8 @@ export default function SettingsDisplay() {
               <label className="settings-left" htmlFor="powerInfusionAmount">Power Infusion amount</label>
               <select className="settings-right" name="powerInfusionAmount" onChange={(e) => settingModifiedHandler(Setting.powerInfusionAmount, e.target.value)} value={playerStore.settings.powerInfusionAmount}>
                 {
-                  Array.from(Array(12), (e, i) => i + 1).map((number, i) =>
-                    <option value={number} key={i}>{number}</option>
+                  Array.from(Array(12), (e, i) => i + 1).map(number =>
+                    <option value={number} key={number}>{number}</option>
                   )
                 }
               </select>
@@ -203,8 +203,8 @@ export default function SettingsDisplay() {
               <label className="settings-left" htmlFor="bloodlustAmount">Bloodlust amount</label>
               <select className="settings-right" name="bloodlustAmount" onChange={(e) => settingModifiedHandler(Setting.bloodlustAmount, e.target.value)} value={playerStore.settings.bloodlustAmount}>
                 {
-                  Array.from(Array(15), (e, i) => i + 1).map((number, i) =>
-                    <option value={number} key={i}>{number}</option>
+                  Array.from(Array(15), (e, i) => i + 1).map(number =>
+                    <option value={number} key={number}>{number}</option>
                   )
                 }
               </select>
@@ -216,8 +216,8 @@ export default function SettingsDisplay() {
               <label className="settings-left" htmlFor="innervateAmount">Innervate amount</label>
               <select className="settings-right" name="innervateAmount" onChange={(e) => settingModifiedHandler(Setting.innervateAmount, e.target.value)} value={playerStore.settings.innervateAmount}>
                 {
-                  Array.from(Array(18), (e, i) => i + 1).map((number, i) =>
-                    <option value={number} key={i}>{number}</option>
+                  Array.from(Array(18), (e, i) => i + 1).map(number =>
+                    <option value={number} key={number}>{number}</option>
                   )
                 }
               </select>

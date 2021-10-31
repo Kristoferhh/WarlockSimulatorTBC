@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { useSelector } from "react-redux"
 import { RootState } from "../redux/Store"
 
@@ -33,8 +34,8 @@ export default function BreakdownTables() {
                   {
                     breakdownObj.data
                       .filter(e => (breakdownObj.spellDamageDict[e.name] && breakdownObj.spellDamageDict[e.name] > 0) || e.misses > 0 || e.crits > 0 || e.glancingBlows > 0 || e.dodges > 0)
-                      .map((spell, i) =>
-                        <tr key={i} className='spell-damage-information'>
+                      .map(spell =>
+                        <tr key={nanoid()} className='spell-damage-information'>
                           <td>{spell.name}</td>
                           <td><meter value={breakdownObj.spellDamageDict[spell.name] ? (breakdownObj.spellDamageDict[spell.name] / breakdownObj.totalDamageDone) * 100 : '0'} min='0' max='100'></meter> {breakdownObj.spellDamageDict[spell.name] ? formatPercentage(breakdownObj.spellDamageDict[spell.name] / breakdownObj.totalDamageDone) : 0}%</td>
                           <td title={spell.casts.toString()}>{spell.casts / breakdownObj.totalIterationAmount < 2 ? Math.round((spell.casts / breakdownObj.totalIterationAmount) * 10) / 10 : Math.round(spell.casts / breakdownObj.totalIterationAmount)}</td>
@@ -69,8 +70,8 @@ export default function BreakdownTables() {
                   {
                     breakdownObj.data
                       .filter(e => breakdownObj.spellManaGainDict[e.name] && breakdownObj.spellManaGainDict[e.name] > 0)
-                      .map((spell, i) =>
-                        <tr key={i} className='spell-damage-information'>
+                      .map(spell =>
+                        <tr key={nanoid()} className='spell-damage-information'>
                           <td>{spell.name}</td>
                           <td><meter value={breakdownObj.spellManaGainDict[spell.name] ? (breakdownObj.spellManaGainDict[spell.name] / breakdownObj.totalManaGained) * 100 : '0'} min='0' max='100'></meter> {breakdownObj.spellManaGainDict[spell.name] ? formatPercentage(breakdownObj.spellManaGainDict[spell.name] / breakdownObj.totalManaGained) : 0}%</td>
                           <td>{(spell.casts / breakdownObj.totalIterationAmount) < 2 ? Math.round((spell.casts / breakdownObj.totalIterationAmount) * 10) / 10 : Math.round(spell.casts / breakdownObj.totalIterationAmount)}</td>
@@ -92,8 +93,8 @@ export default function BreakdownTables() {
                 </thead>
                 <tbody>
                   {
-                    breakdownObj.data.filter(e => e.uptime > 0).map((spell, i) =>
-                      <tr key={i} className='spell-damage-information'>
+                    breakdownObj.data.filter(e => e.uptime > 0).map(spell =>
+                      <tr key={nanoid()} className='spell-damage-information'>
                         <td>{spell.name}</td>
                         {/*If the aura's count is less than 2 then show 1 decimal place, otherwise just round the value*/}
                         <td>{(spell.count / breakdownObj.totalIterationAmount) < 2 ? Math.round((spell.count / breakdownObj.totalIterationAmount) * 10) / 10 : Math.round(spell.count / breakdownObj.totalIterationAmount)}</td>

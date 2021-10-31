@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { useSelector } from "react-redux"
 import { isPetActive } from "../Common";
 import { RootState } from "../redux/Store"
@@ -224,12 +225,11 @@ export default function StatsDisplay() {
   return (
     <ul className="character-stats">
       {
-        stats.map((stat, i) =>
-          (stat.condition === undefined || stat.condition() === true) &&
-            <li key={i}>
-              <p className='character-stat'>{stat.name}</p>
-              <p className='character-stat-val'>{stat.value()}</p>
-            </li>
+        stats.filter(stat => stat.condition === undefined || stat.condition() === true).map(stat =>
+          <li key={nanoid()}>
+            <p className='character-stat'>{stat.name}</p>
+            <p className='character-stat-val'>{stat.value()}</p>
+          </li>
         )
       }
     </ul>
