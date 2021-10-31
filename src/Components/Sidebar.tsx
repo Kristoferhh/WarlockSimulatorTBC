@@ -7,7 +7,6 @@ import StatsDisplay from "./StatsDisplay";
 
 export default function Sidebar() {
   const playerState = useSelector((state: RootState) => state.player);
-  const uiState = useSelector((state: RootState) => state.ui);
 
   return (
     <div id="sidebar">

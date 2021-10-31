@@ -183,15 +183,18 @@ export function SidebarButtons() {
             setNewSimulationDuration((Math.round(totalSimDuration * 10000) / 10000).toString(), true);
             setSimulationProgressPercent(0);
             populateCombatLog();
-            dispatch(setCombatLogBreakdownValue({
-              totalDamageDone: totalDamageDone,
-              totalManaGained: totalManaRegenerated,
-              totalSimulationFightLength: params.totalDuration,
-              totalIterationAmount: params.iterationAmount,
-              spellDamageDict: spellDamageDict,
-              spellManaGainDict: spellManaGainDict,
-              data: combatLogBreakdownArr,
-            }));
+            
+            if (itemIdsToSim.length === 1 && playerState.settings["automatically-open-sim-details"] === 'yes') {
+              dispatch(setCombatLogBreakdownValue({
+                totalDamageDone: totalDamageDone,
+                totalManaGained: totalManaRegenerated,
+                totalSimulationFightLength: params.totalDuration,
+                totalIterationAmount: params.iterationAmount,
+                spellDamageDict: spellDamageDict,
+                spellManaGainDict: spellManaGainDict,
+                data: combatLogBreakdownArr,
+              }));
+            }
           }
 
           // Start a new simulation that's waiting in the queue if there are any remaining

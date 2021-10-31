@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CombatLogBreakdown, CombatLogBreakdownData, GemSelectionTableStruct, InitialGemSelectionTableValue, ItemSlot, ItemSlotKey, Phase, SubSlotValue, UiState } from "../Types";
+import { CombatLogBreakdown, GemSelectionTableStruct, InitialGemSelectionTableValue, ItemSlot, ItemSlotKey, Phase, SubSlotValue, UiState } from "../Types";
 
 const initialUiState : UiState = {
   sources: JSON.parse(localStorage.getItem('sources') || JSON.stringify({ phase: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, } })),
