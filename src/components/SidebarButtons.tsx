@@ -201,6 +201,7 @@ export function SidebarButtons() {
                   spellManaGainDict: spellManaGainDict,
                   data: combatLogBreakdownArr,
                 }));
+                $('.breakdown-table').trigger('update');
               }
             }
   

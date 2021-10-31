@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { shouldDisplayGemOfSocketColor } from "../Common";
+import { canGemColorBeInsertedIntoSocketColor } from "../Common";
 import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
 import { setItemSocketsValue } from "../redux/PlayerSlice";
@@ -97,7 +97,7 @@ export function FillItemSockets() {
         <div id='gem-options-gem-list'>
           {
             Gems.map((gem, i) =>
-              shouldDisplayGemOfSocketColor(socketColor, gem.color) &&
+              canGemColorBeInsertedIntoSocketColor(socketColor, gem.color) &&
                 <div
                   className='gem-options-gem'
                   key={i}

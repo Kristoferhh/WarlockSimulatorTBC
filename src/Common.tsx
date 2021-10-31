@@ -93,11 +93,11 @@ export function getRemainingTalentPoints(talents: TalentStore): number {
   return 61 - Object.values<number>(talents).reduce((a, b) => a + b, 0); // 61 available talent points at lvl 70
 }
 
-export function shouldDisplayPetSetting(talents: TalentStore, settings: Settings, requiresAggressivePet: boolean): boolean {
-  return (talents.demonicSacrifice === 0 || settings.sacrificePet === 'no') && (requiresAggressivePet || settings.petMode === '1');
+export function isPetActive(talents: TalentStore, settings: Settings, requiresAggressivePet: boolean): boolean {
+  return (talents.demonicSacrifice === 0 || settings.sacrificePet === 'no') && (!requiresAggressivePet || settings.petMode === '1');
 }
 
-export function shouldDisplayGemOfSocketColor(socketColor: SocketColor, gemColor: GemColor): boolean {
+export function canGemColorBeInsertedIntoSocketColor(socketColor: SocketColor, gemColor: GemColor): boolean {
   return (socketColor === SocketColor.Meta && gemColor === GemColor.Meta) || (socketColor !== SocketColor.Meta && gemColor !== GemColor.Meta);
 }
 
@@ -105,13 +105,6 @@ export function shouldDisplayGemOfSocketColor(socketColor: SocketColor, gemColor
  * Returns an array of items meeting the criteria to be displayed in the item selection table.
  * The item needs to be of the specified item slot, the item's phase needs to be selected, it needs to not be hidden unless the player is showing hidden items
  * and the item needs to not be unique unless it is not equipped in the other item slot (only applicable to rings and trinkets).
- * @param itemSlot 
- * @param itemSubSlot 
- * @param selectedItems 
- * @param sources 
- * @param hiddenItems 
- * @param hidingItems 
- * @returns Item[]
  */
 export function getItemTableItems(itemSlot: ItemSlotKey, itemSubSlot: SubSlotValue, selectedItems: ItemAndEnchantStruct, sources: SourcesStruct, hiddenItems: number[], hidingItems: boolean): Item[] {
   return Items.filter((e) => e.itemSlot === itemSlot && sources.phase[e.phase] === true && (!hiddenItems.includes(e.id) || hidingItems) && (!e.unique || (selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot === '1' ? '2' : '1')] !== e.id)));

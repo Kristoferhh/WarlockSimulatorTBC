@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot, shouldDisplayGemOfSocketColor } from "../Common";
+import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot, canGemColorBeInsertedIntoSocketColor } from "../Common";
 import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
 import { modifyPlayerStat, setItemSocketsValue } from "../redux/PlayerSlice";
@@ -104,7 +104,7 @@ export default function GemSelection() {
           // Sort gems by favorited gems first
           Gems.sort(function(a, b) { return Number(uiState.gemPreferences.favorites.includes(b.id)) - Number(uiState.gemPreferences.favorites.includes(a.id)); }).map((gem, i) =>
             // Only show the gems if they're meta gems and the socket is a meta socket or if they're not meta gems and the socket is not a meta socket.
-            shouldDisplayGemOfSocketColor(uiState.gemSelectionTable.socketColor, gem.color) &&
+            canGemColorBeInsertedIntoSocketColor(uiState.gemSelectionTable.socketColor, gem.color) &&
               <tr
                 key={i}
                 className='gem-row'

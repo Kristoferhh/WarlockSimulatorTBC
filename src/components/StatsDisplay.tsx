@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux"
-import { shouldDisplayPetSetting } from "../Common";
+import { isPetActive } from "../Common";
 import { RootState } from "../redux/Store"
 import { ItemSet, StatConstant } from "../Types";
 
@@ -15,7 +15,7 @@ export default function StatsDisplay() {
       let bloodPactModifier = parseInt(playerState.settings.improvedImpSetting);
 
       // If the player is using an imp, the imp is active, and the player has more points in the Improved Imp talent than the improved imp setting then use that instead
-      if (shouldDisplayPetSetting(playerState.talents, playerState.settings, false) && playerState.settings.petChoice === '0') {
+      if (isPetActive(playerState.talents, playerState.settings, false) && playerState.settings.petChoice === '0') {
         bloodPactModifier = Math.max(bloodPactModifier, playerState.talents.improvedImp);
       }
 
@@ -218,7 +218,7 @@ export default function StatsDisplay() {
     { name: 'Shadow Dmg %', value: () => getShadowModifier() },
     { name: 'Fire Dmg %', value: () => getFireModifier() },
     { name: 'MP5', value: () => Math.round(getMp5()).toString() },
-    { name: 'Enemy Armor', value: () => Math.round(getEnemyArmor()).toString(), condition: () => shouldDisplayPetSetting(playerState.talents, playerState.settings, true) }
+    { name: 'Enemy Armor', value: () => Math.round(getEnemyArmor()).toString(), condition: () => isPetActive(playerState.talents, playerState.settings, true) }
   ]
 
   return (

@@ -24,8 +24,8 @@ export default function BreakdownTables() {
                     <th>Avg Cast</th>
                     <th>Crit %</th>
                     <th>Miss %</th>
-                    <th id='damage-breakdown-dodge'>Dodge %</th>
-                    <th id='damage-breakdown-glancing'>Glancing %</th>
+                    <th style={{display: breakdownObj.spellDamageDict.Melee ? '' : 'none'}}>Dodge %</th>
+                    <th style={{display: breakdownObj.spellDamageDict.Melee ? '' : 'none'}}>Glancing %</th>
                     <th>Dps</th>
                   </tr>
                 </thead>
@@ -41,8 +41,13 @@ export default function BreakdownTables() {
                           <td>{breakdownObj.spellDamageDict[spell.name] ? Math.round(breakdownObj.spellDamageDict[spell.name] / spell.casts) : 0}</td>
                           <td>{formatPercentage(spell.crits / spell.casts)}</td>
                           <td>{formatPercentage(spell.misses / spell.casts)}</td>
-                          <td>{formatPercentage(spell.dodges / spell.casts)}</td>
-                          <td>{formatPercentage(spell.glancingBlows / spell.casts)}</td>
+                          {
+                            breakdownObj.spellDamageDict.Melee &&
+                              <>
+                                <td>{formatPercentage(spell.dodges / spell.casts)}</td>
+                                <td>{formatPercentage(spell.glancingBlows / spell.casts)}</td>
+                              </>
+                          }
                           <td>{breakdownObj.spellDamageDict[spell.name] ? Math.round((breakdownObj.spellDamageDict[spell.name] / breakdownObj.totalSimulationFightLength) * 100) / 100 : 0}</td>
                         </tr>
                       )
