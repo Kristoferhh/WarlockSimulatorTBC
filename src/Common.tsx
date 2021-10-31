@@ -116,3 +116,8 @@ export function getStdev (array: number[]) {
   const mean = array.reduce((a, b) => a + b) / n
   return Math.sqrt(array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n)
 }
+
+export function average(nums?: number[]) {
+  if (nums === undefined || nums.length === 0) { return 0; }
+  return nums.reduce((a, b) => a + b) / nums.length;
+}

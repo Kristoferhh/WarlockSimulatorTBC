@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { getItemTableItems, getStdev, itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from "../Common";
+import { average, getItemTableItems, getStdev, itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from "../Common";
 import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
 import { RootState } from "../redux/Store"
@@ -30,13 +30,15 @@ export function SidebarButtons() {
   const playerState = useSelector((state: RootState) => state.player);
   const uiState = useSelector((state: RootState) => state.ui);
   const dispatch = useDispatch();
-  const [medianDps, setMedianDps] = useState(localStorage.getItem('medianDps') || 0);
-  const [minDps, setMinDps] = useState(localStorage.getItem('minDps') || 0);
-  const [maxDps, setMaxDps] = useState(localStorage.getItem('maxDps') || 0);
-  const [simulationDuration, setSimulationDuration] = useState(localStorage.getItem('simulationDuration') || 0);
+  const [medianDps, setMedianDps] = useState(localStorage.getItem('medianDps') || '');
+  const [minDps, setMinDps] = useState(localStorage.getItem('minDps') || '');
+  const [maxDps, setMaxDps] = useState(localStorage.getItem('maxDps') || '');
+  const [simulationDuration, setSimulationDuration] = useState(localStorage.getItem('simulationDuration') || '');
   const [simulationProgressPercent, setSimulationProgressPercent] = useState(0);
   const [simulationInProgress, setSimulationInProgress] = useState(false);
-  const [dpsStdev, setDpsStdev] = useState<number | null>(null);
+  const [dpsStdev, setDpsStdev] = useState('');
+  // Used to keep track of the progress % of sims for the progress bar.
+  const [simulationProgressPercentages, setSimulationProgressPercentages] = useState<{itemId: number, progressPercent: number}[]>([]);
   let combatLogEntries: string[] = [];
 
   function getWorkerParams(itemId: number, itemAmount: number): WorkerParams {
@@ -147,6 +149,11 @@ export function SidebarButtons() {
 
     try {
       itemIdsToSim.forEach(itemId => {
+        setSimulationProgressPercentages(prevState => {
+          prevState.push({itemId: itemId, progressPercent: 0});
+          return prevState;
+        });
+        console.log(simulationProgressPercentages)
         simulations.push(new SimWorker(
           (dpsUpdate: {dps: number}) => {
             dpsArray.push(dpsUpdate.dps);
@@ -187,9 +194,9 @@ export function SidebarButtons() {
               setSimulationInProgress(false);
               const totalSimDuration = (performance.now() - startTime) / 1000;
               setNewSimulationDuration((Math.round(totalSimDuration * 10000) / 10000).toString(), true);
-              setSimulationProgressPercent(0);
               populateCombatLog();
-              setDpsStdev(getStdev(dpsArray));
+              setDpsStdev(Math.round(getStdev(dpsArray)).toString());
+              updateSimulationProgressPercent(params.itemId, 100);
               
               if (itemIdsToSim.length === 1 && playerState.settings["automatically-open-sim-details"] === 'yes') {
                 dispatch(setCombatLogBreakdownValue({
@@ -202,6 +209,7 @@ export function SidebarButtons() {
                   data: combatLogBreakdownArr,
                 }));
                 $('.breakdown-table').trigger('update');
+                setSimulationProgressPercentages([]);
               }
             }
   
@@ -215,13 +223,12 @@ export function SidebarButtons() {
           },
           (params: SimulationUpdate) => {
             let newMedianDps = Math.round(params.medianDps * 100) / 100;
+            const simProgressPercent = Math.ceil((params.iteration / params.iterationAmount) * 100);
+            updateSimulationProgressPercent(params.itemId, simProgressPercent);
+            dispatch(setSavedItemDps({ itemSlot: itemSlot, itemId: params.itemId, dps: newMedianDps, saveLocalStorage: false }));
             if (itemIdsToSim.length === 1 || params.itemId ===  equippedItemId) {
               setNewMedianDps(newMedianDps.toString(), false);
             }
-            if (itemIdsToSim.length === 1) {
-              setSimulationProgressPercent(Math.ceil((params.iteration / params.iterationAmount) * 100));
-            }
-            dispatch(setSavedItemDps({ itemSlot: itemSlot, itemId: params.itemId, dps: newMedianDps, saveLocalStorage: false }));
           },
           getWorkerParams(itemId, itemIdsToSim.length)
         ));
@@ -236,6 +243,17 @@ export function SidebarButtons() {
       setSimulationInProgress(false);
       throw "Error when trying to run simulation. " + error;
     }
+  }
+
+  function updateSimulationProgressPercent(itemId: number, progressPercent: number) {
+    setSimulationProgressPercentages(prevState => {
+      const existingSimProgressObj = prevState.find(e => e.itemId === itemId);
+      if (existingSimProgressObj) { existingSimProgressObj.progressPercent = progressPercent; }
+      return prevState;
+    });
+
+    setSimulationProgressPercent(average(simulationProgressPercentages.map(e => e.progressPercent)));
+    console.log(simulationProgressPercentages);
   }
 
   function populateCombatLog(): void {
@@ -276,21 +294,31 @@ export function SidebarButtons() {
 
   return(
     <>
-      <div id="sim-result-dps-div">
-        <p><span id="avg-dps">{medianDps}</span><span> DPS</span> <span id="dps-stdev">{dpsStdev ? '±' + Math.round(dpsStdev) : ''}</span></p>
-        <p>Min: <span id="min-dps">{minDps}</span> Max: <span id="max-dps">{maxDps}</span></p>
-      </div>
+      {
+        medianDps.length > 0 &&
+          <div id="sim-result-dps-div">
+            <p><span id="avg-dps">{medianDps}</span><span> DPS</span> <span id="dps-stdev">{dpsStdev.length > 0 ? '±' + dpsStdev : ''}</span></p>
+            {
+              maxDps.length > 0 && minDps.length > 0 &&
+                <p>Min: <span id="min-dps">{minDps}</span> Max: <span id="max-dps">{maxDps}</span></p>
+            }
+          </div>
+      }
       <div
         className='btn'
         onClick={() => simulate([Items.find(e => e.id === playerState.selectedItems[ItemSlotKeyToItemSlot(false, uiState.selectedItemSlot, uiState.selectedItemSubSlot)])?.id || 0])}
-        style={{background: simulationProgressPercent > 0 ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
-      >{simulationProgressPercent > 0 ? `${simulationProgressPercent}%` : 'Simulate'}</div>
+        style={{background: simulationInProgress && simulationProgressPercentages.length === 1 ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
+      >{simulationInProgress && simulationProgressPercentages.length === 1 ? `${simulationProgressPercent}%` : 'Simulate'}</div>
       <div
         className='btn'
         onClick={() => simulate(getItemTableItems(uiState.selectedItemSlot, uiState.selectedItemSubSlot, playerState.selectedItems, uiState.sources, uiState.hiddenItems, false).map(item => item.id))}
-      >Simulate All Items</div>
+        style={{background: simulationInProgress && simulationProgressPercentages.length > 1 ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
+      >{simulationInProgress && simulationProgressPercentages.length > 1 ? `${simulationProgressPercent}%` : 'Simulate All Items'}</div>
       <div className='btn'>Stat Weights</div>
-      <div className='btn' onClick={() => dispatch(setCombatLogVisibility(!uiState.combatLog.visible))}>Combat Log</div>
+      {
+        uiState.combatLog.data.length > 0 &&
+          <div className='btn' onClick={() => dispatch(setCombatLogVisibility(!uiState.combatLog.visible))}>Combat Log</div>
+      }
       <div className='btn'>Histogram</div>
       <p id="sim-length-result">{simulationDuration}s</p>
     </>
