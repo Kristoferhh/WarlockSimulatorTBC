@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { getItemTableItems, itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from "../Common";
+import { getItemTableItems, getStdev, itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from "../Common";
 import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
 import { RootState } from "../redux/Store"
@@ -36,6 +36,7 @@ export function SidebarButtons() {
   const [simulationDuration, setSimulationDuration] = useState(localStorage.getItem('simulationDuration') || 0);
   const [simulationProgressPercent, setSimulationProgressPercent] = useState(0);
   const [simulationInProgress, setSimulationInProgress] = useState(false);
+  const [dpsStdev, setDpsStdev] = useState<number | null>(null);
   let combatLogEntries: string[] = [];
 
   function getWorkerParams(itemId: number, itemAmount: number): WorkerParams {
@@ -188,6 +189,7 @@ export function SidebarButtons() {
               setNewSimulationDuration((Math.round(totalSimDuration * 10000) / 10000).toString(), true);
               setSimulationProgressPercent(0);
               populateCombatLog();
+              setDpsStdev(getStdev(dpsArray));
               
               if (itemIdsToSim.length === 1 && playerState.settings["automatically-open-sim-details"] === 'yes') {
                 dispatch(setCombatLogBreakdownValue({
@@ -212,16 +214,12 @@ export function SidebarButtons() {
           },
           (params: SimulationUpdate) => {
             let newMedianDps = Math.round(params.medianDps * 100) / 100;
-  
             if (itemIdsToSim.length === 1 || params.itemId ===  equippedItemId) {
               setNewMedianDps(newMedianDps.toString(), false);
             }
-  
             if (itemIdsToSim.length === 1) {
-              // Update the simulation's progress %
               setSimulationProgressPercent(Math.ceil((params.iteration / params.iterationAmount) * 100));
             }
-  
             dispatch(setSavedItemDps({ itemSlot: itemSlot, itemId: params.itemId, dps: newMedianDps, saveLocalStorage: false }));
           },
           getWorkerParams(itemId, itemIdsToSim.length)
@@ -278,7 +276,7 @@ export function SidebarButtons() {
   return(
     <>
       <div id="sim-result-dps-div">
-        <p><span id="avg-dps">{medianDps}</span><span> DPS</span> <span id="dps-stdev"></span></p>
+        <p><span id="avg-dps">{medianDps}</span><span> DPS</span> <span id="dps-stdev">{dpsStdev ? '±' + Math.round(dpsStdev) : ''}</span></p>
         <p>Min: <span id="min-dps">{minDps}</span> Max: <span id="max-dps">{maxDps}</span></p>
       </div>
       <div

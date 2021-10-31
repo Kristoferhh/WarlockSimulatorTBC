@@ -116,3 +116,10 @@ export function shouldDisplayGemOfSocketColor(socketColor: SocketColor, gemColor
 export function getItemTableItems(itemSlot: ItemSlotKey, itemSubSlot: SubSlotValue, selectedItems: ItemAndEnchantStruct, sources: SourcesStruct, hiddenItems: number[], hidingItems: boolean): Item[] {
   return Items.filter((e) => e.itemSlot === itemSlot && sources.phase[e.phase] === true && (!hiddenItems.includes(e.id) || hidingItems) && (!e.unique || (selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot === '1' ? '2' : '1')] !== e.id)));
 }
+
+export function getStdev (array: number[]) {
+  if (!array || array.length === 0) { return 0 }
+  const n = array.length
+  const mean = array.reduce((a, b) => a + b) / n
+  return Math.sqrt(array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n)
+}

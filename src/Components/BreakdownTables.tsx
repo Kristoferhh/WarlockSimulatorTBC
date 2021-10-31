@@ -2,7 +2,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "../redux/Store"
 
 function formatPercentage(num: number) {
-  return Math.round(num * 10000) / 100;
+  return (Math.round(num * 10000) / 100).toFixed(2);
 }
 
 export default function BreakdownTables() {
@@ -36,7 +36,7 @@ export default function BreakdownTables() {
                       .map((spell, i) =>
                         <tr key={i} className='spell-damage-information'>
                           <td>{spell.name}</td>
-                          <td><meter value={breakdownObj.spellDamageDict[spell.name] ? (breakdownObj.spellDamageDict[spell.name] / breakdownObj.totalDamageDone) * 100 : '0'} min='0' max='100'></meter> {breakdownObj.spellDamageDict[spell.name] ? Math.round((breakdownObj.spellDamageDict[spell.name] / breakdownObj.totalDamageDone) * 10000) / 100 : 0}%</td>
+                          <td><meter value={breakdownObj.spellDamageDict[spell.name] ? (breakdownObj.spellDamageDict[spell.name] / breakdownObj.totalDamageDone) * 100 : '0'} min='0' max='100'></meter> {breakdownObj.spellDamageDict[spell.name] ? formatPercentage(breakdownObj.spellDamageDict[spell.name] / breakdownObj.totalDamageDone) : 0}%</td>
                           <td title={spell.casts.toString()}>{spell.casts / breakdownObj.totalIterationAmount < 2 ? Math.round((spell.casts / breakdownObj.totalIterationAmount) * 10) / 10 : Math.round(spell.casts / breakdownObj.totalIterationAmount)}</td>
                           <td>{breakdownObj.spellDamageDict[spell.name] ? Math.round(breakdownObj.spellDamageDict[spell.name] / spell.casts) : 0}</td>
                           <td>{formatPercentage(spell.crits / spell.casts)}</td>
@@ -67,7 +67,7 @@ export default function BreakdownTables() {
                       .map((spell, i) =>
                         <tr key={i} className='spell-damage-information'>
                           <td>{spell.name}</td>
-                          <td><meter value={breakdownObj.spellManaGainDict[spell.name] ? (breakdownObj.spellManaGainDict[spell.name] / breakdownObj.totalManaGained) * 100 : '0'} min='0' max='100'></meter> {breakdownObj.spellManaGainDict[spell.name] ? Math.round((breakdownObj.spellManaGainDict[spell.name] / breakdownObj.totalManaGained) * 10000) / 100 : 0}%</td>
+                          <td><meter value={breakdownObj.spellManaGainDict[spell.name] ? (breakdownObj.spellManaGainDict[spell.name] / breakdownObj.totalManaGained) * 100 : '0'} min='0' max='100'></meter> {breakdownObj.spellManaGainDict[spell.name] ? formatPercentage(breakdownObj.spellManaGainDict[spell.name] / breakdownObj.totalManaGained) : 0}%</td>
                           <td>{(spell.casts / breakdownObj.totalIterationAmount) < 2 ? Math.round((spell.casts / breakdownObj.totalIterationAmount) * 10) / 10 : Math.round(spell.casts / breakdownObj.totalIterationAmount)}</td>
                           <td>{breakdownObj.spellManaGainDict[spell.name] ? Math.round(breakdownObj.spellManaGainDict[spell.name] / spell.casts) : 0}</td>
                         </tr>
@@ -92,7 +92,7 @@ export default function BreakdownTables() {
                         <td>{spell.name}</td>
                         {/*If the aura's count is less than 2 then show 1 decimal place, otherwise just round the value*/}
                         <td>{(spell.count / breakdownObj.totalIterationAmount) < 2 ? Math.round((spell.count / breakdownObj.totalIterationAmount) * 10) / 10 : Math.round(spell.count / breakdownObj.totalIterationAmount)}</td>
-                        <td><meter value={(spell.uptime / breakdownObj.totalSimulationFightLength) * 100} min='0' max='100'></meter> {Math.round((spell.uptime / breakdownObj.totalSimulationFightLength) * 10000) / 100}%</td>
+                        <td><meter value={(spell.uptime / breakdownObj.totalSimulationFightLength) * 100} min='0' max='100'></meter> {formatPercentage(spell.uptime / breakdownObj.totalSimulationFightLength)}%</td>
                       </tr>
                     )
                   }
