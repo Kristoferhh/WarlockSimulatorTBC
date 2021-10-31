@@ -35,6 +35,7 @@ export function SidebarButtons() {
   const [maxDps, setMaxDps] = useState(localStorage.getItem('maxDps') || 0);
   const [simulationDuration, setSimulationDuration] = useState(localStorage.getItem('simulationDuration') || 0);
   const [simulationProgressPercent, setSimulationProgressPercent] = useState(0);
+  const [simulationInProgress, setSimulationInProgress] = useState(false);
   let combatLogEntries: string[] = [];
 
   function getWorkerParams(itemId: number, itemAmount: number): WorkerParams {
@@ -125,6 +126,7 @@ export function SidebarButtons() {
   }
 
   function simulate(itemIdsToSim: number[]) {
+    if (simulationInProgress) { return; }
     const maxWorkers = window.navigator.hardwareConcurrency || 8; // Maximum amount of web workers that can be run concurrently.
     const simulations: SimWorker[] = [];
     const itemSlot: ItemSlot = ItemSlotKeyToItemSlot(false, uiState.selectedItemSlot, uiState.selectedItemSubSlot);
@@ -140,93 +142,100 @@ export function SidebarButtons() {
     let spellDamageDict: {[key: string]: number} = {};
     let spellManaGainDict: {[key: string]: number} = {};
     combatLogEntries = [];
+    setSimulationInProgress(true);
 
-    itemIdsToSim.forEach(itemId => {
-      simulations.push(new SimWorker(
-        (dpsUpdate: {dps: number}) => {
-          dpsArray.push(dpsUpdate.dps);
-          const dps: string = Math.round(dpsUpdate.dps).toString();
-          dpsCount[dps] = Math.round(dpsCount[dps]) + 1 || 1;
-        },
-        (combatLogVector: { name: string, damage: number, manaGain: number }) => {
-          spellDamageDict[combatLogVector.name] = spellDamageDict[combatLogVector.name] + combatLogVector.damage || combatLogVector.damage;
-          spellManaGainDict[combatLogVector.name] = spellManaGainDict[combatLogVector.name] + combatLogVector.manaGain || combatLogVector.manaGain;
-          totalManaRegenerated += combatLogVector.manaGain;
-          totalDamageDone += combatLogVector.damage;
-        },
-        (errorCallback: {errorMsg: string}) => {
-          populateCombatLog();
-          errorCallbackHandler(errorCallback);
-        },
-        (combatLogUpdate: {combatLogEntry: string}) => {
-          combatLogEntries.push(combatLogUpdate.combatLogEntry);
-        },
-        (combatLogBreakdown: CombatLogBreakdownData) => {
-          combatLogBreakdownArr.push(combatLogBreakdown);
-        },
-        (params: SimulationEnd) => {
-          const newMinDps = Math.round(params.minDps * 100) / 100;
-          const newMaxDps = Math.round(params.maxDps * 100) / 100;
-          const newMedianDps = Math.round(params.medianDps * 100) / 100;
-          simulationsFinished++;
-
-          // Callback for the currently equipped item
-          if (itemIdsToSim.length === 1 || params.itemId === equippedItemId) {
-            setNewMedianDps(newMedianDps.toString(), true);
-            setNewMinDps(newMinDps.toString(), true);
-            setNewMaxDps(newMaxDps.toString(), true);
-          }
-
-          // All simulations finished
-          if (simulationsFinished === itemIdsToSim.length) {
-            const totalSimDuration = (performance.now() - startTime) / 1000;
-            setNewSimulationDuration((Math.round(totalSimDuration * 10000) / 10000).toString(), true);
-            setSimulationProgressPercent(0);
+    try {
+      itemIdsToSim.forEach(itemId => {
+        simulations.push(new SimWorker(
+          (dpsUpdate: {dps: number}) => {
+            dpsArray.push(dpsUpdate.dps);
+            const dps: string = Math.round(dpsUpdate.dps).toString();
+            dpsCount[dps] = Math.round(dpsCount[dps]) + 1 || 1;
+          },
+          (combatLogVector: { name: string, damage: number, manaGain: number }) => {
+            spellDamageDict[combatLogVector.name] = spellDamageDict[combatLogVector.name] + combatLogVector.damage || combatLogVector.damage;
+            spellManaGainDict[combatLogVector.name] = spellManaGainDict[combatLogVector.name] + combatLogVector.manaGain || combatLogVector.manaGain;
+            totalManaRegenerated += combatLogVector.manaGain;
+            totalDamageDone += combatLogVector.damage;
+          },
+          (errorCallback: {errorMsg: string}) => {
             populateCombatLog();
-            
-            if (itemIdsToSim.length === 1 && playerState.settings["automatically-open-sim-details"] === 'yes') {
-              dispatch(setCombatLogBreakdownValue({
-                totalDamageDone: totalDamageDone,
-                totalManaGained: totalManaRegenerated,
-                totalSimulationFightLength: params.totalDuration,
-                totalIterationAmount: params.iterationAmount,
-                spellDamageDict: spellDamageDict,
-                spellManaGainDict: spellManaGainDict,
-                data: combatLogBreakdownArr,
-              }));
+            errorCallbackHandler(errorCallback);
+          },
+          (combatLogUpdate: {combatLogEntry: string}) => {
+            combatLogEntries.push(combatLogUpdate.combatLogEntry);
+          },
+          (combatLogBreakdown: CombatLogBreakdownData) => {
+            combatLogBreakdownArr.push(combatLogBreakdown);
+          },
+          (params: SimulationEnd) => {
+            const newMinDps = Math.round(params.minDps * 100) / 100;
+            const newMaxDps = Math.round(params.maxDps * 100) / 100;
+            const newMedianDps = Math.round(params.medianDps * 100) / 100;
+            simulationsFinished++;
+  
+            // Callback for the currently equipped item
+            if (itemIdsToSim.length === 1 || params.itemId === equippedItemId) {
+              setNewMedianDps(newMedianDps.toString(), true);
+              setNewMinDps(newMinDps.toString(), true);
+              setNewMaxDps(newMaxDps.toString(), true);
             }
-          }
-
-          // Start a new simulation that's waiting in the queue if there are any remaining
-          if (simulationsRunning - simulationsFinished < maxWorkers && simIndex < simulations.length) {
-            simulations[simIndex++].start();
-            simulationsRunning++;
-          }
-
-          dispatch(setSavedItemDps({ itemSlot: itemSlot, itemId: params.itemId, dps: newMedianDps, saveLocalStorage: true }));
-        },
-        (params: SimulationUpdate) => {
-          let newMedianDps = Math.round(params.medianDps * 100) / 100;
-
-          if (itemIdsToSim.length === 1 || params.itemId ===  equippedItemId) {
-            setNewMedianDps(newMedianDps.toString(), false);
-          }
-
-          if (itemIdsToSim.length === 1) {
-            // Update the simulation's progress %
-            setSimulationProgressPercent(Math.ceil((params.iteration / params.iterationAmount) * 100));
-          }
-
-          dispatch(setSavedItemDps({ itemSlot: itemSlot, itemId: params.itemId, dps: newMedianDps, saveLocalStorage: false }));
-        },
-        getWorkerParams(itemId, itemIdsToSim.length)
-      ));
-    });
-
-    const startTime = performance.now();
-    while (simulationsRunning < maxWorkers && simIndex < simulations.length) {
-      simulations[simIndex++].start();
-      simulationsRunning++;
+  
+            // All simulations finished
+            if (simulationsFinished === itemIdsToSim.length) {
+              setSimulationInProgress(false);
+              const totalSimDuration = (performance.now() - startTime) / 1000;
+              setNewSimulationDuration((Math.round(totalSimDuration * 10000) / 10000).toString(), true);
+              setSimulationProgressPercent(0);
+              populateCombatLog();
+              
+              if (itemIdsToSim.length === 1 && playerState.settings["automatically-open-sim-details"] === 'yes') {
+                dispatch(setCombatLogBreakdownValue({
+                  totalDamageDone: totalDamageDone,
+                  totalManaGained: totalManaRegenerated,
+                  totalSimulationFightLength: params.totalDuration,
+                  totalIterationAmount: params.iterationAmount,
+                  spellDamageDict: spellDamageDict,
+                  spellManaGainDict: spellManaGainDict,
+                  data: combatLogBreakdownArr,
+                }));
+              }
+            }
+  
+            // Start a new simulation that's waiting in the queue if there are any remaining
+            if (simulationsRunning - simulationsFinished < maxWorkers && simIndex < simulations.length) {
+              simulations[simIndex++].start();
+              simulationsRunning++;
+            }
+  
+            dispatch(setSavedItemDps({ itemSlot: itemSlot, itemId: params.itemId, dps: newMedianDps, saveLocalStorage: true }));
+          },
+          (params: SimulationUpdate) => {
+            let newMedianDps = Math.round(params.medianDps * 100) / 100;
+  
+            if (itemIdsToSim.length === 1 || params.itemId ===  equippedItemId) {
+              setNewMedianDps(newMedianDps.toString(), false);
+            }
+  
+            if (itemIdsToSim.length === 1) {
+              // Update the simulation's progress %
+              setSimulationProgressPercent(Math.ceil((params.iteration / params.iterationAmount) * 100));
+            }
+  
+            dispatch(setSavedItemDps({ itemSlot: itemSlot, itemId: params.itemId, dps: newMedianDps, saveLocalStorage: false }));
+          },
+          getWorkerParams(itemId, itemIdsToSim.length)
+        ));
+      });
+  
+      const startTime = performance.now();
+      while (simulationsRunning < maxWorkers && simIndex < simulations.length) {
+        simulations[simIndex++].start();
+        simulationsRunning++;
+      }
+    } catch(error) {
+      setSimulationInProgress(false);
+      throw "Error when trying to run simulation. " + error;
     }
   }
 
@@ -284,7 +293,7 @@ export function SidebarButtons() {
       <div className='btn'>Stat Weights</div>
       <div className='btn' onClick={() => dispatch(setCombatLogVisibility(!uiState.combatLog.visible))}>Combat Log</div>
       <div className='btn'>Histogram</div>
-      <p id="sim-length-result">{simulationDuration}</p>
+      <p id="sim-length-result">{simulationDuration}s</p>
     </>
   )
 }
