@@ -30,4 +30,4 @@ onmessage = (event) => {
     module._freeSimSettings(simSettings);
     module._freeSim(sim);
   });
-}
+};

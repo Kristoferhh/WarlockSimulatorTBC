@@ -36,12 +36,7 @@ export default function Sidebar() {
         </ul>
 
         <div id="sidebar-simulation-selection">
-          <div id="sim-result-dps-div">
-            <p><span id="avg-dps">{uiState.medianDps}</span><span> DPS</span> <span id="dps-stdev"></span></p>
-            <p>Min: <span id="min-dps">{uiState.minDps}</span> Max: <span id="max-dps">{uiState.maxDps}</span></p>
-          </div>
           <SidebarButtons />
-          <p id="sim-length-result">{uiState.simulationDuration}</p>
           <p id="guybrush-note">This sim was heavily inspired by <a rel="noreferrer" target="_blank" href='https://guybrushgit.github.io/WarriorSim/'>Guybrush's 1.13 Warrior Simulator</a></p>
           <p id="paypal-note"><a href="https://www.paypal.com/paypalme/kristoferhh" rel="noreferrer" target="_blank">Support me via PayPal</a></p>
         </div>

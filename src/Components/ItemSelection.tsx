@@ -53,8 +53,8 @@ export default function ItemSelection() {
       }
 
       // Remove stats from socket bonus if it's active
-      if (itemMeetsSocketRequirements({itemId: itemObj!.id, selectedGems: playerStore.selectedGems})) {
-        for (const [stat, value] of Object.entries(itemObj!.socketBonus!)) {
+      if (itemMeetsSocketRequirements({itemId: itemObj.id, selectedGems: playerStore.selectedGems})) {
+        for (const [stat, value] of Object.entries(itemObj.socketBonus!)) {
           dispatch(modifyPlayerStat({
             stat: stat as Stat,
             value: value,
@@ -64,10 +64,10 @@ export default function ItemSelection() {
       }
 
       // Lower the item set counter by 1 if the item is part of a set
-      if (itemObj!.setId && playerStore.sets[itemObj!.setId] && playerStore.sets[itemObj!.setId] > 0) {
+      if (itemObj.setId && playerStore.sets[itemObj.setId] && playerStore.sets[itemObj.setId] > 0) {
         dispatch(setItemSetCount({
-          setId: itemObj!.setId,
-          count: playerStore.sets[itemObj!.setId] - 1
+          setId: itemObj.setId,
+          count: playerStore.sets[itemObj.setId] - 1
         }));
       }
     }

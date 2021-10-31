@@ -187,6 +187,19 @@ export enum Stat {
   spellPenetration = 'spellPenetration',
 }
 
+export interface CombatLogBreakdownData {
+  name: string,
+  casts: number,
+  crits: number,
+  misses: number,
+  count: number,
+  uptime: number,
+  dodges: number,
+  glancingBlows: number,
+  damage: number,
+  manaGain: number,
+}
+
 export type PlayerStats = {
   [key in keyof typeof Stat]: number
 }
@@ -451,13 +464,19 @@ export interface UiState {
   hiddenItems: number[],
   selectedItemSlot: ItemSlotKey,
   selectedItemSubSlot: SubSlotValue,
-  medianDps: string,
-  minDps: string,
-  maxDps: string,
-  simulationProgressPercent: number,
-  simulationDuration: string,
   savedItemDps: {[key in ItemSlot]: {[key: number]: number}},
   combatLog: {visible: boolean, data: string[]},
+  combatLogBreakdown: CombatLogBreakdown,
+}
+
+export type CombatLogBreakdown = {
+  totalDamageDone: number,
+  totalManaGained: number,
+  totalSimulationFightLength: number,
+  totalIterationAmount: number,
+  spellDamageDict: {[key: string]: number},
+  spellManaGainDict: {[key: string]: number},
+  data: CombatLogBreakdownData[],
 }
 
 export interface WorkerParams {

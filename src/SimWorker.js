@@ -29,7 +29,7 @@ class SimWorker {
         default:
           return;
       }
-    }
+    };
   }
 
   start () {
@@ -37,4 +37,4 @@ class SimWorker {
   }
 }
 
-export { SimWorker }
+export { SimWorker };
