@@ -40,7 +40,7 @@ export function SidebarButtons() {
   const [simulationType, setSimulationType] = useState<SimulationType>(SimulationType.Normal);
   let combatLogEntries: string[] = [];
 
-  function getWorkerParams(itemId: number, equippedItemSimulation: boolean): WorkerParams {
+  function getWorkerParams(itemId: number, equippedItemSimulation: boolean, simType: SimulationType): WorkerParams {
     let params: WorkerParams = {
       playerSettings: {
         auras: playerState.auras,
@@ -60,7 +60,7 @@ export function SidebarButtons() {
         maxTime: parseInt(playerState.settings['max-fight-length'])
       },
       itemId: itemId,
-      simulationType: simulationType,
+      simulationType: simType,
       itemSubSlot: uiState.selectedItemSubSlot,
       customStat: "normal",
       equippedItemSimulation: equippedItemSimulation,
@@ -187,9 +187,9 @@ export function SidebarButtons() {
             simulationProgressPercentages.find(e => e.itemId === params.itemId)!.progressPercent = 100;
   
             // Callback for the currently equipped item
-            if (simulationType === SimulationType.Normal || params.itemId === equippedItemId) {
+            if (type === SimulationType.Normal || params.itemId === equippedItemId) {
               console.log('item amount: ' + itemIdsToSim.length);
-              console.log('simulationType: ' + simulationType);
+              console.log('simulationType: ' + type);
               setNewMedianDps(newMedianDps.toString(), true);
               setNewMinDps(newMinDps.toString(), true);
               setNewMaxDps(newMaxDps.toString(), true);
@@ -204,7 +204,7 @@ export function SidebarButtons() {
               setDpsStdev(Math.round(getStdev(dpsArray)).toString());
               setSimulationProgressPercent(0);
               
-              if (simulationType === SimulationType.Normal && playerState.settings["automatically-open-sim-details"] === 'yes') {
+              if (type === SimulationType.Normal && playerState.settings["automatically-open-sim-details"] === 'yes') {
                 dispatch(setCombatLogBreakdownValue({
                   totalDamageDone: totalDamageDone,
                   totalManaGained: totalManaRegenerated,
@@ -232,18 +232,18 @@ export function SidebarButtons() {
             simulationProgressPercentages.find(e => e.itemId === params.itemId)!.progressPercent = simProgressPercent;
             setSimulationProgressPercent(Math.round(average(simulationProgressPercentages.map(e => e.progressPercent))));
             // Only update the item table dps value for every 10% of progress because otherwise the simulation slows down too much.
-            if (simulationType === SimulationType.Normal || (simulationType === SimulationType.AllItems && simProgressPercent % 10 === 0)) {
+            if (type === SimulationType.Normal || (type === SimulationType.AllItems && simProgressPercent % 10 === 0)) {
               const domElement = document.getElementById(params.itemId.toString());
               if (domElement) {
                 domElement.innerHTML = newMedianDps.toString();
                 $('#item-selection-table').trigger('update');
               }
             }
-            if (simulationType === SimulationType.Normal || params.itemId ===  equippedItemId) {
+            if (type === SimulationType.Normal || params.itemId ===  equippedItemId) {
               setNewMedianDps(newMedianDps.toString(), false);
             }
           },
-          getWorkerParams(itemId, itemId === equippedItemId)
+          getWorkerParams(itemId, itemId === equippedItemId, type)
         ));
       });
   
@@ -254,7 +254,7 @@ export function SidebarButtons() {
       }
     } catch(error) {
       setSimulationInProgress(false);
-      throw "Error when trying to run simulation. " + error;
+      throw new Error("Error when trying to run simulation. " + error);
     }
   }
 
