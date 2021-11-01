@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include "enums.h"
 
 struct SimulationSettings
 {
@@ -8,7 +9,7 @@ struct SimulationSettings
     int minTime;
     int maxTime;
     unsigned int* randomSeeds;
-    bool multiItemSimulation;
+    SimulationType simulationType;
 
-    SimulationSettings(int iterations, int minTime, int maxTime, unsigned int* randomSeeds, bool multiItemSimulation);
+    SimulationSettings(int iterations, int minTime, int maxTime, unsigned int* randomSeeds, SimulationType simulationType);
 };

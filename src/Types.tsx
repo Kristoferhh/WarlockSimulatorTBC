@@ -498,9 +498,16 @@ export interface WorkerParams {
     maxTime: number,
   },
   itemId: number,
-  itemAmount: number,
+  simulationType: SimulationType,
   itemSubSlot: SubSlotValue,
   customStat: string,
+  equippedItemSimulation: boolean,
+}
+
+export enum SimulationType {
+  Normal,
+  AllItems,
+  StatWeights
 }
 
 export interface GemSelectionTableStruct {

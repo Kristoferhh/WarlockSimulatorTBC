@@ -94,9 +94,12 @@ export const UiSlice = createSlice({
     },
     setCombatLogBreakdownValue: (state, action: PayloadAction<CombatLogBreakdown>) => {
       state.combatLogBreakdown = action.payload;
-    }
+    },
+    clearSavedItemSlotDps: (state, action: PayloadAction<ItemSlot>) => {
+      state.savedItemDps[action.payload] = {};
+    },
   }
 });
 
-export const { setCombatLogBreakdownValue, setCombatLogData, setCombatLogVisibility, setSavedItemDps, setSelectedItemSubSlot, setSelectedItemSlot, setFillItemSocketsWindowVisibility, setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
+export const { clearSavedItemSlotDps, setCombatLogBreakdownValue, setCombatLogData, setCombatLogVisibility, setSavedItemDps, setSelectedItemSubSlot, setSelectedItemSlot, setFillItemSocketsWindowVisibility, setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
 export default UiSlice.reducer;

@@ -778,7 +778,7 @@ void Player::throwError(const std::string& error)
 
 bool Player::shouldWriteToCombatLog()
 {
-    return iteration == 0;
+    return iteration == 0 && settings->equippedItemSimulation;
 }
 
 void Player::sendCombatLogEntries()

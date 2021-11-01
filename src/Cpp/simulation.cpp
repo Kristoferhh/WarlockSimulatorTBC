@@ -6,6 +6,7 @@
 #include "spell.h"
 #include <algorithm>
 #include <chrono>
+#include "enums.h"
 
 Simulation::Simulation(Player* player, SimulationSettings* simulationSettings)
     : player(player), settings(simulationSettings) {}
@@ -281,7 +282,7 @@ void Simulation::start()
         dpsVector.push_back(dps);
 
         // Only send the iteration's dps to the web worker if we're doing a normal simulation (this is just for the dps histogram)
-        if (!settings->multiItemSimulation && !player->settings->simmingStamina && !player->settings->simmingIntellect && !player->settings->simmingSpellPower && !player->settings->simmingShadowPower 
+        if (settings->simulationType == SimulationType::NORMAL && !player->settings->simmingStamina && !player->settings->simmingIntellect && !player->settings->simmingSpellPower && !player->settings->simmingShadowPower 
             && !player->settings->simmingFirePower && !player->settings->simmingCritRating && !player->settings->simmingHitRating && !player->settings->simmingHasteRating && !player->settings->simmingMp5)
         {
             dpsUpdate(dps);
@@ -298,10 +299,13 @@ void Simulation::start()
     }
 
     // Send the contents of the combat log to the web worker
-    player->sendCombatLogEntries();
+    if (player->settings->equippedItemSimulation)
+    {
+        player->sendCombatLogEntries();
+    }
     
     // Send the combat log breakdown info
-    if (player->settings->recordingCombatLogBreakdown)
+    if (player->settings->recordingCombatLogBreakdown && player->settings->equippedItemSimulation)
     {
         for (std::map<std::string, std::unique_ptr<CombatLogBreakdown>>::iterator it = player->combatLogBreakdown.begin(); it != player->combatLogBreakdown.end(); it++)
         {
