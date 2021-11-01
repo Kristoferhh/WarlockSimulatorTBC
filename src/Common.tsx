@@ -1,7 +1,10 @@
+import { Auras } from "./data/Auras";
+import { Enchants } from "./data/Enchants";
 import { Gems } from "./data/Gems";
 import { Items } from "./data/Items";
+import { Races } from "./data/Races";
 import { Sockets } from "./data/Sockets";
-import { GemColor, Item, ItemAndEnchantStruct, ItemSlot, ItemSlotKey, SelectedGemsStruct, Settings, SocketColor, SourcesStruct, SubSlotValue, TalentStore } from "./Types";
+import { AurasStruct, GemColor, InitialPlayerStats, InitialSetCounts, Item, ItemAndEnchantStruct, ItemSlot, ItemSlotKey, Race, SelectedGemsStruct, SetsStruct, Settings, SocketColor, SourcesStruct, Stat, StatsCollection, SubSlotValue, TalentStore } from "./Types";
 
 export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
   switch(itemSlot) {
@@ -120,4 +123,116 @@ export function getStdev (array: number[]) {
 export function average(nums?: number[]) {
   if (nums === undefined || nums.length === 0) { return 0; }
   return nums.reduce((a, b) => a + b) / nums.length;
+}
+
+export function getBaseStats(race: Race): StatsCollection {
+  return Races.find(e => e.varName === race)?.stats || {};
+}
+
+export function getAurasStats(auras: AurasStruct): StatsCollection {
+  let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats));
+
+  Object.entries(auras).forEach(aura => {
+    // Check if the aura is selected
+    if (aura[1] === true) {
+      const auraObj = Auras.find(e => e.varName === aura[0]);
+      if (auraObj && auraObj.stats) {
+        Object.entries(auraObj.stats).forEach(auraStat => {
+          addOrMultiplyStat(stats, auraStat[0] as Stat, auraStat[1]);
+        })
+      }
+    }
+  });
+
+  return stats;
+}
+
+export function getItemsStats(items: ItemAndEnchantStruct): StatsCollection {
+  let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats));
+
+  Object.values(items).forEach(itemId => {
+    const itemObj = Items.find(e => e.id === itemId);
+    if (itemObj) {
+      Object.entries(itemObj).forEach(item => {
+        if (item[0] in Stat) {
+          addOrMultiplyStat(stats, item[0] as Stat, item[1]);
+        }
+      })
+    }
+  });
+
+  return stats;
+}
+
+export function getGemsStats(items: ItemAndEnchantStruct, gems: SelectedGemsStruct): StatsCollection {
+  let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats));
+
+  Object.entries(items).forEach(item => {
+    const itemSlotGems = gems[ItemSlotToItemSlotKey(false, item[0] as ItemSlot)];
+    if (itemSlotGems) {
+      const itemGemArrays = itemSlotGems[item[1]];
+      if (itemGemArrays) {
+        itemGemArrays.map(e => e[1]).forEach(gemId => {
+          const gem = Gems.find(e => e.id === gemId);
+          if (gem && gem.stats) {
+            Object.entries(gem.stats).forEach(gemStat => {
+              addOrMultiplyStat(stats, gemStat[0] as Stat, gemStat[1]);
+            })
+          }
+        });
+
+        if (itemMeetsSocketRequirements({ itemId: item[1], selectedGems: gems, socketArray: itemGemArrays })) {
+          const itemObj = Items.find(e => e.id === item[1]);
+          if (itemObj && itemObj.socketBonus) {
+            Object.entries(itemObj.socketBonus).forEach(stat => {
+              addOrMultiplyStat(stats, stat[0] as Stat, stat[1]);
+            })
+          }
+        }
+      }
+    }
+  });
+
+  return stats;
+}
+
+export function getEnchantsStats(items: ItemAndEnchantStruct, enchants: ItemAndEnchantStruct): StatsCollection {
+  let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats));
+
+  Object.entries(enchants).forEach(enchant => {
+    // Only add the enchant's stats if the user has an item equipped in that slot as well.
+    if (Items.find(e => e.id === items[enchant[0] as ItemSlot])) {
+      const enchantObj = Enchants.find(e => e.id === enchant[1]);
+      if (enchantObj) {
+        Object.entries(enchantObj).forEach(prop => {
+          if (prop[0] in Stat) {
+            addOrMultiplyStat(stats, prop[0] as Stat, prop[1]);
+          }
+        })
+      }
+    }
+  });
+
+  return stats;
+}
+
+export function getItemSetCounts(items: ItemAndEnchantStruct): SetsStruct {
+  let sets = JSON.parse(JSON.stringify(InitialSetCounts));
+
+  Object.values(items).forEach(itemId => {
+    const itemObj = Items.find(e => e.id === itemId);
+    if (itemObj && itemObj.setId) {
+      sets[itemObj.setId]++;
+    }
+  });
+
+  return sets;
+}
+
+export function addOrMultiplyStat(statsCollection: StatsCollection, stat: Stat, value: number): void {
+  if (stat.includes('Modifier')) {
+    statsCollection[stat]! *= value;
+  } else {
+    statsCollection[stat]! += value;
+  }
 }

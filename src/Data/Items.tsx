@@ -1,4 +1,4 @@
-import { Item, ItemSlotKey, ItemSource, SocketColor, Quality, ItemSet, ItemSlot } from "../Types"
+import { Item, ItemSlotKey, ItemSource, SocketColor, Quality, ItemSet } from "../Types"
 
 // Made up item IDs that I use for items such as the bracers/boots from the Karazhan basement bosses where all the items use the same item id but they have different stats
 // But each item in the sim needs to have a unique ID so I just make one up here and use that

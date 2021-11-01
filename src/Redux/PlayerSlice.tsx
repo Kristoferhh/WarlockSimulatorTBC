@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getRemainingTalentPoints } from "../Common";
 import { Auras } from "../data/Auras";
-import { Aura, RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Stat, ItemSlot, Profile, InitialSelectedGems, ItemSlotKey, TalentName, Setting, ItemSet } from "../Types";
+import { Aura, RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, ItemSlot, Profile, InitialSelectedGems, ItemSlotKey, TalentName, Setting, ItemSet, StatsCollection, InitialSetCounts, SetsStruct } from "../Types";
 
 const initialPlayerState : PlayerState = {
   talents: JSON.parse(localStorage.getItem('talents') || '{}'),
@@ -11,10 +11,10 @@ const initialPlayerState : PlayerState = {
   selectedGems: JSON.parse(localStorage.getItem('selectedGems') || JSON.stringify(InitialSelectedGems)),
   auras: JSON.parse(localStorage.getItem('auras') || '{}'),
   rotation: JSON.parse(localStorage.getItem('rotation') || '{}'),
-  stats: InitialPlayerStats,
+  stats: { base: InitialPlayerStats, auras: InitialPlayerStats, items: InitialPlayerStats, gems: InitialPlayerStats, enchants: InitialPlayerStats },
   settings: JSON.parse(localStorage.getItem('settings') || JSON.stringify(InitialSettings)),
   profiles: JSON.parse(localStorage.getItem('profiles') || '{}'),
-  sets: {'529': 0, '552': 0, '553': 0, '559': 0, '568': 0, '592': 0, '615': 0, '644': 0, '645': 0, '646': 0, '647': 0, '658': 0, '667': 0, '670': 0, '702': 0, '704': 0, '734': 0, '735': 0},
+  sets: InitialSetCounts,
 }
 
 export const PlayerSlice = createSlice({
@@ -73,20 +73,23 @@ export const PlayerSlice = createSlice({
 
       localStorage.setItem('rotation', JSON.stringify(state.rotation));
     },
-    modifyPlayerStat: (state, action: PayloadAction<{stat: Stat, value: number, action: 'add'|'remove'}>) => {
-      if (action.payload.action === 'add') {
-        if (action.payload.stat.includes('Modifier')) {
-          state.stats[action.payload.stat] *= action.payload.value;
-        } else {
-          state.stats[action.payload.stat] += action.payload.value;
-        }
-      } else if (action.payload.action === 'remove') {
-        if (action.payload.stat.includes('Modifier')) {
-          state.stats[action.payload.stat] /= action.payload.value;
-        } else {
-          state.stats[action.payload.stat] -= action.payload.value;
-        }
-      }
+    setBaseStats: (state, action: PayloadAction<StatsCollection>) => {
+      state.stats.base = action.payload;
+    },
+    setAurasStats: (state, action: PayloadAction<StatsCollection>) => {
+      state.stats.auras = action.payload;
+    },
+    setItemsStats: (state, action: PayloadAction<StatsCollection>) => {
+      state.stats.items = action.payload;
+    },
+    setGemsStats: (state, action: PayloadAction<StatsCollection>) => {
+      state.stats.gems = action.payload;
+    },
+    setEnchantsStats: (state, action: PayloadAction<StatsCollection>) => {
+      state.stats.enchants = action.payload;
+    },
+    setItemSetCounts: (state, action: PayloadAction<SetsStruct>) => {
+      state.sets = action.payload;
     },
     modifySettingValue: (state, action: PayloadAction<{setting: Setting, value: string}>) => {
       state.settings[action.payload.setting] = action.payload.value;
@@ -114,9 +117,6 @@ export const PlayerSlice = createSlice({
       state.selectedGems[action.payload.itemSlot][action.payload.itemId] = action.payload.value;
       localStorage.setItem('selectedGems', JSON.stringify(state.selectedGems));
     },
-    setItemSetCount: (state, action: PayloadAction<{setId: ItemSet, count: number}>) => {
-      state.sets[action.payload.setId] = action.payload.count;
-    },
     deleteProfile: (state, action: PayloadAction<string>) => {
       if (state.profiles[action.payload]) {
         delete state.profiles[action.payload];
@@ -136,5 +136,5 @@ export const PlayerSlice = createSlice({
   }
 });
 
-export const { renameProfile, deleteProfile, setItemSetCount, loadProfile, setItemSocketsValue, setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection, modifyPlayerStat, modifySettingValue, setProfile } = PlayerSlice.actions;
+export const { setItemSetCounts, setAurasStats, setBaseStats, setEnchantsStats, setGemsStats,setItemsStats, renameProfile, deleteProfile, loadProfile, setItemSocketsValue, setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection, modifySettingValue, setProfile } = PlayerSlice.actions;
 export default PlayerSlice.reducer;

@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Auras } from "../data/Auras";
 import { RootState } from "../redux/Store";
-import { Aura, AuraGroupKey, Stat } from "../Types";
+import { Aura, AuraGroupKey } from "../Types";
 import { AuraGroups } from "../data/AuraGroups";
-import { modifyPlayerStat, toggleAuraSelection } from "../redux/PlayerSlice";
+import { setAurasStats, toggleAuraSelection } from "../redux/PlayerSlice";
 import { nanoid } from "nanoid";
+import { getAurasStats } from "../Common";
 
 export default function AuraSelection() {
   const playerState = useSelector((state: RootState) => state.player);
@@ -12,16 +13,7 @@ export default function AuraSelection() {
 
   function auraClickHandler(aura: Aura) {
     dispatch(toggleAuraSelection(aura));
-
-    if (aura.stats) {
-      for (const [stat, value] of Object.entries(aura.stats)) {
-        dispatch(modifyPlayerStat({
-          stat: stat as Stat,
-          value: value,
-          action: playerState.auras[aura.varName] === true ? 'remove' : 'add'
-        }));
-      }
-    }
+    dispatch(setAurasStats(getAurasStats(playerState.auras)));
   }
 
   return(

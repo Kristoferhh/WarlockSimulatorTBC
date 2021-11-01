@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { itemMeetsSocketRequirements, ItemSlotKeyToItemSlot, canGemColorBeInsertedIntoSocketColor } from "../Common";
+import { canGemColorBeInsertedIntoSocketColor, getGemsStats } from "../Common";
 import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
-import { modifyPlayerStat, setItemSocketsValue } from "../redux/PlayerSlice";
+import { setGemsStats, setItemSocketsValue } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store"
 import { favoriteGem, hideGem, setGemSelectionTable } from "../redux/UiSlice";
-import { Gem, InitialGemSelectionTableValue, Stat } from "../Types";
+import { Gem, InitialGemSelectionTableValue } from "../Types";
 
 export default function GemSelection() {
   const uiState = useSelector((state: RootState) => state.ui);
@@ -16,7 +16,6 @@ export default function GemSelection() {
   const [showingHiddenGems, setShowingHiddenGems] = useState(false);
 
   function gemClickHandler(gem: Gem) {
-    const itemIsEquipped = parseInt(uiState.gemSelectionTable.itemId) === selectedItemsState[ItemSlotKeyToItemSlot(false, uiState.gemSelectionTable.itemSlot, uiState.gemSelectionTable.itemSubSlot)];
     let selectedGemsInItemSlot = selectedGemsState[uiState.gemSelectionTable.itemSlot] || {};
 
     // If the item doesn't have a socket array yet then initialize it to an array of ['', 0] sub-arrays.
@@ -34,57 +33,13 @@ export default function GemSelection() {
       }
     }
 
-    // If another gem is already equipped then remove the stats from it and the socket bonus
-    if (itemIsEquipped && ![null, 0].includes(currentItemSocketArray[uiState.gemSelectionTable.socketNumber][1])) {
-      const item = Items.find(e => e.id === parseInt(uiState.gemSelectionTable.itemId))!;
-      for (const [stat, value] of Object.entries(item.socketBonus!)) {
-        dispatch(modifyPlayerStat({
-          stat: stat as Stat,
-          value: value,
-          action: 'remove'
-        }));
-      }
-
-      const gemObj = Gems.find(e => e.id === currentItemSocketArray[uiState.gemSelectionTable.socketNumber][1]);
-      if (gemObj && gemObj.stats) {
-        for (const [stat, value] of Object.entries(gemObj.stats)) {
-          dispatch(modifyPlayerStat({
-            stat: stat as Stat,
-            value: value,
-            action: 'remove'
-          }));
-        }
-      }
-    }
-
     currentItemSocketArray[uiState.gemSelectionTable.socketNumber] = [uiState.gemSelectionTable.socketColor, gem.id];
-    // Add stats from the gem if the item it's in is equipped
-    if (gem.stats && itemIsEquipped) {
-      for (const [stat, value] of Object.entries(gem.stats)) {
-        dispatch(modifyPlayerStat({
-          stat: stat as Stat,
-          value: value,
-          action: 'add'
-        }));
-      }
-    }
-    
     dispatch(setItemSocketsValue({
       itemId: uiState.gemSelectionTable.itemId,
       itemSlot: uiState.gemSelectionTable.itemSlot,
       value: currentItemSocketArray
     }));
-
-    // Add socket bonus stats if the item meets the socket requirements
-    if (itemIsEquipped && itemMeetsSocketRequirements({itemId: parseInt(uiState.gemSelectionTable.itemId), socketArray: currentItemSocketArray})) {
-      for (const [stat, value] of Object.entries(Items.find(e => e.id === parseInt(uiState.gemSelectionTable.itemId))!.socketBonus!)) {
-        dispatch(modifyPlayerStat({
-          stat: stat as Stat,
-          value: value,
-          action: 'add'
-        }));
-      }
-    }
+    dispatch(setGemsStats(getGemsStats(selectedItemsState, selectedGemsState)));
   }
 
   return(

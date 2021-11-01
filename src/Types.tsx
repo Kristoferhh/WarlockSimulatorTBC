@@ -98,7 +98,7 @@ export interface Aura {
   group: AuraGroupKey,
   id: number,
   iconName: string,
-  stats?: {[key in Stat]?: number},
+  stats?: StatsCollection,
   drums?: boolean,
   weaponOil?: boolean,
   foodBuff?: boolean,
@@ -200,8 +200,16 @@ export interface CombatLogBreakdownData {
   manaGain: number,
 }
 
+export type StatsCollection = {
+  [key in Stat]?: number
+}
+
 export type PlayerStats = {
-  [key in keyof typeof Stat]: number
+  base: StatsCollection,
+  auras: StatsCollection,
+  items: StatsCollection,
+  gems: StatsCollection,
+  enchants: StatsCollection,
 }
 
 export enum Setting {
@@ -350,9 +358,7 @@ export const InitialSelectedItemsAndEnchants: ItemAndEnchantStruct = {
   wand: 0
 }
 
-export const InitialPlayerStats: PlayerStats = {
-  health: 3310,
-  mana: 2335,
+export const InitialPlayerStats: StatsCollection = {
   stamina: 0,
   intellect: 0,
   spirit: 0,
@@ -437,6 +443,27 @@ export interface PlayerState {
 
 export type SetsStruct = {
   [key in ItemSet]: number
+}
+
+export const InitialSetCounts: SetsStruct = {
+  [ItemSet.T3]: 0,
+  [ItemSet.Spellfire]: 0,
+  [ItemSet.FrozenShadoweave]: 0,
+  [ItemSet.Spellstrike]: 0,
+  [ItemSet.GladiatorsDreadgear]: 0,
+  [ItemSet.HighWarlordsDreadgear]: 0,
+  [ItemSet.GladiatorsFelshroud]: 0,
+  [ItemSet.Oblivion]: 0,
+  [ItemSet.T4]: 0,
+  [ItemSet.T5]: 0,
+  [ItemSet.IncantersRegalia]: 0,
+  [ItemSet.ManaEtchedRegalia]: 0,
+  [ItemSet.TwinStars]: 0,
+  [ItemSet.T6]: 0,
+  [ItemSet.MercilessGladiatorsDreadgear]: 0,
+  [ItemSet.MercilessGladiatorsFelshroud]: 0,
+  [ItemSet.VengefulGladiatorsDreadgear]: 0,
+  [ItemSet.VengefulGladiatorsFelshroud]: 0
 }
 
 export enum Quality {
@@ -550,7 +577,7 @@ export interface Gem {
   color: GemColor,
   iconName: string,
   phase: Phase,
-  stats?: {[key in Stat]?: number}
+  stats?: StatsCollection
 }
 
 export interface Talent {

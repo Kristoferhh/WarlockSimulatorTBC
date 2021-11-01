@@ -188,8 +188,6 @@ export function SidebarButtons() {
   
             // Callback for the currently equipped item
             if (type === SimulationType.Normal || params.itemId === equippedItemId) {
-              console.log('item amount: ' + itemIdsToSim.length);
-              console.log('simulationType: ' + type);
               setNewMedianDps(newMedianDps.toString(), true);
               setNewMinDps(newMinDps.toString(), true);
               setNewMaxDps(newMaxDps.toString(), true);
