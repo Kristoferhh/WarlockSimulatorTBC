@@ -1,13 +1,13 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { canGemColorBeInsertedIntoSocketColor } from "../Common";
+import { canGemColorBeInsertedIntoSocketColor, getGemsStats } from "../Common";
 import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
-import { setItemSocketsValue } from "../redux/PlayerSlice";
+import { setGemsStats, setSelectedGems } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store"
 import { setFillItemSocketsWindowVisibility } from "../redux/UiSlice";
-import { Item, SocketColor } from "../Types";
+import { Item, SelectedGemsStruct, SocketColor } from "../Types";
 
 const socketOptions: {name: string, color: SocketColor}[] = [
   { name: 'Meta Socket', color: SocketColor.Meta },
@@ -26,21 +26,20 @@ export function FillItemSockets() {
   const [replacingExistingGems, setReplacingExistingGems] = useState(false);
 
   function fillSockets(): void {
-    if (selectedGemId === 0) {
-      return;
-    }
+    if (selectedGemId === 0) { return; }
+    let newSelectedGems = JSON.parse(JSON.stringify(playerState.selectedGems));
 
     Items.filter(item => (item.itemSlot === uiState.selectedItemSlot && itemSlotToFill === 'currentSlot') || itemSlotToFill === 'allSlots').forEach(item => {
-      fillSocketsInItem(item);
+      fillSocketsInItem(item, newSelectedGems);
     });
 
+    dispatch(setSelectedGems(newSelectedGems));
+    dispatch(setGemsStats(getGemsStats(playerState.selectedItems, newSelectedGems)));
     dispatch(setFillItemSocketsWindowVisibility(false));
   }
 
-  function fillSocketsInItem(item: Item): void {
-    if (!item.sockets) {
-      return;
-    }
+  function fillSocketsInItem(item: Item, selectedGemsObj: SelectedGemsStruct): void {
+    if (!item.sockets) { return; }
 
     // Create an empty gem array.
     // If the item already has a gem array then replace it with the existing one.
@@ -57,11 +56,8 @@ export function FillItemSockets() {
       }
     }
 
-    dispatch(setItemSocketsValue({
-      itemId: item.id.toString(),
-      itemSlot: item.itemSlot,
-      value: itemGemArray
-    }));
+    selectedGemsObj[item.itemSlot] = selectedGemsObj[item.itemSlot] || {};
+    selectedGemsObj[item.itemSlot][item.id.toString()] = itemGemArray;
   }
 
   function socketColorClickHandler(newColor: SocketColor) {

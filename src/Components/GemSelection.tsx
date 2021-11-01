@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { canGemColorBeInsertedIntoSocketColor, getGemsStats } from "../Common";
 import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
-import { setGemsStats, setItemSocketsValue } from "../redux/PlayerSlice";
+import { setGemsStats, setSelectedGems } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store"
 import { favoriteGem, hideGem, setGemSelectionTable } from "../redux/UiSlice";
 import { Gem, InitialGemSelectionTableValue } from "../Types";
@@ -16,7 +16,8 @@ export default function GemSelection() {
   const [showingHiddenGems, setShowingHiddenGems] = useState(false);
 
   function gemClickHandler(gem: Gem) {
-    let selectedGemsInItemSlot = selectedGemsState[uiState.gemSelectionTable.itemSlot] || {};
+    let newSelectedGems = JSON.parse(JSON.stringify(selectedGemsState));
+    let selectedGemsInItemSlot = newSelectedGems[uiState.gemSelectionTable.itemSlot] || {};
 
     // If the item doesn't have a socket array yet then initialize it to an array of ['', 0] sub-arrays.
     // The first element is the socket color (not gem color) and the second element is the gem id.
@@ -34,12 +35,10 @@ export default function GemSelection() {
     }
 
     currentItemSocketArray[uiState.gemSelectionTable.socketNumber] = [uiState.gemSelectionTable.socketColor, gem.id];
-    dispatch(setItemSocketsValue({
-      itemId: uiState.gemSelectionTable.itemId,
-      itemSlot: uiState.gemSelectionTable.itemSlot,
-      value: currentItemSocketArray
-    }));
-    dispatch(setGemsStats(getGemsStats(selectedItemsState, selectedGemsState)));
+    newSelectedGems[uiState.gemSelectionTable.itemSlot] = newSelectedGems[uiState.gemSelectionTable.itemSlot] || {};
+    newSelectedGems[uiState.gemSelectionTable.itemSlot][uiState.gemSelectionTable.itemId] = currentItemSocketArray;
+    dispatch(setSelectedGems(newSelectedGems));
+    dispatch(setGemsStats(getGemsStats(selectedItemsState, newSelectedGems)));
   }
 
   return(

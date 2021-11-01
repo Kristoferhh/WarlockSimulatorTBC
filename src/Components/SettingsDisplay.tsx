@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
-import { isPetActive } from "../Common";
-import { modifySettingValue } from "../redux/PlayerSlice";
+import { getBaseStats, isPetActive } from "../Common";
+import { Races } from "../data/Races";
+import { modifySettingValue, setBaseStats } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store"
 import { Setting } from "../Types";
 
@@ -25,7 +26,7 @@ export default function SettingsDisplay() {
       <ul>
         <li>
           <span className="settings-left">Race</span>
-          <select onChange={(e) => settingModifiedHandler(Setting.race, e.target.value)} name="race" id="race-dropdown-list" className="settings-right" value={playerStore.settings.race}>
+          <select onChange={(e) => { settingModifiedHandler(Setting.race, e.target.value); dispatch(setBaseStats(getBaseStats(Races.find(race => race.varName === e.target.value)!.varName))) }} name="race" id="race-dropdown-list" className="settings-right" value={playerStore.settings.race}>
             <option value="gnome">Gnome</option>
             <option value="human">Human</option>
             <option value="orc">Orc</option>
@@ -137,7 +138,7 @@ export default function SettingsDisplay() {
         {
           // Shattered Sun Pendant of Acumen equipped
           playerStore.selectedItems.neck === 34678 &&
-            <div>
+            <>
               <li id="shattrathFaction">
                 <label className="settings-left" htmlFor="shattrathFaction">Shattrath Faction</label>
                 <select className="settings-right" name="shattrathFaction" onChange={(e) => settingModifiedHandler(Setting.shattrathFaction, e.target.value)} value={playerStore.settings.shattrathFaction}>
@@ -152,7 +153,7 @@ export default function SettingsDisplay() {
                   <option value="yes">Yes</option>
                 </select>
               </li>
-            </div>
+            </>
         }
         {
           // Display if pet is succubus, pet is aggressive, and pet is not being sacrificed.

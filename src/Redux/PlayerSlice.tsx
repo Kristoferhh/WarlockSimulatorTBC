@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getRemainingTalentPoints } from "../Common";
-import { Auras } from "../data/Auras";
-import { Aura, RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, ItemSlot, Profile, InitialSelectedGems, ItemSlotKey, TalentName, Setting, ItemSet, StatsCollection, InitialSetCounts, SetsStruct } from "../Types";
+import { RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Profile, InitialSelectedGems, ItemSlotKey, TalentName, Setting, StatsCollection, InitialSetCounts, SetsStruct, AurasStruct, ItemAndEnchantStruct, SelectedGemsStruct } from "../Types";
 
 const initialPlayerState : PlayerState = {
   talents: JSON.parse(localStorage.getItem('talents') || '{}'),
@@ -26,31 +25,16 @@ export const PlayerSlice = createSlice({
       state.talentPointsRemaining = getRemainingTalentPoints(state.talents);
       localStorage.setItem('talents', JSON.stringify(state.talents));
     },
-    setItemInItemSlot: (state, item: PayloadAction<{id: number, itemSlot: ItemSlot}>) => {
-      state.selectedItems[item.payload.itemSlot] = item.payload.id;
+    setSelectedItems: (state, action: PayloadAction<ItemAndEnchantStruct>) => {
+      state.selectedItems = action.payload;
       localStorage.setItem('selectedItems', JSON.stringify(state.selectedItems));
     },
-    setEnchantInItemSlot: (state, enchant: PayloadAction<{id: number, itemSlot: ItemSlot}>) => {
-      state.selectedEnchants[enchant.payload.itemSlot] = enchant.payload.id;
+    setSelectedEnchants: (state, action: PayloadAction<ItemAndEnchantStruct>) => {
+      state.selectedEnchants = action.payload;
       localStorage.setItem('selectedEnchants', JSON.stringify(state.selectedEnchants));
     },
-    toggleAuraSelection: (state, action: PayloadAction<Aura>) => {
-      const isAuraDisabled = state.auras[action.payload.varName] == null || state.auras[action.payload.varName] === false;
-
-      // If the aura is being toggled on and it's a unique buff like potion/food buff, then disable all other auras with that unique property as true.
-      if (isAuraDisabled) {
-        if (action.payload.potion)         Auras.filter((e) => e.potion).forEach((e)         => state.auras[e.varName] = false);
-        if (action.payload.foodBuff)       Auras.filter((e) => e.foodBuff).forEach((e)       => state.auras[e.varName] = false);
-        if (action.payload.weaponOil)      Auras.filter((e) => e.weaponOil).forEach((e)      => state.auras[e.varName] = false);
-        if (action.payload.battleElixir)   Auras.filter((e) => e.battleElixir).forEach((e)   => state.auras[e.varName] = false);
-        if (action.payload.guardianElixir) Auras.filter((e) => e.guardianElixir).forEach((e) => state.auras[e.varName] = false);
-        if (action.payload.alcohol)        Auras.filter((e) => e.alcohol).forEach((e)        => state.auras[e.varName] = false);
-        if (action.payload.demonicRune)    Auras.filter((e) => e.demonicRune).forEach((e)    => state.auras[e.varName] = false);
-        if (action.payload.drums)          Auras.filter((e) => e.drums).forEach((e)          => state.auras[e.varName] = false);
-      }
-
-      // Toggle the aura's bool property/initialize to true.
-      state.auras[action.payload.varName] = state.auras[action.payload.varName] == null ? true : !state.auras[action.payload.varName];
+    setSelectedAuras: (state, action: PayloadAction<AurasStruct>) => {
+      state.auras = action.payload;
       localStorage.setItem('auras', JSON.stringify(state.auras));
     },
     toggleRotationSpellSelection: (state, action: PayloadAction<{rotationGroup: RotationGroup, spell: Spell}>) => {
@@ -109,12 +93,8 @@ export const PlayerSlice = createSlice({
       localStorage.setItem('talents', JSON.stringify(action.payload.talents));
       window.location.reload();
     },
-    setItemSocketsValue: (state, action: PayloadAction<{itemId: string, itemSlot: ItemSlotKey, value: [string, number][]}>) => {
-      if (!state.selectedGems[action.payload.itemSlot]) {
-        state.selectedGems[action.payload.itemSlot] = {};
-      }
-      
-      state.selectedGems[action.payload.itemSlot][action.payload.itemId] = action.payload.value;
+    setSelectedGems: (state, action: PayloadAction<SelectedGemsStruct>) => {
+      state.selectedGems = action.payload;
       localStorage.setItem('selectedGems', JSON.stringify(state.selectedGems));
     },
     deleteProfile: (state, action: PayloadAction<string>) => {
@@ -136,5 +116,5 @@ export const PlayerSlice = createSlice({
   }
 });
 
-export const { setItemSetCounts, setAurasStats, setBaseStats, setEnchantsStats, setGemsStats,setItemsStats, renameProfile, deleteProfile, loadProfile, setItemSocketsValue, setTalentPointValue, setItemInItemSlot, setEnchantInItemSlot, toggleAuraSelection, toggleRotationSpellSelection, modifySettingValue, setProfile } = PlayerSlice.actions;
+export const { setSelectedGems, setSelectedEnchants, setSelectedItems, setSelectedAuras, setItemSetCounts, setAurasStats, setBaseStats, setEnchantsStats, setGemsStats,setItemsStats, renameProfile, deleteProfile, loadProfile, setTalentPointValue, toggleRotationSpellSelection, modifySettingValue, setProfile } = PlayerSlice.actions;
 export default PlayerSlice.reducer;

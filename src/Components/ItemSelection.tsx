@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { Enchants } from '../data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/Store';
-import { setEnchantInItemSlot, setEnchantsStats, setGemsStats, setItemInItemSlot, setItemSocketsValue, setItemsStats } from '../redux/PlayerSlice';
-import { getEnchantsStats, getGemsStats, getItemsStats, getItemTableItems, ItemSlotKeyToItemSlot } from '../Common';
+import { setEnchantsStats, setGemsStats, setItemSetCounts, setItemsStats, setSelectedEnchants, setSelectedGems, setSelectedItems } from '../redux/PlayerSlice';
+import { getEnchantsStats, getGemsStats, getItemSetCounts, getItemsStats, getItemTableItems, ItemSlotKeyToItemSlot } from '../Common';
 import { setEquippedItemsWindowVisibility, setFillItemSocketsWindowVisibility, setGemSelectionTable, setSelectedItemSlot, setSelectedItemSubSlot, toggleHiddenItemId } from '../redux/UiSlice';
 import ItemSocketDisplay from './ItemSocketDisplay';
 import { FillItemSockets } from './FillItemSockets';
@@ -38,63 +38,39 @@ export default function ItemSelection() {
   const uiStore = useSelector((state: RootState) => state.ui);
   const dispatch = useDispatch();
 
-  function selectedItemsChanged(): void {
-    dispatch(setItemsStats(getItemsStats(playerStore.selectedItems)));
-    dispatch(setGemsStats(getGemsStats(playerStore.selectedItems, playerStore.selectedGems)));
-    dispatch(setEnchantsStats(getEnchantsStats(playerStore.selectedItems, playerStore.selectedEnchants)));
-  }
+  function changeEquippedItemId(itemSlot: ItemSlot, itemId: number) {
+    let newSelectedItems = JSON.parse(JSON.stringify(playerStore.selectedItems));
+    // If the item slot already has the item id equipped then there's no need to do anything.
+    if (newSelectedItems[itemSlot] === itemId) { return; }
+    newSelectedItems[itemSlot] = itemId;
 
-  function unequipItemSlot(slot: ItemSlot) {
-    dispatch(setItemInItemSlot({
-      id: 0,
-      itemSlot: slot,
-    }));
-    selectedItemsChanged();
-  }
-
-  function equipItem(item: Item, slot: ItemSlot) {
-    dispatch(setItemInItemSlot({
-      id: item.id,
-      itemSlot: slot,
-    }));
-    selectedItemsChanged();
-
-    // If equipping a two handed weapon then unequip main hand and offhand and vice versa
-    if (slot === ItemSlot.twohand) {
-      unequipItemSlot(ItemSlot.mainhand);
-      unequipItemSlot(ItemSlot.offhand);
-    } else if ([ItemSlot.mainhand, ItemSlot.offhand].includes(slot)) {
-      unequipItemSlot(ItemSlot.twohand);
-    }
-  }
-
-  function itemClickHandler(item: Item, slot: ItemSlot) {
-    // Remove stats from equipped item
-    if (playerStore.selectedItems[slot] !== 0) {
-      unequipItemSlot(slot);
+    // If we're not unequipping an item
+    if (itemId !== 0) {
+      // If equipping a two handed weapon then unequip main hand and offhand and vice versa
+      if (itemSlot === ItemSlot.twohand) {
+        changeEquippedItemId(ItemSlot.mainhand, 0);
+        changeEquippedItemId(ItemSlot.offhand, 0);
+      } else if ([ItemSlot.mainhand, ItemSlot.offhand].includes(itemSlot)) {
+        changeEquippedItemId(ItemSlot.twohand, 0);
+      }
     }
 
-    // Add stats from the item if it's not the currently equipped item
-    if (playerStore.selectedItems[slot] !== item.id) {
-      equipItem(item, slot);
-    }
+    dispatch(setSelectedItems(newSelectedItems));
+    dispatch(setItemsStats(getItemsStats(newSelectedItems)));
+    dispatch(setGemsStats(getGemsStats(newSelectedItems, playerStore.selectedGems)));
+    dispatch(setEnchantsStats(getEnchantsStats(newSelectedItems, playerStore.selectedEnchants)));
+    dispatch(setItemSetCounts(getItemSetCounts(newSelectedItems)));
   }
 
-  function enchantClickHandler(enchant: Enchant, slot: ItemSlot) {
-    // If the clicked enchant is the equipped enchant then set the equipped enchant id to 0 to unequip it.
-    if (playerStore.selectedEnchants[slot] === enchant.id) {
-      dispatch(setEnchantInItemSlot({
-        id: 0,
-        itemSlot: slot,
-      }));
-    } else {
-      dispatch(setEnchantInItemSlot({
-        id: enchant.id,
-        itemSlot: slot,
-      }));
-    }
+  function itemClickHandler(item: Item, itemSlot: ItemSlot) {
+    changeEquippedItemId(itemSlot, playerStore.selectedItems[itemSlot] === item.id ? 0 : item.id);
+  }
 
-    dispatch(setEnchantsStats(getEnchantsStats(playerStore.selectedItems, playerStore.selectedEnchants)));
+  function enchantClickHandler(enchant: Enchant, itemSlot: ItemSlot) {
+    let newSelectedEnchants = JSON.parse(JSON.stringify(playerStore.selectedEnchants));
+    newSelectedEnchants[itemSlot] = newSelectedEnchants[itemSlot] === enchant.id ? 0 : enchant.id;
+    dispatch(setSelectedEnchants(newSelectedEnchants));
+    dispatch(setEnchantsStats(getEnchantsStats(playerStore.selectedItems, newSelectedEnchants)));
   }
 
   function itemSlotClickHandler(slot: ItemSlotKey, subSlot: SubSlotValue) {
@@ -118,16 +94,13 @@ export default function ItemSelection() {
   }
 
   function removeGemFromSocket(itemId: string, socketNumber: number) {
-    if (playerStore.selectedGems[uiStore.selectedItemSlot][itemId]) {
-      let currentItemSocketsValue = JSON.parse(JSON.stringify(playerStore.selectedGems[uiStore.selectedItemSlot][itemId]));
+    let newSelectedGems = JSON.parse(JSON.stringify(playerStore.selectedGems));
+    if (newSelectedGems[uiStore.selectedItemSlot][itemId]) {
+      let currentItemSocketsValue = newSelectedGems[uiStore.selectedItemSlot][itemId];
       if (currentItemSocketsValue[socketNumber][1] !== 0) {
         currentItemSocketsValue[socketNumber] = ['', 0];
-        dispatch(setItemSocketsValue({
-          itemId: itemId,
-          itemSlot: uiStore.selectedItemSlot,
-          value: currentItemSocketsValue
-        }));
-        dispatch(setGemsStats(getGemsStats(playerStore.selectedItems, playerStore.selectedGems)));
+        dispatch(setSelectedGems(newSelectedGems));
+        dispatch(setGemsStats(getGemsStats(playerStore.selectedItems, newSelectedGems)));
       }
     }
   }

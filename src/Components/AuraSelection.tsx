@@ -1,19 +1,38 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Auras } from "../data/Auras";
 import { RootState } from "../redux/Store";
-import { Aura, AuraGroupKey } from "../Types";
+import { Aura, AuraGroupKey, AurasStruct } from "../Types";
 import { AuraGroups } from "../data/AuraGroups";
-import { setAurasStats, toggleAuraSelection } from "../redux/PlayerSlice";
+import { setAurasStats, setSelectedAuras } from "../redux/PlayerSlice";
 import { nanoid } from "nanoid";
 import { getAurasStats } from "../Common";
+
+function disableAurasWithUniqueProperties(aura: Aura, auraObj: AurasStruct): void {
+  if (aura.potion)         Auras.filter((e) => e.potion).forEach((e)         => auraObj[e.varName] = false);
+  if (aura.foodBuff)       Auras.filter((e) => e.foodBuff).forEach((e)       => auraObj[e.varName] = false);
+  if (aura.weaponOil)      Auras.filter((e) => e.weaponOil).forEach((e)      => auraObj[e.varName] = false);
+  if (aura.battleElixir)   Auras.filter((e) => e.battleElixir).forEach((e)   => auraObj[e.varName] = false);
+  if (aura.guardianElixir) Auras.filter((e) => e.guardianElixir).forEach((e) => auraObj[e.varName] = false);
+  if (aura.alcohol)        Auras.filter((e) => e.alcohol).forEach((e)        => auraObj[e.varName] = false);
+  if (aura.demonicRune)    Auras.filter((e) => e.demonicRune).forEach((e)    => auraObj[e.varName] = false);
+  if (aura.drums)          Auras.filter((e) => e.drums).forEach((e)          => auraObj[e.varName] = false);
+}
 
 export default function AuraSelection() {
   const playerState = useSelector((state: RootState) => state.player);
   const dispatch = useDispatch();
 
-  function auraClickHandler(aura: Aura) {
-    dispatch(toggleAuraSelection(aura));
-    dispatch(setAurasStats(getAurasStats(playerState.auras)));
+  function auraClickHandler(aura: Aura): void {
+    let newAuras = JSON.parse(JSON.stringify(playerState.auras));
+    const isAuraDisabled = newAuras[aura.varName] == null || newAuras[aura.varName] === false;
+
+    // If the aura is being toggled on and it's a unique buff like potion/food buff, then disable all other auras with that unique property as true.
+    if (isAuraDisabled) { disableAurasWithUniqueProperties(aura, newAuras); }
+    // Toggle the aura's bool property/initialize to true.
+    newAuras[aura.varName] = newAuras[aura.varName] == null ? true : !newAuras[aura.varName];
+
+    dispatch(setSelectedAuras(newAuras));
+    dispatch(setAurasStats(getAurasStats(newAuras)));
   }
 
   return(
