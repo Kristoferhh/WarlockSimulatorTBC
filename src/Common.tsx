@@ -80,7 +80,8 @@ export function itemMeetsSocketRequirements(params: { itemId: number, selectedGe
       if (gem) {
         const gemColor = gem.color;
         const item = Items.find(e => e.id === params.itemId);
-        if (item && item.sockets && Sockets.find(e => e.color === item.sockets![parseInt(key)])?.validColors.includes(gemColor)) {
+        // Check if the array of valid gem colors for this socket color does not include the equipped gem color.
+        if (item && item.sockets && !Sockets.find(e => e.color === item.sockets![parseInt(key)])?.validColors.includes(gemColor)) {
           return false;
         }
       }
@@ -181,7 +182,7 @@ export function getGemsStats(items: ItemAndEnchantStruct, gems: SelectedGemsStru
           }
         });
 
-        if (itemMeetsSocketRequirements({ itemId: item[1], selectedGems: gems, socketArray: itemGemArrays })) {
+        if (itemMeetsSocketRequirements({ itemId: item[1], socketArray: itemGemArrays })) {
           const itemObj = Items.find(e => e.id === item[1]);
           if (itemObj && itemObj.socketBonus) {
             Object.entries(itemObj.socketBonus).forEach(stat => {

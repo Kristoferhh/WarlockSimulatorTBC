@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getRemainingTalentPoints } from "../Common";
-import { RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Profile, InitialSelectedGems, ItemSlotKey, TalentName, Setting, StatsCollection, InitialSetCounts, SetsStruct, AurasStruct, ItemAndEnchantStruct, SelectedGemsStruct } from "../Types";
+import { RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Profile, InitialSelectedGems, TalentName, Setting, StatsCollection, InitialSetCounts, SetsStruct, AurasStruct, ItemAndEnchantStruct, SelectedGemsStruct } from "../Types";
 
 const initialPlayerState : PlayerState = {
   talents: JSON.parse(localStorage.getItem('talents') || '{}'),
