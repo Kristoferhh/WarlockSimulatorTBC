@@ -202,7 +202,7 @@ export function getEnchantsStats(items: ItemAndEnchantStruct, enchants: ItemAndE
 
   Object.entries(enchants).forEach(enchant => {
     // Only add the enchant's stats if the user has an item equipped in that slot as well.
-    if (Items.find(e => e.id === items[enchant[0] as ItemSlot])) {
+    if (Items.find(e => e.id === items[enchant[0] as ItemSlot]) || (enchant[0] === ItemSlot.mainhand && Items.find(e => e.id === items[ItemSlot.twohand]))) {
       const enchantObj = Enchants.find(e => e.id === enchant[1]);
       if (enchantObj) {
         Object.entries(enchantObj).forEach(prop => {
