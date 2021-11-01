@@ -39,19 +39,18 @@ export default function ItemSelection() {
   const dispatch = useDispatch();
 
   function changeEquippedItemId(itemSlot: ItemSlot, itemId: number) {
+    if (playerStore.selectedItems[itemSlot] === itemId) { return; }
     let newSelectedItems = JSON.parse(JSON.stringify(playerStore.selectedItems));
-    // If the item slot already has the item id equipped then there's no need to do anything.
-    if (newSelectedItems[itemSlot] === itemId) { return; }
     newSelectedItems[itemSlot] = itemId;
 
     // If we're not unequipping an item
     if (itemId !== 0) {
       // If equipping a two handed weapon then unequip main hand and offhand and vice versa
       if (itemSlot === ItemSlot.twohand) {
-        changeEquippedItemId(ItemSlot.mainhand, 0);
-        changeEquippedItemId(ItemSlot.offhand, 0);
+        newSelectedItems[ItemSlot.mainhand] = 0;
+        newSelectedItems[ItemSlot.offhand] = 0;
       } else if ([ItemSlot.mainhand, ItemSlot.offhand].includes(itemSlot)) {
-        changeEquippedItemId(ItemSlot.twohand, 0);
+        newSelectedItems[ItemSlot.twohand] = 0;
       }
     }
 
