@@ -231,9 +231,14 @@ ul {
 	display: inline-block;
 }
 
-#rotation-list li[data-checked='false'] img, .talent-icon[data-points='0'], .aura[data-checked='false'] {
+#rotation-list li[data-checked='false'] img, .talent-icon[data-points='0'] {
 	filter: grayscale(95%);
 }
+
+.aura[data-checked='false'] {
+	filter: grayscale(50%);
+	opacity: 0.4;
+ }
 
 #rotation-list li {
 	display: inline-block;
