@@ -131,7 +131,7 @@ Player::Player(PlayerSettings* playerSettings)
     // Add spell power from Fel Armor
     if (selectedAuras->felArmor)
     {
-        stats->spellPower += 100 * (1 + 0.1 * talents->demonicAegis);
+        stats->spellPower += 100 * (0 + 0.1 * talents->demonicAegis);
     }
     // If using a custom isb uptime % then just add to the shadow modifier % (this assumes 5/5 ISB giving 20% shadow damage)
     if (settings->usingCustomIsbUptime)
