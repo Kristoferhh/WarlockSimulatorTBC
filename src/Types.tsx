@@ -1,3 +1,5 @@
+import { Chart, ChartData } from "chart.js"
+
 export enum ItemSlotKey {
   Head = "head",
   Neck = "neck",
@@ -496,6 +498,7 @@ export interface UiState {
   savedItemDps: {[key in ItemSlot]: {[key: number]: number}},
   combatLog: {visible: boolean, data: string[]},
   combatLogBreakdown: CombatLogBreakdown,
+  histogram: {visible: boolean, data?: {[key: string]: number}},
 }
 
 export type CombatLogBreakdown = {

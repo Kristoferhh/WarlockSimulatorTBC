@@ -4,7 +4,7 @@ import { average, calculatePlayerStats, getItemSetCounts, getItemTableItems, get
 import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
 import { RootState } from "../redux/Store"
-import { clearSavedItemSlotDps, setCombatLogBreakdownValue, setCombatLogData, setCombatLogVisibility, setSavedItemDps } from "../redux/UiSlice";
+import { clearSavedItemSlotDps, setCombatLogBreakdownValue, setCombatLogData, setCombatLogVisibility, setHistogramData, setHistogramVisibility, setSavedItemDps } from "../redux/UiSlice";
 import { SimWorker } from "../SimWorker.js";
 import { CombatLogBreakdownData, GemColor, ItemAndEnchantStruct, ItemSlot, SelectedGemsStruct, SimulationType, Stat, WorkerParams } from "../Types";
 
@@ -155,17 +155,21 @@ export function SimulationButtons() {
               setDpsStdev(Math.round(getStdev(dpsArray)).toString());
               setSimulationProgressPercent(0);
               
-              if (type === SimulationType.Normal && playerState.settings["automatically-open-sim-details"] === 'yes') {
-                dispatch(setCombatLogBreakdownValue({
-                  totalDamageDone: totalDamageDone,
-                  totalManaGained: totalManaRegenerated,
-                  totalSimulationFightLength: params.totalDuration,
-                  totalIterationAmount: params.iterationAmount,
-                  spellDamageDict: spellDamageDict,
-                  spellManaGainDict: spellManaGainDict,
-                  data: combatLogBreakdownArr,
-                }));
-                $('.breakdown-table').trigger('update');
+              if (type === SimulationType.Normal) {
+                dispatch(setHistogramData(dpsCount));
+
+                if (playerState.settings["automatically-open-sim-details"] === 'yes') {
+                  dispatch(setCombatLogBreakdownValue({
+                    totalDamageDone: totalDamageDone,
+                    totalManaGained: totalManaRegenerated,
+                    totalSimulationFightLength: params.totalDuration,
+                    totalIterationAmount: params.iterationAmount,
+                    spellDamageDict: spellDamageDict,
+                    spellManaGainDict: spellManaGainDict,
+                    data: combatLogBreakdownArr,
+                  }));
+                  $('.breakdown-table').trigger('update');
+                }
               }
             }
   
@@ -194,7 +198,7 @@ export function SimulationButtons() {
               setNewMedianDps(newMedianDps.toString(), false);
             }
           },
-          getWorkerParams(itemId, itemId === equippedItemId, type)
+          getWorkerParams(itemId, itemId === equippedItemId || (itemId === 0 && equippedItemId == null), type)
         ));
       });
   
@@ -277,7 +281,10 @@ export function SimulationButtons() {
         uiState.combatLog.data.length > 0 &&
           <div className='btn' onClick={() => dispatch(setCombatLogVisibility(!uiState.combatLog.visible))}>Combat Log</div>
       }
-      <div className='btn'>Histogram</div>
+      {
+        uiState.histogram.data !== undefined &&
+          <div className='btn' onClick={() => dispatch(setHistogramVisibility(!uiState.histogram.visible))}>Histogram</div>
+      }
       <p id="sim-length-result">{simulationDuration}s</p>
     </>
   )
