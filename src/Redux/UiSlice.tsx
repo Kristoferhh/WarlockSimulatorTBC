@@ -16,6 +16,7 @@ const initialUiState : UiState = {
   combatLog: {visible: false, data: []},
   combatLogBreakdown: {totalDamageDone: 0, totalManaGained: 0, totalSimulationFightLength: 0, totalIterationAmount: 0, spellDamageDict: {}, spellManaGainDict: {}, data: []},
   histogram: {visible: false},
+  statWeights: {visible: false},
 }
 
 export const UiSlice = createSlice({
@@ -104,9 +105,12 @@ export const UiSlice = createSlice({
     },
     setHistogramData: (state, action: PayloadAction<{[key: string]: number}>) => {
       state.histogram.data = action.payload;
+    },
+    setStatWeightVisibility: (state, action: PayloadAction<boolean>) => {
+      state.statWeights.visible = action.payload;
     }
   }
 });
 
-export const { setHistogramData, setHistogramVisibility, clearSavedItemSlotDps, setCombatLogBreakdownValue, setCombatLogData, setCombatLogVisibility, setSavedItemDps, setSelectedItemSubSlot, setSelectedItemSlot, setFillItemSocketsWindowVisibility, setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
+export const { setStatWeightVisibility, setHistogramData, setHistogramVisibility, clearSavedItemSlotDps, setCombatLogBreakdownValue, setCombatLogData, setCombatLogVisibility, setSavedItemDps, setSelectedItemSubSlot, setSelectedItemSlot, setFillItemSocketsWindowVisibility, setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
 export default UiSlice.reducer;

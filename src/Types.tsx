@@ -499,6 +499,7 @@ export interface UiState {
   combatLog: {visible: boolean, data: string[]},
   combatLogBreakdown: CombatLogBreakdown,
   histogram: {visible: boolean, data?: {[key: string]: number}},
+  statWeights: {visible: boolean},
 }
 
 export type CombatLogBreakdown = {
