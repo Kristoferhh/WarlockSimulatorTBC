@@ -8,6 +8,17 @@ import { setEquippedItemsWindowVisibility } from "../redux/UiSlice";
 import { Enchant, Item, ItemSlot } from "../Types";
 import ItemSocketDisplay from "./ItemSocketDisplay";
 
+function formatItemSlotName(itemSlot: ItemSlot): string {
+  let formattedItemSlot = itemSlot as string;
+
+  // Check if the last char is '1' or '2', if so then it's an item slot with sub-item slots so we put a space between the name and the sub-item slot value.
+  const subItemSlotIndex = formattedItemSlot.length - 1;
+  if (['1','2'].includes(formattedItemSlot.charAt(subItemSlotIndex))) {
+    formattedItemSlot = formattedItemSlot.substring(0, subItemSlotIndex) + ' ' + formattedItemSlot.substring(subItemSlotIndex);
+  }
+
+  return formattedItemSlot.charAt(0).toUpperCase() + formattedItemSlot.slice(1);
+}
 
 export default function EquippedItemsDisplay() {
   const uiState = useSelector((state: RootState) => state.ui);
@@ -56,7 +67,7 @@ export default function EquippedItemsDisplay() {
                 .filter(slot => (![ItemSlot.mainhand, ItemSlot.offhand, ItemSlot.twohand].includes(slot) || (([ItemSlot.mainhand, ItemSlot.offhand].includes(slot) && (!playerState.selectedItems[ItemSlot.twohand] || playerState.selectedItems[ItemSlot.twohand] === 0)) || (slot === ItemSlot.twohand && (!playerState.selectedItems[ItemSlot.mainhand] || playerState.selectedItems[ItemSlot.mainhand] === 0) && (!playerState.selectedItems[ItemSlot.offhand] || playerState.selectedItems[ItemSlot.offhand] === 0)))))
                 .map(slot =>
                   <tr key={nanoid()} className='equipped-item-row'>
-                    <td>{slot}</td>
+                    <td>{formatItemSlotName(slot)}</td>
                     <td className={'equipped-item-name ' + (playerState.selectedItems[slot] != null ? getItemInItemSlot(slot)?.quality : '')}>
                       {
                         getItemInItemSlot(slot) &&
