@@ -1,5 +1,5 @@
  # TBC Warlock Simulator
- Warlock DPS simulator for WoW TBCC written in React & C++ compiled into WebAssembly.
+ Warlock DPS simulator for WoW TBCC written in React, C++ compiled into WebAssembly, and using Redux Toolkit to manage the state of all the components.
  
  ## Setting up local development
  ### Frontend
