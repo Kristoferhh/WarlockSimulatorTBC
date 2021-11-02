@@ -236,7 +236,7 @@ ul {
 }
 
 .aura[data-checked='false'] {
-	filter: grayscale(50%);
+	filter: grayscale(60%);
 	opacity: 0.4;
  }
 

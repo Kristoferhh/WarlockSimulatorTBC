@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { average, getItemTableItems, getStdev, itemMeetsSocketRequirements, ItemSlotKeyToItemSlot } from "../Common";
+import { average, calculatePlayerStats, getItemSetCounts, getItemTableItems, getStdev, ItemSlotKeyToItemSlot } from "../Common";
 import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
 import { RootState } from "../redux/Store"
 import { clearSavedItemSlotDps, setCombatLogBreakdownValue, setCombatLogData, setCombatLogVisibility, setSavedItemDps } from "../redux/UiSlice";
 import { SimWorker } from "../SimWorker.js";
-import { CombatLogBreakdownData, GemColor, ItemSlot, SimulationType, Stat, WorkerParams } from "../Types";
+import { CombatLogBreakdownData, GemColor, ItemAndEnchantStruct, ItemSlot, SelectedGemsStruct, SimulationType, Stat, WorkerParams } from "../Types";
 
 interface SimulationUpdate {
   medianDps: number,
@@ -26,7 +26,19 @@ interface SimulationEnd {
   medianDps: number
 }
 
-export function SidebarButtons() {
+function getEquippedMetaGemId(items: ItemAndEnchantStruct, gems: SelectedGemsStruct): number {
+  if ([null, 0].includes(items.head) || !gems.head || !gems.head[items.head]) { return 0; }
+
+  for (const gemArray of Object.values(gems.head[items.head])) {
+    if (Gems.find(e => e.id === gemArray[1])?.color === GemColor.Meta) {
+      return gemArray[1];
+    }
+  }
+
+  return 0;
+}
+
+export function SimulationButtons() {
   const playerState = useSelector((state: RootState) => state.player);
   const uiState = useSelector((state: RootState) => state.ui);
   const dispatch = useDispatch();
@@ -41,23 +53,26 @@ export function SidebarButtons() {
   let combatLogEntries: string[] = [];
 
   function getWorkerParams(itemId: number, equippedItemSimulation: boolean, simType: SimulationType): WorkerParams {
-    let params: WorkerParams = {
+    let customPlayerState = JSON.parse(JSON.stringify(playerState));
+    customPlayerState.selectedItems[ItemSlotKeyToItemSlot(false, uiState.selectedItemSlot, uiState.selectedItemSubSlot)] = itemId;
+
+    return {
       playerSettings: {
-        auras: playerState.auras,
-        items: JSON.parse(JSON.stringify(playerState.selectedItems)),
-        enchants: playerState.selectedEnchants,
-        gems: playerState.selectedGems,
-        talents: playerState.talents,
-        rotation: playerState.rotation,
-        stats: JSON.parse(JSON.stringify(playerState.stats)),
-        sets: JSON.parse(JSON.stringify(playerState.sets)),
-        simSettings: playerState.settings,
-        metaGemId: 0,
+        auras: customPlayerState.auras,
+        items: customPlayerState.selectedItems,
+        enchants: customPlayerState.selectedEnchants,
+        gems: customPlayerState.selectedGems,
+        talents: customPlayerState.talents,
+        rotation: customPlayerState.rotation,
+        stats: calculatePlayerStats(customPlayerState),
+        sets: getItemSetCounts(customPlayerState.selectedItems),
+        simSettings: customPlayerState.settings,
+        metaGemId: getEquippedMetaGemId(customPlayerState.selectedItems, customPlayerState.selectedGems),
       },
       simulationSettings: {
-        iterations: parseInt(playerState.settings.iterations),
-        minTime: parseInt(playerState.settings["min-fight-length"]),
-        maxTime: parseInt(playerState.settings['max-fight-length'])
+        iterations: parseInt(customPlayerState.settings.iterations),
+        minTime: parseInt(customPlayerState.settings["min-fight-length"]),
+        maxTime: parseInt(customPlayerState.settings['max-fight-length'])
       },
       itemId: itemId,
       simulationType: simType,
@@ -65,68 +80,6 @@ export function SidebarButtons() {
       customStat: "normal",
       equippedItemSimulation: equippedItemSimulation,
     }
-    let equippedMetaGemId = -1;
-    let customItemMetaGemId = -1;
-
-    // Get the equipped meta gem id
-    if (params.playerSettings.items.head !== 0 && params.playerSettings.gems.head[params.playerSettings.items.head]) {
-      params.playerSettings.gems.head[params.playerSettings.items.head].forEach(gemArray => {
-        const gem = Gems.find(e => e.id === gemArray[1]);
-        if (gem && gem.color === GemColor.Meta) {
-          equippedMetaGemId = gem.id;
-        }
-      });
-    }
-
-    // Check if the parameter item is not the equipped item. If so then unequip the equipped item.
-    const equippedItemId = params.playerSettings.items[ItemSlotKeyToItemSlot(false, uiState.selectedItemSlot, uiState.selectedItemSubSlot)];
-    params.equippedItemSimulation = itemId === equippedItemId;
-    const equippedItem = Items.find(e => e.id === equippedItemId);
-    if (equippedItem && equippedItemId !== itemId) {
-      // Remove item stats
-      for (const [stat, value] of Object.entries(equippedItem)) {
-        if (params.playerSettings.stats.hasOwnProperty(stat)) {
-          //params.playerSettings.stats[stat as Stat] -= value;
-        }
-      }
-
-      // Remove stats from socket bonus if it's active
-      if (itemMeetsSocketRequirements({itemId: equippedItem.id, selectedGems: params.playerSettings.gems}) && equippedItem.socketBonus) {
-        for (const [stat, value] of Object.entries(equippedItem.socketBonus)) {
-          //params.playerSettings.stats[stat as Stat] -= value;
-        }
-      }
-
-      // Lower the item set counter by 1 if the item is part of a set
-      if (equippedItem.setId && params.playerSettings.sets[equippedItem.setId] && params.playerSettings.sets[equippedItem.setId] > 0) {
-        params.playerSettings.sets[equippedItem.setId] -= 1;
-      }
-    }
-
-    // Equip the new item if it's not the same as the equipped item.
-    const customItem = Items.find(e => e.id === itemId);
-    if (customItem && itemId !== equippedItemId) {
-      // Add stats from new item
-      for (const [stat, value] of Object.entries(itemId)) {
-        if (params.playerSettings.stats.hasOwnProperty(stat)) {
-          //params.playerSettings.stats[stat as Stat] -= value;
-        }
-      }
-
-      // Socket bonus
-      if (itemMeetsSocketRequirements({itemId: itemId, selectedGems: params.playerSettings.gems})) {
-        for (const [stat, value] of Object.entries(customItem.socketBonus!)) {
-          //params.playerSettings.stats[stat as Stat] -= value;
-        }
-      }
-
-      // Increment set id counter
-      if (customItem.setId) {
-        params.playerSettings.sets[customItem.setId] += 1;
-      }
-    }
-
-    return params;
   }
 
   function simulate(itemIdsToSim: number[], type: SimulationType) {

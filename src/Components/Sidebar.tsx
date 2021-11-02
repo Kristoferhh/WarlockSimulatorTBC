@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Races } from "../data/Races";
 import { Sets } from "../data/Sets";
 import { RootState } from "../redux/Store";
-import { SidebarButtons } from "./SidebarButtons";
+import { SimulationButtons } from "./SimulationButtons";
 import StatsDisplay from "./StatsDisplay";
 
 export default function Sidebar() {
@@ -35,7 +35,7 @@ export default function Sidebar() {
         </ul>
 
         <div id="sidebar-simulation-selection">
-          <SidebarButtons />
+          <SimulationButtons />
           <p id="guybrush-note">This sim was heavily inspired by <a rel="noreferrer" target="_blank" href='https://guybrushgit.github.io/WarriorSim/'>Guybrush's 1.13 Warrior Simulator</a></p>
           <p id="paypal-note"><a href="https://www.paypal.com/paypalme/kristoferhh" rel="noreferrer" target="_blank">Support me via PayPal</a></p>
         </div>

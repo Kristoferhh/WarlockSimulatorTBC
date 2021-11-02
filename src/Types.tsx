@@ -359,6 +359,8 @@ export const InitialSelectedItemsAndEnchants: ItemAndEnchantStruct = {
 }
 
 export const InitialPlayerStats: StatsCollection = {
+  health: 0,
+  mana: 0,
   stamina: 0,
   intellect: 0,
   spirit: 0,
@@ -514,7 +516,7 @@ export interface WorkerParams {
     gems: SelectedGemsStruct,
     talents: TalentStore,
     rotation: RotationStruct,
-    stats: PlayerStats,
+    stats: StatsCollection,
     sets: SetsStruct,
     simSettings: Settings,
     metaGemId: number,
