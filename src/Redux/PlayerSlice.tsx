@@ -83,16 +83,6 @@ export const PlayerSlice = createSlice({
       state.profiles[action.payload.name] = action.payload.profile;
       localStorage.setItem('profiles', JSON.stringify(state.profiles));
     },
-    loadProfile: (state, action: PayloadAction<Profile>) => {
-      localStorage.setItem('auras', JSON.stringify(action.payload.auras));
-      localStorage.setItem('rotation', JSON.stringify(action.payload.rotation));
-      localStorage.setItem('selectedItems', JSON.stringify(action.payload.items));
-      localStorage.setItem('selectedGems', JSON.stringify(action.payload.gems));
-      localStorage.setItem('selectedEnchants', JSON.stringify(action.payload.enchants));
-      localStorage.setItem('settings', JSON.stringify(action.payload.simSettings));
-      localStorage.setItem('talents', JSON.stringify(action.payload.talents));
-      window.location.reload();
-    },
     setSelectedGems: (state, action: PayloadAction<SelectedGemsStruct>) => {
       state.selectedGems = action.payload;
       localStorage.setItem('selectedGems', JSON.stringify(state.selectedGems));
@@ -128,5 +118,5 @@ export const PlayerSlice = createSlice({
   }
 });
 
-export const { setSettingsState, setRotationState, setTalentsState, setSelectedGems, setSelectedEnchants, setSelectedItems, setSelectedAuras, setItemSetCounts, setAurasStats, setBaseStats, setEnchantsStats, setGemsStats,setItemsStats, renameProfile, deleteProfile, loadProfile, setTalentPointValue, toggleRotationSpellSelection, modifySettingValue, setProfile } = PlayerSlice.actions;
+export const { setSettingsState, setRotationState, setTalentsState, setSelectedGems, setSelectedEnchants, setSelectedItems, setSelectedAuras, setItemSetCounts, setAurasStats, setBaseStats, setEnchantsStats, setGemsStats,setItemsStats, renameProfile, deleteProfile, setTalentPointValue, toggleRotationSpellSelection, modifySettingValue, setProfile } = PlayerSlice.actions;
 export default PlayerSlice.reducer;

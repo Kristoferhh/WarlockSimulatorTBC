@@ -2,7 +2,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAurasStats, getBaseStats, getEnchantsStats, getGemsStats, getItemSetCounts, getItemsStats } from "../Common";
-import { deleteProfile, loadProfile, renameProfile, setAurasStats, setBaseStats, setEnchantsStats, setGemsStats, setItemSetCounts, setItemsStats, setProfile, setRotationState, setSelectedAuras, setSelectedEnchants, setSelectedGems, setSelectedItems, setSettingsState, setTalentsState } from "../redux/PlayerSlice";
+import { deleteProfile, renameProfile, setAurasStats, setBaseStats, setEnchantsStats, setGemsStats, setItemSetCounts, setItemsStats, setProfile, setRotationState, setSelectedAuras, setSelectedEnchants, setSelectedGems, setSelectedItems, setSettingsState, setTalentsState } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store";
 import { setImportExportWindowVisibility, setSelectedProfile, togglePhase } from "../redux/UiSlice";
 import { Phase, Profile, Race } from "../Types";

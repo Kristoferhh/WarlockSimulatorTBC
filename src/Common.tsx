@@ -5,7 +5,7 @@ import { Items } from "./data/Items";
 import { Races } from "./data/Races";
 import { Sockets } from "./data/Sockets";
 import { TalentTreeStruct } from "./data/Talents";
-import { AurasStruct, GemColor, InitialPlayerStats, InitialSetCounts, Item, ItemAndEnchantStruct, ItemSet, ItemSlot, ItemSlotKey, PlayerState, PlayerStats, Race, SelectedGemsStruct, SetsStruct, Settings, SocketColor, SourcesStruct, Stat, StatConstant, StatsCollection, SubSlotValue, TalentStore } from "./Types";
+import { AurasStruct, GemColor, InitialPlayerStats, InitialSetCounts, Item, ItemAndEnchantStruct, ItemSet, ItemSlot, ItemSlotKey, PlayerState, Race, SelectedGemsStruct, SetsStruct, Settings, SocketColor, SourcesStruct, Stat, StatConstant, StatsCollection, SubSlotValue, TalentStore } from "./Types";
 
 export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
   switch(itemSlot) {

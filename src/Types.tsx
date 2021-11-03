@@ -1,5 +1,3 @@
-import { Chart, ChartData } from "chart.js"
-
 export enum ItemSlotKey {
   Head = "head",
   Neck = "neck",
