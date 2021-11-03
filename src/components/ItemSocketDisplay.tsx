@@ -22,7 +22,7 @@ export default function ItemSocketDisplay(props: Props) {
           <a
             target='_blank'
             rel='noreferrer'
-            href={playerState.selectedGems[props.itemSlot] && playerState.selectedGems[props.itemSlot][props.item.id] && playerState.selectedGems[props.itemSlot][props.item.id][j][1] !== 0 ? `https://tbc.wowhead.com/item=${playerState.selectedGems[props.itemSlot][props.item.id][j][1]}` : ''}
+            href={playerState.selectedGems[props.itemSlot] && playerState.selectedGems[props.itemSlot][props.item.id] && playerState.selectedGems[props.itemSlot][props.item.id][j] && playerState.selectedGems[props.itemSlot][props.item.id][j][1] !== 0 ? `https://tbc.wowhead.com/item=${playerState.selectedGems[props.itemSlot][props.item.id][j][1]}` : ''}
             key={j}
             onClick={(e) => { props.itemSocketClickHandler && props.itemSocketClickHandler(props.item.id.toString(), j, socket); e.preventDefault(); e.stopPropagation(); }}
             onContextMenu={(e) => { props.removeGemFromSocket && props.removeGemFromSocket(props.item.id.toString(), j); e.preventDefault(); }}
@@ -31,7 +31,7 @@ export default function ItemSocketDisplay(props: Props) {
               width={16}
               height={16}
               data-color={socket}
-              src={playerState.selectedGems[props.itemSlot] && playerState.selectedGems[props.itemSlot][props.item.id] && ![null, 0].includes(playerState.selectedGems[props.itemSlot][props.item.id][j][1]) ? `${process.env.PUBLIC_URL}/img/${Gems.find(e => e.id === playerState.selectedGems[props.itemSlot][props.item.id][j][1])?.iconName}.jpg` : `${process.env.PUBLIC_URL}/img/${Sockets.find(s => s.color === socket)!.iconName}.jpg`}
+              src={playerState.selectedGems[props.itemSlot] && playerState.selectedGems[props.itemSlot][props.item.id] && playerState.selectedGems[props.itemSlot][props.item.id][j] && ![null, 0].includes(playerState.selectedGems[props.itemSlot][props.item.id][j][1]) ? `${process.env.PUBLIC_URL}/img/${Gems.find(e => e.id === playerState.selectedGems[props.itemSlot][props.item.id][j][1])?.iconName}.jpg` : `${process.env.PUBLIC_URL}/img/${Sockets.find(s => s.color === socket)!.iconName}.jpg`}
               alt={socket + ' socket'}
             />
           </a>
