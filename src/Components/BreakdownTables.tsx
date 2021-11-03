@@ -33,7 +33,7 @@ export default function BreakdownTables() {
                 <tbody>
                   {
                     breakdownObj.data
-                      .filter(e => (breakdownObj.spellDamageDict[e.name] && breakdownObj.spellDamageDict[e.name] > 0) || e.misses > 0 || e.crits > 0 || e.glancingBlows > 0 || e.dodges > 0)
+                      .filter(e => (breakdownObj.spellDamageDict[e.name] && breakdownObj.spellDamageDict[e.name] > 0))
                       .map(spell =>
                         <tr key={nanoid()} className='spell-damage-information'>
                           <td>{spell.name}</td>

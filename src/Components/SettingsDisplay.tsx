@@ -108,13 +108,16 @@ export default function SettingsDisplay() {
             <option value="4">Felguard</option>
           </select>
         </li>
-        <li id="sacrificePet">
-          <label className="settings-left" htmlFor="sacrificePet">Sacrifice pet?</label>
-          <select className="settings-right" name="sacrificePet" onChange={(e) => settingModifiedHandler(Setting.sacrificePet, e.target.value)} value={playerStore.settings.sacrificePet}>
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-          </select>
-        </li>
+        {
+          playerStore.talents.demonicSacrifice === 1 &&
+            <li id="sacrificePet">
+              <label className="settings-left" htmlFor="sacrificePet">Sacrifice pet?</label>
+              <select className="settings-right" name="sacrificePet" onChange={(e) => settingModifiedHandler(Setting.sacrificePet, e.target.value)} value={playerStore.settings.sacrificePet}>
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </li>
+        }
         {
           isPetActive(playerStore.talents, playerStore.settings, false) &&
             <li id="petMode">

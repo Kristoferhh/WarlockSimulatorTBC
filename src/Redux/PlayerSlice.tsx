@@ -9,7 +9,7 @@ const initialPlayerState : PlayerState = {
   selectedEnchants: JSON.parse(localStorage.getItem('selectedEnchants') || JSON.stringify(InitialSelectedItemsAndEnchants)),
   selectedGems: JSON.parse(localStorage.getItem('selectedGems') || JSON.stringify(InitialSelectedGems)),
   auras: JSON.parse(localStorage.getItem('auras') || '{}'),
-  rotation: JSON.parse(localStorage.getItem('rotation') || '{}'),
+  rotation: JSON.parse(localStorage.getItem('rotation') || JSON.stringify({filler: {shadowBolt: true}})),
   stats: { base: InitialPlayerStats, auras: InitialPlayerStats, items: InitialPlayerStats, gems: InitialPlayerStats, enchants: InitialPlayerStats },
   settings: JSON.parse(localStorage.getItem('settings') || JSON.stringify(InitialSettings)),
   profiles: JSON.parse(localStorage.getItem('profiles') || '{}'),
