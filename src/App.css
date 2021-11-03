@@ -97,8 +97,7 @@ ul {
 
 #pawn-import-string {
 	white-space: nowrap;
-	overflow: hidden;
-	padding-bottom: 10px;
+	overflow-x: hidden;
 }
 
 #pawn-import-string:hover {
@@ -418,7 +417,7 @@ ul {
 	margin-right: 10px;
 }
 
-#avg-dps {
+#median-dps {
 	font-size: 40px;
 	font-weight: 700;
 }

@@ -5,33 +5,12 @@ import { setTalentPointValue } from "../redux/PlayerSlice";
 import { PresetTalents } from "../data/PresetTalents";
 import { Talent, TalentName } from "../Types";
 import { nanoid } from "nanoid";
+import { getAllocatedTalentsPointsInTree } from "../Common";
 
 export default function TalentTrees() {
-  const talentStore = useSelector((state: RootState) => state.player.talents);
+  const talentState = useSelector((state: RootState) => state.player.talents);
   const talentPointsRemaining = useSelector((state: RootState) => state.player.talentPointsRemaining);
   const dispatch = useDispatch();
-
-  /**
-   * Returns how many talent points are allocated in a given talent tree.
-   * 
-   * @param {TalentTreeStruct} tree
-   * @returns number
-   */
-  function getAllocatedTalentsPointsInTree(tree: TalentTreeStruct): number {
-    let points = 0;
-
-    for (const row in tree.rows) {
-      for (const talent in tree.rows[row]) {
-        const talentKey = tree.rows[row][talent].varName;
-
-        if (talentKey != null) {
-          points += talentStore[talentKey];
-        }
-      }
-    }
-
-    return points;
-  }
 
   function applyTalentTemplate(talentTemplate: {[key in TalentName]?: number}) {
     for (const talentKey in TalentName) {
@@ -49,7 +28,7 @@ export default function TalentTrees() {
   }
 
   function talentClickHandler(mouseButton: number, talent: Talent) {
-    const currentTalentPointsValue = talentStore[talent.varName!!] || 0;
+    const currentTalentPointsValue = talentState[talent.varName!!] || 0;
 
     // 0 is left click and 2 is right click
     if (mouseButton === 0 && currentTalentPointsValue < talent.rankIDs!!.length && talentPointsRemaining > 0) {
@@ -103,7 +82,7 @@ export default function TalentTrees() {
                                   <div
                                     id={talent.varName}
                                     className='talent-icon'
-                                    data-points={talentStore[talent.varName!!] || 0}
+                                    data-points={talentState[talent.varName!!] || 0}
                                     data-maxpoints={talent.rankIDs.length}
                                     onClick={(e) => talentClickHandler(e.nativeEvent.button, talent)}
                                     onContextMenu={(e) => { talentClickHandler(e.nativeEvent.button, talent); e.preventDefault() }}>
@@ -112,10 +91,10 @@ export default function TalentTrees() {
                                       <span
                                         id={talent.varName!! + '-point-amount'}
                                         className={'talent-point-amount' +
-                                          (talentStore[talent.varName!!] && talentStore[talent.varName!!] === talent.rankIDs.length ? ' maxed-talent' : '') +
-                                          (talentStore[talent.varName!!] && talentStore[talent.varName!!] > 0 && talentStore[talent.varName!!] < talent.rankIDs.length ? ' half-full-talent' : '') +
-                                          (talentStore[talent.varName!!] == null || talentStore[talent.varName!!] === 0 ? ' empty-talent' : '')}>
-                                        {talentStore[talent.varName!!] || 0}
+                                          (talentState[talent.varName!!] && talentState[talent.varName!!] === talent.rankIDs.length ? ' maxed-talent' : '') +
+                                          (talentState[talent.varName!!] && talentState[talent.varName!!] > 0 && talentState[talent.varName!!] < talent.rankIDs.length ? ' half-full-talent' : '') +
+                                          (talentState[talent.varName!!] == null || talentState[talent.varName!!] === 0 ? ' empty-talent' : '')}>
+                                        {talentState[talent.varName!!] || 0}
                                       </span>
                                     </a>
                                   </div>
@@ -129,7 +108,7 @@ export default function TalentTrees() {
                 </tbody>
               </table>
               <div className='talent-tree-name'>
-                <h3 style={{display: 'inline-block'}}>{talentTree.name + ' ' + (getAllocatedTalentsPointsInTree(talentTree) > 0 ? '(' + getAllocatedTalentsPointsInTree(talentTree) + ')' : '')}</h3>
+                <h3 style={{display: 'inline-block'}}>{talentTree.name + ' ' + (getAllocatedTalentsPointsInTree(talentState, talentTree) > 0 ? '(' + getAllocatedTalentsPointsInTree(talentState, talentTree) + ')' : '')}</h3>
                 <span className='clear-talent-tree' onClick={() => clearTalentTree(talentTree)}>❌</span>
               </div>
             </div>

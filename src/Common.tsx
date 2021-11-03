@@ -4,7 +4,8 @@ import { Gems } from "./data/Gems";
 import { Items } from "./data/Items";
 import { Races } from "./data/Races";
 import { Sockets } from "./data/Sockets";
-import { AurasStruct, GemColor, InitialPlayerStats, InitialSetCounts, Item, ItemAndEnchantStruct, ItemSlot, ItemSlotKey, PlayerState, Race, SelectedGemsStruct, SetsStruct, Settings, SocketColor, SourcesStruct, Stat, StatsCollection, SubSlotValue, TalentStore } from "./Types";
+import { TalentTreeStruct } from "./data/Talents";
+import { AurasStruct, GemColor, InitialPlayerStats, InitialSetCounts, Item, ItemAndEnchantStruct, ItemSet, ItemSlot, ItemSlotKey, PlayerState, PlayerStats, Race, SelectedGemsStruct, SetsStruct, Settings, SocketColor, SourcesStruct, Stat, StatConstant, StatsCollection, SubSlotValue, TalentStore } from "./Types";
 
 export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
   switch(itemSlot) {
@@ -257,4 +258,33 @@ export function calculatePlayerStats(playerState: PlayerState): StatsCollection 
   getEnchantsStats(playerState.selectedItems, playerState.selectedEnchants, mainStatsObj);
 
   return mainStatsObj;
+}
+
+export function getPlayerHitRating(playerState: PlayerState): number {
+  let hitRating = Object.values(playerState.stats).map(obj => obj.hitRating || 0).reduce((a, b) => a + b);
+  if (playerState.sets[ItemSet.ManaEtchedRegalia] >= 2) hitRating += 35;
+  return hitRating;
+}
+
+export function getPlayerHitPercent(playerState: PlayerState, hitRating?: number): number {
+  let hitPercent = (hitRating || getPlayerHitRating(playerState)) / StatConstant.hitRatingPerPercent;
+  if (playerState.auras.inspiringPresence) hitPercent++;
+  if (playerState.auras.totemOfWrath) hitPercent += 3 * parseInt(playerState.settings.totemOfWrathAmount);
+  return hitPercent;
+}
+
+export function getAllocatedTalentsPointsInTree(talentState: TalentStore, tree: TalentTreeStruct): number {
+  let points = 0;
+
+  for (const row in tree.rows) {
+    for (const talent in tree.rows[row]) {
+      const talentKey = tree.rows[row][talent].varName;
+
+      if (talentKey != null) {
+        points += talentState[talentKey];
+      }
+    }
+  }
+
+  return points;
 }

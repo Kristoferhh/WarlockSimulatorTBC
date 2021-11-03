@@ -205,7 +205,7 @@ export default function ItemSelection() {
                 <td>{item.critRating}</td>
                 <td>{item.hitRating}</td>
                 <td>{item.hasteRating}</td>
-                <td id={item.id.toString()}>{uiStore.savedItemDps[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)] ? uiStore.savedItemDps[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)][item.id] : ''}</td>
+                <td id={item.id.toString()}>{uiStore.savedItemDps[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)] && uiStore.savedItemDps[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)][item.id] ? (Math.round(uiStore.savedItemDps[ItemSlotKeyToItemSlot(false, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot)][item.id] * 100) / 100).toString() : ''}</td>
               </tr>
           )
         }

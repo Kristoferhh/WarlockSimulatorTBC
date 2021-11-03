@@ -25,7 +25,15 @@ export default function StatWeights() {
     <section id="stat-weights-section" style={{display: statWeightState.visible ? '' : 'none'}}>
       <div>
         <h2 style={{display: 'inline-block'}}>Stat Weights</h2>
-        <a href='#' className='close' id='stat-weight-close-button' onClick={(e) => { dispatch(setStatWeightVisibility(false)); e.preventDefault() }}></a>
+        <a
+          href='#'
+          className='close'
+          id='stat-weight-close-button'
+          onClick={(e) => {
+          dispatch(setStatWeightVisibility(false));
+            e.preventDefault();
+            }
+          }></a>
       </div>
       <ul className="character-stats" id="stat-weights">
         {
@@ -36,8 +44,8 @@ export default function StatWeights() {
             </li>
           )
         }
-        <li id="pawn-import-string">
-          <p></p>
+        <li>
+          <p id="pawn-import-string"></p>
         </li>
       </ul>
     </section>

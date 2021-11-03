@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import { useSelector } from "react-redux"
-import { isPetActive } from "../Common";
+import { getPlayerHitPercent, getPlayerHitRating, isPetActive } from "../Common";
 import { RootState } from "../redux/Store"
 import { ItemSet, StatConstant } from "../Types";
 
@@ -104,12 +104,8 @@ export default function StatsDisplay() {
   }
 
   function getHit(): string {
-    let hitRating = Object.values(playerState.stats).map(obj => obj.hitRating || 0).reduce((a, b) => a + b);
-    if (playerState.sets[ItemSet.ManaEtchedRegalia] >= 2) hitRating += 35;
-
-    let hitPercent = Math.round((hitRating / StatConstant.hitRatingPerPercent) * 100) / 100;
-    if (playerState.auras.inspiringPresence) hitPercent++;
-    if (playerState.auras.totemOfWrath) hitPercent += 3 * parseInt(playerState.settings.totemOfWrathAmount);
+    let hitRating = getPlayerHitRating(playerState);
+    let hitPercent = Math.round(getPlayerHitPercent(playerState, hitRating) * 100) / 100;
 
     return `${hitRating} (${hitPercent.toFixed(2)}%)`;
   }
