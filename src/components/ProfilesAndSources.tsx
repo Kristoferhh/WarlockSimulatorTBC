@@ -1,10 +1,11 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteProfile, loadProfile, renameProfile, setProfile } from "../redux/PlayerSlice";
+import { getAurasStats, getBaseStats, getEnchantsStats, getGemsStats, getItemSetCounts, getItemsStats } from "../Common";
+import { deleteProfile, loadProfile, renameProfile, setAurasStats, setBaseStats, setEnchantsStats, setGemsStats, setItemSetCounts, setItemsStats, setProfile, setRotationState, setSelectedAuras, setSelectedEnchants, setSelectedGems, setSelectedItems, setSettingsState, setTalentsState } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store";
 import { setImportExportWindowVisibility, setSelectedProfile, togglePhase } from "../redux/UiSlice";
-import { Phase, Profile } from "../Types";
+import { Phase, Profile, Race } from "../Types";
 
 const phases: {title: string, phase: Phase}[] = [
   { title: 'Classic', phase: 0 },
@@ -46,7 +47,20 @@ export default function ProfilesAndSources() {
 
   function profileClickHandler(params: [string, Profile]) {
     dispatch(setSelectedProfile(params[0]));
-    dispatch(loadProfile(params[1]));
+    dispatch(setSelectedAuras(params[1].auras));
+    dispatch(setSelectedGems(params[1].gems));
+    dispatch(setSelectedItems(params[1].items));
+    dispatch(setTalentsState(params[1].talents));
+    dispatch(setRotationState(params[1].rotation));
+    dispatch(setSelectedEnchants(params[1].enchants));
+    dispatch(setSettingsState(params[1].simSettings));
+    // Recalculate the player's stats
+    dispatch(setBaseStats(getBaseStats(params[1].simSettings.race as Race)));
+    dispatch(setAurasStats(getAurasStats(params[1].auras)));
+    dispatch(setItemsStats(getItemsStats(params[1].items)));
+    dispatch(setGemsStats(getGemsStats(params[1].items, params[1].gems)));
+    dispatch(setEnchantsStats(getEnchantsStats(params[1].items, params[1].enchants)));
+    dispatch(setItemSetCounts(getItemSetCounts(params[1].items)));
   }
 
   function deleteProfileHandler() {

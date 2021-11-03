@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
+import { getAurasStats, getBaseStats, getEnchantsStats, getGemsStats, getItemSetCounts, getItemsStats } from "../Common";
+import { setAurasStats, setBaseStats, setEnchantsStats, setGemsStats, setItemSetCounts, setItemsStats, setRotationState, setSelectedAuras, setSelectedEnchants, setSelectedGems, setSelectedItems, setSettingsState, setTalentsState } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store"
 import { setImportExportWindowVisibility } from "../redux/UiSlice";
+import { Race } from "../Types";
 
 export default function ImportExport() {
   const playerState = useSelector((state: RootState) => state.player);
@@ -22,16 +25,29 @@ export default function ImportExport() {
   }
 
   function importProfile() {
-    const data = JSON.parse(contentString);
+    try {
+      const data = JSON.parse(contentString);
 
-    if (data.auras)             localStorage.auras = JSON.stringify(data.auras);
-    if (data.selectedGems)      localStorage.selectedGems = JSON.stringify(data.selectedGems);
-    if (data.selectedItems)     localStorage.selectedItems = JSON.stringify(data.selectedItems);
-    if (data.talents)           localStorage.talents = JSON.stringify(data.talents);
-    if (data.rotation)          localStorage.rotation = JSON.stringify(data.rotation);
-    if (data.selectedEnchants)  localStorage.selectedEnchants = JSON.stringify(data.selectedEnchants);
-    if (data.settings)          localStorage.settings = JSON.stringify(data.settings);
-    window.location.reload();
+      if (data.auras && data.selectedGems && data.selectedItems && data.selectedEnchants && data.talents && data.rotation && data.settings) {
+        dispatch(setSelectedAuras(data.auras));
+        dispatch(setSelectedGems(data.selectedGems));
+        dispatch(setSelectedItems(data.selectedItems));
+        dispatch(setTalentsState(data.talents));
+        dispatch(setRotationState(data.rotation));
+        dispatch(setSelectedEnchants(data.selectedEnchants));
+        dispatch(setSettingsState(data.settings));
+        // Recalculate the player's stats
+        dispatch(setBaseStats(getBaseStats(data.settings.race as Race)));
+        dispatch(setAurasStats(getAurasStats(data.auras)));
+        dispatch(setItemsStats(getItemsStats(data.selectedItems)));
+        dispatch(setGemsStats(getGemsStats(data.selectedItems, data.selectedGems)));
+        dispatch(setEnchantsStats(getEnchantsStats(data.selectedItems, data.selectedEnchants)));
+        dispatch(setItemSetCounts(getItemSetCounts(data.selectedItems)));
+        dispatch(setImportExportWindowVisibility(false));
+      }
+    } catch (error) {
+      alert(`Error importing profile: ${error}`);
+    }
   }
 
   return(

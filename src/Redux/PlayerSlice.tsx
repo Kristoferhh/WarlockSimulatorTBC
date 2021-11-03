@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getRemainingTalentPoints } from "../Common";
-import { RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Profile, InitialSelectedGems, TalentName, Setting, StatsCollection, InitialSetCounts, SetsStruct, AurasStruct, ItemAndEnchantStruct, SelectedGemsStruct } from "../Types";
+import { RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Profile, InitialSelectedGems, TalentName, Setting, StatsCollection, InitialSetCounts, SetsStruct, AurasStruct, ItemAndEnchantStruct, SelectedGemsStruct, TalentStore, RotationStruct, Settings } from "../Types";
 
 const initialPlayerState : PlayerState = {
   talents: JSON.parse(localStorage.getItem('talents') || '{}'),
@@ -112,9 +112,21 @@ export const PlayerSlice = createSlice({
         localStorage.setItem('profiles', JSON.stringify(state.profiles));
         localStorage.setItem('selectedProfile', action.payload.newName);
       }
+    },
+    setTalentsState: (state, action: PayloadAction<TalentStore>) => {
+      state.talents = action.payload;
+      localStorage.setItem('talents', JSON.stringify(action.payload));
+    },
+    setRotationState: (state, action: PayloadAction<RotationStruct>) => {
+      state.rotation = action.payload;
+      localStorage.setItem('rotation', JSON.stringify(action.payload));
+    },
+    setSettingsState: (state, action: PayloadAction<Settings>) => {
+      state.settings = action.payload;
+      localStorage.setItem('settings', JSON.stringify(action.payload));
     }
   }
 });
 
-export const { setSelectedGems, setSelectedEnchants, setSelectedItems, setSelectedAuras, setItemSetCounts, setAurasStats, setBaseStats, setEnchantsStats, setGemsStats,setItemsStats, renameProfile, deleteProfile, loadProfile, setTalentPointValue, toggleRotationSpellSelection, modifySettingValue, setProfile } = PlayerSlice.actions;
+export const { setSettingsState, setRotationState, setTalentsState, setSelectedGems, setSelectedEnchants, setSelectedItems, setSelectedAuras, setItemSetCounts, setAurasStats, setBaseStats, setEnchantsStats, setGemsStats,setItemsStats, renameProfile, deleteProfile, loadProfile, setTalentPointValue, toggleRotationSpellSelection, modifySettingValue, setProfile } = PlayerSlice.actions;
 export default PlayerSlice.reducer;
