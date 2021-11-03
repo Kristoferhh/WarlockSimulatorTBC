@@ -1,18 +1,15 @@
- # TBC Warlock Simulator
- Warlock DPS simulator for WoW TBCC written in React, C++ compiled into WebAssembly, and using Redux Toolkit to manage the state of all the components.
+# Warlock Simulator TBC
  
- ## Setting up local development
- ### Frontend
- ```bash
- git clone https://github.com/Kristoferhh/WarlockSimulatorTBC.git
- cd WarlockSimulatorTBC
- npm install
- npm start
- ```
- ### Backend
- [Emscripten SDK to compile the C++ code into WebAssembly](https://emscripten.org/docs/getting_started/downloads.html)  
- Compile the C++ code by running the `make` command in the root directory of the project
+ Warlock simulator for WoW TBCC written in C++ & Javascript
  
- ## GitHub Pages URL
+ ## Building Locally
+ ### Requirements:  
+ [Emscripten SDK to compile the C++ code with Makefile](https://emscripten.org/docs/getting_started/downloads.html)    
+ `npm install`  
+ `npm install -g gulp`
+ ### Run
+ Run Frontend: `gulp`  
+ Compile C++: `make`
+ 
  https://kristoferhh.github.io/WarlockSimulatorTBC/
  ![image](https://user-images.githubusercontent.com/12117382/136641237-61653b35-7b94-4fcb-bca5-243eba96e8f8.png)
