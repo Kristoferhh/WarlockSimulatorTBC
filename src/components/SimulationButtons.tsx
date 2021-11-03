@@ -86,7 +86,6 @@ export function SimulationButtons() {
 
   function getWorkerParams(params: IGetWorkerParams): WorkerParams {
     let customPlayerState: PlayerState = JSON.parse(JSON.stringify(playerState));
-    let playerStats = calculatePlayerStats(customPlayerState);
     let iterationAmount = parseInt(customPlayerState.settings.iterations);
 
     if (params.simulationType === SimulationType.StatWeights) {
@@ -99,6 +98,12 @@ export function SimulationButtons() {
         iterationAmount *= 2;
       }
     }
+
+    if (params.simulationType !== SimulationType.StatWeights) {
+      customPlayerState.selectedItems[ItemSlotKeyToItemSlot(false, uiState.selectedItemSlot, uiState.selectedItemSubSlot)] = params.itemId;
+    }
+
+    let playerStats = calculatePlayerStats(customPlayerState);
     
     if (params.simulationType === SimulationType.StatWeights) {
       if (params.customStat?.stat && params.customStat.stat !== 'normal') {
@@ -110,8 +115,6 @@ export function SimulationButtons() {
         }
         playerStats[params.customStat.stat as Stat]! += statValue;
       }
-    } else {
-      customPlayerState.selectedItems[ItemSlotKeyToItemSlot(false, uiState.selectedItemSlot, uiState.selectedItemSubSlot)] = params.itemId;
     }
 
     return {
