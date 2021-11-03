@@ -1,22 +1,26 @@
-export const PresetItemSets = {
-  prebis: {
-    head: 24266, // Spellstrike Hood
-    neck: 21625, // Brooch of Heightened Potential
-    shoulders: 21869, // Frozen Shadoweave Shoulders
-    back: 27981, // Sethekk Oracle Cloak
-    chest: 21871, // Frozen Shadoweave Robe
-    bracer: 27462, // Crimson Bracers of Gloom
-    gloves: 27493, // Gloves of the Deadwatcher
-    belt: 30038, // Belt of Blasting
-    legs: 24262, // Spellstrike Pants
-    boots: 21870, // Frozen Shadoweave Boots
-    ring1: 28555, // Seal of the Exorcist
-    ring2: 29172, // Ashyen's Gift
-    trinket1: 29370, // Icon of the Silver Crescent
-    trinket2: 27683, // Quagmirran's Eye
-    mainhand: 29153, // Blade of the Archmage
-    offhand: 29272, // Orb of the Soul-Eater
-    twohand: null,
-    wand: 28386 // Nether Core's Control Rod
+import { ItemSlot } from "../Types";
+
+export const PresetItemSets: {name: string, items: {[key in ItemSlot]?: {itemId: number, gemIds?: number[], enchantId?: number}}}[] = [
+  {
+    name: "Shadow Destruction Pre-BiS",
+    items: {
+      head: { itemId: 28193, gemIds: [24030, 34220] },
+      neck: { itemId: 28134 },
+      shoulders: { itemId: 21869, gemIds: [31867, 24056], enchantId: 35406 },
+      back: { itemId: 23050, enchantId: 25084 },
+      chest: { itemId: 21871, gemIds: [31867, 24056], enchantId: 27960 },
+      bracer: { itemId: 24250, gemIds: [31867], enchantId: 27917 },
+      gloves: { itemId: 27465, gemIds: [24030, 24030], enchantId: 33997 },
+      belt: { itemId: 30038, gemIds: [24056, 31867] },
+      legs: { itemId: 24262, gemIds: [31867, 24030, 24030], enchantId: 31372 },
+      boots: { itemId: 21870, gemIds: [31867, 24056], enchantId: 34008 },
+      ring1: { itemId: 28227, enchantId: 27924 },
+      ring2: { itemId: 21709, enchantId: 27924 },
+      trinket1: { itemId: 29370 },
+      trinket2: { itemId: 27683 },
+      mainhand: { itemId: 29155, enchantId: 27982 },
+      offhand: { itemId: 29273 },
+      wand: { itemId: 22821 }
+    }
   }
-}
+]

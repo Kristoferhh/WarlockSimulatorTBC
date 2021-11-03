@@ -1,23 +1,23 @@
-import { AuraGroup, AuraGroupKey } from "../Types";
+import { IAuraGroup, AuraGroup } from "../Types";
 
-export const AuraGroups: AuraGroup[] = [
+export const AuraGroups: IAuraGroup[] = [
   {
-    heading: AuraGroupKey.Buffs,
+    heading: AuraGroup.Buffs,
     type: 'spell',
     varName: 'buffs'
   },
   {
-    heading: AuraGroupKey.Debuffs,
+    heading: AuraGroup.Debuffs,
     type: 'spell',
     varName: 'debuffs',
   },
   {
-    heading: AuraGroupKey.Consumables,
+    heading: AuraGroup.Consumables,
     type: 'item',
     varName: 'consumables',
   },
   {
-    heading: AuraGroupKey.PetBuffs,
+    heading: AuraGroup.PetBuffs,
     type: 'spell',
     varName: 'petBuffs'
   }

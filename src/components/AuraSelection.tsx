@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Auras } from "../data/Auras";
 import { RootState } from "../redux/Store";
-import { Aura, AuraGroupKey, AurasStruct } from "../Types";
+import { Aura, AuraGroup, AurasStruct } from "../Types";
 import { AuraGroups } from "../data/AuraGroups";
 import { setAurasStats, setSelectedAuras } from "../redux/PlayerSlice";
 import { nanoid } from "nanoid";
@@ -41,7 +41,7 @@ export default function AuraSelection() {
         AuraGroups.map(auraGroup =>
           <div
             key={nanoid()}
-            style={{display: auraGroup.heading !== AuraGroupKey.PetBuffs || playerState.talents.demonicSacrifice === 0 || playerState.settings.sacrificePet === 'no' ? '' : 'none'}}>
+            style={{display: auraGroup.heading !== AuraGroup.PetBuffs || playerState.talents.demonicSacrifice === 0 || playerState.settings.sacrificePet === 'no' ? '' : 'none'}}>
             <h3 id='buffs-heading'>{auraGroup.heading}</h3>
             <ul>
               {

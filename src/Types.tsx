@@ -95,7 +95,7 @@ export interface Enchant {
 export interface Aura {
   name: string,
   varName: AuraName,
-  group: AuraGroupKey,
+  group: AuraGroup,
   id: number,
   iconName: string,
   stats?: StatsCollection,
@@ -123,13 +123,13 @@ export interface RotationGroup {
   spells: Spell[]
 }
 
-export interface AuraGroup {
-  heading: AuraGroupKey,
+export interface IAuraGroup {
+  heading: AuraGroup,
   varName: string,
   type: 'spell'|'item'
 }
 
-export enum AuraGroupKey {
+export enum AuraGroup {
   Buffs = 'Buffs',
   Debuffs = 'Debuffs',
   Consumables = 'Consumables',
