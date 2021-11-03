@@ -1,6 +1,6 @@
 class SimWorker {
   constructor (dpsUpdate, combatLogVector, errorCallback, combatLogUpdate, combatLogBreakdown, simulationEnd, simulationUpdate, workerParams) {
-    this.worker = new Worker(`../${process.env.PUBLIC_URL}/web.worker.js`);
+    this.worker = new Worker(`${process.env.PUBLIC_URL}/web.worker.js`);
     this.workerParams = workerParams;
     this.worker.onmessage = function (event) {
       const data = event.data.data;
