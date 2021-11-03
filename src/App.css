@@ -781,7 +781,7 @@ table.dataTable thead th, table.dataTable.no-footer {
 }
 
 .item-row[data-selected='true'], .enchant-row[data-selected='true'] {
-	background-color: #6869a3 !important;
+	background-color: rgba(104, 105, 163, 0.3) !important;
 }
 
 .item-row, .enchant-row {
