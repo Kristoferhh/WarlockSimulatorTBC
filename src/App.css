@@ -616,6 +616,9 @@ img[data-color='meta'] {
 
 #item-slot-selection-list li {
 	display: inline-block;
+}
+
+#item-slot-selection-list li p {
 	cursor: pointer;
 }
 
@@ -623,7 +626,7 @@ img[data-color='meta'] {
 	margin-right: 20px;
 }
 
-#item-slot-selection-list li[data-selected='true'] {
+#item-slot-selection-list li p[data-selected='true'] {
 	font-weight: bold;
 	text-decoration: underline;
 }

@@ -10,6 +10,7 @@ import { setEquippedItemsWindowVisibility, setFillItemSocketsWindowVisibility, s
 import ItemSocketDisplay from './ItemSocketDisplay';
 import { FillItemSockets } from './FillItemSockets';
 import { nanoid } from '@reduxjs/toolkit';
+import { Button } from 'react-bootstrap';
 
 const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlotValue}[] = [
   { name: 'Main Hand', itemSlot: ItemSlotKey.Mainhand, subSlot: '' },
@@ -77,8 +78,8 @@ export default function ItemSelection() {
     dispatch(setSelectedItemSubSlot(subSlot));
   }
 
-  function getEnchantLookupKey(): ItemSlotKey {
-    return uiStore.selectedItemSlot === ItemSlotKey.Twohand ? ItemSlotKey.Mainhand : uiStore.selectedItemSlot;
+  function getEnchantLookupKey(itemSlot: ItemSlotKey): ItemSlotKey {
+    return itemSlot === ItemSlotKey.Twohand ? ItemSlotKey.Mainhand : itemSlot;
   }
 
   function itemSocketClickHandler(itemId: string, socketNumber: number, socketColor: SocketColor) {
@@ -104,6 +105,17 @@ export default function ItemSelection() {
     }
   }
 
+  function shouldDisplayMissingEnchantWarning(itemSlot: ItemSlotKey, subSlot: SubSlotValue): boolean {
+    const equippedEnchantId = playerStore.selectedEnchants[ItemSlotKeyToItemSlot(true, itemSlot, subSlot)];
+
+    if (itemSlot === ItemSlotKey.Ring || Enchants.find(e => e.itemSlot === getEnchantLookupKey(itemSlot)) == null) {
+      return false;
+    }
+
+    // Checks if the user has an item equipped in the slot but no enchant.
+    return (!equippedEnchantId || [null, 0].includes(equippedEnchantId)) && ([0, null].includes(playerStore.selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, subSlot)]) === false);
+  }
+
   return(
     <div id="item-selection-container">
       <ul id="item-slot-selection-list">
@@ -111,16 +123,23 @@ export default function ItemSelection() {
           itemSlotInformation.map(slot =>
             <li
               key={nanoid()}
-              onClick={() => itemSlotClickHandler(slot.itemSlot, slot.subSlot)}
-              data-selected={uiStore.selectedItemSlot === slot.itemSlot && (!slot.subSlot || uiStore.selectedItemSubSlot === slot.subSlot)}>
-              {slot.name}
+            >
+              <p
+                style={{display: 'inline-block'}}
+                onClick={() => itemSlotClickHandler(slot.itemSlot, slot.subSlot)}
+                data-selected={uiStore.selectedItemSlot === slot.itemSlot && (!slot.subSlot || uiStore.selectedItemSubSlot === slot.subSlot)}
+              >{slot.name}</p>
+              {
+                shouldDisplayMissingEnchantWarning(slot.itemSlot, slot.subSlot) &&
+                  <i title='Missing enchant!' className="fas fa-exclamation-triangle" style={{marginLeft: '2px'}}></i>
+              }
             </li>
           )
         }
       </ul>
-      <button id='hide-show-items-btn' onClick={(e) => setHidingItems(!hidingItems)}>Hide / Show Items</button>
-      <button id='gem-options-button' onClick={(e) => dispatch(setFillItemSocketsWindowVisibility(!uiStore.fillItemSocketsWindowVisible))}>Fill Item Sockets</button>
-      <button id='show-equipped-items' onClick={(e) => dispatch(setEquippedItemsWindowVisibility(!uiStore.equippedItemsWindowVisible))}>Show Equipped Items</button>
+      <button onClick={(e) => setHidingItems(!hidingItems)}>Hide / Show Items</button>
+      <button onClick={(e) => dispatch(setFillItemSocketsWindowVisibility(!uiStore.fillItemSocketsWindowVisible))}>Fill Item Sockets</button>
+      <button onClick={(e) => dispatch(setEquippedItemsWindowVisibility(!uiStore.equippedItemsWindowVisible))}>Show Equipped Items</button>
       <FillItemSockets />
       <table id="item-selection-table" data-type="mainhand" className="tablesorter" data-sortlist='[[12,1]]'>
         {
@@ -212,7 +231,7 @@ export default function ItemSelection() {
         </tbody>
       </table>
       {
-        Enchants.filter((e) => e.itemSlot === getEnchantLookupKey()).length > 0 &&
+        Enchants.filter((e) => e.itemSlot === getEnchantLookupKey(uiStore.selectedItemSlot)).length > 0 &&
           <table id="enchant-selection-table" data-type="mainhand">
           <colgroup id="item-selection-colgroup">
             <col style={{width: '20%'}} />
@@ -244,7 +263,7 @@ export default function ItemSelection() {
           </thead>
           <tbody aria-live='polite'>
             {
-              Enchants.filter((e) => e.itemSlot === getEnchantLookupKey()).map(enchant =>
+              Enchants.filter((e) => e.itemSlot === getEnchantLookupKey(uiStore.selectedItemSlot)).map(enchant =>
                 <tr
                   key={enchant.id}
                   className="enchant-row"
