@@ -22,7 +22,7 @@ export default function StatsDisplay() {
       stamina += 70 * (0.1 * bloodPactModifier);
     }
 
-    staminaModifier *= 1 + (0.03 * playerState.talents.demonicEmbrace);
+    staminaModifier *= 1 + (0.03 * playerState.talents.demonicEmbrace || 0);
 
     return stamina * staminaModifier;
   }
@@ -43,11 +43,11 @@ export default function StatsDisplay() {
   }
 
   function getHealth(): number {
-    return (playerState.stats.base.health! + getStamina() * StatConstant.healthPerStamina) * (1 + (0.01 * playerState.talents.felStamina));
+    return (playerState.stats.base.health! + getStamina() * StatConstant.healthPerStamina) * (1 + (0.01 * playerState.talents.felStamina || 0));
   }
 
   function getMana(): number {
-    return (playerState.stats.base.mana! + getIntellect() * StatConstant.manaPerIntellect) * (1 + (0.01 * playerState.talents.felIntellect));
+    return (playerState.stats.base.mana! + getIntellect() * StatConstant.manaPerIntellect) * (1 + (0.01 * playerState.talents.felIntellect || 0));
   }
 
   function getSpellPower(): number {
@@ -91,9 +91,9 @@ export default function StatsDisplay() {
     }
 
     let critPercent = Math.round((critRating / StatConstant.critRatingPerPercent + StatConstant.baseCritChancePercent) * 100) / 100;
-    critPercent += playerState.talents.devastation;
-    critPercent += playerState.talents.backlash;
-    critPercent += playerState.talents.demonicTactics;
+    critPercent += playerState.talents.devastation || 0;
+    critPercent += playerState.talents.backlash || 0;
+    critPercent += playerState.talents.demonicTactics || 0;
     critPercent += getIntellect() * StatConstant.critPercentPerIntellect;
     if (playerState.auras.moonkinAura) critPercent += 5;
     if (playerState.auras.judgementOfTheCrusader) critPercent += 3;
@@ -151,7 +151,7 @@ export default function StatsDisplay() {
 
   function getShadowModifier(): string {
     let modifier = Object.values(playerState.stats).map(obj => obj.shadowModifier || 1).reduce((a, b) => a * b)
-      * getShadowAndFireModifier() * (1 + (0.02 * playerState.talents.shadowMastery));
+      * getShadowAndFireModifier() * (1 + (0.02 * playerState.talents.shadowMastery || 0));
 
     if (playerState.talents.demonicSacrifice === 1 && playerState.settings.sacrificePet === 'yes') {
       switch (playerState.settings.petChoice) {
@@ -174,7 +174,7 @@ export default function StatsDisplay() {
       modifier *= 1.15;
     }
 
-    modifier *= 1 + (0.02 * playerState.talents.emberstorm);
+    modifier *= 1 + (0.02 * playerState.talents.emberstorm || 0);
 
     return `${Math.round(modifier * 100)}%`;
   }

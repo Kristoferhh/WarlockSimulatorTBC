@@ -428,7 +428,7 @@ export function SimulationButtons() {
         uiState.histogram.data !== undefined &&
           <div className='btn' onClick={() => dispatch(setHistogramVisibility(!uiState.histogram.visible))}>Histogram</div>
       }
-      <p id="sim-length-result">{simulationDuration}s</p>
+      <p id="sim-length-result">{simulationDuration.length > 0 ? simulationDuration + 's' : ''}</p>
     </>
   )
 }
