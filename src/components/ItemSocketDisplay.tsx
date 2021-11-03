@@ -1,3 +1,4 @@
+import { nanoid } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { Gems } from "../data/Gems";
 import { Sockets } from "../data/Sockets";
@@ -23,7 +24,7 @@ export default function ItemSocketDisplay(props: Props) {
             target='_blank'
             rel='noreferrer'
             href={playerState.selectedGems[props.itemSlot] && playerState.selectedGems[props.itemSlot][props.item.id] && playerState.selectedGems[props.itemSlot][props.item.id][j] && playerState.selectedGems[props.itemSlot][props.item.id][j][1] !== 0 ? `https://tbc.wowhead.com/item=${playerState.selectedGems[props.itemSlot][props.item.id][j][1]}` : ''}
-            key={j}
+            key={nanoid()}
             onClick={(e) => { props.itemSocketClickHandler && props.itemSocketClickHandler(props.item.id.toString(), j, socket); e.preventDefault(); e.stopPropagation(); }}
             onContextMenu={(e) => { props.removeGemFromSocket && props.removeGemFromSocket(props.item.id.toString(), j); e.preventDefault(); }}
           >

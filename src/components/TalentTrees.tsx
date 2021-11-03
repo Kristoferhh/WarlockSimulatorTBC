@@ -72,11 +72,11 @@ export default function TalentTrees() {
               <table id={'talent-table-' + talentTree.name} className='talent-tree-table'>
                 <tbody>
                   {
-                    talentTree.rows.map((row, j) =>
-                      <tr key={j}>
+                    talentTree.rows.map(row =>
+                      <tr key={nanoid()}>
                         {
-                          row.map((talent, k) =>
-                            <td key={k}>
+                          row.map(talent =>
+                            <td key={nanoid()}>
                               {
                                 talent.rankIDs &&
                                   <div

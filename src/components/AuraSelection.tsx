@@ -45,9 +45,9 @@ export default function AuraSelection() {
             <h3 id='buffs-heading'>{auraGroup.heading}</h3>
             <ul>
               {
-                Auras.filter((e) => e.group === auraGroup.heading).map((aura, j) =>
+                Auras.filter((e) => e.group === auraGroup.heading).map(aura =>
                   <li
-                    key={j}
+                    key={nanoid()}
                     id={aura.varName}
                     className='buffs aura'
                     data-checked={playerState.auras[aura.varName] === true}

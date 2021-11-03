@@ -17,9 +17,9 @@ export default function RotationSelection() {
             <div key={nanoid()} style={{display: rotationGroup.varName !== 'curse' && playerStore.settings.rotationOption === 'simChooses' ? 'none' : ''}}>
               <h4>{rotationGroup.header}</h4>
               {
-                rotationGroup.spells.map((spell, j) =>
+                rotationGroup.spells.map(spell =>
                   <li
-                    key={j}
+                    key={nanoid()}
                     data-checked={(playerStore.rotation[rotationGroup.varName] && playerStore.rotation[rotationGroup.varName][spell.varName] === true) || false}
                     onClick={(e) => { dispatch(toggleRotationSpellSelection({rotationGroup: rotationGroup, spell: spell})); e.preventDefault(); }}>
                     <a href={`https://tbc.wowhead.com/spell=${spell.id}`}>
