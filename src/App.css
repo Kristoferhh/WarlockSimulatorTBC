@@ -605,7 +605,7 @@ img[data-color='meta'] {
 #profiles-and-sources ul li:hover {
 	color: black;
 	background-color: white;
-	opacity: 50%;
+	opacity: 0.5;
 	cursor: pointer;
 }
 
@@ -677,7 +677,7 @@ img[data-color='meta'] {
 .item-row[data-hidden='true'] {
 	filter: grayscale(100);
 	background-color: rgb(0, 0, 0);
-	opacity: 50%;
+	opacity: 0.5;
 }
 
 #show-hidden-gems-button {
