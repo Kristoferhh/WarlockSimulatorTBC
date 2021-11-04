@@ -14,13 +14,17 @@ import { useDispatch } from 'react-redux';
 import { setGemSelectionTable } from '../redux/UiSlice';
 import { InitialGemSelectionTableValue } from '../Types';
 import ProfilesAndSources from './ProfilesAndSources';
+import LanguageSelection from './LanguageSelection';
 
 export default function Main() {
   const dispatch = useDispatch();
 
   return (
     <div id="main" onClick={(e) => dispatch(setGemSelectionTable(InitialGemSelectionTableValue))}>
-      <p id="pet-wip-note">Please report bugs in the #tbc-sim-report channel on the Warlock TBC discord. <a target='_blank' rel='noreferrer' href='https://discord.gg/5MX6j7nk7s'>Click here to join</a>.</p>
+      <div id='header'>
+        <LanguageSelection />
+        <p style={{marginRight: 'auto'}}>Please report bugs in the #tbc-sim-report channel on the Warlock TBC discord. <a target='_blank' rel='noreferrer' href='https://discord.gg/5MX6j7nk7s'>Click here to join</a>.</p>
+      </div>
       <div>
         <AuraSelection />
         <RotationSelection />

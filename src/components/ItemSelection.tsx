@@ -5,12 +5,13 @@ import { Enchants } from '../data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/Store';
 import { setEnchantsStats, setGemsStats, setItemSetCounts, setItemsStats, setSelectedEnchants, setSelectedGems, setSelectedItems } from '../redux/PlayerSlice';
-import { getEnchantsStats, getGemsStats, getItemSetCounts, getItemsStats, getItemTableItems, ItemSlotKeyToItemSlot } from '../Common';
+import { getBaseWowheadUrl, getEnchantsStats, getGemsStats, getItemSetCounts, getItemsStats, getItemTableItems, ItemSlotKeyToItemSlot } from '../Common';
 import { setEquippedItemsWindowVisibility, setFillItemSocketsWindowVisibility, setGemSelectionTable, setSelectedItemSlot, setSelectedItemSubSlot, toggleHiddenItemId } from '../redux/UiSlice';
 import ItemSocketDisplay from './ItemSocketDisplay';
 import { FillItemSockets } from './FillItemSockets';
 import { nanoid } from '@reduxjs/toolkit';
-import { Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import i18n from '../i18n/config';
 
 const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlotValue}[] = [
   { name: 'Main Hand', itemSlot: ItemSlotKey.Mainhand, subSlot: '' },
@@ -38,6 +39,7 @@ export default function ItemSelection() {
   const playerStore = useSelector((state: RootState) => state.player);
   const uiStore = useSelector((state: RootState) => state.ui);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   function changeEquippedItemId(itemSlot: ItemSlot, itemId: number) {
     if (playerStore.selectedItems[itemSlot] === itemId) { return; }
@@ -128,7 +130,7 @@ export default function ItemSelection() {
                 style={{display: 'inline-block'}}
                 onClick={() => itemSlotClickHandler(slot.itemSlot, slot.subSlot)}
                 data-selected={uiStore.selectedItemSlot === slot.itemSlot && (!slot.subSlot || uiStore.selectedItemSubSlot === slot.subSlot)}
-              >{slot.name}</p>
+              >{t(slot.name)}</p>
               {
                 shouldDisplayMissingEnchantWarning(slot.itemSlot, slot.subSlot) &&
                   <i title='Missing enchant!' className="fas fa-exclamation-triangle" style={{marginLeft: '2px'}}></i>
@@ -144,7 +146,7 @@ export default function ItemSelection() {
       <table id="item-selection-table" data-type="mainhand" className="tablesorter" data-sortlist='[[12,1]]'>
         {
           // If no items are found by the filter then don't display the item table headers
-          Items.filter((e) => e.itemSlot === uiStore.selectedItemSlot && uiStore.sources.phase[e.phase] === true).length > 0 ?
+          Items.find((e) => e.itemSlot === uiStore.selectedItemSlot && uiStore.sources.phase[e.phase] === true) != null ?
             <>
               <colgroup id="item-selection-colgroup">
                 <col style={{width: '2%', display: hidingItems ? '' : 'none'}} />
@@ -164,18 +166,18 @@ export default function ItemSelection() {
               <thead>
                 <tr id="item-selection-header">
                   <th style={{display: hidingItems ? '' : 'none'}}></th>
-                  <th id="header-name">Name</th>
+                  <th id="header-name">{t('Name')}</th>
                   <th id="header-gems"></th>
-                  <th id="header-source">Source</th>
-                  <th id="header-stamina">Stam</th>
-                  <th id="header-intellect">Int</th>
-                  <th id="header-spell-power">Spell Power</th>
-                  <th id="header-shadow-power">Shadow</th>
-                  <th id="header-fire-power">Fire</th>
-                  <th id="header-crit">Crit</th>
-                  <th id="header-hit">Hit</th>
-                  <th id="header-haste">Haste</th>
-                  <th id="header-dps">DPS</th>
+                  <th id="header-source">{t('Source')}</th>
+                  <th id="header-stamina">{t('Stam')}</th>
+                  <th id="header-intellect">{t('Int')}</th>
+                  <th id="header-spell-power">{t('Spell Power')}</th>
+                  <th id="header-shadow-power">{t('Shadow')}</th>
+                  <th id="header-fire-power">{t('Fire')}</th>
+                  <th id="header-crit">{t('Crit')}</th>
+                  <th id="header-hit">{t('Hit')}</th>
+                  <th id="header-haste">{t('Haste')}</th>
+                  <th id="header-dps">{t('DPS')}</th>
                 </tr>
               </thead>
             </>
@@ -201,10 +203,10 @@ export default function ItemSelection() {
                 >❌</td>
                 <td className={item.quality + ' item-row-name'}>
                   <a
-                    href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)}
+                    href={`${getBaseWowheadUrl(i18n.language)}/item=${(item.displayId || item.id)}`}
                     onClick={(e) => e.preventDefault()}
                   ></a>
-                  {item.name}
+                  {t(item.name)}
                 </td>
                 <td>
                   {
@@ -215,7 +217,7 @@ export default function ItemSelection() {
                       removeGemFromSocket={removeGemFromSocket} />
                   }
                 </td>
-                <td>{item.source}</td>
+                <td>{t(item.source)}</td>
                 <td>{item.stamina}</td>
                 <td>{item.intellect}</td>
                 <td>{item.spellPower}</td>
@@ -248,17 +250,17 @@ export default function ItemSelection() {
           </colgroup>
           <thead>
             <tr id="item-selection-header">
-              <th id="header-enchant-name">Enchant</th>
-              <th id="header-enchant-spell-power">Spell Power</th>
-              <th id="header-enchant-shadow-power">Shadow Power</th>
-              <th id="header-enchant-fire-power">Fire Power</th>
-              <th id="header-enchant-hit-rating">Hit Rating</th>
-              <th id="header-enchant-crit-rating">Crit Rating</th>
-              <th id="header-enchant-stamina">Stamina</th>
-              <th id="header-enchant-intellect">Intellect</th>
-              <th id="header-enchant-mp5">MP5</th>
-              <th id="header-enchant-spell-penetration">Spell Pen</th>
-              <th id="header-enchant-dps">DPS</th>
+              <th id="header-enchant-name">{t('Enchant')}</th>
+              <th id="header-enchant-spell-power">{t('Spell Power')}</th>
+              <th id="header-enchant-shadow-power">{t('Shadow Power')}</th>
+              <th id="header-enchant-fire-power">{t('Fire Power')}</th>
+              <th id="header-enchant-hit-rating">{t('Hit Rating')}</th>
+              <th id="header-enchant-crit-rating">{t('Crit Rating')}</th>
+              <th id="header-enchant-stamina">{t('Stamina')}</th>
+              <th id="header-enchant-intellect">{t('Intellect')}</th>
+              <th id="header-enchant-mp5">{t('MP5')}</th>
+              <th id="header-enchant-spell-penetration">{t('Spell Pen')}</th>
+              <th id="header-enchant-dps">{t('DPS')}</th>
             </tr>
           </thead>
           <tbody aria-live='polite'>
@@ -271,10 +273,10 @@ export default function ItemSelection() {
                   onClick={() => enchantClickHandler(enchant, ItemSlotKeyToItemSlot(true, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot))}>
                   <td className={enchant.quality + ' enchant-row-name'}>
                     <a
-                      href={'https://tbc.wowhead.com/spell=' + enchant.id}
+                      href={`${getBaseWowheadUrl(i18n.language)}/spell=${enchant.id}`}
                       onClick={(e) => e.preventDefault()}
                     ></a>
-                    {enchant.name}
+                    {t(enchant.name)}
                     </td>
                   <td>{enchant.spellPower}</td>
                   <td>{enchant.shadowPower}</td>

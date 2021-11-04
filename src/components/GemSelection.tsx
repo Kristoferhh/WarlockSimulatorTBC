@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { canGemColorBeInsertedIntoSocketColor, getGemsStats } from "../Common";
+import { canGemColorBeInsertedIntoSocketColor, getBaseWowheadUrl, getGemsStats } from "../Common";
 import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
+import i18n from "../i18n/config";
 import { setGemsStats, setSelectedGems } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store"
 import { favoriteGem, hideGem, setGemSelectionTable } from "../redux/UiSlice";
@@ -74,7 +75,7 @@ export default function GemSelection() {
                 >★</td>
                 <td className='gem-info gem-name' onClick={(e) => { gemClickHandler(gem); dispatch(setGemSelectionTable(InitialGemSelectionTableValue)); e.preventDefault(); }}>
                   <img src={`${process.env.PUBLIC_URL}/img/${gem.iconName}.jpg`} alt={gem.name + ' icon'} width={20} height={20} />
-                  <a href={`https://tbc.wowhead.com/item=${gem.id}`}>{gem.name}</a>
+                  <a href={`${getBaseWowheadUrl(i18n.language)}/item=${gem.id}`}>{gem.name}</a>
                 </td>
                 <td
                   className='gem-info gem-hide'
