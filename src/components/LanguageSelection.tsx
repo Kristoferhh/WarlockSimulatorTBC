@@ -1,4 +1,5 @@
 import { ClickAwayListener, MenuItem, MenuList, Paper, Stack, Button, Grow, Popper } from "@mui/material";
+import { nanoid } from "@reduxjs/toolkit";
 import { useEffect, useRef, useState } from "react";
 import i18n from "../i18n/config";
 import { Languages } from "../Types";
@@ -90,7 +91,7 @@ export default function LanguageSelection() {
                   >
                     {
                       Languages.map(language =>
-                        <MenuItem onClick={() => languageClickHandler(language.iso)}>{language.name}</MenuItem>
+                        <MenuItem key={nanoid()} onClick={() => languageClickHandler(language.iso)}>{language.name}</MenuItem>
                       )
                     }
                   </MenuList>
