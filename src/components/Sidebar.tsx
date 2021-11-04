@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { Races } from "../data/Races";
 import { Sets } from "../data/Sets";
@@ -8,12 +9,13 @@ import StatsDisplay from "./StatsDisplay";
 
 export default function Sidebar() {
   const playerState = useSelector((state: RootState) => state.player);
+  const { t } = useTranslation();
 
   return (
     <div id="sidebar">
       <section id="character-section">
-        <p id="character-race"><span id="race">{Races.find(e => e.varName === playerState.settings.race)?.name}</span> Warlock</p>
-        <p id="character-level">Level <span>70</span></p>
+        <p id="character-race"><span id="race">{t(Races.find(e => e.varName === playerState.settings.race)!.name)}</span> {t('Warlock')}</p>
+        <p id="character-level">{t('Level')} <span>70</span></p>
         <StatsDisplay />
         <ul id="sidebar-sets">
           <li><h3>Set Bonuses</h3></li>

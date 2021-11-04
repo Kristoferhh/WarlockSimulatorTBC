@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux"
 import { getPlayerHitPercent, getPlayerHitRating, isPetActive } from "../Common";
 import { RootState } from "../redux/Store"
@@ -6,6 +7,7 @@ import { ItemSet, StatConstant } from "../Types";
 
 export default function StatsDisplay() {
   const playerState = useSelector((state: RootState) => state.player);
+  const { t } = useTranslation();
 
   function getStamina(): number {
     let stamina = Object.values(playerState.stats).map(obj => obj.stamina || 0).reduce((a, b) => a + b);
@@ -224,7 +226,7 @@ export default function StatsDisplay() {
       {
         stats.filter(stat => stat.condition === undefined || stat.condition() === true).map(stat =>
           <li key={nanoid()}>
-            <p className='character-stat'>{stat.name}</p>
+            <p className='character-stat'>{t(stat.name)}</p>
             <p className='character-stat-val'>{stat.value()}</p>
           </li>
         )

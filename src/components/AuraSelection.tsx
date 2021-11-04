@@ -6,6 +6,7 @@ import { AuraGroups } from "../data/AuraGroups";
 import { setAurasStats, setSelectedAuras } from "../redux/PlayerSlice";
 import { nanoid } from "nanoid";
 import { getAurasStats } from "../Common";
+import { useTranslation } from "react-i18next";
 
 function disableAurasWithUniqueProperties(aura: Aura, auraObj: AurasStruct): void {
   if (aura.potion)         Auras.filter((e) => e.potion).forEach((e)         => auraObj[e.varName] = false);
@@ -21,6 +22,7 @@ function disableAurasWithUniqueProperties(aura: Aura, auraObj: AurasStruct): voi
 export default function AuraSelection() {
   const playerState = useSelector((state: RootState) => state.player);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   function auraClickHandler(aura: Aura): void {
     let newAuras = JSON.parse(JSON.stringify(playerState.auras));
@@ -42,7 +44,7 @@ export default function AuraSelection() {
           <div
             key={nanoid()}
             style={{display: auraGroup.heading !== AuraGroup.PetBuffs || playerState.talents.demonicSacrifice === 0 || playerState.settings.sacrificePet === 'no' ? '' : 'none'}}>
-            <h3 id='buffs-heading'>{auraGroup.heading}</h3>
+            <h3 id='buffs-heading'>{t(auraGroup.heading)}</h3>
             <ul>
               {
                 Auras.filter((e) => e.group === auraGroup.heading).map(aura =>

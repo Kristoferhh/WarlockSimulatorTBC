@@ -6,11 +6,13 @@ import { PresetTalents } from "../data/PresetTalents";
 import { Talent, TalentName } from "../Types";
 import { nanoid } from "nanoid";
 import { getAllocatedTalentsPointsInTree } from "../Common";
+import { useTranslation } from "react-i18next";
 
 export default function TalentTrees() {
   const talentState = useSelector((state: RootState) => state.player.talents);
   const talentPointsRemaining = useSelector((state: RootState) => state.player.talentPointsRemaining);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   function applyTalentTemplate(talentTemplate: {[key in TalentName]?: number}) {
     for (const talentKey in TalentName) {
@@ -108,7 +110,7 @@ export default function TalentTrees() {
                 </tbody>
               </table>
               <div className='talent-tree-name'>
-                <h3 style={{display: 'inline-block'}}>{talentTree.name + ' ' + (getAllocatedTalentsPointsInTree(talentState, talentTree) > 0 ? '(' + getAllocatedTalentsPointsInTree(talentState, talentTree) + ')' : '')}</h3>
+                <h3 style={{display: 'inline-block'}}>{t(talentTree.name) + ' ' + (getAllocatedTalentsPointsInTree(talentState, talentTree) > 0 ? '(' + getAllocatedTalentsPointsInTree(talentState, talentTree) + ')' : '')}</h3>
                 <span className='clear-talent-tree' onClick={() => clearTalentTree(talentTree)}>❌</span>
               </div>
             </div>
