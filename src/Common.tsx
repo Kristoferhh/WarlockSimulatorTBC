@@ -70,21 +70,25 @@ export function itemMeetsSocketRequirements(params: { itemId: number, selectedGe
   if (socketArray) {
     // Loop through the gems in the item and if any of gems don't match the socket's color or if a gem isn't equipped then return false.
     for (const [key, value] of Object.entries(socketArray)) {
-      const currentGemId = value[1];
+      if (value) {
+        const currentGemId = value[1];
   
-      if (currentGemId === 0) {
-        return false;
-      }
-  
-      // Find the item object to get access to the item's socket array to get the socket color
-      const gem = Gems.find(e => e.id === currentGemId);
-      if (gem) {
-        const gemColor = gem.color;
-        const item = Items.find(e => e.id === params.itemId);
-        // Check if the array of valid gem colors for this socket color does not include the equipped gem color.
-        if (item && item.sockets && !Sockets.find(e => e.color === item.sockets![parseInt(key)])?.validColors.includes(gemColor)) {
+        if (currentGemId === 0) {
           return false;
         }
+    
+        // Find the item object to get access to the item's socket array to get the socket color
+        const gem = Gems.find(e => e.id === currentGemId);
+        if (gem) {
+          const gemColor = gem.color;
+          const item = Items.find(e => e.id === params.itemId);
+          // Check if the array of valid gem colors for this socket color does not include the equipped gem color.
+          if (item && item.sockets && !Sockets.find(e => e.color === item.sockets![parseInt(key)])?.validColors.includes(gemColor)) {
+            return false;
+          }
+        }
+      } else {
+        return false;
       }
     }
   
@@ -183,14 +187,16 @@ export function getGemsStats(items: ItemAndEnchantStruct, gems: SelectedGemsStru
     if (itemSlotGems) {
       const itemGemArrays = itemSlotGems[item[1]];
       if (itemGemArrays) {
-        itemGemArrays.map(e => e[1]).forEach(gemId => {
-          const gem = Gems.find(e => e.id === gemId);
-          if (gem && gem.stats) {
-            Object.entries(gem.stats).forEach(gemStat => {
-              addOrMultiplyStat(statsObj || stats, gemStat[0] as Stat, gemStat[1]);
-            })
+        for (const gemArray of Object.values(itemGemArrays)) {
+          if (gemArray) {
+            const gem = Gems.find(e => e.id === gemArray[1]);
+            if (gem && gem.stats) {
+              Object.entries(gem.stats).forEach(gemStat => {
+                addOrMultiplyStat(statsObj || stats, gemStat[0] as Stat, gemStat[1]);
+              })
+            }
           }
-        });
+        }
 
         if (itemMeetsSocketRequirements({ itemId: item[1], socketArray: itemGemArrays })) {
           const itemObj = Items.find(e => e.id === item[1]);
