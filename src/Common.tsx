@@ -290,5 +290,5 @@ export function getAllocatedTalentsPointsInTree(talentState: TalentStore, tree: 
 }
 
 export function getBaseWowheadUrl(language: string): string {
-  return `https://${Languages.find(e => e.iso === language)!.wowheadPrefix}tbc.wowhead.com`;
+  return `https://${Languages.find(e => e.iso === language)?.wowheadPrefix || ''}tbc.wowhead.com`;
 }

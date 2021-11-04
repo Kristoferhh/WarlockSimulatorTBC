@@ -71,6 +71,7 @@ ul {
 
 #language-menu {
 	margin-right: auto;
+	z-index: 1000;
 }
 
 #header {
