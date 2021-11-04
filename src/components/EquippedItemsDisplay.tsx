@@ -1,8 +1,9 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
-import { ItemSlotToItemSlotKey } from "../Common";
+import { getBaseWowheadUrl, ItemSlotToItemSlotKey } from "../Common";
 import { Enchants } from "../data/Enchants";
 import { Items } from "../data/Items";
+import i18n from "../i18n/config";
 import { RootState } from "../redux/Store";
 import { setEquippedItemsWindowVisibility } from "../redux/UiSlice";
 import { Enchant, Item, ItemSlot } from "../Types";
@@ -73,7 +74,7 @@ export default function EquippedItemsDisplay() {
                         getItemInItemSlot(slot) &&
                           <>
                             <a
-                              href={'https://tbc.wowhead.com/item=' + (getItemInItemSlot(slot)!.displayId || getItemInItemSlot(slot)!.id)}
+                              href={`${getBaseWowheadUrl(i18n.language)}/item=${(getItemInItemSlot(slot)!.displayId || getItemInItemSlot(slot)!.id)}`}
                               onClick={(e) => e.preventDefault()}
                             ></a>
                             {getItemInItemSlot(slot)?.name}
@@ -94,7 +95,7 @@ export default function EquippedItemsDisplay() {
                         getEnchantInItemSlot(slot) !== undefined &&
                         <>
                           <a
-                            href={'https://tbc.wowhead.com/spell=' + (getEnchantInItemSlot(slot)!.id)}
+                            href={`${getBaseWowheadUrl(i18n.language)}/spell=${(getEnchantInItemSlot(slot)!.id)}`}
                             onClick={(e) => e.preventDefault()}
                           ></a>
                           {getEnchantInItemSlot(slot)!.name}

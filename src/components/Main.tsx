@@ -12,15 +12,26 @@ import GemSelection from './GemSelection';
 import ItemSelection from './ItemSelection';
 import { useDispatch } from 'react-redux';
 import { setGemSelectionTable } from '../redux/UiSlice';
-import { InitialGemSelectionTableValue } from '../Types';
+import { InitialGemSelectionTableValue, Languages } from '../Types';
 import ProfilesAndSources from './ProfilesAndSources';
+import { useTranslation } from 'react-i18next';
 
 export default function Main() {
   const dispatch = useDispatch();
+  const { i18n } = useTranslation();
 
   return (
     <div id="main" onClick={(e) => dispatch(setGemSelectionTable(InitialGemSelectionTableValue))}>
-      <p id="pet-wip-note">Please report bugs in the #tbc-sim-report channel on the Warlock TBC discord. <a target='_blank' rel='noreferrer' href='https://discord.gg/5MX6j7nk7s'>Click here to join</a>.</p>
+      <div id='header'>
+        <div id='language-menu'>
+          {
+            Languages.map(language =>
+              <button onClick={() => { i18n.changeLanguage(language.iso); localStorage.setItem('language', language.iso); }}>{language.name}</button>
+            )
+          }
+        </div>
+        <p style={{marginRight: 'auto'}}>Please report bugs in the #tbc-sim-report channel on the Warlock TBC discord. <a target='_blank' rel='noreferrer' href='https://discord.gg/5MX6j7nk7s'>Click here to join</a>.</p>
+      </div>
       <div>
         <AuraSelection />
         <RotationSelection />

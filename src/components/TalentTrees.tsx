@@ -5,8 +5,9 @@ import { setTalentPointValue } from "../redux/PlayerSlice";
 import { PresetTalents } from "../data/PresetTalents";
 import { Talent, TalentName } from "../Types";
 import { nanoid } from "nanoid";
-import { getAllocatedTalentsPointsInTree } from "../Common";
+import { getAllocatedTalentsPointsInTree, getBaseWowheadUrl } from "../Common";
 import { useTranslation } from "react-i18next";
+import i18n from "../i18n/config";
 
 export default function TalentTrees() {
   const talentState = useSelector((state: RootState) => state.player.talents);
@@ -88,7 +89,7 @@ export default function TalentTrees() {
                                     data-maxpoints={talent.rankIDs.length}
                                     onClick={(e) => talentClickHandler(e.nativeEvent.button, talent)}
                                     onContextMenu={(e) => { talentClickHandler(e.nativeEvent.button, talent); e.preventDefault() }}>
-                                    <a href={'https://tbc.wowhead.com/spell=' + talent.rankIDs[0]} onClick={(e) => e.preventDefault()}>
+                                    <a href={`${getBaseWowheadUrl(i18n.language)}/spell=${talent.rankIDs[0]}`} onClick={(e) => e.preventDefault()}>
                                       <img src={`${process.env.PUBLIC_URL}/img/${talent.iconName}.jpg`} alt={talent.name} />
                                       <span
                                         id={talent.varName!! + '-point-amount'}

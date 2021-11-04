@@ -1,9 +1,10 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { canGemColorBeInsertedIntoSocketColor, getGemsStats } from "../Common";
+import { canGemColorBeInsertedIntoSocketColor, getBaseWowheadUrl, getGemsStats } from "../Common";
 import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
+import i18n from "../i18n/config";
 import { setGemsStats, setSelectedGems } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store"
 import { setFillItemSocketsWindowVisibility } from "../redux/UiSlice";
@@ -101,7 +102,7 @@ export function FillItemSockets() {
                 data-checked={selectedGemId === gem.id}
               >
                 <img src={`${process.env.PUBLIC_URL}/img/${gem.iconName}.jpg`} alt={gem.name} />
-                <a href={`https://tbc.wowhead.com/item=${gem.id}`}>{gem.name}</a>
+                <a href={`${getBaseWowheadUrl(i18n.language)}/item=${gem.id}`}>{gem.name}</a>
               </div>
             )
           }

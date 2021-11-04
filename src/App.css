@@ -69,14 +69,20 @@ ul {
 	text-align: right;
 }
 
-#pet-wip-note {
-	padding: 10px;
+#language-menu {
+	margin-right: auto;
+}
+
+#header {
 	margin-top: 0px;
 	text-align: center;
 	border-bottom: 1px solid gray;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-#pet-wip-note a {
+#header a {
 	color: white;
 }
 

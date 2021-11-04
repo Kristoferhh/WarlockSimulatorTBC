@@ -5,13 +5,13 @@ import { Enchants } from '../data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/Store';
 import { setEnchantsStats, setGemsStats, setItemSetCounts, setItemsStats, setSelectedEnchants, setSelectedGems, setSelectedItems } from '../redux/PlayerSlice';
-import { getEnchantsStats, getGemsStats, getItemSetCounts, getItemsStats, getItemTableItems, ItemSlotKeyToItemSlot } from '../Common';
+import { getBaseWowheadUrl, getEnchantsStats, getGemsStats, getItemSetCounts, getItemsStats, getItemTableItems, ItemSlotKeyToItemSlot } from '../Common';
 import { setEquippedItemsWindowVisibility, setFillItemSocketsWindowVisibility, setGemSelectionTable, setSelectedItemSlot, setSelectedItemSubSlot, toggleHiddenItemId } from '../redux/UiSlice';
 import ItemSocketDisplay from './ItemSocketDisplay';
 import { FillItemSockets } from './FillItemSockets';
 import { nanoid } from '@reduxjs/toolkit';
-import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import i18n from '../i18n/config';
 
 const itemSlotInformation: {name: string, itemSlot: ItemSlotKey, subSlot: SubSlotValue}[] = [
   { name: 'Main Hand', itemSlot: ItemSlotKey.Mainhand, subSlot: '' },
@@ -203,7 +203,7 @@ export default function ItemSelection() {
                 >❌</td>
                 <td className={item.quality + ' item-row-name'}>
                   <a
-                    href={'https://tbc.wowhead.com/item=' + (item.displayId || item.id)}
+                    href={`${getBaseWowheadUrl(i18n.language)}/item=${(item.displayId || item.id)}`}
                     onClick={(e) => e.preventDefault()}
                   ></a>
                   {t(item.name)}
@@ -273,10 +273,10 @@ export default function ItemSelection() {
                   onClick={() => enchantClickHandler(enchant, ItemSlotKeyToItemSlot(true, uiStore.selectedItemSlot, uiStore.selectedItemSubSlot))}>
                   <td className={enchant.quality + ' enchant-row-name'}>
                     <a
-                      href={'https://tbc.wowhead.com/spell=' + enchant.id}
+                      href={`${getBaseWowheadUrl(i18n.language)}/spell=${enchant.id}`}
                       onClick={(e) => e.preventDefault()}
                     ></a>
-                    {enchant.name}
+                    {t(enchant.name)}
                     </td>
                   <td>{enchant.spellPower}</td>
                   <td>{enchant.shadowPower}</td>

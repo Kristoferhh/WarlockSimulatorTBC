@@ -1,8 +1,10 @@
 import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { getBaseWowheadUrl } from "../Common";
 import { Races } from "../data/Races";
 import { Sets } from "../data/Sets";
+import i18n from "../i18n/config";
 import { RootState } from "../redux/Store";
 import { SimulationButtons } from "./SimulationButtons";
 import StatsDisplay from "./StatsDisplay";
@@ -28,7 +30,7 @@ export default function Sidebar() {
                   <a
                     target='_blank'
                     rel='noreferrer'
-                    href={`https://tbc.wowhead.com/item-set=${Sets.find(e => e.setId === set[0])?.setId}`}
+                    href={`${getBaseWowheadUrl(i18n.language)}/item-set=${Sets.find(e => e.setId === set[0])?.setId}`}
                     className={Sets.find(e => e.setId === set[0])?.quality}
                   >{Sets.find(e => e.setId === set[0])?.name} ({set[1]})</a>
                 </li>

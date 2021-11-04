@@ -575,6 +575,11 @@ export enum GemColor {
   Purple = 'purple'
 }
 
+export const Languages: {iso: string, name: string, wowheadPrefix: string}[] = [
+  { iso: 'en', name: 'English', wowheadPrefix: '' },
+  { iso: 'zh', name: '中文', wowheadPrefix: 'cn.' },
+]
+
 export interface Gem {
   name: string,
   id: number,
@@ -644,7 +649,7 @@ export enum ItemSource {
   SethekkHalls = "Sethekk Halls",
   Arcatraz = "Arcatraz",
   Underbog = "The Underbog",
-  SlavePens = "Slave Pens",
+  SlavePens = "The Slave Pens",
   ShadowLabyrinth = "Shadow Labyrinth",
   Botanica = "The Botanica",
   BloodFurnace = "The Blood Furnace",
