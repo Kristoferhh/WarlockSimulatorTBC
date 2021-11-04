@@ -10,7 +10,7 @@ export default function LanguageSelection() {
   const anchorRef = useRef<HTMLButtonElement>(null);
 
   const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
+    setOpen((currentState) => !currentState);
   };
 
   function languageClickHandler(languageIsoCode: string): void {
