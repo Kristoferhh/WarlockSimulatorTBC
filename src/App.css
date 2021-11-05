@@ -522,6 +522,10 @@ ul {
 	font-weight: bold;
 }
 
+#sim-version-number {
+	margin-right: 10px;
+}
+
 #guybrush-note, #paypal-note {
 	font-size: 12px;
 }
@@ -835,6 +839,10 @@ table.dataTable thead th, table.dataTable.no-footer {
 		padding-top: 1px;
 		width: 100%;
 		float: none;
+	}
+
+	#language-menu {
+		margin-left: 10px;
 	}
 
 	#buffs-and-debuffs-section img {

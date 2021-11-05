@@ -1,7 +1,7 @@
 {
   "homepage": "https://kristoferhh.github.io/WarlockSimulatorTBC",
   "name": "warlock-simulator-tbc",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.5.0",
@@ -34,7 +34,7 @@
     "web-vitals": "^2.1.2"
   },
   "scripts": {
-    "predeploy": "npm run build",
+    "predeploy": "npm --no-git-tag-version version patch && npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
