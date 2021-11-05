@@ -41,10 +41,6 @@ export default function ItemSelection() {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  useEffect(() => {
-    $('#item-selection-table').trigger('update');
-  });
-
   function changeEquippedItemId(itemSlot: ItemSlot, itemId: number) {
     if (playerStore.selectedItems[itemSlot] === itemId) { return; }
     let newSelectedItems = JSON.parse(JSON.stringify(playerStore.selectedItems));
@@ -190,7 +186,7 @@ export default function ItemSelection() {
         }
         <tbody aria-live='polite'>
         {
-          getItemTableItems(uiStore.selectedItemSlot, uiStore.selectedItemSubSlot, playerStore.selectedItems, uiStore.sources, uiStore.hiddenItems, hidingItems)
+          getItemTableItems(uiStore.selectedItemSlot, uiStore.selectedItemSubSlot, playerStore.selectedItems, uiStore.sources, uiStore.hiddenItems, hidingItems, uiStore.savedItemDps)
             .map(item =>
               <tr
                 key={item.id}

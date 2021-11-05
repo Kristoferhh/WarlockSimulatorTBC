@@ -1,6 +1,5 @@
 import json
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.expected_conditions import number_of_windows_to_be, visibility_of_all_elements_located, visibility_of_element_located
 from selenium.webdriver.support.ui import WebDriverWait

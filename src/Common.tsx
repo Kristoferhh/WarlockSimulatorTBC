@@ -5,7 +5,7 @@ import { Items } from "./data/Items";
 import { Races } from "./data/Races";
 import { Sockets } from "./data/Sockets";
 import { TalentTreeStruct } from "./data/Talents";
-import { AurasStruct, GemColor, InitialPlayerStats, InitialSetCounts, Item, ItemAndEnchantStruct, ItemSet, ItemSlot, ItemSlotKey, Languages, PlayerState, Race, SelectedGemsStruct, SetsStruct, Settings, SocketColor, SourcesStruct, Stat, StatConstant, StatsCollection, SubSlotValue, TalentStore } from "./Types";
+import { AurasStruct, GemColor, InitialPlayerStats, InitialSetCounts, Item, ItemAndEnchantStruct, ItemSet, ItemSlot, ItemSlotKey, Languages, PlayerState, Race, SavedItemDps, SelectedGemsStruct, SetsStruct, Settings, SocketColor, SourcesStruct, Stat, StatConstant, StatsCollection, SubSlotValue, TalentStore } from "./Types";
 
 export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
   switch(itemSlot) {
@@ -115,8 +115,26 @@ export function canGemColorBeInsertedIntoSocketColor(socketColor: SocketColor, g
  * The item needs to be of the specified item slot, the item's phase needs to be selected, it needs to not be hidden unless the player is showing hidden items
  * and the item needs to not be unique unless it is not equipped in the other item slot (only applicable to rings and trinkets).
  */
-export function getItemTableItems(itemSlot: ItemSlotKey, itemSubSlot: SubSlotValue, selectedItems: ItemAndEnchantStruct, sources: SourcesStruct, hiddenItems: number[], hidingItems: boolean): Item[] {
-  return Items.filter((e) => e.itemSlot === itemSlot && sources.phase[e.phase] === true && (!hiddenItems.includes(e.id) || hidingItems) && (!e.unique || (selectedItems[ItemSlotKeyToItemSlot(false, itemSlot, itemSubSlot === '1' ? '2' : '1')] !== e.id)));
+export function getItemTableItems(itemSlotKey: ItemSlotKey, itemSubSlot: SubSlotValue, selectedItems: ItemAndEnchantStruct, sources: SourcesStruct, hiddenItems: number[], hidingItems: boolean, savedItemDps: SavedItemDps): Item[] {
+  const itemSlot = ItemSlotKeyToItemSlot(false, itemSlotKey, itemSubSlot);
+  const savedItemSlotDpsExists = savedItemDps[itemSlot] != null;
+  const secondRingOrTrinket = selectedItems[ItemSlotKeyToItemSlot(false, itemSlotKey, itemSubSlot === '1' ? '2' : '1')];
+  return Items
+    .filter((e) => {
+      return e.itemSlot === itemSlotKey && sources.phase[e.phase] === true && (!hiddenItems.includes(e.id) || hidingItems) && (!e.unique || (secondRingOrTrinket !== e.id));
+    })
+    .sort((a, b) => {
+      // Sort by the saved dps or by phase as backup
+      if (!savedItemSlotDpsExists || (!savedItemDps[itemSlot][a.id] && !savedItemDps[itemSlot][b.id])) {
+        return a.phase < b.phase ? 1 : -1;
+      } else if (!savedItemDps[itemSlot][b.id]) {
+        return -1;
+      } else if (!savedItemDps[itemSlot][a.id]) {
+        return 1;
+      } else {
+        return savedItemDps[itemSlot][a.id] < savedItemDps[itemSlot][b.id] ? 1 : -1;
+      }
+    });
 }
 
 export function getStdev (array: number[]) {

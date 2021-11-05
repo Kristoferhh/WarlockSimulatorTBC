@@ -482,6 +482,12 @@ export type SourcesStruct = {
   }
 }
 
+export type SavedItemDps = {
+  [key in ItemSlot]: {
+    [key: number]: number
+  }
+}
+
 export interface UiState {
   sources: SourcesStruct,
   gemSelectionTable: GemSelectionTableStruct,
@@ -493,7 +499,7 @@ export interface UiState {
   hiddenItems: number[],
   selectedItemSlot: ItemSlotKey,
   selectedItemSubSlot: SubSlotValue,
-  savedItemDps: {[key in ItemSlot]: {[key: number]: number}},
+  savedItemDps: SavedItemDps,
   combatLog: {visible: boolean, data: string[]},
   combatLogBreakdown: CombatLogBreakdown,
   histogram: {visible: boolean, data?: {[key: string]: number}},
