@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux"
 import { canGemColorBeInsertedIntoSocketColor, getBaseWowheadUrl, getGemsStats } from "../Common";
 import { Gems } from "../data/Gems";
@@ -15,6 +16,7 @@ export default function GemSelection() {
   const selectedItemsState = useSelector((state: RootState) => state.player.selectedItems);
   const dispatch = useDispatch();
   const [showingHiddenGems, setShowingHiddenGems] = useState(false);
+  const { t } = useTranslation();
 
   function gemClickHandler(gem: Gem) {
     let newSelectedGems = JSON.parse(JSON.stringify(selectedGemsState));
@@ -43,7 +45,13 @@ export default function GemSelection() {
   }
 
   return(
-    <table id="gem-selection-table" cellSpacing={0} data-color='none' style={{display: uiState.gemSelectionTable.visible ? '' : 'none'}} onClick={(e) => e.stopPropagation()}>
+    <table
+      id="gem-selection-table"
+      cellSpacing={0}
+      data-color='none'
+      style={{display: uiState.gemSelectionTable.visible ? '' : 'none'}}
+      onClick={(e) => e.stopPropagation()}
+    >
       <tbody>
         <tr>
           <td></td>
@@ -74,8 +82,8 @@ export default function GemSelection() {
                   onClick={(e) => dispatch(favoriteGem(gem.id))}
                 >★</td>
                 <td className='gem-info gem-name' onClick={(e) => { gemClickHandler(gem); dispatch(setGemSelectionTable(InitialGemSelectionTableValue)); e.preventDefault(); }}>
-                  <img src={`${process.env.PUBLIC_URL}/img/${gem.iconName}.jpg`} alt={gem.name + ' icon'} width={20} height={20} />
-                  <a href={`${getBaseWowheadUrl(i18n.language)}/item=${gem.id}`}>{gem.name}</a>
+                  <img src={`${process.env.PUBLIC_URL}/img/${gem.iconName}.jpg`} alt={t(gem.name)} width={20} height={20} />
+                  <a href={`${getBaseWowheadUrl(i18n.language)}/item=${gem.id}`}>{t(gem.name)}</a>
                 </td>
                 <td
                   className='gem-info gem-hide'
