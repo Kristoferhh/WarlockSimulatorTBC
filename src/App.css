@@ -381,6 +381,7 @@ ul {
 	margin-top: 50px;
 	left: 15%;
 	position: absolute;
+	z-index: 2000;
 }
 
 #import-export-window textarea {
