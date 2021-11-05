@@ -63,7 +63,7 @@ export default function TalentTrees() {
       <div id="preset-talent-buttons">
         {
           PresetTalents.map(talentTemplate =>
-            <button key={nanoid()} onClick={() => applyTalentTemplate(talentTemplate.talents)}>{talentTemplate.name}</button>
+            <button key={nanoid()} onClick={() => applyTalentTemplate(talentTemplate.talents)}>{t(talentTemplate.name)}</button>
           )
         }
       </div>
@@ -90,7 +90,7 @@ export default function TalentTrees() {
                                     onClick={(e) => talentClickHandler(e.nativeEvent.button, talent)}
                                     onContextMenu={(e) => { talentClickHandler(e.nativeEvent.button, talent); e.preventDefault() }}>
                                     <a href={`${getBaseWowheadUrl(i18n.language)}/spell=${talent.rankIDs[0]}`} onClick={(e) => e.preventDefault()}>
-                                      <img src={`${process.env.PUBLIC_URL}/img/${talent.iconName}.jpg`} alt={talent.name} />
+                                      <img src={`${process.env.PUBLIC_URL}/img/${talent.iconName}.jpg`} alt={t(talent.name!)} />
                                       <span
                                         id={talent.varName!! + '-point-amount'}
                                         className={'talent-point-amount' +

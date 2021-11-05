@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux"
 import { getBaseStats, isPetActive } from "../Common";
 import { Races } from "../data/Races";
@@ -8,6 +9,7 @@ import { Setting } from "../Types";
 export default function SettingsDisplay() {
   const playerStore = useSelector((state: RootState) => state.player);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   function settingModifiedHandler(setting: string, value: string) {
     dispatch(modifySettingValue({setting: setting as Setting, value: value}));
@@ -27,11 +29,11 @@ export default function SettingsDisplay() {
         <li>
           <span className="settings-left">Race</span>
           <select onChange={(e) => { settingModifiedHandler(Setting.race, e.target.value); dispatch(setBaseStats(getBaseStats(Races.find(race => race.varName === e.target.value)!.varName))) }} name="race" id="race-dropdown-list" className="settings-right" value={playerStore.settings.race}>
-            <option value="gnome">Gnome</option>
-            <option value="human">Human</option>
-            <option value="orc">Orc</option>
-            <option value="undead">Undead</option>
-            <option value="bloodElf">Blood Elf</option>
+            <option value="gnome">{t('Gnome')}</option>
+            <option value="human">{t('Human')}</option>
+            <option value="orc">{t('Orc')}</option>
+            <option value="undead">{t('Undead')}</option>
+            <option value="bloodElf">{t('Blood Elf')}</option>
           </select>
         </li>
         <li>
@@ -103,9 +105,9 @@ export default function SettingsDisplay() {
         <li id='petChoice'>
           <label className="settings-left" htmlFor="petChoice">Pet</label>
           <select className="settings-right" name="petChoice" onChange={(e) => settingModifiedHandler(Setting.petChoice, e.target.value)} value={playerStore.settings.petChoice}>
-            <option value="0">Imp</option>
-            <option value="2">Succubus</option>
-            <option value="4">Felguard</option>
+            <option value="0">{t('Imp')}</option>
+            <option value="2">{t('Succubus')}</option>
+            <option value="4">{t('Felguard')}</option>
           </select>
         </li>
         {

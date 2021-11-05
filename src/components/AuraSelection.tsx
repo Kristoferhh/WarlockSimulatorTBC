@@ -57,7 +57,7 @@ export default function AuraSelection() {
                     onClick={(e) => { auraClickHandler(aura); e.preventDefault() }}
                     style={{display: (!aura.forPet || (playerState.settings.petMode === '1' && (!playerState.talents.demonicSacrifice || playerState.settings.sacrificePet === 'no'))) ? '' : 'none'}}>
                     <a href={`${getBaseWowheadUrl(i18n.language)}/${auraGroup.type}=${aura.id}`}>
-                      <img src={`${process.env.PUBLIC_URL}/img/${aura.iconName}.jpg`} alt={aura.name} />
+                      <img src={`${process.env.PUBLIC_URL}/img/${aura.iconName}.jpg`} alt={t(aura.name)} />
                     </a>
                   </li>
                 )

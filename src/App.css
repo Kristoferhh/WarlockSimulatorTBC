@@ -368,6 +368,7 @@ ul {
 	background-color: black;
 	position: absolute;
 	top: 0;
+	z-index: 2000;
 }
 
 #import-export-window {

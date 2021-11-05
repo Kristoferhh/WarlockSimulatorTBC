@@ -20,7 +20,7 @@ export default function Sidebar() {
         <p id="character-level">{t('Level')} <span>70</span></p>
         <StatsDisplay />
         <ul id="sidebar-sets">
-          <li><h3>Set Bonuses</h3></li>
+          <li><h3>{t('Set Bonuses')}</h3></li>
           {
             Object.entries(playerState.sets)
               // Show the set only if at least one bonus is active from it
@@ -32,7 +32,7 @@ export default function Sidebar() {
                     rel='noreferrer'
                     href={`${getBaseWowheadUrl(i18n.language)}/item-set=${Sets.find(e => e.setId === set[0])?.setId}`}
                     className={Sets.find(e => e.setId === set[0])?.quality}
-                  >{Sets.find(e => e.setId === set[0])?.name} ({set[1]})</a>
+                  >{t(Sets.find(e => e.setId === set[0])!.name)} ({set[1]})</a>
                 </li>
             )
           }

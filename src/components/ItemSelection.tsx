@@ -139,9 +139,9 @@ export default function ItemSelection() {
           )
         }
       </ul>
-      <button onClick={(e) => setHidingItems(!hidingItems)}>Hide / Show Items</button>
-      <button onClick={(e) => dispatch(setFillItemSocketsWindowVisibility(!uiStore.fillItemSocketsWindowVisible))}>Fill Item Sockets</button>
-      <button onClick={(e) => dispatch(setEquippedItemsWindowVisibility(!uiStore.equippedItemsWindowVisible))}>Show Equipped Items</button>
+      <button onClick={(e) => setHidingItems(!hidingItems)}>{t('Hide / Show Items')}</button>
+      <button onClick={(e) => dispatch(setFillItemSocketsWindowVisibility(!uiStore.fillItemSocketsWindowVisible))}>{t('Fill Item Sockets')}</button>
+      <button onClick={(e) => dispatch(setEquippedItemsWindowVisibility(!uiStore.equippedItemsWindowVisible))}>{t('Show Equipped Items')}</button>
       <FillItemSockets />
       <table id="item-selection-table" data-type="mainhand" className="tablesorter" data-sortlist='[[12,1]]'>
         {
