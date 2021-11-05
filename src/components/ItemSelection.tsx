@@ -1,6 +1,6 @@
 import { Items } from '../data/Items';
 import { Enchant, Item, ItemSlot, ItemSlotKey, SocketColor, SubSlotValue } from '../Types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Enchants } from '../data/Enchants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/Store';
@@ -40,6 +40,10 @@ export default function ItemSelection() {
   const uiStore = useSelector((state: RootState) => state.ui);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    $('#item-selection-table').trigger('update');
+  });
 
   function changeEquippedItemId(itemSlot: ItemSlot, itemId: number) {
     if (playerStore.selectedItems[itemSlot] === itemId) { return; }

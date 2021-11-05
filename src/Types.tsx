@@ -647,7 +647,7 @@ export enum ItemSource {
   AuchenaiCrypts = "Auchenai Crypts",
   ManaTombs = "Mana-Tombs",
   SethekkHalls = "Sethekk Halls",
-  Arcatraz = "Arcatraz",
+  Arcatraz = "The Arcatraz",
   Underbog = "The Underbog",
   SlavePens = "The Slave Pens",
   ShadowLabyrinth = "Shadow Labyrinth",

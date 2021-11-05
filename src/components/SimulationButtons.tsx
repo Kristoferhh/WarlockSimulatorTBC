@@ -354,7 +354,6 @@ export function SimulationButtons() {
 
   function setSavedItemDpsValue(itemSlot: ItemSlot, itemId: number, newMedianDps: number, saveToLocalStorage: boolean): void {
     dispatch(setSavedItemDps({ itemSlot: itemSlot, itemId: itemId, dps: newMedianDps, saveLocalStorage: saveToLocalStorage }));
-    $('#item-selection-table').trigger('update');
   }
 
   function populateCombatLog(): void {
