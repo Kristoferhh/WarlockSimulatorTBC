@@ -131,6 +131,11 @@ void Aura::apply()
 
 void Aura::fade(bool endOfIteration)
 {
+    if (!active)
+    {
+        player->throwError("Attempting to fade " + name + " when it isn't active");
+    }
+
     active = false;
     bool recalculatePetStats = false;
 
