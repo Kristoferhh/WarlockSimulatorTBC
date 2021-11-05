@@ -237,11 +237,11 @@ ul {
 	display: inline-block;
 }
 
-#rotation-list li[data-checked='false'] img, .talent-icon[data-points='0'] {
+.talent-icon[data-points='0'] {
 	filter: grayscale(95%);
 }
 
-.aura[data-checked='false'] {
+#rotation-list li[data-checked='false'] img, .aura[data-checked='false'] {
 	filter: grayscale(60%);
 	opacity: 0.4;
  }
