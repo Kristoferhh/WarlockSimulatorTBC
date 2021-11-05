@@ -35,8 +35,7 @@ void Trinket::use()
     bool recalculatePetStats = false;
     if (player->shouldWriteToCombatLog())
     {
-        std::string msg = name + " used";
-        player->combatLog(msg);
+        player->combatLog(name + " used");
     }
     player->combatLogBreakdown.at(name)->appliedAt = player->fightTime;
     player->combatLogBreakdown.at(name)->count++;
@@ -74,22 +73,20 @@ void Trinket::use()
     cooldownRemaining = cooldown;
 }
 
-void Trinket::fade(bool endOfIteration)
+void Trinket::fade()
 {
     bool recalculatePetStats = false;
-    if (!endOfIteration && player->shouldWriteToCombatLog())
+    if (player->shouldWriteToCombatLog())
     {
-        std::string msg = name + " faded";
-        player->combatLog(msg);
+        player->combatLog(name + " faded");
     }
 
     if (stats->spellPower > 0)
     {
-        if (!endOfIteration && player->shouldWriteToCombatLog())
+        if (player->shouldWriteToCombatLog())
         {
             int currentSpellPower = player->getSpellPower();
-            std::string msg = "Spell Power - " + std::to_string(stats->spellPower) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower - stats->spellPower) + ")";
-            player->combatLog(msg);
+            player->combatLog("Spell Power - " + std::to_string(stats->spellPower) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower - stats->spellPower) + ")");
         }
         player->stats->spellPower -= stats->spellPower;
         recalculatePetStats = true;
@@ -118,8 +115,7 @@ void Trinket::tick(double t)
 {
     if (player->shouldWriteToCombatLog() && cooldownRemaining > 0 && cooldownRemaining - t <= 0)
     {
-        std::string msg = name + " off cooldown";
-        player->combatLog(msg);
+        player->combatLog(name + " off cooldown");
     }
     cooldownRemaining -= t;
     durationRemaining -= t;

@@ -268,6 +268,8 @@ void Simulation::start()
             player->combatLog("Fight end");
         }
 
+        player->endAuras();
+
         player->totalDuration += fightLength;
         double dps = player->iterationDamage / static_cast<double>(fightLength);
 
@@ -588,8 +590,7 @@ double Simulation::passTime()
 
             if (player->shouldWriteToCombatLog())
             {
-                std::string msg = "Player gains " + truncateTrailingZeros(std::to_string(round(manaGained))) + " mana from MP5 (" + std::to_string(currentPlayerMana) + " -> " + std::to_string(player->stats->mana) + ")";
-                player->combatLog(msg);
+                player->combatLog("Player gains " + truncateTrailingZeros(std::to_string(round(manaGained))) + " mana from MP5 (" + std::to_string(currentPlayerMana) + " -> " + std::to_string(player->stats->mana) + ")");
             }
         }
     }

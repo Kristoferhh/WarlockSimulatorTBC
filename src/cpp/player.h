@@ -63,6 +63,7 @@ struct Player
   Player(PlayerSettings* settings);
   void initialize();
   void reset();
+  void endAuras();
   void throwError(const std::string& error);
   double getGcdValue(const std::shared_ptr<Spell>& spell);
   double getSpellPower(SpellSchool school = SpellSchool::NO_SCHOOL);

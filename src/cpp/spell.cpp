@@ -156,8 +156,7 @@ void Spell::cast()
 
     if (castTime > 0 && player->shouldWriteToCombatLog())
     {
-        std::string msg = "Finished casting " + name + " - Mana: " + truncateTrailingZeros(std::to_string(currentMana)) + " -> " + truncateTrailingZeros(std::to_string(player->stats->mana)) + " - Mana Cost: " + truncateTrailingZeros(std::to_string(round(manaCost))) + " - Mana Cost Modifier: " + truncateTrailingZeros(std::to_string(round(player->stats->manaCostModifier * 100))) + "%";
-        player->combatLog(msg);
+        player->combatLog("Finished casting " + name + " - Mana: " + truncateTrailingZeros(std::to_string(currentMana)) + " -> " + truncateTrailingZeros(std::to_string(player->stats->mana)) + " - Mana Cost: " + truncateTrailingZeros(std::to_string(round(manaCost))) + " - Mana Cost Modifier: " + truncateTrailingZeros(std::to_string(round(player->stats->manaCostModifier * 100))) + "%");
     }
 
     if (canCrit)
@@ -174,8 +173,7 @@ void Spell::cast()
     {
         if (player->shouldWriteToCombatLog())
         {
-            std::string msg = name + " *resist*";
-            player->combatLog(msg);
+            player->combatLog(name + " *resist*");
         }
         player->combatLogBreakdown.at(name)->misses++;
         return;
@@ -975,8 +973,7 @@ void SuperManaPotion::cast()
     player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
     {
-        std::string msg = "Player gains " + truncateTrailingZeros(std::to_string(round(player->stats->mana - currentPlayerMana))) + " mana from " + name + " (" + truncateTrailingZeros(std::to_string(round(currentPlayerMana))) + " -> " + truncateTrailingZeros(std::to_string(round(player->stats->mana))) + ")";
-        player->combatLog(msg);
+        player->combatLog("Player gains " + truncateTrailingZeros(std::to_string(round(player->stats->mana - currentPlayerMana))) + " mana from " + name + " (" + truncateTrailingZeros(std::to_string(round(currentPlayerMana))) + " -> " + truncateTrailingZeros(std::to_string(round(player->stats->mana))) + ")");
     }
 }
 
@@ -1001,8 +998,7 @@ void DemonicRune::cast()
     player->stats->mana = std::min(player->stats->maxMana, currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
     {
-        std::string msg = "Player gains " + truncateTrailingZeros(std::to_string(round(player->stats->mana - currentPlayerMana))) + " mana from " + name + " (" + truncateTrailingZeros(std::to_string(round(currentPlayerMana))) + " -> " + truncateTrailingZeros(std::to_string(round(player->stats->mana))) + ")";
-        player->combatLog(msg);
+        player->combatLog("Player gains " + truncateTrailingZeros(std::to_string(round(player->stats->mana - currentPlayerMana))) + " mana from " + name + " (" + truncateTrailingZeros(std::to_string(round(currentPlayerMana))) + " -> " + truncateTrailingZeros(std::to_string(round(player->stats->mana))) + ")");
     }
 }
 
@@ -1118,8 +1114,7 @@ void MarkOfDefiance::cast()
         player->stats->mana = std::min(static_cast<double>(player->stats->maxMana), currentPlayerMana + avgManaValue);
         if (player->shouldWriteToCombatLog())
         {
-            std::string msg = "Player gains " + truncateTrailingZeros(std::to_string(round(player->stats->mana - currentPlayerMana))) + " mana from " + name + " (" + truncateTrailingZeros(std::to_string(round(currentPlayerMana))) + " -> " + truncateTrailingZeros(std::to_string(round(player->stats->mana))) + ")";
-            player->combatLog(msg);
+            player->combatLog("Player gains " + truncateTrailingZeros(std::to_string(round(player->stats->mana - currentPlayerMana))) + " mana from " + name + " (" + truncateTrailingZeros(std::to_string(round(currentPlayerMana))) + " -> " + truncateTrailingZeros(std::to_string(round(player->stats->mana))) + ")");
         }
         cooldownRemaining = cooldown;
     }
@@ -1270,8 +1265,7 @@ void InsightfulEarthstormDiamond::cast()
     player->stats->mana = std::min(static_cast<double>(player->stats->maxMana), currentPlayerMana + manaGain);
     if (player->shouldWriteToCombatLog())
     {
-        std::string msg = "Player gains " + std::to_string(round(player->stats->mana - currentPlayerMana)) + " mana from " + name + " (" + std::to_string(round(currentPlayerMana)) + " -> " + std::to_string(round(player->stats->mana)) + ")";
-        player->combatLog(msg);
+        player->combatLog("Player gains " + std::to_string(round(player->stats->mana - currentPlayerMana)) + " mana from " + name + " (" + std::to_string(round(currentPlayerMana)) + " -> " + std::to_string(round(player->stats->mana)) + ")");
     }
 }
 

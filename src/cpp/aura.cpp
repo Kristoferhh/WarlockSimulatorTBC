@@ -11,6 +11,7 @@ Aura::Aura(Player* player) : player(player)
     modifier = 1;
     stacks = 0;
     tickTimerRemaining = 0;
+    active = false;
 }
 
 void Aura::setup()
@@ -37,8 +38,7 @@ void Aura::apply()
 {
     if (active && player->shouldWriteToCombatLog())
     {
-        std::string msg = name + " refreshed";
-        player->combatLog(msg);
+        player->combatLog(name + " refreshed");
     }
     else if (!active)
     {
@@ -50,8 +50,7 @@ void Aura::apply()
             if (player->shouldWriteToCombatLog())
             {
                 int currentSpellPower = player->getSpellPower();
-                std::string msg = "Spell Power + " + std::to_string(stats->spellPower) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower + stats->spellPower) + ")";
-                player->combatLog(msg);
+                player->combatLog("Spell Power + " + std::to_string(stats->spellPower) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower + stats->spellPower) + ")");
             }
             player->stats->spellPower += stats->spellPower;
             recalculatePetStats = true;
@@ -61,8 +60,7 @@ void Aura::apply()
             if (player->shouldWriteToCombatLog())
             {
                 int currentShadowPower = player->stats->shadowPower;
-                std::string msg = "Shadow Power + " + std::to_string(stats->shadowPower) + " (" + std::to_string(currentShadowPower) + " -> " + std::to_string(currentShadowPower + stats->shadowPower) + ")";
-                player->combatLog(msg);
+                player->combatLog("Shadow Power + " + std::to_string(stats->shadowPower) + " (" + std::to_string(currentShadowPower) + " -> " + std::to_string(currentShadowPower + stats->shadowPower) + ")");
             }
             player->stats->shadowPower += stats->shadowPower;
             recalculatePetStats = true;
@@ -72,8 +70,7 @@ void Aura::apply()
             if (player->shouldWriteToCombatLog())
             {
                 int currentFirePower = player->stats->firePower;
-                std::string msg = "Fire Power + " + std::to_string(stats->firePower) + " (" + std::to_string(currentFirePower) + " -> " + std::to_string(currentFirePower + stats->firePower) + ")";
-                player->combatLog(msg);
+                player->combatLog("Fire Power + " + std::to_string(stats->firePower) + " (" + std::to_string(currentFirePower) + " -> " + std::to_string(currentFirePower + stats->firePower) + ")");
             }
             player->stats->firePower += stats->firePower;
             recalculatePetStats = true;
@@ -83,8 +80,7 @@ void Aura::apply()
             if (player->shouldWriteToCombatLog())
             {
                 int currentHasteRating = player->stats->hasteRating;
-                std::string msg = "Haste Rating + " + std::to_string(stats->hasteRating) + " (" + std::to_string(currentHasteRating) + " -> " + std::to_string(currentHasteRating + stats->hasteRating) + ")";
-                player->combatLog(msg);
+                player->combatLog("Haste Rating + " + std::to_string(stats->hasteRating) + " (" + std::to_string(currentHasteRating) + " -> " + std::to_string(currentHasteRating + stats->hasteRating) + ")");
             }
             player->stats->hasteRating += stats->hasteRating;
         }
@@ -92,8 +88,7 @@ void Aura::apply()
         {
             if (player->shouldWriteToCombatLog())
             {
-                std::string msg = "Haste % * " + std::to_string(stats->hastePercent) + " (" + std::to_string((player->stats->hastePercent - 1) * 100) + " -> " + std::to_string((player->stats->hastePercent * (1 + (stats->hastePercent / 100)) - 1) * 100) + ")";
-                player->combatLog(msg);
+                player->combatLog("Haste % * " + std::to_string(stats->hastePercent) + " (" + std::to_string((player->stats->hastePercent - 1) * 100) + " -> " + std::to_string((player->stats->hastePercent * (1 + (stats->hastePercent / 100)) - 1) * 100) + ")");
             }
             player->stats->hastePercent *= (1 + stats->hastePercent / 100.0);
             if (player->pet != NULL && groupWide)
@@ -106,8 +101,7 @@ void Aura::apply()
             if (player->shouldWriteToCombatLog())
             {
                 double currentmanaCostModifier = player->stats->manaCostModifier;
-                std::string msg = "Mana Cost Modifier * " + truncateTrailingZeros(std::to_string(stats->manaCostModifier), 2) + " (" + truncateTrailingZeros(std::to_string(currentmanaCostModifier), 2) + " -> " + truncateTrailingZeros(std::to_string(currentmanaCostModifier * stats->manaCostModifier), 2) + ")";
-                player->combatLog(msg);
+                player->combatLog("Mana Cost Modifier * " + truncateTrailingZeros(std::to_string(stats->manaCostModifier), 2) + " (" + truncateTrailingZeros(std::to_string(currentmanaCostModifier), 2) + " -> " + truncateTrailingZeros(std::to_string(currentmanaCostModifier * stats->manaCostModifier), 2) + ")");
             }
             player->stats->manaCostModifier *= stats->manaCostModifier;
         }
@@ -118,8 +112,7 @@ void Aura::apply()
         }
         if (player->shouldWriteToCombatLog())
         {
-            std::string msg = name + " applied";
-            player->combatLog(msg);
+            player->combatLog(name + " applied");
         }
 
         active = true;
@@ -129,7 +122,7 @@ void Aura::apply()
     durationRemaining = duration;
 }
 
-void Aura::fade(bool endOfIteration)
+void Aura::fade()
 {
     if (!active)
     {
@@ -141,11 +134,10 @@ void Aura::fade(bool endOfIteration)
 
     if (stats != NULL && stats->spellPower > 0)
     {
-        if (!endOfIteration && player->shouldWriteToCombatLog())
+        if (player->shouldWriteToCombatLog())
         {
             int currentSpellPower = player->getSpellPower();
-            std::string msg = "Spell Power - " + std::to_string(stats->spellPower) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower - stats->spellPower) + ")";
-            player->combatLog(msg);
+            player->combatLog("Spell Power - " + std::to_string(stats->spellPower) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower - stats->spellPower) + ")");
         }
 
         player->stats->spellPower -= stats->spellPower;
@@ -153,42 +145,38 @@ void Aura::fade(bool endOfIteration)
     }
     if (stats != NULL && stats->shadowPower > 0)
     {
-        if (!endOfIteration && player->shouldWriteToCombatLog())
+        if (player->shouldWriteToCombatLog())
         {
             int currentShadowPower = player->stats->shadowPower;
-            std::string msg = "Shadow Power - " + std::to_string(stats->shadowPower) + " (" + std::to_string(currentShadowPower) + " -> " + std::to_string(currentShadowPower - stats->shadowPower) + ")";
-            player->combatLog(msg);
+            player->combatLog("Shadow Power - " + std::to_string(stats->shadowPower) + " (" + std::to_string(currentShadowPower) + " -> " + std::to_string(currentShadowPower - stats->shadowPower) + ")");
         }
         player->stats->shadowPower -= stats->shadowPower;
         recalculatePetStats = true;
     }
     if (stats != NULL && stats->firePower > 0)
     {
-        if (!endOfIteration && player->shouldWriteToCombatLog())
+        if (player->shouldWriteToCombatLog())
         {
             int currentFirePower = player->stats->firePower;
-            std::string msg = "Fire Power - " + std::to_string(stats->firePower) + " (" + std::to_string(currentFirePower) + " -> " + std::to_string(currentFirePower - stats->firePower) + ")";
-            player->combatLog(msg);
+            player->combatLog("Fire Power - " + std::to_string(stats->firePower) + " (" + std::to_string(currentFirePower) + " -> " + std::to_string(currentFirePower - stats->firePower) + ")");
         }
         player->stats->firePower -= stats->firePower;
         recalculatePetStats = true;
     }
     if (stats != NULL && stats->hasteRating > 0)
     {
-        if (!endOfIteration && player->shouldWriteToCombatLog())
+        if (player->shouldWriteToCombatLog())
         {
             int currentHasteRating = player->stats->hasteRating;
-            std::string msg = "Haste Rating - " + std::to_string(stats->hasteRating) + " (" + std::to_string(currentHasteRating) + " -> " + std::to_string(currentHasteRating - stats->hasteRating) + ")";
-            player->combatLog(msg);
+            player->combatLog("Haste Rating - " + std::to_string(stats->hasteRating) + " (" + std::to_string(currentHasteRating) + " -> " + std::to_string(currentHasteRating - stats->hasteRating) + ")");
         }
         player->stats->hasteRating -= stats->hasteRating;
     }
     if (stats != NULL && stats->hastePercent > 0)
     {
-        if (!endOfIteration && player->shouldWriteToCombatLog())
+        if (player->shouldWriteToCombatLog())
         {
-            std::string msg = "Haste % / " + std::to_string(stats->hastePercent) + "% (" + std::to_string((player->stats->hastePercent - 1) * 100) + " -> " + std::to_string((player->stats->hastePercent / (1 + (stats->hastePercent / 100)) - 1) * 100) + ")";
-            player->combatLog(msg);
+            player->combatLog("Haste % / " + std::to_string(stats->hastePercent) + "% (" + std::to_string((player->stats->hastePercent - 1) * 100) + " -> " + std::to_string((player->stats->hastePercent / (1 + (stats->hastePercent / 100)) - 1) * 100) + ")");
         }
         player->stats->hastePercent /= (1 + stats->hastePercent / 100.0);
         if (player->pet != NULL && groupWide)
@@ -198,26 +186,22 @@ void Aura::fade(bool endOfIteration)
     }
     if (stats != NULL && stats->manaCostModifier > 0)
     {
-        if (!endOfIteration && player->shouldWriteToCombatLog())
+        if (player->shouldWriteToCombatLog())
         {
             double currentmanaCostModifier = player->stats->manaCostModifier;
-            std::string msg = "Mana Cost Modifier / " + truncateTrailingZeros(std::to_string(stats->manaCostModifier), 2) + " (" + truncateTrailingZeros(std::to_string(currentmanaCostModifier), 2) + " -> " + truncateTrailingZeros(std::to_string(currentmanaCostModifier / stats->manaCostModifier), 2) + ")";
-            player->combatLog(msg);
+            player->combatLog("Mana Cost Modifier / " + truncateTrailingZeros(std::to_string(stats->manaCostModifier), 2) + " (" + truncateTrailingZeros(std::to_string(currentmanaCostModifier), 2) + " -> " + truncateTrailingZeros(std::to_string(currentmanaCostModifier / stats->manaCostModifier), 2) + ")");
         }
         player->stats->manaCostModifier /= stats->manaCostModifier;
     }
 
-    if (!endOfIteration)
+    if (recalculatePetStats && player->pet != NULL)
     {
-        if (recalculatePetStats && player->pet != NULL)
-        {
-            player->pet->calculateStatsFromPlayer();
-        }
-        if (player->shouldWriteToCombatLog())
-        {
-            std::string msg = name + " faded";
-            player->combatLog(msg);
-        }
+        player->pet->calculateStatsFromPlayer();
+    }
+
+    if (player->shouldWriteToCombatLog())
+    {
+        player->combatLog(name + " faded");
     }
 
     double auraUptime = player->fightTime - player->combatLogBreakdown.at(name)->appliedAt;
@@ -253,14 +237,13 @@ void ImprovedShadowBoltAura::decrementStacks()
     }
     else if (player->shouldWriteToCombatLog())
     {
-        std::string msg = name + " (" + std::to_string(stacks) + ")";
-        player->combatLog(msg);
+        player->combatLog(name + " (" + std::to_string(stacks) + ")");
     }
 }
 
-void ImprovedShadowBoltAura::fade(bool endOfIteration)
+void ImprovedShadowBoltAura::fade()
 {
-    Aura::fade(endOfIteration);
+    Aura::fade();
     uptimeSoFar = player->combatLogBreakdown.at(name)->uptime / player->totalDuration;
 }
 
@@ -375,10 +358,9 @@ void DestructionPotionAura::apply()
         if (player->shouldWriteToCombatLog())
         {
             int currentSpellPower = player->getSpellPower();
-            std::string msg = "Spell Power + 120 (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower + 120) +  + ")"")";
-            std::string msg2 = "Crit Chance + 2% (" + std::to_string(round(player->stats->critChance * 100) / 100) + "% -> " + std::to_string(round((player->stats->critChance + 2) * 100) / 100) + "%)";
-            player->combatLog(msg);
-            player->combatLog(msg2);
+            double currentCritChance = player->getCritChance(SpellType::DESTRUCTION);
+            player->combatLog("Spell Power + 120 (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower + 120) +  + ")"")");
+            player->combatLog("Crit Chance + 2% (" + std::to_string(round(currentCritChance * 100) / 100) + "% -> " + std::to_string(round((currentCritChance + 2) * 100) / 100) + "%)");
         }
         player->stats->spellPower += 120;
         player->stats->critChance += 2;
@@ -390,17 +372,16 @@ void DestructionPotionAura::apply()
     Aura::apply();
 }
 
-void DestructionPotionAura::fade(bool endOfIteration)
+void DestructionPotionAura::fade()
 {
     if (active)
     {
-        if (!endOfIteration && player->shouldWriteToCombatLog())
+        if (player->shouldWriteToCombatLog())
         {
             int currentSpellPower = player->getSpellPower();
-            std::string msg = "Spell Power - 120 (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower - 120) +  + ")"")";
-            std::string msg2 = "Crit Chance - 2% (" + std::to_string(round(player->stats->critChance * 100) / 100) + "% -> " + std::to_string(round((player->stats->critChance - 2) * 100) / 100) + "%)";
-            player->combatLog(msg);
-            player->combatLog(msg2);
+            double currentCritChance = player->getCritChance(SpellType::DESTRUCTION);
+            player->combatLog("Spell Power - 120 (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower - 120) +  + ")"")");
+            player->combatLog("Crit Chance - 2% (" + std::to_string(round(currentCritChance * 100) / 100) + "% -> " + std::to_string(round((currentCritChance - 2) * 100) / 100) + "%)");
         }
         player->stats->spellPower -= 120;
         player->stats->critChance -= 2;
@@ -409,7 +390,7 @@ void DestructionPotionAura::fade(bool endOfIteration)
             player->pet->calculateStatsFromPlayer();
         }
     }
-    Aura::fade(endOfIteration);
+    Aura::fade();
 }
 
 FlameCapAura::FlameCapAura(Player* player) : Aura(player)
@@ -487,8 +468,7 @@ void DrumsOfRestorationAura::tick(double t)
         player->addIterationDamageAndMana(name, manaGained, 0);
         if (player->shouldWriteToCombatLog())
         {
-            std::string msg = "Player gains " + std::to_string(manaGained) + " mana from Drums of Restoration (" + std::to_string(currentMana) + " -> " + std::to_string(player->stats->mana) + ")" + ")";
-            player->combatLog(msg);
+            player->combatLog("Player gains " + std::to_string(manaGained) + " mana from Drums of Restoration (" + std::to_string(currentMana) + " -> " + std::to_string(player->stats->mana) + ")" + ")");
         }
         // todo pet
 
@@ -528,8 +508,7 @@ void DarkmoonCardCrusadeAura::apply()
         if (player->shouldWriteToCombatLog())
         {
             int currentSpellPower = player->getSpellPower();
-            std::string msg = "Spell Power + " + std::to_string(spellPowerPerStack) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower + spellPowerPerStack) +  + ")"")";
-            player->combatLog(msg);
+            player->combatLog("Spell Power + " + std::to_string(spellPowerPerStack) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower + spellPowerPerStack) +  + ")"")");
         }
         player->stats->spellPower += spellPowerPerStack;
         stacks++;
@@ -541,24 +520,20 @@ void DarkmoonCardCrusadeAura::apply()
     Aura::apply();
 }
 
-void DarkmoonCardCrusadeAura::fade(bool endOfIteration)
+void DarkmoonCardCrusadeAura::fade()
 {
-    if (!endOfIteration)
+    if (player->shouldWriteToCombatLog())
     {
-        if (player->shouldWriteToCombatLog())
-        {
-            int currentSpellPower = player->getSpellPower();
-            std::string msg = "Spell Power - " + std::to_string(spellPowerPerStack) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower - spellPowerPerStack) +  + ")"")";
-            player->combatLog(msg);
-        }
-        if (player->pet != NULL)
-        {
-            player->pet->calculateStatsFromPlayer();
-        }
+        int currentSpellPower = player->getSpellPower();
+        player->combatLog("Spell Power - " + std::to_string(spellPowerPerStack) + " (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower - spellPowerPerStack) +  + ")"")");
+    }
+    if (player->pet != NULL)
+    {
+        player->pet->calculateStatsFromPlayer();
     }
     player->stats->spellPower -= spellPowerPerStack * stacks;
     stacks = 0;
-    Aura::fade(endOfIteration);
+    Aura::fade();
 }
 
 TheLightningCapacitorAura::TheLightningCapacitorAura(Player* player) : Aura(player)
@@ -579,15 +554,14 @@ void TheLightningCapacitorAura::apply()
 
     if (player->shouldWriteToCombatLog())
     {
-        std::string msg = name + " + 1 stack (" + std::to_string(stacks) + ")";
-        player->combatLog(msg);
+        player->combatLog(name + " + 1 stack (" + std::to_string(stacks) + ")");
     }
 }
 
-void TheLightningCapacitorAura::fade(bool endOfIteration)
+void TheLightningCapacitorAura::fade()
 {
     stacks = 0;
-    Aura::fade(endOfIteration);
+    Aura::fade();
 }
 
 BandOfTheEternalSageAura::BandOfTheEternalSageAura(Player* player) : Aura(player)

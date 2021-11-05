@@ -511,52 +511,54 @@ void Player::reset()
     {
         (*it)->reset();
     }
+}
 
-    // End all active auras, dots, and activatable trinkets
+void Player::endAuras()
+{
     for (int i = 0; i < trinkets.size(); i++)
     {
         if (trinkets[i]->active)
         {
-            trinkets[i]->fade(true);
+            trinkets[i]->fade();
         }
     }
-    if (auras->Corruption != NULL && auras->Corruption->active) auras->Corruption->fade(true);
-    if (auras->UnstableAffliction != NULL && auras->UnstableAffliction->active) auras->UnstableAffliction->fade(true);
-    if (auras->SiphonLife != NULL && auras->SiphonLife->active) auras->SiphonLife->fade(true);
-    if (auras->Immolate != NULL && auras->Immolate->active) auras->Immolate->fade(true);
-    if (auras->CurseOfAgony != NULL && auras->CurseOfAgony->active) auras->CurseOfAgony->fade(true);
-    if (auras->CurseOfDoom != NULL && auras->CurseOfDoom->active) auras->CurseOfDoom->fade(true);
-    if (auras->ImprovedShadowBolt != NULL && auras->ImprovedShadowBolt->active) auras->ImprovedShadowBolt->fade(true);
-    if (auras->CurseOfTheElements != NULL && auras->CurseOfTheElements->active) auras->CurseOfTheElements->fade(true);
-    if (auras->CurseOfRecklessness != NULL && auras->CurseOfRecklessness->active) auras->CurseOfRecklessness->fade(true);
-    if (auras->ShadowTrance != NULL && auras->ShadowTrance->active) auras->ShadowTrance->fade(true);
-    if (auras->AmplifyCurse != NULL && auras->AmplifyCurse->active) auras->AmplifyCurse->fade(true);
-    if (auras->PowerInfusion != NULL && auras->PowerInfusion->active) auras->PowerInfusion->fade(true);
-    if (auras->Innervate != NULL && auras->Innervate->active) auras->Innervate->fade(true);
-    if (auras->BloodFury != NULL && auras->BloodFury->active) auras->BloodFury->fade(true);
-    if (auras->DestructionPotion != NULL && auras->DestructionPotion->active) auras->DestructionPotion->fade(true);
-    if (auras->FlameCap != NULL && auras->FlameCap->active) auras->FlameCap->fade(true);
-    if (auras->Bloodlust != NULL && auras->Bloodlust->active) auras->Bloodlust->fade(true);
-    if (auras->DrumsOfBattle != NULL && auras->DrumsOfBattle->active) auras->DrumsOfBattle->fade(true);
-    if (auras->DrumsOfWar != NULL && auras->DrumsOfWar->active) auras->DrumsOfWar->fade(true);
-    if (auras->DrumsOfRestoration != NULL && auras->DrumsOfRestoration->active) auras->DrumsOfRestoration->fade(true);
-    if (auras->BandOfTheEternalSage != NULL && auras->BandOfTheEternalSage->active) auras->BandOfTheEternalSage->fade(true);
-    if (auras->WrathOfCenarius != NULL && auras->WrathOfCenarius->active) auras->WrathOfCenarius->fade(true);
-    if (auras->BladeOfWizardry != NULL && auras->BladeOfWizardry->active) auras->BladeOfWizardry->fade(true);
-    if (auras->ShatteredSunPendantOfAcumen != NULL && auras->ShatteredSunPendantOfAcumen->active) auras->ShatteredSunPendantOfAcumen->fade(true);
-    if (auras->RobeOfTheElderScribes != NULL && auras->RobeOfTheElderScribes->active) auras->RobeOfTheElderScribes->fade(true);
-    if (auras->MysticalSkyfireDiamond != NULL && auras->MysticalSkyfireDiamond->active) auras->MysticalSkyfireDiamond->fade(true);
-    if (auras->EyeOfMagtheridon != NULL && auras->EyeOfMagtheridon->active) auras->EyeOfMagtheridon->fade(true);
-    if (auras->SextantOfUnstableCurrents != NULL && auras->SextantOfUnstableCurrents->active) auras->SextantOfUnstableCurrents->fade(true);
-    if (auras->QuagmirransEye != NULL && auras->QuagmirransEye->active) auras->QuagmirransEye->fade(true);
-    if (auras->ShiffarsNexusHorn != NULL && auras->ShiffarsNexusHorn->active) auras->ShiffarsNexusHorn->fade(true);
-    if (auras->AshtongueTalismanOfShadows != NULL && auras->AshtongueTalismanOfShadows->active) auras->AshtongueTalismanOfShadows->fade(true);
-    if (auras->DarkmoonCardCrusade != NULL && auras->DarkmoonCardCrusade->active) auras->DarkmoonCardCrusade->fade(true);
-    if (auras->TheLightningCapacitor != NULL && auras->TheLightningCapacitor->active) auras->TheLightningCapacitor->fade(true);
-    if (auras->Flameshadow != NULL && auras->Flameshadow->active) auras->Flameshadow->fade(true);
-    if (auras->Shadowflame != NULL && auras->Shadowflame->active) auras->Shadowflame->fade(true);
-    if (auras->Spellstrike != NULL && auras->Spellstrike->active) auras->Spellstrike->fade(true);
-    if (auras->ManaEtched4Set != NULL && auras->ManaEtched4Set->active) auras->ManaEtched4Set->fade(true);
+    if (auras->Corruption != NULL && auras->Corruption->active) auras->Corruption->fade();
+    if (auras->UnstableAffliction != NULL && auras->UnstableAffliction->active) auras->UnstableAffliction->fade();
+    if (auras->SiphonLife != NULL && auras->SiphonLife->active) auras->SiphonLife->fade();
+    if (auras->Immolate != NULL && auras->Immolate->active) auras->Immolate->fade();
+    if (auras->CurseOfAgony != NULL && auras->CurseOfAgony->active) auras->CurseOfAgony->fade();
+    if (auras->CurseOfDoom != NULL && auras->CurseOfDoom->active) auras->CurseOfDoom->fade();
+    if (auras->ImprovedShadowBolt != NULL && auras->ImprovedShadowBolt->active) auras->ImprovedShadowBolt->fade();
+    if (auras->CurseOfTheElements != NULL && auras->CurseOfTheElements->active) auras->CurseOfTheElements->fade();
+    if (auras->CurseOfRecklessness != NULL && auras->CurseOfRecklessness->active) auras->CurseOfRecklessness->fade();
+    if (auras->ShadowTrance != NULL && auras->ShadowTrance->active) auras->ShadowTrance->fade();
+    if (auras->AmplifyCurse != NULL && auras->AmplifyCurse->active) auras->AmplifyCurse->fade();
+    if (auras->PowerInfusion != NULL && auras->PowerInfusion->active) auras->PowerInfusion->fade();
+    if (auras->Innervate != NULL && auras->Innervate->active) auras->Innervate->fade();
+    if (auras->BloodFury != NULL && auras->BloodFury->active) auras->BloodFury->fade();
+    if (auras->DestructionPotion != NULL && auras->DestructionPotion->active) auras->DestructionPotion->fade();
+    if (auras->FlameCap != NULL && auras->FlameCap->active) auras->FlameCap->fade();
+    if (auras->Bloodlust != NULL && auras->Bloodlust->active) auras->Bloodlust->fade();
+    if (auras->DrumsOfBattle != NULL && auras->DrumsOfBattle->active) auras->DrumsOfBattle->fade();
+    if (auras->DrumsOfWar != NULL && auras->DrumsOfWar->active) auras->DrumsOfWar->fade();
+    if (auras->DrumsOfRestoration != NULL && auras->DrumsOfRestoration->active) auras->DrumsOfRestoration->fade();
+    if (auras->BandOfTheEternalSage != NULL && auras->BandOfTheEternalSage->active) auras->BandOfTheEternalSage->fade();
+    if (auras->WrathOfCenarius != NULL && auras->WrathOfCenarius->active) auras->WrathOfCenarius->fade();
+    if (auras->BladeOfWizardry != NULL && auras->BladeOfWizardry->active) auras->BladeOfWizardry->fade();
+    if (auras->ShatteredSunPendantOfAcumen != NULL && auras->ShatteredSunPendantOfAcumen->active) auras->ShatteredSunPendantOfAcumen->fade();
+    if (auras->RobeOfTheElderScribes != NULL && auras->RobeOfTheElderScribes->active) auras->RobeOfTheElderScribes->fade();
+    if (auras->MysticalSkyfireDiamond != NULL && auras->MysticalSkyfireDiamond->active) auras->MysticalSkyfireDiamond->fade();
+    if (auras->EyeOfMagtheridon != NULL && auras->EyeOfMagtheridon->active) auras->EyeOfMagtheridon->fade();
+    if (auras->SextantOfUnstableCurrents != NULL && auras->SextantOfUnstableCurrents->active) auras->SextantOfUnstableCurrents->fade();
+    if (auras->QuagmirransEye != NULL && auras->QuagmirransEye->active) auras->QuagmirransEye->fade();
+    if (auras->ShiffarsNexusHorn != NULL && auras->ShiffarsNexusHorn->active) auras->ShiffarsNexusHorn->fade();
+    if (auras->AshtongueTalismanOfShadows != NULL && auras->AshtongueTalismanOfShadows->active) auras->AshtongueTalismanOfShadows->fade();
+    if (auras->DarkmoonCardCrusade != NULL && auras->DarkmoonCardCrusade->active) auras->DarkmoonCardCrusade->fade();
+    if (auras->TheLightningCapacitor != NULL && auras->TheLightningCapacitor->active) auras->TheLightningCapacitor->fade();
+    if (auras->Flameshadow != NULL && auras->Flameshadow->active) auras->Flameshadow->fade();
+    if (auras->Shadowflame != NULL && auras->Shadowflame->active) auras->Shadowflame->fade();
+    if (auras->Spellstrike != NULL && auras->Spellstrike->active) auras->Spellstrike->fade();
+    if (auras->ManaEtched4Set != NULL && auras->ManaEtched4Set->active) auras->ManaEtched4Set->fade();
 }
 
 double Player::getHastePercent()
@@ -778,7 +780,7 @@ void Player::throwError(const std::string& error)
 
 bool Player::shouldWriteToCombatLog()
 {
-    return iteration == 0 && settings->equippedItemSimulation;
+    return iteration == 10 && settings->equippedItemSimulation;
 }
 
 void Player::sendCombatLogEntries()

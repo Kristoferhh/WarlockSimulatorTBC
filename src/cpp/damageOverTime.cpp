@@ -56,8 +56,7 @@ void DamageOverTime::apply()
     if (player->shouldWriteToCombatLog())
     {
         std::string refreshedOrApplied = isActive ? "refreshed" : "applied";
-        std::string msg = name + " " + refreshedOrApplied + " (" + std::to_string(spellPower) + " Spell Power)";
-        player->combatLog(msg);
+        player->combatLog(name + " " + refreshedOrApplied + " (" + std::to_string(spellPower) + " Spell Power)");
     }
     // Siphon Life snapshots the presence of ISB. So if ISB isn't up when it's cast, it doesn't get the benefit even if it comes up later during the duration.
     if (player->spells->SiphonLife != NULL && name == player->spells->SiphonLife->name)
@@ -76,7 +75,7 @@ void DamageOverTime::apply()
     }
 }
 
-void DamageOverTime::fade(bool endOfIteration)
+void DamageOverTime::fade()
 {
     active = false;
     tickTimerRemaining = 0;
@@ -85,10 +84,9 @@ void DamageOverTime::fade(bool endOfIteration)
     double auraUptime = player->fightTime - player->combatLogBreakdown.at(name)->appliedAt;
     player->combatLogBreakdown.at(name)->uptime += auraUptime;
 
-    if (!endOfIteration && player->shouldWriteToCombatLog())
+    if (player->shouldWriteToCombatLog())
     {
-        std::string msg = name + " faded";
-        player->combatLog(msg);
+        player->combatLog(name + " faded");
     }
 }
 

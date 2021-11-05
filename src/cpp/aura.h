@@ -34,7 +34,7 @@ struct Aura
     void setup();
     virtual void tick(double time);
     virtual void apply();
-    virtual void fade(bool endOfIteration = false);
+    virtual void fade();
     virtual void decrementStacks(); // ISB
 };
 
@@ -44,7 +44,7 @@ struct ImprovedShadowBoltAura : public Aura
 
     ImprovedShadowBoltAura(Player* player);
     void apply();
-    void fade(bool endOfIteration = false);
+    void fade();
     void decrementStacks();
 };
 
@@ -112,7 +112,7 @@ struct DestructionPotionAura : public Aura
 {
     DestructionPotionAura(Player* player);
     void apply();
-    void fade(bool endOfIteration = false);
+    void fade();
 };
 
 struct FlameCapAura : public Aura
@@ -162,14 +162,14 @@ struct DarkmoonCardCrusadeAura : public Aura
 
     DarkmoonCardCrusadeAura(Player* player);
     void apply();
-    void fade(bool endOfIteration = false);
+    void fade();
 };
 
 struct TheLightningCapacitorAura : public Aura
 {
     TheLightningCapacitorAura(Player* player);
     void apply();
-    void fade(bool endOfIteration = false);
+    void fade();
 };
 
 struct BandOfTheEternalSageAura : public Aura

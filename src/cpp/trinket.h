@@ -21,7 +21,7 @@ struct Trinket
     void reset();
     void setup();
     void use();
-    void fade(bool endOfIteration = false);
+    void fade();
     void tick(double time);
 };
 
