@@ -16,7 +16,6 @@
     "@types/jest": "^27.0.2",
     "@types/node": "^16.11.6",
     "@types/react": "^17.0.34",
-    "@types/react-bootstrap": "^0.32.28",
     "@types/react-dom": "^17.0.11",
     "chart.js": "^3.6.0",
     "gh-pages": "^3.2.3",
@@ -24,7 +23,6 @@
     "jshint": "^2.13.1",
     "nanoid": "^3.1.30",
     "react": "^17.0.2",
-    "react-bootstrap": "^2.0.2",
     "react-chartjs-2": "^3.3.0",
     "react-dom": "^17.0.2",
     "react-i18next": "^11.13.0",
@@ -36,9 +34,9 @@
   "scripts": {
     "predeploy": "npm --no-git-tag-version version patch && npm run build",
     "deploy": "gh-pages -d build",
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
