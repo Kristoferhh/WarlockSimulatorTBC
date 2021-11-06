@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/WarlockSimulatorTBC/static/css/main.ffb3b8e2.chunk.css",
-    "main.js": "/WarlockSimulatorTBC/static/js/main.7412d810.chunk.js",
-    "main.js.map": "/WarlockSimulatorTBC/static/js/main.7412d810.chunk.js.map",
+    "main.css": "/WarlockSimulatorTBC/static/css/main.1c5f3584.chunk.css",
+    "main.js": "/WarlockSimulatorTBC/static/js/main.5b135316.chunk.js",
+    "main.js.map": "/WarlockSimulatorTBC/static/js/main.5b135316.chunk.js.map",
     "runtime-main.js": "/WarlockSimulatorTBC/static/js/runtime-main.d830f162.js",
     "runtime-main.js.map": "/WarlockSimulatorTBC/static/js/runtime-main.d830f162.js.map",
-    "static/js/2.23440b9e.chunk.js": "/WarlockSimulatorTBC/static/js/2.23440b9e.chunk.js",
-    "static/js/2.23440b9e.chunk.js.map": "/WarlockSimulatorTBC/static/js/2.23440b9e.chunk.js.map",
+    "static/js/2.bf87a906.chunk.js": "/WarlockSimulatorTBC/static/js/2.bf87a906.chunk.js",
+    "static/js/2.bf87a906.chunk.js.map": "/WarlockSimulatorTBC/static/js/2.bf87a906.chunk.js.map",
     "index.html": "/WarlockSimulatorTBC/index.html",
-    "static/css/main.ffb3b8e2.chunk.css.map": "/WarlockSimulatorTBC/static/css/main.ffb3b8e2.chunk.css.map",
-    "static/js/2.23440b9e.chunk.js.LICENSE.txt": "/WarlockSimulatorTBC/static/js/2.23440b9e.chunk.js.LICENSE.txt"
+    "static/css/main.1c5f3584.chunk.css.map": "/WarlockSimulatorTBC/static/css/main.1c5f3584.chunk.css.map",
+    "static/js/2.bf87a906.chunk.js.LICENSE.txt": "/WarlockSimulatorTBC/static/js/2.bf87a906.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.d830f162.js",
-    "static/js/2.23440b9e.chunk.js",
-    "static/css/main.ffb3b8e2.chunk.css",
-    "static/js/main.7412d810.chunk.js"
+    "static/js/2.bf87a906.chunk.js",
+    "static/css/main.1c5f3584.chunk.css",
+    "static/js/main.5b135316.chunk.js"
   ]
 }
