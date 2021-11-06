@@ -3,6 +3,7 @@ body {
 	padding: 0px !important;
 	color: white;
 	font-family: Open Sans, sans-serif;
+	font-size: 14px;
 }
 
 ul {
@@ -13,13 +14,13 @@ ul {
 	border-right: 1px solid gray;
 	position: fixed;
 	height: 100%;
-	width: clamp(315px, 20%, 380px);
-	background-color: #226F54;
+	width: 360px;
+	background-color: #0b544a;
 	overflow: hidden;
 }
 
 #main {
-	margin-left: clamp(300px, 20%, 380px);
+	margin-left: 360px;
 	background-color: #0B3954;
 }
 
@@ -260,7 +261,6 @@ ul {
 	display: inline-block;
 	padding: 5px;	
 	line-height: 25px;
-	font-size: 0.9em;
 	margin: auto;
 	width: 22.5%;
 }
@@ -275,6 +275,12 @@ ul {
 	text-align: center;
 }
 
+#breakdown-tables-container {
+	display: flex;
+	justify-content: center;
+	overflow-x: visible;
+}
+
 .breakdown-section {
 	vertical-align: top;
 }
@@ -283,7 +289,7 @@ ul {
 	padding-left: 8px;
 	display: inline-block;
 	border-spacing: 0;
-	font-size: 0.75em;
+	font-size: 12px;
 }
 
 .breakdown-table .number {

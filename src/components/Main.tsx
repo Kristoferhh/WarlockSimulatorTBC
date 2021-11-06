@@ -27,7 +27,7 @@ export default function Main() {
         <p style={{marginRight: 'auto'}}>Please report bugs in the #tbc-sim-report channel on the Warlock TBC discord. <a target='_blank' rel='noreferrer' href='https://discord.gg/5MX6j7nk7s'>Click here to join</a>.</p>
         <p id='sim-version-number'>v{packageJson.version}</p>
       </div>
-      <div>
+      <div id='container-1'>
         <AuraSelection />
         <RotationSelection />
         <SettingsDisplay />
@@ -35,7 +35,7 @@ export default function Main() {
         <StatWeights />
         <BreakdownTables />
       </div>
-      <div>
+      <div id='container-2'>
         <EquippedItemsDisplay />
         <CombatLog />
         <DpsHistogram />

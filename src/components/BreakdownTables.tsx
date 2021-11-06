@@ -12,7 +12,7 @@ export default function BreakdownTables() {
   const { t } = useTranslation();
 
   return(
-    <div style={{display: breakdownObj.data.length === 0 ? 'none' : ''}}>
+    <div id='breakdown-tables-container' style={{display: breakdownObj.data.length === 0 ? 'none' : ''}}>
       <section className="breakdown-section" id="damage-breakdown-section" style={{display: 'inline-block'}}>
         <table className="breakdown-table tablesorter" id="damage-breakdown-table" data-sortlist='[[1,1]]'>
           <thead>
