@@ -51,7 +51,7 @@ double Spell::getCastTime()
 
 bool Spell::canCast()
 {
-    return (!onGcd || isNonWarlockAbility || player->gcdRemaining <= 0) && (isProc || isNonWarlockAbility || player->castTimeRemaining <= 0) && cooldownRemaining <= 0;
+    return cooldownRemaining <= 0 && (isNonWarlockAbility || ((!onGcd || player->gcdRemaining <= 0) && (isProc || player->castTimeRemaining <= 0)));
 }
 
 bool Spell::hasEnoughMana()
