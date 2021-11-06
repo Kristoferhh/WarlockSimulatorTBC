@@ -1,4 +1,5 @@
 import { nanoid } from "@reduxjs/toolkit";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { getBaseWowheadUrl, ItemSlotToItemSlotKey } from "../Common";
 import { Enchants } from "../data/Enchants";
@@ -25,6 +26,7 @@ export default function EquippedItemsDisplay() {
   const uiState = useSelector((state: RootState) => state.ui);
   const playerState = useSelector((state: RootState) => state.player);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   function getEnchantInItemSlot(itemSlot: ItemSlot): Enchant | undefined {
     let slot = itemSlot;
@@ -68,7 +70,7 @@ export default function EquippedItemsDisplay() {
                 .filter(slot => (![ItemSlot.mainhand, ItemSlot.offhand, ItemSlot.twohand].includes(slot) || (([ItemSlot.mainhand, ItemSlot.offhand].includes(slot) && (!playerState.selectedItems[ItemSlot.twohand] || playerState.selectedItems[ItemSlot.twohand] === 0)) || (slot === ItemSlot.twohand && (!playerState.selectedItems[ItemSlot.mainhand] || playerState.selectedItems[ItemSlot.mainhand] === 0) && (!playerState.selectedItems[ItemSlot.offhand] || playerState.selectedItems[ItemSlot.offhand] === 0)))))
                 .map(slot =>
                   <tr key={nanoid()} className='equipped-item-row'>
-                    <td>{formatItemSlotName(slot)}</td>
+                    <td>{t(formatItemSlotName(slot))}</td>
                     <td className={'equipped-item-name ' + (playerState.selectedItems[slot] != null ? getItemInItemSlot(slot)?.quality : '')}>
                       {
                         getItemInItemSlot(slot) &&
@@ -77,7 +79,7 @@ export default function EquippedItemsDisplay() {
                               href={`${getBaseWowheadUrl(i18n.language)}/item=${(getItemInItemSlot(slot)!.displayId || getItemInItemSlot(slot)!.id)}`}
                               onClick={(e) => e.preventDefault()}
                             ></a>
-                            {getItemInItemSlot(slot)?.name}
+                            {getItemInItemSlot(slot) ? t(getItemInItemSlot(slot)!.name) : ''}
                           </>
                       }
                     </td>
@@ -98,7 +100,7 @@ export default function EquippedItemsDisplay() {
                             href={`${getBaseWowheadUrl(i18n.language)}/spell=${(getEnchantInItemSlot(slot)!.id)}`}
                             onClick={(e) => e.preventDefault()}
                           ></a>
-                          {getEnchantInItemSlot(slot)!.name}
+                          {t(getEnchantInItemSlot(slot)!.name)}
                         </>
                       }
                     </td>
