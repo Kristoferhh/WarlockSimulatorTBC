@@ -18,21 +18,21 @@ export default function RotationSelection() {
       <ul id="rotation-list">
         {
           Rotation.map(rotationGroup =>
-            <div key={nanoid()} style={{display: rotationGroup.varName !== 'curse' && playerStore.settings.rotationOption === 'simChooses' ? 'none' : ''}}>
+            <li key={nanoid()} style={{display: rotationGroup.varName !== 'curse' && playerStore.settings.rotationOption === 'simChooses' ? 'none' : ''}}>
               <h4>{t(rotationGroup.header)}</h4>
               {
                 rotationGroup.spells.map(spell =>
-                  <li
+                  <div
                     key={nanoid()}
                     data-checked={(playerStore.rotation[rotationGroup.varName] && playerStore.rotation[rotationGroup.varName][spell.varName] === true) || false}
                     onClick={(e) => { dispatch(toggleRotationSpellSelection({rotationGroup: rotationGroup, spell: spell})); e.preventDefault(); }}>
                     <a href={`${getBaseWowheadUrl(i18n.language)}/spell=${spell.id}`}>
                       <img src={`${process.env.PUBLIC_URL}/img/${spell.iconName}.jpg`} alt={t(spell.name)} />
                     </a>
-                  </li>
+                  </div>
                 )
               }
-            </div>
+            </li>
           )
         }
       </ul>

@@ -24,10 +24,6 @@ ul {
 	background-color: #0B3954;
 }
 
-#character-section {
-	vertical-align: top;
-}
-
 .maxed-talent {
 	color: #ffcd45;
 }
@@ -66,7 +62,6 @@ ul {
 }
 
 .character-stat-val {
-	float: right;
 	text-align: right;
 }
 
@@ -228,7 +223,7 @@ ul {
 	margin-left: 5px;
 }
 
-#rotation-section ul div {
+#rotation-section ul {
 	margin-left: -30px;
 }
 
@@ -242,12 +237,12 @@ ul {
 	filter: grayscale(95%);
 }
 
-#rotation-list li[data-checked='false'] img, .aura[data-checked='false'] {
+#rotation-list li div[data-checked='false'] img, .aura[data-checked='false'] {
 	filter: grayscale(60%);
 	opacity: 0.4;
  }
 
-#rotation-list li {
+#rotation-list li div {
 	display: inline-block;
 	cursor: pointer;
 	user-select: none;
@@ -834,12 +829,6 @@ table.dataTable thead th, table.dataTable.no-footer {
 	}
 }
 
-@media screen and (max-width: 1780px) {
-	.btn {
-		font-size: 0.85em;
-	}
-}
-
 @media screen and (max-width: 1715px) {
 	#buffs-and-debuffs-section {
 		padding-top: 1px;
@@ -905,7 +894,39 @@ table.dataTable thead th, table.dataTable.no-footer {
 	}
 
 	#rotation-section {
-		min-width: 150px;
+		width: 100%;
+		margin: 0;
+	}
+
+	#rotation-list {
+		display: flex;
+		justify-content: space-between
+	}
+}
+
+@media screen and (max-width: 880px) {
+	#buffs-and-debuffs-section {
+		width: 100%;
+		margin: 0;
+	}
+
+	#sidebar {
+		width: 270px;
+	}
+
+	.btn {
+		font-size: 11px;
+	}
+
+	#main {
+		margin-left: 270px;
+	}
+}
+
+@media screen and (max-width: 790px) {
+	#rotation-list li {
+		display: flex;
+		flex-direction: column;
 	}
 }
 
@@ -935,13 +956,4 @@ table.dataTable thead th, table.dataTable.no-footer {
 	.character-stats li {
 		line-height: 0px;
 	}
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
