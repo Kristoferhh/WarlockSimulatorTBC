@@ -1,5 +1,6 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux"
 import { canGemColorBeInsertedIntoSocketColor, getBaseWowheadUrl, getGemsStats } from "../Common";
 import { Gems } from "../data/Gems";
@@ -25,6 +26,7 @@ export function FillItemSockets() {
   const [selectedGemId, setSelectedGemId] = useState(0);
   const [itemSlotToFill, setItemSlotToFill] = useState<'currentSlot' | 'allSlots'>('currentSlot');
   const [replacingExistingGems, setReplacingExistingGems] = useState(false);
+  const { t } = useTranslation();
 
   function fillSockets(): void {
     if (selectedGemId === 0) { return; }
@@ -101,8 +103,8 @@ export function FillItemSockets() {
                 onClick={(e) => { setSelectedGemId(gem.id); e.preventDefault(); }}
                 data-checked={selectedGemId === gem.id}
               >
-                <img src={`${process.env.PUBLIC_URL}/img/${gem.iconName}.jpg`} alt={gem.name} />
-                <a href={`${getBaseWowheadUrl(i18n.language)}/item=${gem.id}`}>{gem.name}</a>
+                <img src={`${process.env.PUBLIC_URL}/img/${gem.iconName}.jpg`} alt={t(gem.name)} />
+                <a href={`${getBaseWowheadUrl(i18n.language)}/item=${gem.id}`}>{t(gem.name)}</a>
               </div>
             )
           }

@@ -344,6 +344,7 @@ ul {
 	top: 0;
 	right: 0;
 	margin: 20px 20px 0px 0px;
+	cursor: pointer;
 }
 
 #combat-log {
@@ -369,15 +370,16 @@ ul {
 }
 
 #import-export-window {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
 	background-color: #121212;
 	padding: 50px;
-	width: 70%;
-	height: 70%;
-	top: 0;
-	margin-top: 50px;
-	left: 15%;
-	position: absolute;
 	z-index: 2000;
+	height: 600px;
+	width: 1300px;
 }
 
 #import-export-window textarea {
@@ -754,13 +756,19 @@ table.dataTable thead th, table.dataTable.no-footer {
 }
 
 #gem-options-window {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	background-color: #121212;
 	border: 1px solid gray;
-	position: absolute;
 	width: clamp(100px,60%,1000px);
 	text-align: center;
-	background-color: #121212;
 	padding: 20px;
 	line-height: 30px;
+	height: 80%;
+	overflow-y: auto;
 	z-index: 4;
 }
 

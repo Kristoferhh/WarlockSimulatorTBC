@@ -46,7 +46,7 @@ export default function EquippedItemsDisplay() {
     <div id="currently-equipped-items-container" style={{display: uiState.equippedItemsWindowVisible ? '' : 'none'}}>
       <div id="currently-equipped-items">
         <div onClick={(e) => dispatch(setEquippedItemsWindowVisibility(false))}>
-          <a href='#' className='close' id='currently-equipped-items-close-button'></a>
+          <p className='close' id='currently-equipped-items-close-button'></p>
         </div>
         <table>
           <colgroup>
