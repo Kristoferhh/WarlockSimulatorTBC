@@ -84,6 +84,14 @@ export function SimulationButtons() {
   const [simulationType, setSimulationType] = useState(SimulationType.Normal);
   let combatLogEntries: string[] = [];
 
+  function combatLogButtonIsDisabled(): boolean {
+    return uiState.combatLog.data.length === 0;
+  }
+
+  function histogramButtonIsDisabled(): boolean {
+    return uiState.histogram.data === undefined;
+  }
+
   function getWorkerParams(params: IGetWorkerParams): WorkerParams {
     let customPlayerState: PlayerState = JSON.parse(JSON.stringify(playerState));
     let iterationAmount = parseInt(customPlayerState.settings.iterations);
@@ -131,8 +139,6 @@ export function SimulationButtons() {
         metaGemId: getEquippedMetaGemId(customPlayerState.selectedItems, customPlayerState.selectedGems),
       },
       simulationSettings: {
-        // Double the iteration amount if it's a stat weight sim and it's not the 'normal' sim with no added stats.
-        // Also set a minimum amount of iterations to 10,000 for stat weight simulations.
         iterations: iterationAmount,
         minTime: parseInt(customPlayerState.settings["min-fight-length"]),
         maxTime: parseInt(customPlayerState.settings['max-fight-length'])
@@ -405,27 +411,25 @@ export function SimulationButtons() {
           </div>
       }
       <div
-        className='btn'
+        className='btn active-btn'
         onClick={() => simulate({ itemIdsToSim: [Items.find(e => e.id === playerState.selectedItems[ItemSlotKeyToItemSlot(false, uiState.selectedItemSlot, uiState.selectedItemSubSlot)])?.id || 0], type: SimulationType.Normal })}
         style={{background: simulationInProgress && simulationType === SimulationType.Normal ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
       >{simulationInProgress && simulationType === SimulationType.Normal ? `${simulationProgressPercent}%` : 'Simulate'}</div>
       <div
-        className='btn'
+        className='btn active-btn'
         onClick={() => simulate({ itemIdsToSim: getItemTableItems(uiState.selectedItemSlot, uiState.selectedItemSubSlot, playerState.selectedItems, uiState.sources, uiState.hiddenItems, false, uiState.savedItemDps).map(item => item.id), type: SimulationType.AllItems })}
         style={{background: simulationInProgress && simulationType === SimulationType.AllItems ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
       >{simulationInProgress && simulationType === SimulationType.AllItems ? `${simulationProgressPercent}%` : 'Simulate All Items'}</div>
       <div
-        className='btn'
+        className='btn active-btn'
         onClick={() => simulate({ type: SimulationType.StatWeights })}
         style={{background: simulationInProgress && simulationType === SimulationType.StatWeights ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
       >{simulationInProgress && simulationType === SimulationType.StatWeights ? `${simulationProgressPercent}%` : 'Stat Weights'}</div>
       {
-        uiState.combatLog.data.length > 0 &&
-          <div className='btn' onClick={() => dispatch(setCombatLogVisibility(!uiState.combatLog.visible))}>Combat Log</div>
+        <div className={'btn' + (combatLogButtonIsDisabled() ? ' disabled-btn' : ' active-btn')} onClick={() => !combatLogButtonIsDisabled() && dispatch(setCombatLogVisibility(!uiState.combatLog.visible))}>Combat Log</div>
       }
       {
-        uiState.histogram.data !== undefined &&
-          <div className='btn' onClick={() => dispatch(setHistogramVisibility(!uiState.histogram.visible))}>Histogram</div>
+        <div className={'btn' + (histogramButtonIsDisabled() ? ' disabled-btn' : ' active-btn')} onClick={() => !histogramButtonIsDisabled() && dispatch(setHistogramVisibility(!uiState.histogram.visible))}>Histogram</div>
       }
       <p id="sim-length-result">{simulationDuration.length > 0 ? simulationDuration + 's' : ''}</p>
     </>

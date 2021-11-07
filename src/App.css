@@ -510,9 +510,14 @@ ul {
 	user-select: none;
 }
 
-.btn:hover {
+.active-btn:hover {
 	background-color: #fff;
 	color: black;
+}
+
+.disabled-btn {
+	opacity: 0.5;
+	cursor: default;
 }
 
 #sim-length-result {
