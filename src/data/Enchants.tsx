@@ -26,14 +26,14 @@ export const Enchants: Enchant[] = [
   { name: 'Spell Penetration', varName: 'spellPenetration', itemSlot: ItemSlotKey.Back, spellPenetration: 20, id: 34003, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
   { name: 'Major Resistance', varName: 'majorResistance', itemSlot: ItemSlotKey.Back, fireResist: 7, shadowResist: 7, arcaneResist: 7, natureResist: 7, frostResist: 7, id: 27962, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
   { name: 'Greater Arcane Resistance', varName: 'greaterArcaneResistance', itemSlot: ItemSlotKey.Back, arcaneResist: 15, id: 34005, source: ItemSource.Enchanting, phase: 1, quality: Quality.Rare },
-  { name: 'Greater Fire Resistance', varName: 'greaterFireResistance', itemSlot: ItemSlotKey.Back, fireResist: 15, id: 25081, source: ItemSource.Enchanting, phase: 0, quality: Quality.Common },
+  { name: 'Greater Fire Resistance', varName: 'greaterFireResistance', itemSlot: ItemSlotKey.Back, fireResist: 15, id: 25081, source: ItemSource.Enchanting, phase: 0, quality: Quality.Uncommon },
   { name: 'Greater Shadow Resistance', varName: 'greaterShadowResistance', itemSlot: ItemSlotKey.Back, shadowResist: 15, id: 34006, source: ItemSource.Enchanting, phase: 1, quality: Quality.Rare },
-  { name: 'Greater Nature Resistance', varName: 'greaterNatureResistance', itemSlot: ItemSlotKey.Back, natureResist: 15, id: 25082, source: ItemSource.Enchanting, phase: 0, quality: Quality.Common },
+  { name: 'Greater Nature Resistance', varName: 'greaterNatureResistance', itemSlot: ItemSlotKey.Back, natureResist: 15, id: 25082, source: ItemSource.Enchanting, phase: 0, quality: Quality.Uncommon },
 
   // Chest
-  { name: 'Exceptional Stats', varName: 'exceptionalStats', itemSlot: ItemSlotKey.Chest, stamina: 6, intellect: 6, spirit: 6, id: 27960, source: ItemSource.Enchanting, phase: 1, quality: Quality.Common },
+  { name: 'Exceptional Stats', varName: 'exceptionalStats', itemSlot: ItemSlotKey.Chest, stamina: 6, intellect: 6, spirit: 6, id: 27960, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
   { name: 'Major Resilience', varName: 'majorResilience', itemSlot: ItemSlotKey.Chest, resilienceRating: 15, id: 33992, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
-  { name: "Magister's Armor Kit", varName: 'magistersArmorKit', itemSlot: ItemSlotKey.Chest, mp5: 3, id: 32399, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Common },
+  { name: "Magister's Armor Kit", varName: 'magistersArmorKit', itemSlot: ItemSlotKey.Chest, mp5: 3, id: 32399, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Arcane Armor Kit', varName: 'arcaneArmorKit', itemSlot: ItemSlotKey.Chest, arcaneResist: 8, id: 35420, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Flame Armor Kit', varName: 'flameArmorKit', itemSlot: ItemSlotKey.Chest, fireResist: 8, id: 35416, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Shadow Armor Kit', varName: 'shadowArmorKit', itemSlot: ItemSlotKey.Chest, shadowResist: 8, id: 35415, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
@@ -43,16 +43,16 @@ export const Enchants: Enchant[] = [
 
   // Bracer
   { name: 'Spellpower', varName: 'spellpower', itemSlot: ItemSlotKey.Bracer, spellPower: 15, id: 27917, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
-  { name: 'Superior Healing', varName: 'superiorHealing', itemSlot: ItemSlotKey.Bracer, spellPower: 10, id: 27911, source: ItemSource.Enchanting, phase: 1, quality: Quality.Common },
-  { name: 'Major Intellect', varName: 'majorIntellect', itemSlot: ItemSlotKey.Bracer, intellect: 12, id: 34001, source: ItemSource.Enchanting, phase: 1, quality: Quality.Common },
-  { name: 'Stats', varName: 'stats', itemSlot: ItemSlotKey.Bracer, stamina: 4, intellect: 4, spirit: 4, id: 27905, source: ItemSource.Enchanting, phase: 1, quality: Quality.Common },
-  { name: 'Healing Power', varName: 'healingPower', itemSlot: ItemSlotKey.Bracer, spellPower: 8, id: 23802, source: ItemSource.Enchanting, phase: 0, quality: Quality.Common },
+  { name: 'Superior Healing', varName: 'superiorHealing', itemSlot: ItemSlotKey.Bracer, spellPower: 10, id: 27911, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
+  { name: 'Major Intellect', varName: 'majorIntellect', itemSlot: ItemSlotKey.Bracer, intellect: 12, id: 34001, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
+  { name: 'Stats', varName: 'stats', itemSlot: ItemSlotKey.Bracer, stamina: 4, intellect: 4, spirit: 4, id: 27905, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
+  { name: 'Healing Power', varName: 'healingPower', itemSlot: ItemSlotKey.Bracer, spellPower: 8, id: 23802, source: ItemSource.Enchanting, phase: 0, quality: Quality.Uncommon },
 
   // Gloves
   { name: 'Major Spellpower', varName: 'majorSpellpower', itemSlot: ItemSlotKey.Gloves, spellPower: 20, id: 33997, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
   { name: 'Spell Strike', varName: 'spellStrike', itemSlot: ItemSlotKey.Gloves, hitRating: 15, id: 33994, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
-  { name: 'Blasting', varName: 'blasting', itemSlot: ItemSlotKey.Gloves, critRating: 10, id: 33993, source: ItemSource.Enchanting, phase: 1, quality: Quality.Common },
-  { name: "Magister's Armor Kit", varName: 'magistersArmorKit', itemSlot: ItemSlotKey.Gloves, mp5: 3, id: 32399, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Common },
+  { name: 'Blasting', varName: 'blasting', itemSlot: ItemSlotKey.Gloves, critRating: 10, id: 33993, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
+  { name: "Magister's Armor Kit", varName: 'magistersArmorKit', itemSlot: ItemSlotKey.Gloves, mp5: 3, id: 32399, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Arcane Armor Kit', varName: 'arcaneArmorKit', itemSlot: ItemSlotKey.Gloves, arcaneResist: 8, id: 35420, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Flame Armor Kit', varName: 'flameArmorKit', itemSlot: ItemSlotKey.Gloves, fireResist: 8, id: 35416, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Shadow Armor Kit', varName: 'shadowArmorKit', itemSlot: ItemSlotKey.Gloves, shadowResist: 8, id: 35415, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
@@ -62,7 +62,7 @@ export const Enchants: Enchant[] = [
   // Legs
   { name: 'Runic Spellthread', varName: 'runicSpellthread', itemSlot: ItemSlotKey.Legs, stamina: 20, spellPower: 35, id: 31372, source: ItemSource.Tailoring, phase: 1, quality: Quality.Epic },
   { name: 'Mystic Spellthread', varName: 'mysticSpellthread', itemSlot: ItemSlotKey.Legs, stamina: 15, spellPower: 25, id: 31371, source: ItemSource.Tailoring, phase: 1, quality: Quality.Rare },
-  { name: "Magister's Armor Kit", varName: 'magistersArmorKit', itemSlot: ItemSlotKey.Legs, mp5: 3, id: 32399, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Common },
+  { name: "Magister's Armor Kit", varName: 'magistersArmorKit', itemSlot: ItemSlotKey.Legs, mp5: 3, id: 32399, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Arcane Armor Kit', varName: 'arcaneArmorKit', itemSlot: ItemSlotKey.Legs, arcaneResist: 8, id: 35420, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Flame Armor Kit', varName: 'flameArmorKit', itemSlot: ItemSlotKey.Legs, fireResist: 8, id: 35416, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Shadow Armor Kit', varName: 'shadowArmorKit', itemSlot: ItemSlotKey.Legs, shadowResist: 8, id: 35415, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
@@ -73,7 +73,7 @@ export const Enchants: Enchant[] = [
   // Boots
   { name: 'Fortitude', varName: 'fortitude', itemSlot: ItemSlotKey.Boots, stamina: 12, id: 46490, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
   { name: "Boar's Speed", varName: 'boarsSpeed', itemSlot: ItemSlotKey.Boots, stamina: 9, id: 34008, source: ItemSource.Enchanting, phase: 1, quality: Quality.Rare },
-  { name: "Magister's Armor Kit", varName: 'magistersArmorKit', itemSlot: ItemSlotKey.Boots, mp5: 3, id: 32399, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Common },
+  { name: "Magister's Armor Kit", varName: 'magistersArmorKit', itemSlot: ItemSlotKey.Boots, mp5: 3, id: 32399, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Arcane Armor Kit', varName: 'arcaneArmorKit', itemSlot: ItemSlotKey.Boots, arcaneResist: 8, id: 35420, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Flame Armor Kit', varName: 'flameArmorKit', itemSlot: ItemSlotKey.Boots, fireResist: 8, id: 35416, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Shadow Armor Kit', varName: 'shadowArmorKit', itemSlot: ItemSlotKey.Boots, shadowResist: 8, id: 35415, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
@@ -81,8 +81,8 @@ export const Enchants: Enchant[] = [
   { name: 'Frost Armor Kit', varName: 'frostArmorKit', itemSlot: ItemSlotKey.Boots, frostResist: 8, id: 35418, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
 
   // Ring
-  { name: 'Spellpower', varName: 'spellpower', itemSlot: ItemSlotKey.Ring, spellPower: 12, id: 27924, source: ItemSource.Enchanting, phase: 1, quality: Quality.Common },
-  { name: 'Stats', varName: 'stats', itemSlot: ItemSlotKey.Ring, stamina: 4, intellect: 4, spirit: 4, id: 27927, source: ItemSource.Enchanting, phase: 1, quality: Quality.Common },
+  { name: 'Spellpower', varName: 'spellpower', itemSlot: ItemSlotKey.Ring, spellPower: 12, id: 27924, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
+  { name: 'Stats', varName: 'stats', itemSlot: ItemSlotKey.Ring, stamina: 4, intellect: 4, spirit: 4, id: 27927, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
 
   // Weapon
   { name: 'Soulfrost', varName: 'soulfrost', itemSlot: ItemSlotKey.Mainhand, shadowPower: 54, id: 27982, source: ItemSource.Enchanting, phase: 1, quality: Quality.Rare },
