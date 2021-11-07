@@ -28,23 +28,35 @@ export default function ImportExport() {
     try {
       const data = JSON.parse(contentString);
 
-      if (data.auras && data.selectedGems && data.selectedItems && data.selectedEnchants && data.talents && data.rotation && data.settings) {
+      if (data.auras) {
         dispatch(setSelectedAuras(data.auras));
-        dispatch(setSelectedGems(data.selectedGems));
-        dispatch(setSelectedItems(data.selectedItems));
-        dispatch(setTalentsState(data.talents));
-        dispatch(setRotationState(data.rotation));
-        dispatch(setSelectedEnchants(data.selectedEnchants));
-        dispatch(setSettingsState(data.settings));
-        // Recalculate the player's stats
-        dispatch(setBaseStats(getBaseStats(data.settings.race as Race)));
         dispatch(setAurasStats(getAurasStats(data.auras)));
-        dispatch(setItemsStats(getItemsStats(data.selectedItems)));
-        dispatch(setGemsStats(getGemsStats(data.selectedItems, data.selectedGems)));
-        dispatch(setEnchantsStats(getEnchantsStats(data.selectedItems, data.selectedEnchants)));
-        dispatch(setItemSetCounts(getItemSetCounts(data.selectedItems)));
-        dispatch(setImportExportWindowVisibility(false));
       }
+      if (data.selectedItems) {
+        dispatch(setSelectedItems(data.selectedItems));
+        dispatch(setItemsStats(getItemsStats(data.selectedItems)));
+        dispatch(setItemSetCounts(getItemSetCounts(data.selectedItems)));
+      }
+      if (data.selectedEnchants) {
+        dispatch(setSelectedEnchants(data.selectedEnchants));
+        dispatch(setEnchantsStats(getEnchantsStats(data.selectedItems ? data.selectedItems : playerState.selectedItems, data.selectedEnchants)));
+      }
+      if (data.selectedGems) {
+        dispatch(setSelectedGems(data.selectedGems));
+        dispatch(setGemsStats(getGemsStats(data.selectedItems ? data.selectedItems : playerState.selectedItems, data.selectedGems)));
+      }
+      if (data.talents) {
+        dispatch(setTalentsState(data.talents));
+      }
+      if (data.rotation) {
+        dispatch(setRotationState(data.rotation));
+      }
+      if (data.settings) {
+        dispatch(setSettingsState(data.settings));
+        dispatch(setBaseStats(getBaseStats(data.settings.race as Race)));
+      }
+      
+      dispatch(setImportExportWindowVisibility(false));
     } catch (error) {
       alert(`Error importing profile: ${error}`);
     }
