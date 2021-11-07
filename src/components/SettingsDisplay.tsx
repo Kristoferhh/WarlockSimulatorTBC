@@ -380,6 +380,10 @@ export default function SettingsDisplay() {
               <input id="customIsbUptimeValue" onChange={(e) => settingModifiedHandler(Setting.customIsbUptimeValue, e.target.value)} value={playerStore.settings.customIsbUptimeValue} type="number" name="customIsbUptimeValue" className="settings-right" />
             </li>
         }
+        <li>
+          <label className='settings-left'>Concurrent item sims amount (set to 0 to use the default amount)</label>
+          <input className='settings-right' onChange={(e) => settingModifiedHandler(Setting.maxWebWorkers, e.target.value)} value={playerStore.settings.maxWebWorkers || 0} type='number'></input>
+        </li>
       </ul>
     </section>
   )

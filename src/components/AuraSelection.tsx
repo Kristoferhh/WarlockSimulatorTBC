@@ -45,7 +45,7 @@ export default function AuraSelection() {
           .filter(auraGroup => auraGroup.heading !== AuraGroup.PetBuffs || playerState.talents.demonicSacrifice === 0 || playerState.settings.sacrificePet === 'no')
           .map(auraGroup =>
             <div key={nanoid()}>
-              <h3 id='buffs-heading'>{t(auraGroup.heading)}</h3>
+              <h3 className='buffs-heading'>{t(auraGroup.heading)}</h3>
               <ul>
                 {
                   Auras

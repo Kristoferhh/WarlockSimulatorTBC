@@ -153,7 +153,8 @@ export function SimulationButtons() {
 
   function simulate(simulationParams: { type: SimulationType, itemIdsToSim?: number[] }) {
     if (simulationInProgress) { return; }
-    const maxWorkers = window.navigator.hardwareConcurrency || 8; // Maximum amount of web workers that can be run concurrently.
+    let maxWorkers = window.navigator.hardwareConcurrency || 8; // Maximum amount of web workers that can be run concurrently.
+    if (playerState.settings.maxWebWorkers && parseInt(playerState.settings.maxWebWorkers) > 0) { maxWorkers = parseInt(playerState.settings.maxWebWorkers); }
     const simulations: SimWorker[] = [];
     const itemSlot: ItemSlot = ItemSlotKeyToItemSlot(false, uiState.selectedItemSlot, uiState.selectedItemSubSlot);
     const equippedItemId = playerState.selectedItems[itemSlot];

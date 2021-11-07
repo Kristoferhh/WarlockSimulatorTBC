@@ -259,6 +259,7 @@ export enum Setting {
   ferociousInspirationAmount = 'ferociousInspirationAmount',
   improvedImpSetting = 'improvedImpSetting',
   improvedWrathOfAirTotem = 'improvedWrathOfAirTotem',
+  maxWebWorkers = 'maxWebWorkers',
 }
 
 export type Settings = {
@@ -306,6 +307,7 @@ export const InitialSettings: {[key in Setting]: string} = {
   ferociousInspirationAmount: '1',
   improvedImpSetting: '0',
   improvedWrathOfAirTotem: 'no',
+  maxWebWorkers: '0',
 }
 
 export type TalentStore = {
