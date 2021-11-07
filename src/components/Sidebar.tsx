@@ -9,6 +9,14 @@ import { RootState } from "../redux/Store";
 import { SimulationButtons } from "./SimulationButtons";
 import StatsDisplay from "./StatsDisplay";
 
+function setHasActiveBonus(set: [string, number]): boolean {
+  const setObj = Sets.find(e => e.setId === set[0]);
+  if (setObj) {
+    return set[1] >= setObj.bonuses[0];
+  }
+  return false;
+}
+
 export default function Sidebar() {
   const playerState = useSelector((state: RootState) => state.player);
   const { t } = useTranslation();
@@ -20,11 +28,13 @@ export default function Sidebar() {
         <p id="character-level">{t('Level')} <span>70</span></p>
         <StatsDisplay />
         <ul id="sidebar-sets">
-          <li><h3>{t('Set Bonuses')}</h3></li>
+          {
+            Object.entries(playerState.sets).find(set => setHasActiveBonus(set)) &&
+              <li><h3>{t('Set Bonuses')}</h3></li>
+          }
           {
             Object.entries(playerState.sets)
-              // Show the set only if at least one bonus is active from it
-              .filter(set => Sets.find(e => e.setId === set[0]) != null && set[1] >= Sets.find(e => e.setId === set[0])!.bonuses[0])
+              .filter(set => setHasActiveBonus(set))
               .map(set =>
                 <li key={nanoid()} className="sidebar-set-bonus">
                   <a
