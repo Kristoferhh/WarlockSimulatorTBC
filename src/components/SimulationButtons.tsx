@@ -228,6 +228,7 @@ export function SimulationButtons() {
             simulationsFinished++;
             findSimulationProgressPercentObject({ simulationProgressPercentages: simulationProgressPercentages, simType: simulationParams.type, itemId: params.itemId, stat: params.customStat  })
               .progressPercent = 100;
+            setSavedItemDpsValue(itemSlot, params.itemId, newMedianDps, true);
   
             // Callback for the currently equipped item
             if (simulationParams.type === SimulationType.Normal || (simulationParams.type === SimulationType.AllItems && params.itemId === equippedItemId) || (simulationParams.type === SimulationType.StatWeights && params.customStat === 'normal')) {
@@ -252,7 +253,6 @@ export function SimulationButtons() {
               // Either normal sim or multi-item sim
               if ([SimulationType.Normal, SimulationType.AllItems].includes(simulationParams.type)) {
                 populateCombatLog();
-                setSavedItemDpsValue(itemSlot, params.itemId, newMedianDps, true);
               }
 
               if (simulationParams.type === SimulationType.Normal) {
