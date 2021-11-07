@@ -235,7 +235,7 @@ export default function ItemSelection() {
       {
         Enchants.filter((e) => e.itemSlot === getEnchantLookupKey(uiStore.selectedItemSlot)).length > 0 &&
           <table id="enchant-selection-table" data-type="mainhand">
-          <colgroup id="item-selection-colgroup">
+          <colgroup id="enchant-selection-colgroup">
             <col style={{width: '20%'}} />
             <col style={{width: '9%'}} />
             <col style={{width: '10%'}} />
@@ -249,7 +249,7 @@ export default function ItemSelection() {
             <col style={{width: '10%'}} />
           </colgroup>
           <thead>
-            <tr id="item-selection-header">
+            <tr id="enchant-selection-header">
               <th id="header-enchant-name">{t('Enchant')}</th>
               <th id="header-enchant-spell-power">{t('Spell Power')}</th>
               <th id="header-enchant-shadow-power">{t('Shadow Power')}</th>

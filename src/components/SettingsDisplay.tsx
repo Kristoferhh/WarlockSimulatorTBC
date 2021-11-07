@@ -19,15 +19,29 @@ export default function SettingsDisplay() {
     <section id="sim-settings">
       <fieldset>
         <legend>Rotation Options</legend>
-        <input onChange={(e) => settingModifiedHandler(Setting.rotationOption, e.target.value)} type='radio' name='rotationOption' value='simChooses' checked={playerStore.settings.rotationOption === 'simChooses'} />
-        <label htmlFor='simChooses'>Simulation chooses spells for me</label>
+        <input
+          id='sim-chooses-option'
+          onChange={(e) => settingModifiedHandler(Setting.rotationOption, e.target.value)}
+          type='radio'
+          name='rotationOption'
+          value='simChooses'
+          checked={playerStore.settings.rotationOption === 'simChooses'}
+        />
+        <label htmlFor='sim-chooses-option'>Simulation chooses spells for me</label>
         <br/>
-        <input onChange={(e) => settingModifiedHandler(Setting.rotationOption, e.target.value)} type='radio' name='rotationOption' value='userChooses' checked={playerStore.settings.rotationOption === 'userChooses'} />
-        <label htmlFor='userChooses'>Choose spells myself</label>
+        <input
+          id='user-chooses-option'
+          onChange={(e) => settingModifiedHandler(Setting.rotationOption, e.target.value)}
+          type='radio'
+          name='rotationOption'
+          value='userChooses'
+          checked={playerStore.settings.rotationOption === 'userChooses'}
+        />
+        <label htmlFor='user-chooses-option'>Choose spells myself</label>
       </fieldset>
       <ul>
         <li>
-          <span className="settings-left">Race</span>
+          <label className="settings-left">Race</label>
           <select onChange={(e) => { settingModifiedHandler(Setting.race, e.target.value); dispatch(setBaseStats(getBaseStats(Races.find(race => race.varName === e.target.value)!.varName))) }} name="race" id="race-dropdown-list" className="settings-right" value={playerStore.settings.race}>
             <option value="gnome">{t('Gnome')}</option>
             <option value="human">{t('Human')}</option>
@@ -37,31 +51,31 @@ export default function SettingsDisplay() {
           </select>
         </li>
         <li>
-          <span className="settings-left">Iterations</span>
+          <label htmlFor='iterations' className="settings-left">Iterations</label>
           <input id="iterations" onChange={(e) => settingModifiedHandler(Setting.iterations, e.target.value)} value={playerStore.settings.iterations} step='1000' min="1000" type="number" name="iterations" className="settings-right" />
         </li>
         <li>
-          <span className="settings-left">Min Fight Length</span>
+          <label htmlFor='min-fight-length' className="settings-left">Min Fight Length</label>
           <input id="min-fight-length" onChange={(e) => settingModifiedHandler(Setting['min-fight-length'], e.target.value)} value={playerStore.settings['min-fight-length']} type="number" name="min-fight-length" className="settings-right" />
         </li>
         <li>
-          <span className="settings-left">Max Fight Length</span>
+          <label htmlFor='max-fight-length' className="settings-left">Max Fight Length</label>
           <input id="max-fight-length" onChange={(e) => settingModifiedHandler(Setting['max-fight-length'], e.target.value)} value={playerStore.settings['max-fight-length']} type="number" name="max-fight-length" className="settings-right" />
         </li>
         <li>
-          <span className="settings-left">Target Level</span>
+          <label htmlFor='target-level' className="settings-left">Target Level</label>
           <input id="target-level" onChange={(e) => settingModifiedHandler(Setting['target-level'], e.target.value)} value={playerStore.settings['target-level']} type="number" name="target-level" className="settings-right" />
         </li>
         <li>
-          <span className="settings-left">Target Shadow Resistance</span>
+          <label htmlFor='target-shadow-resistance' className="settings-left">Target Shadow Resistance</label>
           <input id="target-shadow-resistance" onChange={(e) => settingModifiedHandler(Setting['target-shadow-resistance'], e.target.value)} value={playerStore.settings['target-shadow-resistance']} type="number" name="target-shadow-resistance" className="settings-right" />
         </li>
         <li>
-          <span className="settings-left">Target Fire Resistance</span>
+          <label htmlFor='target-fire-resistance' className="settings-left">Target Fire Resistance</label>
           <input id="target-fire-resistance" onChange={(e) => settingModifiedHandler(Setting['target-fire-resistance'], e.target.value)} value={playerStore.settings['target-fire-resistance']} type="number" name="target-fire-resistance" className="settings-right" />
         </li>
         <li>
-          <span className="settings-left">Fight Type</span>
+          <label className="settings-left">Fight Type</label>
           <select onChange={(e) => settingModifiedHandler(Setting.fightType, e.target.value)} value={playerStore.settings.fightType} name="fightType" id="fight-type" className="settings-right">
             <option value="singleTarget">Single Target</option>
             <option value="aoe">AoE (Seed of Corruption)</option>
@@ -70,7 +84,7 @@ export default function SettingsDisplay() {
         {
           playerStore.settings.fightType === 'aoe' &&
             <li id="enemy-amount" title="Including the target you're casting Seed of Corruption on">
-              <span className="settings-left">Enemy Amount</span>
+              <label className="settings-left">Enemy Amount</label>
               <input name="enemyAmount" className="settings-right" onChange={(e) => settingModifiedHandler(Setting.enemyAmount, e.target.value)} value={playerStore.settings.enemyAmount} step="1" min="1" type="number" />
             </li>
         }
@@ -362,7 +376,7 @@ export default function SettingsDisplay() {
         {
           playerStore.settings.customIsbUptime === 'yes' &&
             <li id="custom-isb-uptime-value">
-              <span className="settings-left">Custom ISB Uptime %</span>
+              <label htmlFor='customIsbUptimeValue' className="settings-left">Custom ISB Uptime %</label>
               <input id="customIsbUptimeValue" onChange={(e) => settingModifiedHandler(Setting.customIsbUptimeValue, e.target.value)} value={playerStore.settings.customIsbUptimeValue} type="number" name="customIsbUptimeValue" className="settings-right" />
             </li>
         }
