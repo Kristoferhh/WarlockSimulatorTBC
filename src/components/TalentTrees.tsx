@@ -85,19 +85,19 @@ export default function TalentTrees() {
                                   <div
                                     id={talent.varName}
                                     className='talent-icon'
-                                    data-points={talentState[talent.varName!!] || 0}
+                                    data-points={talentState[talent.varName!] || 0}
                                     data-maxpoints={talent.rankIDs.length}
                                     onClick={(e) => talentClickHandler(e.nativeEvent.button, talent)}
                                     onContextMenu={(e) => { talentClickHandler(e.nativeEvent.button, talent); e.preventDefault() }}>
-                                    <a href={`${getBaseWowheadUrl(i18n.language)}/spell=${talent.rankIDs[0]}`} onClick={(e) => e.preventDefault()}>
+                                    <a href={`${getBaseWowheadUrl(i18n.language)}/spell=${talent.rankIDs[Math.max(talentState[talent.varName!] - 1, 0) || 0]}`} onClick={(e) => e.preventDefault()}>
                                       <img src={`${process.env.PUBLIC_URL}/img/${talent.iconName}.jpg`} alt={t(talent.name!)} />
                                       <span
-                                        id={talent.varName!! + '-point-amount'}
+                                        id={talent.varName! + '-point-amount'}
                                         className={'talent-point-amount' +
-                                          (talentState[talent.varName!!] && talentState[talent.varName!!] === talent.rankIDs.length ? ' maxed-talent' : '') +
-                                          (talentState[talent.varName!!] && talentState[talent.varName!!] > 0 && talentState[talent.varName!!] < talent.rankIDs.length ? ' half-full-talent' : '') +
-                                          (talentState[talent.varName!!] == null || talentState[talent.varName!!] === 0 ? ' empty-talent' : '')}>
-                                        {talentState[talent.varName!!] || 0}
+                                          (talentState[talent.varName!] && talentState[talent.varName!] === talent.rankIDs.length ? ' maxed-talent' : '') +
+                                          (talentState[talent.varName!] && talentState[talent.varName!] > 0 && talentState[talent.varName!] < talent.rankIDs.length ? ' half-full-talent' : '') +
+                                          (talentState[talent.varName!] == null || talentState[talent.varName!] === 0 ? ' empty-talent' : '')}>
+                                        {talentState[talent.varName!] || 0}
                                       </span>
                                     </a>
                                   </div>
