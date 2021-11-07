@@ -5,7 +5,7 @@ import { Items } from "./data/Items";
 import { Races } from "./data/Races";
 import { Sockets } from "./data/Sockets";
 import { TalentTreeStruct } from "./data/Talents";
-import { AurasStruct, GemColor, InitialPlayerStats, InitialSetCounts, Item, ItemAndEnchantStruct, ItemSet, ItemSlot, ItemSlotKey, Languages, PlayerState, Race, SavedItemDps, SelectedGemsStruct, SetsStruct, Settings, SocketColor, SourcesStruct, Stat, StatConstant, StatsCollection, SubSlotValue, TalentStore } from "./Types";
+import { AurasStruct, GemColor, InitialPlayerStats, InitialSetCounts, Item, ItemAndEnchantStruct, ItemSet, ItemSlot, ItemSlotKey, Languages, PetName, PlayerState, Race, SavedItemDps, SelectedGemsStruct, SetsStruct, Settings, SocketColor, SourcesStruct, Stat, StatConstant, StatsCollection, SubSlotValue, TalentStore } from "./Types";
 
 export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
   switch(itemSlot) {
@@ -102,8 +102,8 @@ export function getRemainingTalentPoints(talents: TalentStore): number {
   return 61 - Object.values<number>(talents).reduce((a, b) => a + b, 0); // 61 available talent points at lvl 70
 }
 
-export function isPetActive(talents: TalentStore, settings: Settings, requiresAggressivePet: boolean): boolean {
-  return (talents.demonicSacrifice === 0 || settings.sacrificePet === 'no') && (!requiresAggressivePet || settings.petMode === '1');
+export function isPetActive(talents: TalentStore, settings: Settings, requiresAggressivePet: boolean, requiresPhysicalPet: boolean): boolean {
+  return (talents.demonicSacrifice === 0 || settings.sacrificePet === 'no') && (!requiresAggressivePet || settings.petMode === '1') && (!requiresPhysicalPet || settings.petChoice !== PetName.IMP);
 }
 
 export function canGemColorBeInsertedIntoSocketColor(socketColor: SocketColor, gemColor: GemColor): boolean {

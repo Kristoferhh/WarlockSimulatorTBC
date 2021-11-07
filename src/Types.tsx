@@ -110,6 +110,12 @@ export interface Aura {
   alcohol?: boolean,
 }
 
+export enum PetName {
+  IMP = '0',
+  SUCCUBUS = '2',
+  FELGUARD = '4',
+}
+
 export interface Spell {
   name: string,
   varName: string,

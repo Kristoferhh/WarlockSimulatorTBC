@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux"
 import { getPlayerHitPercent, getPlayerHitRating, isPetActive } from "../Common";
 import { RootState } from "../redux/Store"
-import { ItemSet, StatConstant } from "../Types";
+import { ItemSet, PetName, StatConstant } from "../Types";
 
 export default function StatsDisplay() {
   const playerState = useSelector((state: RootState) => state.player);
@@ -17,7 +17,7 @@ export default function StatsDisplay() {
       let bloodPactModifier = parseInt(playerState.settings.improvedImpSetting);
 
       // If the player is using an imp, the imp is active, and the player has more points in the Improved Imp talent than the improved imp setting then use that instead
-      if (isPetActive(playerState.talents, playerState.settings, false) && playerState.settings.petChoice === '0') {
+      if (isPetActive(playerState.talents, playerState.settings, false, false) && playerState.settings.petChoice === PetName.IMP) {
         bloodPactModifier = Math.max(bloodPactModifier, playerState.talents.improvedImp);
       }
 
@@ -172,7 +172,7 @@ export default function StatsDisplay() {
   function getFireModifier(): string {
     let modifier = Object.values(playerState.stats).map(obj => obj.fireModifier || 1).reduce((a, b) => a * b) * getShadowAndFireModifier();
 
-    if (playerState.talents.demonicSacrifice === 1 && playerState.settings.sacrificePet === 'yes' && playerState.settings.petChoice === '0') {
+    if (playerState.talents.demonicSacrifice === 1 && playerState.settings.sacrificePet === 'yes' && playerState.settings.petChoice === PetName.IMP) {
       modifier *= 1.15;
     }
 
@@ -218,7 +218,7 @@ export default function StatsDisplay() {
     { name: 'Shadow Dmg %', value: () => getShadowModifier() },
     { name: 'Fire Dmg %', value: () => getFireModifier() },
     { name: 'MP5', value: () => Math.round(getMp5()).toString() },
-    { name: 'Enemy Armor', value: () => Math.round(getEnemyArmor()).toString(), condition: () => isPetActive(playerState.talents, playerState.settings, true) }
+    { name: 'Enemy Armor', value: () => Math.round(getEnemyArmor()).toString(), condition: () => isPetActive(playerState.talents, playerState.settings, true, true) }
   ]
 
   return (

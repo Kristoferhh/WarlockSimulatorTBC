@@ -4,7 +4,7 @@ import { getBaseStats, isPetActive } from "../Common";
 import { Races } from "../data/Races";
 import { modifySettingValue, setBaseStats } from "../redux/PlayerSlice";
 import { RootState } from "../redux/Store"
-import { Setting } from "../Types";
+import { PetName, Setting } from "../Types";
 
 export default function SettingsDisplay() {
   const playerStore = useSelector((state: RootState) => state.player);
@@ -105,9 +105,9 @@ export default function SettingsDisplay() {
         <li id='petChoice'>
           <label className="settings-left" htmlFor="petChoice">Pet</label>
           <select className="settings-right" name="petChoice" onChange={(e) => settingModifiedHandler(Setting.petChoice, e.target.value)} value={playerStore.settings.petChoice}>
-            <option value="0">{t('Imp')}</option>
-            <option value="2">{t('Succubus')}</option>
-            <option value="4">{t('Felguard')}</option>
+            <option value={PetName.IMP}>{t('Imp')}</option>
+            <option value={PetName.SUCCUBUS}>{t('Succubus')}</option>
+            <option value={PetName.FELGUARD}>{t('Felguard')}</option>
           </select>
         </li>
         {
@@ -121,7 +121,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          isPetActive(playerStore.talents, playerStore.settings, false) &&
+          isPetActive(playerStore.talents, playerStore.settings, false, false) &&
             <li id="petMode">
               <label className="settings-left" htmlFor="petMode">Pet mode</label>
               <select className="settings-right" name="petMode" onChange={(e) => settingModifiedHandler(Setting.petMode, e.target.value)} value={playerStore.settings.petMode}>
@@ -131,7 +131,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          isPetActive(playerStore.talents, playerStore.settings, true) &&
+          isPetActive(playerStore.talents, playerStore.settings, true, false) &&
             <li id="prepopBlackBook">
               <label className="settings-left" htmlFor="prepopBlackBook">Prepop Black Book?</label>
               <select className="settings-right" name="prepopBlackBook" onChange={(e) => settingModifiedHandler(Setting.prepopBlackBook, e.target.value)} value={playerStore.settings.prepopBlackBook}>
@@ -162,7 +162,7 @@ export default function SettingsDisplay() {
         }
         {
           // Display if pet is succubus, pet is aggressive, and pet is not being sacrificed.
-          isPetActive(playerStore.talents, playerStore.settings, true) && playerStore.settings.petChoice === '2' &&
+          isPetActive(playerStore.talents, playerStore.settings, true, true) && playerStore.settings.petChoice === PetName.SUCCUBUS &&
             <li id="lashOfPainUsage">
               <label className='settings-left' htmlFor='lashOfPainUsage'>When to use Lash of Pain?</label>
               <select className='settings-right' name='lashOfPainUsage' onChange={(e) => settingModifiedHandler(Setting.lashOfPainUsage, e.target.value)} value={playerStore.settings.lashOfPainUsage}>
@@ -172,7 +172,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          isPetActive(playerStore.talents, playerStore.settings, true) &&
+          isPetActive(playerStore.talents, playerStore.settings, true, true) &&
             <li id="enemyArmor">
               <label className="settings-left" htmlFor="enemyArmor">Enemy Armor</label>
               <input className="settings-right" onChange={(e) => settingModifiedHandler(Setting.enemyArmor, e.target.value)} value={playerStore.settings.enemyArmor} type="number" min='0' max='10000' name="enemyArmor" />
@@ -319,7 +319,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras.faerieFire && isPetActive(playerStore.talents, playerStore.settings, true) &&
+          playerStore.auras.faerieFire && isPetActive(playerStore.talents, playerStore.settings, true, true) &&
             <li id='improvedFaerieFire'>
               <label className='settings-left' htmlFor="improvedFaerieFire">Improved Faerie Fire?</label>
               <select className='settings-right' name='improvedFaerieFire' onChange={(e) => settingModifiedHandler(Setting.improvedFaerieFire, e.target.value)} value={playerStore.settings.improvedFaerieFire}>
@@ -329,7 +329,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras.exposeArmor && isPetActive(playerStore.talents, playerStore.settings, true) &&
+          playerStore.auras.exposeArmor && isPetActive(playerStore.talents, playerStore.settings, true, true) &&
             <li id='improvedExposeArmor'>
               <label className='settings-left' htmlFor="improvedExposeArmor">Improved Expose Armor?</label>
               <select className='settings-right' name='improvedExposeArmor' onChange={(e) => settingModifiedHandler(Setting.improvedExposeArmor, e.target.value)} value={playerStore.settings.improvedExposeArmor}>
@@ -340,7 +340,7 @@ export default function SettingsDisplay() {
             </li>
         }
         {
-          playerStore.auras.exposeWeakness && isPetActive(playerStore.talents, playerStore.settings, true) &&
+          playerStore.auras.exposeWeakness && isPetActive(playerStore.talents, playerStore.settings, true, true) &&
             <div>
               <li id='survivalHunterAgility'>
                 <label className="settings-left" htmlFor="survivalHunterAgility">Survival Hunter Agility</label>

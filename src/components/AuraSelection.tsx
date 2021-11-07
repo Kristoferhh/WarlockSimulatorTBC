@@ -5,7 +5,7 @@ import { Aura, AuraGroup, AurasStruct } from "../Types";
 import { AuraGroups } from "../data/AuraGroups";
 import { setAurasStats, setSelectedAuras } from "../redux/PlayerSlice";
 import { nanoid } from "nanoid";
-import { getAurasStats, getBaseWowheadUrl } from "../Common";
+import { getAurasStats, getBaseWowheadUrl, isPetActive } from "../Common";
 import { useTranslation } from "react-i18next";
 import i18n from "../i18n/config";
 
@@ -41,29 +41,31 @@ export default function AuraSelection() {
   return(
     <section id="buffs-and-debuffs-section">
       {
-        AuraGroups.map(auraGroup =>
-          <div
-            key={nanoid()}
-            style={{display: auraGroup.heading !== AuraGroup.PetBuffs || playerState.talents.demonicSacrifice === 0 || playerState.settings.sacrificePet === 'no' ? '' : 'none'}}>
-            <h3 id='buffs-heading'>{t(auraGroup.heading)}</h3>
-            <ul>
-              {
-                Auras.filter((e) => e.group === auraGroup.heading).map(aura =>
-                  <li
-                    key={nanoid()}
-                    id={aura.varName}
-                    className='buffs aura'
-                    data-checked={playerState.auras[aura.varName] === true}
-                    onClick={(e) => { auraClickHandler(aura); e.preventDefault() }}
-                    style={{display: (!aura.forPet || (playerState.settings.petMode === '1' && (!playerState.talents.demonicSacrifice || playerState.settings.sacrificePet === 'no'))) ? '' : 'none'}}>
-                    <a href={`${getBaseWowheadUrl(i18n.language)}/${auraGroup.type}=${aura.id}`}>
-                      <img src={`${process.env.PUBLIC_URL}/img/${aura.iconName}.jpg`} alt={t(aura.name)} />
-                    </a>
-                  </li>
-                )
-              }
-            </ul>
-          </div>
+        AuraGroups
+          .filter(auraGroup => auraGroup.heading !== AuraGroup.PetBuffs || playerState.talents.demonicSacrifice === 0 || playerState.settings.sacrificePet === 'no')
+          .map(auraGroup =>
+            <div key={nanoid()}>
+              <h3 id='buffs-heading'>{t(auraGroup.heading)}</h3>
+              <ul>
+                {
+                  Auras
+                    .filter((aura) => aura.group === auraGroup.heading && (!aura.forPet || isPetActive(playerState.talents, playerState.settings, true, true)))
+                    .map(aura =>
+                      <li
+                        key={nanoid()}
+                        id={aura.varName}
+                        className='buffs aura'
+                        data-checked={playerState.auras[aura.varName] === true}
+                        onClick={(e) => { auraClickHandler(aura); e.preventDefault() }}
+                      >
+                        <a href={`${getBaseWowheadUrl(i18n.language)}/${auraGroup.type}=${aura.id}`}>
+                          <img src={`${process.env.PUBLIC_URL}/img/${aura.iconName}.jpg`} alt={t(aura.name)} />
+                        </a>
+                      </li>
+                  )
+                }
+              </ul>
+            </div>
         )
       }
     </section>
