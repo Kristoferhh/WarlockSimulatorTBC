@@ -89,27 +89,34 @@ export default function ProfilesAndSources() {
         <legend>{t('Profile Options')}</legend>
         <input placeholder={t('E.g. "P3 Shadow BiS"')} type="text" value={profileName} onChange={(e) => setProfileName(e.target.value)} name="profileName" />
         <button
+          className='btn btn-primary btn-sm'
           id="save-new-profile-button"
           onClick={(e) => callSetProfile(true)}
           disabled={profileName.replaceAll("'", "").length === 0}
         >{t('Save New Profile')}</button>
         <div id="update-profile-div">
           <button
+            className='btn btn-primary btn-sm'
             style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }}
             id="save-profile-button"
             onClick={(e) => callSetProfile(false)}
           >{t('Save')}</button>
+          {' '}
           <button
+            className='btn btn-primary btn-sm'
             style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }}
             id="delete-profile-button"
             onClick={(e) => deleteProfileHandler()}
           >{t('Delete')}</button>
+          {' '}
           <button
+            className='btn btn-primary btn-sm'
             style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }}
             id="rename-profile-button"
             onClick={(e) => renameProfileHandler()}
           >{t('Rename')}</button>
-          <button id="import-export-button" onClick={(e) => dispatch(setImportExportWindowVisibility(true))}>{t('Import/Export')}</button>
+          {' '}
+          <button id="import-export-button" className='btn btn-primary btn-sm' onClick={(e) => dispatch(setImportExportWindowVisibility(true))}>{t('Import/Export')}</button>
         </div>
       </fieldset>
       <fieldset id="saved-profiles" style={{ display: Object.keys(playerStore.profiles).length === 0 ? 'none' : '' }}>

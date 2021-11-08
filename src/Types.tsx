@@ -734,7 +734,7 @@ export enum ItemSource {
   HellfirePeninsulaQuest = "Hellfire Peninsula Quest",
   BloodFurnaceQuest = "The Blood Furnace Quest",
   SilithusQuest = "Silithus Quest",
-  NagrandQuest = "NagrandQuest",
+  NagrandQuest = "Nagrand Quest",
   ZangarmarshQuest = "Zangarmarsh Quest",
   TerokkarForestQuest = "Terokkar Forest Quest",
   ShatteredHallsQuest = "Shattered Halls Quest",

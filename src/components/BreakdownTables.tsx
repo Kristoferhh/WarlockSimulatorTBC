@@ -17,15 +17,15 @@ export default function BreakdownTables() {
         <table className="breakdown-table tablesorter" id="damage-breakdown-table" data-sortlist='[[1,1]]'>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Damage</th>
-              <th>Casts</th>
-              <th>Avg Cast</th>
-              <th>Crit %</th>
-              <th>Miss %</th>
-              <th style={{display: breakdownObj.spellDamageDict.Melee ? '' : 'none'}}>Dodge %</th>
-              <th style={{display: breakdownObj.spellDamageDict.Melee ? '' : 'none'}}>Glancing %</th>
-              <th>Dps</th>
+              <th>{t('Name')}</th>
+              <th>{t('Damage')}</th>
+              <th>{t('Casts')}</th>
+              <th>{t('Avg Cast')}</th>
+              <th>{t('Crit %')}</th>
+              <th>{t('Miss %')}</th>
+              <th style={{display: breakdownObj.spellDamageDict.Melee ? '' : 'none'}}>{t('Dodge %')}</th>
+              <th style={{display: breakdownObj.spellDamageDict.Melee ? '' : 'none'}}>{t('Glancing %')}</th>
+              <th>{t('Dps')}</th>
             </tr>
           </thead>
           <tbody>
@@ -58,10 +58,10 @@ export default function BreakdownTables() {
         <table className="breakdown-table tablesorter" id="mana-gain-breakdown-table" data-sortlist='[[1,1]]'>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>% Of Total Gain</th>
-              <th>Casts</th>
-              <th>Avg Cast</th>
+              <th>{t('Name')}</th>
+              <th>{t('% Of Total Gain')}</th>
+              <th>{t('Casts')}</th>
+              <th>{t('Avg Cast')}</th>
             </tr>
           </thead>
           <tbody>
@@ -84,9 +84,9 @@ export default function BreakdownTables() {
         <table className="breakdown-table tablesorter" id="aura-breakdown-table" data-sortlist='[[2,1]]'>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Count</th>
-              <th>Uptime</th>
+              <th>{t('Name')}</th>
+              <th>{t('Count')}</th>
+              <th>{t('Uptime')}</th>
             </tr>
           </thead>
           <tbody>

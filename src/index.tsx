@@ -5,7 +5,7 @@ import { Store } from './redux/Store';
 import { Provider } from 'react-redux';
 import '../node_modules/@fortawesome/fontawesome-free/js/all'
 import './i18n/config';
-import './index.css';
+import './css/index.css';
 
 ReactDOM.render(
   <React.StrictMode>

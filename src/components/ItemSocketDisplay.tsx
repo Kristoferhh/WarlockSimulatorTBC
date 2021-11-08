@@ -19,7 +19,7 @@ export default function ItemSocketDisplay(props: Props) {
   const playerState = useSelector((state: RootState) => state.player);
 
   return (
-    <div>
+    <div className='item-sockets-container'>
       {
         props.item.sockets?.map((socket, j) =>
           <a

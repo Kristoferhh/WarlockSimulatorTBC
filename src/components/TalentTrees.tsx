@@ -63,7 +63,7 @@ export default function TalentTrees() {
       <div id="preset-talent-buttons">
         {
           PresetTalents.map(talentTemplate =>
-            <button key={nanoid()} onClick={() => applyTalentTemplate(talentTemplate.talents)}>{t(talentTemplate.name)}</button>
+            <button className='btn btn-primary btn-sm' type='button' key={nanoid()} onClick={() => applyTalentTemplate(talentTemplate.talents)}>{t(talentTemplate.name)}</button>
           )
         }
       </div>

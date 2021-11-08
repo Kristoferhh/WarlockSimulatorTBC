@@ -22,6 +22,8 @@ export default function ImportExport() {
       selectedEnchants: playerState.selectedEnchants,
       settings: playerState.settings
     }));
+
+    setInterval(() => (document.getElementById('import-export-textarea') as HTMLInputElement)?.select(), 100);
   }
 
   function importProfile() {
@@ -55,7 +57,7 @@ export default function ImportExport() {
         dispatch(setSettingsState(data.settings));
         dispatch(setBaseStats(getBaseStats(data.settings.race as Race)));
       }
-      
+
       dispatch(setImportExportWindowVisibility(false));
     } catch (error) {
       alert(`Error importing profile: ${error}`);
@@ -64,11 +66,12 @@ export default function ImportExport() {
 
   return(
     <div id="import-export-window" className="close-button-target" style={{ display: windowIsVisible ? '' : 'none' }}>
-      <textarea onFocus={(e) => e.target.select()} value={contentString} onChange={(e) => setContentString(e.target.value)}></textarea>
-      <br/>
-      <button id="import-button" onClick={(e) => importProfile()}>Import</button>
-      <button id="export-button" onClick={(e) => exportProfile()}>Export</button>
-      <button id="export-close-button" onClick={(e) => { dispatch(setImportExportWindowVisibility(false)); setContentString(''); }}>Close</button>
+      <textarea id='import-export-textarea' value={contentString} onChange={(e) => setContentString(e.target.value)}></textarea>
+      <button className='btn btn-primary btn-sm' id="import-button" onClick={(e) => importProfile()}>Import</button>
+      {' '}
+      <button className='btn btn-primary btn-sm' id="export-button" onClick={(e) => exportProfile()}>Export</button>
+      {' '}
+      <button className='btn btn-primary btn-sm' id="export-close-button" onClick={(e) => { dispatch(setImportExportWindowVisibility(false)); setContentString(''); }}>Close</button>
     </div>
   )
 }

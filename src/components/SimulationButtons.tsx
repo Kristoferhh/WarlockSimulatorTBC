@@ -412,25 +412,25 @@ export function SimulationButtons() {
           </div>
       }
       <div
-        className='btn active-btn'
+        className='warlock-btn active-btn'
         onClick={() => simulate({ itemIdsToSim: [Items.find(e => e.id === playerState.selectedItems[ItemSlotKeyToItemSlot(false, uiState.selectedItemSlot, uiState.selectedItemSubSlot)])?.id || 0], type: SimulationType.Normal })}
         style={{background: simulationInProgress && simulationType === SimulationType.Normal ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
       >{simulationInProgress && simulationType === SimulationType.Normal ? `${simulationProgressPercent}%` : 'Simulate'}</div>
       <div
-        className='btn active-btn'
+        className='warlock-btn active-btn'
         onClick={() => simulate({ itemIdsToSim: getItemTableItems(uiState.selectedItemSlot, uiState.selectedItemSubSlot, playerState.selectedItems, uiState.sources, uiState.hiddenItems, false, uiState.savedItemDps).map(item => item.id), type: SimulationType.AllItems })}
         style={{background: simulationInProgress && simulationType === SimulationType.AllItems ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
       >{simulationInProgress && simulationType === SimulationType.AllItems ? `${simulationProgressPercent}%` : 'Simulate All Items'}</div>
       <div
-        className='btn active-btn'
+        className='warlock-btn active-btn'
         onClick={() => simulate({ type: SimulationType.StatWeights })}
         style={{background: simulationInProgress && simulationType === SimulationType.StatWeights ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
       >{simulationInProgress && simulationType === SimulationType.StatWeights ? `${simulationProgressPercent}%` : 'Stat Weights'}</div>
       {
-        <div className={'btn' + (combatLogButtonIsDisabled() ? ' disabled-btn' : ' active-btn')} onClick={() => !combatLogButtonIsDisabled() && dispatch(setCombatLogVisibility(!uiState.combatLog.visible))}>Combat Log</div>
+        <div className={'warlock-btn' + (combatLogButtonIsDisabled() ? ' disabled-btn' : ' active-btn')} onClick={() => !combatLogButtonIsDisabled() && dispatch(setCombatLogVisibility(!uiState.combatLog.visible))}>Combat Log</div>
       }
       {
-        <div className={'btn' + (histogramButtonIsDisabled() ? ' disabled-btn' : ' active-btn')} onClick={() => !histogramButtonIsDisabled() && dispatch(setHistogramVisibility(!uiState.histogram.visible))}>Histogram</div>
+        <div className={'warlock-btn' + (histogramButtonIsDisabled() ? ' disabled-btn' : ' active-btn')} onClick={() => !histogramButtonIsDisabled() && dispatch(setHistogramVisibility(!uiState.histogram.visible))}>Histogram</div>
       }
       <p id="sim-length-result">{simulationDuration.length > 0 ? simulationDuration + 's' : ''}</p>
     </>

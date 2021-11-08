@@ -91,7 +91,7 @@ export default function LanguageSelection() {
                   >
                     {
                       Languages.map(language =>
-                        <MenuItem key={nanoid()} onClick={() => languageClickHandler(language.iso)}>{language.name}</MenuItem>
+                        <MenuItem key={nanoid()} className='language-item' onClick={() => languageClickHandler(language.iso)}>{language.name}</MenuItem>
                       )
                     }
                   </MenuList>

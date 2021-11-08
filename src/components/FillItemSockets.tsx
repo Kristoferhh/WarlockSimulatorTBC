@@ -110,8 +110,9 @@ export function FillItemSockets() {
           }
         </div>
       </div>
-      <button id='gem-options-apply-button' onClick={(e) => fillSockets()} disabled={selectedGemId === 0}>Apply</button>
-      <button onClick={(e) => dispatch(setFillItemSocketsWindowVisibility(false))}>Close</button>
+      <button className='btn btn-primary btn-sm' id='gem-options-apply-button' onClick={(e) => fillSockets()} disabled={selectedGemId === 0}>Apply</button>
+      {' '}
+      <button className='btn btn-primary btn-sm' onClick={(e) => dispatch(setFillItemSocketsWindowVisibility(false))}>Close</button>
     </div>
   )
 }
