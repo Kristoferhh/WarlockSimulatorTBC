@@ -140,7 +140,9 @@ export default function ItemSelection() {
         }
       </ul>
       <button className='btn btn-primary btn-sm' onClick={(e) => setHidingItems(!hidingItems)}>{t('Hide / Show Items')}</button>
+      {' '}
       <button className='btn btn-primary btn-sm' onClick={(e) => dispatch(setFillItemSocketsWindowVisibility(!uiStore.fillItemSocketsWindowVisible))}>{t('Fill Item Sockets')}</button>
+      {' '}
       <button className='btn btn-primary btn-sm' onClick={(e) => dispatch(setEquippedItemsWindowVisibility(!uiStore.equippedItemsWindowVisible))}>{t('Show Equipped Items')}</button>
       <FillItemSockets />
       <table id="item-selection-table" data-type="mainhand" className="tablesorter" data-sortlist='[[12,1]]'>
