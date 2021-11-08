@@ -14,5 +14,6 @@
  Compile the C++ code by running the `make` command in the root directory of the project
  
  ## GitHub Pages URL
- https://kristoferhh.github.io/WarlockSimulatorTBC/
- ![image](https://user-images.githubusercontent.com/12117382/136641237-61653b35-7b94-4fcb-bca5-243eba96e8f8.png)
+ https://kristoferhh.github.io/WarlockSimulatorTBC
+ ![image](https://user-images.githubusercontent.com/12117382/140816543-a1656e01-8a63-454e-bf2c-239dc04a1680.png)
+ ![image](https://user-images.githubusercontent.com/12117382/140816708-08453c89-b39b-477c-b71e-952fe9fe05c0.png)
