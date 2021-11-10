@@ -8,7 +8,7 @@
 #include <chrono>
 #include "enums.h"
 
-Simulation::Simulation(Player* player, SimulationSettings* simulationSettings)
+Simulation::Simulation(std::shared_ptr<Player> player, std::shared_ptr<SimulationSettings> simulationSettings)
     : player(player), settings(simulationSettings) {}
 
 void Simulation::start()

@@ -6,7 +6,7 @@ struct Player;
 
 struct Trinket
 {
-    Player* player;
+    std::shared_ptr<Player> player;
     std::unique_ptr<AuraStats> stats;
     int duration;
     double durationRemaining;
@@ -16,7 +16,7 @@ struct Trinket
     bool sharesCooldown;
     std::string name;
 
-    Trinket(Player* player);
+    Trinket(std::shared_ptr<Player> player);
     bool ready();
     void reset();
     void setup();
@@ -27,75 +27,75 @@ struct Trinket
 
 struct RestrainedEssenceOfSapphiron : public Trinket
 {
-    RestrainedEssenceOfSapphiron(Player* player);
+    RestrainedEssenceOfSapphiron(std::shared_ptr<Player> player);
 };
 
 struct ShiftingNaaruSliver : public Trinket
 {
-    ShiftingNaaruSliver(Player* player);
+    ShiftingNaaruSliver(std::shared_ptr<Player> player);
 };
 
 struct SkullOfGuldan : public Trinket
 {
-    SkullOfGuldan(Player* player);
+    SkullOfGuldan(std::shared_ptr<Player> player);
 };
 
 struct HexShrunkenHead : public Trinket
 {
-    HexShrunkenHead(Player* player);
+    HexShrunkenHead(std::shared_ptr<Player> player);
 };
 
 struct IconOfTheSilverCrescent : public Trinket
 {
-    IconOfTheSilverCrescent(Player* player);
+    IconOfTheSilverCrescent(std::shared_ptr<Player> player);
 };
 
 struct ScryersBloodgem : public Trinket
 {
-    ScryersBloodgem(Player* player);
+    ScryersBloodgem(std::shared_ptr<Player> player);
 };
 
 struct AncientCrystalTalisman : public Trinket
 {
-    AncientCrystalTalisman(Player* player);
+    AncientCrystalTalisman(std::shared_ptr<Player> player);
 };
 
 struct ArcanistsStone : public Trinket
 {
-    ArcanistsStone(Player* player);
+    ArcanistsStone(std::shared_ptr<Player> player);
 };
 
 struct TerokkarTabletOfVim : public Trinket
 {
-    TerokkarTabletOfVim(Player* player);
+    TerokkarTabletOfVim(std::shared_ptr<Player> player);
 };
 
 struct XirisGift : public Trinket
 {
-    XirisGift(Player* player);
+    XirisGift(std::shared_ptr<Player> player);
 };
 
 struct VengeanceOfTheIllidari : public Trinket
 {
-    VengeanceOfTheIllidari(Player* player);
+    VengeanceOfTheIllidari(std::shared_ptr<Player> player);
 };
 
 struct FigurineLivingRubySerpent : public Trinket
 {
-    FigurineLivingRubySerpent(Player* player);
+    FigurineLivingRubySerpent(std::shared_ptr<Player> player);
 };
 
 struct EssenceOfTheMartyr : public Trinket
 {
-    EssenceOfTheMartyr(Player* player);
+    EssenceOfTheMartyr(std::shared_ptr<Player> player);
 };
 
 struct StarkillersBauble : public Trinket
 {
-    StarkillersBauble(Player* player);
+    StarkillersBauble(std::shared_ptr<Player> player);
 };
 
 struct DarkIronSmokingPipe : public Trinket
 {
-    DarkIronSmokingPipe(Player* player);
+    DarkIronSmokingPipe(std::shared_ptr<Player> player);
 };

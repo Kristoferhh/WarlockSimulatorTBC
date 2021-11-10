@@ -1,10 +1,11 @@
 #pragma once
 
 struct Player;
+#include <memory>
 
 struct PetStats
 {
-    Player* player;
+    std::shared_ptr<Player> player;
     int stamina;
     int intellect;
     int strength;
@@ -29,5 +30,5 @@ struct PetStats
     double attackPowerModifier;
     double damageModifier;
 
-    PetStats(Player* player = nullptr);
+    PetStats(std::shared_ptr<Player> player = nullptr);
 };

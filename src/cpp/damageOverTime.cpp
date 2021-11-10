@@ -2,7 +2,7 @@
 #include "common.h"
 #include "player.h"
 
-DamageOverTime::DamageOverTime(Player* player) : player(player)
+DamageOverTime::DamageOverTime(std::shared_ptr<Player> player) : player(player)
 {
     duration = 0;
     tickTimerTotal = 3;
@@ -210,7 +210,7 @@ void DamageOverTime::tick(double t)
     }
 }
 
-CorruptionDot::CorruptionDot(Player* player) : DamageOverTime(player)
+CorruptionDot::CorruptionDot(std::shared_ptr<Player> player) : DamageOverTime(player)
 {
     name = "Corruption";
     duration = 18;
@@ -249,7 +249,7 @@ void CorruptionDot::apply()
     DamageOverTime::apply();
 }
 
-UnstableAfflictionDot::UnstableAfflictionDot(Player* player) : DamageOverTime(player)
+UnstableAfflictionDot::UnstableAfflictionDot(std::shared_ptr<Player> player) : DamageOverTime(player)
 {
     name = "Unstable Affliction";
     duration = 18;
@@ -261,7 +261,7 @@ UnstableAfflictionDot::UnstableAfflictionDot(Player* player) : DamageOverTime(pl
     setup();
 }
 
-SiphonLifeDot::SiphonLifeDot(Player* player) : DamageOverTime(player)
+SiphonLifeDot::SiphonLifeDot(std::shared_ptr<Player> player) : DamageOverTime(player)
 {
     name = "Siphon Life";
     duration = 30;
@@ -273,7 +273,7 @@ SiphonLifeDot::SiphonLifeDot(Player* player) : DamageOverTime(player)
     setup();
 }
 
-ImmolateDot::ImmolateDot(Player* player) : DamageOverTime(player)
+ImmolateDot::ImmolateDot(std::shared_ptr<Player> player) : DamageOverTime(player)
 {
     name = "Immolate";
     duration = 15;
@@ -293,7 +293,7 @@ void ImmolateDot::apply()
     DamageOverTime::apply();
 }
 
-CurseOfAgonyDot::CurseOfAgonyDot(Player* player) : DamageOverTime(player)
+CurseOfAgonyDot::CurseOfAgonyDot(std::shared_ptr<Player> player) : DamageOverTime(player)
 {
     name = "Curse of Agony";
     duration = 24;
@@ -314,7 +314,7 @@ double CurseOfAgonyDot::getModifier()
     return modifier;
 }
 
-CurseOfDoomDot::CurseOfDoomDot(Player* player) : DamageOverTime(player)
+CurseOfDoomDot::CurseOfDoomDot(std::shared_ptr<Player> player) : DamageOverTime(player)
 {
     name = "Curse of Doom";
     duration = 60;

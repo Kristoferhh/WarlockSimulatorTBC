@@ -7,9 +7,9 @@ struct Player;
 #include "petAuras.h"
 #include <iostream>
 
-struct Pet
+struct Pet : std::enable_shared_from_this<Pet>
 {
-    Player* player;
+    std::shared_ptr<Player> player;
     std::unique_ptr<PetSpells> spells;
     std::unique_ptr<PetAuras> auras;
     std::unique_ptr<PetStats> baseStats;
@@ -32,7 +32,7 @@ struct Pet
     double dmg;
     double baseMeleeSpeed;
 
-    Pet(Player* player);
+    Pet(std::shared_ptr<Player> player);
     void initialize();
     void calculateStatsFromAuras();
     void calculateStatsFromPlayer(bool announceInCombatLog = true);
@@ -51,15 +51,15 @@ struct Pet
 
 struct Imp : public Pet
 {
-    Imp(Player* player);
+    Imp(std::shared_ptr<Player> player);
 };
 
 struct Succubus : public Pet
 {
-    Succubus(Player* player);
+    Succubus(std::shared_ptr<Player> player);
 };
 
 struct Felguard : public Pet
 {
-    Felguard(Player* player);
+    Felguard(std::shared_ptr<Player> player);
 };

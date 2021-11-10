@@ -4,7 +4,7 @@
 #include "damageOverTime.h"
 #include "bindings.h"
 
-Player::Player(PlayerSettings* playerSettings)
+Player::Player(std::shared_ptr<PlayerSettings> playerSettings)
     : selectedAuras(playerSettings->auras), talents(playerSettings->talents), sets(playerSettings->sets), stats(playerSettings->stats), items(playerSettings->items), settings(playerSettings)
 {
     spells = std::make_unique<PlayerSpells>();
@@ -133,7 +133,7 @@ Player::Player(PlayerSettings* playerSettings)
     {
         stats->spellPower += 100 * (0 + 0.1 * talents->demonicAegis);
     }
-    // If using a custom isb uptime % then just add to the shadow modifier % (this assumes 5/5 ISB giving 20% shadow damage)
+    // If using a custom isb uptime % then just add to the shadow modifier % (shared_from_this() assumes 5/5 ISB giving 20% shadow damage)
     if (settings->usingCustomIsbUptime)
     {
         stats->shadowModifier *= (1.0 + 0.2 * (settings->customIsbUptimeValue / 100.0));
@@ -211,15 +211,15 @@ Player::Player(PlayerSettings* playerSettings)
     {
         if (settings->petIsImp)
         {
-            pet = std::make_unique<Imp>(this);
+            pet = std::make_unique<Imp>(shared_from_this());
         }
         else if (settings->petIsSuccubus)
         {
-            pet = std::make_unique<Succubus>(this);
+            pet = std::make_unique<Succubus>(shared_from_this());
         }
         else if (settings->petIsFelguard)
         {
-            pet = std::make_unique<Felguard>(this);
+            pet = std::make_unique<Felguard>(shared_from_this());
         }
     }
 
@@ -281,132 +281,132 @@ void Player::initialize()
 {
     // Trinkets
     std::vector<int> trinketIds { items->trinket1, items->trinket2 };
-    if (std::find(trinketIds.begin(), trinketIds.end(), 32483) != trinketIds.end()) trinkets.push_back(std::make_unique<SkullOfGuldan>(this));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 34429) != trinketIds.end()) trinkets.push_back(std::make_unique<ShiftingNaaruSliver>(this));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 33829) != trinketIds.end()) trinkets.push_back(std::make_unique<HexShrunkenHead>(this));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 29370) != trinketIds.end()) trinkets.push_back(std::make_unique<IconOfTheSilverCrescent>(this));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 29132) != trinketIds.end()) trinkets.push_back(std::make_unique<ScryersBloodgem>(this));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 23046) != trinketIds.end()) trinkets.push_back(std::make_unique<RestrainedEssenceOfSapphiron>(this));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 29179) != trinketIds.end()) trinkets.push_back(std::make_unique<XirisGift>(this));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 25620) != trinketIds.end()) trinkets.push_back(std::make_unique<AncientCrystalTalisman>(this));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 28223) != trinketIds.end()) trinkets.push_back(std::make_unique<ArcanistsStone>(this));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 25936) != trinketIds.end()) trinkets.push_back(std::make_unique<TerokkarTabletOfVim>(this));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 28040) != trinketIds.end()) trinkets.push_back(std::make_unique<VengeanceOfTheIllidari>(this));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 24126) != trinketIds.end()) trinkets.push_back(std::make_unique<FigurineLivingRubySerpent>(this));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 29376) != trinketIds.end()) trinkets.push_back(std::make_unique<EssenceOfTheMartyr>(this));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 30340) != trinketIds.end()) trinkets.push_back(std::make_unique<StarkillersBauble>(this));
-    if (std::find(trinketIds.begin(), trinketIds.end(), 38290) != trinketIds.end()) trinkets.push_back(std::make_unique<DarkIronSmokingPipe>(this));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 32483) != trinketIds.end()) trinkets.push_back(std::make_unique<SkullOfGuldan>(shared_from_this()));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 34429) != trinketIds.end()) trinkets.push_back(std::make_unique<ShiftingNaaruSliver>(shared_from_this()));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 33829) != trinketIds.end()) trinkets.push_back(std::make_unique<HexShrunkenHead>(shared_from_this()));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 29370) != trinketIds.end()) trinkets.push_back(std::make_unique<IconOfTheSilverCrescent>(shared_from_this()));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 29132) != trinketIds.end()) trinkets.push_back(std::make_unique<ScryersBloodgem>(shared_from_this()));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 23046) != trinketIds.end()) trinkets.push_back(std::make_unique<RestrainedEssenceOfSapphiron>(shared_from_this()));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 29179) != trinketIds.end()) trinkets.push_back(std::make_unique<XirisGift>(shared_from_this()));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 25620) != trinketIds.end()) trinkets.push_back(std::make_unique<AncientCrystalTalisman>(shared_from_this()));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 28223) != trinketIds.end()) trinkets.push_back(std::make_unique<ArcanistsStone>(shared_from_this()));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 25936) != trinketIds.end()) trinkets.push_back(std::make_unique<TerokkarTabletOfVim>(shared_from_this()));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 28040) != trinketIds.end()) trinkets.push_back(std::make_unique<VengeanceOfTheIllidari>(shared_from_this()));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 24126) != trinketIds.end()) trinkets.push_back(std::make_unique<FigurineLivingRubySerpent>(shared_from_this()));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 29376) != trinketIds.end()) trinkets.push_back(std::make_unique<EssenceOfTheMartyr>(shared_from_this()));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 30340) != trinketIds.end()) trinkets.push_back(std::make_unique<StarkillersBauble>(shared_from_this()));
+    if (std::find(trinketIds.begin(), trinketIds.end(), 38290) != trinketIds.end()) trinkets.push_back(std::make_unique<DarkIronSmokingPipe>(shared_from_this()));
 
     // Auras
     if (settings->isSingleTarget)
     {
-        if (talents->improvedShadowBolt > 0) auras->ImprovedShadowBolt = std::make_shared<ImprovedShadowBoltAura>(this);
-        if (settings->hasCorruption || settings->simChoosingRotation) auras->Corruption = std::make_shared<CorruptionDot>(this);
-        if (talents->unstableAffliction == 1 && (settings->hasUnstableAffliction || settings->simChoosingRotation)) auras->UnstableAffliction = std::make_shared<UnstableAfflictionDot>(this);
-        if (talents->siphonLife == 1 && (settings->hasSiphonLife || settings->simChoosingRotation)) auras->SiphonLife = std::make_shared<SiphonLifeDot>(this);
-        if (settings->hasImmolate || settings->simChoosingRotation) auras->Immolate = std::make_shared<ImmolateDot>(this);
-        if (settings->hasCurseOfAgony || settings->hasCurseOfDoom) auras->CurseOfAgony = std::make_shared<CurseOfAgonyDot>(this);
-        if (settings->hasCurseOfTheElements) auras->CurseOfTheElements = std::make_shared<CurseOfTheElementsAura>(this);
-        if (settings->hasCurseOfRecklessness) auras->CurseOfRecklessness = std::make_shared<CurseOfRecklessnessAura>(this);
-        if (settings->hasCurseOfDoom) auras->CurseOfDoom = std::make_shared<CurseOfDoomDot>(this);
-        if (talents->nightfall > 0) auras->ShadowTrance = std::make_shared<ShadowTranceAura>(this);
-        if (talents->amplifyCurse == 1 && (settings->hasAmplifyCurse || settings->simChoosingRotation)) auras->AmplifyCurse = std::make_shared<AmplifyCurseAura>(this);
+        if (talents->improvedShadowBolt > 0) auras->ImprovedShadowBolt = std::make_shared<ImprovedShadowBoltAura>(shared_from_this());
+        if (settings->hasCorruption || settings->simChoosingRotation) auras->Corruption = std::make_shared<CorruptionDot>(shared_from_this());
+        if (talents->unstableAffliction == 1 && (settings->hasUnstableAffliction || settings->simChoosingRotation)) auras->UnstableAffliction = std::make_shared<UnstableAfflictionDot>(shared_from_this());
+        if (talents->siphonLife == 1 && (settings->hasSiphonLife || settings->simChoosingRotation)) auras->SiphonLife = std::make_shared<SiphonLifeDot>(shared_from_this());
+        if (settings->hasImmolate || settings->simChoosingRotation) auras->Immolate = std::make_shared<ImmolateDot>(shared_from_this());
+        if (settings->hasCurseOfAgony || settings->hasCurseOfDoom) auras->CurseOfAgony = std::make_shared<CurseOfAgonyDot>(shared_from_this());
+        if (settings->hasCurseOfTheElements) auras->CurseOfTheElements = std::make_shared<CurseOfTheElementsAura>(shared_from_this());
+        if (settings->hasCurseOfRecklessness) auras->CurseOfRecklessness = std::make_shared<CurseOfRecklessnessAura>(shared_from_this());
+        if (settings->hasCurseOfDoom) auras->CurseOfDoom = std::make_shared<CurseOfDoomDot>(shared_from_this());
+        if (talents->nightfall > 0) auras->ShadowTrance = std::make_shared<ShadowTranceAura>(shared_from_this());
+        if (talents->amplifyCurse == 1 && (settings->hasAmplifyCurse || settings->simChoosingRotation)) auras->AmplifyCurse = std::make_shared<AmplifyCurseAura>(shared_from_this());
     }
-    if (selectedAuras->powerInfusion) auras->PowerInfusion = std::make_shared<PowerInfusionAura>(this);
-    if (selectedAuras->innervate) auras->Innervate = std::make_shared<InnervateAura>(this);
-    if (selectedAuras->bloodlust) auras->Bloodlust = std::make_shared<BloodlustAura>(this);
-    if (selectedAuras->destructionPotion) auras->DestructionPotion = std::make_shared<DestructionPotionAura>(this);
-    if (selectedAuras->flameCap) auras->FlameCap = std::make_shared<FlameCapAura>(this);
-    if (settings->isOrc) auras->BloodFury = std::make_shared<BloodFuryAura>(this);
-    if (selectedAuras->drumsOfBattle) auras->DrumsOfBattle = std::make_shared<DrumsOfBattleAura>(this);
-    else if (selectedAuras->drumsOfWar) auras->DrumsOfWar = std::make_shared<DrumsOfWarAura>(this);
-    else if (selectedAuras->drumsOfRestoration) auras->DrumsOfRestoration = std::make_shared<DrumsOfRestorationAura>(this);
-    if (items->mainHand == 31336) auras->BladeOfWizardry = std::make_shared<BladeOfWizardryAura>(this);
-    if (items->neck == 34678) auras->ShatteredSunPendantOfAcumen = std::make_shared<ShatteredSunPendantOfAcumenAura>(this);
-    if (items->chest == 28602) auras->RobeOfTheElderScribes = std::make_shared<RobeOfTheElderScribesAura>(this);
-    if (settings->metaGemId == 25893) auras->MysticalSkyfireDiamond = std::make_shared<MysticalSkyfireDiamondAura>(this);
-    if (std::find(trinketIds.begin(), trinketIds.end(), 28789) != trinketIds.end()) auras->EyeOfMagtheridon = std::make_shared<EyeOfMagtheridonAura>(this);
-    if (std::find(trinketIds.begin(), trinketIds.end(), 32493) != trinketIds.end()) auras->AshtongueTalismanOfShadows = std::make_shared<AshtongueTalismanOfShadowsAura>(this);
-    if (std::find(trinketIds.begin(), trinketIds.end(), 31856) != trinketIds.end()) auras->DarkmoonCardCrusade = std::make_shared<DarkmoonCardCrusadeAura>(this);
-    if (std::find(trinketIds.begin(), trinketIds.end(), 28785) != trinketIds.end()) auras->TheLightningCapacitor = std::make_shared<TheLightningCapacitorAura>(this);
-    if (std::find(trinketIds.begin(), trinketIds.end(), 27683) != trinketIds.end()) auras->QuagmirransEye = std::make_shared<QuagmirransEyeAura>(this);
-    if (std::find(trinketIds.begin(), trinketIds.end(), 28418) != trinketIds.end()) auras->ShiffarsNexusHorn = std::make_shared<ShiffarsNexusHornAura>(this);
-    if (std::find(trinketIds.begin(), trinketIds.end(), 30626) != trinketIds.end()) auras->SextantOfUnstableCurrents = std::make_shared<SextantOfUnstableCurrentsAura>(this);
-    if (items->ring1 == 29305 || items->ring2 == 29305) auras->BandOfTheEternalSage = std::make_shared<BandOfTheEternalSageAura>(this);
-    if (items->ring1 == 21190 || items->ring2 == 21190) auras->WrathOfCenarius = std::make_shared<WrathOfCenariusAura>(this);
+    if (selectedAuras->powerInfusion) auras->PowerInfusion = std::make_shared<PowerInfusionAura>(shared_from_this());
+    if (selectedAuras->innervate) auras->Innervate = std::make_shared<InnervateAura>(shared_from_this());
+    if (selectedAuras->bloodlust) auras->Bloodlust = std::make_shared<BloodlustAura>(shared_from_this());
+    if (selectedAuras->destructionPotion) auras->DestructionPotion = std::make_shared<DestructionPotionAura>(shared_from_this());
+    if (selectedAuras->flameCap) auras->FlameCap = std::make_shared<FlameCapAura>(shared_from_this());
+    if (settings->isOrc) auras->BloodFury = std::make_shared<BloodFuryAura>(shared_from_this());
+    if (selectedAuras->drumsOfBattle) auras->DrumsOfBattle = std::make_shared<DrumsOfBattleAura>(shared_from_this());
+    else if (selectedAuras->drumsOfWar) auras->DrumsOfWar = std::make_shared<DrumsOfWarAura>(shared_from_this());
+    else if (selectedAuras->drumsOfRestoration) auras->DrumsOfRestoration = std::make_shared<DrumsOfRestorationAura>(shared_from_this());
+    if (items->mainHand == 31336) auras->BladeOfWizardry = std::make_shared<BladeOfWizardryAura>(shared_from_this());
+    if (items->neck == 34678) auras->ShatteredSunPendantOfAcumen = std::make_shared<ShatteredSunPendantOfAcumenAura>(shared_from_this());
+    if (items->chest == 28602) auras->RobeOfTheElderScribes = std::make_shared<RobeOfTheElderScribesAura>(shared_from_this());
+    if (settings->metaGemId == 25893) auras->MysticalSkyfireDiamond = std::make_shared<MysticalSkyfireDiamondAura>(shared_from_this());
+    if (std::find(trinketIds.begin(), trinketIds.end(), 28789) != trinketIds.end()) auras->EyeOfMagtheridon = std::make_shared<EyeOfMagtheridonAura>(shared_from_this());
+    if (std::find(trinketIds.begin(), trinketIds.end(), 32493) != trinketIds.end()) auras->AshtongueTalismanOfShadows = std::make_shared<AshtongueTalismanOfShadowsAura>(shared_from_this());
+    if (std::find(trinketIds.begin(), trinketIds.end(), 31856) != trinketIds.end()) auras->DarkmoonCardCrusade = std::make_shared<DarkmoonCardCrusadeAura>(shared_from_this());
+    if (std::find(trinketIds.begin(), trinketIds.end(), 28785) != trinketIds.end()) auras->TheLightningCapacitor = std::make_shared<TheLightningCapacitorAura>(shared_from_this());
+    if (std::find(trinketIds.begin(), trinketIds.end(), 27683) != trinketIds.end()) auras->QuagmirransEye = std::make_shared<QuagmirransEyeAura>(shared_from_this());
+    if (std::find(trinketIds.begin(), trinketIds.end(), 28418) != trinketIds.end()) auras->ShiffarsNexusHorn = std::make_shared<ShiffarsNexusHornAura>(shared_from_this());
+    if (std::find(trinketIds.begin(), trinketIds.end(), 30626) != trinketIds.end()) auras->SextantOfUnstableCurrents = std::make_shared<SextantOfUnstableCurrentsAura>(shared_from_this());
+    if (items->ring1 == 29305 || items->ring2 == 29305) auras->BandOfTheEternalSage = std::make_shared<BandOfTheEternalSageAura>(shared_from_this());
+    if (items->ring1 == 21190 || items->ring2 == 21190) auras->WrathOfCenarius = std::make_shared<WrathOfCenariusAura>(shared_from_this());
     if (sets->t4 >= 2)
     {
-        auras->Flameshadow = std::make_shared<FlameshadowAura>(this);
-        auras->Shadowflame = std::make_shared<ShadowflameAura>(this);
+        auras->Flameshadow = std::make_shared<FlameshadowAura>(shared_from_this());
+        auras->Shadowflame = std::make_shared<ShadowflameAura>(shared_from_this());
     }
-    if (sets->spellstrike >= 2) auras->Spellstrike = std::make_shared<SpellstrikeAura>(this);
-    if (sets->manaEtched >= 4) auras->ManaEtched4Set = std::make_shared<ManaEtched4SetAura>(this);
+    if (sets->spellstrike >= 2) auras->Spellstrike = std::make_shared<SpellstrikeAura>(shared_from_this());
+    if (sets->manaEtched >= 4) auras->ManaEtched4Set = std::make_shared<ManaEtched4SetAura>(shared_from_this());
 
     // Spells
-    spells->LifeTap = std::make_shared<LifeTap>(this);
+    spells->LifeTap = std::make_shared<LifeTap>(shared_from_this());
     if (!settings->isSingleTarget)
     {
-        spells->SeedOfCorruption = std::make_shared<SeedOfCorruption>(this);
+        spells->SeedOfCorruption = std::make_shared<SeedOfCorruption>(shared_from_this());
     }
     else
     {
-        if (settings->hasShadowBolt || talents->nightfall > 0 || settings->simChoosingRotation) spells->ShadowBolt = std::make_shared<ShadowBolt>(this);
-        if (settings->hasIncinerate || settings->simChoosingRotation) spells->Incinerate = std::make_shared<Incinerate>(this);
-        if (settings->hasSearingPain || settings->simChoosingRotation) spells->SearingPain = std::make_shared<SearingPain>(this);
-        if (settings->hasDeathCoil || settings->simChoosingRotation) spells->DeathCoil = std::make_shared<DeathCoil>(this);
-        if (talents->conflagrate == 1 && (settings->hasConflagrate || settings->simChoosingRotation)) spells->Conflagrate = std::make_shared<Conflagrate>(this);
-        if (talents->shadowburn == 1 && (settings->hasShadowburn || settings->simChoosingRotation)) spells->Shadowburn = std::make_shared<Shadowburn>(this);
-        if (talents->shadowfury == 1 && (settings->hasShadowfury || settings->simChoosingRotation)) spells->Shadowfury = std::make_shared<Shadowfury>(this);
-        if (auras->Corruption != NULL) spells->Corruption = std::make_shared<Corruption>(this, nullptr, auras->Corruption);
-        if (auras->UnstableAffliction != NULL) spells->UnstableAffliction = std::make_shared<UnstableAffliction>(this, nullptr, auras->UnstableAffliction);
-        if (auras->SiphonLife != NULL) spells->SiphonLife = std::make_shared<SiphonLife>(this, nullptr, auras->SiphonLife);
-        if (auras->Immolate != NULL) spells->Immolate = std::make_shared<Immolate>(this, nullptr, auras->Immolate);
-        if (auras->CurseOfAgony != NULL || auras->CurseOfDoom != NULL) spells->CurseOfAgony = std::make_shared<CurseOfAgony>(this, nullptr, auras->CurseOfAgony);
-        if (auras->CurseOfTheElements != NULL) spells->CurseOfTheElements = std::make_shared<CurseOfTheElements>(this, auras->CurseOfTheElements);
-        if (auras->CurseOfRecklessness != NULL) spells->CurseOfRecklessness = std::make_shared<CurseOfRecklessness>(this, auras->CurseOfRecklessness);
-        if (auras->CurseOfDoom != NULL) spells->CurseOfDoom = std::make_shared<CurseOfDoom>(this, nullptr, auras->CurseOfDoom);
-        if (auras->AmplifyCurse != NULL) spells->AmplifyCurse = std::make_shared<AmplifyCurse>(this, auras->AmplifyCurse);
+        if (settings->hasShadowBolt || talents->nightfall > 0 || settings->simChoosingRotation) spells->ShadowBolt = std::make_shared<ShadowBolt>(shared_from_this());
+        if (settings->hasIncinerate || settings->simChoosingRotation) spells->Incinerate = std::make_shared<Incinerate>(shared_from_this());
+        if (settings->hasSearingPain || settings->simChoosingRotation) spells->SearingPain = std::make_shared<SearingPain>(shared_from_this());
+        if (settings->hasDeathCoil || settings->simChoosingRotation) spells->DeathCoil = std::make_shared<DeathCoil>(shared_from_this());
+        if (talents->conflagrate == 1 && (settings->hasConflagrate || settings->simChoosingRotation)) spells->Conflagrate = std::make_shared<Conflagrate>(shared_from_this());
+        if (talents->shadowburn == 1 && (settings->hasShadowburn || settings->simChoosingRotation)) spells->Shadowburn = std::make_shared<Shadowburn>(shared_from_this());
+        if (talents->shadowfury == 1 && (settings->hasShadowfury || settings->simChoosingRotation)) spells->Shadowfury = std::make_shared<Shadowfury>(shared_from_this());
+        if (auras->Corruption != NULL) spells->Corruption = std::make_shared<Corruption>(shared_from_this(), nullptr, auras->Corruption);
+        if (auras->UnstableAffliction != NULL) spells->UnstableAffliction = std::make_shared<UnstableAffliction>(shared_from_this(), nullptr, auras->UnstableAffliction);
+        if (auras->SiphonLife != NULL) spells->SiphonLife = std::make_shared<SiphonLife>(shared_from_this(), nullptr, auras->SiphonLife);
+        if (auras->Immolate != NULL) spells->Immolate = std::make_shared<Immolate>(shared_from_this(), nullptr, auras->Immolate);
+        if (auras->CurseOfAgony != NULL || auras->CurseOfDoom != NULL) spells->CurseOfAgony = std::make_shared<CurseOfAgony>(shared_from_this(), nullptr, auras->CurseOfAgony);
+        if (auras->CurseOfTheElements != NULL) spells->CurseOfTheElements = std::make_shared<CurseOfTheElements>(shared_from_this(), auras->CurseOfTheElements);
+        if (auras->CurseOfRecklessness != NULL) spells->CurseOfRecklessness = std::make_shared<CurseOfRecklessness>(shared_from_this(), auras->CurseOfRecklessness);
+        if (auras->CurseOfDoom != NULL) spells->CurseOfDoom = std::make_shared<CurseOfDoom>(shared_from_this(), nullptr, auras->CurseOfDoom);
+        if (auras->AmplifyCurse != NULL) spells->AmplifyCurse = std::make_shared<AmplifyCurse>(shared_from_this(), auras->AmplifyCurse);
     }
-    if (selectedAuras->superManaPotion) spells->SuperManaPotion = std::make_shared<SuperManaPotion>(this);
-    if (selectedAuras->demonicRune) spells->DemonicRune = std::make_shared<DemonicRune>(this);
-    if (talents->darkPact == 1 && (settings->hasDarkPact || settings->simChoosingRotation)) spells->DarkPact = std::make_shared<DarkPact>(this);
-    if (auras->DestructionPotion != NULL) spells->DestructionPotion = std::make_shared<DestructionPotion>(this, auras->DestructionPotion);
-    if (auras->FlameCap != NULL) spells->FlameCap = std::make_shared<FlameCap>(this, auras->FlameCap);
-    if (auras->BloodFury != NULL) spells->BloodFury = std::make_shared<BloodFury>(this, auras->BloodFury);
-    if (auras->DrumsOfBattle != NULL) spells->DrumsOfBattle = std::make_shared<DrumsOfBattle>(this, auras->DrumsOfBattle);
-    else if (auras->DrumsOfWar != NULL) spells->DrumsOfWar = std::make_shared<DrumsOfWar>(this, auras->DrumsOfWar);
-    else if (auras->DrumsOfRestoration != NULL) spells->DrumsOfRestoration = std::make_shared<DrumsOfRestoration>(this, auras->DrumsOfRestoration);
-    if (auras->BladeOfWizardry != NULL) spells->BladeOfWizardry = std::make_shared<BladeOfWizardry>(this, auras->BladeOfWizardry);
-    if (auras->ShatteredSunPendantOfAcumen != NULL) spells->ShatteredSunPendantOfAcumen = std::make_shared<ShatteredSunPendantOfAcumen>(this, auras->ShatteredSunPendantOfAcumen);
-    if (auras->RobeOfTheElderScribes != NULL) spells->RobeOfTheElderScribes = std::make_shared<RobeOfTheElderScribes>(this, auras->RobeOfTheElderScribes);
-    if (auras->MysticalSkyfireDiamond != NULL) spells->MysticalSkyfireDiamond = std::make_shared<MysticalSkyfireDiamond>(this, auras->MysticalSkyfireDiamond);
-    if (settings->metaGemId == 25901) spells->InsightfulEarthstormDiamond = std::make_shared<InsightfulEarthstormDiamond>(this);
-    if (std::find(trinketIds.begin(), trinketIds.end(), 34470) != trinketIds.end()) spells->TimbalsFocusingCrystal = std::make_shared<TimbalsFocusingCrystal>(this);
-    if (std::find(trinketIds.begin(), trinketIds.end(), 27922) != trinketIds.end()) spells->MarkOfDefiance = std::make_shared<MarkOfDefiance>(this);
-    if (auras->TheLightningCapacitor != NULL) spells->TheLightningCapacitor = std::make_shared<TheLightningCapacitor>(this, auras->TheLightningCapacitor);
-    if (auras->QuagmirransEye != NULL) spells->QuagmirransEye = std::make_shared<QuagmirransEye>(this, auras->QuagmirransEye);
-    if (auras->ShiffarsNexusHorn != NULL) spells->ShiffarsNexusHorn = std::make_shared<ShiffarsNexusHorn>(this, auras->ShiffarsNexusHorn);
-    if (auras->SextantOfUnstableCurrents != NULL) spells->SextantOfUnstableCurrents = std::make_shared<SextantOfUnstableCurrents>(this, auras->SextantOfUnstableCurrents);
-    if (items->ring1 == 29305 || items->ring2 == 29305) spells->BandOfTheEternalSage = std::make_shared<BandOfTheEternalSage>(this, auras->BandOfTheEternalSage);
+    if (selectedAuras->superManaPotion) spells->SuperManaPotion = std::make_shared<SuperManaPotion>(shared_from_this());
+    if (selectedAuras->demonicRune) spells->DemonicRune = std::make_shared<DemonicRune>(shared_from_this());
+    if (talents->darkPact == 1 && (settings->hasDarkPact || settings->simChoosingRotation)) spells->DarkPact = std::make_shared<DarkPact>(shared_from_this());
+    if (auras->DestructionPotion != NULL) spells->DestructionPotion = std::make_shared<DestructionPotion>(shared_from_this(), auras->DestructionPotion);
+    if (auras->FlameCap != NULL) spells->FlameCap = std::make_shared<FlameCap>(shared_from_this(), auras->FlameCap);
+    if (auras->BloodFury != NULL) spells->BloodFury = std::make_shared<BloodFury>(shared_from_this(), auras->BloodFury);
+    if (auras->DrumsOfBattle != NULL) spells->DrumsOfBattle = std::make_shared<DrumsOfBattle>(shared_from_this(), auras->DrumsOfBattle);
+    else if (auras->DrumsOfWar != NULL) spells->DrumsOfWar = std::make_shared<DrumsOfWar>(shared_from_this(), auras->DrumsOfWar);
+    else if (auras->DrumsOfRestoration != NULL) spells->DrumsOfRestoration = std::make_shared<DrumsOfRestoration>(shared_from_this(), auras->DrumsOfRestoration);
+    if (auras->BladeOfWizardry != NULL) spells->BladeOfWizardry = std::make_shared<BladeOfWizardry>(shared_from_this(), auras->BladeOfWizardry);
+    if (auras->ShatteredSunPendantOfAcumen != NULL) spells->ShatteredSunPendantOfAcumen = std::make_shared<ShatteredSunPendantOfAcumen>(shared_from_this(), auras->ShatteredSunPendantOfAcumen);
+    if (auras->RobeOfTheElderScribes != NULL) spells->RobeOfTheElderScribes = std::make_shared<RobeOfTheElderScribes>(shared_from_this(), auras->RobeOfTheElderScribes);
+    if (auras->MysticalSkyfireDiamond != NULL) spells->MysticalSkyfireDiamond = std::make_shared<MysticalSkyfireDiamond>(shared_from_this(), auras->MysticalSkyfireDiamond);
+    if (settings->metaGemId == 25901) spells->InsightfulEarthstormDiamond = std::make_shared<InsightfulEarthstormDiamond>(shared_from_this());
+    if (std::find(trinketIds.begin(), trinketIds.end(), 34470) != trinketIds.end()) spells->TimbalsFocusingCrystal = std::make_shared<TimbalsFocusingCrystal>(shared_from_this());
+    if (std::find(trinketIds.begin(), trinketIds.end(), 27922) != trinketIds.end()) spells->MarkOfDefiance = std::make_shared<MarkOfDefiance>(shared_from_this());
+    if (auras->TheLightningCapacitor != NULL) spells->TheLightningCapacitor = std::make_shared<TheLightningCapacitor>(shared_from_this(), auras->TheLightningCapacitor);
+    if (auras->QuagmirransEye != NULL) spells->QuagmirransEye = std::make_shared<QuagmirransEye>(shared_from_this(), auras->QuagmirransEye);
+    if (auras->ShiffarsNexusHorn != NULL) spells->ShiffarsNexusHorn = std::make_shared<ShiffarsNexusHorn>(shared_from_this(), auras->ShiffarsNexusHorn);
+    if (auras->SextantOfUnstableCurrents != NULL) spells->SextantOfUnstableCurrents = std::make_shared<SextantOfUnstableCurrents>(shared_from_this(), auras->SextantOfUnstableCurrents);
+    if (items->ring1 == 29305 || items->ring2 == 29305) spells->BandOfTheEternalSage = std::make_shared<BandOfTheEternalSage>(shared_from_this(), auras->BandOfTheEternalSage);
     if (auras->PowerInfusion != NULL)
     {
         for (int i = 0; i < settings->powerInfusionAmount; i++)
         {
-            spells->PowerInfusion.push_back(std::make_shared<PowerInfusion>(this, auras->PowerInfusion));
+            spells->PowerInfusion.push_back(std::make_shared<PowerInfusion>(shared_from_this(), auras->PowerInfusion));
         }
     }
     if (auras->Bloodlust != NULL)
     {
         for (int i = 0; i < settings->bloodlustAmount; i++)
         {
-            spells->Bloodlust.push_back(std::make_shared<Bloodlust>(this, auras->Bloodlust));
+            spells->Bloodlust.push_back(std::make_shared<Bloodlust>(shared_from_this(), auras->Bloodlust));
         }
     }
     if (auras->Innervate != NULL)
     {
         for (int i = 0; i < settings->innervateAmount; i++)
         {
-            spells->Innervate.push_back(std::make_shared<Innervate>(this, auras->Innervate));
+            spells->Innervate.push_back(std::make_shared<Innervate>(shared_from_this(), auras->Innervate));
         }
     }
 

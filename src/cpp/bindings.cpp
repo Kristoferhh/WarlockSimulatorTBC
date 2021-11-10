@@ -5,9 +5,9 @@
 
 #ifdef EMSCRIPTEN
 #include "emscripten.h"
+#include "emscripten/bind.h"
 #else
 #include <iostream>
-#define EMSCRIPTEN_KEEPALIVE
 #endif
 
 void dpsUpdate(double dps)
@@ -133,179 +133,69 @@ void simulationEnd(double medianDps, double minDps, double maxDps, int itemId, i
 #endif
 }
 
-EMSCRIPTEN_KEEPALIVE
-void startSimulation(Simulation* sim)
+void startSimulation(std::shared_ptr<Simulation> sim)
 {
     sim->start();
 }
 
-EMSCRIPTEN_KEEPALIVE
 unsigned int* allocRandomSeeds(int amountOfSeeds)
 {
-    std::random_device rd;
+    srand(time(nullptr));
     unsigned int* seeds = new unsigned int[amountOfSeeds];
 
     for (int i = 0; i < amountOfSeeds; i++)
     {
-        seeds[i] = rd();
+        seeds[i] = rand();
     }
 
     return seeds;
 }
 
-EMSCRIPTEN_KEEPALIVE
-Items* allocItems(int head, int neck, int shoulders, int back, int chest, int bracers, int gloves, int belt, int legs, int boots
-    , int finger1, int finger2, int trinket1, int trinket2, int mainHand, int offHand, int twoHand, int wand)
+std::shared_ptr<Items> allocItems(int head, int neck, int shoulders, int back, int chest, int bracers, int gloves, int belt, int legs, int boots, int finger1, int finger2, int trinket1, int trinket2, int mainHand, int offHand, int twoHand, int wand)
 {
-    return new Items(head, neck, shoulders, back, chest, bracers, gloves, belt, legs, boots, finger1, finger2, trinket1, trinket2, mainHand, offHand, twoHand, wand);
+    return std::make_shared<Items>(head, neck, shoulders, back, chest, bracers, gloves, belt, legs, boots, finger1, finger2, trinket1, trinket2, mainHand, offHand, twoHand, wand);
 }
 
-EMSCRIPTEN_KEEPALIVE
-Auras* allocAuras(bool felArmor, bool blessingOfKings, bool blessingOfWisdom, bool judgementOfWisdom, bool manaSpringTotem, bool wrathOfAirTotem, bool totemOfWrath, bool markOfTheWild, bool arcaneIntellect
-    , bool prayerOfFortitude, bool prayerOfSpirit, bool bloodPact, bool inspiringPresence, bool moonkinAura, bool powerInfusion, bool powerOfTheGuardianWarlock, bool powerOfTheGuardianMage, bool eyeOfTheNight
-    , bool chainOfTheTwilightOwl, bool jadePendantOfBlasting, bool idolOfTheRavenGoddess, bool drumsOfBattle, bool drumsOfWar, bool drumsOfRestoration, bool bloodlust, bool ferociousInspiration
-    , bool innervate, bool curseOfTheElements, bool shadowWeaving, bool improvedScorch, bool misery, bool judgementOfTheCrusader, bool vampiricTouch, bool faerieFire, bool sunderArmor, bool exposeArmor
-    , bool curseOfRecklessness, bool bloodFrenzy, bool exposeWeakness, bool annihilator, bool improvedHuntersMark, bool flaskOfPureDeath, bool elixirOfMajorShadowPower, bool elixirOfMajorFirepower
-    , bool greaterArcaneElixir, bool adeptsElixir, bool elixirOfDraenicWisdom, bool elixirOfMajorMageblood, bool superManaPotion, bool destructionPotion, bool brilliantWizardOil, bool superiorWizardOil
-    , bool blessedWizardOil, bool demonicRune, bool flameCap, bool rumseyRumBlackLabel, bool kreegsStoutBeatdown, bool blackenedBasilisk, bool skullfishSoup, bool veryBerryCream, bool midsummerSausage
-    , bool bloodthistle, bool petBlessingOfKings, bool petBlessingOfWisdom, bool petBlessingOfMight, bool petArcaneIntellect, bool petMarkOfTheWild, bool petPrayerOfFortitude, bool petPrayerOfSpirit
-    , bool petKiblersBits, bool petHeroicPresence, bool petStrengthOfEarthTotem, bool petGraceOfAirTotem, bool petBattleShout, bool petTrueshotAura, bool petLeaderOfThePack, bool petUnleashedRage
-    , bool petStaminaScroll, bool petIntellectScroll, bool petStrengthScroll, bool petAgilityScroll, bool petSpiritScroll)
+std::shared_ptr<Auras> allocAuras(bool felArmor, bool blessingOfKings, bool blessingOfWisdom, bool judgementOfWisdom, bool manaSpringTotem, bool wrathOfAirTotem, bool totemOfWrath, bool markOfTheWild, bool arcaneIntellect, bool prayerOfFortitude, bool prayerOfSpirit, bool bloodPact, bool inspiringPresence, bool moonkinAura, bool powerInfusion, bool powerOfTheGuardianWarlock, bool powerOfTheGuardianMage, bool eyeOfTheNight, bool chainOfTheTwilightOwl, bool jadePendantOfBlasting, bool idolOfTheRavenGoddess, bool drumsOfBattle, bool drumsOfWar, bool drumsOfRestoration, bool bloodlust, bool ferociousInspiration, bool innervate, bool curseOfTheElements, bool shadowWeaving, bool improvedScorch, bool misery, bool judgementOfTheCrusader, bool vampiricTouch, bool faerieFire, bool sunderArmor, bool exposeArmor, bool curseOfRecklessness, bool bloodFrenzy, bool exposeWeakness, bool annihilator, bool improvedHuntersMark, bool flaskOfPureDeath, bool elixirOfMajorShadowPower, bool elixirOfMajorFirepower, bool greaterArcaneElixir, bool adeptsElixir, bool elixirOfDraenicWisdom, bool elixirOfMajorMageblood, bool superManaPotion, bool destructionPotion, bool brilliantWizardOil, bool superiorWizardOil, bool blessedWizardOil, bool demonicRune, bool flameCap, bool rumseyRumBlackLabel, bool kreegsStoutBeatdown, bool blackenedBasilisk, bool skullfishSoup, bool veryBerryCream, bool midsummerSausage, bool bloodthistle, bool petBlessingOfKings, bool petBlessingOfWisdom, bool petBlessingOfMight, bool petArcaneIntellect, bool petMarkOfTheWild, bool petPrayerOfFortitude, bool petPrayerOfSpirit, bool petKiblersBits, bool petHeroicPresence, bool petStrengthOfEarthTotem, bool petGraceOfAirTotem, bool petBattleShout, bool petTrueshotAura, bool petLeaderOfThePack, bool petUnleashedRage, bool petStaminaScroll, bool petIntellectScroll, bool petStrengthScroll, bool petAgilityScroll, bool petSpiritScroll)
 {
-    return new Auras(felArmor, blessingOfKings, blessingOfWisdom, judgementOfWisdom, manaSpringTotem, wrathOfAirTotem, totemOfWrath, markOfTheWild, arcaneIntellect, prayerOfFortitude, prayerOfSpirit, bloodPact
-    , inspiringPresence, moonkinAura, powerInfusion, powerOfTheGuardianWarlock, powerOfTheGuardianMage, eyeOfTheNight, chainOfTheTwilightOwl, jadePendantOfBlasting, idolOfTheRavenGoddess, drumsOfBattle
-    , drumsOfWar, drumsOfRestoration, bloodlust, ferociousInspiration, innervate, curseOfTheElements, shadowWeaving, improvedScorch, misery, judgementOfTheCrusader, vampiricTouch, faerieFire, sunderArmor
-    , exposeArmor, curseOfRecklessness, bloodFrenzy, exposeWeakness, annihilator, improvedHuntersMark, flaskOfPureDeath, elixirOfMajorShadowPower, elixirOfMajorFirepower, greaterArcaneElixir, adeptsElixir
-    , elixirOfDraenicWisdom, elixirOfMajorMageblood, superManaPotion, destructionPotion, brilliantWizardOil, superiorWizardOil, blessedWizardOil, demonicRune, flameCap, rumseyRumBlackLabel, kreegsStoutBeatdown
-    , blackenedBasilisk, skullfishSoup, veryBerryCream, midsummerSausage, bloodthistle, petBlessingOfKings, petBlessingOfWisdom, petBlessingOfMight, petArcaneIntellect, petMarkOfTheWild, petPrayerOfFortitude
-    , petPrayerOfSpirit, petKiblersBits, petHeroicPresence, petStrengthOfEarthTotem, petGraceOfAirTotem, petBattleShout, petTrueshotAura, petLeaderOfThePack, petUnleashedRage, petStaminaScroll, petIntellectScroll
-    , petStrengthScroll, petAgilityScroll, petSpiritScroll);
+    return std::make_shared<Auras>(felArmor, blessingOfKings, blessingOfWisdom, judgementOfWisdom, manaSpringTotem, wrathOfAirTotem, totemOfWrath, markOfTheWild, arcaneIntellect, prayerOfFortitude, prayerOfSpirit, bloodPact, inspiringPresence, moonkinAura, powerInfusion, powerOfTheGuardianWarlock, powerOfTheGuardianMage, eyeOfTheNight, chainOfTheTwilightOwl, jadePendantOfBlasting, idolOfTheRavenGoddess, drumsOfBattle, drumsOfWar, drumsOfRestoration, bloodlust, ferociousInspiration, innervate, curseOfTheElements, shadowWeaving, improvedScorch, misery, judgementOfTheCrusader, vampiricTouch, faerieFire, sunderArmor, exposeArmor, curseOfRecklessness, bloodFrenzy, exposeWeakness, annihilator, improvedHuntersMark, flaskOfPureDeath, elixirOfMajorShadowPower, elixirOfMajorFirepower, greaterArcaneElixir, adeptsElixir, elixirOfDraenicWisdom, elixirOfMajorMageblood, superManaPotion, destructionPotion, brilliantWizardOil, superiorWizardOil, blessedWizardOil, demonicRune, flameCap, rumseyRumBlackLabel, kreegsStoutBeatdown, blackenedBasilisk, skullfishSoup, veryBerryCream, midsummerSausage, bloodthistle, petBlessingOfKings, petBlessingOfWisdom, petBlessingOfMight, petArcaneIntellect, petMarkOfTheWild, petPrayerOfFortitude, petPrayerOfSpirit, petKiblersBits, petHeroicPresence, petStrengthOfEarthTotem, petGraceOfAirTotem, petBattleShout, petTrueshotAura, petLeaderOfThePack, petUnleashedRage, petStaminaScroll, petIntellectScroll, petStrengthScroll, petAgilityScroll, petSpiritScroll);
 }
 
-EMSCRIPTEN_KEEPALIVE
-Talents* allocTalents(int suppression, int improvedCorruption, int improvedLifeTap, int improvedCurseOfAgony, int amplifyCurse, int nightfall, int empoweredCorruption, int siphonLife, int shadowMastery, int contagion
-    , int darkPact, int unstableAffliction, int improvedImp, int demonicEmbrace, int felIntellect, int felStamina, int improvedSuccubus, int demonicAegis, int unholyPower, int demonicSacrifice, int manaFeed
-    , int masterDemonologist, int soulLink, int demonicKnowledge, int demonicTactics, int felguard, int improvedShadowBolt, int cataclysm, int bane, int improvedFirebolt, int improvedLashOfPain, int devastation
-    , int shadowburn, int improvedSearingPain, int improvedImmolate, int ruin, int emberstorm, int backlash, int conflagrate, int shadowAndFlame, int shadowfury)
+std::shared_ptr<Talents> allocTalents(int suppression, int improvedCorruption, int improvedLifeTap, int improvedCurseOfAgony, int amplifyCurse, int nightfall, int empoweredCorruption, int siphonLife, int shadowMastery, int contagion, int darkPact, int unstableAffliction, int improvedImp, int demonicEmbrace, int felIntellect, int felStamina, int improvedSuccubus, int demonicAegis, int unholyPower, int demonicSacrifice, int manaFeed, int masterDemonologist, int soulLink, int demonicKnowledge, int demonicTactics, int felguard, int improvedShadowBolt, int cataclysm, int bane, int improvedFirebolt, int improvedLashOfPain, int devastation, int shadowburn, int improvedSearingPain, int improvedImmolate, int ruin, int emberstorm, int backlash, int conflagrate, int shadowAndFlame, int shadowfury)
 {
-    return new Talents(suppression, improvedCorruption, improvedLifeTap, improvedCurseOfAgony, amplifyCurse, nightfall, empoweredCorruption, siphonLife, shadowMastery, contagion, darkPact, unstableAffliction
-    , improvedImp, demonicEmbrace, felIntellect, felStamina, improvedSuccubus, demonicAegis, unholyPower, demonicSacrifice, manaFeed, masterDemonologist, soulLink, demonicKnowledge, demonicTactics
-    , felguard, improvedShadowBolt, cataclysm, bane, improvedFirebolt, improvedLashOfPain, devastation, shadowburn, improvedSearingPain, improvedImmolate, ruin, emberstorm, backlash, conflagrate, shadowAndFlame, shadowfury);
+    return std::make_shared<Talents>(suppression, improvedCorruption, improvedLifeTap, improvedCurseOfAgony, amplifyCurse, nightfall, empoweredCorruption, siphonLife, shadowMastery, contagion, darkPact, unstableAffliction, improvedImp, demonicEmbrace, felIntellect, felStamina, improvedSuccubus, demonicAegis, unholyPower, demonicSacrifice, manaFeed, masterDemonologist, soulLink, demonicKnowledge, demonicTactics, felguard, improvedShadowBolt, cataclysm, bane, improvedFirebolt, improvedLashOfPain, devastation, shadowburn, improvedSearingPain, improvedImmolate, ruin, emberstorm, backlash, conflagrate, shadowAndFlame, shadowfury);
 }
 
-EMSCRIPTEN_KEEPALIVE
-Sets* allocSets(int plagueheart, int spellfire, int frozenShadoweave, int spellstrike, int oblivion, int manaEtched, int twinStars, int t4, int t5, int t6)
+std::shared_ptr<Sets> allocSets(int plagueheart, int spellfire, int frozenShadoweave, int spellstrike, int oblivion, int manaEtched, int twinStars, int t4, int t5, int t6)
 {
-    return new Sets(plagueheart, spellfire, frozenShadoweave, spellstrike, oblivion, manaEtched, twinStars, t4, t5, t6);
+    return std::make_shared<Sets>(plagueheart, spellfire, frozenShadoweave, spellstrike, oblivion, manaEtched, twinStars, t4, t5, t6);
 }
 
-EMSCRIPTEN_KEEPALIVE
-CharacterStats* allocStats(int health, int mana, double stamina, double intellect, double spirit, double spellPower, int shadowPower, int firePower, int hasteRating, int hitRating, int critRating,
-    int mp5, int spellPen, double fireModifier, double frostModifier, double shadowModifier, double staminaModifier, double intellectModifier,
-    double spiritModifier, double arcaneModifier, double natureModifier, int natureResist, int arcaneResist, int fireResist, int frostResist, int shadowResist)
+std::shared_ptr<CharacterStats> allocStats(int health, int mana, double stamina, double intellect, double spirit, double spellPower, int shadowPower, int firePower, int hasteRating, int hitRating, int critRating, int mp5, int spellPen, double fireModifier, double frostModifier, double shadowModifier, double staminaModifier, double intellectModifier, double spiritModifier, double arcaneModifier, double natureModifier, int natureResist, int arcaneResist, int fireResist, int frostResist, int shadowResist)
 {
-    return new CharacterStats(health, mana, stamina, intellect, spirit, spellPower, shadowPower, firePower, hasteRating, hitRating, critRating, mp5, spellPen, fireModifier, frostModifier
-    , shadowModifier, staminaModifier, intellectModifier, spiritModifier, arcaneModifier, natureModifier, natureResist, arcaneResist, fireResist, frostResist, shadowResist);
+    return std::make_shared<CharacterStats>(health, mana, stamina, intellect, spirit, spellPower, shadowPower, firePower, hasteRating, hitRating, critRating, mp5, spellPen, fireModifier, frostModifier, shadowModifier, staminaModifier, intellectModifier, spiritModifier, arcaneModifier, natureModifier, natureResist, arcaneResist, fireResist, frostResist, shadowResist);
 }
 
-EMSCRIPTEN_KEEPALIVE
-PlayerSettings* allocPlayerSettings(Auras* auras, Talents* talents, Sets* sets, CharacterStats* stats, Items* items, int itemId, int metaGemId, bool equippedItemSimulation, bool recordingCombatLogBreakdown, bool simmingStamina, bool simmingIntellect, bool simmingSpirit, bool simmingSpellPower
-    , bool simmingShadowPower, bool simmingFirePower, bool simmingHitRating, bool simmingCritRating, bool simmingHasteRating, bool simmingMp5, bool isAldor, int enemyLevel, int enemyShadowResist, int enemyFireResist
-    , int mageAtieshAmount, int totemOfWrathAmount, bool sacrificingPet, bool petIsImp, bool petIsSuccubus, bool petIsFelguard, int ferociousInspirationAmount, int improvedCurseOfTheElements
-    , bool usingCustomIsbUptime, int customIsbUptimeValue, int improvedDivineSpirit, int improvedImp, int shadowPriestDps, int warlockAtieshAmount, int improvedExposeArmor, bool isSingleTarget, int enemyAmount
-    , bool isOrc, int powerInfusionAmount, bool bloodlustAmount, bool innervateAmount, int enemyArmor, int exposeWeaknessUptime, bool improvedFaerieFire, bool infinitePlayerMana, bool infinitePetMana
-    , bool usingLashOfPainOnCooldown, bool petIsAggressive, bool prepopBlackBook, bool randomizeValues, bool userChoosingRotation, bool exaltedWithShattrathFaction, int survivalHunterAgility, bool hasImmolate
-    , bool hasCorruption, bool hasSiphonLife, bool hasUnstableAffliction, bool hasSearingPain, bool hasShadowBolt, bool hasIncinerate, bool hasCurseOfRecklessness, bool hasCurseOfTheElements, bool hasCurseOfAgony
-    , bool hasCurseOfDoom, bool hasDeathCoil, bool hasShadowburn, bool hasConflagrate, bool hasShadowfury, bool hasAmplifyCurse, bool hasDarkPact, bool hasElementalShamanT4Bonus)
+std::shared_ptr<PlayerSettings> allocPlayerSettings(std::shared_ptr<Auras> auras, std::shared_ptr<Talents> talents, std::shared_ptr<Sets> sets, std::shared_ptr<CharacterStats> stats, std::shared_ptr<Items> items, int itemId, int metaGemId, bool equippedItemSimulation, bool recordingCombatLogBreakdown, bool simmingStamina, bool simmingIntellect, bool simmingSpirit, bool simmingSpellPower, bool simmingShadowPower, bool simmingFirePower, bool simmingHitRating, bool simmingCritRating, bool simmingHasteRating, bool simmingMp5, bool isAldor, int enemyLevel, int enemyShadowResist, int enemyFireResist, int mageAtieshAmount, int totemOfWrathAmount, bool sacrificingPet, bool petIsImp, bool petIsSuccubus, bool petIsFelguard, int ferociousInspirationAmount, int improvedCurseOfTheElements, bool usingCustomIsbUptime, int customIsbUptimeValue, int improvedDivineSpirit, int improvedImp, int shadowPriestDps, int warlockAtieshAmount, int improvedExposeArmor, bool isSingleTarget, int enemyAmount, bool isOrc, int powerInfusionAmount, bool bloodlustAmount, bool innervateAmount, int enemyArmor, int exposeWeaknessUptime, bool improvedFaerieFire, bool infinitePlayerMana, bool infinitePetMana, bool usingLashOfPainOnCooldown, bool petIsAggressive, bool prepopBlackBook, bool randomizeValues, bool userChoosingRotation, bool exaltedWithShattrathFaction, int survivalHunterAgility, bool hasImmolate, bool hasCorruption, bool hasSiphonLife, bool hasUnstableAffliction, bool hasSearingPain, bool hasShadowBolt, bool hasIncinerate, bool hasCurseOfRecklessness, bool hasCurseOfTheElements, bool hasCurseOfAgony, bool hasCurseOfDoom, bool hasDeathCoil, bool hasShadowburn, bool hasConflagrate, bool hasShadowfury, bool hasAmplifyCurse, bool hasDarkPact, bool hasElementalShamanT4Bonus)
 {
-    return new PlayerSettings(auras, talents, sets, stats, items, itemId, metaGemId, equippedItemSimulation, recordingCombatLogBreakdown, simmingStamina, simmingIntellect, simmingSpirit, simmingSpellPower, simmingShadowPower, simmingFirePower, simmingHitRating, simmingCritRating
-        , simmingHasteRating, simmingMp5, isAldor, enemyLevel, enemyShadowResist, enemyFireResist, mageAtieshAmount, totemOfWrathAmount, sacrificingPet, petIsImp, petIsSuccubus, petIsFelguard
-        , ferociousInspirationAmount, improvedCurseOfTheElements, usingCustomIsbUptime, customIsbUptimeValue, improvedDivineSpirit, improvedImp, shadowPriestDps, warlockAtieshAmount, improvedExposeArmor
-        , isSingleTarget, enemyAmount, isOrc, powerInfusionAmount, bloodlustAmount, innervateAmount, enemyArmor, exposeWeaknessUptime, improvedFaerieFire, infinitePlayerMana, infinitePetMana
-        , usingLashOfPainOnCooldown, petIsAggressive, prepopBlackBook, randomizeValues, userChoosingRotation, exaltedWithShattrathFaction, survivalHunterAgility, hasImmolate, hasCorruption, hasSiphonLife
-        , hasUnstableAffliction, hasSearingPain, hasShadowBolt, hasIncinerate, hasCurseOfRecklessness, hasCurseOfTheElements, hasCurseOfAgony, hasCurseOfDoom, hasDeathCoil, hasShadowburn, hasConflagrate
-        , hasShadowfury, hasAmplifyCurse, hasDarkPact, hasElementalShamanT4Bonus);
+    return std::make_shared<PlayerSettings>(auras, talents, sets, stats, items, itemId, metaGemId, equippedItemSimulation, recordingCombatLogBreakdown, simmingStamina, simmingIntellect, simmingSpirit, simmingSpellPower, simmingShadowPower, simmingFirePower, simmingHitRating, simmingCritRating, simmingHasteRating, simmingMp5, isAldor, enemyLevel, enemyShadowResist, enemyFireResist, mageAtieshAmount, totemOfWrathAmount, sacrificingPet, petIsImp, petIsSuccubus, petIsFelguard, ferociousInspirationAmount, improvedCurseOfTheElements, usingCustomIsbUptime, customIsbUptimeValue, improvedDivineSpirit, improvedImp, shadowPriestDps, warlockAtieshAmount, improvedExposeArmor, isSingleTarget, enemyAmount, isOrc, powerInfusionAmount, bloodlustAmount, innervateAmount, enemyArmor, exposeWeaknessUptime, improvedFaerieFire, infinitePlayerMana, infinitePetMana, usingLashOfPainOnCooldown, petIsAggressive, prepopBlackBook, randomizeValues, userChoosingRotation, exaltedWithShattrathFaction, survivalHunterAgility, hasImmolate, hasCorruption, hasSiphonLife, hasUnstableAffliction, hasSearingPain, hasShadowBolt, hasIncinerate, hasCurseOfRecklessness, hasCurseOfTheElements, hasCurseOfAgony, hasCurseOfDoom, hasDeathCoil, hasShadowburn, hasConflagrate, hasShadowfury, hasAmplifyCurse, hasDarkPact, hasElementalShamanT4Bonus);
 }
 
-EMSCRIPTEN_KEEPALIVE
-Player* allocPlayer(PlayerSettings* settings)
+std::shared_ptr<Player> allocPlayer(std::shared_ptr<PlayerSettings> settings)
 {
-    return new Player(settings);
+    return std::make_shared<Player>(settings);
 }
 
-EMSCRIPTEN_KEEPALIVE
-SimulationSettings* allocSimSettings(int iterations, int minTime, int maxTime, unsigned int* randomSeeds, SimulationType simulationType)
+std::shared_ptr<SimulationSettings> allocSimSettings(int iterations, int minTime, int maxTime, unsigned int* randomSeeds, SimulationType simulationType)
 {
-    return new SimulationSettings(iterations, minTime, maxTime, randomSeeds, simulationType);
+    return std::make_shared<SimulationSettings>(iterations, minTime, maxTime, randomSeeds, simulationType);
 }
 
-EMSCRIPTEN_KEEPALIVE
-Simulation* allocSim(Player* player, SimulationSettings* simulationSettings)
+std::shared_ptr<Simulation> allocSim(std::shared_ptr<Player> player, std::shared_ptr<SimulationSettings> simulationSettings)
 {
-    return new Simulation(player, simulationSettings);
+    return std::make_shared<Simulation>(player, simulationSettings);
 }
 
-EMSCRIPTEN_KEEPALIVE
-void freeUnsignedIntArr(unsigned int* arr)
-{
-    delete[] arr;
-}
-
-EMSCRIPTEN_KEEPALIVE
-void freeItems(Items* items)
-{
-    delete items;
-}
-
-EMSCRIPTEN_KEEPALIVE
-void freeAuras(Auras* auras)
-{
-    delete auras;
-}
-
-EMSCRIPTEN_KEEPALIVE
-void freeTalents(Talents* talents)
-{
-    delete talents;
-}
-
-EMSCRIPTEN_KEEPALIVE
-void freeSets(Sets* sets)
-{
-    delete sets;
-}
-
-EMSCRIPTEN_KEEPALIVE
-void freeStats(CharacterStats* stats)
-{
-    delete stats;
-}
-
-EMSCRIPTEN_KEEPALIVE
-void freePlayerSettings(PlayerSettings* settings)
-{
-    delete settings;
-}
-
-EMSCRIPTEN_KEEPALIVE
-void freePlayer(Player* player)
-{
-    delete player;
-}
-
-EMSCRIPTEN_KEEPALIVE
-void freeSimSettings(SimulationSettings* settings)
-{
-    delete settings;
-}
-
-EMSCRIPTEN_KEEPALIVE
-void freeSim(Simulation* sim)
-{
-    delete sim;
-}
-
-// I gave up on trying to get embind to work, but it would be better to handle it this way than using a bunch of booleans in the PlayerSettings struct
 /*EMSCRIPTEN_BINDINGS(module)
 {
     emscripten::enum_<Constant>("Constant")

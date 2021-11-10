@@ -3,7 +3,7 @@
 #include <iostream>
 #include "common.h"
 
-Aura::Aura(Player* player) : player(player)
+Aura::Aura(std::shared_ptr<Player> player) : player(player)
 {
     durationRemaining = 0;
     hasDuration = true;
@@ -210,7 +210,7 @@ void Aura::fade()
 
 void Aura::decrementStacks() {}
 
-ImprovedShadowBoltAura::ImprovedShadowBoltAura(Player* player) : Aura(player)
+ImprovedShadowBoltAura::ImprovedShadowBoltAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Improved Shadow Bolt";
     duration = 12;
@@ -247,28 +247,28 @@ void ImprovedShadowBoltAura::fade()
     uptimeSoFar = player->combatLogBreakdown.at(name)->uptime / player->totalDuration;
 }
 
-CurseOfTheElementsAura::CurseOfTheElementsAura(Player* player) : Aura(player)
+CurseOfTheElementsAura::CurseOfTheElementsAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Curse of the Elements";
     duration = 300;
     setup();
 }
 
-CurseOfRecklessnessAura::CurseOfRecklessnessAura(Player* player) : Aura(player)
+CurseOfRecklessnessAura::CurseOfRecklessnessAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Curse of Recklessness";
     duration = 120;
     setup();
 }
 
-ShadowTranceAura::ShadowTranceAura(Player* player) : Aura(player)
+ShadowTranceAura::ShadowTranceAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Shadow Trance (Nightfall)";
     duration = 10;
     setup();
 }
 
-FlameshadowAura::FlameshadowAura(Player* player) : Aura(player)
+FlameshadowAura::FlameshadowAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Flameshadow";
     duration = 15;
@@ -277,7 +277,7 @@ FlameshadowAura::FlameshadowAura(Player* player) : Aura(player)
     setup();
 }
 
-ShadowflameAura::ShadowflameAura(Player* player) : Aura(player)
+ShadowflameAura::ShadowflameAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Shadowflame";
     duration = 15;
@@ -286,7 +286,7 @@ ShadowflameAura::ShadowflameAura(Player* player) : Aura(player)
     setup();
 }
 
-SpellstrikeAura::SpellstrikeAura(Player* player) : Aura(player)
+SpellstrikeAura::SpellstrikeAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Spellstrike";
     duration = 10;
@@ -295,7 +295,7 @@ SpellstrikeAura::SpellstrikeAura(Player* player) : Aura(player)
     setup();
 }
 
-PowerInfusionAura::PowerInfusionAura(Player* player) : Aura(player)
+PowerInfusionAura::PowerInfusionAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Power Infusion";
     duration = 15;
@@ -303,7 +303,7 @@ PowerInfusionAura::PowerInfusionAura(Player* player) : Aura(player)
     setup();
 }
 
-EyeOfMagtheridonAura::EyeOfMagtheridonAura(Player* player) : Aura(player)
+EyeOfMagtheridonAura::EyeOfMagtheridonAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Eye of Magtheridon";
     duration = 10;
@@ -311,7 +311,7 @@ EyeOfMagtheridonAura::EyeOfMagtheridonAura(Player* player) : Aura(player)
     setup();
 }
 
-SextantOfUnstableCurrentsAura::SextantOfUnstableCurrentsAura(Player* player) : Aura(player)
+SextantOfUnstableCurrentsAura::SextantOfUnstableCurrentsAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Sextant of Unstable Currents";
     duration = 15;
@@ -319,7 +319,7 @@ SextantOfUnstableCurrentsAura::SextantOfUnstableCurrentsAura(Player* player) : A
     setup();
 }
 
-QuagmirransEyeAura::QuagmirransEyeAura(Player* player) : Aura(player)
+QuagmirransEyeAura::QuagmirransEyeAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Quagmirran's Eye";
     duration = 6;
@@ -327,7 +327,7 @@ QuagmirransEyeAura::QuagmirransEyeAura(Player* player) : Aura(player)
     setup();  
 }
 
-ShiffarsNexusHornAura::ShiffarsNexusHornAura(Player* player) : Aura(player)
+ShiffarsNexusHornAura::ShiffarsNexusHornAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Shiffar's Nexus-Horn";
     duration = 10;
@@ -335,7 +335,7 @@ ShiffarsNexusHornAura::ShiffarsNexusHornAura(Player* player) : Aura(player)
     setup();
 }
 
-ManaEtched4SetAura::ManaEtched4SetAura(Player* player) : Aura(player)
+ManaEtched4SetAura::ManaEtched4SetAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Mana-Etched 4-Set Bonus";
     duration = 15;
@@ -344,7 +344,7 @@ ManaEtched4SetAura::ManaEtched4SetAura(Player* player) : Aura(player)
     setup();
 }
 
-DestructionPotionAura::DestructionPotionAura(Player* player) : Aura(player)
+DestructionPotionAura::DestructionPotionAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Destruction Potion";
     duration = 15;
@@ -393,7 +393,7 @@ void DestructionPotionAura::fade()
     Aura::fade();
 }
 
-FlameCapAura::FlameCapAura(Player* player) : Aura(player)
+FlameCapAura::FlameCapAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Flame Cap";
     duration = 60;
@@ -401,7 +401,7 @@ FlameCapAura::FlameCapAura(Player* player) : Aura(player)
     setup();
 }
 
-BloodFuryAura::BloodFuryAura(Player* player) : Aura(player)
+BloodFuryAura::BloodFuryAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Blood Fury";
     duration = 15;
@@ -409,7 +409,7 @@ BloodFuryAura::BloodFuryAura(Player* player) : Aura(player)
     setup();
 }
 
-BloodlustAura::BloodlustAura(Player* player) : Aura(player)
+BloodlustAura::BloodlustAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Bloodlust";
     duration = 40;
@@ -418,7 +418,7 @@ BloodlustAura::BloodlustAura(Player* player) : Aura(player)
     setup();
 }
 
-DrumsOfBattleAura::DrumsOfBattleAura(Player* player) : Aura(player)
+DrumsOfBattleAura::DrumsOfBattleAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Drums of Battle";
     duration = 30;
@@ -427,7 +427,7 @@ DrumsOfBattleAura::DrumsOfBattleAura(Player* player) : Aura(player)
     setup();
 }
 
-DrumsOfWarAura::DrumsOfWarAura(Player* player) : Aura(player)
+DrumsOfWarAura::DrumsOfWarAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Drums of War";
     duration = 30;
@@ -436,7 +436,7 @@ DrumsOfWarAura::DrumsOfWarAura(Player* player) : Aura(player)
     setup();
 }
 
-DrumsOfRestorationAura::DrumsOfRestorationAura(Player* player) : Aura(player)
+DrumsOfRestorationAura::DrumsOfRestorationAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Drums of Restoration";
     duration = 15;
@@ -482,7 +482,7 @@ void DrumsOfRestorationAura::tick(double t)
     }
 }
 
-AshtongueTalismanOfShadowsAura::AshtongueTalismanOfShadowsAura(Player* player) : Aura(player)
+AshtongueTalismanOfShadowsAura::AshtongueTalismanOfShadowsAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Ashtongue Talisman of Shadows";
     duration = 5;
@@ -491,7 +491,7 @@ AshtongueTalismanOfShadowsAura::AshtongueTalismanOfShadowsAura(Player* player) :
     setup();
 }
 
-DarkmoonCardCrusadeAura::DarkmoonCardCrusadeAura(Player* player) : Aura(player)
+DarkmoonCardCrusadeAura::DarkmoonCardCrusadeAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Darkmoon Card: Crusade";
     duration = 10;
@@ -536,7 +536,7 @@ void DarkmoonCardCrusadeAura::fade()
     Aura::fade();
 }
 
-TheLightningCapacitorAura::TheLightningCapacitorAura(Player* player) : Aura(player)
+TheLightningCapacitorAura::TheLightningCapacitorAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "The Lightning Capacitor";
     hasDuration = false;
@@ -564,7 +564,7 @@ void TheLightningCapacitorAura::fade()
     Aura::fade();
 }
 
-BandOfTheEternalSageAura::BandOfTheEternalSageAura(Player* player) : Aura(player)
+BandOfTheEternalSageAura::BandOfTheEternalSageAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Band of the Eternal Sage";
     duration = 10;
@@ -572,7 +572,7 @@ BandOfTheEternalSageAura::BandOfTheEternalSageAura(Player* player) : Aura(player
     setup();
 }
 
-BladeOfWizardryAura::BladeOfWizardryAura(Player* player) : Aura(player)
+BladeOfWizardryAura::BladeOfWizardryAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Blade of Wizardry";
     duration = 6;
@@ -581,7 +581,7 @@ BladeOfWizardryAura::BladeOfWizardryAura(Player* player) : Aura(player)
     setup();
 }
 
-ShatteredSunPendantOfAcumenAura::ShatteredSunPendantOfAcumenAura(Player* player) : Aura(player)
+ShatteredSunPendantOfAcumenAura::ShatteredSunPendantOfAcumenAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Shattered Sun Pendant of Acumen (Aldor)";
     duration = 10;
@@ -589,7 +589,7 @@ ShatteredSunPendantOfAcumenAura::ShatteredSunPendantOfAcumenAura(Player* player)
     setup();
 }
 
-RobeOfTheElderScribesAura::RobeOfTheElderScribesAura(Player* player) : Aura(player)
+RobeOfTheElderScribesAura::RobeOfTheElderScribesAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Robe of the Elder Scribes";
     duration = 10;
@@ -597,7 +597,7 @@ RobeOfTheElderScribesAura::RobeOfTheElderScribesAura(Player* player) : Aura(play
     setup();
 }
 
-MysticalSkyfireDiamondAura::MysticalSkyfireDiamondAura(Player* player) : Aura(player)
+MysticalSkyfireDiamondAura::MysticalSkyfireDiamondAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Mystical Skyfire Diamond";
     duration = 4;
@@ -605,14 +605,14 @@ MysticalSkyfireDiamondAura::MysticalSkyfireDiamondAura(Player* player) : Aura(pl
     setup();
 }
 
-AmplifyCurseAura::AmplifyCurseAura(Player* player) : Aura(player)
+AmplifyCurseAura::AmplifyCurseAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Amplify Curse";
     duration = 30;
     setup();
 };
 
-WrathOfCenariusAura::WrathOfCenariusAura(Player* player) : Aura(player)
+WrathOfCenariusAura::WrathOfCenariusAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Wrath of Cenarius";
     duration = 10;
@@ -621,7 +621,7 @@ WrathOfCenariusAura::WrathOfCenariusAura(Player* player) : Aura(player)
     setup();
 }
 
-InnervateAura::InnervateAura(Player* player) : Aura(player)
+InnervateAura::InnervateAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Innervate";
     duration = 20;

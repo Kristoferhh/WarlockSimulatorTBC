@@ -1,7 +1,7 @@
 #include "petAura.h"
 #include "player.h"
 
-PetAura::PetAura(Pet* pet) : pet(pet)
+PetAura::PetAura(std::shared_ptr<Pet> pet) : pet(pet)
 {
     duration = 0;
     durationRemaining = 0;
@@ -54,7 +54,7 @@ void PetAura::fade(bool endOfIteration)
     }
 }
 
-DemonicFrenzy::DemonicFrenzy(Pet* pet) : PetAura(pet)
+DemonicFrenzy::DemonicFrenzy(std::shared_ptr<Pet> pet) : PetAura(pet)
 {
     name = "Demonic Frenzy";
     duration = 10;
@@ -78,7 +78,7 @@ void DemonicFrenzy::fade(bool endOfIteration)
     PetAura::fade(endOfIteration);
 }
 
-BlackBook::BlackBook(Pet* pet) : PetAura(pet)
+BlackBook::BlackBook(std::shared_ptr<Pet> pet) : PetAura(pet)
 {
     name = "Black Book";
     duration = 30;

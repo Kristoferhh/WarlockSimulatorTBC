@@ -4,10 +4,10 @@
 
 struct Simulation
 {
-  Player* player;
-  SimulationSettings* settings;
+  std::shared_ptr<Player> player;
+  std::shared_ptr<SimulationSettings> settings;
 
-  Simulation(Player* player, SimulationSettings* simSettings);
+  Simulation(std::shared_ptr<Player> player, std::shared_ptr<SimulationSettings> simSettings);
   void start();
   double passTime();
   void selectedSpellHandler(std::shared_ptr<Spell>& spell, std::map<std::shared_ptr<Spell>, double>& predictedDamageOfSpells);
