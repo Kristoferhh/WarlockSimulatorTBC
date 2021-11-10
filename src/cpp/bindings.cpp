@@ -8,6 +8,7 @@
 #include "emscripten/bind.h"
 #else
 #include <iostream>
+#define EMSCRIPTEN_KEEPALIVE
 #endif
 
 void dpsUpdate(double dps)
@@ -151,8 +152,15 @@ unsigned int* allocRandomSeeds(int amountOfSeeds)
     return seeds;
 }
 
+void freeUnsignedIntArr(unsigned int* arr)
+{
+    delete[] arr;
+}
+
 std::shared_ptr<Items> allocItems(int head, int neck, int shoulders, int back, int chest, int bracers, int gloves, int belt, int legs, int boots, int finger1, int finger2, int trinket1, int trinket2, int mainHand, int offHand, int twoHand, int wand)
 {
+    std::cout << "allocItems" << std::endl;
+    std::cout << "head: " << std::to_string(head) << std::endl;
     return std::make_shared<Items>(head, neck, shoulders, back, chest, bracers, gloves, belt, legs, boots, finger1, finger2, trinket1, trinket2, mainHand, offHand, twoHand, wand);
 }
 
@@ -196,9 +204,30 @@ std::shared_ptr<Simulation> allocSim(std::shared_ptr<Player> player, std::shared
     return std::make_shared<Simulation>(player, simulationSettings);
 }
 
-/*EMSCRIPTEN_BINDINGS(module)
+#ifdef EMSCRIPTEN
+EMSCRIPTEN_BINDINGS(module)
 {
-    emscripten::enum_<Constant>("Constant")
+    /*emscripten::class_<Player>("Player")
+        .smart_ptr<std::shared_ptr<Player>>("Player");*/
+    emscripten::class_<Simulation>("Simulation")
+        .smart_ptr<std::shared_ptr<Simulation>>("Simulation")
+        .property("player", &Simulation::player)
+        .property("simSettings", &Simulation::settings)
+        .function("start", &Simulation::start);
+
+    emscripten::function("allocItems", &allocItems);
+    emscripten::function("allocAuras", &allocAuras);
+    emscripten::function("allocTalents", &allocTalents);
+    emscripten::function("allocSets", &allocSets);
+    emscripten::function("allocStats", &allocStats);
+    emscripten::function("allocPlayerSettings", &allocPlayerSettings);
+    emscripten::function("allocPlayer", &allocPlayer);
+    emscripten::function("allocSimSettings", &allocSimSettings, emscripten::allow_raw_pointers());
+    emscripten::function("allocSim", &allocSim);
+    emscripten::function("allocRandomSeeds", &allocRandomSeeds, emscripten::allow_raw_pointers());
+    emscripten::function("freeUnsignedIntArr", &freeUnsignedIntArr, emscripten::allow_raw_pointers());
+
+    /*emscripten::enum_<Constant>("Constant")
         .value("ALDOR", ALDOR)
         .value("Scryers", SCRYER)
         .value("yes", YES)
@@ -230,5 +259,6 @@ std::shared_ptr<Simulation> allocSim(std::shared_ptr<Player> player, std::shared
         .field("prepopBlackBook", &AdditionalPlayerSettings::prepopBlackBook)
         .field("rotationOption", &AdditionalPlayerSettings::rotationOption)
         .field("fightType", &AdditionalPlayerSettings::fightType)
-        ;
-}*/
+        ;*/
+}
+#endif

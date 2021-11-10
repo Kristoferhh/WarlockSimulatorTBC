@@ -24,8 +24,9 @@ std::shared_ptr<Sets> allocSets(int plagueheart, int spellfire, int frozenShadow
 std::shared_ptr<CharacterStats> allocStats(int health, int mana, double stamina, double intellect, double spirit, double spellPower, int shadowPower, int firePower, int hasteRating, int hitRating, int critRating, int mp5, int spellPen, double fireModifier, double frostModifier, double shadowModifier, double staminaModifier, double intellectModifier, double spiritModifier, double arcaneModifier, double natureModifier, int natureResist, int arcaneResist, int fireResist, int frostResist, int shadowResist);
 std::shared_ptr<SimulationSettings> allocSimSettings(int iterations, int minTime, int maxTime, unsigned int* randomSeeds, SimulationType SimulationType);
 std::shared_ptr<Simulation> allocSim(std::shared_ptr<Player> player, std::shared_ptr<SimulationSettings> simulationSettings);
-unsigned int* allocRandomSeeds(int amountOfSeeds);
 void startSimulation(Simulation* sim);
+unsigned int* allocRandomSeeds(int amountOfSeeds);
+void freeUnsignedIntArr(unsigned int* arr);
 
 void dpsUpdate(double dps);
 void errorCallback(const char* errorMsg);
