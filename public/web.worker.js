@@ -9,9 +9,9 @@ onmessage = (event) => {
     const player = event.data.playerSettings;
     const simulation = event.data.simulationSettings;
     console.log(0);
-    const randomSeedsPtr = 0; /*module.allocRandomSeeds(simulation.iterations);*/
+    const randomSeedsPtr = 0; //module.allocRandomSeeds(simulation.iterations);
     console.log(1);
-    const itemsPtr = module.allocItems(player.items.head, player.items.neck, player.items.shoulders, player.items.back, player.items.chest, player.items.bracer, player.items.gloves, player.items.belt, player.items.legs, player.items.boots, player.items.ring1, player.items.ring2, player.items.trinket1, player.items.trinket2, player.items.mainhand, player.items.offhand, player.items.twohand, player.items.wand);
+    const itemsPtr = module.allocItems(player.items.head || 0, player.items.neck || 0, player.items.shoulders || 0, player.items.back || 0, player.items.chest || 0, player.items.bracer || 0, player.items.gloves || 0, player.items.belt || 0, player.items.legs || 0, player.items.boots || 0, player.items.ring1 || 0, player.items.ring2 || 0, player.items.trinket1 || 0, player.items.trinket2 || 0, player.items.mainhand || 0, player.items.offhand || 0, player.items.twohand || 0, player.items.wand || 0);
     console.log(2);
     const aurasPtr = module.allocAuras(player.auras.felArmor, player.auras.blessingOfKings, player.auras.blessingOfWisdom, player.auras.judgementOfWisdom, player.auras.manaSpringTotem, player.auras.wrathOfAirTotem, player.auras.totemOfWrath, player.auras.markOfTheWild, player.auras.arcaneIntellect, player.auras.prayerOfFortitude, player.auras.prayerOfSpirit, player.auras.bloodPact, player.auras.inspiringPresence, player.auras.moonkinAura, player.auras.powerInfusion, player.auras.powerOfTheGuardianWarlock, player.auras.powerOfTheGuardianMage, player.auras.eyeOfTheNight, player.auras.chainOfTheTwilightOwl, player.auras.jadePendantOfBlasting, player.auras.idolOfTheRavenGoddess, player.auras.drumsOfBattle, player.auras.drumsOfWar, player.auras.drumsOfRestoration, player.auras.bloodlust, player.auras.ferociousInspiration, player.auras.innervate, player.auras.curseOfTheElements, player.auras.shadowWeaving, player.auras.improvedScorch, player.auras.misery, player.auras.judgementOfTheCrusader, player.auras.vampiricTouch, player.auras.faerieFire, player.auras.sunderArmor, player.auras.exposeArmor, player.auras.curseOfRecklessness, player.auras.bloodFrenzy, player.auras.exposeWeakness, player.auras.annihilator, player.auras.improvedHuntersMark, player.auras.flaskOfPureDeath, player.auras.elixirOfMajorShadowPower, player.auras.elixirOfMajorFirepower, player.auras.greaterArcaneElixir, player.auras.adeptsElixir, player.auras.elixirOfDraenicWisdom, player.auras.elixirOfMajorMageblood, player.auras.superManaPotion, player.auras.destructionPotion, player.auras.brilliantWizardOil, player.auras.superiorWizardOil, player.auras.blessedWizardOil, player.auras.demonicRune, player.auras.flameCap, player.auras.rumseyRumBlackLabel, player.auras.kreegsStoutBeatdown, player.auras.blackenedBasilisk, player.auras.skullfishSoup, player.auras.veryBerryCream, player.auras.midsummerSausage, player.auras.bloodthistle, player.auras.blessingOfKingsPet, player.auras.blessingOfWisdomPet, player.auras.blessingOfMight, player.auras.arcaneIntellectPet, player.auras.markOfTheWildPet, player.auras.prayerOfFortitudePet, player.auras.prayerOfSpiritPet, player.auras.kiblersBits, player.auras.heroicPresence, player.auras.strengthOfEarthTotem, player.auras.graceOfAirTotem, player.auras.battleShout, player.auras.trueshotAura, player.auras.leaderOfThePack, player.auras.unleashedRage, player.auras.scrollOfStaminaV, player.auras.scrollOfIntellectV, player.auras.scrollOfStrengthV, player.auras.scrollOfAgilityV, player.auras.scrollOfSpiritV);
     console.log(3);
@@ -29,8 +29,7 @@ onmessage = (event) => {
     console.log(9);
     const simPtr = module.allocSim(playerPtr, simSettingsPtr);
     console.log(10);
-    module.startSimulation(simPtr);
-    module.freeUnsignedIntArr(randomSeedsPtr);
+    //module.startSimulation(simPtr);
   })
-  .catch(error => console.log("Web worker error: " + error));
+  .catch(e => console.error(`${e.error}: ${e.message}`));
 };

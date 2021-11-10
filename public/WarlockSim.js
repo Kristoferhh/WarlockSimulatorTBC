@@ -1849,13 +1849,13 @@ var tempI64;
 // === Body ===
 
 var ASM_CONSTS = {
-  39412: function($0) {postMessage({ event: "dpsUpdate", data: { dps: $0 } })},  
- 39471: function($0) {postMessage({ event: "errorCallback", data: { errorMsg: UTF8ToString($0) } })},  
- 39553: function($0, $1, $2) {postMessage({ event: "combatLogVector", data: { name: UTF8ToString($0), manaGain: $1, damage: $2 } })},  
- 39659: function($0, $1, $2, $3, $4, $5, $6, $7) {postMessage({ event: "combatLogBreakdown", data: { name: UTF8ToString($0), casts: $1, crits: $2, misses: $3, count: $4, uptime: $5, dodges: $6, glancingBlows: $7, damage: 0, manaGain: 0 } })},  
- 39854: function($0) {postMessage({ event: "combatLogUpdate", data: { combatLogEntry: UTF8ToString($0) } })},  
- 39944: function($0, $1, $2, $3, $4) {postMessage({ event: "update", data: { medianDps: $0, iteration: $1, iterationAmount: $2, itemId: $3, customStat: UTF8ToString($4) } })},  
- 40084: function($0, $1, $2, $3, $4, $5, $6) {postMessage({ event: "end", data: { medianDps: $0, minDps: $1, maxDps: $2, itemId: $3, iterationAmount: $4, totalDuration: $5, customStat: UTF8ToString($6) } })}
+  45316: function($0) {postMessage({ event: "dpsUpdate", data: { dps: $0 } })},  
+ 45375: function($0) {postMessage({ event: "errorCallback", data: { errorMsg: UTF8ToString($0) } })},  
+ 45457: function($0, $1, $2) {postMessage({ event: "combatLogVector", data: { name: UTF8ToString($0), manaGain: $1, damage: $2 } })},  
+ 45563: function($0, $1, $2, $3, $4, $5, $6, $7) {postMessage({ event: "combatLogBreakdown", data: { name: UTF8ToString($0), casts: $1, crits: $2, misses: $3, count: $4, uptime: $5, dodges: $6, glancingBlows: $7, damage: 0, manaGain: 0 } })},  
+ 45758: function($0) {postMessage({ event: "combatLogUpdate", data: { combatLogEntry: UTF8ToString($0) } })},  
+ 45848: function($0, $1, $2, $3, $4) {postMessage({ event: "update", data: { medianDps: $0, iteration: $1, iterationAmount: $2, itemId: $3, customStat: UTF8ToString($4) } })},  
+ 45988: function($0, $1, $2, $3, $4, $5, $6) {postMessage({ event: "end", data: { medianDps: $0, minDps: $1, maxDps: $2, itemId: $3, iterationAmount: $4, totalDuration: $5, customStat: UTF8ToString($6) } })}
 };
 
 
@@ -3408,6 +3408,78 @@ var ASM_CONSTS = {
       });
     }
 
+  function enumReadValueFromPointer(name, shift, signed) {
+      switch (shift) {
+          case 0: return function(pointer) {
+              var heap = signed ? HEAP8 : HEAPU8;
+              return this['fromWireType'](heap[pointer]);
+          };
+          case 1: return function(pointer) {
+              var heap = signed ? HEAP16 : HEAPU16;
+              return this['fromWireType'](heap[pointer >> 1]);
+          };
+          case 2: return function(pointer) {
+              var heap = signed ? HEAP32 : HEAPU32;
+              return this['fromWireType'](heap[pointer >> 2]);
+          };
+          default:
+              throw new TypeError("Unknown integer type: " + name);
+      }
+    }
+  function __embind_register_enum(
+      rawType,
+      name,
+      size,
+      isSigned
+    ) {
+      var shift = getShiftFromSize(size);
+      name = readLatin1String(name);
+  
+      function ctor() {
+      }
+      ctor.values = {};
+  
+      registerType(rawType, {
+          name: name,
+          constructor: ctor,
+          'fromWireType': function(c) {
+              return this.constructor.values[c];
+          },
+          'toWireType': function(destructors, c) {
+              return c.value;
+          },
+          'argPackAdvance': 8,
+          'readValueFromPointer': enumReadValueFromPointer(name, shift, isSigned),
+          destructorFunction: null,
+      });
+      exposePublicSymbol(name, ctor);
+    }
+
+  function requireRegisteredType(rawType, humanName) {
+      var impl = registeredTypes[rawType];
+      if (undefined === impl) {
+          throwBindingError(humanName + " has unknown type " + getTypeName(rawType));
+      }
+      return impl;
+    }
+  function __embind_register_enum_value(
+      rawEnumType,
+      name,
+      enumValue
+    ) {
+      var enumType = requireRegisteredType(rawEnumType, 'enum');
+      name = readLatin1String(name);
+  
+      var Enum = enumType.constructor;
+  
+      var Value = Object.create(enumType.constructor.prototype, {
+          value: {value: enumValue},
+          constructor: {value: createNamedFunction(enumType.name + '_' + name, function() {})},
+      });
+      Enum.values[enumValue] = Value;
+      Enum[name] = Value;
+    }
+
   function _embind_repr(v) {
       if (v === null) {
           return 'null';
@@ -3777,13 +3849,6 @@ var ASM_CONSTS = {
       });
     }
 
-  function requireRegisteredType(rawType, humanName) {
-      var impl = registeredTypes[rawType];
-      if (undefined === impl) {
-          throwBindingError(humanName + " has unknown type " + getTypeName(rawType));
-      }
-      return impl;
-    }
   function __emval_lookupTypes(argCount, argTypes) {
       var a = new Array(argCount);
       for (var i = 0; i < argCount; ++i) {
@@ -4469,6 +4534,8 @@ var asmLibraryArg = {
   "_embind_register_class_function": __embind_register_class_function,
   "_embind_register_class_property": __embind_register_class_property,
   "_embind_register_emval": __embind_register_emval,
+  "_embind_register_enum": __embind_register_enum,
+  "_embind_register_enum_value": __embind_register_enum_value,
   "_embind_register_float": __embind_register_float,
   "_embind_register_function": __embind_register_function,
   "_embind_register_integer": __embind_register_integer,

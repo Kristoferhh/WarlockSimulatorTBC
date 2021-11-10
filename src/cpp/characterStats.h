@@ -22,7 +22,6 @@ struct CharacterStats
     double fireModifier;
     double frostModifier;
     double hastePercent;
-    double damageModifier;
     double shadowModifier;
     double staminaModifier;
     double intellectModifier;

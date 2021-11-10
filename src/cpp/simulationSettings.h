@@ -8,8 +8,8 @@ struct SimulationSettings
     int iterations;
     int minTime;
     int maxTime;
-    unsigned int* randomSeeds;
+    std::shared_ptr<uint32_t[]> randomSeeds;
     SimulationType simulationType;
 
-    SimulationSettings(int iterations, int minTime, int maxTime, unsigned int* randomSeeds, SimulationType simulationType);
+    SimulationSettings(int iterations, int minTime, int maxTime, std::shared_ptr<uint32_t[]> randomSeeds, SimulationType simulationType);
 };
