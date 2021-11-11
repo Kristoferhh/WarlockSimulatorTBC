@@ -312,6 +312,8 @@ void Player::initialize()
         if (talents->nightfall > 0) auras->ShadowTrance = std::make_shared<ShadowTranceAura>(shared_from_this());
         if (talents->amplifyCurse == 1 && (settings->hasAmplifyCurse || settings->simChoosingRotation)) auras->AmplifyCurse = std::make_shared<AmplifyCurseAura>(shared_from_this());
     }
+    if (selectedAuras->chippedPowerCore) auras->ChippedPowerCore = std::make_shared<ChippedPowerCoreAura>(shared_from_this());
+    if (selectedAuras->crackedPowerCore) auras->CrackedPowerCore = std::make_shared<CrackedPowerCoreAura>(shared_from_this());
     if (selectedAuras->powerInfusion) auras->PowerInfusion = std::make_shared<PowerInfusionAura>(shared_from_this());
     if (selectedAuras->innervate) auras->Innervate = std::make_shared<InnervateAura>(shared_from_this());
     if (selectedAuras->bloodlust) auras->Bloodlust = std::make_shared<BloodlustAura>(shared_from_this());
@@ -367,6 +369,8 @@ void Player::initialize()
         if (auras->CurseOfDoom != NULL) spells->CurseOfDoom = std::make_shared<CurseOfDoom>(shared_from_this(), nullptr, auras->CurseOfDoom);
         if (auras->AmplifyCurse != NULL) spells->AmplifyCurse = std::make_shared<AmplifyCurse>(shared_from_this(), auras->AmplifyCurse);
     }
+    if (auras->ChippedPowerCore != NULL) spells->ChippedPowerCore = std::make_shared<ChippedPowerCore>(shared_from_this(), auras->ChippedPowerCore);
+    if (auras->CrackedPowerCore != NULL) spells->CrackedPowerCore = std::make_shared<CrackedPowerCore>(shared_from_this(), auras->CrackedPowerCore);
     if (selectedAuras->superManaPotion) spells->SuperManaPotion = std::make_shared<SuperManaPotion>(shared_from_this());
     if (selectedAuras->demonicRune) spells->DemonicRune = std::make_shared<DemonicRune>(shared_from_this());
     if (talents->darkPact == 1 && (settings->hasDarkPact || settings->simChoosingRotation)) spells->DarkPact = std::make_shared<DarkPact>(shared_from_this());
@@ -499,6 +503,8 @@ void Player::reset()
     if (spells->ShiffarsNexusHorn != NULL) spells->ShiffarsNexusHorn->reset();
     if (spells->SextantOfUnstableCurrents != NULL) spells->SextantOfUnstableCurrents->reset();
     if (spells->BandOfTheEternalSage != NULL) spells->BandOfTheEternalSage->reset();
+    if (spells->ChippedPowerCore != NULL) spells->ChippedPowerCore->reset();
+    if (spells->CrackedPowerCore != NULL) spells->CrackedPowerCore->reset();
     for (std::vector<std::shared_ptr<Spell>>::iterator it = spells->PowerInfusion.begin(); it != spells->PowerInfusion.end(); it++)
     {
         (*it)->reset();
@@ -559,6 +565,8 @@ void Player::endAuras()
     if (auras->Shadowflame != NULL && auras->Shadowflame->active) auras->Shadowflame->fade();
     if (auras->Spellstrike != NULL && auras->Spellstrike->active) auras->Spellstrike->fade();
     if (auras->ManaEtched4Set != NULL && auras->ManaEtched4Set->active) auras->ManaEtched4Set->fade();
+    if (auras->ChippedPowerCore != NULL && auras->ChippedPowerCore->active) auras->ChippedPowerCore->fade();
+    if (auras->CrackedPowerCore != NULL && auras->CrackedPowerCore->active) auras->CrackedPowerCore->fade();
 }
 
 double Player::getHastePercent()
@@ -685,6 +693,14 @@ void Player::useCooldowns()
                 break;
             }
         }
+    }
+    if (spells->ChippedPowerCore != NULL && spells->ChippedPowerCore->ready())
+    {
+        spells->ChippedPowerCore->startCast();
+    }
+    else if (spells->CrackedPowerCore != NULL && spells->CrackedPowerCore->ready())
+    {
+        spells->CrackedPowerCore->startCast();
     }
     if (spells->DestructionPotion != NULL && spells->DestructionPotion->ready())
     {

@@ -209,5 +209,15 @@ struct WrathOfCenariusAura : public Aura
 
 struct InnervateAura : public Aura
 {
-    InnervateAura(std::shared_ptr<Player> player);
+    InnervateAura(Player* player);
+};
+
+struct ChippedPowerCoreAura : public Aura
+{
+    ChippedPowerCoreAura(Player* player);
+};
+
+struct CrackedPowerCoreAura : public Aura
+{
+    CrackedPowerCoreAura(Player* player);
 };
