@@ -1326,7 +1326,7 @@ Innervate::Innervate(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura)
     setup();
 }
 
-ChippedPowerCore::ChippedPowerCore(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
+ChippedPowerCore::ChippedPowerCore(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Chipped Power Core";
     cooldown = 120;
@@ -1354,7 +1354,7 @@ void ChippedPowerCore::cast()
     }
 }
 
-CrackedPowerCore::CrackedPowerCore(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
+CrackedPowerCore::CrackedPowerCore(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = "Cracked Power Core";
     cooldown = 120;
