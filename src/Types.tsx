@@ -891,6 +891,7 @@ export enum AuraName {
   bloodthistle = 'bloodthistle',
   chippedPowerCore = 'chippedPowerCore',
   crackedPowerCore = 'crackedPowerCore',
+  crystalOfInsight = 'crystalOfInsight',
   blessingOfKingsPet = 'blessingOfKingsPet',
   blessingOfWisdomPet = 'blessingOfWisdomPet',
   blessingOfMight = 'blessingOfMight',

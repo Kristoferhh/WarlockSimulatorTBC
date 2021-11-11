@@ -70,6 +70,7 @@ export const Auras: Aura[] = [
   { name: "Bloodthistle", varName: AuraName.bloodthistle, group: AuraGroup.Consumables, iconName: "inv_misc_herb_11", id: 22710, stats: { spellPower: 10, }, },
   { name: 'Chipped Power Core', varName: AuraName.chippedPowerCore, group: AuraGroup.Consumables, iconName: 'inv_misc_gem_diamond_02', id: 23381 },
   { name: 'Cracked Power Core', varName: AuraName.crackedPowerCore, group: AuraGroup.Consumables, iconName: 'inv_misc_gem_diamond_02', id: 23334 },
+  { name: 'Crystal of Insight', varName: AuraName.crystalOfInsight, group: AuraGroup.Consumables, iconName: 'inv_datacrystal01', id: 23986, stats: { intellect: 5 } },
 
   // Pet Buffs
   { name: 'Blessing of Kings', varName: AuraName.blessingOfKingsPet, group: AuraGroup.PetBuffs, iconName: 'spell_magic_greaterblessingofkings', id: 25898 },
