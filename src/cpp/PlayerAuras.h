@@ -42,4 +42,6 @@ struct PlayerAuras
     std::shared_ptr<Aura> Shadowflame; // Firepower
     std::shared_ptr<Aura> Spellstrike;
     std::shared_ptr<Aura> ManaEtched4Set;
+    std::shared_ptr<Aura> ChippedPowerCore;
+    std::shared_ptr<Aura> CrackedPowerCore;
 };

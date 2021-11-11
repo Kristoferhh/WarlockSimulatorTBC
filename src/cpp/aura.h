@@ -211,3 +211,13 @@ struct InnervateAura : public Aura
 {
     InnervateAura(Player* player);
 };
+
+struct ChippedPowerCoreAura : public Aura
+{
+    ChippedPowerCoreAura(Player* player);
+};
+
+struct CrackedPowerCoreAura : public Aura
+{
+    CrackedPowerCoreAura(Player* player);
+};

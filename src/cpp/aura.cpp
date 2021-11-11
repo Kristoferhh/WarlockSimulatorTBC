@@ -627,3 +627,19 @@ InnervateAura::InnervateAura(Player* player) : Aura(player)
     duration = 20;
     setup();
 }
+
+ChippedPowerCoreAura::ChippedPowerCoreAura(Player* player) : Aura(player)
+{
+    name = "Chipped Power Core";
+    duration = 30;
+    Aura::stats = std::make_unique<AuraStats>(25, 0, 0, 0, 0, 0);
+    setup();
+}
+
+CrackedPowerCoreAura::CrackedPowerCoreAura(Player* player) : Aura(player)
+{
+    name = "Cracked Power Core";
+    duration = 30;
+    Aura::stats = std::make_unique<AuraStats>(15, 0, 0, 0, 0, 0);
+    setup();
+}

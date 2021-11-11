@@ -44,6 +44,8 @@ struct PlayerSpells
     std::shared_ptr<Spell> ShiffarsNexusHorn;
     std::shared_ptr<Spell> SextantOfUnstableCurrents;
     std::shared_ptr<Spell> BandOfTheEternalSage;
+    std::shared_ptr<Spell> ChippedPowerCore;
+    std::shared_ptr<Spell> CrackedPowerCore;
     std::vector<std::shared_ptr<Spell>> PowerInfusion;
     std::vector<std::shared_ptr<Spell>> Bloodlust;
     std::vector<std::shared_ptr<Spell>> Innervate;
