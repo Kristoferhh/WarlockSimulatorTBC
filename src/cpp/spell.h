@@ -45,6 +45,9 @@ struct Spell : std::enable_shared_from_this<Spell>
     bool isFinisher;
     std::string name;
     std::string breakdownTable;
+    // For Chipped Power Core
+    bool usableOncePerFight;
+    bool hasNotBeenCastThisFight;
 
     Spell(Player* player, std::shared_ptr<Aura> aura = nullptr, std::shared_ptr<DamageOverTime> dot = nullptr);
 
@@ -194,6 +197,7 @@ struct DemonicRune : public Spell
 struct FlameCap : public Spell
 {
     FlameCap(Player* player, std::shared_ptr<Aura> aura);
+    void cast();
 };
 
 struct BloodFury : public Spell
@@ -300,4 +304,16 @@ struct PowerInfusion : public Spell
 struct Innervate : public Spell
 {
     Innervate(Player* player, std::shared_ptr<Aura> aura);
+};
+
+struct ChippedPowerCore : public Spell
+{
+    ChippedPowerCore(Player* player, std::shared_ptr<Aura> aura);
+    void cast();
+};
+
+struct CrackedPowerCore : public Spell
+{
+    CrackedPowerCore(Player* player, std::shared_ptr<Aura> aura);
+    void cast();
 };

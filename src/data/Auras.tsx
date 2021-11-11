@@ -68,6 +68,8 @@ export const Auras: Aura[] = [
   { name: 'Very Berry Cream', varName: AuraName.veryBerryCream, group: AuraGroup.Consumables, iconName: 'inv_valentineschocolate02', id: 22238, stats: { spellPower: 23, } },
   { name: 'Midsummer Sausage', varName: AuraName.midsummerSausage, group: AuraGroup.Consumables, iconName: 'inv_misc_food_53', id: 23326, stats: { spellPower: 23, } },
   { name: "Bloodthistle", varName: AuraName.bloodthistle, group: AuraGroup.Consumables, iconName: "inv_misc_herb_11", id: 22710, stats: { spellPower: 10, }, },
+  { name: 'Chipped Power Core', varName: AuraName.chippedPowerCore, group: AuraGroup.Consumables, iconName: 'inv_misc_gem_diamond_02', id: 23381 },
+  { name: 'Cracked Power Core', varName: AuraName.crackedPowerCore, group: AuraGroup.Consumables, iconName: 'inv_misc_gem_diamond_02', id: 23334 },
 
   // Pet Buffs
   { name: 'Blessing of Kings', varName: AuraName.blessingOfKingsPet, group: AuraGroup.PetBuffs, iconName: 'spell_magic_greaterblessingofkings', id: 25898 },

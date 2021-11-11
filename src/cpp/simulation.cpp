@@ -73,7 +73,7 @@ void Simulation::start()
             {
                 // Spells not on the GCD
                 // Demonic Rune
-                if ((player->fightTime > 5 || player->stats->mp5 == 0) && player->spells->DemonicRune != NULL && (player->stats->maxMana - player->stats->mana) > player->spells->DemonicRune->avgManaValue && player->spells->DemonicRune->ready())
+                if ((player->fightTime > 5 || player->stats->mp5 == 0) && player->spells->DemonicRune != NULL && (player->stats->maxMana - player->stats->mana) > player->spells->DemonicRune->avgManaValue && player->spells->DemonicRune->ready() && (!player->spells->ChippedPowerCore || player->spells->ChippedPowerCore->cooldownRemaining > 0) && (!player->spells->CrackedPowerCore || player->spells->CrackedPowerCore->cooldownRemaining > 0))
                 {
                     player->spells->DemonicRune->startCast();
                 }
@@ -374,6 +374,8 @@ double Simulation::passTime()
     if (player->spells->ShiffarsNexusHorn != NULL && player->spells->ShiffarsNexusHorn->cooldownRemaining > 0 && player->spells->ShiffarsNexusHorn->cooldownRemaining < time) time = player->spells->ShiffarsNexusHorn->cooldownRemaining;
     if (player->spells->SextantOfUnstableCurrents != NULL && player->spells->SextantOfUnstableCurrents->cooldownRemaining > 0 && player->spells->SextantOfUnstableCurrents->cooldownRemaining < time) time = player->spells->SextantOfUnstableCurrents->cooldownRemaining;
     if (player->spells->BandOfTheEternalSage != NULL && player->spells->BandOfTheEternalSage->cooldownRemaining > 0 && player->spells->BandOfTheEternalSage->cooldownRemaining < time) time = player->spells->BandOfTheEternalSage->cooldownRemaining;
+    if (player->spells->ChippedPowerCore != NULL && player->spells->ChippedPowerCore->cooldownRemaining > 0 && player->spells->ChippedPowerCore->cooldownRemaining < time) time = player->spells->ChippedPowerCore->cooldownRemaining;
+    if (player->spells->CrackedPowerCore != NULL && player->spells->CrackedPowerCore->cooldownRemaining > 0 && player->spells->CrackedPowerCore->cooldownRemaining < time) time = player->spells->CrackedPowerCore->cooldownRemaining;
     for (std::vector<std::shared_ptr<Spell>>::iterator it = player->spells->PowerInfusion.begin(); it != player->spells->PowerInfusion.end(); it++)
     {
         if ((*it)->cooldownRemaining > 0 && (*it)->cooldownRemaining < time) time = (*it)->cooldownRemaining;
@@ -425,6 +427,8 @@ double Simulation::passTime()
     if (player->auras->Shadowflame != NULL && player->auras->Shadowflame->active && player->auras->Shadowflame->durationRemaining < time) time = player->auras->Shadowflame->durationRemaining;
     if (player->auras->Spellstrike != NULL && player->auras->Spellstrike->active && player->auras->Spellstrike->durationRemaining < time) time = player->auras->Spellstrike->durationRemaining;
     if (player->auras->ManaEtched4Set != NULL && player->auras->ManaEtched4Set->active && player->auras->ManaEtched4Set->durationRemaining < time) time = player->auras->ManaEtched4Set->durationRemaining;
+    if (player->auras->ChippedPowerCore != NULL && player->auras->ChippedPowerCore->active && player->auras->ChippedPowerCore->durationRemaining < time) time = player->auras->ChippedPowerCore->durationRemaining;
+    if (player->auras->CrackedPowerCore != NULL && player->auras->CrackedPowerCore->active && player->auras->CrackedPowerCore->durationRemaining < time) time = player->auras->CrackedPowerCore->durationRemaining;
     #pragma endregion
 
     // MP5
@@ -494,6 +498,8 @@ double Simulation::passTime()
     if (player->auras->Shadowflame != NULL && player->auras->Shadowflame->active) player->auras->Shadowflame->tick(time);
     if (player->auras->Spellstrike != NULL && player->auras->Spellstrike->active) player->auras->Spellstrike->tick(time);
     if (player->auras->ManaEtched4Set != NULL && player->auras->ManaEtched4Set->active) player->auras->ManaEtched4Set->tick(time);
+    if (player->auras->ChippedPowerCore != NULL && player->auras->ChippedPowerCore->active) player->auras->ChippedPowerCore->tick(time);
+    if (player->auras->CrackedPowerCore != NULL && player->auras->CrackedPowerCore->active) player->auras->CrackedPowerCore->tick(time);
     #pragma endregion
 
     #pragma region Spells
@@ -530,6 +536,8 @@ double Simulation::passTime()
     if (player->spells->ShiffarsNexusHorn != NULL && (player->spells->ShiffarsNexusHorn->cooldownRemaining > 0 || player->spells->ShiffarsNexusHorn->casting)) player->spells->ShiffarsNexusHorn->tick(time);
     if (player->spells->SextantOfUnstableCurrents != NULL && (player->spells->SextantOfUnstableCurrents->cooldownRemaining > 0 || player->spells->SextantOfUnstableCurrents->casting)) player->spells->SextantOfUnstableCurrents->tick(time);
     if (player->spells->BandOfTheEternalSage != NULL && (player->spells->BandOfTheEternalSage->cooldownRemaining > 0 || player->spells->BandOfTheEternalSage->casting)) player->spells->BandOfTheEternalSage->tick(time);
+    if (player->spells->ChippedPowerCore != NULL && (player->spells->ChippedPowerCore->cooldownRemaining > 0 || player->spells->ChippedPowerCore->casting)) player->spells->ChippedPowerCore->tick(time);
+    if (player->spells->CrackedPowerCore != NULL && (player->spells->CrackedPowerCore->cooldownRemaining > 0 || player->spells->CrackedPowerCore->casting)) player->spells->CrackedPowerCore->tick(time);
     for (std::vector<std::shared_ptr<Spell>>::iterator it = player->spells->PowerInfusion.begin(); it != player->spells->PowerInfusion.end(); it++)
     {
         if ((*it)->cooldownRemaining > 0) (*it)->tick(time);

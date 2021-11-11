@@ -889,6 +889,8 @@ export enum AuraName {
   veryBerryCream = 'veryBerryCream',
   midsummerSausage = 'midsummerSausage',
   bloodthistle = 'bloodthistle',
+  chippedPowerCore = 'chippedPowerCore',
+  crackedPowerCore = 'crackedPowerCore',
   blessingOfKingsPet = 'blessingOfKingsPet',
   blessingOfWisdomPet = 'blessingOfWisdomPet',
   blessingOfMight = 'blessingOfMight',

@@ -20,12 +20,15 @@ Spell::Spell(Player* player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageO
     isProc = false;
     isFinisher = false;
     castTime = 0;
+    usableOncePerFight = false;
+    hasNotBeenCastThisFight = true;
 }
 
 void Spell::reset()
 {
     cooldownRemaining = 0;
     casting = false;
+    hasNotBeenCastThisFight = true;
 }
 
 void Spell::setup()
@@ -51,7 +54,7 @@ double Spell::getCastTime()
 
 bool Spell::canCast()
 {
-    return cooldownRemaining <= 0 && (isNonWarlockAbility || ((!onGcd || player->gcdRemaining <= 0) && (isProc || player->castTimeRemaining <= 0)));
+    return cooldownRemaining <= 0 && (isNonWarlockAbility || ((!onGcd || player->gcdRemaining <= 0) && (isProc || player->castTimeRemaining <= 0))) && (!usableOncePerFight || hasNotBeenCastThisFight);
 }
 
 bool Spell::hasEnoughMana()
@@ -142,6 +145,7 @@ void Spell::cast()
     bool isCrit = false;
     cooldownRemaining = cooldown;
     casting = false;
+    hasNotBeenCastThisFight = false;
 
     if (!isAura)
     {
@@ -1000,6 +1004,16 @@ void DemonicRune::cast()
     {
         player->combatLog("Player gains " + truncateTrailingZeros(std::to_string(round(player->stats->mana - currentPlayerMana))) + " mana from " + name + " (" + truncateTrailingZeros(std::to_string(round(currentPlayerMana))) + " -> " + truncateTrailingZeros(std::to_string(round(player->stats->mana))) + ")");
     }
+
+    // Put Chipped Power Core and Cracked Power Core on cooldown
+    if (player->spells->ChippedPowerCore != NULL)
+    {
+        player->spells->ChippedPowerCore->cooldownRemaining = cooldown;
+    }
+    if (player->spells->CrackedPowerCore != NULL)
+    {
+        player->spells->CrackedPowerCore->cooldownRemaining = cooldown;
+    }
 }
 
 FlameCap::FlameCap(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
@@ -1010,6 +1024,20 @@ FlameCap::FlameCap(Player* player, std::shared_ptr<Aura> aura) : Spell(player, a
     isAura = true;
     onGcd = false;
     setup();
+}
+
+void FlameCap::cast()
+{
+    Spell::cast();
+
+    if (player->spells->ChippedPowerCore != NULL)
+    {
+        player->spells->ChippedPowerCore->cooldownRemaining = cooldown;
+    }
+    if (player->spells->CrackedPowerCore != NULL)
+    {
+        player->spells->CrackedPowerCore->cooldownRemaining = cooldown;
+    }
 }
 
 BloodFury::BloodFury(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
@@ -1296,4 +1324,60 @@ Innervate::Innervate(Player* player, std::shared_ptr<Aura> aura) : Spell(player,
     onGcd = false;
     isNonWarlockAbility = true;
     setup();
+}
+
+ChippedPowerCore::ChippedPowerCore(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
+{
+    name = "Chipped Power Core";
+    cooldown = 120;
+    usableOncePerFight = true; // The item is unique so you can only carry one at a time, so I'm just gonna limit it to 1 use per fight.
+    isAura = true;
+    onGcd = false;
+    setup();
+};
+
+void ChippedPowerCore::cast()
+{
+    Spell::cast();
+
+    if (player->spells->DemonicRune != NULL)
+    {
+        player->spells->DemonicRune->cooldownRemaining = cooldown;
+    }
+    if (player->spells->FlameCap != NULL)
+    {
+        player->spells->FlameCap->cooldownRemaining = cooldown;
+    }
+    if (player->spells->CrackedPowerCore != NULL)
+    {
+        player->spells->CrackedPowerCore->cooldownRemaining = cooldown;
+    }
+}
+
+CrackedPowerCore::CrackedPowerCore(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
+{
+    name = "Cracked Power Core";
+    cooldown = 120;
+    usableOncePerFight = true; // The item is unique so you can only carry one at a time, so I'm just gonna limit it to 1 use per fight.
+    isAura = true;
+    onGcd = false;
+    setup();
+};
+
+void CrackedPowerCore::cast()
+{
+    Spell::cast();
+
+    if (player->spells->DemonicRune != NULL)
+    {
+        player->spells->DemonicRune->cooldownRemaining = cooldown;
+    }
+    if (player->spells->FlameCap != NULL)
+    {
+        player->spells->FlameCap->cooldownRemaining = cooldown;
+    }
+    if (player->spells->ChippedPowerCore != NULL)
+    {
+        player->spells->ChippedPowerCore->cooldownRemaining = cooldown;
+    }
 }
