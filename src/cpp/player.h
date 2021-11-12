@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_PLAYER
+#define WARLOCK_SIMULATOR_TBC_PLAYER
 
 #include <map>
 #include <vector>
@@ -10,11 +11,11 @@
 #include "aura.h"
 #include "items.h"
 #include "trinket.h"
-#include "playerSettings.h"
-#include "damageOverTime.h"
-#include "PlayerSpells.h"
-#include "PlayerAuras.h"
-#include "combatLogBreakdown.h"
+#include "player_settings.h"
+#include "damage_over_time.h"
+#include "player_spells.h"
+#include "player_auras.h"
+#include "combat_log_breakdown.h"
 #include <random>
 #include "pet.h"
 
@@ -82,4 +83,7 @@ struct Player : std::enable_shared_from_this<Player>
   void postIterationDamageAndMana(const std::string& spellName);
   void sendCombatLogEntries();
   void combatLog(const std::string& entry);
+  std::string getCustomStat();
 };
+
+#endif

@@ -1,4 +1,4 @@
-#include "petAura.h"
+#include "pet_aura.h"
 #include "player.h"
 
 PetAura::PetAura(std::shared_ptr<Pet> pet) : pet(pet)

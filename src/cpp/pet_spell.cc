@@ -1,7 +1,7 @@
-#include "petSpell.h"
+#include "pet_spell.h"
 #include "common.h"
 #include "player.h"
-#include "petAura.h"
+#include "pet_aura.h"
 
 PetSpell::PetSpell(std::shared_ptr<Pet> pet) : pet(pet)
 {

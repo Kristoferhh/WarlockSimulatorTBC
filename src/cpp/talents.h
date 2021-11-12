@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_TALENTS
+#define WARLOCK_SIMULATOR_TBC_TALENTS
 
 struct Talents
 {
@@ -46,3 +47,5 @@ struct Talents
     int shadowAndFlame;
     int shadowfury;
 };
+
+#endif

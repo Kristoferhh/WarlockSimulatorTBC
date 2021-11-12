@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_CONSTANT
+#define WARLOCK_SIMULATOR_TBC_CONSTANT
 
 enum Constant : int
 {
@@ -19,3 +20,5 @@ enum Constant : int
     SIM_CHOOSES,
     USER_CHOOSES
 };
+
+#endif

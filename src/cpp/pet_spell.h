@@ -1,6 +1,7 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_PET_SPELL
+#define WARLOCK_SIMULATOR_TBC_PET_SPELL
 
-struct Pet;
+#include "pet.h"
 #include <iostream>
 #include "enums.h"
 
@@ -55,3 +56,5 @@ struct FelguardCleave : public PetSpell
     FelguardCleave(std::shared_ptr<Pet> pet);
     double getBaseDamage();
 };
+
+#endif

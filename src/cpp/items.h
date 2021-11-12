@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_ITEMS
+#define WARLOCK_SIMULATOR_TBC_ITEMS
 
 struct Items
 {
@@ -21,3 +22,5 @@ struct Items
     int twoHand;
     int wand;
 };
+
+#endif

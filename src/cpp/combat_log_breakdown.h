@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_COMBAT_LOG_BREAKDOWN
+#define WARLOCK_SIMULATOR_TBC_COMBAT_LOG_BREAKDOWN
 
 #include <iostream>
 #include <vector>
@@ -19,3 +20,5 @@ struct CombatLogBreakdown
 
     CombatLogBreakdown(std::string name);
 };
+
+#endif

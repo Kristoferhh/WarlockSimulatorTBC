@@ -1,7 +1,7 @@
 #include "player.h"
 #include "spell.h"
 #include "common.h"
-#include "damageOverTime.h"
+#include "damage_over_time.h"
 #include "bindings.h"
 
 Player::Player(std::shared_ptr<PlayerSettings> playerSettings)
@@ -789,6 +789,21 @@ void Player::postIterationDamageAndMana(const std::string& spellName)
     postCombatLogBreakdownVector(spellName.c_str(), combatLogBreakdown.at(spellName)->iterationManaGain, combatLogBreakdown.at(spellName)->iterationDamage);
     combatLogBreakdown.at(spellName)->iterationDamage = 0;
     combatLogBreakdown.at(spellName)->iterationManaGain = 0;
+}
+
+std::string Player::getCustomStat()
+{
+    if (settings->simmingStamina)       return "stamina";
+    if (settings->simmingIntellect)     return "intellect";
+    if (settings->simmingSpirit)        return "spirit";
+    if (settings->simmingSpellPower)    return "spellPower";
+    if (settings->simmingShadowPower)   return "shadowPower";
+    if (settings->simmingFirePower)     return "firePower";
+    if (settings->simmingCritRating)    return "critRating";
+    if (settings->simmingHitRating)     return "hitRating";
+    if (settings->simmingHasteRating)   return "hasteRating";
+    if (settings->simmingMp5)           return "mp5";
+    return "normal";
 }
 
 void Player::throwError(const std::string& error)

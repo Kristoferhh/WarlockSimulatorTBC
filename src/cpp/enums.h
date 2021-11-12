@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_ENUMS
+#define WARLOCK_SIMULATOR_TBC_ENUMS
 
 enum SpellSchool { NO_SCHOOL, SHADOW, FIRE };
 enum SpellType { NO_SPELL_TYPE, AFFLICTION, DESTRUCTION };
@@ -7,3 +8,5 @@ enum PetType { NO_PET_TYPE, MELEE, RANGED };
 enum PetMode { NO_MODE, PASSIVE, AGGRESSIVE };
 enum AttackType { NO_ATTACK_TYPE, PHYSICAL, MAGICAL };
 enum SimulationType { NORMAL, ALL_ITEMS, STAT_WEIGHTS };
+
+#endif

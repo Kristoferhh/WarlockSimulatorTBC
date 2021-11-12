@@ -1,10 +1,10 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_PET
 
-struct Player;
+#include "player.h"
 #include "enums.h"
-#include "petStats.h"
-#include "petSpells.h"
-#include "petAuras.h"
+#include "pet_stats.h"
+#include "pet_spells.h"
+#include "pet_auras.h"
 #include <iostream>
 
 struct Pet : std::enable_shared_from_this<Pet>

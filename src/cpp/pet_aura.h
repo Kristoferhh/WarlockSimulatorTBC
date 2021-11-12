@@ -1,7 +1,8 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_PET_AURA
+#define WARLOCK_SIMULATOR_TBC_PET_AURA
 
-struct Pet;
-struct Player;
+#include "pet.h"
+#include "player.h"
 #include <iostream>
 
 struct PetAura
@@ -34,3 +35,5 @@ struct BlackBook : public PetAura
     void apply(bool announceInCombatLog = true);
     void fade(bool endOfIteration = false);
 };
+
+#endif

@@ -1,6 +1,7 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_DAMAGE_OVER_TIME
+#define WARLOCK_SIMULATOR_TBC_DAMAGE_OVER_TIME
 
-struct Player; // Can't include player.h cause of circular reference
+#include "player.h"
 #include <iostream>
 #include "enums.h"
 #include "aura.h"
@@ -72,3 +73,4 @@ struct CurseOfDoomDot : public DamageOverTime
     double getModifier();
 };
 
+#endif

@@ -1,5 +1,4 @@
-#include "petStats.h"
-
+#include "pet_stats.h"
 #include "player.h"
 
 PetStats::PetStats(std::shared_ptr<Player> player)

@@ -1,11 +1,11 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_SPELL
+#define WARLOCK_SIMULATOR_TBC_SPELL
 
-struct Player;
-
+#include "player.h"
 #include <string>
 #include <cmath>
 #include "enums.h"
-#include "damageOverTime.h"
+#include "damage_over_time.h"
 
 struct Spell : std::enable_shared_from_this<Spell>
 {
@@ -322,3 +322,5 @@ struct ManaTideTotem : public Spell
 {
     ManaTideTotem(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
 };
+
+#endif

@@ -1,7 +1,8 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_TRINKET
+#define WARLOCK_SIMULATOR_TBC_TRINKET
 
-struct Player;
-#include "auraStats.h"
+#include "player.h"
+#include "aura_stats.h"
 #include <iostream>
 
 struct Trinket
@@ -99,3 +100,5 @@ struct DarkIronSmokingPipe : public Trinket
 {
     DarkIronSmokingPipe(std::shared_ptr<Player> player);
 };
+
+#endif

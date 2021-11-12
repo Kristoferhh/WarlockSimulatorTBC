@@ -1,4 +1,4 @@
-#include "combatLogBreakdown.h"
+#include "combat_log_breakdown.h"
 #include <iostream>
 
 CombatLogBreakdown::CombatLogBreakdown(std::string name)

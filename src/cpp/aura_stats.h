@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_AURA_STATS
+#define WARLOCK_SIMULATOR_TBC_AURA_STATS
 
 struct AuraStats
 {
@@ -11,3 +12,5 @@ struct AuraStats
 
     AuraStats(int spellPower, int shadowPower, int firePower, int hasteRating, double hastePercent, double manaCostModifier);
 };
+
+#endif

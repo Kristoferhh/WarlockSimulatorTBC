@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_AURAS
+#define WARLOCK_SIMULATOR_TBC_AURAS
 
 struct Auras
 {
@@ -91,3 +92,5 @@ struct Auras
     bool petAgilityScroll;
     bool petSpiritScroll;
 };
+
+#endif

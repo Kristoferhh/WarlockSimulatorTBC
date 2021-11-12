@@ -1,9 +1,10 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_PLAYER_SETTINGS
+#define WARLOCK_SIMULATOR_TBC_PLAYER_SETTINGS
 
 #include "auras.h"
 #include "talents.h"
 #include "sets.h"
-#include "characterStats.h"
+#include "character_stats.h"
 #include "items.h"
 #include <memory>
 
@@ -84,3 +85,5 @@ struct PlayerSettings
     bool hasDarkPact;
     bool hasElementalShamanT4Bonus;
 };
+
+#endif

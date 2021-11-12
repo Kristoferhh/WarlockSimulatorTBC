@@ -1,6 +1,7 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_PET_STATS
+#define WARLOCK_SIMULATOR_TBC_PET_STATS
 
-struct Player;
+#include "player.h"
 #include <memory>
 
 struct PetStats
@@ -32,3 +33,5 @@ struct PetStats
 
     PetStats(std::shared_ptr<Player> player = nullptr);
 };
+
+#endif

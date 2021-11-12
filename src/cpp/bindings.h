@@ -1,14 +1,16 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_BINDINGS
+#define WARLOCK_SIMULATOR_TBC_BINDINGS
+
 #include "simulation.h"
 #include "auras.h"
 #include "talents.h"
 #include "sets.h"
-#include "characterStats.h"
+#include "character_stats.h"
 #include <chrono>
 #include "constant.h"
 #include "aura.h"
 #include "items.h"
-#include "combatLogBreakdown.h"
+#include "combat_log_breakdown.h"
 
 #ifdef EMSCRIPTEN
 #include "emscripten.h"
@@ -33,3 +35,5 @@ void postCombatLogBreakdown(const char* name, int casts, int crits, int misses, 
 void combatLogUpdate(const char* combatLogEntry);
 void simulationUpdate(int iteration, int iterationAmount, double medianDps, int itemId, const char* customStat);
 void simulationEnd(double medianDps, double minDps, double maxDps, int itemId, int iterationAmount, int totalDuration, const char* customStat);
+
+#endif

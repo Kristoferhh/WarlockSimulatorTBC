@@ -1,8 +1,9 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_AURA
+#define WARLOCK_SIMULATOR_TBC_AURA
 
-struct Player;
 #include <iostream>
-#include "auraStats.h"
+#include "player.h"
+#include "aura_stats.h"
 
 struct Aura
 {
@@ -228,3 +229,5 @@ struct ManaTideTotemAura : public Aura
     void tick(double time);
     void apply();
 };
+
+#endif

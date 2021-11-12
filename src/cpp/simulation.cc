@@ -299,11 +299,7 @@ void Simulation::start()
 
         if (player->iteration % static_cast<int>(std::floor(settings->iterations / 100.0)) == 0)
         {
-            simulationUpdate(player->iteration, settings->iterations, median(dpsVector), player->settings->itemId,
-                player->settings->simmingStamina ? "stamina" : player->settings->simmingIntellect ? "intellect" : player->settings->simmingSpirit ? "spirit" :
-                player->settings->simmingSpellPower ? "spellPower" : player->settings->simmingShadowPower ? "shadowPower" : 
-                player->settings->simmingFirePower ? "firePower" : player->settings->simmingCritRating ? "critRating" : player->settings->simmingHitRating ? "hitRating" :
-                player->settings->simmingHasteRating ? "hasteRating" : player->settings->simmingMp5 ? "mp5" : "normal");
+            simulationUpdate(player->iteration, settings->iterations, median(dpsVector), player->settings->itemId, player->getCustomStat().c_str());
         }
     }
 
@@ -327,11 +323,7 @@ void Simulation::start()
             postCombatLogBreakdown(it->second->name.c_str(), it->second->casts, it->second->crits, it->second->misses, it->second->count, it->second->uptime, it->second->dodge, it->second->glancingBlows);
         }
     }
-    simulationEnd(median(dpsVector), minDps, maxDps, player->settings->itemId, settings->iterations, player->totalDuration,
-        player->settings->simmingStamina ? "stamina" : player->settings->simmingIntellect ? "intellect" : player->settings->simmingSpirit ? "spirit" :
-        player->settings->simmingSpellPower ? "spellPower" : player->settings->simmingShadowPower ? "shadowPower" :
-        player->settings->simmingFirePower ? "firePower" : player->settings->simmingCritRating ? "critRating" : player->settings->simmingHitRating ? "hitRating" :
-        player->settings->simmingHasteRating ? "hasteRating" : player->settings->simmingMp5 ? "mp5" : "normal");
+    simulationEnd(median(dpsVector), minDps, maxDps, player->settings->itemId, settings->iterations, player->totalDuration, player->getCustomStat().c_str());
 }
 
 double Simulation::passTime()

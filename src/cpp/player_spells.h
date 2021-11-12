@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_PLAYER_SPELLS
+#define WARLOCK_SIMULATOR_TBC_PLAYER_SPELLS
 
 #include "spell.h"
 #include <vector>
@@ -51,3 +52,5 @@ struct PlayerSpells
     std::vector<std::shared_ptr<Spell>> Bloodlust;
     std::vector<std::shared_ptr<Spell>> Innervate;
 };
+
+#endif

@@ -1,7 +1,8 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_PLAYER_AURAS
+#define WARLOCK_SIMULATOR_TBC_PLAYER_AURAS
 
 #include "aura.h"
-#include "damageOverTime.h"
+#include "damage_over_time.h"
 
 struct PlayerAuras
 {
@@ -46,3 +47,5 @@ struct PlayerAuras
     std::shared_ptr<Aura> CrackedPowerCore;
     std::shared_ptr<Aura> ManaTideTotem;
 };
+
+#endif

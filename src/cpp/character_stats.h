@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_CHARACTER_STATS
+#define WARLOCK_SIMULATOR_TBC_CHARACTER_STATS
 
 struct CharacterStats
 {
@@ -35,3 +36,5 @@ struct CharacterStats
     int frostResist;
     int shadowResist;
 };
+
+#endif
