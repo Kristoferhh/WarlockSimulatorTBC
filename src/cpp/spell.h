@@ -320,5 +320,5 @@ struct CrackedPowerCore : public Spell
 
 struct ManaTideTotem : public Spell
 {
-    ManaTideTotem(Player* player, std::shared_ptr<Aura> aura);
+    ManaTideTotem(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
 };

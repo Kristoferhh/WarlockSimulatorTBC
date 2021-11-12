@@ -209,22 +209,22 @@ struct WrathOfCenariusAura : public Aura
 
 struct InnervateAura : public Aura
 {
-    InnervateAura(Player* player);
+    InnervateAura(std::shared_ptr<Player> player);
 };
 
 struct ChippedPowerCoreAura : public Aura
 {
-    ChippedPowerCoreAura(Player* player);
+    ChippedPowerCoreAura(std::shared_ptr<Player> player);
 };
 
 struct CrackedPowerCoreAura : public Aura
 {
-    CrackedPowerCoreAura(Player* player);
+    CrackedPowerCoreAura(std::shared_ptr<Player> player);
 };
 
 struct ManaTideTotemAura : public Aura
 {
-    ManaTideTotemAura(Player* player);
+    ManaTideTotemAura(std::shared_ptr<Player> player);
     void tick(double time);
     void apply();
 };

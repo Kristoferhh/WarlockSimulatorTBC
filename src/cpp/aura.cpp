@@ -628,7 +628,7 @@ InnervateAura::InnervateAura(std::shared_ptr<Player> player) : Aura(player)
     setup();
 }
 
-ChippedPowerCoreAura::ChippedPowerCoreAura(Player* player) : Aura(player)
+ChippedPowerCoreAura::ChippedPowerCoreAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Chipped Power Core";
     duration = 30;
@@ -636,7 +636,7 @@ ChippedPowerCoreAura::ChippedPowerCoreAura(Player* player) : Aura(player)
     setup();
 }
 
-CrackedPowerCoreAura::CrackedPowerCoreAura(Player* player) : Aura(player)
+CrackedPowerCoreAura::CrackedPowerCoreAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Cracked Power Core";
     duration = 30;
@@ -644,7 +644,7 @@ CrackedPowerCoreAura::CrackedPowerCoreAura(Player* player) : Aura(player)
     setup();
 }
 
-ManaTideTotemAura::ManaTideTotemAura(Player* player) : Aura(player)
+ManaTideTotemAura::ManaTideTotemAura(std::shared_ptr<Player> player) : Aura(player)
 {
     name = "Mana Tide Totem";
     duration = 12;

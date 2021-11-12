@@ -1382,7 +1382,7 @@ void CrackedPowerCore::cast()
     }
 }
 
-ManaTideTotem::ManaTideTotem(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
+ManaTideTotem::ManaTideTotem(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura) : Spell(player, aura)
 {
     name = aura->name;
     cooldown = 300;
