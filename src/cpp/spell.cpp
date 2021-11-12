@@ -69,7 +69,7 @@ bool Spell::ready()
 
 void Spell::startCast(double predictedDamage)
 {
-    if (onGcd)
+    if (onGcd && !isNonWarlockAbility)
     {
         // Error: Casting a spell while GCD is active
         if (player->gcdRemaining > 0)
@@ -1380,4 +1380,12 @@ void CrackedPowerCore::cast()
     {
         player->spells->ChippedPowerCore->cooldownRemaining = cooldown;
     }
+}
+
+ManaTideTotem::ManaTideTotem(Player* player, std::shared_ptr<Aura> aura) : Spell(player, aura)
+{
+    name = aura->name;
+    cooldown = 300;
+    isAura = true;
+    isNonWarlockAbility = true;
 }

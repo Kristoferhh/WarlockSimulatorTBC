@@ -46,6 +46,7 @@ struct PlayerSpells
     std::shared_ptr<Spell> BandOfTheEternalSage;
     std::shared_ptr<Spell> ChippedPowerCore;
     std::shared_ptr<Spell> CrackedPowerCore;
+    std::shared_ptr<Spell> ManaTideTotem;
     std::vector<std::shared_ptr<Spell>> PowerInfusion;
     std::vector<std::shared_ptr<Spell>> Bloodlust;
     std::vector<std::shared_ptr<Spell>> Innervate;

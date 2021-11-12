@@ -42,6 +42,8 @@ void Simulation::start()
 
         while (player->fightTime < fightLength)
         {
+            double timeRemaining = fightLength - player->fightTime;
+
             // Use Drums
             if (player->spells->DrumsOfBattle != NULL && !player->auras->DrumsOfBattle->active && player->spells->DrumsOfBattle->ready())
             {
@@ -67,6 +69,11 @@ void Simulation::start()
                     }
                 }
             }
+            // Use Mana Tide Totem if there's <= 12 sec remaning or the player's mana is at 50% or lower
+            if (player->spells->ManaTideTotem != NULL && player->spells->ManaTideTotem->ready() && (timeRemaining <= player->auras->ManaTideTotem->duration || player->stats->mana / static_cast<double>(player->stats->maxMana) <= 0.50))
+            {
+                player->spells->ManaTideTotem->startCast();
+            }
 
             // Player
             if (player->castTimeRemaining <= 0)
@@ -88,7 +95,6 @@ void Simulation::start()
                 {
                     if (player->settings->isSingleTarget)
                     {
-                        double timeRemaining = fightLength - player->fightTime;
                         bool notEnoughTimeForFiller = timeRemaining < player->filler->getCastTime();
 
                         // Map of spells with their predicted damage as the value. This is used by the sim to determine what the best spell to cast is.
@@ -376,6 +382,7 @@ double Simulation::passTime()
     if (player->spells->BandOfTheEternalSage != NULL && player->spells->BandOfTheEternalSage->cooldownRemaining > 0 && player->spells->BandOfTheEternalSage->cooldownRemaining < time) time = player->spells->BandOfTheEternalSage->cooldownRemaining;
     if (player->spells->ChippedPowerCore != NULL && player->spells->ChippedPowerCore->cooldownRemaining > 0 && player->spells->ChippedPowerCore->cooldownRemaining < time) time = player->spells->ChippedPowerCore->cooldownRemaining;
     if (player->spells->CrackedPowerCore != NULL && player->spells->CrackedPowerCore->cooldownRemaining > 0 && player->spells->CrackedPowerCore->cooldownRemaining < time) time = player->spells->CrackedPowerCore->cooldownRemaining;
+    if (player->spells->ManaTideTotem != NULL && player->spells->ManaTideTotem->cooldownRemaining > 0 && player->spells->ManaTideTotem->cooldownRemaining < time) time = player->spells->ManaTideTotem->cooldownRemaining;
     for (std::vector<std::shared_ptr<Spell>>::iterator it = player->spells->PowerInfusion.begin(); it != player->spells->PowerInfusion.end(); it++)
     {
         if ((*it)->cooldownRemaining > 0 && (*it)->cooldownRemaining < time) time = (*it)->cooldownRemaining;
@@ -429,6 +436,7 @@ double Simulation::passTime()
     if (player->auras->ManaEtched4Set != NULL && player->auras->ManaEtched4Set->active && player->auras->ManaEtched4Set->durationRemaining < time) time = player->auras->ManaEtched4Set->durationRemaining;
     if (player->auras->ChippedPowerCore != NULL && player->auras->ChippedPowerCore->active && player->auras->ChippedPowerCore->durationRemaining < time) time = player->auras->ChippedPowerCore->durationRemaining;
     if (player->auras->CrackedPowerCore != NULL && player->auras->CrackedPowerCore->active && player->auras->CrackedPowerCore->durationRemaining < time) time = player->auras->CrackedPowerCore->durationRemaining;
+    if (player->auras->ManaTideTotem != NULL && player->auras->ManaTideTotem->active && player->auras->ManaTideTotem->durationRemaining < time) time = player->auras->ManaTideTotem->durationRemaining;
     #pragma endregion
 
     // MP5
@@ -500,6 +508,7 @@ double Simulation::passTime()
     if (player->auras->ManaEtched4Set != NULL && player->auras->ManaEtched4Set->active) player->auras->ManaEtched4Set->tick(time);
     if (player->auras->ChippedPowerCore != NULL && player->auras->ChippedPowerCore->active) player->auras->ChippedPowerCore->tick(time);
     if (player->auras->CrackedPowerCore != NULL && player->auras->CrackedPowerCore->active) player->auras->CrackedPowerCore->tick(time);
+    if (player->auras->ManaTideTotem != NULL && player->auras->ManaTideTotem->active) player->auras->ManaTideTotem->tick(time);
     #pragma endregion
 
     #pragma region Spells
@@ -538,6 +547,7 @@ double Simulation::passTime()
     if (player->spells->BandOfTheEternalSage != NULL && (player->spells->BandOfTheEternalSage->cooldownRemaining > 0 || player->spells->BandOfTheEternalSage->casting)) player->spells->BandOfTheEternalSage->tick(time);
     if (player->spells->ChippedPowerCore != NULL && (player->spells->ChippedPowerCore->cooldownRemaining > 0 || player->spells->ChippedPowerCore->casting)) player->spells->ChippedPowerCore->tick(time);
     if (player->spells->CrackedPowerCore != NULL && (player->spells->CrackedPowerCore->cooldownRemaining > 0 || player->spells->CrackedPowerCore->casting)) player->spells->CrackedPowerCore->tick(time);
+    if (player->spells->ManaTideTotem != NULL && (player->spells->ManaTideTotem->cooldownRemaining > 0 || player->spells->ManaTideTotem->casting)) player->spells->ManaTideTotem->tick(time);
     for (std::vector<std::shared_ptr<Spell>>::iterator it = player->spells->PowerInfusion.begin(); it != player->spells->PowerInfusion.end(); it++)
     {
         if ((*it)->cooldownRemaining > 0) (*it)->tick(time);
