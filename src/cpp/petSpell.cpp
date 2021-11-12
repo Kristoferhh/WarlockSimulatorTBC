@@ -3,7 +3,7 @@
 #include "player.h"
 #include "petAura.h"
 
-PetSpell::PetSpell(Pet* pet) : pet(pet)
+PetSpell::PetSpell(std::shared_ptr<Pet> pet) : pet(pet)
 {
     casting = false;
     canCrit = true;
@@ -354,7 +354,7 @@ void PetSpell::damage(bool isCrit, bool isGlancing)
     }
 }
 
-ImpFirebolt::ImpFirebolt(Pet* pet) : PetSpell(pet)
+ImpFirebolt::ImpFirebolt(std::shared_ptr<Pet> pet) : PetSpell(pet)
 {
     name = "Firebolt";
     castTime = 2 - (0.25 * pet->player->talents->improvedFirebolt);
@@ -366,7 +366,7 @@ ImpFirebolt::ImpFirebolt(Pet* pet) : PetSpell(pet)
     setup();
 }
 
-Melee::Melee(Pet* pet) : PetSpell(pet)
+Melee::Melee(std::shared_ptr<Pet> pet) : PetSpell(pet)
 {
     cooldown = 2;
     name = "Melee";
@@ -384,7 +384,7 @@ double Melee::getCooldown()
     return round((cooldown / pet->stats->hastePercent) * 10000) / 10000.0;
 }
 
-FelguardCleave::FelguardCleave(Pet* pet) : PetSpell(pet)
+FelguardCleave::FelguardCleave(std::shared_ptr<Pet> pet) : PetSpell(pet)
 {
     cooldown = 6;
     manaCost = 417;
@@ -398,7 +398,7 @@ double FelguardCleave::getBaseDamage()
     return pet->spells->Melee->getBaseDamage() + 78;
 }
 
-SuccubusLashOfPain::SuccubusLashOfPain(Pet* pet) : PetSpell(pet)
+SuccubusLashOfPain::SuccubusLashOfPain(std::shared_ptr<Pet> pet) : PetSpell(pet)
 {
     cooldown = 12 - 3 * pet->player->talents->improvedLashOfPain;
     manaCost = 190;

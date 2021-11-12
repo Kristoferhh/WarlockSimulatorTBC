@@ -6,7 +6,7 @@ struct Pet;
 
 struct PetSpell
 {
-    Pet* pet;
+    std::shared_ptr<Pet> pet;
     SpellSchool school;
     AttackType type;
     std::string name;
@@ -20,7 +20,7 @@ struct PetSpell
     double modifier;
     int cooldown;
 
-    PetSpell(Pet* pet);
+    PetSpell(std::shared_ptr<Pet> pet);
     bool ready();
     void setup();
     void reset();
@@ -35,23 +35,23 @@ struct PetSpell
 
 struct Melee : public PetSpell
 {
-    Melee(Pet* pet);
+    Melee(std::shared_ptr<Pet> pet);
     double getBaseDamage();
     double getCooldown();
 };
 
 struct ImpFirebolt : public PetSpell
 {
-    ImpFirebolt(Pet* pet);
+    ImpFirebolt(std::shared_ptr<Pet> pet);
 };
 
 struct SuccubusLashOfPain : public PetSpell
 {
-    SuccubusLashOfPain(Pet* pet);
+    SuccubusLashOfPain(std::shared_ptr<Pet> pet);
 };
 
 struct FelguardCleave : public PetSpell
 {
-    FelguardCleave(Pet* pet);
+    FelguardCleave(std::shared_ptr<Pet> pet);
     double getBaseDamage();
 };

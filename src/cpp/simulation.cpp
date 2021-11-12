@@ -8,11 +8,12 @@
 #include <chrono>
 #include "enums.h"
 
-Simulation::Simulation(Player* player, SimulationSettings* simulationSettings)
+Simulation::Simulation(std::shared_ptr<Player> player, std::shared_ptr<SimulationSettings> simulationSettings)
     : player(player), settings(simulationSettings) {}
 
 void Simulation::start()
 {
+    uint32_t* randomSeeds = allocRandomSeeds(settings->iterations);
     std::vector<double> dpsVector;
     player->totalDuration = 0;
     player->initialize();
@@ -24,8 +25,8 @@ void Simulation::start()
     for (player->iteration = 0; player->iteration < settings->iterations; player->iteration++)
     {
         // Set the random seeds
-        player->gen.seed(settings->randomSeeds[player->iteration]);
-        gen.seed(settings->randomSeeds[player->iteration]);
+        player->gen.seed(randomSeeds[player->iteration]);
+        gen.seed(randomSeeds[player->iteration]);
         // Get a random fight length
         int fightLength = randomFightLength(gen);
         player->reset();
@@ -305,6 +306,8 @@ void Simulation::start()
                 player->settings->simmingHasteRating ? "hasteRating" : player->settings->simmingMp5 ? "mp5" : "normal");
         }
     }
+
+    delete[] randomSeeds;
 
     // Send the contents of the combat log to the web worker
     if (player->settings->equippedItemSimulation)

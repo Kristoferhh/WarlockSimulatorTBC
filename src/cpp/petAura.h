@@ -6,7 +6,7 @@ struct Player;
 
 struct PetAura
 {
-    Pet* pet;
+    std::shared_ptr<Pet> pet;
     std::string name;
     int duration;
     double durationRemaining;
@@ -15,7 +15,7 @@ struct PetAura
     int maxStacks;
     int stacks;
 
-    PetAura(Pet* pet);
+    PetAura(std::shared_ptr<Pet> pet);
     void tick(double time);
     virtual void apply();
     virtual void fade(bool endOfIteration = false);
@@ -23,14 +23,14 @@ struct PetAura
 
 struct DemonicFrenzy : public PetAura
 {
-    DemonicFrenzy(Pet* pet);
+    DemonicFrenzy(std::shared_ptr<Pet> pet);
     void apply();
     void fade(bool endOfIteration = false);
 };
 
 struct BlackBook : public PetAura
 {
-    BlackBook(Pet* pet);
+    BlackBook(std::shared_ptr<Pet> pet);
     void apply(bool announceInCombatLog = true);
     void fade(bool endOfIteration = false);
 };

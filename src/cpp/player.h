@@ -18,7 +18,7 @@
 #include <random>
 #include "pet.h"
 
-struct Player
+struct Player : std::enable_shared_from_this<Player>
 {
   const double hitRatingPerPercent = 12.62;
   const double critRatingPerPercent = 22.08;
@@ -28,12 +28,12 @@ struct Player
   const double critPerInt = 1 / 81.95; // Crit % per point of intellect
   const double baseCritChancePercent = 1.701;
   std::unique_ptr<Pet> pet;
-  Auras* selectedAuras;
-  Talents* talents;
-  Sets* sets;
-  CharacterStats* stats;
-  Items* items;
-  PlayerSettings* settings;
+  std::shared_ptr<Auras> selectedAuras;
+  std::shared_ptr<Talents> talents;
+  std::shared_ptr<Sets> sets;
+  std::shared_ptr<CharacterStats> stats;
+  std::shared_ptr<Items> items;
+  std::shared_ptr<PlayerSettings> settings;
   std::unique_ptr<PlayerSpells> spells;
   std::unique_ptr<PlayerAuras> auras;
   std::vector<std::unique_ptr<Trinket>> trinkets;
@@ -60,7 +60,7 @@ struct Player
   double demonicKnowledgeSpellPower;
   double critMultiplier;
 
-  Player(PlayerSettings* settings);
+  Player(std::shared_ptr<PlayerSettings> settings);
   void initialize();
   void reset();
   void endAuras();

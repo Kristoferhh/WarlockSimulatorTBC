@@ -7,7 +7,7 @@ struct Player; // Can't include player.h cause of circular reference
 
 struct DamageOverTime
 {
-    Player* player;
+    std::shared_ptr<Player> player;
     SpellSchool school;
     int duration; // Total duration of the dot
     int originalDuration; // Used for T4 4pc since we're increasing the duration by 3 seconds but need to know what the original duration was
@@ -26,7 +26,7 @@ struct DamageOverTime
     bool isbActive; // Siphon Life
     std::string name;
 
-    DamageOverTime(Player* player);
+    DamageOverTime(std::shared_ptr<Player> player);
     void setup();
     virtual void apply();
     virtual double getModifier();
@@ -41,34 +41,34 @@ struct CorruptionDot : public DamageOverTime
     double getModifier();
     void apply();
 
-    CorruptionDot(Player* player);
+    CorruptionDot(std::shared_ptr<Player> player);
 };
 
 struct UnstableAfflictionDot : public DamageOverTime
 {
-    UnstableAfflictionDot(Player* player);
+    UnstableAfflictionDot(std::shared_ptr<Player> player);
 };
 
 struct SiphonLifeDot : public DamageOverTime
 {
-    SiphonLifeDot(Player* player);
+    SiphonLifeDot(std::shared_ptr<Player> player);
 };
 
 struct ImmolateDot : public DamageOverTime
 {
-    ImmolateDot(Player* player);
+    ImmolateDot(std::shared_ptr<Player> player);
     void apply();
 };
 
 struct CurseOfAgonyDot : public DamageOverTime
 {
-    CurseOfAgonyDot(Player* player);
+    CurseOfAgonyDot(std::shared_ptr<Player> player);
     double getModifier();
 };
 
 struct CurseOfDoomDot : public DamageOverTime
 {
-    CurseOfDoomDot(Player* player);
+    CurseOfDoomDot(std::shared_ptr<Player> player);
     double getModifier();
 };
 

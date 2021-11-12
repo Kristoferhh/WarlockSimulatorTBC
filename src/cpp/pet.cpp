@@ -1,7 +1,7 @@
 #include "pet.h"
 #include "player.h"
 
-Pet::Pet(Player* player) : player(player)
+Pet::Pet(std::shared_ptr<Player> player) : player(player)
 {
     spells = std::make_unique<PetSpells>();
     auras = std::make_unique<PetAuras>();
@@ -24,26 +24,26 @@ void Pet::initialize()
 {
     if (pet == PetName::IMP)
     {
-        spells->Firebolt = std::make_unique<ImpFirebolt>(this);
+        spells->Firebolt = std::make_unique<ImpFirebolt>(shared_from_this());
     }
     else
     {
-        spells->Melee = std::make_unique<Melee>(this);
+        spells->Melee = std::make_unique<Melee>(shared_from_this());
         
         if (pet == PetName::SUCCUBUS)
         {
-            spells->LashOfPain = std::make_unique<SuccubusLashOfPain>(this);
+            spells->LashOfPain = std::make_unique<SuccubusLashOfPain>(shared_from_this());
         }
         else if (pet == PetName::FELGUARD)
         {
-            spells->Cleave = std::make_unique<FelguardCleave>(this);
-            auras->DemonicFrenzy = std::make_unique<DemonicFrenzy>(this);
+            spells->Cleave = std::make_unique<FelguardCleave>(shared_from_this());
+            auras->DemonicFrenzy = std::make_unique<DemonicFrenzy>(shared_from_this());
         }
     }
 
     if (player->settings->prepopBlackBook)
     {
-        auras->BlackBook = std::make_unique<BlackBook>(this);
+        auras->BlackBook = std::make_unique<BlackBook>(shared_from_this());
     }
 }
 
@@ -465,7 +465,7 @@ void Pet::tick(double t)
     }
 }
 
-Imp::Imp(Player* player) : Pet(player)
+Imp::Imp(std::shared_ptr<Player> player) : Pet(player)
 {
     name = "Imp";
     pet = PetName::IMP;
@@ -479,7 +479,7 @@ Imp::Imp(Player* player) : Pet(player)
     setup();
 }
 
-Succubus::Succubus(Player* player) : Pet(player)
+Succubus::Succubus(std::shared_ptr<Player> player) : Pet(player)
 {
     name = "Succubus";
     pet = PetName::SUCCUBUS;
@@ -495,7 +495,7 @@ Succubus::Succubus(Player* player) : Pet(player)
     setup();
 }
 
-Felguard::Felguard(Player* player) : Pet(player)
+Felguard::Felguard(std::shared_ptr<Player> player) : Pet(player)
 {
     name = "Felguard";
     petType = PetType::MELEE;
