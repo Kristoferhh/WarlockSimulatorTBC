@@ -126,10 +126,10 @@ void simulationEnd(double medianDps, double minDps, double maxDps, int itemId, i
 #endif
 }
 
-std::shared_ptr<uint32_t[]> allocRandomSeeds(int amountOfSeeds)
+uint32_t* allocRandomSeeds(int amountOfSeeds)
 {
     srand(time(nullptr));
-    std::shared_ptr<uint32_t[]> seeds = std::make_shared<uint32_t[]>(10000);
+    uint32_t* seeds = new uint32_t[10000];
 
     for (int i = 0; i < amountOfSeeds; i++)
     {
@@ -141,8 +141,6 @@ std::shared_ptr<uint32_t[]> allocRandomSeeds(int amountOfSeeds)
 
 std::shared_ptr<Items> allocItems(int head, int neck, int shoulders, int back, int chest, int bracers, int gloves, int belt, int legs, int boots, int finger1, int finger2, int trinket1, int trinket2, int mainHand, int offHand, int twoHand, int wand)
 {
-    std::cout << "allocItems" << std::endl;
-    std::cout << "head: " << std::to_string(head) << std::endl;
     return std::make_shared<Items>(head, neck, shoulders, back, chest, bracers, gloves, belt, legs, boots, finger1, finger2, trinket1, trinket2, mainHand, offHand, twoHand, wand);
 }
 
@@ -176,9 +174,9 @@ std::shared_ptr<Player> allocPlayer(std::shared_ptr<PlayerSettings> settings)
     return std::make_shared<Player>(settings);
 }
 
-std::shared_ptr<SimulationSettings> allocSimSettings(int iterations, int minTime, int maxTime, std::shared_ptr<uint32_t[]> randomSeeds, SimulationType simulationType)
+std::shared_ptr<SimulationSettings> allocSimSettings(int iterations, int minTime, int maxTime, SimulationType simulationType)
 {
-    return std::make_shared<SimulationSettings>(iterations, minTime, maxTime, randomSeeds, simulationType);
+    return std::make_shared<SimulationSettings>(iterations, minTime, maxTime, simulationType);
 }
 
 std::shared_ptr<Simulation> allocSim(std::shared_ptr<Player> player, std::shared_ptr<SimulationSettings> simulationSettings)
@@ -473,7 +471,6 @@ EMSCRIPTEN_BINDINGS(module)
         .property("iterations", &SimulationSettings::iterations)
         .property("minTime", &SimulationSettings::minTime)
         .property("maxTime", &SimulationSettings::maxTime)
-        .property("randomSeeds", &SimulationSettings::randomSeeds)
         .property("simulationType", &SimulationSettings::simulationType);
 
     emscripten::enum_<SimulationType>("SimulationType")
@@ -490,7 +487,6 @@ EMSCRIPTEN_BINDINGS(module)
     emscripten::function("allocPlayer", &allocPlayer);
     emscripten::function("allocSimSettings", &allocSimSettings);
     emscripten::function("allocSim", &allocSim);
-    emscripten::function("allocRandomSeeds", &allocRandomSeeds);
 
     /*emscripten::enum_<Constant>("Constant")
         .value("ALDOR", ALDOR)
