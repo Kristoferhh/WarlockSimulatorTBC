@@ -288,5 +288,5 @@ onmessage = (event) => {
     const simPtr = module.allocSim(playerPtr, simSettingsPtr);
     simPtr.start();
   })
-  .catch(e => console.error(e));
+  .catch(e => alert(e));
 };
