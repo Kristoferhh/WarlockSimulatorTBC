@@ -307,6 +307,8 @@ void Simulation::start()
         }
     }
 
+    delete[] randomSeeds;
+
     // Send the contents of the combat log to the web worker
     if (player->settings->equippedItemSimulation)
     {
