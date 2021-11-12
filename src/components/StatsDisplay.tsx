@@ -14,7 +14,7 @@ export default function StatsDisplay() {
     let staminaModifier = Object.values(playerState.stats).map(obj => obj.staminaModifier || 1).reduce((a, b) => a * b);
 
     if (playerState.auras.bloodPact) {
-      let bloodPactModifier = parseInt(playerState.settings.improvedImpSetting);
+      let bloodPactModifier = parseInt(playerState.settings.improvedImpSetting) || 0;
 
       // If the player is using an imp, the imp is active, and the player has more points in the Improved Imp talent than the improved imp setting then use that instead
       if (isPetActive(playerState.talents, playerState.settings, false, false) && playerState.settings.petChoice === PetName.IMP) {
