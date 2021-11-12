@@ -10,6 +10,7 @@ Aura::Aura(std::shared_ptr<Player> player) : player(player)
     groupWide = false;
     modifier = 1;
     stacks = 0;
+    ticksRemaining = 0;
     tickTimerRemaining = 0;
     active = false;
 }
@@ -442,7 +443,6 @@ DrumsOfRestorationAura::DrumsOfRestorationAura(std::shared_ptr<Player> player) :
     duration = 15;
     groupWide = true;
     tickTimerTotal = 3;
-    ticksRemaining = 0;
     ticksTotal = duration / tickTimerTotal;
     manaGain = 600.0 / (duration / tickTimerTotal);
     setup();
@@ -642,4 +642,47 @@ CrackedPowerCoreAura::CrackedPowerCoreAura(Player* player) : Aura(player)
     duration = 30;
     Aura::stats = std::make_unique<AuraStats>(15, 0, 0, 0, 0, 0);
     setup();
+}
+
+ManaTideTotemAura::ManaTideTotemAura(Player* player) : Aura(player)
+{
+    name = "Mana Tide Totem";
+    duration = 12;
+    tickTimerTotal = 3;
+    ticksTotal = duration / tickTimerTotal;
+    setup();
+};
+
+void ManaTideTotemAura::apply()
+{
+    tickTimerRemaining = tickTimerTotal;
+    ticksRemaining = ticksTotal;
+    Aura::apply();
+}
+
+void ManaTideTotemAura::tick(double t)
+{
+    tickTimerRemaining -= t;
+    
+    if (tickTimerRemaining <= 0)
+    {
+        int currentMana = player->stats->mana;
+        int manaGain = player->stats->maxMana * 0.06;
+        player->stats->mana = std::min(player->stats->maxMana, player->stats->mana + manaGain);
+        int manaGained = player->stats->mana - currentMana;
+        player->combatLogBreakdown.at(name)->casts++;
+        player->addIterationDamageAndMana(name, manaGained, 0);
+        if (player->shouldWriteToCombatLog())
+        {
+            player->combatLog("Player gains " + std::to_string(manaGained) + " mana from Mana Tide Totem (" + std::to_string(currentMana) + " -> " + std::to_string(player->stats->mana) + ")");
+        }
+
+        ticksRemaining--;
+        tickTimerRemaining = tickTimerTotal;
+
+        if (ticksRemaining <= 0)
+        {
+            Aura::fade();
+        }
+    }
 }

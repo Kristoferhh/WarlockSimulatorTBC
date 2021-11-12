@@ -29,6 +29,7 @@ export const Auras: Aura[] = [
   { name: 'Bloodlust', varName: AuraName.bloodlust, group: AuraGroup.Buffs, iconName: 'spell_nature_bloodlust', id: 2825 },
   { name: 'Ferocious Inspiration', varName: AuraName.ferociousInspiration, group: AuraGroup.Buffs, iconName: 'ability_hunter_ferociousinspiration', id: 34460 },
   { name: 'Innervate', varName: AuraName.innervate, group: AuraGroup.Buffs, iconName: 'spell_nature_lightning', id: 29166 },
+  { name: 'Mana Tide Totem', varName: AuraName.manaTideTotem, group: AuraGroup.Buffs, iconName: 'spell_frost_summonwaterelemental', id: 16190 },
 
   // Debuffs
   { name: 'Curse of the Elements', varName: AuraName.curseOfTheElements, group: AuraGroup.Debuffs, iconName: 'spell_shadow_chilltouch', id: 27228, stats: { spellPenetration: 88, } },
@@ -70,6 +71,7 @@ export const Auras: Aura[] = [
   { name: "Bloodthistle", varName: AuraName.bloodthistle, group: AuraGroup.Consumables, iconName: "inv_misc_herb_11", id: 22710, stats: { spellPower: 10, }, },
   { name: 'Chipped Power Core', varName: AuraName.chippedPowerCore, group: AuraGroup.Consumables, iconName: 'inv_misc_gem_diamond_02', id: 23381 },
   { name: 'Cracked Power Core', varName: AuraName.crackedPowerCore, group: AuraGroup.Consumables, iconName: 'inv_misc_gem_diamond_02', id: 23334 },
+  { name: 'Crystal of Insight', varName: AuraName.crystalOfInsight, group: AuraGroup.Consumables, iconName: 'inv_datacrystal01', id: 23986, stats: { intellect: 5 } },
 
   // Pet Buffs
   { name: 'Blessing of Kings', varName: AuraName.blessingOfKingsPet, group: AuraGroup.PetBuffs, iconName: 'spell_magic_greaterblessingofkings', id: 25898 },

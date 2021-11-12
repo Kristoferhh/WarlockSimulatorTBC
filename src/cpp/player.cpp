@@ -312,6 +312,7 @@ void Player::initialize()
         if (talents->nightfall > 0) auras->ShadowTrance = std::make_shared<ShadowTranceAura>(shared_from_this());
         if (talents->amplifyCurse == 1 && (settings->hasAmplifyCurse || settings->simChoosingRotation)) auras->AmplifyCurse = std::make_shared<AmplifyCurseAura>(shared_from_this());
     }
+    if (selectedAuras->manaTideTotem) auras->ManaTideTotem = std::make_shared<ManaTideTotemAura>(shared_from_this());
     if (selectedAuras->chippedPowerCore) auras->ChippedPowerCore = std::make_shared<ChippedPowerCoreAura>(shared_from_this());
     if (selectedAuras->crackedPowerCore) auras->CrackedPowerCore = std::make_shared<CrackedPowerCoreAura>(shared_from_this());
     if (selectedAuras->powerInfusion) auras->PowerInfusion = std::make_shared<PowerInfusionAura>(shared_from_this());
@@ -369,6 +370,7 @@ void Player::initialize()
         if (auras->CurseOfDoom != NULL) spells->CurseOfDoom = std::make_shared<CurseOfDoom>(shared_from_this(), nullptr, auras->CurseOfDoom);
         if (auras->AmplifyCurse != NULL) spells->AmplifyCurse = std::make_shared<AmplifyCurse>(shared_from_this(), auras->AmplifyCurse);
     }
+    if (auras->ManaTideTotem != NULL) spells->ManaTideTotem = std::make_shared<ManaTideTotem>(shared_from_this(), auras->ManaTideTotem);
     if (auras->ChippedPowerCore != NULL) spells->ChippedPowerCore = std::make_shared<ChippedPowerCore>(shared_from_this(), auras->ChippedPowerCore);
     if (auras->CrackedPowerCore != NULL) spells->CrackedPowerCore = std::make_shared<CrackedPowerCore>(shared_from_this(), auras->CrackedPowerCore);
     if (selectedAuras->superManaPotion) spells->SuperManaPotion = std::make_shared<SuperManaPotion>(shared_from_this());
@@ -505,6 +507,7 @@ void Player::reset()
     if (spells->BandOfTheEternalSage != NULL) spells->BandOfTheEternalSage->reset();
     if (spells->ChippedPowerCore != NULL) spells->ChippedPowerCore->reset();
     if (spells->CrackedPowerCore != NULL) spells->CrackedPowerCore->reset();
+    if (spells->ManaTideTotem != NULL) spells->ManaTideTotem->reset();
     for (std::vector<std::shared_ptr<Spell>>::iterator it = spells->PowerInfusion.begin(); it != spells->PowerInfusion.end(); it++)
     {
         (*it)->reset();
@@ -567,6 +570,7 @@ void Player::endAuras()
     if (auras->ManaEtched4Set != NULL && auras->ManaEtched4Set->active) auras->ManaEtched4Set->fade();
     if (auras->ChippedPowerCore != NULL && auras->ChippedPowerCore->active) auras->ChippedPowerCore->fade();
     if (auras->CrackedPowerCore != NULL && auras->CrackedPowerCore->active) auras->CrackedPowerCore->fade();
+    if (auras->ManaTideTotem != NULL && auras->ManaTideTotem->active) auras->ManaTideTotem->fade();
 }
 
 double Player::getHastePercent()

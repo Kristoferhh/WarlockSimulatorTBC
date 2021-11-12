@@ -44,4 +44,5 @@ struct PlayerAuras
     std::shared_ptr<Aura> ManaEtched4Set;
     std::shared_ptr<Aura> ChippedPowerCore;
     std::shared_ptr<Aura> CrackedPowerCore;
+    std::shared_ptr<Aura> ManaTideTotem;
 };
