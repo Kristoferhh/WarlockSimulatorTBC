@@ -129,7 +129,7 @@ void simulationEnd(double medianDps, double minDps, double maxDps, int itemId, i
 uint32_t* allocRandomSeeds(int amountOfSeeds)
 {
     srand(time(nullptr));
-    uint32_t* seeds = new uint32_t[10000];
+    uint32_t* seeds = new uint32_t[amountOfSeeds];
 
     for (int i = 0; i < amountOfSeeds; i++)
     {
