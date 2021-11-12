@@ -32,7 +32,7 @@ export default function GemSelection() {
       currentItemSocketArray = JSON.parse(JSON.stringify(currentItemSocketArray));
 
       // Return if the clicked gem is the same as the already equipped gem
-      if (currentItemSocketArray[uiState.gemSelectionTable.socketNumber][1] === gem.id) {
+      if (currentItemSocketArray[uiState.gemSelectionTable.socketNumber] && currentItemSocketArray[uiState.gemSelectionTable.socketNumber][1] === gem.id) {
         return;
       }
     }

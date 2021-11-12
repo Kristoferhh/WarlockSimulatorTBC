@@ -62,7 +62,7 @@ function getEquippedMetaGemId(items: ItemAndEnchantStruct, gems: SelectedGemsStr
   if ([null, 0].includes(items.head) || !gems.head || !gems.head[items.head]) { return 0; }
 
   for (const gemArray of Object.values(gems.head[items.head])) {
-    if (Gems.find(e => e.id === gemArray[1])?.color === GemColor.Meta) {
+    if (gemArray && Gems.find(e => e.id === gemArray[1])?.color === GemColor.Meta) {
       return gemArray[1];
     }
   }
