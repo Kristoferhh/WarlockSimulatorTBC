@@ -317,3 +317,8 @@ struct CrackedPowerCore : public Spell
     CrackedPowerCore(Player* player, std::shared_ptr<Aura> aura);
     void cast();
 };
+
+struct ManaTideTotem : public Spell
+{
+    ManaTideTotem(Player* player, std::shared_ptr<Aura> aura);
+};

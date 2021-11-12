@@ -221,3 +221,10 @@ struct CrackedPowerCoreAura : public Aura
 {
     CrackedPowerCoreAura(Player* player);
 };
+
+struct ManaTideTotemAura : public Aura
+{
+    ManaTideTotemAura(Player* player);
+    void tick(double time);
+    void apply();
+};
