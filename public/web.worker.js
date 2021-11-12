@@ -277,7 +277,6 @@ onmessage = (event) => {
     playerSettingsPtr.hasAmplifyCurse = player.rotation.other && player.rotation.other.amplifyCurse;
     playerSettingsPtr.hasDarkPact = player.rotation.other && player.rotation.other.darkPact;
     playerSettingsPtr.hasElementalShamanT4Bonus = player.simSettings.improvedWrathOfAirTotem === "yes";
-    debugger;
 
     const simSettingsPtr = module.allocSimSettings();
     simSettingsPtr.iterations = parseInt(simulation.iterations);
