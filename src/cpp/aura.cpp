@@ -674,7 +674,7 @@ void ManaTideTotemAura::tick(double t)
         player->addIterationDamageAndMana(name, manaGained, 0);
         if (player->shouldWriteToCombatLog())
         {
-            player->combatLog("Player gains " + std::to_string(manaGained) + " mana from Mana Tide Totem (" + std::to_string(currentMana) + " -> " + std::to_string(player->stats->mana) + ")" + ")");
+            player->combatLog("Player gains " + std::to_string(manaGained) + " mana from Mana Tide Totem (" + std::to_string(currentMana) + " -> " + std::to_string(player->stats->mana) + ")");
         }
 
         ticksRemaining--;
