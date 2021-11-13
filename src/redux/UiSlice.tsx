@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CombatLogBreakdown, GemSelectionTableStruct, InitialGemSelectionTableValue, ItemSlot, ItemSlotKey, Phase, SubSlotValue, UiState } from "../Types";
+import { CombatLogBreakdown, GemSelectionTableStruct, InitialGemSelectionTableValue, ItemSlot, ItemSlotKey, Phase, Stat, StatWeightStats, SubSlotValue, UiState } from "../Types";
 
 const initialUiState : UiState = {
   sources: JSON.parse(localStorage.getItem('sources') || JSON.stringify({ phase: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, } })),
@@ -16,7 +16,22 @@ const initialUiState : UiState = {
   combatLog: {visible: false, data: []},
   combatLogBreakdown: {totalDamageDone: 0, totalManaGained: 0, totalSimulationFightLength: 0, totalIterationAmount: 0, spellDamageDict: {}, spellManaGainDict: {}, data: []},
   histogram: {visible: false},
-  statWeights: {visible: false},
+  simulationInProgress: false,
+  statWeights: {
+    visible: false,
+    statValues: {
+      [Stat.stamina]: 0,
+      [Stat.intellect]: 0,
+      [Stat.spirit]: 0,
+      [Stat.spellPower]: 0,
+      [Stat.shadowPower]: 0,
+      [Stat.firePower]: 0,
+      [Stat.hitRating]: 0,
+      [Stat.critRating]: 0,
+      [Stat.hasteRating]: 0,
+      [Stat.mp5]: 0,
+    }
+  },
 }
 
 export const UiSlice = createSlice({
@@ -108,9 +123,15 @@ export const UiSlice = createSlice({
     },
     setStatWeightVisibility: (state, action: PayloadAction<boolean>) => {
       state.statWeights.visible = action.payload;
-    }
+    },
+    setStatWeightValue: (state, action: PayloadAction<{ stat: [keyof StatWeightStats], value: number }>) => {
+      state.statWeights.statValues[action.payload.stat as unknown as Stat] = action.payload.value;
+    },
+    setSimulationInProgressStatus: (state, action: PayloadAction<boolean>) => {
+      state.simulationInProgress = action.payload;
+    },
   }
 });
 
-export const { setStatWeightVisibility, setHistogramData, setHistogramVisibility, clearSavedItemSlotDps, setCombatLogBreakdownValue, setCombatLogData, setCombatLogVisibility, setSavedItemDps, setSelectedItemSubSlot, setSelectedItemSlot, setFillItemSocketsWindowVisibility, setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
+export const { setStatWeightValue, setSimulationInProgressStatus, setStatWeightVisibility, setHistogramData, setHistogramVisibility, clearSavedItemSlotDps, setCombatLogBreakdownValue, setCombatLogData, setCombatLogVisibility, setSavedItemDps, setSelectedItemSubSlot, setSelectedItemSlot, setFillItemSocketsWindowVisibility, setEquippedItemsWindowVisibility, toggleHiddenItemId, setImportExportWindowVisibility, setSelectedProfile, togglePhase, setGemSelectionTable, favoriteGem, hideGem } = UiSlice.actions;
 export default UiSlice.reducer;

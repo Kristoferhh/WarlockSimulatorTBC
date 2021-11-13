@@ -456,8 +456,9 @@ img {
 }
 
 #stat-weight-close-button {
-	margin-left: 110px;
-	margin-top: 15px;
+	display: inline-block;
+	cursor: pointer;
+	margin-left: 130px;
 }
 
 #import-export-close-button {
