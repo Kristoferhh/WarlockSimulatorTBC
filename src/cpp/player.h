@@ -28,7 +28,7 @@ struct Player : std::enable_shared_from_this<Player>
   const double healthPerStamina = 10;
   const double critPerInt = 1 / 81.95; // Crit % per point of intellect
   const double baseCritChancePercent = 1.701;
-  std::unique_ptr<Pet> pet;
+  std::shared_ptr<Pet> pet;
   std::shared_ptr<Auras> selectedAuras;
   std::shared_ptr<Talents> talents;
   std::shared_ptr<Sets> sets;
@@ -84,6 +84,7 @@ struct Player : std::enable_shared_from_this<Player>
   void sendCombatLogEntries();
   void combatLog(const std::string& entry);
   std::string getCustomStat();
+  void sendPlayerInfoToCombatLog();
 };
 
 #endif
