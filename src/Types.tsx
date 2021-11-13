@@ -499,7 +499,7 @@ export type SavedItemDps = {
 export interface UiState {
   sources: SourcesStruct,
   gemSelectionTable: GemSelectionTableStruct,
-  gemPreferences: {hidden: number[], favorites: number[]},
+  gemPreferences: { hidden: number[], favorites: number[] },
   selectedProfile: string,
   importExportWindowVisible: boolean,
   equippedItemsWindowVisible: boolean,
@@ -508,10 +508,27 @@ export interface UiState {
   selectedItemSlot: ItemSlotKey,
   selectedItemSubSlot: SubSlotValue,
   savedItemDps: SavedItemDps,
-  combatLog: {visible: boolean, data: string[]},
+  combatLog: { visible: boolean, data: string[] },
   combatLogBreakdown: CombatLogBreakdown,
-  histogram: {visible: boolean, data?: {[key: string]: number}},
-  statWeights: {visible: boolean},
+  histogram: { visible: boolean, data?: {[key: string]: number} },
+  simulationInProgress: boolean,
+  statWeights: {
+    visible: boolean,
+    statValues: { [key in Stat]?: number }
+  },
+}
+
+export interface StatWeightStats {
+  [Stat.stamina]: number,
+  [Stat.intellect]: number,
+  [Stat.spirit]: number,
+  [Stat.spellPower]: number,
+  [Stat.shadowPower]: number,
+  [Stat.firePower]: number,
+  [Stat.hitRating]: number,
+  [Stat.critRating]: number,
+  [Stat.hasteRating]: number,
+  [Stat.mp5]: number,
 }
 
 export type CombatLogBreakdown = {

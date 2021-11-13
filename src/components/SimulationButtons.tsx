@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { average, calculatePlayerStats, getAllocatedTalentsPointsInTree, getItemSetCounts, getItemTableItems, getPlayerHitPercent, getStdev, ItemSlotKeyToItemSlot } from "../Common";
+import { average, calculatePlayerStats, getItemSetCounts, getItemTableItems, getPlayerHitPercent, getStdev, ItemSlotKeyToItemSlot } from "../Common";
 import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
-import { Talents } from "../data/Talents";
 import { RootState } from "../redux/Store"
-import { clearSavedItemSlotDps, setCombatLogBreakdownValue, setCombatLogData, setCombatLogVisibility, setHistogramData, setHistogramVisibility, setSavedItemDps, setStatWeightVisibility } from "../redux/UiSlice";
+import { clearSavedItemSlotDps, setCombatLogBreakdownValue, setCombatLogData, setCombatLogVisibility, setHistogramData, setHistogramVisibility, setSavedItemDps, setSimulationInProgressStatus, setStatWeightValue, setStatWeightVisibility } from "../redux/UiSlice";
 import { SimWorker } from "../SimWorker.js";
-import { CombatLogBreakdownData, GemColor, ItemAndEnchantStruct, ItemSlot, PlayerState, SelectedGemsStruct, SimulationType, Stat, StatConstant, TalentTree, WorkerParams } from "../Types";
+import { CombatLogBreakdownData, GemColor, ItemAndEnchantStruct, ItemSlot, PlayerState, SelectedGemsStruct, SimulationType, Stat, StatConstant, StatWeightStats, WorkerParams } from "../Types";
 
 interface SimulationUpdate {
   medianDps: number,
@@ -43,19 +42,19 @@ interface ISimulationProgressPercent {
   customStat?: string
 }
 
-const statAmount = 100;
+const statWeightStatIncrease = 100;
 const statWeightValues: {[key: string]: number} = {
   'normal': 0,
-  [Stat.stamina]: statAmount,
-  [Stat.intellect]: statAmount,
-  [Stat.spirit]: statAmount,
-  [Stat.spellPower]: statAmount,
-  [Stat.shadowPower]: statAmount,
-  [Stat.firePower]: statAmount,
-  [Stat.hitRating]: statAmount,
-  [Stat.critRating]: statAmount,
-  [Stat.hasteRating]: statAmount,
-  [Stat.mp5]: statAmount,
+  [Stat.stamina]: statWeightStatIncrease,
+  [Stat.intellect]: statWeightStatIncrease,
+  [Stat.spirit]: statWeightStatIncrease,
+  [Stat.spellPower]: statWeightStatIncrease,
+  [Stat.shadowPower]: statWeightStatIncrease,
+  [Stat.firePower]: statWeightStatIncrease,
+  [Stat.hitRating]: statWeightStatIncrease,
+  [Stat.critRating]: statWeightStatIncrease,
+  [Stat.hasteRating]: statWeightStatIncrease,
+  [Stat.mp5]: statWeightStatIncrease,
 }
 
 function getEquippedMetaGemId(items: ItemAndEnchantStruct, gems: SelectedGemsStruct): number {
@@ -70,6 +69,8 @@ function getEquippedMetaGemId(items: ItemAndEnchantStruct, gems: SelectedGemsStr
   return 0;
 }
 
+let lastStatWeightUpdateTime: { [key: string]: number } = {};
+
 export function SimulationButtons() {
   const playerState = useSelector((state: RootState) => state.player);
   const uiState = useSelector((state: RootState) => state.ui);
@@ -79,7 +80,6 @@ export function SimulationButtons() {
   const [maxDps, setMaxDps] = useState(localStorage.getItem('maxDps') || '');
   const [simulationDuration, setSimulationDuration] = useState(localStorage.getItem('simulationDuration') || '');
   const [simulationProgressPercent, setSimulationProgressPercent] = useState(0);
-  const [simulationInProgress, setSimulationInProgress] = useState(false);
   const [dpsStdev, setDpsStdev] = useState('');
   const [simulationType, setSimulationType] = useState(SimulationType.Normal);
   let combatLogEntries: string[] = [];
@@ -152,7 +152,7 @@ export function SimulationButtons() {
   }
 
   function simulate(simulationParams: { type: SimulationType, itemIdsToSim?: number[] }) {
-    if (simulationInProgress) { return; }
+    if (uiState.simulationInProgress) { return; }
     let maxWorkers = window.navigator.hardwareConcurrency || 8; // Maximum amount of web workers that can be run concurrently.
     if (playerState.settings.maxWebWorkers && parseInt(playerState.settings.maxWebWorkers) > 0) { maxWorkers = parseInt(playerState.settings.maxWebWorkers); }
     const simulations: SimWorker[] = [];
@@ -172,7 +172,7 @@ export function SimulationButtons() {
     let simulationProgressPercentages: ISimulationProgressPercent[] = [];
     let simWorkerParameters: IGetWorkerParams[] = [];
     combatLogEntries = [];
-    setSimulationInProgress(true);
+    dispatch(setSimulationInProgressStatus(true));
     setSimulationType(simulationParams.type);
     if (simulationParams.type === SimulationType.AllItems) {
       dispatch(clearSavedItemSlotDps(itemSlot));
@@ -241,12 +241,12 @@ export function SimulationButtons() {
             }
 
             if (simulationParams.type === SimulationType.StatWeights) {
-              updateStatWeightValue(params.customStat, newMedianDps);
+              updateStatWeightValue(params.customStat, newMedianDps, true);
             }
   
             // All simulations finished
             if (simulationsFinished === simWorkerParameters.length) {
-              setSimulationInProgress(false);
+              dispatch(setSimulationInProgressStatus(false));
               const totalSimDuration = (performance.now() - startTime) / 1000;
               setNewSimulationDuration((Math.round(totalSimDuration * 10000) / 10000).toString(), true);
               setSimulationProgressPercent(0);
@@ -272,26 +272,6 @@ export function SimulationButtons() {
                   }));
                   $('.breakdown-table').trigger('update');
                 }
-              } else if (simulationParams.type === SimulationType.StatWeights) {
-                let talentTreePoints: {name: TalentTree, points: number}[] = [
-                  { name: TalentTree.Affliction, points: getAllocatedTalentsPointsInTree(playerState.talents, Talents.find(e => e.name === TalentTree.Affliction)!) },
-                  { name: TalentTree.Demonology, points: getAllocatedTalentsPointsInTree(playerState.talents, Talents.find(e => e.name === TalentTree.Demonology)!) },
-                  { name: TalentTree.Destruction, points: getAllocatedTalentsPointsInTree(playerState.talents, Talents.find(e => e.name === TalentTree.Destruction)!) }
-                ];
-                // Gets the name of the talent tree with the most amount of points allocated by the player.
-                const playerSpec = talentTreePoints.find(e => e.points === Math.max.apply(Math, talentTreePoints.map(a => a.points)))?.name;
-  
-                document.getElementById('pawn-import-string')!.innerHTML = `( Pawn: v1: "${uiState.selectedProfile || 'Warlock'}": Class=Warlock, Spec=${playerSpec}` +
-                ', Stamina=' + $('#stat-weight-stamina').text() +
-                ', Intellect=' + $('#stat-weight-intellect').text() +
-                ', Spirit=' + $('#stat-weight-spirit').text() +
-                ', SpellCritRating=' + $('#stat-weight-critRating').text() +
-                ', SpellHitRating=' + $('#stat-weight-hitRating').text() +
-                ', FireSpellDamage=' + $('#stat-weight-firePower').text() +
-                ', ShadowSpellDamage=' + $('#stat-weight-shadowPower').text() +
-                ', SpellDamage=' + $('#stat-weight-spellPower').text() +
-                ', Mp5=' + $('#stat-weight-mp5').text() +
-                ', SpellHasteRating=' + $('#stat-weight-hasteRating').text() + ')';
               }
             }
             // Multi-item sim
@@ -320,7 +300,12 @@ export function SimulationButtons() {
             if (simulationParams.type === SimulationType.Normal || (simulationParams.type === SimulationType.AllItems && params.itemId ===  equippedItemId) || (simulationParams.type === SimulationType.StatWeights && params.customStat === 'normal')) {
               setNewMedianDps(newMedianDps.toString(), false);
             } else if (simulationParams.type === SimulationType.StatWeights) {
-              updateStatWeightValue(params.customStat, params.medianDps);
+              // Limit the updates to once every 5 seconds
+              const dateNow = Date.now();
+              if (!lastStatWeightUpdateTime[params.customStat] || dateNow - lastStatWeightUpdateTime[params.customStat] > 5000) {
+                updateStatWeightValue(params.customStat, params.medianDps, false);
+                lastStatWeightUpdateTime[params.customStat] = dateNow;
+              }
             }
           },
           getWorkerParams({
@@ -338,20 +323,21 @@ export function SimulationButtons() {
         simulationsRunning++;
       }
     } catch(error) {
-      setSimulationInProgress(false);
+      dispatch(setSimulationInProgressStatus(false));
       throw new Error("Error when trying to run simulation. " + error);
     }
   }
 
-  function updateStatWeightValue(stat: string, value: number): void {
-    const element = document.getElementById(`stat-weight-${stat}`);
-    if (element) {
-      let dpsDifference = Math.abs(Math.round(((value - Number(medianDps)) / statWeightValues[stat]) * 1000) / 1000);
-      if (dpsDifference < 0.05) {
-        dpsDifference = 0;
-      }
-      element.innerHTML = dpsDifference.toFixed(3).toString();
+  function updateStatWeightValue(stat: string, value: number, finalStatWeightUpdate: boolean): void {
+    let dpsDifference = Math.abs(Math.round(((value - Number(medianDps)) / statWeightStatIncrease) * 1000) / 1000);
+    if (dpsDifference < 0.05) {
+      dpsDifference = 0;
     }
+
+    dispatch(setStatWeightValue({
+      stat: stat as unknown as [keyof StatWeightStats],
+      value: dpsDifference
+    }));
   }
 
   function findSimulationProgressPercentObject(params: { simulationProgressPercentages: ISimulationProgressPercent[], simType: SimulationType, itemId: number, stat: string }): ISimulationProgressPercent {
@@ -414,18 +400,18 @@ export function SimulationButtons() {
       <div
         className='warlock-btn active-btn'
         onClick={() => simulate({ itemIdsToSim: [Items.find(e => e.id === playerState.selectedItems[ItemSlotKeyToItemSlot(false, uiState.selectedItemSlot, uiState.selectedItemSubSlot)])?.id || 0], type: SimulationType.Normal })}
-        style={{background: simulationInProgress && simulationType === SimulationType.Normal ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
-      >{simulationInProgress && simulationType === SimulationType.Normal ? `${simulationProgressPercent}%` : 'Simulate'}</div>
+        style={{background: uiState.simulationInProgress && simulationType === SimulationType.Normal ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
+      >{uiState.simulationInProgress && simulationType === SimulationType.Normal ? `${simulationProgressPercent}%` : 'Simulate'}</div>
       <div
         className='warlock-btn active-btn'
         onClick={() => simulate({ itemIdsToSim: getItemTableItems(uiState.selectedItemSlot, uiState.selectedItemSubSlot, playerState.selectedItems, uiState.sources, uiState.hiddenItems, false, uiState.savedItemDps).map(item => item.id), type: SimulationType.AllItems })}
-        style={{background: simulationInProgress && simulationType === SimulationType.AllItems ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
-      >{simulationInProgress && simulationType === SimulationType.AllItems ? `${simulationProgressPercent}%` : 'Simulate All Items'}</div>
+        style={{background: uiState.simulationInProgress && simulationType === SimulationType.AllItems ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
+      >{uiState.simulationInProgress && simulationType === SimulationType.AllItems ? `${simulationProgressPercent}%` : 'Simulate All Items'}</div>
       <div
         className='warlock-btn active-btn'
         onClick={() => simulate({ type: SimulationType.StatWeights })}
-        style={{background: simulationInProgress && simulationType === SimulationType.StatWeights ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
-      >{simulationInProgress && simulationType === SimulationType.StatWeights ? `${simulationProgressPercent}%` : 'Stat Weights'}</div>
+        style={{background: uiState.simulationInProgress && simulationType === SimulationType.StatWeights ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
+      >{uiState.simulationInProgress && simulationType === SimulationType.StatWeights ? `${simulationProgressPercent}%` : 'Stat Weights'}</div>
       {
         <div className={'warlock-btn' + (combatLogButtonIsDisabled() ? ' disabled-btn' : ' active-btn')} onClick={() => !combatLogButtonIsDisabled() && dispatch(setCombatLogVisibility(!uiState.combatLog.visible))}>Combat Log</div>
       }
