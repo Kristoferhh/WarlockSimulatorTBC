@@ -35,13 +35,13 @@ void DamageOverTime::Apply() {
   if (active && player->ShouldWriteToCombatLog()) {
     std::string msg = name + " refreshed before letting it expire";
   } else if (!active) {
-    player->combatLogBreakdown.at(name)->applied_at = player->fightTime;
+    player->combat_log_breakdown.at(name)->applied_at = player->fight_time;
   }
   bool is_active = active;
-  int spell_power = player->getSpellPower(school);
+  int spell_power = player->GetSpellPower(school);
   this->spell_power = spell_power;
 
-  player->combatLogBreakdown.at(name)->count++;
+  player->combat_log_breakdown.at(name)->count++;
   active = true;
   tick_timer_remaining = tick_timer_total;
   ticks_remaining = ticks_total;
@@ -53,16 +53,16 @@ void DamageOverTime::Apply() {
   // Siphon Life snapshots the presence of ISB. So if ISB isn't up when it's
   // Cast, it doesn't get the benefit even if it comes up later during the
   // duration.
-  if (player->spells->SiphonLife != NULL && name == player->spells->SiphonLife->name) {
-    isb_is_active = !player->settings->using_custom_isb_uptime && player->auras->ImprovedShadowBolt != NULL &&
-                    player->auras->ImprovedShadowBolt->active;
+  if (player->spells->siphon_life != NULL && name == player->spells->siphon_life->name) {
+    isb_is_active = !player->settings->using_custom_isb_uptime && player->auras->improved_shadow_bolt != NULL &&
+                    player->auras->improved_shadow_bolt->active;
   }
   // Amplify Curse
-  if (((player->spells->CurseOfAgony != NULL && name == player->spells->CurseOfAgony->name) ||
-       (player->spells->CurseOfDoom != NULL && name == player->spells->CurseOfDoom->name)) &&
-      player->auras->AmplifyCurse != NULL && player->auras->AmplifyCurse->active) {
+  if (((player->spells->curse_of_agony != NULL && name == player->spells->curse_of_agony->name) ||
+       (player->spells->curse_of_doom != NULL && name == player->spells->curse_of_doom->name)) &&
+      player->auras->amplify_curse != NULL && player->auras->amplify_curse->active) {
     amplified = true;
-    player->auras->AmplifyCurse->Fade();
+    player->auras->amplify_curse->Fade();
   } else {
     amplified = false;
   }

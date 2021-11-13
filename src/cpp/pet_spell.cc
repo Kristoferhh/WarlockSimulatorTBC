@@ -176,7 +176,7 @@ void PetSpell::Cast() {
       // Check for crit
       bool is_crit = false;
 
-      if (can_crit && pet->is_crit(type)) {
+      if (can_crit && pet->IsCrit(type)) {
         is_crit = true;
         pet->player->combat_log_breakdown.at(name)->crits++;
       }

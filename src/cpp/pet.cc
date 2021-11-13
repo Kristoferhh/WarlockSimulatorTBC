@@ -274,21 +274,21 @@ void Pet::Setup() {
   CalculateStatsFromPlayer(false);
 }
 
-void Pet::reset() {
+void Pet::Reset() {
   stats->mana = stats->max_mana;
   five_second_rule_timer_remaining = 5;
   spirit_tick_timer_remaining = 2;
   cast_time_remaining = 0;
 
   // Reset spells
-  if (spells->Melee != NULL) spells->Melee->Reset();
-  if (spells->Firebolt != NULL) spells->Firebolt->Reset();
-  if (spells->LashOfPain != NULL) spells->LashOfPain->Reset();
-  if (spells->Cleave != NULL) spells->Cleave->Reset();
+  if (spells->melee != NULL) spells->melee->Reset();
+  if (spells->firebolt != NULL) spells->firebolt->Reset();
+  if (spells->lash_of_pain != NULL) spells->lash_of_pain->Reset();
+  if (spells->cleave != NULL) spells->cleave->Reset();
 
   // End Auras
-  if (auras->black_book != NULL && auras->black_book->active) auras->black_book->Fade(true);
-  if (auras->demonic_frenzy != NULL && auras->demonic_frenzy->active) auras->demonic_frenzy->Fade(true);
+  if (auras->black_book != NULL && auras->black_book->active) auras->black_book->Fade();
+  if (auras->demonic_frenzy != NULL && auras->demonic_frenzy->active) auras->demonic_frenzy->Fade();
 
   CalculateStatsFromPlayer(false);
 }

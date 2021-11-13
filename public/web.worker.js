@@ -10,7 +10,7 @@ onmessage = (event) => {
         const player = event.data.playerSettings;
         const simulation = event.data.simulationSettings;
 
-        const itemsPtr = module.AllocItems();
+        const itemsPtr = module.allocItems();
         itemsPtr.head = parseInt(player.items.head) || 0;
         itemsPtr.neck = parseInt(player.items.neck) || 0;
         itemsPtr.shoulders = parseInt(player.items.shoulders) || 0;
@@ -30,7 +30,7 @@ onmessage = (event) => {
         itemsPtr.twohand = parseInt(player.items.twohand) || 0;
         itemsPtr.wand = parseInt(player.items.wand) || 0;
 
-        const aurasPtr = module.AllocAuras();
+        const aurasPtr = module.allocAuras();
         aurasPtr.felArmor = player.auras.felArmor || false;
         aurasPtr.blessingOfKings = player.auras.blessingOfKings || false;
         aurasPtr.blessingOfWisdom = player.auras.blessingOfWisdom || false;
@@ -117,7 +117,7 @@ onmessage = (event) => {
         aurasPtr.scrollOfAgilityV = player.auras.scrollOfAgilityV || false;
         aurasPtr.scrollOfSpiritV = player.auras.scrollOfSpiritV || false;
 
-        const talentsPtr = module.AllocTalents();
+        const talentsPtr = module.allocTalents();
         talentsPtr.suppression = parseInt(player.talents.suppression) || 0;
         talentsPtr.improvedCorruption = parseInt(player.talents.improvedCorruption) || 0;
         talentsPtr.improvedLifeTap = parseInt(player.talents.improvedLifeTap) || 0;
@@ -160,7 +160,7 @@ onmessage = (event) => {
         talentsPtr.shadowAndFlame = parseInt(player.talents.shadowAndFlame) || 0;
         talentsPtr.shadowfury = parseInt(player.talents.shadowfury) || 0;
 
-        const setsPtr = module.AllocSets();
+        const setsPtr = module.allocSets();
         setsPtr.plagueheart = parseInt(player.sets['529']) || 0;
         setsPtr.spellfire = parseInt(player.sets['552']) || 0;
         setsPtr.frozenShadoweave = parseInt(player.sets['553']) || 0;
@@ -172,7 +172,7 @@ onmessage = (event) => {
         setsPtr.t5 = parseInt(player.sets['646']) || 0;
         setsPtr.t6 = parseInt(player.sets['670']) || 0;
 
-        const statsPtr = module.AllocStats();
+        const statsPtr = module.allocStats();
         statsPtr.health = parseFloat(player.stats.health);
         statsPtr.mana = parseFloat(player.stats.mana);
         statsPtr.stamina = parseFloat(player.stats.stamina);
@@ -203,7 +203,7 @@ onmessage = (event) => {
         statsPtr.frostResist = parseFloat(player.stats.frostResist);
         statsPtr.shadowResist = parseFloat(player.stats.shadowResist);
 
-        const playerSettingsPtr = module.AllocPlayerSettings();
+        const playerSettingsPtr = module.allocPlayerSettings();
         playerSettingsPtr.auras = aurasPtr;
         playerSettingsPtr.talents = talentsPtr;
         playerSettingsPtr.sets = setsPtr;
@@ -279,17 +279,17 @@ onmessage = (event) => {
         playerSettingsPtr.hasDarkPact = player.rotation.other && player.rotation.other.darkPact;
         playerSettingsPtr.hasElementalShamanT4Bonus = player.simSettings.improvedWrathOfAirTotem === "yes";
 
-        const simSettingsPtr = module.AllocSimSettings();
+        const simSettingsPtr = module.allocSimSettings();
         simSettingsPtr.iterations = parseInt(simulation.iterations);
         simSettingsPtr.minTime = parseInt(simulation.minTime);
         simSettingsPtr.maxTime = parseInt(simulation.maxTime);
         simSettingsPtr.simulationType = parseInt(event.data.simulationType);
 
-        const playerPtr = module.AllocPlayer(playerSettingsPtr);
-        const simPtr = module.AllocSim(playerPtr, simSettingsPtr);
-        simPtr.Start();
+        const playerPtr = module.allocPlayer(playerSettingsPtr);
+        const simPtr = module.allocSim(playerPtr, simSettingsPtr);
+        simPtr.start();
       } catch (exceptionPtr) {
-        console.error(module.GetExceptionMessage(exceptionPtr));
+        console.error(module.getExceptionMessage(exceptionPtr));
       }
     })
     .catch(e => console.error(e));

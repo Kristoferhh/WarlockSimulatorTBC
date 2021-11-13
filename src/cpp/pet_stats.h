@@ -20,7 +20,6 @@ struct PetStats {
   double melee_hit_chance;
   double spell_crit_chance;
   double spell_hit_chance;
-  double spell_crit_chance;
   double haste_percent;
   double stamina_modifier;
   double intellect_modifier;

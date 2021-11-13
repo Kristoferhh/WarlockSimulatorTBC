@@ -254,7 +254,7 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("nightfall", &Talents::nightfall)
       .property("empoweredCorruption", &Talents::empowered_corruption)
       .property("siphonLife", &Talents::siphon_life)
-      .property("shadowMastery", &Talents::shadowMastery)
+      .property("shadowMastery", &Talents::shadow_mastery)
       .property("contagion", &Talents::contagion)
       .property("darkPact", &Talents::dark_pact)
       .property("unstableAffliction", &Talents::unstable_affliction)
@@ -305,34 +305,33 @@ EMSCRIPTEN_BINDINGS(module) {
       .smart_ptr<std::shared_ptr<CharacterStats>>("CharacterStats")
       .property("health", &CharacterStats::health)
       .property("mana", &CharacterStats::mana)
-      .property("max_mana", &CharacterStats::max_mana)
       .property("stamina", &CharacterStats::stamina)
       .property("intellect", &CharacterStats::intellect)
       .property("spirit", &CharacterStats::spirit)
-      .property("spell_power", &CharacterStats::spell_power)
-      .property("shadow_power", &CharacterStats::shadow_power)
-      .property("fire_power", &CharacterStats::fire_power)
-      .property("haste_rating", &CharacterStats::haste_rating)
-      .property("haste_percent", &CharacterStats::haste_percent)
-      .property("hit_rating", &CharacterStats::hit_rating)
-      .property("crit_rating", &CharacterStats::crit_rating)
-      .property("crit_chance", &CharacterStats::crit_chance)
+      .property("spellPower", &CharacterStats::spell_power)
+      .property("shadowPower", &CharacterStats::shadow_power)
+      .property("firePower", &CharacterStats::fire_power)
+      .property("hasteRating", &CharacterStats::haste_rating)
+      .property("hastePercent", &CharacterStats::haste_percent)
+      .property("hitRating", &CharacterStats::hit_rating)
+      .property("critRating", &CharacterStats::crit_rating)
+      .property("critChance", &CharacterStats::crit_chance)
       .property("mp5", &CharacterStats::mp5)
-      .property("mana_cost_modifier", &CharacterStats::mana_cost_modifier)
+      .property("manaCostModifier", &CharacterStats::mana_cost_modifier)
       .property("spellPenetration", &CharacterStats::spell_penetration)
-      .property("fire_modifier", &CharacterStats::fire_modifier)
-      .property("frost_modifier", &CharacterStats::frost_modifier)
-      .property("shadow_modifier", &CharacterStats::shadow_modifier)
-      .property("stamina_modifier", &CharacterStats::stamina_modifier)
-      .property("intellect_modifier", &CharacterStats::intellect_modifier)
-      .property("spirit_modifier", &CharacterStats::spirit_modifier)
-      .property("arcane_modifier", &CharacterStats::arcane_modifier)
-      .property("nature_modifier", &CharacterStats::nature_modifier)
-      .property("nature_resist", &CharacterStats::nature_resist)
-      .property("arcane_resist", &CharacterStats::arcane_resist)
-      .property("fire_resist", &CharacterStats::fire_resist)
-      .property("frost_resist", &CharacterStats::frost_resist)
-      .property("shadow_resist", &CharacterStats::shadow_resist);
+      .property("fireModifier", &CharacterStats::fire_modifier)
+      .property("frostModifier", &CharacterStats::frost_modifier)
+      .property("shadowModifier", &CharacterStats::shadow_modifier)
+      .property("staminaModifier", &CharacterStats::stamina_modifier)
+      .property("intellectModifier", &CharacterStats::intellect_modifier)
+      .property("spiritModifier", &CharacterStats::spirit_modifier)
+      .property("arcaneModifier", &CharacterStats::arcane_modifier)
+      .property("natureModifier", &CharacterStats::nature_modifier)
+      .property("natureResist", &CharacterStats::nature_resist)
+      .property("arcaneResist", &CharacterStats::arcane_resist)
+      .property("fireResist", &CharacterStats::fire_resist)
+      .property("frostResist", &CharacterStats::frost_resist)
+      .property("shadowResist", &CharacterStats::shadow_resist);
 
   emscripten::class_<PlayerSettings>("PlayerSettings")
       .smart_ptr<std::shared_ptr<PlayerSettings>>("PlayerSettings")
@@ -341,7 +340,7 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("sets", &PlayerSettings::sets)
       .property("stats", &PlayerSettings::stats)
       .property("items", &PlayerSettings::items)
-      .property("item_id", &PlayerSettings::item_id)
+      .property("itemId", &PlayerSettings::item_id)
       .property("metaGemId", &PlayerSettings::meta_gem_id)
       .property("equippedItemSimulation", &PlayerSettings::equipped_item_simulation)
       .property("recordingCombatLogBreakdown", &PlayerSettings::recording_combat_log_breakdown)
@@ -359,7 +358,7 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("enemyLevel", &PlayerSettings::enemy_level)
       .property("enemyShadowResist", &PlayerSettings::enemy_shadow_resist)
       .property("enemyFireResist", &PlayerSettings::enemy_fire_resist)
-      .property("mageAtieshAmount", &PlayerSettings::mageAtieshAmount)
+      .property("mageAtieshAmount", &PlayerSettings::mage_atiesh_amount)
       .property("totemOfWrathAmount", &PlayerSettings::totem_of_wrath_amount)
       .property("sacrificingPet", &PlayerSettings::sacrificing_pet)
       .property("petIsImp", &PlayerSettings::pet_is_imp)
@@ -423,16 +422,16 @@ EMSCRIPTEN_BINDINGS(module) {
       .value("allItems", SimulationType::ALL_ITEMS)
       .value("statWeights", SimulationType::STAT_WEIGHTS);
 
-  emscripten::function("AllocItems", &AllocItems);
-  emscripten::function("AllocAuras", &AllocAuras);
-  emscripten::function("AllocTalents", &AllocTalents);
-  emscripten::function("AllocSets", &AllocSets);
-  emscripten::function("AllocStats", &AllocStats);
-  emscripten::function("AllocPlayerSettings", &AllocPlayerSettings);
-  emscripten::function("AllocPlayer", &AllocPlayer);
-  emscripten::function("AllocSimSettings", &AllocSimSettings);
-  emscripten::function("AllocSim", &AllocSim);
-  emscripten::function("GetExceptionMessage", &GetExceptionMessage);
+  emscripten::function("allocItems", &AllocItems);
+  emscripten::function("allocAuras", &AllocAuras);
+  emscripten::function("allocTalents", &AllocTalents);
+  emscripten::function("allocSets", &AllocSets);
+  emscripten::function("allocStats", &AllocStats);
+  emscripten::function("allocPlayerSettings", &AllocPlayerSettings);
+  emscripten::function("allocPlayer", &AllocPlayer);
+  emscripten::function("allocSimSettings", &AllocSimSettings);
+  emscripten::function("allocSim", &AllocSim);
+  emscripten::function("getExceptionMessage", &GetExceptionMessage);
 
   /*emscripten::enum_<Constant>("Constant")
       .value("ALDOR", ALDOR)
