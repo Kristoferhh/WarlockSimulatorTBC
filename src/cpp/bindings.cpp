@@ -184,6 +184,10 @@ std::shared_ptr<Simulation> allocSim(std::shared_ptr<Player> player, std::shared
     return std::make_shared<Simulation>(player, simulationSettings);
 }
 
+std::string getExceptionMessage(intptr_t exceptionPtr) {
+    return std::string(reinterpret_cast<std::exception *>(exceptionPtr)->what());
+}
+
 #ifdef EMSCRIPTEN
 EMSCRIPTEN_BINDINGS(module)
 {
@@ -493,6 +497,7 @@ EMSCRIPTEN_BINDINGS(module)
     emscripten::function("allocPlayer", &allocPlayer);
     emscripten::function("allocSimSettings", &allocSimSettings);
     emscripten::function("allocSim", &allocSim);
+    emscripten::function("getExceptionMessage", &getExceptionMessage);
 
     /*emscripten::enum_<Constant>("Constant")
         .value("ALDOR", ALDOR)
