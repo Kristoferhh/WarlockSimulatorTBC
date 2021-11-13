@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/WarlockSimulatorTBC/static/css/main.0e941370.chunk.css",
-    "main.js": "/WarlockSimulatorTBC/static/js/main.b891a466.chunk.js",
-    "main.js.map": "/WarlockSimulatorTBC/static/js/main.b891a466.chunk.js.map",
+    "main.css": "/WarlockSimulatorTBC/static/css/main.68d42afb.chunk.css",
+    "main.js": "/WarlockSimulatorTBC/static/js/main.611ea294.chunk.js",
+    "main.js.map": "/WarlockSimulatorTBC/static/js/main.611ea294.chunk.js.map",
     "runtime-main.js": "/WarlockSimulatorTBC/static/js/runtime-main.d830f162.js",
     "runtime-main.js.map": "/WarlockSimulatorTBC/static/js/runtime-main.d830f162.js.map",
     "static/js/2.1f3828db.chunk.js": "/WarlockSimulatorTBC/static/js/2.1f3828db.chunk.js",
     "static/js/2.1f3828db.chunk.js.map": "/WarlockSimulatorTBC/static/js/2.1f3828db.chunk.js.map",
     "index.html": "/WarlockSimulatorTBC/index.html",
-    "static/css/main.0e941370.chunk.css.map": "/WarlockSimulatorTBC/static/css/main.0e941370.chunk.css.map",
+    "static/css/main.68d42afb.chunk.css.map": "/WarlockSimulatorTBC/static/css/main.68d42afb.chunk.css.map",
     "static/js/2.1f3828db.chunk.js.LICENSE.txt": "/WarlockSimulatorTBC/static/js/2.1f3828db.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.d830f162.js",
     "static/js/2.1f3828db.chunk.js",
-    "static/css/main.0e941370.chunk.css",
-    "static/js/main.b891a466.chunk.js"
+    "static/css/main.68d42afb.chunk.css",
+    "static/js/main.611ea294.chunk.js"
   ]
 }
