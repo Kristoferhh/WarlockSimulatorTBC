@@ -4,16 +4,15 @@
 
 PetStats::PetStats(std::shared_ptr<Player> player)
     : player(player),
-      damageModifier(1),
-      staminaModifier(1),
-      intellectModifier(1),
-      strengthModifier(1),
-      agilityModifier(1),
-      spiritModifier(1),
-      attackPowerModifier(1),
-      hastePercent(1) {
-  staminaModifier *= 1 + (0.05 * player->talents->felStamina);
-  intellectModifier *= 1 + (0.05 * player->talents->felIntellect);
-  damageModifier *= (1 + 0.04 * player->talents->unholyPower) *
-                    (1 + 0.05 * player->talents->soulLink);
+      damage_modifier(1),
+      stamina_modifier(1),
+      intellect_modifier(1),
+      strength_modifier(1),
+      agility_modifier(1),
+      spirit_modifier(1),
+      attack_power_modifier(1),
+      haste_percent(1) {
+  stamina_modifier *= 1 + (0.05 * player->talents->fel_stamina);
+  intellect_modifier *= 1 + (0.05 * player->talents->fel_intellect);
+  damage_modifier *= (1 + 0.04 * player->talents->unholy_power) * (1 + 0.05 * player->talents->soul_link);
 }

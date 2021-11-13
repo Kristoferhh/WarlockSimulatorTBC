@@ -10,20 +10,20 @@ struct Trinket {
   std::shared_ptr<Player> player;
   std::unique_ptr<AuraStats> stats;
   int duration;
-  double durationRemaining;
+  double duration_remaining;
   int cooldown;
-  double cooldownRemaining;
+  double cooldown_remaining;
   bool active;
-  bool sharesCooldown;
+  bool shares_cooldown;
   std::string name;
 
   Trinket(std::shared_ptr<Player> player);
-  bool ready();
-  void reset();
-  void setup();
-  void use();
-  void fade();
-  void tick(double time);
+  bool Ready();
+  void Reset();
+  void Setup();
+  void Use();
+  void Fade();
+  void Tick(double time);
 };
 
 struct RestrainedEssenceOfSapphiron : public Trinket {

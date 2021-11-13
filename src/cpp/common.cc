@@ -6,9 +6,9 @@
 #include <iostream>
 #include <vector>
 
-int random(int min, int max) { return min + (rand() % (max - min + 1)); }
+int Random(int min, int max) { return min + (rand() % (max - min + 1)); }
 
-double median(std::vector<double> vec) {
+double Median(std::vector<double> vec) {
   size_t size = vec.size();
 
   if (size > 0) {
@@ -23,9 +23,9 @@ double median(std::vector<double> vec) {
   }
 }
 
-std::string truncateTrailingZeros(std::string num, int decimalPlaces) {
-  if (decimalPlaces == 0) {
+std::string TruncateTrailingZeros(std::string num, int decimal_places) {
+  if (decimal_places == 0) {
     return num.substr(0, num.find("."));
   }
-  return num.substr(0, num.find(".") + decimalPlaces + 1);
+  return num.substr(0, num.find(".") + decimal_places + 1);
 }

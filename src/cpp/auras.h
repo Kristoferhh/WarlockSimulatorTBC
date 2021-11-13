@@ -1,6 +1,7 @@
 #ifndef WARLOCK_SIMULATOR_TBC_AURAS
 #define WARLOCK_SIMULATOR_TBC_AURAS
 
+// TODO remove unused properties and fix naming
 struct Auras {
   bool felArmor;
   bool blessingOfKings;

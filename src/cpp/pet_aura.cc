@@ -4,67 +4,67 @@
 
 PetAura::PetAura(std::shared_ptr<Pet> pet) : pet(pet) {
   duration = 0;
-  durationRemaining = 0;
+  duration_remaining = 0;
   active = false;
 }
 
-void PetAura::tick(double t) {
-  durationRemaining -= t;
+void PetAura::Tick(double t) {
+  duration_remaining -= t;
 
-  if (active && durationRemaining <= 0) {
-    fade();
+  if (active && duration_remaining <= 0) {
+    Fade();
   }
 }
 
-void PetAura::apply() {
+void PetAura::Apply() {
   active = true;
-  durationRemaining = duration;
+  duration_remaining = duration;
 
-  if (pet->player->shouldWriteToCombatLog()) {
+  if (pet->player->ShouldWriteToCombatLog()) {
     std::string msg = pet->name + " gains " + name;
 
-    if (pet->auras->DemonicFrenzy != NULL) {
-      msg.append(" (" + std::to_string(stacks) + ") - Current AP: " +
-                 std::to_string(round(pet->getAttackPower())) + ")");
+    if (pet->auras->demonic_frenzy != NULL) {
+      msg.append(" (" + std::to_string(stacks) + ") - Current AP: " + std::to_string(round(pet->GetAttackPower())) +
+                 ")");
     }
 
-    pet->player->combatLog(msg);
+    pet->player->CombatLog(msg);
   }
 }
 
-void PetAura::fade(bool endOfIteration) {
+void PetAura::Fade() {
   active = false;
-  durationRemaining = 0;
+  duration_remaining = 0;
 
-  if (!endOfIteration) {
+  if (pet->player->ShouldWriteToCombatLog()) {
     std::string msg = name;
 
-    if (pet->auras->DemonicFrenzy != NULL) {
+    if (pet->auras->demonic_frenzy != NULL) {
       msg.append(" (" + std::to_string(stacks) + ")");
     }
 
-    pet->player->combatLog(msg);
+    pet->player->CombatLog(msg);
   }
 }
 
 DemonicFrenzy::DemonicFrenzy(std::shared_ptr<Pet> pet) : PetAura(pet) {
   name = "Demonic Frenzy";
   duration = 10;
-  maxStacks = 10;
+  max_stacks = 10;
   stacks = 0;
 }
 
-void DemonicFrenzy::apply() {
-  if (stacks < maxStacks) {
+void DemonicFrenzy::Apply() {
+  if (stacks < max_stacks) {
     stacks++;
   }
 
-  PetAura::apply();
+  PetAura::Apply();
 }
 
-void DemonicFrenzy::fade(bool endOfIteration) {
+void DemonicFrenzy::Fade() {
   stacks = 0;
-  PetAura::fade(endOfIteration);
+  PetAura::Fade();
 }
 
 BlackBook::BlackBook(std::shared_ptr<Pet> pet) : PetAura(pet) {
@@ -72,34 +72,30 @@ BlackBook::BlackBook(std::shared_ptr<Pet> pet) : PetAura(pet) {
   duration = 30;
 }
 
-void BlackBook::apply(bool announceInCombatLog) {
-  PetAura::apply();
+void BlackBook::Apply(bool announce_in_combat_log) {
+  PetAura::Apply();
 
-  if (announceInCombatLog && pet->player->shouldWriteToCombatLog()) {
-    pet->player->combatLog(pet->name + " Spell Power + 200 (" +
-                           std::to_string(pet->stats->spellPower) + " -> " +
-                           std::to_string(pet->stats->spellPower + 200) + ")");
-    pet->player->combatLog(pet->name + " Attack Power + 325 (" +
-                           std::to_string(pet->stats->attackPower) + " -> " +
-                           std::to_string(pet->stats->attackPower + 325) + ")");
+  if (announce_in_combat_log && pet->player->ShouldWriteToCombatLog()) {
+    pet->player->CombatLog(pet->name + " Spell Power + 200 (" + std::to_string(pet->stats->spell_power) + " -> " +
+                           std::to_string(pet->stats->spell_power + 200) + ")");
+    pet->player->CombatLog(pet->name + " Attack Power + 325 (" + std::to_string(pet->stats->attack_power) + " -> " +
+                           std::to_string(pet->stats->attack_power + 325) + ")");
   }
-  pet->buffStats->spellPower += 200;
-  pet->buffStats->attackPower += 325;
-  pet->calculateStatsFromPlayer(announceInCombatLog);
+  pet->buff_stats->spell_power += 200;
+  pet->buff_stats->attack_power += 325;
+  pet->CalculateStatsFromPlayer(announce_in_combat_log);
 }
 
-void BlackBook::fade(bool endOfIteration) {
-  PetAura::fade();
+void BlackBook::Fade() {
+  PetAura::Fade();
 
-  if (!endOfIteration && pet->player->shouldWriteToCombatLog()) {
-    pet->player->combatLog(pet->name + " Spell Power - 200 (" +
-                           std::to_string(pet->stats->spellPower) + " -> " +
-                           std::to_string(pet->stats->spellPower - 200) + ")");
-    pet->player->combatLog(pet->name + " Attack Power - 325 (" +
-                           std::to_string(pet->stats->attackPower) + " -> " +
-                           std::to_string(pet->stats->attackPower - 325) + ")");
+  if (pet->player->ShouldWriteToCombatLog()) {
+    pet->player->CombatLog(pet->name + " Spell Power - 200 (" + std::to_string(pet->stats->spell_power) + " -> " +
+                           std::to_string(pet->stats->spell_power - 200) + ")");
+    pet->player->CombatLog(pet->name + " Attack Power - 325 (" + std::to_string(pet->stats->attack_power) + " -> " +
+                           std::to_string(pet->stats->attack_power - 325) + ")");
   }
-  pet->buffStats->spellPower -= 200;
-  pet->buffStats->attackPower -= 325;
-  pet->calculateStatsFromPlayer(endOfIteration);
+  pet->buff_stats->spell_power -= 200;
+  pet->buff_stats->attack_power -= 325;
+  pet->CalculateStatsFromPlayer();
 }

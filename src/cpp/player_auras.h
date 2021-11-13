@@ -5,46 +5,46 @@
 #include "damage_over_time.h"
 
 struct PlayerAuras {
-  std::shared_ptr<DamageOverTime> Corruption;
-  std::shared_ptr<DamageOverTime> UnstableAffliction;
-  std::shared_ptr<DamageOverTime> SiphonLife;
-  std::shared_ptr<DamageOverTime> Immolate;
-  std::shared_ptr<DamageOverTime> CurseOfAgony;
-  std::shared_ptr<DamageOverTime> CurseOfDoom;
-  std::shared_ptr<Aura> ImprovedShadowBolt;
-  std::shared_ptr<Aura> CurseOfTheElements;
-  std::shared_ptr<Aura> CurseOfRecklessness;
-  std::shared_ptr<Aura> ShadowTrance;
-  std::shared_ptr<Aura> AmplifyCurse;
-  std::shared_ptr<Aura> PowerInfusion;
-  std::shared_ptr<Aura> Innervate;
-  std::shared_ptr<Aura> BloodFury;
-  std::shared_ptr<Aura> DestructionPotion;
-  std::shared_ptr<Aura> FlameCap;
-  std::shared_ptr<Aura> Bloodlust;
-  std::shared_ptr<Aura> DrumsOfBattle;
-  std::shared_ptr<Aura> DrumsOfWar;
-  std::shared_ptr<Aura> DrumsOfRestoration;
-  std::shared_ptr<Aura> BandOfTheEternalSage;
-  std::shared_ptr<Aura> WrathOfCenarius;
-  std::shared_ptr<Aura> BladeOfWizardry;
-  std::shared_ptr<Aura> ShatteredSunPendantOfAcumen;
-  std::shared_ptr<Aura> RobeOfTheElderScribes;
-  std::shared_ptr<Aura> MysticalSkyfireDiamond;
-  std::shared_ptr<Aura> EyeOfMagtheridon;
-  std::shared_ptr<Aura> SextantOfUnstableCurrents;
-  std::shared_ptr<Aura> QuagmirransEye;
-  std::shared_ptr<Aura> ShiffarsNexusHorn;
-  std::shared_ptr<Aura> AshtongueTalismanOfShadows;
-  std::shared_ptr<Aura> DarkmoonCardCrusade;
-  std::shared_ptr<Aura> TheLightningCapacitor;
-  std::shared_ptr<Aura> Flameshadow;  // Shadowpower
-  std::shared_ptr<Aura> Shadowflame;  // Firepower
-  std::shared_ptr<Aura> Spellstrike;
-  std::shared_ptr<Aura> ManaEtched4Set;
-  std::shared_ptr<Aura> ChippedPowerCore;
-  std::shared_ptr<Aura> CrackedPowerCore;
-  std::shared_ptr<Aura> ManaTideTotem;
+  std::shared_ptr<DamageOverTime> corruption;
+  std::shared_ptr<DamageOverTime> unstable_affliction;
+  std::shared_ptr<DamageOverTime> siphon_life;
+  std::shared_ptr<DamageOverTime> immolate;
+  std::shared_ptr<DamageOverTime> curse_of_agony;
+  std::shared_ptr<DamageOverTime> curse_of_doom;
+  std::shared_ptr<Aura> improved_shadow_bolt;
+  std::shared_ptr<Aura> curse_of_the_elements;
+  std::shared_ptr<Aura> curse_of_recklessness;
+  std::shared_ptr<Aura> shadow_trance;
+  std::shared_ptr<Aura> amplify_curse;
+  std::shared_ptr<Aura> power_infusion;
+  std::shared_ptr<Aura> innervate;
+  std::shared_ptr<Aura> blood_fury;
+  std::shared_ptr<Aura> destruction_potion;
+  std::shared_ptr<Aura> flame_cap;
+  std::shared_ptr<Aura> bloodlust;
+  std::shared_ptr<Aura> drums_of_battle;
+  std::shared_ptr<Aura> drums_of_war;
+  std::shared_ptr<Aura> drums_of_restoration;
+  std::shared_ptr<Aura> band_of_the_eternal_sage;
+  std::shared_ptr<Aura> wrath_of_cenarius;
+  std::shared_ptr<Aura> blade_of_wizardry;
+  std::shared_ptr<Aura> shattered_sun_pendant_of_acumen;
+  std::shared_ptr<Aura> robe_of_the_elder_scribes;
+  std::shared_ptr<Aura> mystical_skyfire_diamond;
+  std::shared_ptr<Aura> eye_of_magtheridon;
+  std::shared_ptr<Aura> sextant_of_unstable_currents;
+  std::shared_ptr<Aura> quagmirrans_eye;
+  std::shared_ptr<Aura> shiffars_nexus_horn;
+  std::shared_ptr<Aura> ashtongue_talisman_of_shadows;
+  std::shared_ptr<Aura> darkmoon_card_crusade;
+  std::shared_ptr<Aura> the_lightning_capacitor;
+  std::shared_ptr<Aura> flameshadow;  // Shadowpower
+  std::shared_ptr<Aura> shadowflame;  // Firepower
+  std::shared_ptr<Aura> spellstrike;
+  std::shared_ptr<Aura> mana_etched_4_set;
+  std::shared_ptr<Aura> chipped_power_core;
+  std::shared_ptr<Aura> cracked_power_core;
+  std::shared_ptr<Aura> mana_tide_totem;
 };
 
 #endif

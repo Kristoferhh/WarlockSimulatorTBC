@@ -7,9 +7,9 @@
 
 struct SimulationSettings {
   int iterations;
-  int minTime;
-  int maxTime;
-  SimulationType simulationType;
+  int min_time;
+  int max_time;
+  SimulationType simulation_type;
 };
 
 #endif

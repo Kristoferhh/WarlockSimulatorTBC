@@ -5,132 +5,122 @@
 
 Trinket::Trinket(std::shared_ptr<Player> player) : player(player) {
   cooldown = 0;
-  cooldownRemaining = 0;
+  cooldown_remaining = 0;
   duration = 0;
-  durationRemaining = 0;
+  duration_remaining = 0;
   active = false;
-  sharesCooldown = true;
+  shares_cooldown = true;
 }
 
-bool Trinket::ready() { return cooldownRemaining <= 0; }
+bool Trinket::Ready() { return cooldown_remaining <= 0; }
 
-void Trinket::reset() { cooldownRemaining = 0; }
+void Trinket::Reset() { cooldown_remaining = 0; }
 
-void Trinket::setup() {
-  if (player->combatLogBreakdown.count(name) == 0) {
-    player->combatLogBreakdown.insert(
-        std::make_pair(name, new CombatLogBreakdown(name)));
+void Trinket::Setup() {
+  if (player->combat_log_breakdown.count(name) == 0) {
+    player->combat_log_breakdown.insert(std::make_pair(name, new CombatLogBreakdown(name)));
   }
 }
 
-void Trinket::use() {
-  bool recalculatePetStats = false;
-  if (player->shouldWriteToCombatLog()) {
-    player->combatLog(name + " used");
+void Trinket::Use() {
+  bool recalculating_pet_stats = false;
+  if (player->ShouldWriteToCombatLog()) {
+    player->CombatLog(name + " used");
   }
-  player->combatLogBreakdown.at(name)->appliedAt = player->fightTime;
-  player->combatLogBreakdown.at(name)->count++;
+  player->combat_log_breakdown.at(name)->applied_at = player->fight_time;
+  player->combat_log_breakdown.at(name)->count++;
 
   if (duration > 0) {
-    if (stats->spellPower > 0) {
-      if (player->shouldWriteToCombatLog()) {
-        int currentSpellPower = player->getSpellPower();
-        player->combatLog(
-            "Spell Power + " + std::to_string(stats->spellPower) + " (" +
-            std::to_string(currentSpellPower) + " -> " +
-            std::to_string(currentSpellPower + stats->spellPower) + ")");
+    if (stats->spell_power > 0) {
+      if (player->ShouldWriteToCombatLog()) {
+        int kCurrentSpellPower = player->GetSpellPower();
+        player->CombatLog("Spell Power + " + std::to_string(stats->spell_power) + " (" +
+                          std::to_string(kCurrentSpellPower) + " -> " +
+                          std::to_string(kCurrentSpellPower + stats->spell_power) + ")");
       }
-      player->stats->spellPower += stats->spellPower;
-      recalculatePetStats = true;
+      player->stats->spell_power += stats->spell_power;
+      recalculating_pet_stats = true;
     }
-    if (stats->hasteRating > 0) {
-      if (player->shouldWriteToCombatLog()) {
-        int currentHasteRating = player->stats->hasteRating;
-        player->combatLog(
-            "Haste Rating + " + std::to_string(stats->hasteRating) + " (" +
-            std::to_string(currentHasteRating) + " -> " +
-            std::to_string(currentHasteRating + stats->hasteRating) + ")");
+    if (stats->haste_rating > 0) {
+      if (player->ShouldWriteToCombatLog()) {
+        const int kCurrentHasteRating = player->stats->haste_rating;
+        player->CombatLog("Haste Rating + " + std::to_string(stats->haste_rating) + " (" +
+                          std::to_string(kCurrentHasteRating) + " -> " +
+                          std::to_string(kCurrentHasteRating + stats->haste_rating) + ")");
       }
-      player->stats->hasteRating += stats->hasteRating;
+      player->stats->haste_rating += stats->haste_rating;
     }
   }
 
-  if (recalculatePetStats && player->pet != NULL) {
-    player->pet->calculateStatsFromPlayer();
+  if (recalculating_pet_stats && player->pet != NULL) {
+    player->pet->CalculateStatsFromPlayer();
   }
 
   active = true;
-  durationRemaining = duration;
-  cooldownRemaining = cooldown;
+  duration_remaining = duration;
+  cooldown_remaining = cooldown;
 }
 
-void Trinket::fade() {
-  bool recalculatePetStats = false;
-  if (player->shouldWriteToCombatLog()) {
-    player->combatLog(name + " faded");
+void Trinket::Fade() {
+  bool recalculating_pet_stats = false;
+  if (player->ShouldWriteToCombatLog()) {
+    player->CombatLog(name + " faded");
   }
 
-  if (stats->spellPower > 0) {
-    if (player->shouldWriteToCombatLog()) {
-      int currentSpellPower = player->getSpellPower();
-      player->combatLog("Spell Power - " + std::to_string(stats->spellPower) +
-                        " (" + std::to_string(currentSpellPower) + " -> " +
-                        std::to_string(currentSpellPower - stats->spellPower) +
-                        ")");
+  if (stats->spell_power > 0) {
+    if (player->ShouldWriteToCombatLog()) {
+      const int kCurrentSpellPower = player->GetSpellPower();
+      player->CombatLog("Spell Power - " + std::to_string(stats->spell_power) + " (" +
+                        std::to_string(kCurrentSpellPower) + " -> " +
+                        std::to_string(kCurrentSpellPower - stats->spell_power) + ")");
     }
-    player->stats->spellPower -= stats->spellPower;
-    recalculatePetStats = true;
+    player->stats->spell_power -= stats->spell_power;
+    recalculating_pet_stats = true;
   }
-  if (stats->hasteRating > 0) {
-    if (player->shouldWriteToCombatLog()) {
-      int currentHasteRating = player->stats->hasteRating;
-      player->combatLog(
-          "Haste Rating - " + std::to_string(stats->hasteRating) + " (" +
-          std::to_string(currentHasteRating) + " -> " +
-          std::to_string(currentHasteRating - stats->hasteRating) + ")");
+  if (stats->haste_rating > 0) {
+    if (player->ShouldWriteToCombatLog()) {
+      int kCurrentHasteRating = player->stats->haste_rating;
+      player->CombatLog("Haste Rating - " + std::to_string(stats->haste_rating) + " (" +
+                        std::to_string(kCurrentHasteRating) + " -> " +
+                        std::to_string(kCurrentHasteRating - stats->haste_rating) + ")");
     }
-    player->stats->hasteRating -= stats->hasteRating;
+    player->stats->haste_rating -= stats->haste_rating;
   }
 
-  if (recalculatePetStats && player->pet != NULL) {
-    player->pet->calculateStatsFromPlayer();
+  if (recalculating_pet_stats && player->pet != NULL) {
+    player->pet->CalculateStatsFromPlayer();
   }
 
   active = false;
-  double auraUptime =
-      player->fightTime - player->combatLogBreakdown.at(name)->appliedAt;
-  player->combatLogBreakdown.at(name)->uptime += auraUptime;
+  const double kAuraUptime = player->fight_time - player->combat_log_breakdown.at(name)->applied_at;
+  player->combat_log_breakdown.at(name)->uptime += kAuraUptime;
 }
 
-void Trinket::tick(double t) {
-  if (player->shouldWriteToCombatLog() && cooldownRemaining > 0 &&
-      cooldownRemaining - t <= 0) {
-    player->combatLog(name + " off cooldown");
+void Trinket::Tick(double t) {
+  if (player->ShouldWriteToCombatLog() && cooldown_remaining > 0 && cooldown_remaining - t <= 0) {
+    player->CombatLog(name + " off cooldown");
   }
-  cooldownRemaining -= t;
-  durationRemaining -= t;
-  if (active && durationRemaining <= 0) {
-    fade();
+  cooldown_remaining -= t;
+  duration_remaining -= t;
+  if (active && duration_remaining <= 0) {
+    Fade();
   }
 }
 
-RestrainedEssenceOfSapphiron::RestrainedEssenceOfSapphiron(
-    std::shared_ptr<Player> player)
-    : Trinket(player) {
+RestrainedEssenceOfSapphiron::RestrainedEssenceOfSapphiron(std::shared_ptr<Player> player) : Trinket(player) {
   name = "Restrained Essence of Sapphiron";
   cooldown = 120;
   duration = 20;
   Trinket::stats = std::make_unique<AuraStats>(130, 0, 0, 0, 0, 0);
-  setup();
+  Setup();
 }
 
-ShiftingNaaruSliver::ShiftingNaaruSliver(std::shared_ptr<Player> player)
-    : Trinket(player) {
+ShiftingNaaruSliver::ShiftingNaaruSliver(std::shared_ptr<Player> player) : Trinket(player) {
   name = "Shifting Naaru Sliver";
   cooldown = 90;
   duration = 15;
   Trinket::stats = std::make_unique<AuraStats>(320, 0, 0, 0, 0, 0);
-  setup();
+  Setup();
 }
 
 SkullOfGuldan::SkullOfGuldan(std::shared_ptr<Player> player) : Trinket(player) {
@@ -138,61 +128,55 @@ SkullOfGuldan::SkullOfGuldan(std::shared_ptr<Player> player) : Trinket(player) {
   cooldown = 120;
   duration = 20;
   Trinket::stats = std::make_unique<AuraStats>(0, 0, 0, 175, 0, 0);
-  setup();
+  Setup();
 }
 
-HexShrunkenHead::HexShrunkenHead(std::shared_ptr<Player> player)
-    : Trinket(player) {
+HexShrunkenHead::HexShrunkenHead(std::shared_ptr<Player> player) : Trinket(player) {
   name = "Hex Shrunken Head";
   cooldown = 120;
   duration = 20;
   Trinket::stats = std::make_unique<AuraStats>(211, 0, 0, 0, 0, 0);
-  setup();
+  Setup();
 }
 
-IconOfTheSilverCrescent::IconOfTheSilverCrescent(std::shared_ptr<Player> player)
-    : Trinket(player) {
+IconOfTheSilverCrescent::IconOfTheSilverCrescent(std::shared_ptr<Player> player) : Trinket(player) {
   name = "Icon of the Silver Crescent";
   cooldown = 120;
   duration = 20;
   Trinket::stats = std::make_unique<AuraStats>(155, 0, 0, 0, 0, 0);
-  setup();
+  Setup();
 }
 
-ScryersBloodgem::ScryersBloodgem(std::shared_ptr<Player> player)
-    : Trinket(player) {
+ScryersBloodgem::ScryersBloodgem(std::shared_ptr<Player> player) : Trinket(player) {
   name = "Scryer's Bloodgem";
   cooldown = 90;
   duration = 15;
   Trinket::stats = std::make_unique<AuraStats>(150, 0, 0, 0, 0, 0);
-  setup();
+  Setup();
 }
 
-AncientCrystalTalisman::AncientCrystalTalisman(std::shared_ptr<Player> player)
-    : Trinket(player) {
+AncientCrystalTalisman::AncientCrystalTalisman(std::shared_ptr<Player> player) : Trinket(player) {
   name = "Ancient Crystal Talisman";
   cooldown = 120;
   duration = 20;
   Trinket::stats = std::make_unique<AuraStats>(104, 0, 0, 0, 0, 0);
-  setup();
+  Setup();
 }
 
-ArcanistsStone::ArcanistsStone(std::shared_ptr<Player> player)
-    : Trinket(player) {
+ArcanistsStone::ArcanistsStone(std::shared_ptr<Player> player) : Trinket(player) {
   name = "Arcanist's Stone";
   cooldown = 120;
   duration = 20;
   Trinket::stats = std::make_unique<AuraStats>(167, 0, 0, 0, 0, 0);
-  setup();
+  Setup();
 }
 
-TerokkarTabletOfVim::TerokkarTabletOfVim(std::shared_ptr<Player> player)
-    : Trinket(player) {
+TerokkarTabletOfVim::TerokkarTabletOfVim(std::shared_ptr<Player> player) : Trinket(player) {
   name = "Terokkar Table of Vim";
   cooldown = 90;
   duration = 15;
   Trinket::stats = std::make_unique<AuraStats>(84, 0, 0, 0, 0, 0);
-  setup();
+  Setup();
 }
 
 XirisGift::XirisGift(std::shared_ptr<Player> player) : Trinket(player) {
@@ -200,52 +184,46 @@ XirisGift::XirisGift(std::shared_ptr<Player> player) : Trinket(player) {
   cooldown = 90;
   duration = 15;
   Trinket::stats = std::make_unique<AuraStats>(150, 0, 0, 0, 0, 0);
-  setup();
+  Setup();
 }
 
-VengeanceOfTheIllidari::VengeanceOfTheIllidari(std::shared_ptr<Player> player)
-    : Trinket(player) {
+VengeanceOfTheIllidari::VengeanceOfTheIllidari(std::shared_ptr<Player> player) : Trinket(player) {
   name = "Vengeance of the Illidari";
   cooldown = 90;
   duration = 15;
   Trinket::stats = std::make_unique<AuraStats>(120, 0, 0, 0, 0, 0);
-  setup();
+  Setup();
 }
 
-FigurineLivingRubySerpent::FigurineLivingRubySerpent(
-    std::shared_ptr<Player> player)
-    : Trinket(player) {
+FigurineLivingRubySerpent::FigurineLivingRubySerpent(std::shared_ptr<Player> player) : Trinket(player) {
   name = "Figurine: Living Ruby Serpent";
   cooldown = 300;
   duration = 20;
   Trinket::stats = std::make_unique<AuraStats>(150, 0, 0, 0, 0, 0);
-  setup();
+  Setup();
 }
 
-EssenceOfTheMartyr::EssenceOfTheMartyr(std::shared_ptr<Player> player)
-    : Trinket(player) {
+EssenceOfTheMartyr::EssenceOfTheMartyr(std::shared_ptr<Player> player) : Trinket(player) {
   name = "Essence of the Martyr";
   cooldown = 120;
   duration = 20;
-  sharesCooldown = false;
+  shares_cooldown = false;
   Trinket::stats = std::make_unique<AuraStats>(99, 0, 0, 0, 0, 0);
-  setup();
+  Setup();
 }
 
-StarkillersBauble::StarkillersBauble(std::shared_ptr<Player> player)
-    : Trinket(player) {
+StarkillersBauble::StarkillersBauble(std::shared_ptr<Player> player) : Trinket(player) {
   name = "Starkiller's Bauble";
   cooldown = 90;
   duration = 15;
   Trinket::stats = std::make_unique<AuraStats>(125, 0, 0, 0, 0, 0);
-  setup();
+  Setup();
 }
 
-DarkIronSmokingPipe::DarkIronSmokingPipe(std::shared_ptr<Player> player)
-    : Trinket(player) {
+DarkIronSmokingPipe::DarkIronSmokingPipe(std::shared_ptr<Player> player) : Trinket(player) {
   name = "Dark Iron Smoking Pipe";
   cooldown = 120;
   duration = 20;
   Trinket::stats = std::make_unique<AuraStats>(155, 0, 0, 0, 0, 0);
-  setup();
+  Setup();
 }

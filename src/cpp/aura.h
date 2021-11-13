@@ -11,42 +11,42 @@ struct Aura {
   std::unique_ptr<AuraStats> stats;
   std::string name;
   int duration;
-  double durationRemaining;
-  int procChance;
+  double duration_remaining;
+  int proc_chance;
   bool active;
-  bool hasDuration;
-  bool groupWide;  // true if it's an aura that applies to everyone in the group
-                   // (will apply to pets as well then)
+  bool has_duration;
+  bool group_wide;  // true if it's an aura that applies to everyone in the group
+                    // (will apply to pets as well then)
   // dots
-  int tickTimerTotal;
-  double tickTimerRemaining;
-  int ticksRemaining;
-  int ticksTotal;
-  int minimumDuration;
+  int tick_timer_total;
+  double tick_timer_remaining;
+  int ticks_remaining;
+  int ticks_total;
+  int minimum_duration;
   // The Lightning Capacitor & ISB
   int stacks;
-  int maxStacks;
+  int max_stacks;
   // ISB
   double modifier;
-  double uptimeSoFar;
+  double uptime_so_far;
   // Bloodlust
-  double hasteModifier;
+  double haste_modifier;
 
   Aura(std::shared_ptr<Player> player);
-  void setup();
-  virtual void tick(double time);
-  virtual void apply();
-  virtual void fade();
-  virtual void decrementStacks();  // ISB
+  void Setup();
+  virtual void Tick(double time);
+  virtual void Apply();
+  virtual void Fade();
+  virtual void DecrementStacks();  // ISB
 };
 
 struct ImprovedShadowBoltAura : public Aura {
   double modifier;
 
   ImprovedShadowBoltAura(std::shared_ptr<Player> player);
-  void apply();
-  void fade();
-  void decrementStacks();
+  void Apply();
+  void Fade();
+  void DecrementStacks();
 };
 
 struct CurseOfTheElementsAura : public Aura {
@@ -99,8 +99,8 @@ struct ManaEtched4SetAura : public Aura {
 
 struct DestructionPotionAura : public Aura {
   DestructionPotionAura(std::shared_ptr<Player> player);
-  void apply();
-  void fade();
+  void Apply();
+  void Fade();
 };
 
 struct FlameCapAura : public Aura {
@@ -127,8 +127,8 @@ struct DrumsOfRestorationAura : public Aura {
   int manaGain;
 
   DrumsOfRestorationAura(std::shared_ptr<Player> player);
-  void apply();
-  void tick(double time);
+  void Apply();
+  void Tick(double time);
 };
 
 struct AshtongueTalismanOfShadowsAura : public Aura {
@@ -137,18 +137,18 @@ struct AshtongueTalismanOfShadowsAura : public Aura {
 
 struct DarkmoonCardCrusadeAura : public Aura {
   int stacks;
-  int maxStacks;
-  int spellPowerPerStack;
+  int max_stacks;
+  int spell_power_per_stack;
 
   DarkmoonCardCrusadeAura(std::shared_ptr<Player> player);
-  void apply();
-  void fade();
+  void Apply();
+  void Fade();
 };
 
 struct TheLightningCapacitorAura : public Aura {
   TheLightningCapacitorAura(std::shared_ptr<Player> player);
-  void apply();
-  void fade();
+  void Apply();
+  void Fade();
 };
 
 struct BandOfTheEternalSageAura : public Aura {
@@ -193,8 +193,8 @@ struct CrackedPowerCoreAura : public Aura {
 
 struct ManaTideTotemAura : public Aura {
   ManaTideTotemAura(std::shared_ptr<Player> player);
-  void tick(double time);
-  void apply();
+  void Tick(double time);
+  void Apply();
 };
 
 #endif

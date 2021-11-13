@@ -13,31 +13,31 @@ struct PetSpell {
   std::string name;
   double dmg;
   bool casting;
-  bool canCrit;
+  bool can_crit;
   double coefficient;
-  double cooldownRemaining;
-  double castTime;
-  int manaCost;
+  double cooldown_remaining;
+  double cast_time;
+  int mana_cost;
   double modifier;
   int cooldown;
 
   PetSpell(std::shared_ptr<Pet> pet);
-  bool ready();
-  void setup();
-  void reset();
-  virtual double getBaseDamage();
-  double getCastTime();
-  virtual double getCooldown();
-  void tick(double time);
-  void startCast();
-  void cast();
-  void damage(bool isCrit, bool isGlancing);
+  bool Ready();
+  void Setup();
+  void Reset();
+  virtual double GetBaseDamage();
+  double GetCastTime();
+  virtual double GetCooldown();
+  void Tick(double time);
+  void StartCast();
+  void Cast();
+  void Damage(bool is_crit, bool is_glancing);
 };
 
 struct Melee : public PetSpell {
   Melee(std::shared_ptr<Pet> pet);
-  double getBaseDamage();
-  double getCooldown();
+  double GetBaseDamage();
+  double GetCooldown();
 };
 
 struct ImpFirebolt : public PetSpell {
@@ -50,7 +50,7 @@ struct SuccubusLashOfPain : public PetSpell {
 
 struct FelguardCleave : public PetSpell {
   FelguardCleave(std::shared_ptr<Pet> pet);
-  double getBaseDamage();
+  double GetBaseDamage();
 };
 
 #endif

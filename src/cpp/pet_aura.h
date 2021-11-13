@@ -9,28 +9,28 @@ struct PetAura {
   std::shared_ptr<Pet> pet;
   std::string name;
   int duration;
-  double durationRemaining;
+  double duration_remaining;
   bool active;
   // Demonic Frenzy
-  int maxStacks;
+  int max_stacks;
   int stacks;
 
   PetAura(std::shared_ptr<Pet> pet);
-  void tick(double time);
-  virtual void apply();
-  virtual void fade(bool endOfIteration = false);
+  void Tick(double time);
+  virtual void Apply();
+  virtual void Fade();
 };
 
 struct DemonicFrenzy : public PetAura {
   DemonicFrenzy(std::shared_ptr<Pet> pet);
-  void apply();
-  void fade(bool endOfIteration = false);
+  void Apply();
+  void Fade();
 };
 
 struct BlackBook : public PetAura {
   BlackBook(std::shared_ptr<Pet> pet);
-  void apply(bool announceInCombatLog = true);
-  void fade(bool endOfIteration = false);
+  void Apply(bool announce_in_combat_log = true);
+  void Fade();
 };
 
 #endif

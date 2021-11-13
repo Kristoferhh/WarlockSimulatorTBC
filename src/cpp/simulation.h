@@ -8,15 +8,12 @@ struct Simulation {
   std::shared_ptr<Player> player;
   std::shared_ptr<SimulationSettings> settings;
 
-  Simulation(std::shared_ptr<Player> player,
-             std::shared_ptr<SimulationSettings> simSettings);
-  void start();
-  double passTime();
-  void selectedSpellHandler(
-      std::shared_ptr<Spell>& spell,
-      std::map<std::shared_ptr<Spell>, double>& predictedDamageOfSpells);
-  void castSelectedSpell(std::shared_ptr<Spell>& spell,
-                         double predictedDamage = 0);
+  Simulation(std::shared_ptr<Player> player, std::shared_ptr<SimulationSettings> sim_settings);
+  void Start();
+  double PassTime();
+  void SelectedSpellHandler(std::shared_ptr<Spell>& spell,
+                            std::map<std::shared_ptr<Spell>, double>& predicted_damage_of_spells);
+  void CastSelectedSpell(std::shared_ptr<Spell>& spell, double predicted_damage = 0);
 };
 
 #endif
