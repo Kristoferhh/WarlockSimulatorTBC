@@ -3,10 +3,9 @@
 
 #include "pet_aura.h"
 
-struct PetAuras
-{
-    std::unique_ptr<PetAura> DemonicFrenzy;
-    std::unique_ptr<PetAura> BlackBook;
+struct PetAuras {
+  std::unique_ptr<PetAura> DemonicFrenzy;
+  std::unique_ptr<PetAura> BlackBook;
 };
 
 #endif

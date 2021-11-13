@@ -3,12 +3,11 @@
 
 #include "pet_spell.h"
 
-struct PetSpells
-{
-    std::unique_ptr<PetSpell> Melee;
-    std::unique_ptr<PetSpell> Firebolt;
-    std::unique_ptr<PetSpell> LashOfPain;
-    std::unique_ptr<PetSpell> Cleave;
+struct PetSpells {
+  std::unique_ptr<PetSpell> Melee;
+  std::unique_ptr<PetSpell> Firebolt;
+  std::unique_ptr<PetSpell> LashOfPain;
+  std::unique_ptr<PetSpell> Cleave;
 };
 
 #endif

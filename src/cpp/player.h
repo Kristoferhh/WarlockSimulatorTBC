@@ -2,31 +2,31 @@
 #define WARLOCK_SIMULATOR_TBC_PLAYER
 
 #include <map>
-#include <vector>
+#include <random>
 #include <string>
+#include <vector>
+
+#include "aura.h"
 #include "auras.h"
-#include "talents.h"
+#include "combat_log_breakdown.h"
+#include "damage_over_time.h"
+#include "items.h"
+#include "pet.h"
+#include "player_auras.h"
+#include "player_settings.h"
+#include "player_spells.h"
 #include "sets.h"
 #include "spell.h"
-#include "aura.h"
-#include "items.h"
+#include "talents.h"
 #include "trinket.h"
-#include "player_settings.h"
-#include "damage_over_time.h"
-#include "player_spells.h"
-#include "player_auras.h"
-#include "combat_log_breakdown.h"
-#include <random>
-#include "pet.h"
 
-struct Player : std::enable_shared_from_this<Player>
-{
+struct Player : std::enable_shared_from_this<Player> {
   const double hitRatingPerPercent = 12.62;
   const double critRatingPerPercent = 22.08;
   const double hasteRatingPerPercent = 15.77;
   const double manaPerInt = 15;
   const double healthPerStamina = 10;
-  const double critPerInt = 1 / 81.95; // Crit % per point of intellect
+  const double critPerInt = 1 / 81.95;  // Crit % per point of intellect
   const double baseCritChancePercent = 1.701;
   std::shared_ptr<Pet> pet;
   std::shared_ptr<Auras> selectedAuras;
@@ -79,7 +79,8 @@ struct Player : std::enable_shared_from_this<Player>
   int getRand();
   void castLifeTapOrDarkPact();
   bool shouldWriteToCombatLog();
-  void addIterationDamageAndMana(const std::string& spellName, int manaGain, int damage);
+  void addIterationDamageAndMana(const std::string& spellName, int manaGain,
+                                 int damage);
   void postIterationDamageAndMana(const std::string& spellName);
   void sendCombatLogEntries();
   void combatLog(const std::string& entry);
