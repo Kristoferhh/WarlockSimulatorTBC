@@ -56,6 +56,7 @@ struct Player : std::enable_shared_from_this<Player> {
   uint32_t iteration_damage;
   std::mt19937 gen;
   std::uniform_int_distribution<> random_num{1, 100 * kFloatNumberMultiplier};
+  std::string customStat;
   double cast_time_remaining;
   double gcd_remaining;
   double total_duration;
@@ -71,7 +72,7 @@ struct Player : std::enable_shared_from_this<Player> {
   void EndAuras();
   void ThrowError(const std::string& error);
   double GetGcdValue(const std::shared_ptr<Spell>& spell);
-  double GetSpellPower(SpellSchool school = SpellSchool::NO_SCHOOL);
+  double GetSpellPower(SpellSchool school = SpellSchool::kNoSchool);
   double GetHastePercent();
   bool IsCrit(SpellType spell_type, double extra_crit = 0);
   bool IsHit(SpellType spell_type);
@@ -87,7 +88,6 @@ struct Player : std::enable_shared_from_this<Player> {
   void PostIterationDamageAndMana(const std::string& spell_name);
   void SendCombatLogEntries();
   void CombatLog(const std::string& entry);
-  std::string GetCustomStat();
   void SendPlayerInfoToCombatLog();
 };
 

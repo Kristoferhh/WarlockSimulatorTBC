@@ -323,7 +323,7 @@ void DestructionPotionAura::Apply() {
   if (!active) {
     if (player->ShouldWriteToCombatLog()) {
       int currentSpellPower = player->GetSpellPower();
-      double currentCritChance = player->GetCritChance(SpellType::DESTRUCTION);
+      double currentCritChance = player->GetCritChance(SpellType::kDestruction);
       player->CombatLog("Spell Power + 120 (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower + 120) +  + ")"")");
       player->CombatLog("Crit Chance + 2% (" + std::to_string(round(currentCritChance * 100) / 100) + "% -> " +
                         std::to_string(round((currentCritChance + 2) * 100) / 100) + "%)");
@@ -341,7 +341,7 @@ void DestructionPotionAura::Fade() {
   if (active) {
     if (player->ShouldWriteToCombatLog()) {
       int currentSpellPower = player->GetSpellPower();
-      double currentCritChance = player->GetCritChance(SpellType::DESTRUCTION);
+      double currentCritChance = player->GetCritChance(SpellType::kDestruction);
       player->CombatLog("Spell Power - 120 (" + std::to_string(currentSpellPower) + " -> " + std::to_string(currentSpellPower - 120) +  + ")"")");
       player->CombatLog("Crit Chance - 2% (" + std::to_string(round(currentCritChance * 100) / 100) + "% -> " +
                         std::to_string(round((currentCritChance - 2) * 100) / 100) + "%)");

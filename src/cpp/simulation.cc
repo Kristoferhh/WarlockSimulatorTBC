@@ -269,7 +269,7 @@ void Simulation::Start() {
       }
 
       // Pet
-      if (player->pet != NULL && player->pet->mode == PetMode::AGGRESSIVE) {
+      if (player->pet != NULL && player->pet->mode == PetMode::kAggressive) {
         // Auto Attack
         if (player->pet->spells->melee != NULL && player->pet->spells->melee->Ready()) {
           player->pet->spells->melee->StartCast();
@@ -321,7 +321,7 @@ void Simulation::Start() {
 
     // Only send the iteration's dps to the web worker if we're doing a normal
     // simulation (this is just for the dps histogram)
-    if (settings->simulation_type == SimulationType::NORMAL && !player->settings->simming_stamina &&
+    if (settings->simulation_type == SimulationType::kNormal && !player->settings->simming_stamina &&
         !player->settings->simming_intellect && !player->settings->simming_spell_power &&
         !player->settings->simming_shadow_power && !player->settings->simming_fire_power &&
         !player->settings->simming_crit_rating && !player->settings->simming_hit_rating &&
@@ -331,7 +331,7 @@ void Simulation::Start() {
 
     if (player->iteration % static_cast<int>(std::floor(settings->iterations / 100.0)) == 0) {
       SimulationUpdate(player->iteration, settings->iterations, Median(dps_vector), player->settings->item_id,
-                       player->GetCustomStat().c_str());
+                       player->customStat.c_str());
     }
   }
 
@@ -354,7 +354,7 @@ void Simulation::Start() {
     }
   }
   SimulationEnd(Median(dps_vector), min_dps, max_dps, player->settings->item_id, settings->iterations,
-                player->total_duration, player->GetCustomStat().c_str());
+                player->total_duration, player->customStat.c_str());
 }
 
 double Simulation::PassTime() {
@@ -364,12 +364,12 @@ double Simulation::PassTime() {
   // Find the lowest time until the next action needs to be taken
   // Pet
   if (player->pet != NULL) {
-    if ((player->talents->dark_pact > 0 || player->pet->mode == PetMode::AGGRESSIVE) &&
+    if ((player->talents->dark_pact > 0 || player->pet->mode == PetMode::kAggressive) &&
         player->pet->spirit_tick_timer_remaining < time)
       time = player->pet->spirit_tick_timer_remaining;
 
     // Pet's attacks/abilities and such
-    if (player->pet->mode == PetMode::AGGRESSIVE) {
+    if (player->pet->mode == PetMode::kAggressive) {
       if (player->pet->spells->melee != NULL && player->pet->spells->melee->cooldown_remaining > 0 &&
           player->pet->spells->melee->cooldown_remaining < time)
         time = player->pet->spells->melee->cooldown_remaining;

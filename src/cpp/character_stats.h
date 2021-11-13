@@ -20,20 +20,16 @@ struct CharacterStats {
   int mp5;
   int spell_penetration;
   double fire_modifier;
-  double frost_modifier;
   double haste_percent;
   double shadow_modifier;
   double stamina_modifier;
   double intellect_modifier;
   double spirit_modifier;
   double mana_cost_modifier;
-  double arcane_modifier;
-  double nature_modifier;
-  int nature_resist;
-  int arcane_resist;
-  int fire_resist;
-  int frost_resist;
-  int shadow_resist;
+
+  int GetStamina();
+  int GetIntellect();
+  int GetSpirit();
 };
 
 #endif

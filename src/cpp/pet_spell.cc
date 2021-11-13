@@ -11,7 +11,7 @@ PetSpell::PetSpell(std::shared_ptr<Pet> pet) : pet(pet) {
   cast_time = 0;
   mana_cost = 0;
   modifier = 1;
-  school = SpellSchool::NO_SCHOOL;
+  school = SpellSchool::kNoSchool;
   cooldown = 0;
 }
 
@@ -114,7 +114,7 @@ void PetSpell::Cast() {
   }
 
   // Physical dmg spell
-  if (type == AttackType::PHYSICAL) {
+  if (type == AttackType::kPhysical) {
     bool is_crit = false;
     bool is_glancing = false;
     double crit_chance = pet->GetMeleeCritChance() * pet->player->kFloatNumberMultiplier;
@@ -164,7 +164,7 @@ void PetSpell::Cast() {
     Damage(is_crit, is_glancing);
   }
   // Magic dmg spell
-  else if (type == AttackType::MAGICAL) {
+  else if (type == AttackType::kMagical) {
     // Check for resist
     if (!pet->IsHit(type)) {
       pet->player->combat_log_breakdown.at(name)->misses++;
@@ -192,7 +192,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
   double damage_modifier = modifier;
 
   // Add damage from Spell Power
-  if (type == AttackType::MAGICAL) {
+  if (type == AttackType::kMagical) {
     dmg += pet->stats->spell_power * coefficient;
   }
 
@@ -202,10 +202,10 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
   }
 
   // Magic damage multipliers
-  if (type == AttackType::MAGICAL) {
+  if (type == AttackType::kMagical) {
     // Curse of the Elements
-    if (pet->player->selected_auras->curseOfTheElements &&
-        (school == SpellSchool::SHADOW || school == SpellSchool::FIRE)) {
+    if (pet->player->selected_auras->curse_of_the_elements &&
+        (school == SpellSchool::kShadow || school == SpellSchool::kFire)) {
       damage_modifier *= (1.1 + 0.01 * pet->player->settings->improved_curse_of_the_elements);
     }
 
@@ -215,9 +215,9 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
     }
 
     // Shadow Damage Multipliers
-    if (school == SpellSchool::SHADOW) {
+    if (school == SpellSchool::kShadow) {
       // Shadow Weaving
-      if (pet->player->selected_auras->shadowWeaving) {
+      if (pet->player->selected_auras->shadow_weaving) {
         damage_modifier *= 1.1;
       }
 
@@ -236,17 +236,17 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
       }
     }
     // Fire Damage Multipliers
-    else if (school == SpellSchool::FIRE) {
+    else if (school == SpellSchool::kFire) {
       // Improved Scorch
-      if (pet->player->selected_auras->improvedScorch) {
+      if (pet->player->selected_auras->improved_scorch) {
         damage_modifier *= 1.15;
       }
     }
   }
   // Physical Damage Multipliers
-  else if (type == AttackType::PHYSICAL) {
+  else if (type == AttackType::kPhysical) {
     // Blood Frenzy
-    if (pet->player->selected_auras->bloodFrenzy) {
+    if (pet->player->selected_auras->blood_frenzy) {
       damage_modifier *= 1.04;
     }
 
@@ -265,14 +265,14 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
 
   // Partial Resist Reduction
   double partial_resist_multiplier = pet->player->GetPartialResistMultiplier(school);
-  if (type == AttackType::MAGICAL) {
+  if (type == AttackType::kMagical) {
     dmg *= partial_resist_multiplier;
   }
 
   pet->player->AddIterationDamageAndMana(name, 0, dmg);
   pet->player->iteration_damage += dmg;
 
-  if (pet->pet == PetName::FELGUARD) {
+  if (pet->pet == PetName::kFelguard) {
     pet->auras->demonic_frenzy->Apply();
   }
 
@@ -283,12 +283,12 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
     if (is_crit) combat_log_message.append("*");
     if (is_glancing) combat_log_message.append(" Glancing");
     combat_log_message.append(" (" + TruncateTrailingZeros(std::to_string(round(base_damage))) + " Base Damage");
-    if (type == AttackType::MAGICAL) {
+    if (type == AttackType::kMagical) {
       combat_log_message.append(" - " + std::to_string(round(coefficient * 1000) / 1000.0) + " Coefficient");
       combat_log_message.append(" - " + std::to_string(pet->stats->spell_power) + " Spell Power");
       combat_log_message.append(" - " + std::to_string(round(partial_resist_multiplier * 1000) / 10.0) +
                                 "% Partial Resist Multiplier");
-    } else if (type == AttackType::PHYSICAL) {
+    } else if (type == AttackType::kPhysical) {
       if (is_glancing)
         combat_log_message.append(" - " +
                                   TruncateTrailingZeros(std::to_string(pet->glancing_blow_multiplier * 100), 1) +
@@ -315,15 +315,15 @@ ImpFirebolt::ImpFirebolt(std::shared_ptr<Pet> pet) : PetSpell(pet) {
   mana_cost = 145;
   dmg = 119.5 * (1 + 0.1 * pet->player->talents->improved_imp);
   coefficient = 2 / 3.5;
-  school = SpellSchool::FIRE;
-  type = AttackType::MAGICAL;
+  school = SpellSchool::kFire;
+  type = AttackType::kMagical;
   Setup();
 }
 
 Melee::Melee(std::shared_ptr<Pet> pet) : PetSpell(pet) {
   cooldown = 2;
   name = "Melee";
-  type = AttackType::PHYSICAL;
+  type = AttackType::kPhysical;
   Setup();
 }
 
@@ -335,7 +335,7 @@ FelguardCleave::FelguardCleave(std::shared_ptr<Pet> pet) : PetSpell(pet) {
   cooldown = 6;
   mana_cost = 417;
   name = "Cleave";
-  type = AttackType::PHYSICAL;
+  type = AttackType::kPhysical;
   Setup();
 }
 
@@ -346,9 +346,9 @@ SuccubusLashOfPain::SuccubusLashOfPain(std::shared_ptr<Pet> pet) : PetSpell(pet)
   mana_cost = 190;
   name = "Lash of Pain";
   dmg = 123;
-  school = SpellSchool::SHADOW;
+  school = SpellSchool::kShadow;
   coefficient = 0.429;
-  type = AttackType::MAGICAL;
+  type = AttackType::kMagical;
   can_crit = true;
   modifier *= 1 + pet->player->talents->improved_succubus / 10.0;
   Setup();

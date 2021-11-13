@@ -4,7 +4,6 @@
 struct Sets {
   int plagueheart;
   int spellfire;
-  int frozen_shadoweave;
   int spellstrike;
   int oblivion;
   int mana_etched;

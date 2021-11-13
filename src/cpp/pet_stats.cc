@@ -16,3 +16,7 @@ PetStats::PetStats(std::shared_ptr<Player> player)
   intellect_modifier *= 1 + (0.05 * player->talents->fel_intellect);
   damage_modifier *= (1 + 0.04 * player->talents->unholy_power) * (1 + 0.05 * player->talents->soul_link);
 }
+
+int PetStats::GetStamina() { return stamina * stamina_modifier; }
+
+int PetStats::GetIntellect() { return intellect * intellect_modifier; }

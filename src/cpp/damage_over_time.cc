@@ -83,13 +83,13 @@ void DamageOverTime::Fade() {
 
 double DamageOverTime::GetModifier() {
   double damage_modifier = modifier;
-  if (school == SpellSchool::SHADOW) {
+  if (school == SpellSchool::kShadow) {
     damage_modifier *= player->stats->shadow_modifier;
-  } else if (school == SpellSchool::FIRE) {
+  } else if (school == SpellSchool::kFire) {
     damage_modifier *= player->stats->fire_modifier;
   }
   // Improved Shadow Bolt
-  if ((school == SpellSchool::SHADOW && player->auras->improved_shadow_bolt != NULL &&
+  if ((school == SpellSchool::kShadow && player->auras->improved_shadow_bolt != NULL &&
        player->auras->improved_shadow_bolt->active &&
        (player->spells->siphon_life == NULL || name != player->spells->siphon_life->name)) ||
       (player->spells->siphon_life != NULL && name == player->spells->siphon_life->name && isb_is_active)) {
@@ -208,7 +208,7 @@ CorruptionDot::CorruptionDot(std::shared_ptr<Player> player) : DamageOverTime(pl
   duration = 18;
   tick_timer_total = 3;
   dmg = 900;
-  school = SpellSchool::SHADOW;
+  school = SpellSchool::kShadow;
   coefficient = 0.936 + (0.12 * player->talents->empowered_corruption);
   minimum_duration = 9;
   t5_bonus_modifier = 1;
@@ -242,7 +242,7 @@ UnstableAfflictionDot::UnstableAfflictionDot(std::shared_ptr<Player> player) : D
   duration = 18;
   tick_timer_total = 3;
   dmg = 1050;
-  school = SpellSchool::SHADOW;
+  school = SpellSchool::kShadow;
   coefficient = 1.2;
   minimum_duration = 9;
   Setup();
@@ -253,7 +253,7 @@ SiphonLifeDot::SiphonLifeDot(std::shared_ptr<Player> player) : DamageOverTime(pl
   duration = 30;
   tick_timer_total = 3;
   dmg = 630;
-  school = SpellSchool::SHADOW;
+  school = SpellSchool::kShadow;
   coefficient = 1;
   minimum_duration = 30;
   Setup();
@@ -264,7 +264,7 @@ ImmolateDot::ImmolateDot(std::shared_ptr<Player> player) : DamageOverTime(player
   duration = 15;
   tick_timer_total = 3;
   dmg = 615;
-  school = SpellSchool::FIRE;
+  school = SpellSchool::kFire;
   coefficient = 0.65;
   minimum_duration = 12;
   t5_bonus_modifier = 1;
@@ -282,7 +282,7 @@ CurseOfAgonyDot::CurseOfAgonyDot(std::shared_ptr<Player> player) : DamageOverTim
   duration = 24;
   tick_timer_total = 3;
   dmg = 1356;
-  school = SpellSchool::SHADOW;
+  school = SpellSchool::kShadow;
   coefficient = 1.2;
   minimum_duration = 15;
   Setup();
@@ -303,7 +303,7 @@ CurseOfDoomDot::CurseOfDoomDot(std::shared_ptr<Player> player) : DamageOverTime(
   duration = 60;
   tick_timer_total = 60;
   dmg = 4200;
-  school = SpellSchool::SHADOW;
+  school = SpellSchool::kShadow;
   coefficient = 2;
   minimum_duration = 60;
   Setup();

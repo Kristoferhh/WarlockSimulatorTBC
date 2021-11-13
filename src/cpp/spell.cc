@@ -11,7 +11,7 @@ Spell::Spell(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura, std::sh
   modifier = 1;
   coefficient = 0;
   cooldown = 0;
-  school = SpellSchool::NO_SCHOOL;
+  school = SpellSchool::kNoSchool;
   is_non_warlock_ability = false;
   is_dot = false;
   does_damage = false;
@@ -188,7 +188,7 @@ void Spell::Cast() {
 
 double Spell::GetModifier() {
   double damage_modifier = modifier;
-  if (school == SpellSchool::SHADOW) {
+  if (school == SpellSchool::kShadow) {
     damage_modifier *= player->stats->shadow_modifier;
 
     // Improved Shadow Bolt
@@ -196,7 +196,7 @@ double Spell::GetModifier() {
         player->auras->improved_shadow_bolt->active) {
       damage_modifier *= player->auras->improved_shadow_bolt->modifier;
     }
-  } else if (school == SpellSchool::FIRE) {
+  } else if (school == SpellSchool::kFire) {
     damage_modifier *= player->stats->fire_modifier;
   }
 
@@ -216,7 +216,7 @@ void Spell::Damage(bool isCrit) {
     crit_multiplier = GetCritMultiplier(crit_multiplier);
     total_damage *= crit_multiplier;
     OnCritProcs();
-  } else if (school == SpellSchool::SHADOW && !is_dot && player->auras->improved_shadow_bolt != NULL &&
+  } else if (school == SpellSchool::kShadow && !is_dot && player->auras->improved_shadow_bolt != NULL &&
              player->auras->improved_shadow_bolt->active && !player->settings->using_custom_isb_uptime) {
     player->auras->improved_shadow_bolt->DecrementStacks();
   }
@@ -294,7 +294,7 @@ double Spell::GetCritMultiplier(double player_crit_multiplier) {
     crit_multiplier *= 1.03;
   }
   // Ruin
-  if (type == SpellType::DESTRUCTION && player->talents->ruin == 1) {
+  if (type == SpellType::kDestruction && player->talents->ruin == 1) {
     // Ruin doubles the *bonus* of your crits, not the Damage of the crit itself
     // So if your crit Damage % is e.g. 154.5% it would become 209% because
     // the 54.5% is being doubled
@@ -331,7 +331,7 @@ double Spell::PredictDamage() {
   // selected, but the ISB aura is not active, then give some % modifier as an
   // "average" for the Damage. Without this, the sim will choose Incinerate over
   // Shadow Bolt because it basically just doesn't know that ISB exists
-  if (school == SpellSchool::SHADOW && !player->settings->using_custom_isb_uptime &&
+  if (school == SpellSchool::kShadow && !player->settings->using_custom_isb_uptime &&
       player->auras->improved_shadow_bolt != NULL && !player->auras->improved_shadow_bolt->active) {
     // If this isn't the player's first iteration then check what their ISB
     // uptime is and add that %
@@ -383,7 +383,7 @@ void Spell::OnDamageProcs() {
 
 void Spell::OnHitProcs() {
   // Judgement of Wisdom (50% proc rate)
-  if (player->selected_auras->judgementOfWisdom && player->GetRand() <= 50 * player->kFloatNumberMultiplier) {
+  if (player->selected_auras->judgement_of_wisdom && player->GetRand() <= 50 * player->kFloatNumberMultiplier) {
     const int kManaValue = 74;
     const int kCurrentMana = player->stats->mana;
     const int kManaGained = std::min(player->stats->max_mana - kCurrentMana, kManaValue);
@@ -396,11 +396,11 @@ void Spell::OnHitProcs() {
     }
   }
   // T4 2pc
-  if (player->sets->t4 >= 2 && (school == SpellSchool::SHADOW || school == SpellSchool::FIRE) &&
+  if (player->sets->t4 >= 2 && (school == SpellSchool::kShadow || school == SpellSchool::kFire) &&
       player->GetRand() <= player->auras->flameshadow->proc_chance * player->kFloatNumberMultiplier) {
-    if (school == SpellSchool::SHADOW) {
+    if (school == SpellSchool::kShadow) {
       player->auras->flameshadow->Apply();
-    } else if (school == SpellSchool::FIRE) {
+    } else if (school == SpellSchool::kFire) {
       player->auras->shadowflame->Apply();
     }
   }
@@ -470,8 +470,8 @@ ShadowBolt::ShadowBolt(std::shared_ptr<Player> player) : Spell(player) {
   name = "Shadow Bolt";
   does_damage = true;
   can_crit = true;
-  school = SpellSchool::SHADOW;
-  type = SpellType::DESTRUCTION;
+  school = SpellSchool::kShadow;
+  type = SpellType::kDestruction;
   Setup();
 
   // T6 4pc bonus
@@ -532,8 +532,8 @@ Incinerate::Incinerate(std::shared_ptr<Player> player) : Spell(player) {
   bonus_damage_from_immolate_average = (bonus_damage_from_immolate_min + bonus_damage_from_immolate_max) / 2;
   does_damage = true;
   can_crit = true;
-  school = SpellSchool::FIRE;
-  type = SpellType::DESTRUCTION;
+  school = SpellSchool::kFire;
+  type = SpellType::kDestruction;
   Setup();
 
   if (player->sets->t6 >= 4) {
@@ -550,8 +550,8 @@ SearingPain::SearingPain(std::shared_ptr<Player> player) : Spell(player) {
   max_dmg = 320;
   does_damage = true;
   can_crit = true;
-  school = SpellSchool::FIRE;
-  type = SpellType::DESTRUCTION;
+  school = SpellSchool::kFire;
+  type = SpellType::kDestruction;
   bonus_crit = 4 * player->talents->improved_searing_pain;
   Setup();
 };
@@ -565,8 +565,8 @@ SoulFire::SoulFire(std::shared_ptr<Player> player) : Spell(player) {
   max_dmg = 1257;
   does_damage = true;
   can_crit = true;
-  school = SpellSchool::FIRE;
-  type = SpellType::DESTRUCTION;
+  school = SpellSchool::kFire;
+  type = SpellType::kDestruction;
   Setup();
 };
 
@@ -580,8 +580,8 @@ Shadowburn::Shadowburn(std::shared_ptr<Player> player) : Spell(player) {
   does_damage = true;
   can_crit = true;
   is_finisher = true;
-  school = SpellSchool::SHADOW;
-  type = SpellType::DESTRUCTION;
+  school = SpellSchool::kShadow;
+  type = SpellType::kDestruction;
   Setup();
 };
 
@@ -593,8 +593,8 @@ DeathCoil::DeathCoil(std::shared_ptr<Player> player) : Spell(player) {
   dmg = 526;
   does_damage = true;
   is_finisher = true;
-  school = SpellSchool::SHADOW;
-  type = SpellType::AFFLICTION;
+  school = SpellSchool::kShadow;
+  type = SpellType::kAffliction;
   Setup();
 };
 
@@ -606,8 +606,8 @@ Shadowfury::Shadowfury(std::shared_ptr<Player> player) : Spell(player) {
   max_dmg = 728;
   does_damage = true;
   can_crit = true;
-  school = SpellSchool::SHADOW;
-  type = SpellType::DESTRUCTION;
+  school = SpellSchool::kShadow;
+  type = SpellType::kDestruction;
   cooldown = 20;
   coefficient = 0.195;
   Setup();
@@ -621,8 +621,8 @@ SeedOfCorruption::SeedOfCorruption(std::shared_ptr<Player> player) : Spell(playe
   cast_time = 2;
   aoe_cap = 13580;
   does_damage = true;
-  school = SpellSchool::SHADOW;
-  type = SpellType::AFFLICTION;
+  school = SpellSchool::kShadow;
+  type = SpellType::kAffliction;
   coefficient = 0.214;
   Setup();
 };
@@ -640,12 +640,12 @@ void SeedOfCorruption::Damage(bool isCrit) {
 
   // Remove debuffs from the modifier since they ignore the AOE cap, so we'll
   // add the debuff % modifiers after the Damage has been calculated.
-  if (player->selected_auras->curseOfTheElements) {
+  if (player->selected_auras->curse_of_the_elements) {
     const double kModifier = 1.1 + (0.01 * player->settings->improved_curse_of_the_elements);
     internal_modifier /= kModifier;
     external_modifier *= kModifier;
   }
-  if (player->selected_auras->shadowWeaving) {
+  if (player->selected_auras->shadow_weaving) {
     const double kModifier = 1.1;
     internal_modifier /= kModifier;
     external_modifier *= kModifier;
@@ -767,8 +767,8 @@ Corruption::Corruption(std::shared_ptr<Player> player, std::shared_ptr<Aura> aur
   mana_cost = 370;
   cast_time = round((2 - (0.4 * player->talents->improved_corruption)) * 100) / 100.0;
   is_dot = true;
-  school = SpellSchool::SHADOW;
-  type = SpellType::AFFLICTION;
+  school = SpellSchool::kShadow;
+  type = SpellType::kAffliction;
   Setup();
 }
 
@@ -779,8 +779,8 @@ UnstableAffliction::UnstableAffliction(std::shared_ptr<Player> player, std::shar
   mana_cost = 400;
   cast_time = 1.5;
   is_dot = true;
-  school = SpellSchool::SHADOW;
-  type = SpellType::AFFLICTION;
+  school = SpellSchool::kShadow;
+  type = SpellType::kAffliction;
   Setup();
 }
 
@@ -789,8 +789,8 @@ SiphonLife::SiphonLife(std::shared_ptr<Player> player, std::shared_ptr<Aura> aur
   name = "Siphon Life";
   mana_cost = 410;
   is_dot = true;
-  school = SpellSchool::SHADOW;
-  type = SpellType::AFFLICTION;
+  school = SpellSchool::kShadow;
+  type = SpellType::kAffliction;
   Setup();
 }
 
@@ -804,8 +804,8 @@ Immolate::Immolate(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura, s
   can_crit = true;
   dmg = 331;
   coefficient = 0.2;
-  school = SpellSchool::FIRE;
-  type = SpellType::DESTRUCTION;
+  school = SpellSchool::kFire;
+  type = SpellType::kDestruction;
   Setup();
 }
 
@@ -824,8 +824,8 @@ CurseOfAgony::CurseOfAgony(std::shared_ptr<Player> player, std::shared_ptr<Aura>
   name = "Curse of Agony";
   mana_cost = 265;
   is_dot = true;
-  school = SpellSchool::SHADOW;
-  type = SpellType::AFFLICTION;
+  school = SpellSchool::kShadow;
+  type = SpellType::kAffliction;
   Setup();
 }
 
@@ -833,7 +833,7 @@ CurseOfTheElements::CurseOfTheElements(std::shared_ptr<Player> player, std::shar
     : Spell(player, aura) {
   name = "Curse of the Elements";
   mana_cost = 260;
-  type = SpellType::AFFLICTION;
+  type = SpellType::kAffliction;
   is_aura = true;
   Setup();
 }
@@ -842,7 +842,7 @@ CurseOfRecklessness::CurseOfRecklessness(std::shared_ptr<Player> player, std::sh
     : Spell(player, aura) {
   name = "Curse of Recklessness";
   mana_cost = 160;
-  type = SpellType::AFFLICTION;
+  type = SpellType::kAffliction;
   is_aura = true;
   Setup();
 }
@@ -853,8 +853,8 @@ CurseOfDoom::CurseOfDoom(std::shared_ptr<Player> player, std::shared_ptr<Aura> a
   name = "Curse of Doom";
   mana_cost = 380;
   cooldown = 60;
-  school = SpellSchool::SHADOW;
-  type = SpellType::AFFLICTION;
+  school = SpellSchool::kShadow;
+  type = SpellType::kAffliction;
   is_dot = true;
   Setup();
 }
@@ -869,8 +869,8 @@ Conflagrate::Conflagrate(std::shared_ptr<Player> player) : Spell(player) {
   does_damage = true;
   is_finisher = true;
   can_crit = true;
-  school = SpellSchool::FIRE;
-  type = SpellType::DESTRUCTION;
+  school = SpellSchool::kFire;
+  type = SpellType::kDestruction;
   Setup();
 }
 
@@ -1033,7 +1033,7 @@ TimbalsFocusingCrystal::TimbalsFocusingCrystal(std::shared_ptr<Player> player) :
   max_dmg = 475;
   does_damage = true;
   is_proc = true;
-  school = SpellSchool::SHADOW;
+  school = SpellSchool::kShadow;
   can_crit = true;
   Setup();
 }

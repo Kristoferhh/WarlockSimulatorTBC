@@ -30,6 +30,8 @@ struct PetStats {
   double damage_modifier;
 
   PetStats(std::shared_ptr<Player> player = nullptr);
+  int GetStamina();
+  int GetIntellect();
 };
 
 #endif

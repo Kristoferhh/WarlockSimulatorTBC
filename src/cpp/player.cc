@@ -24,27 +24,50 @@ Player::Player(std::shared_ptr<PlayerSettings> player_settings)
   settings->enemy_fire_resist = std::max(static_cast<double>(settings->enemy_fire_resist), enemy_base_resistance);
 
   combat_log_breakdown.insert(std::make_pair("Mp5", std::make_unique<CombatLogBreakdown>("Mp5")));
-  if (selected_auras->judgementOfWisdom) {
+  if (selected_auras->judgement_of_wisdom) {
     combat_log_breakdown.insert(
         std::make_pair("Judgement of Wisdom", std::make_unique<CombatLogBreakdown>("Judgement of Wisdom")));
   }
 
+  if (settings->simming_stamina)
+    customStat = "stamina";
+  else if (settings->simming_intellect)
+    customStat = "intellect";
+  else if (settings->simming_spirit)
+    customStat = "spirit";
+  else if (settings->simming_spell_power)
+    customStat = "spellPower";
+  else if (settings->simming_shadow_power)
+    customStat = "shadowPower";
+  else if (settings->simming_fire_power)
+    customStat = "firePower";
+  else if (settings->simming_crit_rating)
+    customStat = "critRating";
+  else if (settings->simming_hit_rating)
+    customStat = "hitRating";
+  else if (settings->simming_haste_rating)
+    customStat = "hasteRating";
+  else if (settings->simming_mp5)
+    customStat = "mp5";
+  else
+    customStat = "normal";
+
   // Crit chance
-  if (selected_auras->powerOfTheGuardianMage) {
+  if (selected_auras->atiesh_mage) {
     stats->crit_rating += 28 * settings->mage_atiesh_amount;
   }
   stats->crit_chance = kBaseCritChancePercent + (stats->crit_rating / kCritRatingPerPercent) + talents->devastation +
                        talents->backlash + talents->demonic_tactics;
-  if (selected_auras->moonkinAura) {
+  if (selected_auras->moonkin_aura) {
     stats->crit_chance += 5;
   }
-  if (selected_auras->judgementOfTheCrusader) {
+  if (selected_auras->judgement_of_the_crusader) {
     stats->crit_chance += 3;
   }
-  if (selected_auras->totemOfWrath) {
+  if (selected_auras->totem_of_wrath) {
     stats->crit_chance += (3 * settings->totem_of_wrath_amount);
   }
-  if (selected_auras->chainOfTheTwilightOwl) {
+  if (selected_auras->chain_of_the_twilight_owl) {
     stats->crit_chance += 2;
   }
 
@@ -53,10 +76,10 @@ Player::Player(std::shared_ptr<PlayerSettings> player_settings)
     stats->hit_rating += 35;
   }
   stats->extra_hit_chance = stats->hit_rating / kHitRatingPerPercent;
-  if (selected_auras->totemOfWrath) {
+  if (selected_auras->totem_of_wrath) {
     stats->extra_hit_chance += (3 * settings->totem_of_wrath_amount);
   }
-  if (selected_auras->inspiringPresence) {
+  if (selected_auras->inspiring_presence) {
     stats->extra_hit_chance += 1;
   }
   stats->hit_chance = round(GetBaseHitChance(kLevel, settings->enemy_level));
@@ -90,12 +113,12 @@ Player::Player(std::shared_ptr<PlayerSettings> player_settings)
   // Shadow Mastery
   stats->shadow_modifier *= (1 + (0.02 * talents->shadow_mastery));
   // Ferocious Inspiration
-  if (selected_auras->ferociousInspiration) {
+  if (selected_auras->ferocious_inspiration) {
     stats->shadow_modifier *= std::pow(1.03, settings->ferocious_inspiration_amount);
     stats->fire_modifier *= std::pow(1.03, settings->ferocious_inspiration_amount);
   }
   // Add % dmg modifiers from Curse of the Elements + Malediction
-  if (selected_auras->curseOfTheElements) {
+  if (selected_auras->curse_of_the_elements) {
     stats->shadow_modifier *= 1.1 + (0.01 * settings->improved_curse_of_the_elements);
     stats->fire_modifier *= 1.1 + (0.01 * settings->improved_curse_of_the_elements);
   }
@@ -104,7 +127,7 @@ Player::Player(std::shared_ptr<PlayerSettings> player_settings)
     stats->fire_modifier *= 1 + (0.02 * talents->emberstorm);
   }
   // Add spell power from Fel Armor
-  if (selected_auras->felArmor) {
+  if (selected_auras->fel_armor) {
     stats->spell_power += 100 * (0 + 0.1 * talents->demonic_aegis);
   }
   // If using a custom isb uptime % then just add to the shadow modifier % (this
@@ -114,16 +137,15 @@ Player::Player(std::shared_ptr<PlayerSettings> player_settings)
   }
   // Add spell power from Improved Divine Spirit
   stats->spirit_modifier *= (1 - (0.01 * talents->demonic_embrace));
-  if (selected_auras->prayerOfSpirit && settings->improved_divine_spirit > 0) {
-    stats->spell_power +=
-        (stats->spirit * stats->spirit_modifier * (0 + (static_cast<double>(settings->improved_divine_spirit) / 20.0)));
+  if (selected_auras->prayer_of_spirit && settings->improved_divine_spirit > 0) {
+    stats->spell_power += stats->GetSpirit() * (0 + (static_cast<double>(settings->improved_divine_spirit) / 20.0));
   }
   // Elemental shaman t4 2pc bonus
-  if (selected_auras->wrathOfAirTotem && settings->has_elemental_shaman_t4_bonus) {
+  if (selected_auras->wrath_of_air_totem && settings->has_elemental_shaman_t4_bonus) {
     stats->spell_power += 20;
   }
   // Add extra stamina from Blood Pact from Improved Imp
-  if (selected_auras->bloodPact) {
+  if (selected_auras->blood_pact) {
     int improved_imp_points = settings->improved_imp;
 
     if (settings->pet_is_imp && (!settings->sacrificing_pet || talents->demonic_sacrifice == 0) &&
@@ -137,10 +159,10 @@ Player::Player(std::shared_ptr<PlayerSettings> player_settings)
   stats->stamina_modifier *= 1 + (0.03 * talents->demonic_embrace);
   // Add mp5 from Vampiric Touch (add 25% instead of 5% since we're adding it to
   // the mana per 5 seconds variable)
-  if (selected_auras->vampiricTouch) {
+  if (selected_auras->vampiric_touch) {
     stats->mp5 += settings->shadow_priest_dps * 0.25;
   }
-  if (selected_auras->powerOfTheGuardianWarlock) {
+  if (selected_auras->atiesh_warlock) {
     stats->spell_power += 33 * settings->warlock_atiesh_amount;
   }
   if (sets->twin_stars == 2) {
@@ -148,16 +170,16 @@ Player::Player(std::shared_ptr<PlayerSettings> player_settings)
   }
 
   // Enemy Armor Reduction
-  if (selected_auras->faerieFire) {
+  if (selected_auras->faerie_fire) {
     settings->enemy_armor -= 610;
   }
-  if ((selected_auras->sunderArmor && selected_auras->exposeArmor && settings->improved_expose_armor == 2) ||
-      (selected_auras->exposeArmor && !selected_auras->sunderArmor)) {
+  if ((selected_auras->sunder_armor && selected_auras->expose_armor && settings->improved_expose_armor == 2) ||
+      (selected_auras->expose_armor && !selected_auras->sunder_armor)) {
     settings->enemy_armor -= 2050 * (1 + 0.25 * settings->improved_expose_armor);
-  } else if (selected_auras->sunderArmor) {
+  } else if (selected_auras->sunder_armor) {
     settings->enemy_armor -= 520 * 5;
   }
-  if (selected_auras->curseOfRecklessness) {
+  if (selected_auras->curse_of_recklessness) {
     settings->enemy_armor -= 800;
   }
   if (selected_auras->annihilator) {
@@ -166,9 +188,9 @@ Player::Player(std::shared_ptr<PlayerSettings> player_settings)
   settings->enemy_armor = std::max(0, settings->enemy_armor);
 
   // Health & Mana
-  stats->health = (stats->health + (stats->stamina * stats->stamina_modifier) * kHealthPerStamina) *
+  stats->health = (stats->health + stats->GetStamina() * kHealthPerStamina) *
                   (1 + (0.01 * static_cast<double>(talents->fel_stamina)));
-  stats->max_mana = (stats->mana + (stats->intellect * stats->intellect_modifier) * kManaPerIntellect) *
+  stats->max_mana = (stats->mana + stats->GetIntellect() * kManaPerIntellect) *
                     (1 + (0.01 * static_cast<double>(talents->fel_intellect)));
 }
 
@@ -242,23 +264,23 @@ void Player::Initialize() {
     if (talents->amplify_curse == 1 && (settings->has_amplify_curse || settings->sim_choosing_rotation))
       auras->amplify_curse = std::make_shared<AmplifyCurseAura>(shared_from_this());
   }
-  if (selected_auras->manaTideTotem) auras->mana_tide_totem = std::make_shared<ManaTideTotemAura>(shared_from_this());
-  if (selected_auras->chippedPowerCore)
+  if (selected_auras->mana_tide_totem) auras->mana_tide_totem = std::make_shared<ManaTideTotemAura>(shared_from_this());
+  if (selected_auras->chipped_power_core)
     auras->chipped_power_core = std::make_shared<ChippedPowerCoreAura>(shared_from_this());
-  if (selected_auras->crackedPowerCore)
+  if (selected_auras->cracked_power_core)
     auras->cracked_power_core = std::make_shared<CrackedPowerCoreAura>(shared_from_this());
-  if (selected_auras->powerInfusion) auras->power_infusion = std::make_shared<PowerInfusionAura>(shared_from_this());
+  if (selected_auras->power_infusion) auras->power_infusion = std::make_shared<PowerInfusionAura>(shared_from_this());
   if (selected_auras->innervate) auras->innervate = std::make_shared<InnervateAura>(shared_from_this());
   if (selected_auras->bloodlust) auras->bloodlust = std::make_shared<BloodlustAura>(shared_from_this());
-  if (selected_auras->destructionPotion)
+  if (selected_auras->destruction_potion)
     auras->destruction_potion = std::make_shared<DestructionPotionAura>(shared_from_this());
-  if (selected_auras->flameCap) auras->flame_cap = std::make_shared<FlameCapAura>(shared_from_this());
+  if (selected_auras->flame_cap) auras->flame_cap = std::make_shared<FlameCapAura>(shared_from_this());
   if (settings->is_orc) auras->blood_fury = std::make_shared<BloodFuryAura>(shared_from_this());
-  if (selected_auras->drumsOfBattle)
+  if (selected_auras->drums_of_battle)
     auras->drums_of_battle = std::make_shared<DrumsOfBattleAura>(shared_from_this());
-  else if (selected_auras->drumsOfWar)
+  else if (selected_auras->drums_of_war)
     auras->drums_of_war = std::make_shared<DrumsOfWarAura>(shared_from_this());
-  else if (selected_auras->drumsOfRestoration)
+  else if (selected_auras->drums_of_restoration)
     auras->drums_of_restoration = std::make_shared<DrumsOfRestorationAura>(shared_from_this());
   if (items->main_hand == 31336) auras->blade_of_wizardry = std::make_shared<BladeOfWizardryAura>(shared_from_this());
   if (items->neck == 34678)
@@ -339,9 +361,9 @@ void Player::Initialize() {
     spells->chipped_power_core = std::make_shared<ChippedPowerCore>(shared_from_this(), auras->chipped_power_core);
   if (auras->cracked_power_core != NULL)
     spells->cracked_power_core = std::make_shared<CrackedPowerCore>(shared_from_this(), auras->cracked_power_core);
-  if (selected_auras->superManaPotion)
+  if (selected_auras->super_mana_potion)
     spells->super_mana_potion = std::make_shared<SuperManaPotion>(shared_from_this());
-  if (selected_auras->demonicRune) spells->demonic_rune = std::make_shared<DemonicRune>(shared_from_this());
+  if (selected_auras->demonic_rune) spells->demonic_rune = std::make_shared<DemonicRune>(shared_from_this());
   if (talents->dark_pact == 1 && (settings->has_dark_pact || settings->sim_choosing_rotation))
     spells->dark_pact = std::make_shared<DarkPact>(shared_from_this());
   if (auras->destruction_potion != NULL)
@@ -577,19 +599,19 @@ double Player::GetGcdValue(const std::shared_ptr<Spell>& spell) {
 double Player::GetSpellPower(SpellSchool school) {
   double spell_power = stats->spell_power + demonic_knowledge_spell_power;
   if (sets->spellfire == 3) {
-    spell_power += stats->intellect * stats->intellect_modifier * 0.07;
+    spell_power += stats->GetIntellect() * 0.07;
   }
-  if (school == SpellSchool::SHADOW) {
+  if (school == SpellSchool::kShadow) {
     spell_power += stats->shadow_power;
-  } else if (school == SpellSchool::FIRE) {
+  } else if (school == SpellSchool::kFire) {
     spell_power += stats->fire_power;
   }
   return spell_power;
 }
 
 double Player::GetCritChance(SpellType spell_type) {
-  double crit_chance = stats->crit_chance + ((stats->intellect * stats->intellect_modifier) * kCritChancePerIntellect);
-  if (spell_type != SpellType::DESTRUCTION) {
+  double crit_chance = stats->crit_chance + (stats->GetIntellect() * kCritChancePerIntellect);
+  if (spell_type != SpellType::kDestruction) {
     crit_chance -= talents->devastation;
   }
   return crit_chance;
@@ -597,7 +619,7 @@ double Player::GetCritChance(SpellType spell_type) {
 
 double Player::GetHitChance(SpellType spell_type) {
   double hit_chance = stats->hit_chance + stats->extra_hit_chance;
-  if (spell_type == SpellType::AFFLICTION) {
+  if (spell_type == SpellType::kAffliction) {
     hit_chance += talents->suppression * 2;
   }
   return std::min(99.0, hit_chance);
@@ -691,9 +713,9 @@ void Player::CastLifeTapOrDarkPact() {
 }
 
 double Player::GetPartialResistMultiplier(SpellSchool school) {
-  if (school == SpellSchool::SHADOW) {
+  if (school == SpellSchool::kShadow) {
     return 1.0 - ((75 * settings->enemy_shadow_resist) / (kLevel * 5)) / 100.0;
-  } else if (school == SpellSchool::FIRE) {
+  } else if (school == SpellSchool::kFire) {
     return 1.0 - ((75 * settings->enemy_fire_resist) / (kLevel * 5)) / 100.0;
   }
 
@@ -728,20 +750,6 @@ void Player::PostIterationDamageAndMana(const std::string& spell_name) {
   combat_log_breakdown.at(spell_name)->iteration_mana_gain = 0;
 }
 
-std::string Player::GetCustomStat() {
-  if (settings->simming_stamina) return "stamina";
-  if (settings->simming_intellect) return "intellect";
-  if (settings->simming_spirit) return "spirit";
-  if (settings->simming_spell_power) return "spell_power";
-  if (settings->simming_shadow_power) return "shadowPower";
-  if (settings->simming_fire_power) return "firePower";
-  if (settings->simming_crit_rating) return "critRating";
-  if (settings->simming_hit_rating) return "hitRating";
-  if (settings->simming_haste_rating) return "hasteRating";
-  if (settings->simming_mp5) return "mp5";
-  return "normal";
-}
-
 void Player::ThrowError(const std::string& error) {
   SendCombatLogEntries();
   ErrorCallback(error.c_str());
@@ -764,16 +772,14 @@ void Player::SendPlayerInfoToCombatLog() {
   combat_log_entries.push_back("---------------- Player stats ----------------");
   combat_log_entries.push_back("Health: " + TruncateTrailingZeros(std::to_string(round(stats->health))));
   combat_log_entries.push_back("Mana: " + TruncateTrailingZeros(std::to_string(round(stats->max_mana))));
-  combat_log_entries.push_back("Stamina: " +
-                               TruncateTrailingZeros(std::to_string(round(stats->stamina * stats->stamina_modifier))));
-  combat_log_entries.push_back(
-      "Intellect: " + TruncateTrailingZeros(std::to_string(round(stats->intellect * stats->intellect_modifier))));
+  combat_log_entries.push_back("Stamina: " + TruncateTrailingZeros(std::to_string(round(stats->GetStamina()))));
+  combat_log_entries.push_back("Intellect: " + TruncateTrailingZeros(std::to_string(round(stats->GetIntellect()))));
   combat_log_entries.push_back("Spell Power: " + TruncateTrailingZeros(std::to_string(round(GetSpellPower()))));
   combat_log_entries.push_back("Shadow Power: " + std::to_string(stats->shadow_power));
   combat_log_entries.push_back("Fire Power: " + std::to_string(stats->fire_power));
   combat_log_entries.push_back(
       "Crit Chance: " +
-      TruncateTrailingZeros(std::to_string(round(GetCritChance(SpellType::DESTRUCTION) * 100) / 100), 2) + "%");
+      TruncateTrailingZeros(std::to_string(round(GetCritChance(SpellType::kDestruction) * 100) / 100), 2) + "%");
   combat_log_entries.push_back(
       "Hit Chance: " +
       TruncateTrailingZeros(
@@ -791,10 +797,9 @@ void Player::SendPlayerInfoToCombatLog() {
   combat_log_entries.push_back("Spell Penetration: " + std::to_string(stats->spell_penetration));
   if (pet != NULL) {
     combat_log_entries.push_back("---------------- Pet stats ----------------");
-    combat_log_entries.push_back(
-        "Stamina: " + TruncateTrailingZeros(std::to_string(round(pet->stats->stamina * pet->stats->stamina_modifier))));
-    combat_log_entries.push_back("Intellect: " + TruncateTrailingZeros(std::to_string(
-                                                     round(pet->stats->intellect * pet->stats->intellect_modifier))));
+    combat_log_entries.push_back("Stamina: " + TruncateTrailingZeros(std::to_string(round(pet->stats->GetStamina()))));
+    combat_log_entries.push_back("Intellect: " +
+                                 TruncateTrailingZeros(std::to_string(round(pet->stats->GetIntellect()))));
     combat_log_entries.push_back(
         "Strength: " + TruncateTrailingZeros(std::to_string(
                            round((pet->base_stats->strength + pet->buff_stats->strength + pet->stats->strength) *
@@ -811,7 +816,7 @@ void Player::SendPlayerInfoToCombatLog() {
     combat_log_entries.push_back("Spell Power: " + TruncateTrailingZeros(std::to_string(pet->stats->spell_power)));
     combat_log_entries.push_back("Mana: " + TruncateTrailingZeros(std::to_string(pet->stats->max_mana)));
     combat_log_entries.push_back("MP5: " + std::to_string(pet->stats->mp5));
-    if (pet->pet_type == PetType::MELEE) {
+    if (pet->pet_type == PetType::kMelee) {
       combat_log_entries.push_back(
           "Physical Hit Chance: " +
           TruncateTrailingZeros(std::to_string(round(pet->GetMeleeHitChance() * 100) / 100.0), 2) + "%");
@@ -826,7 +831,7 @@ void Player::SendPlayerInfoToCombatLog() {
           "Attack Power Modifier: " +
           TruncateTrailingZeros(std::to_string(round(pet->stats->attack_power_modifier * 10000) / 100.0), 2) + "%");
     }
-    if (pet->pet == PetName::IMP || pet->pet == PetName::SUCCUBUS) {
+    if (pet->pet == PetName::kImp || pet->pet == PetName::kSuccubus) {
       combat_log_entries.push_back(
           "Spell Hit Chance: " +
           TruncateTrailingZeros(std::to_string(round(pet->GetSpellHitChance() * 100) / 100.0), 2) + "%");
@@ -842,7 +847,7 @@ void Player::SendPlayerInfoToCombatLog() {
   combat_log_entries.push_back("Level: " + std::to_string(settings->enemy_level));
   combat_log_entries.push_back("Shadow Resistance: " + std::to_string(settings->enemy_shadow_resist));
   combat_log_entries.push_back("Fire Resistance: " + std::to_string(settings->enemy_fire_resist));
-  if (pet != NULL && pet->pet != PetName::IMP) {
+  if (pet != NULL && pet->pet != PetName::kImp) {
     combat_log_entries.push_back("Dodge Chance: " + std::to_string(pet->enemy_dodge_chance) + "%");
     combat_log_entries.push_back("Armor: " + std::to_string(settings->enemy_armor));
     combat_log_entries.push_back(
