@@ -22,6 +22,8 @@ Pet::Pet(std::shared_ptr<Player> player) : player(player)
 
 void Pet::initialize()
 {
+    setup();
+
     if (pet == PetName::IMP)
     {
         spells->Firebolt = std::make_unique<ImpFirebolt>(shared_from_this());
@@ -323,7 +325,6 @@ void Pet::calculateStatsFromPlayer(bool announceInCombatLog)
 
 void Pet::setup()
 {
-    initialize();
     calculateStatsFromAuras();
     calculateStatsFromPlayer(false);
 }
