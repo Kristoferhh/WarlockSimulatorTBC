@@ -1,9 +1,12 @@
-#pragma once
+#ifndef WARLOCK_SIMULATOR_TBC_ENUMS
+#define WARLOCK_SIMULATOR_TBC_ENUMS
 
-enum SpellSchool { NO_SCHOOL, SHADOW, FIRE };
-enum SpellType { NO_SPELL_TYPE, AFFLICTION, DESTRUCTION };
-enum PetName { NO_NAME, IMP, VOIDWALKER, SUCCUBUS, FELHUNTER, FELGUARD };
-enum PetType { NO_PET_TYPE, MELEE, RANGED };
-enum PetMode { NO_MODE, PASSIVE, AGGRESSIVE };
-enum AttackType { NO_ATTACK_TYPE, PHYSICAL, MAGICAL };
-enum SimulationType { NORMAL, ALL_ITEMS, STAT_WEIGHTS };
+enum SpellSchool { kNoSchool, kShadow, kFire };
+enum SpellType { kNoSpellType, kAffliction, kDestruction };
+enum PetName { kNoName, kImp, kVoidwalker, kSuccubus, kFelhunter, kFelguard };
+enum PetType { kNoPetType, kMelee, kRanged };
+enum PetMode { kNoMode, kPassive, kAggressive };
+enum AttackType { kNoAttackType, kPhysical, kMagical };
+enum SimulationType { kNormal, kAllItems, kStatWeights };
+
+#endif

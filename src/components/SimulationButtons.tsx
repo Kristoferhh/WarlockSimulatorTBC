@@ -21,7 +21,7 @@ interface SimulationEnd {
   itemId: number,
   iterationAmount: number,
   totalDuration: number,
-  maxDps:  number,
+  maxDps: number,
   minDps: number,
   medianDps: number
 }
@@ -43,7 +43,7 @@ interface ISimulationProgressPercent {
 }
 
 const statWeightStatIncrease = 100;
-const statWeightValues: {[key: string]: number} = {
+const statWeightValues: { [key: string]: number } = {
   'normal': 0,
   [Stat.stamina]: statWeightStatIncrease,
   [Stat.intellect]: statWeightStatIncrease,
@@ -97,9 +97,9 @@ export function SimulationButtons() {
     let iterationAmount = parseInt(customPlayerState.settings.iterations);
 
     if (params.simulationType === SimulationType.StatWeights) {
-      // Set minimum iteration amount to 10,000 for stat weight sims
-      if (iterationAmount < 10000) {
-        iterationAmount = 10000;
+      // Set minimum iteration amount to 30,000 for stat weight sims
+      if (iterationAmount < 30000) {
+        iterationAmount = 30000;
       }
       // Double the iteration amount for stat weight sims if it's not the 'normal' sim with no added stats.
       if (params.customStat?.stat !== 'normal') {
@@ -112,7 +112,7 @@ export function SimulationButtons() {
     }
 
     let playerStats = calculatePlayerStats(customPlayerState);
-    
+
     if (params.simulationType === SimulationType.StatWeights) {
       if (params.customStat?.stat && params.customStat.stat !== 'normal') {
         const hitPercent = getPlayerHitPercent(customPlayerState);
@@ -146,7 +146,7 @@ export function SimulationButtons() {
       itemId: params.itemId,
       simulationType: params.simulationType,
       itemSubSlot: uiState.selectedItemSubSlot,
-      customStat: params.customStat?.stat ||  'normal',
+      customStat: params.customStat?.stat || 'normal',
       equippedItemSimulation: params.itemId === params.equippedItemId || (params.itemId === 0 && params.equippedItemId == null),
     }
   }
@@ -162,12 +162,12 @@ export function SimulationButtons() {
     let simulationsRunning = 0;
     let simIndex = 0;
     let dpsArray: number[] = [];
-    let dpsCount: {[key: string]: number} = {};
+    let dpsCount: { [key: string]: number } = {};
     let combatLogBreakdownArr: CombatLogBreakdownData[] = [];
     let totalManaRegenerated = 0;
     let totalDamageDone = 0;
-    let spellDamageDict: {[key: string]: number} = {};
-    let spellManaGainDict: {[key: string]: number} = {};
+    let spellDamageDict: { [key: string]: number } = {};
+    let spellManaGainDict: { [key: string]: number } = {};
     // Used to keep track of the progress % of sims for the progress bar.
     let simulationProgressPercentages: ISimulationProgressPercent[] = [];
     let simWorkerParameters: IGetWorkerParams[] = [];
@@ -201,9 +201,9 @@ export function SimulationButtons() {
 
     try {
       simWorkerParameters.forEach(simWorkerParameter => {
-        simulationProgressPercentages.push({itemId: simWorkerParameter.itemId, progressPercent: 0, customStat: simWorkerParameter.customStat?.stat});
+        simulationProgressPercentages.push({ itemId: simWorkerParameter.itemId, progressPercent: 0, customStat: simWorkerParameter.customStat?.stat });
         simulations.push(new SimWorker(
-          (dpsUpdate: {dps: number}) => {
+          (dpsUpdate: { dps: number }) => {
             dpsArray.push(dpsUpdate.dps);
             const dps: string = Math.round(dpsUpdate.dps).toString();
             dpsCount[dps] = Math.round(dpsCount[dps]) + 1 || 1;
@@ -214,11 +214,11 @@ export function SimulationButtons() {
             totalManaRegenerated += combatLogVector.manaGain;
             totalDamageDone += combatLogVector.damage;
           },
-          (errorCallback: {errorMsg: string}) => {
+          (errorCallback: { errorMsg: string }) => {
             populateCombatLog();
             errorCallbackHandler(errorCallback);
           },
-          (combatLogUpdate: {combatLogEntry: string}) => {
+          (combatLogUpdate: { combatLogEntry: string }) => {
             combatLogEntries.push(combatLogUpdate.combatLogEntry);
           },
           (combatLogBreakdown: CombatLogBreakdownData) => {
@@ -227,10 +227,10 @@ export function SimulationButtons() {
           (params: SimulationEnd) => {
             const newMedianDps = params.medianDps;
             simulationsFinished++;
-            findSimulationProgressPercentObject({ simulationProgressPercentages: simulationProgressPercentages, simType: simulationParams.type, itemId: params.itemId, stat: params.customStat  })
+            findSimulationProgressPercentObject({ simulationProgressPercentages: simulationProgressPercentages, simType: simulationParams.type, itemId: params.itemId, stat: params.customStat })
               .progressPercent = 100;
             setSavedItemDpsValue(itemSlot, params.itemId, newMedianDps, true);
-  
+
             // Callback for the currently equipped item
             if (simulationParams.type === SimulationType.Normal || (simulationParams.type === SimulationType.AllItems && params.itemId === equippedItemId) || (simulationParams.type === SimulationType.StatWeights && params.customStat === 'normal')) {
               const newMinDps = Math.round(params.minDps * 100) / 100;
@@ -243,7 +243,7 @@ export function SimulationButtons() {
             if (simulationParams.type === SimulationType.StatWeights) {
               updateStatWeightValue(params.customStat, newMedianDps, true);
             }
-  
+
             // All simulations finished
             if (simulationsFinished === simWorkerParameters.length) {
               dispatch(setSimulationInProgressStatus(false));
@@ -286,7 +286,7 @@ export function SimulationButtons() {
           (params: SimulationUpdate) => {
             let newMedianDps = params.medianDps;
             const simProgressPercent = Math.ceil((params.iteration / params.iterationAmount) * 100);
-            findSimulationProgressPercentObject({ simulationProgressPercentages: simulationProgressPercentages, simType: simulationParams.type, itemId: params.itemId, stat: params.customStat  })
+            findSimulationProgressPercentObject({ simulationProgressPercentages: simulationProgressPercentages, simType: simulationParams.type, itemId: params.itemId, stat: params.customStat })
               .progressPercent = simProgressPercent;
             setSimulationProgressPercent(Math.round(average(simulationProgressPercentages.map(e => e.progressPercent))));
             // Only update the item table dps value for every 10% of progress because otherwise the simulation slows down too much.
@@ -297,7 +297,7 @@ export function SimulationButtons() {
                 $('#item-selection-table').trigger('update');
               }
             }
-            if (simulationParams.type === SimulationType.Normal || (simulationParams.type === SimulationType.AllItems && params.itemId ===  equippedItemId) || (simulationParams.type === SimulationType.StatWeights && params.customStat === 'normal')) {
+            if (simulationParams.type === SimulationType.Normal || (simulationParams.type === SimulationType.AllItems && params.itemId === equippedItemId) || (simulationParams.type === SimulationType.StatWeights && params.customStat === 'normal')) {
               setNewMedianDps(newMedianDps.toString(), false);
             } else if (simulationParams.type === SimulationType.StatWeights) {
               // Limit the updates to once every 5 seconds
@@ -316,13 +316,13 @@ export function SimulationButtons() {
           })
         ));
       });
-  
+
       const startTime = performance.now();
       while ((simulationsRunning < maxWorkers || simulationParams.type === SimulationType.StatWeights) && simIndex < simulations.length) {
         simulations[simIndex++].start();
         simulationsRunning++;
       }
-    } catch(error) {
+    } catch (error) {
       dispatch(setSimulationInProgressStatus(false));
       throw new Error("Error when trying to run simulation. " + error);
     }
@@ -353,7 +353,7 @@ export function SimulationButtons() {
     dispatch(setCombatLogData(combatLogEntries));
   }
 
-  function errorCallbackHandler(errorCallback: {errorMsg: string}): void {
+  function errorCallbackHandler(errorCallback: { errorMsg: string }): void {
     alert("Error: " + errorCallback.errorMsg + "\nPost in #tbc-sim-report on the TBC Warlock Discord or contact Kristofer#8003 on Discord.");
   }
 
@@ -385,32 +385,32 @@ export function SimulationButtons() {
     }
   }
 
-  return(
+  return (
     <>
       {
         medianDps.length > 0 &&
-          <div id="sim-result-dps-div">
-            <p><span id="median-dps">{Math.round(Number(medianDps) * 100) / 100}</span><span> DPS</span> <span id="dps-stdev">{dpsStdev.length > 0 ? '±' + dpsStdev : ''}</span></p>
-            {
-              maxDps.length > 0 && minDps.length > 0 &&
-                <p>Min: <span id="min-dps">{minDps}</span> Max: <span id="max-dps">{maxDps}</span></p>
-            }
-          </div>
+        <div id="sim-result-dps-div">
+          <p><span id="median-dps">{Math.round(Number(medianDps) * 100) / 100}</span><span> DPS</span> <span id="dps-stdev">{dpsStdev.length > 0 ? '±' + dpsStdev : ''}</span></p>
+          {
+            maxDps.length > 0 && minDps.length > 0 &&
+            <p>Min: <span id="min-dps">{minDps}</span> Max: <span id="max-dps">{maxDps}</span></p>
+          }
+        </div>
       }
       <div
         className='warlock-btn active-btn'
         onClick={() => simulate({ itemIdsToSim: [Items.find(e => e.id === playerState.selectedItems[ItemSlotKeyToItemSlot(false, uiState.selectedItemSlot, uiState.selectedItemSubSlot)])?.id || 0], type: SimulationType.Normal })}
-        style={{background: uiState.simulationInProgress && simulationType === SimulationType.Normal ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
+        style={{ background: uiState.simulationInProgress && simulationType === SimulationType.Normal ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : '' }}
       >{uiState.simulationInProgress && simulationType === SimulationType.Normal ? `${simulationProgressPercent}%` : 'Simulate'}</div>
       <div
         className='warlock-btn active-btn'
         onClick={() => simulate({ itemIdsToSim: getItemTableItems(uiState.selectedItemSlot, uiState.selectedItemSubSlot, playerState.selectedItems, uiState.sources, uiState.hiddenItems, false, uiState.savedItemDps).map(item => item.id), type: SimulationType.AllItems })}
-        style={{background: uiState.simulationInProgress && simulationType === SimulationType.AllItems ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
+        style={{ background: uiState.simulationInProgress && simulationType === SimulationType.AllItems ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : '' }}
       >{uiState.simulationInProgress && simulationType === SimulationType.AllItems ? `${simulationProgressPercent}%` : 'Simulate All Items'}</div>
       <div
         className='warlock-btn active-btn'
         onClick={() => simulate({ type: SimulationType.StatWeights })}
-        style={{background: uiState.simulationInProgress && simulationType === SimulationType.StatWeights ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : ''}}
+        style={{ background: uiState.simulationInProgress && simulationType === SimulationType.StatWeights ? `linear-gradient(to right, #9482C9 ${simulationProgressPercent}%, transparent ${simulationProgressPercent}%)` : '' }}
       >{uiState.simulationInProgress && simulationType === SimulationType.StatWeights ? `${simulationProgressPercent}%` : 'Stat Weights'}</div>
       {
         <div className={'warlock-btn' + (combatLogButtonIsDisabled() ? ' disabled-btn' : ' active-btn')} onClick={() => !combatLogButtonIsDisabled() && dispatch(setCombatLogVisibility(!uiState.combatLog.visible))}>Combat Log</div>
