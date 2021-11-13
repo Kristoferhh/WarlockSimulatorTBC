@@ -1,7 +1,7 @@
 #ifndef WARLOCK_SIMULATOR_TBC_TRINKET
 #define WARLOCK_SIMULATOR_TBC_TRINKET
 
-#include "player.h"
+struct Player;
 #include "aura_stats.h"
 #include <iostream>
 

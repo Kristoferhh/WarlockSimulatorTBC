@@ -1,7 +1,7 @@
 #ifndef WARLOCK_SIMULATOR_TBC_DAMAGE_OVER_TIME
 #define WARLOCK_SIMULATOR_TBC_DAMAGE_OVER_TIME
 
-#include "player.h"
+struct Player;
 #include <iostream>
 #include "enums.h"
 #include "aura.h"

@@ -1,8 +1,8 @@
 #ifndef WARLOCK_SIMULATOR_TBC_PET_AURA
 #define WARLOCK_SIMULATOR_TBC_PET_AURA
 
-#include "pet.h"
-#include "player.h"
+struct Pet;
+struct Player;
 #include <iostream>
 
 struct PetAura

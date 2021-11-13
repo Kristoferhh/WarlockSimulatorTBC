@@ -1,8 +1,8 @@
 #ifndef WARLOCK_SIMULATOR_TBC_AURA
 #define WARLOCK_SIMULATOR_TBC_AURA
 
+struct Player;
 #include <iostream>
-#include "player.h"
 #include "aura_stats.h"
 
 struct Aura

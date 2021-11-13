@@ -1,6 +1,7 @@
 #ifndef WARLOCK_SIMULATOR_TBC_PET
+#define WARLOCK_SIMULATOR_TBC_PET
 
-#include "player.h"
+struct Player;
 #include "enums.h"
 #include "pet_stats.h"
 #include "pet_spells.h"
@@ -63,3 +64,5 @@ struct Felguard : public Pet
 {
     Felguard(std::shared_ptr<Player> player);
 };
+
+#endif

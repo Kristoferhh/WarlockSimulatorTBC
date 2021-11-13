@@ -1,7 +1,7 @@
 #ifndef WARLOCK_SIMULATOR_TBC_PET_STATS
 #define WARLOCK_SIMULATOR_TBC_PET_STATS
 
-#include "player.h"
+struct Player;
 #include <memory>
 
 struct PetStats

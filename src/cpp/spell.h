@@ -1,7 +1,7 @@
 #ifndef WARLOCK_SIMULATOR_TBC_SPELL
 #define WARLOCK_SIMULATOR_TBC_SPELL
 
-#include "player.h"
+struct Player;
 #include <string>
 #include <cmath>
 #include "enums.h"

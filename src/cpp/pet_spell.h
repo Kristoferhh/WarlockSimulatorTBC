@@ -1,7 +1,7 @@
 #ifndef WARLOCK_SIMULATOR_TBC_PET_SPELL
 #define WARLOCK_SIMULATOR_TBC_PET_SPELL
 
-#include "pet.h"
+struct Pet;
 #include <iostream>
 #include "enums.h"
 
