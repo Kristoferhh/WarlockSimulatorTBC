@@ -55,9 +55,9 @@ export default function StatWeights() {
               { name: TalentTree.Demonology, points: getAllocatedTalentsPointsInTree(playerState.talents, Talents.find(e => e.name === TalentTree.Demonology)!) },
               { name: TalentTree.Destruction, points: getAllocatedTalentsPointsInTree(playerState.talents, Talents.find(e => e.name === TalentTree.Destruction)!) }
             ];
-
             // Gets the name of the talent tree with the most amount of points allocated by the player.
             const playerSpec = talentTreePoints.find(e => e.points === Math.max.apply(Math, talentTreePoints.map(a => a.points)))?.name;
+
             navigator.clipboard.writeText(
               `( Pawn: v1: "${uiState.selectedProfile || 'Warlock'}": Class=Warlock, Spec=${playerSpec}` +
               `, Stamina=${uiState.statWeights.statValues.stamina}` +
