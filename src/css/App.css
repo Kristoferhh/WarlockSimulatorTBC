@@ -310,22 +310,6 @@ img {
 	text-align: center;
 }
 
-.breakdown-table-spell-icon {
-	width: 20px;
-	height: 20px;
-	margin-right: 5px;
-	user-select: none;
-}
-
-.breakdown-table-spell-name {
-	text-decoration: none;
-	color: white;
-}
-
-.breakdown-table-name-cell {
-	padding: 4px;
-}
-
 #breakdown-tables-container {
 	display: flex;
 	justify-content: center;
@@ -357,8 +341,24 @@ img {
 	border-collapse: collapse;
 }
 
+.breakdown-table td:first-child {
+	padding: 4px;
+}
+
 .breakdown-table tr {
 	line-height: 20px;
+}
+
+.breakdown-table-spell-icon {
+	width: 20px;
+	height: 20px;
+	margin-right: 5px;
+	user-select: none;
+}
+
+.breakdown-table-spell-name {
+	text-decoration: none;
+	color: white;
 }
 
 #currently-equipped-items {
