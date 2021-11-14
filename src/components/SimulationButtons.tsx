@@ -119,14 +119,18 @@ export function SimulationButtons() {
 
     if (params.simulationType === SimulationType.StatWeights) {
       if (params.customStat?.stat && params.customStat.stat !== 'normal') {
-        const hitPercent = getPlayerHitPercent(customPlayerState);
         let statValue = params.customStat.value;
-        // If the user isn't hitcapped but adding the extra hit rating would overcap them
-        // then instead remove hit rating instead of adding it so it doesn't get wasted.
-        if (params.customStat.stat === Stat.hitRating &&
-          hitPercent < 16 &&
-          hitPercent + statWeightValues[Stat.hitRating] / StatConstant.hitRatingPerPercent > 16) {
-          statValue *= -1;
+
+        if (params.customStat.stat === Stat.hitRating) {
+          const hitPercent = getPlayerHitPercent(customPlayerState);
+          // If the user isn't hitcapped but adding the extra hit rating would overcap them
+          // then instead remove hit rating instead of adding it so it doesn't get wasted.
+          // Using 15.99 instead of 16 because using 16 was causing issues when a player had 
+          // e.g. 15.995 hit percent which would show as 16% in the sidebar but not technically be hit capped.
+          if (hitPercent <= 15.99 &&
+            hitPercent + statWeightValues[Stat.hitRating] / StatConstant.hitRatingPerPercent > StatConstant.hitPercentCap) {
+            statValue *= -1;
+          }
         }
         playerStats[params.customStat.stat as Stat]! += statValue;
       }

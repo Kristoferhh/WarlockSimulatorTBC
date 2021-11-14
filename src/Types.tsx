@@ -857,6 +857,7 @@ export const StatConstant = {
   hasteRatingPerPercent: 15.77,
   critPercentPerIntellect: 1 / 81.95,
   baseCritChancePercent: 1.701,
+  hitPercentCap: 16,
 }
 
 export enum AuraName {
