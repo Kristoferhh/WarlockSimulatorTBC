@@ -26,13 +26,15 @@ export default function GemSelection() {
     // The first element is the socket color (not gem color) and the second element is the gem id.
     let currentItemSocketArray = selectedGemsInItemSlot[uiState.gemSelectionTable.itemId];
     if (currentItemSocketArray == null) {
-      const itemSocketAmount = Items.find(i => i.id === parseInt(uiState.gemSelectionTable.itemId))?.sockets?.length;
+      const itemSocketAmount = Items
+        .find(i => i.id === parseInt(uiState.gemSelectionTable.itemId))?.sockets?.length;
       currentItemSocketArray = Array(itemSocketAmount).fill(['', 0]);
     } else {
       currentItemSocketArray = JSON.parse(JSON.stringify(currentItemSocketArray));
 
       // Return if the clicked gem is the same as the already equipped gem
-      if (currentItemSocketArray[uiState.gemSelectionTable.socketNumber] && currentItemSocketArray[uiState.gemSelectionTable.socketNumber][1] === gem.id) {
+      if (currentItemSocketArray[uiState.gemSelectionTable.socketNumber] &&
+        currentItemSocketArray[uiState.gemSelectionTable.socketNumber][1] === gem.id) {
         return;
       }
     }
@@ -44,12 +46,12 @@ export default function GemSelection() {
     dispatch(setGemsStats(getGemsStats(selectedItemsState, newSelectedGems)));
   }
 
-  return(
+  return (
     <table
       id="gem-selection-table"
       cellSpacing={0}
       data-color='none'
-      style={{display: uiState.gemSelectionTable.visible ? '' : 'none'}}
+      style={{ display: uiState.gemSelectionTable.visible ? '' : 'none' }}
       onClick={(e) => e.stopPropagation()}
     >
       <tbody>
@@ -58,7 +60,7 @@ export default function GemSelection() {
           <td
             id='show-hidden-gems-button'
             onClick={(e) => setShowingHiddenGems(!showingHiddenGems)}
-            style={{display: uiState.gemPreferences.hidden.length === 0 ? 'none' : ''}}
+            style={{ display: uiState.gemPreferences.hidden.length === 0 ? 'none' : '' }}
           >
             {(showingHiddenGems ? 'Hide' : 'Show') + ' Hidden Gems'}
           </td>
@@ -67,22 +69,39 @@ export default function GemSelection() {
           // Sort gems by favorited gems first
           Gems
             .filter(gem => canGemColorBeInsertedIntoSocketColor(uiState.gemSelectionTable.socketColor, gem.color))
-            .sort(function(a, b) { return Number(uiState.gemPreferences.favorites.includes(b.id)) - Number(uiState.gemPreferences.favorites.includes(a.id)); })
+            .sort(function (a, b) {
+              return Number(uiState.gemPreferences.favorites.includes(b.id)) -
+                Number(uiState.gemPreferences.favorites.includes(a.id));
+            })
             .map(gem =>
               <tr
                 key={gem.id}
                 className='gem-row'
                 data-hidden={false}
-                style={{display: uiState.gemPreferences.hidden.includes(gem.id) && !showingHiddenGems ? 'none' : ''}}
+                style={{
+                  display: uiState.gemPreferences.hidden.includes(gem.id) && !showingHiddenGems ? 'none' : ''
+                }}
               >
                 <td
                   className='gem-info gem-favorite-star'
-                  title={uiState.gemPreferences.favorites.includes(gem.id) ? 'Remove gem from favorites' : 'Add gem to favorites'}
+                  title={uiState.gemPreferences.favorites.includes(gem.id) ?
+                    'Remove gem from favorites' : 'Add gem to favorites'}
                   data-favorited={uiState.gemPreferences.favorites.includes(gem.id)}
                   onClick={(e) => dispatch(favoriteGem(gem.id))}
                 >★</td>
-                <td className='gem-info gem-name' onClick={(e) => { gemClickHandler(gem); dispatch(setGemSelectionTable(InitialGemSelectionTableValue)); e.preventDefault(); }}>
-                  <img src={`${process.env.PUBLIC_URL}/img/${gem.iconName}.jpg`} alt={t(gem.name)} width={20} height={20} />
+                <td
+                  className='gem-info gem-name'
+                  onClick={(e) => {
+                    gemClickHandler(gem); dispatch(setGemSelectionTable(InitialGemSelectionTableValue));
+                    e.preventDefault();
+                  }}
+                >
+                  <img
+                    src={`${process.env.PUBLIC_URL}/img/${gem.iconName}.jpg`}
+                    alt={t(gem.name)}
+                    width={20}
+                    height={20}
+                  />
                   <a href={`${getBaseWowheadUrl(i18n.language)}/item=${gem.id}`}>{t(gem.name)}</a>
                 </td>
                 <td
@@ -92,7 +111,7 @@ export default function GemSelection() {
                   onClick={(e) => dispatch(hideGem(gem.id))}
                 >❌</td>
               </tr>
-          )
+            )
         }
       </tbody>
     </table>

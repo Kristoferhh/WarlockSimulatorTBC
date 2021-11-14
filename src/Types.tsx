@@ -117,22 +117,38 @@ export enum PetName {
 }
 
 export interface Spell {
+  group?: RotationGroup,
   name: string,
   varName: string,
   iconName: string,
   id: number,
 }
 
-export interface RotationGroup {
-  header: string,
-  varName: string,
-  spells: Spell[]
+export enum RotationGroup {
+  Dots = 'Dots',
+  Filler = 'Filler',
+  Curse = 'Curse',
+  Finishers = 'Finishers',
+  Other = 'Other',
 }
+
+export interface IRotationGroup {
+  header: RotationGroup,
+  varName: string
+}
+
+export const rotationGroups: IRotationGroup[] = [
+  { header: RotationGroup.Dots, varName: 'dot' },
+  { header: RotationGroup.Filler, varName: 'filler' },
+  { header: RotationGroup.Curse, varName: 'curse' },
+  { header: RotationGroup.Finishers, varName: 'finisher' },
+  { header: RotationGroup.Other, varName: 'other' },
+]
 
 export interface IAuraGroup {
   heading: AuraGroup,
   varName: string,
-  type: 'spell'|'item'
+  type: 'spell' | 'item'
 }
 
 export enum AuraGroup {
@@ -266,7 +282,7 @@ export type Settings = {
   [key in Setting]: string
 }
 
-export const InitialSettings: {[key in Setting]: string} = {
+export const InitialSettings: { [key in Setting]: string } = {
   race: Race.Gnome,
   improvedDivineSpirit: '0',
   improvedCurseOfTheElements: '0',
@@ -291,7 +307,7 @@ export const InitialSettings: {[key in Setting]: string} = {
   exposeWeaknessUptime: '90',
   lashOfPainUsage: 'noISB',
   shattrathFaction: 'Aldor',
-  shattrathFactionReputation: 'yes',  
+  shattrathFactionReputation: 'yes',
   'automatically-open-sim-details': 'no',
   customIsbUptime: 'yes',
   customIsbUptimeValue: '70',
@@ -447,7 +463,7 @@ export interface PlayerState {
   rotation: RotationStruct,
   stats: PlayerStats,
   settings: Settings,
-  profiles: {[key: string]: Profile},
+  profiles: { [key: string]: Profile },
   sets: SetsStruct,
 }
 
@@ -510,7 +526,7 @@ export interface UiState {
   savedItemDps: SavedItemDps,
   combatLog: { visible: boolean, data: string[] },
   combatLogBreakdown: CombatLogBreakdown,
-  histogram: { visible: boolean, data?: {[key: string]: number} },
+  histogram: { visible: boolean, data?: { [key: string]: number } },
   simulationInProgress: boolean,
   statWeights: {
     visible: boolean,
@@ -536,8 +552,8 @@ export type CombatLogBreakdown = {
   totalManaGained: number,
   totalSimulationFightLength: number,
   totalIterationAmount: number,
-  spellDamageDict: {[key: string]: number},
-  spellManaGainDict: {[key: string]: number},
+  spellDamageDict: { [key: string]: number },
+  spellManaGainDict: { [key: string]: number },
   data: CombatLogBreakdownData[],
 }
 
@@ -606,7 +622,7 @@ export enum GemColor {
   Purple = 'purple'
 }
 
-export const Languages: {iso: string, name: string, wowheadPrefix: string}[] = [
+export const Languages: { iso: string, name: string, wowheadPrefix: string }[] = [
   { iso: 'en', name: 'English', wowheadPrefix: '' },
   { iso: 'zh', name: '中文', wowheadPrefix: 'cn.' },
 ]
@@ -759,10 +775,10 @@ export enum ItemSource {
 }
 
 export interface Source {
-  phase: {[key in Phase]: boolean}
+  phase: { [key in Phase]: boolean }
 }
 
-export type Phase = 0|1|2|3|4|5;
+export type Phase = 0 | 1 | 2 | 3 | 4 | 5;
 
 export type SubSlotValue = '' | '1' | '2';
 

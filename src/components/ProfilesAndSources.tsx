@@ -8,7 +8,7 @@ import { RootState } from "../redux/Store";
 import { setImportExportWindowVisibility, setSelectedProfile, togglePhase } from "../redux/UiSlice";
 import { Phase, Profile, Race } from "../Types";
 
-const phases: {title: string, phase: Phase}[] = [
+const phases: { title: string, phase: Phase }[] = [
   { title: 'Classic', phase: 0 },
   { title: 'P1', phase: 1 },
   { title: 'P2', phase: 2 },
@@ -72,7 +72,8 @@ export default function ProfilesAndSources() {
   }
 
   function renameProfileHandler() {
-    const newName = prompt(`Enter the new name for profile '${selectedProfileState}'`)?.replaceAll("'", "");
+    const newName =
+      prompt(`Enter the new name for profile '${selectedProfileState}'`)?.replaceAll("'", "");
 
     if (newName != null && newName.length > 0 && newName !== selectedProfileState) {
       dispatch(renameProfile({
@@ -87,7 +88,13 @@ export default function ProfilesAndSources() {
     <div id="profiles-and-sources">
       <fieldset id="profile-fieldset">
         <legend>{t('Profile Options')}</legend>
-        <input placeholder={t('E.g. "P3 Shadow BiS"')} type="text" value={profileName} onChange={(e) => setProfileName(e.target.value)} name="profileName" />
+        <input
+          placeholder={t('E.g. "P3 Shadow BiS"')}
+          type="text"
+          value={profileName}
+          onChange={(e) => setProfileName(e.target.value)}
+          name="profileName"
+        />
         <button
           className='btn btn-primary btn-sm'
           id="save-new-profile-button"
@@ -97,29 +104,44 @@ export default function ProfilesAndSources() {
         <div id="update-profile-div">
           <button
             className='btn btn-primary btn-sm'
-            style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }}
+            style={{
+              display: playerStore.profiles[selectedProfileState] == null ? 'none' : ''
+            }}
             id="save-profile-button"
             onClick={(e) => callSetProfile(false)}
           >{t('Save')}</button>
           {' '}
           <button
             className='btn btn-primary btn-sm'
-            style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }}
+            style={{
+              display: playerStore.profiles[selectedProfileState] == null ? 'none' : ''
+            }}
             id="delete-profile-button"
             onClick={(e) => deleteProfileHandler()}
           >{t('Delete')}</button>
           {' '}
           <button
             className='btn btn-primary btn-sm'
-            style={{ display: playerStore.profiles[selectedProfileState] == null ? 'none' : '' }}
+            style={{
+              display: playerStore.profiles[selectedProfileState] == null ? 'none' : ''
+            }}
             id="rename-profile-button"
             onClick={(e) => renameProfileHandler()}
           >{t('Rename')}</button>
           {' '}
-          <button id="import-export-button" className='btn btn-primary btn-sm' onClick={(e) => dispatch(setImportExportWindowVisibility(true))}>{t('Import/Export')}</button>
+          <button
+            id="import-export-button"
+            className='btn btn-primary btn-sm'
+            onClick={(e) => dispatch(setImportExportWindowVisibility(true))}
+          >{t('Import/Export')}</button>
         </div>
       </fieldset>
-      <fieldset id="saved-profiles" style={{ display: Object.keys(playerStore.profiles).length === 0 ? 'none' : '' }}>
+      <fieldset
+        id="saved-profiles"
+        style={{
+          display: Object.keys(playerStore.profiles).length === 0 ? 'none' : ''
+        }}
+      >
         <legend>{t('Saved Profiles')}</legend>
         <ul>
           {

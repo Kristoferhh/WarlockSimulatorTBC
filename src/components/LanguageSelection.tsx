@@ -7,7 +7,8 @@ import { Languages } from "../Types";
 
 export default function LanguageSelection() {
   const [open, setOpen] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState(Languages.find(e => e.iso === i18n.language)?.name);
+  const [currentLanguage, setCurrentLanguage] =
+    useState(Languages.find(e => e.iso === i18n.language)?.name);
   const anchorRef = useRef<HTMLButtonElement>(null);
 
   const handleToggle = () => {
@@ -61,7 +62,7 @@ export default function LanguageSelection() {
           aria-expanded={open ? 'true' : undefined}
           aria-haspopup="true"
           onClick={handleToggle}
-          style={{color: 'white', marginLeft: '10px', border: '1px solid white'}}
+          style={{ color: 'white', marginLeft: '10px', border: '1px solid white' }}
         >
           {currentLanguage}
         </Button>
@@ -91,7 +92,11 @@ export default function LanguageSelection() {
                   >
                     {
                       Languages.map(language =>
-                        <MenuItem key={nanoid()} className='language-item' onClick={() => languageClickHandler(language.iso)}>{language.name}</MenuItem>
+                        <MenuItem
+                          key={nanoid()}
+                          className='language-item'
+                          onClick={() => languageClickHandler(language.iso)}
+                        >{language.name}</MenuItem>
                       )
                     }
                   </MenuList>

@@ -10,14 +10,18 @@ export default function StatsDisplay() {
   const { t } = useTranslation();
 
   function getStamina(): number {
-    let stamina = Object.values(playerState.stats).map(obj => obj.stamina || 0).reduce((a, b) => a + b);
-    let staminaModifier = Object.values(playerState.stats).map(obj => obj.staminaModifier || 1).reduce((a, b) => a * b);
+    let stamina = Object.values(playerState.stats)
+      .map(obj => obj.stamina || 0).reduce((a, b) => a + b);
+    let staminaModifier = Object.values(playerState.stats)
+      .map(obj => obj.staminaModifier || 1).reduce((a, b) => a * b);
 
     if (playerState.auras.bloodPact) {
       let bloodPactModifier = parseInt(playerState.settings.improvedImpSetting) || 0;
 
-      // If the player is using an imp, the imp is active, and the player has more points in the Improved Imp talent than the improved imp setting then use that instead
-      if (isPetActive(playerState.talents, playerState.settings, false, false) && playerState.settings.petChoice === PetName.IMP) {
+      // If the player is using an imp, the imp is active, and the player 
+      // has more points in the Improved Imp talent than the improved imp setting then use that instead
+      if (isPetActive(playerState.talents, playerState.settings, false, false) &&
+        playerState.settings.petChoice === PetName.IMP) {
         bloodPactModifier = Math.max(bloodPactModifier, playerState.talents.improvedImp);
       }
 
@@ -30,30 +34,39 @@ export default function StatsDisplay() {
   }
 
   function getIntellect(): number {
-    return Object.values(playerState.stats).map(obj => obj.intellect || 0).reduce((a, b) => a + b)
-      * Object.values(playerState.stats).map(obj => obj.intellectModifier || 1).reduce((a, b) => a * b);
+    return Object.values(playerState.stats)
+      .map(obj => obj.intellect || 0).reduce((a, b) => a + b)
+      * Object.values(playerState.stats)
+        .map(obj => obj.intellectModifier || 1).reduce((a, b) => a * b);
   }
 
   function getSpirit(): number {
-    let spiritModifier = Object.values(playerState.stats).map(obj => obj.spiritModifier || 1).reduce((a, b) => a * b);
+    let spiritModifier = Object.values(playerState.stats)
+      .map(obj => obj.spiritModifier || 1).reduce((a, b) => a * b);
 
     if (playerState.talents.demonicEmbrace > 0) {
       spiritModifier *= 1 - 0.01 * playerState.talents.demonicEmbrace;
     }
 
-    return Object.values(playerState.stats).map(obj => obj.spirit || 0).reduce((a, b) => a + b) * spiritModifier;
+    return Object.values(playerState.stats)
+      .map(obj => obj.spirit || 0).reduce((a, b) => a + b) * spiritModifier;
   }
 
   function getHealth(): number {
-    return (playerState.stats.base.health! + getStamina() * StatConstant.healthPerStamina) * (1 + (0.01 * playerState.talents.felStamina || 0));
+    return (playerState.stats.base.health! +
+      getStamina() * StatConstant.healthPerStamina) *
+      (1 + (0.01 * playerState.talents.felStamina || 0));
   }
 
   function getMana(): number {
-    return (playerState.stats.base.mana! + getIntellect() * StatConstant.manaPerIntellect) * (1 + (0.01 * playerState.talents.felIntellect || 0));
+    return (playerState.stats.base.mana! +
+      getIntellect() * StatConstant.manaPerIntellect) *
+      (1 + (0.01 * playerState.talents.felIntellect || 0));
   }
 
   function getSpellPower(): number {
-    let spellPower = Object.values(playerState.stats).map(obj => obj.spellPower || 0).reduce((a, b) => a + b);
+    let spellPower = Object.values(playerState.stats)
+      .map(obj => obj.spellPower || 0).reduce((a, b) => a + b);
 
     if (playerState.auras.felArmor) {
       spellPower += 100 * (0.1 * playerState.talents.demonicAegis);
@@ -62,12 +75,14 @@ export default function StatsDisplay() {
       spellPower += 33 * parseInt(playerState.settings.warlockAtieshAmount);
     }
     if (playerState.auras.prayerOfSpirit) {
-      spellPower += getSpirit() * 0.05 * parseInt(playerState.settings.improvedDivineSpirit);
+      spellPower += getSpirit() * 0.05 *
+        parseInt(playerState.settings.improvedDivineSpirit);
     }
     if (playerState.sets[ItemSet.Spellfire] === 3) {
       spellPower += getIntellect() * 0.07;
     }
-    if (playerState.auras.wrathOfAirTotem && playerState.settings.improvedWrathOfAirTotem === 'yes') {
+    if (playerState.auras.wrathOfAirTotem &&
+      playerState.settings.improvedWrathOfAirTotem === 'yes') {
       spellPower += 20;
     }
 
@@ -75,24 +90,28 @@ export default function StatsDisplay() {
   }
 
   function getShadowPower(): string {
-    const shadowPower = Object.values(playerState.stats).map(obj => obj.shadowPower || 0).reduce((a, b) => a + b).toString();
+    const shadowPower = Object.values(playerState.stats)
+      .map(obj => obj.shadowPower || 0).reduce((a, b) => a + b).toString();
 
     return `${shadowPower} (${parseInt(shadowPower) + Math.round(getSpellPower())})`;
   }
 
   function getFirePower(): string {
-    const firePower = Object.values(playerState.stats).map(obj => obj.firePower || 0).reduce((a, b) => a + b).toString();
+    const firePower = Object.values(playerState.stats)
+      .map(obj => obj.firePower || 0).reduce((a, b) => a + b).toString();
 
     return `${firePower} (${parseInt(firePower) + Math.round(getSpellPower())})`;
   }
 
   function getCrit(): string {
-    let critRating = Math.round(Object.values(playerState.stats).map(obj => obj.critRating || 0).reduce((a, b) => a + b));
+    let critRating = Math.round(Object.values(playerState.stats)
+      .map(obj => obj.critRating || 0).reduce((a, b) => a + b));
     if (playerState.auras.powerOfTheGuardianMage) {
       critRating += 28 * parseInt(playerState.settings.mageAtieshAmount);
     }
 
-    let critPercent = Math.round((critRating / StatConstant.critRatingPerPercent + StatConstant.baseCritChancePercent) * 100) / 100;
+    let critPercent =
+      Math.round((critRating / StatConstant.critRatingPerPercent + StatConstant.baseCritChancePercent) * 100) / 100;
     critPercent += playerState.talents.devastation || 0;
     critPercent += playerState.talents.backlash || 0;
     critPercent += playerState.talents.demonicTactics || 0;
@@ -113,7 +132,8 @@ export default function StatsDisplay() {
   }
 
   function getHaste(): string {
-    let hasteRating = Object.values(playerState.stats).map(obj => obj.hasteRating || 0).reduce((a, b) => a + b);
+    let hasteRating = Object.values(playerState.stats)
+      .map(obj => obj.hasteRating || 0).reduce((a, b) => a + b);
     let hastePercent = Math.round((hasteRating / StatConstant.hasteRatingPerPercent) * 100) / 100;
 
     return `${hasteRating} (${hastePercent.toFixed(2)}%)`;
@@ -130,10 +150,10 @@ export default function StatsDisplay() {
     if (playerState.talents.demonicSacrifice === 0 || playerState.settings.sacrificePet === 'no') {
       if (playerState.talents.masterDemonologist > 0) {
         switch (playerState.settings.petChoice) {
-          case '2': // Succubus
+          case PetName.SUCCUBUS:
             modifier *= (1 + (0.02 * playerState.talents.masterDemonologist));
             break;
-          case '4': // Felguard
+          case PetName.FELGUARD:
             modifier *= (1 + (0.01 * playerState.talents.masterDemonologist));
             break;
         }
@@ -152,15 +172,16 @@ export default function StatsDisplay() {
   }
 
   function getShadowModifier(): string {
-    let modifier = Object.values(playerState.stats).map(obj => obj.shadowModifier || 1).reduce((a, b) => a * b)
+    let modifier = Object.values(playerState.stats)
+      .map(obj => obj.shadowModifier || 1).reduce((a, b) => a * b)
       * getShadowAndFireModifier() * (1 + (0.02 * playerState.talents.shadowMastery || 0));
 
     if (playerState.talents.demonicSacrifice === 1 && playerState.settings.sacrificePet === 'yes') {
       switch (playerState.settings.petChoice) {
-        case '2': // Succubus
+        case PetName.SUCCUBUS:
           modifier *= 1.15;
           break;
-        case '4': // Felguard
+        case PetName.FELGUARD:
           modifier *= 1.1;
           break;
       }
@@ -170,9 +191,12 @@ export default function StatsDisplay() {
   }
 
   function getFireModifier(): string {
-    let modifier = Object.values(playerState.stats).map(obj => obj.fireModifier || 1).reduce((a, b) => a * b) * getShadowAndFireModifier();
+    let modifier = Object.values(playerState.stats)
+      .map(obj => obj.fireModifier || 1).reduce((a, b) => a * b) * getShadowAndFireModifier();
 
-    if (playerState.talents.demonicSacrifice === 1 && playerState.settings.sacrificePet === 'yes' && playerState.settings.petChoice === PetName.IMP) {
+    if (playerState.talents.demonicSacrifice === 1 &&
+      playerState.settings.sacrificePet === 'yes' &&
+      playerState.settings.petChoice === PetName.IMP) {
       modifier *= 1.15;
     }
 
@@ -182,7 +206,8 @@ export default function StatsDisplay() {
   }
 
   function getMp5(): number {
-    let mp5 = Object.values(playerState.stats).map(obj => obj.mp5 || 0).reduce((a, b) => a + b);
+    let mp5 = Object.values(playerState.stats)
+      .map(obj => obj.mp5 || 0).reduce((a, b) => a + b);
 
     if (playerState.auras.vampiricTouch) {
       mp5 += parseInt(playerState.settings.shadowPriestDps) * 0.25;
@@ -195,7 +220,11 @@ export default function StatsDisplay() {
     let armor = parseInt(playerState.settings.enemyArmor);
 
     if (playerState.auras.faerieFire) armor -= 610;
-    if ((playerState.auras.sunderArmor && playerState.auras.exposeArmor && playerState.settings.improvedExposeArmor === '2') || (playerState.auras.exposeArmor && !playerState.auras.sunderArmor)) armor -= 2050 * (1 + 0.25 * parseInt(playerState.settings.improvedExposeArmor));
+    if ((playerState.auras.sunderArmor &&
+      playerState.auras.exposeArmor && playerState.settings.improvedExposeArmor === '2') ||
+      (playerState.auras.exposeArmor && !playerState.auras.sunderArmor)) {
+      armor -= 2050 * (1 + 0.25 * parseInt(playerState.settings.improvedExposeArmor));
+    }
     else if (playerState.auras.sunderArmor) armor -= 520 * 5;
     if (playerState.auras.curseOfRecklessness) armor -= 800;
     if (playerState.auras.annihilator) armor -= 600;
@@ -203,7 +232,7 @@ export default function StatsDisplay() {
     return Math.max(0, armor);
   }
 
-  const stats: {name: string, value: () => string, condition?: () => boolean}[] = [
+  const stats: { name: string, value: () => string, condition?: () => boolean }[] = [
     { name: 'Health', value: () => Math.round(getHealth()).toString() },
     { name: 'Mana', value: () => Math.round(getMana()).toString() },
     { name: 'Stamina', value: () => Math.round(getStamina()).toString() },
@@ -218,18 +247,23 @@ export default function StatsDisplay() {
     { name: 'Shadow Dmg %', value: () => getShadowModifier() },
     { name: 'Fire Dmg %', value: () => getFireModifier() },
     { name: 'MP5', value: () => Math.round(getMp5()).toString() },
-    { name: 'Enemy Armor', value: () => Math.round(getEnemyArmor()).toString(), condition: () => isPetActive(playerState.talents, playerState.settings, true, true) }
+    {
+      name: 'Enemy Armor', value: () => Math.round(getEnemyArmor()).toString(),
+      condition: () => isPetActive(playerState.talents, playerState.settings, true, true)
+    }
   ]
 
   return (
     <ul className="character-stats">
       {
-        stats.filter(stat => stat.condition === undefined || stat.condition() === true).map(stat =>
-          <li key={nanoid()}>
-            <p className='character-stat'>{t(stat.name)}</p>
-            <p className='character-stat-val'>{stat.value()}</p>
-          </li>
-        )
+        stats
+          .filter(stat => stat.condition === undefined || stat.condition() === true)
+          .map(stat =>
+            <li key={nanoid()}>
+              <p className='character-stat'>{t(stat.name)}</p>
+              <p className='character-stat-val'>{stat.value()}</p>
+            </li>
+          )
       }
     </ul>
   )

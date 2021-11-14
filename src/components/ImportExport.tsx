@@ -64,14 +64,34 @@ export default function ImportExport() {
     }
   }
 
-  return(
-    <div id="import-export-window" className="close-button-target" style={{ display: windowIsVisible ? '' : 'none' }}>
-      <textarea id='import-export-textarea' value={contentString} onChange={(e) => setContentString(e.target.value)}></textarea>
-      <button className='btn btn-primary btn-sm' id="import-button" onClick={(e) => importProfile()}>Import</button>
+  return (
+    <div
+      id="import-export-window"
+      className="close-button-target"
+      style={{ display: windowIsVisible ? '' : 'none' }}
+    >
+      <textarea
+        id='import-export-textarea'
+        value={contentString}
+        onChange={(e) => setContentString(e.target.value)}
+      ></textarea>
+      <button
+        className='btn btn-primary btn-sm'
+        id="import-button"
+        onClick={(e) => importProfile()}
+      >Import</button>
       {' '}
-      <button className='btn btn-primary btn-sm' id="export-button" onClick={(e) => exportProfile()}>Export</button>
+      <button
+        className='btn btn-primary btn-sm'
+        id="export-button"
+        onClick={(e) => exportProfile()}
+      >Export</button>
       {' '}
-      <button className='btn btn-primary btn-sm' id="export-close-button" onClick={(e) => { dispatch(setImportExportWindowVisibility(false)); setContentString(''); }}>Close</button>
+      <button
+        className='btn btn-primary btn-sm'
+        id="export-close-button"
+        onClick={(e) => { dispatch(setImportExportWindowVisibility(false)); setContentString(''); }}
+      >Close</button>
     </div>
   )
 }

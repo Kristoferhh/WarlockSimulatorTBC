@@ -24,13 +24,17 @@ export default function Sidebar() {
   return (
     <div id="sidebar">
       <section id="character-section">
-        <p id="character-race"><span id="race">{t(Races.find(e => e.varName === playerState.settings.race)!.name)}</span> {t('Warlock')}</p>
+        <p id="character-race">
+          <span id="race">
+            {t(Races.find(e => e.varName === playerState.settings.race)!.name)}
+          </span> {t('Warlock')}
+        </p>
         <p id="character-level">{t('Level')} <span>70</span></p>
         <StatsDisplay />
         <ul id="sidebar-sets">
           {
             Object.entries(playerState.sets).find(set => setHasActiveBonus(set)) &&
-              <li><h3>{t('Set Bonuses')}</h3></li>
+            <li><h3>{t('Set Bonuses')}</h3></li>
           }
           {
             Object.entries(playerState.sets)
@@ -40,18 +44,26 @@ export default function Sidebar() {
                   <a
                     target='_blank'
                     rel='noreferrer'
-                    href={`${getBaseWowheadUrl(i18n.language)}/item-set=${Sets.find(e => e.setId === set[0])?.setId}`}
+                    href={
+                      `${getBaseWowheadUrl(i18n.language)}/item-set=${Sets.find(e => e.setId === set[0])?.setId}`
+                    }
                     className={Sets.find(e => e.setId === set[0])?.quality}
                   >{t(Sets.find(e => e.setId === set[0])!.name)} ({set[1]})</a>
                 </li>
-            )
+              )
           }
         </ul>
 
         <div id="sidebar-simulation-selection">
           <SimulationButtons />
-          <p id="guybrush-note">This sim was heavily inspired by <a rel="noreferrer" target="_blank" href='https://guybrushgit.github.io/WarriorSim/'>Guybrush's 1.13 Warrior Simulator</a></p>
-          <p id="paypal-note"><a href="https://www.paypal.com/paypalme/kristoferhh" rel="noreferrer" target="_blank">Support me via PayPal</a></p>
+          <p id="guybrush-note">
+            This sim was heavily inspired by <a rel="noreferrer" target="_blank" href='https://guybrushgit.github.io/WarriorSim/'>Guybrush's 1.13 Warrior Simulator</a>
+          </p>
+          <p id="paypal-note">
+            <a href="https://www.paypal.com/paypalme/kristoferhh" rel="noreferrer" target="_blank">
+              Support me via PayPal
+            </a>
+          </p>
         </div>
       </section>
     </div>

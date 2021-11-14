@@ -310,6 +310,22 @@ img {
 	text-align: center;
 }
 
+.breakdown-table-spell-icon {
+	width: 20px;
+	height: 20px;
+	margin-right: 5px;
+	user-select: none;
+}
+
+.breakdown-table-spell-name {
+	text-decoration: none;
+	color: white;
+}
+
+.breakdown-table-name-cell {
+	padding: 4px;
+}
+
 #breakdown-tables-container {
 	display: flex;
 	justify-content: center;
@@ -324,7 +340,7 @@ img {
 	padding-left: 8px;
 	display: inline-block;
 	border-spacing: 0;
-	font-size: 12px;
+	font-size: 11px;
 }
 
 .breakdown-table .number {

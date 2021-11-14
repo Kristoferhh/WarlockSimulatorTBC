@@ -24,7 +24,9 @@ export default function Main() {
     <div id="main" onClick={(e) => dispatch(setGemSelectionTable(InitialGemSelectionTableValue))}>
       <div id='header'>
         <LanguageSelection />
-        <p style={{marginRight: 'auto'}}>Please report bugs in the #tbc-sim-report channel on the Warlock TBC discord. <a target='_blank' rel='noreferrer' href='https://discord.gg/5MX6j7nk7s'>Click here to join</a>.</p>
+        <p style={{ marginRight: 'auto' }}>
+          Please report bugs in the #tbc-sim-report channel on the Warlock TBC discord. <a target='_blank' rel='noreferrer' href='https://discord.gg/5MX6j7nk7s'>Click here to join</a>.
+        </p>
         <p id='sim-version-number'>v{packageJson.version}</p>
       </div>
       <div id='container-1'>
@@ -43,7 +45,7 @@ export default function Main() {
         <GemSelection />
         <ProfilesAndSources />
         <ItemSelection />
-      </div>  
+      </div>
     </div>
   )
 }

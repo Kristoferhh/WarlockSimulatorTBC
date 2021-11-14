@@ -1,15 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getRemainingTalentPoints } from "../Common";
-import { RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Profile, InitialSelectedGems, TalentName, Setting, StatsCollection, InitialSetCounts, SetsStruct, AurasStruct, ItemAndEnchantStruct, SelectedGemsStruct, TalentStore, RotationStruct, Settings } from "../Types";
+import { Spells } from "../data/Spells";
+import { RotationGroup, Spell, PlayerState, InitialPlayerStats, InitialSelectedItemsAndEnchants, InitialSettings, Profile, InitialSelectedGems, TalentName, Setting, StatsCollection, InitialSetCounts, SetsStruct, AurasStruct, ItemAndEnchantStruct, SelectedGemsStruct, TalentStore, RotationStruct, Settings, rotationGroups } from "../Types";
 
-const initialPlayerState : PlayerState = {
+const initialPlayerState: PlayerState = {
   talents: JSON.parse(localStorage.getItem('talents') || '{}'),
   talentPointsRemaining: getRemainingTalentPoints(JSON.parse(localStorage.getItem('talents') || '{}')),
   selectedItems: JSON.parse(localStorage.getItem('selectedItems') || JSON.stringify(InitialSelectedItemsAndEnchants)),
   selectedEnchants: JSON.parse(localStorage.getItem('selectedEnchants') || JSON.stringify(InitialSelectedItemsAndEnchants)),
   selectedGems: JSON.parse(localStorage.getItem('selectedGems') || JSON.stringify(InitialSelectedGems)),
   auras: JSON.parse(localStorage.getItem('auras') || '{}'),
-  rotation: JSON.parse(localStorage.getItem('rotation') || JSON.stringify({filler: {shadowBolt: true}})),
+  rotation: JSON.parse(localStorage.getItem('rotation') || JSON.stringify({ filler: { shadowBolt: true } })),
   stats: { base: InitialPlayerStats, auras: InitialPlayerStats, items: InitialPlayerStats, gems: InitialPlayerStats, enchants: InitialPlayerStats },
   settings: JSON.parse(localStorage.getItem('settings') || JSON.stringify(InitialSettings)),
   profiles: JSON.parse(localStorage.getItem('profiles') || '{}'),
@@ -20,7 +21,7 @@ export const PlayerSlice = createSlice({
   name: 'player',
   initialState: initialPlayerState,
   reducers: {
-    setTalentPointValue: (state, talent: PayloadAction<{name: TalentName, points: number}>) => {
+    setTalentPointValue: (state, talent: PayloadAction<{ name: TalentName, points: number }>) => {
       state.talents[talent.payload.name] = talent.payload.points;
       state.talentPointsRemaining = getRemainingTalentPoints(state.talents);
       localStorage.setItem('talents', JSON.stringify(state.talents));
@@ -37,24 +38,26 @@ export const PlayerSlice = createSlice({
       state.auras = action.payload;
       localStorage.setItem('auras', JSON.stringify(state.auras));
     },
-    toggleRotationSpellSelection: (state, action: PayloadAction<{rotationGroup: RotationGroup, spell: Spell}>) => {
-      if (state.rotation[action.payload.rotationGroup.varName] == null) {
-        state.rotation[action.payload.rotationGroup.varName] = {};
+    toggleRotationSpellSelection: (state, action: PayloadAction<Spell>) => {
+      const rotationGroup = rotationGroups.find(e => e.header === action.payload.group);
+      if (!rotationGroup) { return; }
+      if (state.rotation[rotationGroup.varName] == null) {
+        state.rotation[rotationGroup.varName] = {};
       }
-      
-      const isSpellDisabled = state.rotation[action.payload.rotationGroup.varName][action.payload.spell.varName] == null || state.rotation[action.payload.rotationGroup.varName][action.payload.spell.varName] === false;
+      const spellState = state.rotation[rotationGroup.varName][action.payload.varName];
+      const isSpellDisabled = spellState == null || spellState === false;
       // If a filler/curse is being enabled then disable all other curses/fillers
       if (isSpellDisabled) {
-        if (['filler', 'curse'].includes(action.payload.rotationGroup.varName)) {
-          action.payload.rotationGroup.spells.forEach((e) => state.rotation[action.payload.rotationGroup.varName][e.varName] = false);
+        if ([RotationGroup.Finishers, RotationGroup.Curse].includes(rotationGroup.header)) {
+          Spells
+            .filter(e => e.group === action.payload.group)
+            .forEach((e) => {
+              state.rotation[rotationGroup.varName][e.varName] = false;
+            });
         }
       }
-      if (state.rotation[action.payload.rotationGroup.varName][action.payload.spell.varName] == null) {
-        state.rotation[action.payload.rotationGroup.varName][action.payload.spell.varName] = true;
-      } else {
-        state.rotation[action.payload.rotationGroup.varName][action.payload.spell.varName] = !state.rotation[action.payload.rotationGroup.varName][action.payload.spell.varName];
-      }
-
+      state.rotation[rotationGroup.varName][action.payload.varName] =
+        spellState === null ? true : !state.rotation[rotationGroup.varName][action.payload.varName];
       localStorage.setItem('rotation', JSON.stringify(state.rotation));
     },
     setBaseStats: (state, action: PayloadAction<StatsCollection>) => {
@@ -75,11 +78,11 @@ export const PlayerSlice = createSlice({
     setItemSetCounts: (state, action: PayloadAction<SetsStruct>) => {
       state.sets = action.payload;
     },
-    modifySettingValue: (state, action: PayloadAction<{setting: Setting, value: string}>) => {
+    modifySettingValue: (state, action: PayloadAction<{ setting: Setting, value: string }>) => {
       state.settings[action.payload.setting] = action.payload.value;
       localStorage.setItem('settings', JSON.stringify(state.settings));
     },
-    setProfile: (state, action: PayloadAction<{profile: Profile, name: string}>) => {
+    setProfile: (state, action: PayloadAction<{ profile: Profile, name: string }>) => {
       state.profiles[action.payload.name] = action.payload.profile;
       localStorage.setItem('profiles', JSON.stringify(state.profiles));
     },
@@ -94,7 +97,7 @@ export const PlayerSlice = createSlice({
         localStorage.removeItem('selectedProfile');
       }
     },
-    renameProfile: (state, action: PayloadAction<{oldName: string, newName: string}>) => {
+    renameProfile: (state, action: PayloadAction<{ oldName: string, newName: string }>) => {
       if (state.profiles[action.payload.oldName]) {
         // Create a copy of the old profile with the new name and delete the old profile.
         state.profiles[action.payload.newName] = state.profiles[action.payload.oldName];
@@ -118,5 +121,5 @@ export const PlayerSlice = createSlice({
   }
 });
 
-export const { setSettingsState, setRotationState, setTalentsState, setSelectedGems, setSelectedEnchants, setSelectedItems, setSelectedAuras, setItemSetCounts, setAurasStats, setBaseStats, setEnchantsStats, setGemsStats,setItemsStats, renameProfile, deleteProfile, setTalentPointValue, toggleRotationSpellSelection, modifySettingValue, setProfile } = PlayerSlice.actions;
+export const { setSettingsState, setRotationState, setTalentsState, setSelectedGems, setSelectedEnchants, setSelectedItems, setSelectedAuras, setItemSetCounts, setAurasStats, setBaseStats, setEnchantsStats, setGemsStats, setItemsStats, renameProfile, deleteProfile, setTalentPointValue, toggleRotationSpellSelection, modifySettingValue, setProfile } = PlayerSlice.actions;
 export default PlayerSlice.reducer;
