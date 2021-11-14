@@ -60,7 +60,7 @@ export default function BreakdownTables() {
 
                   return (
                     <tr key={nanoid()} className='spell-damage-information'>
-                      <td className='breakdown-table-name-cell'>
+                      <td>
                         {
                           spellObj?.iconName && spellObj.iconName.length > 0 &&
                           <img
@@ -139,7 +139,7 @@ export default function BreakdownTables() {
 
                   return (
                     <tr key={nanoid()} className='spell-damage-information'>
-                      <td className='breakdown-table-name-cell'>
+                      <td>
                         {
                           spellObj?.iconName && spellObj.iconName.length > 0 &&
                           <img
@@ -202,7 +202,7 @@ export default function BreakdownTables() {
 
                   return (
                     <tr key={nanoid()} className='spell-damage-information'>
-                      <td className='breakdown-table-name-cell'>
+                      <td>
                         {
                           spellObj?.iconName && spellObj.iconName.length > 0 &&
                           <img
