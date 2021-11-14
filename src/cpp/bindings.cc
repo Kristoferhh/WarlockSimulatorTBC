@@ -24,8 +24,8 @@ void PostCombatLogBreakdownVector(const char* name, int mana_gain, int damage) {
 #endif
 }
 
-void PostCombatLogBreakdown(const char* name, int casts, int crits, int misses, int count, double uptime, int dodges,
-                            int glancing_blows) {
+void PostCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, uint32_t misses, uint32_t count,
+                            double uptime, uint32_t dodges, uint32_t glancing_blows) {
 #ifdef EMSCRIPTEN
   EM_ASM({postMessage({
            event : "combatLogBreakdown",

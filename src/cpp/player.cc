@@ -452,13 +452,14 @@ void Player::Initialize() {
 void Player::Reset() {
   cast_time_remaining = 0;
   gcd_remaining = 0;
-  stats->mana = stats->max_mana;
   mp5_timer = 5;
   five_second_rule_timer = 5;
+  stats->mana = stats->max_mana;
+  power_infusions_ready = settings->power_infusion_amount;
 
   // Reset trinkets
-  for (int i = 0; i < trinkets.size(); i++) {
-    trinkets[i]->Reset();
+  for (auto& trinket : trinkets) {
+    trinket->Reset();
   }
 
   // Reset spells
@@ -504,17 +505,14 @@ void Player::Reset() {
   if (spells->chipped_power_core != NULL) spells->chipped_power_core->Reset();
   if (spells->cracked_power_core != NULL) spells->cracked_power_core->Reset();
   if (spells->mana_tide_totem != NULL) spells->mana_tide_totem->Reset();
-  for (std::vector<std::shared_ptr<Spell>>::iterator it = spells->power_infusion.begin();
-       it != spells->power_infusion.end(); it++) {
-    (*it)->Reset();
+  for (auto& pi : spells->power_infusion) {
+    pi->Reset();
   }
-  for (std::vector<std::shared_ptr<Spell>>::iterator it = spells->bloodlust.begin(); it != spells->bloodlust.end();
-       it++) {
-    (*it)->Reset();
+  for (auto& bl : spells->bloodlust) {
+    bl->Reset();
   }
-  for (std::vector<std::shared_ptr<Spell>>::iterator it = spells->innervate.begin(); it != spells->innervate.end();
-       it++) {
-    (*it)->Reset();
+  for (auto& innervate : spells->innervate) {
+    innervate->Reset();
   }
 }
 
@@ -630,11 +628,11 @@ bool Player::IsCrit(SpellType spell_type, double extra_crit) {
 }
 
 bool Player::IsHit(SpellType spell_type) {
-  double hit = GetRand() <= (GetHitChance(spell_type) * kFloatNumberMultiplier);
-  if (!hit && auras->eye_of_magtheridon != NULL) {
+  const bool kIsHit = GetRand() <= (GetHitChance(spell_type) * kFloatNumberMultiplier);
+  if (!kIsHit && auras->eye_of_magtheridon != NULL) {
     auras->eye_of_magtheridon->Apply();
   }
-  return hit;
+  return kIsHit;
 }
 
 int Player::GetRand() { return random_num(gen); }
@@ -654,11 +652,12 @@ double Player::GetBaseHitChance(int player_level, int enemy_level) {
   return 0;
 }
 
-void Player::UseCooldowns() {
-  // Only use PI if Bloodlust isn't selected or if Bloodlust isn't active since
-  // they don't stack
+void Player::UseCooldowns(double fight_time_remaining) {
+  // Only use PI if Bloodlust isn't selected or if Bloodlust isn't active since they don't stack, or if there are enough
+  // Power Infusions available to last until the end of the fight for the mana cost reduction
   if (!spells->power_infusion.empty() && !auras->power_infusion->active &&
-      (spells->bloodlust.empty() || !auras->bloodlust->active)) {
+      (spells->bloodlust.empty() || !auras->bloodlust->active ||
+       power_infusions_ready * auras->power_infusion->duration >= fight_time_remaining)) {
     for (auto pi : spells->power_infusion) {
       if (pi->Ready()) {
         pi->StartCast();
@@ -694,11 +693,11 @@ void Player::UseCooldowns() {
       trinkets[i]->Use();
       // Set the other on-use trinket (if another is equipped) on cooldown for
       // the duration of the trinket just used if the trinkets share cooldown
-      int otherTrinketSlot = i == 1 ? 0 : 1;
-      if (trinkets.size() > otherTrinketSlot && trinkets[otherTrinketSlot] != NULL &&
-          trinkets[otherTrinketSlot]->shares_cooldown && trinkets[i]->shares_cooldown) {
-        trinkets[otherTrinketSlot]->cooldown_remaining =
-            std::max(trinkets[otherTrinketSlot]->cooldown_remaining, static_cast<double>(trinkets[i]->duration));
+      const int kOtherTrinketSlot = i == 1 ? 0 : 1;
+      if (trinkets.size() > kOtherTrinketSlot && trinkets[kOtherTrinketSlot] != NULL &&
+          trinkets[kOtherTrinketSlot]->shares_cooldown && trinkets[i]->shares_cooldown) {
+        trinkets[kOtherTrinketSlot]->cooldown_remaining =
+            std::max(trinkets[kOtherTrinketSlot]->cooldown_remaining, static_cast<double>(trinkets[i]->duration));
       }
     }
   }
@@ -713,25 +712,26 @@ void Player::CastLifeTapOrDarkPact() {
 }
 
 double Player::GetPartialResistMultiplier(SpellSchool school) {
-  if (school == SpellSchool::kShadow) {
-    return 1.0 - ((75 * settings->enemy_shadow_resist) / (kLevel * 5)) / 100.0;
-  } else if (school == SpellSchool::kFire) {
-    return 1.0 - ((75 * settings->enemy_fire_resist) / (kLevel * 5)) / 100.0;
+  if (school != SpellSchool::kShadow && school != SpellSchool::kFire) {
+    return 1;
   }
 
-  return 1;
+  const int kEnemyResist = school == SpellSchool::kShadow ? settings->enemy_shadow_resist : settings->enemy_fire_resist;
+
+  return 1.0 - ((75 * kEnemyResist) / (kLevel * 5)) / 100.0;
 }
 
 void Player::AddIterationDamageAndMana(const std::string& spell_name, int mana_gain, int damage) {
-  if (combat_log_breakdown.count(spell_name) == 0 || !settings->recording_combat_log_breakdown) {
+  if (combat_log_breakdown.count(spell_name) == 0 || !settings->recording_combat_log_breakdown ||
+      !settings->equipped_item_simulation) {
     return;
   }
 
-  int iteration_mana_gain = combat_log_breakdown.at(spell_name)->iteration_mana_gain;
-  int iteration_damage = combat_log_breakdown.at(spell_name)->iteration_damage;
+  const int kCurrentManaGain = combat_log_breakdown.at(spell_name)->iteration_mana_gain;
+  const int kCurrentDamage = combat_log_breakdown.at(spell_name)->iteration_damage;
 
   // Check for integer overflow
-  if (iteration_mana_gain + mana_gain < 0 || iteration_damage + damage < 0) {
+  if (kCurrentManaGain + mana_gain < 0 || kCurrentDamage + damage < 0) {
     PostIterationDamageAndMana(spell_name);
   }
 
@@ -740,7 +740,7 @@ void Player::AddIterationDamageAndMana(const std::string& spell_name, int mana_g
 }
 
 void Player::PostIterationDamageAndMana(const std::string& spell_name) {
-  if (!settings->recording_combat_log_breakdown) {
+  if (!settings->recording_combat_log_breakdown || !settings->equipped_item_simulation) {
     return;
   }
 
@@ -782,9 +782,7 @@ void Player::SendPlayerInfoToCombatLog() {
       TruncateTrailingZeros(std::to_string(round(GetCritChance(SpellType::kDestruction) * 100) / 100), 2) + "%");
   combat_log_entries.push_back(
       "Hit Chance: " +
-      TruncateTrailingZeros(
-          std::to_string(std::min(static_cast<double>(16), round((stats->extra_hit_chance) * 100) / 100)), 2) +
-      "%");
+      TruncateTrailingZeros(std::to_string(std::min(16.0, round((stats->extra_hit_chance) * 100) / 100)), 2) + "%");
   combat_log_entries.push_back(
       "Haste: " +
       TruncateTrailingZeros(std::to_string(round((stats->haste_rating / kHasteRatingPerPercent) * 100) / 100), 2) +

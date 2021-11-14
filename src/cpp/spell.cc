@@ -55,7 +55,7 @@ bool Spell::CanCast() {
          (!usable_once_per_fight || has_not_been_cast_this_fight);
 }
 
-bool Spell::HasEnoughMana() { return mana_cost * player->stats->mana_cost_modifier <= player->stats->mana; }
+bool Spell::HasEnoughMana() { return GetManaCost() <= player->stats->mana; }
 
 bool Spell::Ready() { return CanCast() && HasEnoughMana(); }
 
@@ -111,12 +111,19 @@ void Spell::StartCast(double predicted_damage) {
   }
 }
 
-void Spell::Tick(double t) {
-  if (cooldown_remaining > 0 && cooldown_remaining - t <= 0 && player->ShouldWriteToCombatLog()) {
-    player->CombatLog(name + " is off cooldown");
-  }
-  cooldown_remaining -= t;
+int Spell::GetManaCost() { return mana_cost * player->stats->mana_cost_modifier; }
 
+void Spell::Tick(double t) {
+  if (cooldown_remaining > 0 && cooldown_remaining - t <= 0) {
+    if (name == "Power Infusion") {
+      player->power_infusions_ready++;
+    }
+    if (player->ShouldWriteToCombatLog()) {
+      player->CombatLog(name + " is off cooldown");
+    }
+  }
+
+  cooldown_remaining -= t;
   if (casting && player->cast_time_remaining <= 0) {
     Cast();
   }
@@ -129,19 +136,23 @@ void Spell::Cast() {
   casting = false;
   has_not_been_cast_this_fight = false;
 
+  if (name == "Power Infusion") {
+    player->power_infusions_ready--;
+  }
+
   if (!is_aura) {
     player->combat_log_breakdown.at(name)->casts++;
   }
 
   if (mana_cost > 0 && !player->settings->infinite_player_mana) {
-    player->stats->mana -= mana_cost * player->stats->mana_cost_modifier;
+    player->stats->mana -= GetManaCost();
     player->five_second_rule_timer = 5;
   }
 
   if (cast_time > 0 && player->ShouldWriteToCombatLog()) {
     player->CombatLog("Finished casting " + name + " - Mana: " + TruncateTrailingZeros(std::to_string(kCurrentMana)) +
                       " -> " + TruncateTrailingZeros(std::to_string(player->stats->mana)) + " - Mana Cost: " +
-                      TruncateTrailingZeros(std::to_string(round(mana_cost))) + " - Mana Cost Modifier: " +
+                      TruncateTrailingZeros(std::to_string(round(GetManaCost()))) + " - Mana Cost Modifier: " +
                       TruncateTrailingZeros(std::to_string(round(player->stats->mana_cost_modifier * 100))) + "%");
   }
 
@@ -172,14 +183,10 @@ void Spell::Cast() {
   if (is_dot) {
     dot_effect->Apply();
   }
-
   if (does_damage) {
     Damage(is_crit);
   }
 
-  // If it's an item such as mana potion, demonic rune, destruction potion, or
-  // if it's a proc with a hidden cooldown like Blade of Wizardry or Robe of the
-  // Elder Scribes then don't check for on-hit procs
   if (!is_item && !is_proc && !is_non_warlock_ability &&
       (!player->auras->amplify_curse || name != player->auras->amplify_curse->name)) {
     OnHitProcs();

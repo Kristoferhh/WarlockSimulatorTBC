@@ -12,8 +12,9 @@ struct Simulation {
   void Start();
   double PassTime();
   void SelectedSpellHandler(std::shared_ptr<Spell>& spell,
-                            std::map<std::shared_ptr<Spell>, double>& predicted_damage_of_spells);
-  void CastSelectedSpell(std::shared_ptr<Spell>& spell, double predicted_damage = 0);
+                            std::map<std::shared_ptr<Spell>, double>& predicted_damage_of_spells,
+                            double fight_time_remaining);
+  void CastSelectedSpell(std::shared_ptr<Spell>& spell, double fight_time_remaining, double predicted_damage = 0);
 };
 
 #endif

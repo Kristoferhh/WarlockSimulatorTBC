@@ -65,6 +65,7 @@ struct Player : std::enable_shared_from_this<Player> {
   double mp5_timer;
   double five_second_rule_timer;
   double demonic_knowledge_spell_power;
+  int power_infusions_ready;
 
   Player(std::shared_ptr<PlayerSettings> settings);
   void Initialize();
@@ -80,7 +81,7 @@ struct Player : std::enable_shared_from_this<Player> {
   double GetHitChance(SpellType spell_type);
   double GetPartialResistMultiplier(SpellSchool school);
   double GetBaseHitChance(int player_level, int enemy_level);
-  void UseCooldowns();
+  void UseCooldowns(double fight_time_remaining);
   int GetRand();
   void CastLifeTapOrDarkPact();
   bool ShouldWriteToCombatLog();
