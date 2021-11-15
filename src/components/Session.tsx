@@ -16,8 +16,8 @@ export default function Session() {
     dispatch(setGemsStats(getGemsStats(playerStore.selectedItems, playerStore.selectedGems)));
     dispatch(setEnchantsStats(getEnchantsStats(playerStore.selectedItems, playerStore.selectedEnchants)));
     dispatch(setItemSetCounts(getItemSetCounts(playerStore.selectedItems)));
-    ($('.tablesorter') as any).tablesorter();
+    (jQuery('.tablesorter') as any).tablesorter();
   }, []);
 
-  return(<div></div>);
+  return (<div></div>);
 }
