@@ -253,7 +253,10 @@ export function SimulationButtons() {
               itemId: params.itemId,
               stat: params.customStat
             }).progressPercent = 100;
-            setSavedItemDpsValue(itemSlot, params.itemId, newMedianDps, true);
+
+            if (simulationParams.type !== SimulationType.StatWeights || params.customStat === 'normal') {
+              setSavedItemDpsValue(itemSlot, params.itemId, newMedianDps, true);
+            }
 
             // Callback for the currently equipped item
             if (simulationParams.type === SimulationType.Normal ||
@@ -270,7 +273,6 @@ export function SimulationButtons() {
               updateStatWeightValue(params.customStat, newMedianDps, true);
             }
 
-            // All simulations finished
             if (simulationsFinished === simWorkerParameters.length) {
               dispatch(setSimulationInProgressStatus(false));
               const totalSimDuration = (performance.now() - startTime) / 1000;
@@ -300,9 +302,7 @@ export function SimulationButtons() {
                 }
               }
             }
-            // Multi-item sim
             else if (simulationParams.type === SimulationType.AllItems) {
-              // Start a new simulation that's waiting in the queue
               if (simulationsRunning - simulationsFinished < maxWorkers &&
                 simIndex < simulations.length) {
                 simulations[simIndex++].start();
