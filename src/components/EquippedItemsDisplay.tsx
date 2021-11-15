@@ -91,10 +91,19 @@ export default function EquippedItemsDisplay() {
                         getItemInItemSlot(slot) &&
                         <>
                           <a
-                            href={`${getBaseWowheadUrl(i18n.language)}/item=${(getItemInItemSlot(slot)!.displayId || getItemInItemSlot(slot)!.id)}`}
+                            href={
+                              `${getBaseWowheadUrl(i18n.language)}/item=${(getItemInItemSlot(slot)!.displayId || getItemInItemSlot(slot)!.id)}`
+                            }
                             onClick={(e) => e.preventDefault()}
                             style={{ fontSize: '0px' }}
                           >.</a>
+                          {
+                            getItemInItemSlot(slot) &&
+                            <img
+                              src={`${process.env.PUBLIC_URL}/img/${getItemInItemSlot(slot)?.iconName}.jpg`}
+                              className='item-icon'
+                            />
+                          }
                           {getItemInItemSlot(slot) ? t(getItemInItemSlot(slot)!.name) : ''}
                         </>
                       }

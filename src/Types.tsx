@@ -44,6 +44,7 @@ export interface Item {
   id: number,
   itemSlot: ItemSlotKey,
   quality: Quality,
+  iconName: string,
   stamina?: number,
   intellect?: number,
   spirit?: number,
