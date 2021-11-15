@@ -26,7 +26,7 @@ function findSpellByName(name: string): { iconName: string, id: number, wowheadT
 
   const itemObj = Items.find(e => e.name === name);
   if (itemObj) {
-    return { iconName: '', id: itemObj.id, wowheadType: 'item' }
+    return { iconName: itemObj.iconName, id: itemObj.id, wowheadType: 'item' }
   }
 }
 
