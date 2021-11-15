@@ -296,7 +296,7 @@ export function SimulationButtons() {
                     spellManaGainDict: spellManaGainDict,
                     data: combatLogBreakdownArr,
                   }));
-                  $('.breakdown-table').trigger('update');
+                  jQuery('.breakdown-table').trigger('update');
                 }
               }
             }
@@ -328,7 +328,7 @@ export function SimulationButtons() {
               const domElement = document.getElementById(params.itemId.toString());
               if (domElement) {
                 domElement.innerHTML = (Math.round(newMedianDps * 100) / 100).toString();
-                $('#item-selection-table').trigger('update');
+                jQuery('#item-selection-table').trigger('update');
               }
             }
             if (simulationParams.type === SimulationType.Normal ||
