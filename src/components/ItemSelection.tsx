@@ -239,6 +239,11 @@ export default function ItemSelection() {
                       onClick={(e) => e.preventDefault()}
                       style={{ fontSize: '0px' }}
                     >.</a>
+                    <img
+                      src={`${process.env.PUBLIC_URL}/img/${item.iconName}.jpg`}
+                      alt={t(item.name)}
+                      className='item-icon'
+                    />
                     {t(item.name)}
                   </td>
                   <td>

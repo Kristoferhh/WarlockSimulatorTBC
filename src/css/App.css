@@ -775,6 +775,12 @@ img[data-color='meta'] {
 	z-index: 2;
 }
 
+.item-icon {
+	width: 20px;
+	height: 20px;
+	margin-right: 5px;
+}
+
 #enchant-selection-table {
 	margin-top: 60px;
 	padding-bottom: 100px;
