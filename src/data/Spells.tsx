@@ -24,5 +24,7 @@ export const Spells: Spell[] = [
   { group: RotationGroup.Other, name: 'Dark Pact', varName: 'darkPact', iconName: 'spell_shadow_darkritual', id: 27265 },
 
   { name: 'Life Tap', varName: 'lifeTap', iconName: 'spell_shadow_burningspirit', id: 27222 },
-  { name: 'Mp5', varName: 'mp5', iconName: 'inv_elemental_mote_mana', id: 0 }
+  { name: 'Mp5', varName: 'mp5', iconName: 'inv_elemental_mote_mana', id: 0 },
+  { name: 'Melee', varName: 'melee', iconName: 'ability_meleedamage', id: 0 },
+  { name: 'Cleave', varName: 'cleave', iconName: 'ability_warrior_cleave', id: 30224 }
 ]
