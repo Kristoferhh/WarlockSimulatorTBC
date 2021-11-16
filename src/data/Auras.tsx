@@ -93,5 +93,16 @@ export const Auras: Aura[] = [
   { name: 'Scroll of Intellect V', varName: AuraName.scrollOfIntellectV, group: AuraGroup.PetBuffs, iconName: 'inv_scroll_01', id: 33078 },
   { name: 'Scroll of Strength V', varName: AuraName.scrollOfStrengthV, group: AuraGroup.PetBuffs, iconName: 'inv_scroll_02', id: 33082 },
   { name: 'Scroll of Agility V', varName: AuraName.scrollOfAgilityV, group: AuraGroup.PetBuffs, iconName: 'inv_scroll_02', id: 33077 },
-  { name: 'Scroll of Spirit V', varName: AuraName.scrollOfSpiritV, group: AuraGroup.PetBuffs, iconName: 'inv_scroll_01', id: 33080 }
+  { name: 'Scroll of Spirit V', varName: AuraName.scrollOfSpiritV, group: AuraGroup.PetBuffs, iconName: 'inv_scroll_01', id: 33080 },
+
+  // Noncategorized
+  { name: 'Improved Shadow Bolt', varName: AuraName.improvedShadowBolt, iconName: 'spell_shadow_shadowbolt', id: 17800 },
+  { name: 'Flameshadow', varName: AuraName.flameshadow, iconName: 'spell_shadow_shadowfury', id: 37379 },
+  { name: 'Shadowflame', varName: AuraName.shadowflame, iconName: 'spell_shadow_shadowandflame', id: 37378 },
+  { name: 'Nightfall', varName: AuraName.nightfall, iconName: 'spell_shadow_twilight', id: 17941 },
+  { name: 'Spellstrike', varName: AuraName.spellstrike, iconName: 'spell_shadow_siphonmana', id: 32106 },
+  { name: 'Mana-Etched 4-Set Bonus', varName: AuraName.manaEtched4Set, iconName: 'spell_arcane_blink', id: 37619 },
+  { name: 'Blood Fury', varName: AuraName.bloodFury, iconName: 'racial_orc_berserkerstrength', id: 33702 },
+  { name: 'Shattered Sun Pendant of Acumen (Aldor)', varName: AuraName.shatteredSunPendantOfAcumenAldor, iconName: 'inv_jewelry_necklace_32', id: 45479 },
+  { name: 'Shattered Sun Pendant of Acumen (Scryers)', varName: AuraName.shatteredSunPendantOfAcumenScryers, iconName: 'inv_jewelry_necklace_32', id: 45429 },
 ]

@@ -26,5 +26,7 @@ export const Spells: Spell[] = [
   { name: 'Life Tap', varName: 'lifeTap', iconName: 'spell_shadow_burningspirit', id: 27222 },
   { name: 'Mp5', varName: 'mp5', iconName: 'inv_elemental_mote_mana', id: 0 },
   { name: 'Melee', varName: 'melee', iconName: 'ability_meleedamage', id: 0 },
-  { name: 'Cleave', varName: 'cleave', iconName: 'ability_warrior_cleave', id: 30224 }
+  { name: 'Cleave', varName: 'cleave', iconName: 'ability_warrior_cleave', id: 30224 },
+  { name: 'Lash of Pain', varName: 'lashOfPain', iconName: 'spell_shadow_curse', id: 27274 },
+  { name: 'Firebolt', varName: 'firebolt', iconName: 'spell_fire_firebolt', id: 27267 },
 ]

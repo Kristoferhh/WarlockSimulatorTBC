@@ -262,7 +262,7 @@ CurseOfRecklessnessAura::CurseOfRecklessnessAura(Player& player) : Aura(player) 
 }
 
 ShadowTranceAura::ShadowTranceAura(Player& player) : Aura(player) {
-  name = "Shadow Trance (Nightfall)";
+  name = "Nightfall";
   duration = 10;
   Setup();
 }

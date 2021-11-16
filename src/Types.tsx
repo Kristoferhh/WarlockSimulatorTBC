@@ -96,7 +96,7 @@ export interface Enchant {
 export interface Aura {
   name: string,
   varName: AuraName,
-  group: AuraGroup,
+  group?: AuraGroup,
   id: number,
   iconName: string,
   stats?: StatsCollection,
@@ -948,4 +948,14 @@ export enum AuraName {
   scrollOfStrengthV = 'scrollOfStrengthV',
   scrollOfAgilityV = 'scrollOfAgilityV',
   scrollOfSpiritV = 'scrollOfSpiritV',
+  improvedShadowBolt = 'improvedShadowBolt',
+  flameshadow = 'flameshadow',
+  shadowflame = 'shadowflame',
+  nightfall = 'nightfall',
+  spellstrike = 'spellstrike',
+  manaEtched4Set = 'manaEtched4Set',
+  bloodFury = 'bloodFury',
+  shatteredSunPendantOfAcumenAldor = 'shatteredSunPendantOfAcumenAldor',
+  shatteredSunPendantOfAcumenScryers = 'shatteredSunPendantOfAcumenScryers',
+  mysticalSkyfireDiamond = 'mysticalSkyfireDiamond',
 }

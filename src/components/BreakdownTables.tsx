@@ -4,6 +4,7 @@ import { useSelector } from "react-redux"
 import { getBaseWowheadUrl } from "../Common";
 import { AuraGroups } from "../data/AuraGroups";
 import { Auras } from "../data/Auras";
+import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
 import { Spells } from "../data/Spells";
 import i18n from "../i18n/config";
@@ -21,12 +22,17 @@ function findSpellByName(name: string): { iconName: string, id: number, wowheadT
 
   const auraObj = Auras.find(e => e.name === name);
   if (auraObj) {
-    return { iconName: auraObj.iconName, id: auraObj.id, wowheadType: AuraGroups.find(e => e.heading === auraObj.group)!.type }
+    return { iconName: auraObj.iconName, id: auraObj.id, wowheadType: AuraGroups.find(e => e.heading === auraObj.group)?.type || 'spell' }
   }
 
   const itemObj = Items.find(e => e.name === name);
   if (itemObj) {
     return { iconName: itemObj.iconName, id: itemObj.id, wowheadType: 'item' }
+  }
+
+  const gemObj = Gems.find(e => e.name === name);
+  if (gemObj) {
+    return { iconName: gemObj.iconName, id: gemObj.id, wowheadType: 'item' }
   }
 }
 
