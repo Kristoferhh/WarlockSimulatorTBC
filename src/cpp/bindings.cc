@@ -2,7 +2,7 @@
 
 #include <random>
 
-#include "constant.h"
+#include "embind_constant.h"
 #include "simulation.h"
 
 void DpsUpdate(double dps) {
@@ -126,7 +126,7 @@ std::string GetExceptionMessage(intptr_t exception_ptr) {
 
 #ifdef EMSCRIPTEN
 EMSCRIPTEN_BINDINGS(module) {
-  emscripten::class_<Player>("Player").smart_ptr<std::shared_ptr<Player>>("Player");
+  emscripten::class_<Player>("Player").constructor<PlayerSettings&>();
 
   emscripten::class_<Simulation>("Simulation")
       .constructor<Player&, SimulationSettings&>()
@@ -304,26 +304,15 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("metaGemId", &PlayerSettings::meta_gem_id)
       .property("equippedItemSimulation", &PlayerSettings::equipped_item_simulation)
       .property("recordingCombatLogBreakdown", &PlayerSettings::recording_combat_log_breakdown)
-      .property("simmingStamina", &PlayerSettings::simming_stamina)
-      .property("simmingIntellect", &PlayerSettings::simming_intellect)
-      .property("simmingSpirit", &PlayerSettings::simming_spirit)
-      .property("simmingSpellPower", &PlayerSettings::simming_spell_power)
-      .property("simmingShadowPower", &PlayerSettings::simming_shadow_power)
-      .property("simmingFirePower", &PlayerSettings::simming_fire_power)
-      .property("simmingHitRating", &PlayerSettings::simming_hit_rating)
-      .property("simmingCritRating", &PlayerSettings::simming_crit_rating)
-      .property("simmingHasteRating", &PlayerSettings::simming_haste_rating)
-      .property("simmingMp5", &PlayerSettings::simming_mp5)
-      .property("isAldor", &PlayerSettings::is_aldor)
+      .property("customStat", &PlayerSettings::custom_stat)
+      .property("shattrathFaction", &PlayerSettings::shattrath_faction)
       .property("enemyLevel", &PlayerSettings::enemy_level)
       .property("enemyShadowResist", &PlayerSettings::enemy_shadow_resist)
       .property("enemyFireResist", &PlayerSettings::enemy_fire_resist)
       .property("mageAtieshAmount", &PlayerSettings::mage_atiesh_amount)
       .property("totemOfWrathAmount", &PlayerSettings::totem_of_wrath_amount)
       .property("sacrificingPet", &PlayerSettings::sacrificing_pet)
-      .property("petIsImp", &PlayerSettings::pet_is_imp)
-      .property("petIsSuccubus", &PlayerSettings::pet_is_succubus)
-      .property("petIsFelguard", &PlayerSettings::pet_is_felguard)
+      .property("selectedPet", &PlayerSettings::selected_pet)
       .property("ferociousInspirationAmount", &PlayerSettings::ferocious_inspiration_amount)
       .property("improvedCurseOfTheElements", &PlayerSettings::improved_curse_of_the_elements)
       .property("usingCustomIsbUptime", &PlayerSettings::using_custom_isb_uptime)
@@ -333,9 +322,9 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("shadowPriestDps", &PlayerSettings::shadow_priest_dps)
       .property("warlockAtieshAmount", &PlayerSettings::warlock_atiesh_amount)
       .property("improvedExposeArmor", &PlayerSettings::improved_expose_armor)
-      .property("isSingleTarget", &PlayerSettings::is_single_target)
+      .property("fightType", &PlayerSettings::fight_type)
       .property("enemyAmount", &PlayerSettings::enemy_amount)
-      .property("isOrc", &PlayerSettings::is_orc)
+      .property("race", &PlayerSettings::race)
       .property("powerInfusionAmount", &PlayerSettings::power_infusion_amount)
       .property("bloodlustAmount", &PlayerSettings::bloodlust_amount)
       .property("innervateAmount", &PlayerSettings::innervate_amount)
@@ -344,11 +333,11 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("improvedFaerieFire", &PlayerSettings::improved_faerie_fire)
       .property("infinitePlayerMana", &PlayerSettings::infinite_player_mana)
       .property("infinitePetMana", &PlayerSettings::infinite_pet_mana)
-      .property("usingLashOfPainOnCooldown", &PlayerSettings::using_lash_of_pain_on_cooldown)
-      .property("petIsAggressive", &PlayerSettings::pet_is_aggressive)
+      .property("lashOfPainUsage", &PlayerSettings::lash_of_pain_usage)
+      .property("petMode", &PlayerSettings::pet_mode)
       .property("prepopBlackBook", &PlayerSettings::prepop_black_book)
       .property("randomizeValues", &PlayerSettings::randomize_values)
-      .property("simChoosingRotation", &PlayerSettings::sim_choosing_rotation)
+      .property("rotationOption", &PlayerSettings::rotation_option)
       .property("exaltedWithShattrathFaction", &PlayerSettings::exalted_with_shattrath_faction)
       .property("survivalHunterAgility", &PlayerSettings::survival_hunter_agility)
       .property("hasImmolate", &PlayerSettings::has_immolate)
@@ -393,22 +382,35 @@ EMSCRIPTEN_BINDINGS(module) {
   emscripten::function("allocSim", &AllocSim);
   emscripten::function("getExceptionMessage", &GetExceptionMessage);
 
-  /*emscripten::enum_<Constant>("Constant")
-      .value("ALDOR", ALDOR)
-      .value("Scryers", SCRYER)
-      .value("yes", YES)
-      .value("no", NO)
-      .value("onCooldown", ON_COOLDOWN)
-      .value("singleTarget", SINGLE_TARGET)
-      .value("aoe", AOE)
-      .value("noISB", NO_ISB)
-      .value("human", HUMAN)
-      .value("gnome", GNOME)
-      .value("orc", ORC)
-      .value("undead", UNDEAD)
-      .value("bloodElf", BLOOD_ELF)
-      .value("simChooses", SIM_CHOOSES)
-      .value("userChooses", USER_CHOOSES)
-      ;*/
+  emscripten::enum_<EmbindConstant>("EmbindConstant")
+      .value("aldor", EmbindConstant::kAldor)
+      .value("scryers", EmbindConstant::kScryers)
+      .value("onCooldown", EmbindConstant::kOnCooldown)
+      .value("singleTarget", EmbindConstant::kSingleTarget)
+      .value("aoe", EmbindConstant::kAoe)
+      .value("noIsb", EmbindConstant::kNoIsb)
+      .value("human", EmbindConstant::kHuman)
+      .value("gnome", EmbindConstant::kGnome)
+      .value("orc", EmbindConstant::kOrc)
+      .value("undead", EmbindConstant::kUndead)
+      .value("bloodElf", EmbindConstant::kBloodElf)
+      .value("simChooses", EmbindConstant::kSimChooses)
+      .value("userChooses", EmbindConstant::kUserChooses)
+      .value("stamina", EmbindConstant::kStamina)
+      .value("intellect", EmbindConstant::kIntellect)
+      .value("spirit", EmbindConstant::kSpirit)
+      .value("spellPower", EmbindConstant::kSpellPower)
+      .value("shadowPower", EmbindConstant::kShadowPower)
+      .value("firePower", EmbindConstant::kFirePower)
+      .value("hitRating", EmbindConstant::kHitRating)
+      .value("critRating", EmbindConstant::kCritRating)
+      .value("hasteRating", EmbindConstant::kHasteRating)
+      .value("mp5", EmbindConstant::kMp5)
+      .value("normal", EmbindConstant::kNormal)
+      .value("imp", EmbindConstant::kImp)
+      .value("succubus", EmbindConstant::kSuccubus)
+      .value("felguard", EmbindConstant::kFelguard)
+      .value("passive", EmbindConstant::kPassive)
+      .value("aggressive", EmbindConstant::kAggressive);
 }
 #endif

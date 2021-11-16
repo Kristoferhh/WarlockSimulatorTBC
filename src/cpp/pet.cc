@@ -13,7 +13,6 @@ Pet::Pet(Player& player) : player(player) {
   cast_time_remaining = 0;
   five_second_rule_timer_remaining = 5;
   spirit_tick_timer_remaining = 2;
-  mode = player.settings.pet_is_aggressive ? PetMode::kAggressive : PetMode::kPassive;
   crit_multiplier = 1.5;
   glancing_blow_multiplier = 1 - (0.1 + (player.settings.enemy_level * 5 - player.kLevel * 5) / 100.0);
   glancing_blow_chance = std::max(0.0, 6 + (player.settings.enemy_level * 5 - player.kLevel * 5) * 1.2);
@@ -196,7 +195,7 @@ void Pet::CalculateStatsFromAuras() {
   if (player.selected_auras.ferocious_inspiration) {
     stats->damage_modifier *= std::pow(1.03, player.settings.ferocious_inspiration_amount);
   }
-  if (player.settings.is_orc) {
+  if (player.settings.race == EmbindConstant::kOrc) {
     stats->damage_modifier *= 1.05;
   }
 

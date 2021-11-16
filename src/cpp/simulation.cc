@@ -89,7 +89,7 @@ void Simulation::Start() {
 
         // Spells on the GCD
         if (player.gcd_remaining <= 0) {
-          if (player.settings.is_single_target) {
+          if (player.settings.fight_type == EmbindConstant::kSingleTarget) {
             const bool kNotEnoughTimeForFillerSpell = kFightTimeRemaining < player.filler->GetCastTime();
 
             // Map of spells with their predicted Damage as the value. This is
@@ -100,7 +100,7 @@ void Simulation::Start() {
             // Damage of the three filler spells if they're available (maybe
             // just skip Searing Pain to save time, there's no way it will ever
             // be the best spell to Cast)
-            if (player.settings.sim_choosing_rotation) {
+            if (player.settings.rotation_option == EmbindConstant::kSimChooses) {
               if (kFightTimeRemaining >= player.spells->shadow_bolt->GetCastTime()) {
                 predicted_damage_of_spells.insert(
                     std::make_pair(player.spells->shadow_bolt, player.spells->shadow_bolt->PredictDamage()));
@@ -223,7 +223,7 @@ void Simulation::Start() {
             // Cast filler spell if sim is not choosing the rotation for the
             // user or if the predicted_damage_of_spells map is empty
             if (player.gcd_remaining <= 0 &&
-                ((!kNotEnoughTimeForFillerSpell && !player.settings.sim_choosing_rotation) ||
+                ((!kNotEnoughTimeForFillerSpell && player.settings.rotation_option == EmbindConstant::kUserChooses) ||
                  predicted_damage_of_spells.size() == 0) &&
                 player.filler->CanCast()) {
               SelectedSpellHandler(player.filler, predicted_damage_of_spells, kFightTimeRemaining);
@@ -267,7 +267,7 @@ void Simulation::Start() {
       }
 
       // Pet
-      if (player.pet != NULL && player.pet->mode == PetMode::kAggressive) {
+      if (player.pet != NULL && player.settings.pet_mode == EmbindConstant::kAggressive) {
         // Auto Attack
         if (player.pet->spells->melee != NULL && player.pet->spells->melee->Ready()) {
           player.pet->spells->melee->StartCast();
@@ -278,7 +278,7 @@ void Simulation::Start() {
         }
         // Succubus Lash of Pain
         if (player.pet->spells->lash_of_pain != NULL && player.pet->spells->lash_of_pain->Ready() &&
-            (player.settings.using_lash_of_pain_on_cooldown ||
+            (player.settings.lash_of_pain_usage == EmbindConstant::kOnCooldown ||
              (!player.settings.using_custom_isb_uptime &&
               (player.auras->improved_shadow_bolt == NULL || !player.auras->improved_shadow_bolt->active)))) {
           player.pet->spells->lash_of_pain->StartCast();
@@ -319,13 +319,13 @@ void Simulation::Start() {
 
     // Only send the iteration's dps to the web worker if we're doing a normal
     // simulation (this is just for the dps histogram)
-    if (settings.simulation_type == SimulationType::kNormal && player.customStat == "normal") {
+    if (settings.simulation_type == SimulationType::kNormal && player.custom_stat == "normal") {
       DpsUpdate(kDps);
     }
 
     if (player.iteration % static_cast<int>(std::floor(settings.iterations / 100.0)) == 0) {
       SimulationUpdate(player.iteration, settings.iterations, Median(dps_vector), player.settings.item_id,
-                       player.customStat.c_str());
+                       player.custom_stat.c_str());
     }
   }
 
@@ -348,7 +348,7 @@ void Simulation::Start() {
     }
   }
   SimulationEnd(Median(dps_vector), min_dps, max_dps, player.settings.item_id, settings.iterations,
-                player.total_duration, player.customStat.c_str());
+                player.total_duration, player.custom_stat.c_str());
 }
 
 double Simulation::PassTime() {
@@ -358,12 +358,12 @@ double Simulation::PassTime() {
   // Find the lowest time until the next action needs to be taken
   // Pet
   if (player.pet != NULL) {
-    if ((player.talents.dark_pact > 0 || player.pet->mode == PetMode::kAggressive) &&
+    if ((player.talents.dark_pact > 0 || player.settings.pet_mode == EmbindConstant::kAggressive) &&
         player.pet->spirit_tick_timer_remaining < time)
       time = player.pet->spirit_tick_timer_remaining;
 
     // Pet's attacks/abilities and such
-    if (player.pet->mode == PetMode::kAggressive) {
+    if (player.settings.pet_mode == EmbindConstant::kAggressive) {
       if (player.pet->spells->melee != NULL && player.pet->spells->melee->cooldown_remaining > 0 &&
           player.pet->spells->melee->cooldown_remaining < time)
         time = player.pet->spells->melee->cooldown_remaining;
@@ -895,7 +895,8 @@ double Simulation::PassTime() {
 void Simulation::SelectedSpellHandler(std::shared_ptr<Spell>& spell,
                                       std::map<std::shared_ptr<Spell>, double>& predicted_damage_of_spells,
                                       double fight_time_remaining) {
-  if ((player.settings.sim_choosing_rotation || spell->is_finisher) && predicted_damage_of_spells.count(spell) == 0) {
+  if ((player.settings.rotation_option == EmbindConstant::kSimChooses || spell->is_finisher) &&
+      predicted_damage_of_spells.count(spell) == 0) {
     predicted_damage_of_spells.insert(std::make_pair(spell, spell->PredictDamage()));
   } else if (spell->HasEnoughMana()) {
     CastSelectedSpell(spell, fight_time_remaining);

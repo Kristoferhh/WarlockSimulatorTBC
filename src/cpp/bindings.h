@@ -7,7 +7,6 @@
 #include "auras.h"
 #include "character_stats.h"
 #include "combat_log_breakdown.h"
-#include "constant.h"
 #include "items.h"
 #include "sets.h"
 #include "simulation.h"

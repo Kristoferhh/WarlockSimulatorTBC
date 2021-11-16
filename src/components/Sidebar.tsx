@@ -56,13 +56,13 @@ export default function Sidebar() {
 
         <div id="sidebar-simulation-selection">
           <SimulationButtons />
-          <p id="guybrush-note">
-            This sim was heavily inspired by <a rel="noreferrer" target="_blank" href='https://guybrushgit.github.io/WarriorSim/'>Guybrush's 1.13 Warrior Simulator</a>
-          </p>
           <p id="paypal-note">
             <a href="https://www.paypal.com/paypalme/kristoferhh" rel="noreferrer" target="_blank">
               Support me via PayPal
             </a>
+          </p>
+          <p id="guybrush-note">
+            This sim was heavily inspired by <a rel="noreferrer" target="_blank" href='https://guybrushgit.github.io/WarriorSim/'>Guybrush's 1.13 Warrior Simulator</a>
           </p>
         </div>
       </section>

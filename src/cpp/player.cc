@@ -34,28 +34,28 @@ Player::Player(PlayerSettings& player_settings)
     }
   }
 
-  if (settings.simming_stamina)
-    customStat = "stamina";
-  else if (settings.simming_intellect)
-    customStat = "intellect";
-  else if (settings.simming_spirit)
-    customStat = "spirit";
-  else if (settings.simming_spell_power)
-    customStat = "spellPower";
-  else if (settings.simming_shadow_power)
-    customStat = "shadowPower";
-  else if (settings.simming_fire_power)
-    customStat = "firePower";
-  else if (settings.simming_crit_rating)
-    customStat = "critRating";
-  else if (settings.simming_hit_rating)
-    customStat = "hitRating";
-  else if (settings.simming_haste_rating)
-    customStat = "hasteRating";
-  else if (settings.simming_mp5)
-    customStat = "mp5";
+  if (settings.custom_stat == EmbindConstant::kStamina)
+    custom_stat = "stamina";
+  else if (settings.custom_stat == EmbindConstant::kIntellect)
+    custom_stat = "intellect";
+  else if (settings.custom_stat == EmbindConstant::kSpirit)
+    custom_stat = "spirit";
+  else if (settings.custom_stat == EmbindConstant::kSpellPower)
+    custom_stat = "spellPower";
+  else if (settings.custom_stat == EmbindConstant::kShadowPower)
+    custom_stat = "shadowPower";
+  else if (settings.custom_stat == EmbindConstant::kFirePower)
+    custom_stat = "firePower";
+  else if (settings.custom_stat == EmbindConstant::kCritRating)
+    custom_stat = "critRating";
+  else if (settings.custom_stat == EmbindConstant::kHitRating)
+    custom_stat = "hitRating";
+  else if (settings.custom_stat == EmbindConstant::kHasteRating)
+    custom_stat = "hasteRating";
+  else if (settings.custom_stat == EmbindConstant::kMp5)
+    custom_stat = "mp5";
   else
-    customStat = "normal";
+    custom_stat = "normal";
 
   // Crit chance
   if (selected_auras.atiesh_mage) {
@@ -91,11 +91,11 @@ Player::Player(PlayerSettings& player_settings)
 
   // Add bonus damage % from Demonic Sacrifice
   if (talents.demonic_sacrifice == 1 && settings.sacrificing_pet) {
-    if (settings.pet_is_imp) {
+    if (settings.selected_pet == EmbindConstant::kImp) {
       stats.fire_modifier *= 1.15;
-    } else if (settings.pet_is_succubus) {
+    } else if (settings.selected_pet == EmbindConstant::kSuccubus) {
       stats.shadow_modifier *= 1.15;
-    } else if (settings.pet_is_felguard) {
+    } else if (settings.selected_pet == EmbindConstant::kFelguard) {
       stats.shadow_modifier *= 1.1;
     }
     // todo add felhunter mana regen maybe
@@ -106,10 +106,10 @@ Player::Player(PlayerSettings& player_settings)
       stats.fire_modifier *= 1.05;
     }
     if (talents.master_demonologist > 0) {
-      if (settings.pet_is_succubus) {
+      if (settings.selected_pet == EmbindConstant::kSuccubus) {
         stats.shadow_modifier *= (1 + 0.02 * talents.master_demonologist);
         stats.fire_modifier *= (1 + 0.02 * talents.master_demonologist);
-      } else if (settings.pet_is_felguard) {
+      } else if (settings.selected_pet == EmbindConstant::kFelguard) {
         stats.shadow_modifier *= (1 + 0.01 * talents.master_demonologist);
         stats.fire_modifier *= (1 + 0.01 * talents.master_demonologist);
       }
@@ -153,8 +153,8 @@ Player::Player(PlayerSettings& player_settings)
   if (selected_auras.blood_pact) {
     int improved_imp_points = settings.improved_imp;
 
-    if (settings.pet_is_imp && (!settings.sacrificing_pet || talents.demonic_sacrifice == 0) &&
-        talents.improved_imp > improved_imp_points) {
+    if (settings.selected_pet == EmbindConstant::kImp &&
+        (!settings.sacrificing_pet || talents.demonic_sacrifice == 0) && talents.improved_imp > improved_imp_points) {
       improved_imp_points = talents.improved_imp;
     }
 
@@ -202,11 +202,11 @@ Player::Player(PlayerSettings& player_settings)
 void Player::Initialize() {
   demonic_knowledge_spell_power = 0;
   if (!settings.sacrificing_pet || talents.demonic_sacrifice == 0) {
-    if (settings.pet_is_imp) {
+    if (settings.selected_pet == EmbindConstant::kImp) {
       pet = std::make_shared<Imp>(*this);
-    } else if (settings.pet_is_succubus) {
+    } else if (settings.selected_pet == EmbindConstant::kSuccubus) {
       pet = std::make_shared<Succubus>(*this);
-    } else if (settings.pet_is_felguard) {
+    } else if (settings.selected_pet == EmbindConstant::kFelguard) {
       pet = std::make_shared<Felguard>(*this);
     }
     if (pet != NULL) {
@@ -247,15 +247,18 @@ void Player::Initialize() {
     trinkets.push_back(std::make_unique<DarkIronSmokingPipe>(*this));
 
   // Auras
-  if (settings.is_single_target) {
+  if (settings.fight_type == EmbindConstant::kSingleTarget) {
     if (talents.improved_shadow_bolt > 0) auras->improved_shadow_bolt = std::make_shared<ImprovedShadowBoltAura>(*this);
-    if (settings.has_corruption || settings.sim_choosing_rotation)
+    if (settings.has_corruption || settings.rotation_option == EmbindConstant::kSimChooses)
       auras->corruption = std::make_shared<CorruptionDot>(*this);
-    if (talents.unstable_affliction == 1 && (settings.has_unstable_affliction || settings.sim_choosing_rotation))
+    if (talents.unstable_affliction == 1 &&
+        (settings.has_unstable_affliction || settings.rotation_option == EmbindConstant::kSimChooses))
       auras->unstable_affliction = std::make_shared<UnstableAfflictionDot>(*this);
-    if (talents.siphon_life == 1 && (settings.has_siphon_life || settings.sim_choosing_rotation))
+    if (talents.siphon_life == 1 &&
+        (settings.has_siphon_life || settings.rotation_option == EmbindConstant::kSimChooses))
       auras->siphon_life = std::make_shared<SiphonLifeDot>(*this);
-    if (settings.has_immolate || settings.sim_choosing_rotation) auras->immolate = std::make_shared<ImmolateDot>(*this);
+    if (settings.has_immolate || settings.rotation_option == EmbindConstant::kSimChooses)
+      auras->immolate = std::make_shared<ImmolateDot>(*this);
     if (settings.has_curse_of_agony || settings.has_curse_of_doom)
       auras->curse_of_agony = std::make_shared<CurseOfAgonyDot>(*this);
     if (settings.has_curse_of_the_elements)
@@ -264,7 +267,8 @@ void Player::Initialize() {
       auras->curse_of_recklessness = std::make_shared<CurseOfRecklessnessAura>(*this);
     if (settings.has_curse_of_doom) auras->curse_of_doom = std::make_shared<CurseOfDoomDot>(*this);
     if (talents.nightfall > 0) auras->shadow_trance = std::make_shared<ShadowTranceAura>(*this);
-    if (talents.amplify_curse == 1 && (settings.has_amplify_curse || settings.sim_choosing_rotation))
+    if (talents.amplify_curse == 1 &&
+        (settings.has_amplify_curse || settings.rotation_option == EmbindConstant::kSimChooses))
       auras->amplify_curse = std::make_shared<AmplifyCurseAura>(*this);
   }
   if (selected_auras.mana_tide_totem) auras->mana_tide_totem = std::make_shared<ManaTideTotemAura>(*this);
@@ -275,7 +279,7 @@ void Player::Initialize() {
   if (selected_auras.bloodlust) auras->bloodlust = std::make_shared<BloodlustAura>(*this);
   if (selected_auras.destruction_potion) auras->destruction_potion = std::make_shared<DestructionPotionAura>(*this);
   if (selected_auras.flame_cap) auras->flame_cap = std::make_shared<FlameCapAura>(*this);
-  if (settings.is_orc) auras->blood_fury = std::make_shared<BloodFuryAura>(*this);
+  if (settings.race == EmbindConstant::kOrc) auras->blood_fury = std::make_shared<BloodFuryAura>(*this);
   if (selected_auras.drums_of_battle)
     auras->drums_of_battle = std::make_shared<DrumsOfBattleAura>(*this);
   else if (selected_auras.drums_of_war)
@@ -315,22 +319,24 @@ void Player::Initialize() {
 
   // Spells
   spells->life_tap = std::make_shared<LifeTap>(*this);
-  if (!settings.is_single_target) {
+  if (settings.fight_type == EmbindConstant::kAoe) {
     spells->seed_of_corruption = std::make_shared<SeedOfCorruption>(*this);
   } else {
-    if (settings.has_shadow_bolt || talents.nightfall > 0 || settings.sim_choosing_rotation)
+    if (settings.has_shadow_bolt || talents.nightfall > 0 || settings.rotation_option == EmbindConstant::kSimChooses)
       spells->shadow_bolt = std::make_shared<ShadowBolt>(*this);
-    if (settings.has_incinerate || settings.sim_choosing_rotation)
+    if (settings.has_incinerate || settings.rotation_option == EmbindConstant::kSimChooses)
       spells->incinerate = std::make_shared<Incinerate>(*this);
-    if (settings.has_searing_pain || settings.sim_choosing_rotation)
+    if (settings.has_searing_pain || settings.rotation_option == EmbindConstant::kSimChooses)
       spells->searing_pain = std::make_shared<SearingPain>(*this);
-    if (settings.has_death_coil || settings.sim_choosing_rotation)
+    if (settings.has_death_coil || settings.rotation_option == EmbindConstant::kSimChooses)
       spells->death_coil = std::make_shared<DeathCoil>(*this);
-    if (talents.conflagrate == 1 && (settings.has_conflagrate || settings.sim_choosing_rotation))
+    if (talents.conflagrate == 1 &&
+        (settings.has_conflagrate || settings.rotation_option == EmbindConstant::kSimChooses))
       spells->conflagrate = std::make_shared<Conflagrate>(*this);
-    if (talents.shadowburn == 1 && (settings.has_shadow_burn || settings.sim_choosing_rotation))
+    if (talents.shadowburn == 1 &&
+        (settings.has_shadow_burn || settings.rotation_option == EmbindConstant::kSimChooses))
       spells->shadowburn = std::make_shared<Shadowburn>(*this);
-    if (talents.shadowfury == 1 && (settings.has_shadowfury || settings.sim_choosing_rotation))
+    if (talents.shadowfury == 1 && (settings.has_shadowfury || settings.rotation_option == EmbindConstant::kSimChooses))
       spells->shadowfury = std::make_shared<Shadowfury>(*this);
     if (auras->corruption != NULL) spells->corruption = std::make_shared<Corruption>(*this, nullptr, auras->corruption);
     if (auras->unstable_affliction != NULL)
@@ -357,7 +363,7 @@ void Player::Initialize() {
     spells->cracked_power_core = std::make_shared<CrackedPowerCore>(*this, auras->cracked_power_core);
   if (selected_auras.super_mana_potion) spells->super_mana_potion = std::make_shared<SuperManaPotion>(*this);
   if (selected_auras.demonic_rune) spells->demonic_rune = std::make_shared<DemonicRune>(*this);
-  if (talents.dark_pact == 1 && (settings.has_dark_pact || settings.sim_choosing_rotation))
+  if (talents.dark_pact == 1 && (settings.has_dark_pact || settings.rotation_option == EmbindConstant::kSimChooses))
     spells->dark_pact = std::make_shared<DarkPact>(*this);
   if (auras->destruction_potion != NULL)
     spells->destruction_potion = std::make_shared<DestructionPotion>(*this, auras->destruction_potion);

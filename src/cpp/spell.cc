@@ -1027,13 +1027,13 @@ ShatteredSunPendantOfAcumen::ShatteredSunPendantOfAcumen(Player& player, std::sh
   proc_chance = 15;
   on_gcd = false;
   is_item = true;
-  if (player.settings.is_aldor) {
+  if (player.settings.shattrath_faction == EmbindConstant::kAldor) {
     this->is_proc = true;
     this->is_aura = true;
   } else {
     this->does_damage = true;
     this->can_crit = true;
-    this->dmg = 333;  // confirm
+    this->dmg = 333;
   }
   Setup();
 }

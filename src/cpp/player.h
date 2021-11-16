@@ -55,7 +55,7 @@ struct Player {
   std::map<std::string, std::unique_ptr<CombatLogBreakdown>> combat_log_breakdown;
   std::mt19937 gen;
   std::uniform_int_distribution<> random_num{1, 100 * kFloatNumberMultiplier};
-  std::string customStat;
+  std::string custom_stat;
   double cast_time_remaining;
   double gcd_remaining;
   double total_duration;

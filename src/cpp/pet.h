@@ -20,7 +20,6 @@ struct Pet : std::enable_shared_from_this<Pet> {
   std::unique_ptr<PetStats> debuff_stats;
   std::unique_ptr<PetStats> stats;
   PetName pet;
-  PetMode mode;
   PetType pet_type;
   std::string name;
   double enemy_dodge_chance;
