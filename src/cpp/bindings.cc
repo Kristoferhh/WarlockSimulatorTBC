@@ -37,7 +37,7 @@ void PostCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, ui
              count : $4,
              uptime : $5,
              dodges : $6,
-             glancing_blows : $7,
+             glancingBlows : $7,
              damage : 0,
              manaGain : 0
            }
