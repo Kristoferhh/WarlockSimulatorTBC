@@ -27,9 +27,9 @@ struct CharacterStats {
   double spirit_modifier;
   double mana_cost_modifier;
 
-  int GetStamina();
-  int GetIntellect();
-  int GetSpirit();
+  inline int GetStamina() { return stamina * stamina_modifier; }
+  inline int GetIntellect() { return intellect * intellect_modifier; }
+  inline int GetSpirit() { return spirit * spirit_modifier; }
 };
 
 #endif

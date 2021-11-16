@@ -7,7 +7,7 @@ struct Player;
 #include "aura_stats.h"
 
 struct Aura {
-  std::shared_ptr<Player> player;
+  Player& player;
   std::unique_ptr<AuraStats> stats;
   std::string name;
   int duration;
@@ -28,12 +28,11 @@ struct Aura {
   int max_stacks;
   // ISB
   double modifier;
-  double uptime_so_far;
   // Bloodlust
   double haste_modifier;
 
-  Aura(std::shared_ptr<Player> player);
-  void Setup();
+  Aura(Player& player);
+  virtual void Setup();
   virtual void Tick(double time);
   virtual void Apply();
   virtual void Fade();
@@ -43,96 +42,85 @@ struct Aura {
 struct ImprovedShadowBoltAura : public Aura {
   double modifier;
 
-  ImprovedShadowBoltAura(std::shared_ptr<Player> player);
+  ImprovedShadowBoltAura(Player& player);
   void Apply();
-  void Fade();
   void DecrementStacks();
 };
 
 struct CurseOfTheElementsAura : public Aura {
-  CurseOfTheElementsAura(std::shared_ptr<Player> player);
+  CurseOfTheElementsAura(Player& player);
 };
 
 struct CurseOfRecklessnessAura : public Aura {
-  CurseOfRecklessnessAura(std::shared_ptr<Player> player);
+  CurseOfRecklessnessAura(Player& player);
 };
 
 struct ShadowTranceAura : public Aura {
-  ShadowTranceAura(std::shared_ptr<Player> player);
+  ShadowTranceAura(Player& player);
 };
 
 struct FlameshadowAura : public Aura {
-  FlameshadowAura(std::shared_ptr<Player> player);
+  FlameshadowAura(Player& player);
 };
 
 struct ShadowflameAura : public Aura {
-  ShadowflameAura(std::shared_ptr<Player> player);
+  ShadowflameAura(Player& player);
 };
 
 struct SpellstrikeAura : public Aura {
-  SpellstrikeAura(std::shared_ptr<Player> player);
+  SpellstrikeAura(Player& player);
 };
 
 struct PowerInfusionAura : public Aura {
-  PowerInfusionAura(std::shared_ptr<Player> player);
+  PowerInfusionAura(Player& player);
 };
 
 struct EyeOfMagtheridonAura : public Aura {
-  EyeOfMagtheridonAura(std::shared_ptr<Player> player);
+  EyeOfMagtheridonAura(Player& player);
 };
 
 struct SextantOfUnstableCurrentsAura : public Aura {
-  SextantOfUnstableCurrentsAura(std::shared_ptr<Player> player);
+  SextantOfUnstableCurrentsAura(Player& player);
 };
 
 struct QuagmirransEyeAura : public Aura {
-  QuagmirransEyeAura(std::shared_ptr<Player> player);
+  QuagmirransEyeAura(Player& player);
 };
 
 struct ShiffarsNexusHornAura : public Aura {
-  ShiffarsNexusHornAura(std::shared_ptr<Player> player);
+  ShiffarsNexusHornAura(Player& player);
 };
 
 struct ManaEtched4SetAura : public Aura {
-  ManaEtched4SetAura(std::shared_ptr<Player> player);
+  ManaEtched4SetAura(Player& player);
 };
 
 struct DestructionPotionAura : public Aura {
-  DestructionPotionAura(std::shared_ptr<Player> player);
-  void Apply();
-  void Fade();
+  DestructionPotionAura(Player& player);
 };
 
 struct FlameCapAura : public Aura {
-  FlameCapAura(std::shared_ptr<Player> player);
+  FlameCapAura(Player& player);
 };
 
 struct BloodFuryAura : public Aura {
-  BloodFuryAura(std::shared_ptr<Player> player);
+  BloodFuryAura(Player& player);
 };
 
 struct BloodlustAura : public Aura {
-  BloodlustAura(std::shared_ptr<Player> player);
+  BloodlustAura(Player& player);
 };
 
 struct DrumsOfBattleAura : public Aura {
-  DrumsOfBattleAura(std::shared_ptr<Player> player);
+  DrumsOfBattleAura(Player& player);
 };
 
 struct DrumsOfWarAura : public Aura {
-  DrumsOfWarAura(std::shared_ptr<Player> player);
-};
-
-struct DrumsOfRestorationAura : public Aura {
-  int manaGain;
-
-  DrumsOfRestorationAura(std::shared_ptr<Player> player);
-  void Apply();
-  void Tick(double time);
+  DrumsOfWarAura(Player& player);
 };
 
 struct AshtongueTalismanOfShadowsAura : public Aura {
-  AshtongueTalismanOfShadowsAura(std::shared_ptr<Player> player);
+  AshtongueTalismanOfShadowsAura(Player& player);
 };
 
 struct DarkmoonCardCrusadeAura : public Aura {
@@ -140,61 +128,55 @@ struct DarkmoonCardCrusadeAura : public Aura {
   int max_stacks;
   int spell_power_per_stack;
 
-  DarkmoonCardCrusadeAura(std::shared_ptr<Player> player);
+  DarkmoonCardCrusadeAura(Player& player);
   void Apply();
   void Fade();
 };
 
 struct TheLightningCapacitorAura : public Aura {
-  TheLightningCapacitorAura(std::shared_ptr<Player> player);
+  TheLightningCapacitorAura(Player& player);
   void Apply();
   void Fade();
 };
 
 struct BandOfTheEternalSageAura : public Aura {
-  BandOfTheEternalSageAura(std::shared_ptr<Player> player);
+  BandOfTheEternalSageAura(Player& player);
 };
 
 struct BladeOfWizardryAura : public Aura {
-  BladeOfWizardryAura(std::shared_ptr<Player> player);
+  BladeOfWizardryAura(Player& player);
 };
 
 struct ShatteredSunPendantOfAcumenAura : public Aura {
-  ShatteredSunPendantOfAcumenAura(std::shared_ptr<Player> player);
+  ShatteredSunPendantOfAcumenAura(Player& player);
 };
 
 struct RobeOfTheElderScribesAura : public Aura {
-  RobeOfTheElderScribesAura(std::shared_ptr<Player> player);
+  RobeOfTheElderScribesAura(Player& player);
 };
 
 struct MysticalSkyfireDiamondAura : public Aura {
-  MysticalSkyfireDiamondAura(std::shared_ptr<Player> player);
+  MysticalSkyfireDiamondAura(Player& player);
 };
 
 struct AmplifyCurseAura : public Aura {
-  AmplifyCurseAura(std::shared_ptr<Player> player);
+  AmplifyCurseAura(Player& player);
 };
 
 struct WrathOfCenariusAura : public Aura {
-  WrathOfCenariusAura(std::shared_ptr<Player> player);
+  WrathOfCenariusAura(Player& player);
 };
 
 struct InnervateAura : public Aura {
-  InnervateAura(std::shared_ptr<Player> player);
+  InnervateAura(Player& player);
 };
 
 struct ChippedPowerCoreAura : public Aura {
-  ChippedPowerCoreAura(std::shared_ptr<Player> player);
+  ChippedPowerCoreAura(Player& player);
 };
 
 struct CrackedPowerCoreAura : public Aura {
-  CrackedPowerCoreAura(std::shared_ptr<Player> player);
-};
-
-struct ManaTideTotemAura : public Aura {
-  ManaTideTotemAura(std::shared_ptr<Player> player);
-  void Tick(double time);
-  void Apply();
+  CrackedPowerCoreAura(Player& player);
 };
 
 #endif

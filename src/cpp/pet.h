@@ -10,7 +10,7 @@ struct Player;
 #include "pet_stats.h"
 
 struct Pet : std::enable_shared_from_this<Pet> {
-  std::shared_ptr<Player> player;
+  Player& player;
   std::unique_ptr<PetSpells> spells;
   std::unique_ptr<PetAuras> auras;
   std::unique_ptr<PetStats> base_stats;
@@ -35,7 +35,7 @@ struct Pet : std::enable_shared_from_this<Pet> {
   double dmg;
   double base_melee_speed;
 
-  Pet(std::shared_ptr<Player> player);
+  Pet(Player& player);
   void Initialize();
   void CalculateStatsFromAuras();
   void CalculateStatsFromPlayer(bool announce_in_combat_log = true);
@@ -48,20 +48,26 @@ struct Pet : std::enable_shared_from_this<Pet> {
   double GetMeleeHitChance();
   double GetSpellCritChance();
   double GetSpellHitChance();
+  int GetStamina();
+  int GetIntellect();
+  int GetSpirit();
+  int GetAgility();
+  int GetStrength();
+  int GetPlayerSpellPower();
   bool IsCrit(AttackType type);
   bool IsHit(AttackType type);
 };
 
 struct Imp : public Pet {
-  Imp(std::shared_ptr<Player> player);
+  Imp(Player& player);
 };
 
 struct Succubus : public Pet {
-  Succubus(std::shared_ptr<Player> player);
+  Succubus(Player& player);
 };
 
 struct Felguard : public Pet {
-  Felguard(std::shared_ptr<Player> player);
+  Felguard(Player& player);
 };
 
 #endif

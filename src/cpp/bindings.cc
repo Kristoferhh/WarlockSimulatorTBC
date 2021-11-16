@@ -98,27 +98,26 @@ uint32_t* AllocRandomSeeds(int amount_of_seeds) {
   return seeds;
 }
 
-std::shared_ptr<Items> AllocItems() { return std::make_shared<Items>(); }
+Items AllocItems() { return Items(); }
 
-std::shared_ptr<Auras> AllocAuras() { return std::make_shared<Auras>(); }
+Auras AllocAuras() { return Auras(); }
 
-std::shared_ptr<Talents> AllocTalents() { return std::make_shared<Talents>(); }
+Talents AllocTalents() { return Talents(); }
 
-std::shared_ptr<Sets> AllocSets() { return std::make_shared<Sets>(); }
+Sets AllocSets() { return Sets(); }
 
-std::shared_ptr<CharacterStats> AllocStats() { return std::make_shared<CharacterStats>(); }
+CharacterStats AllocStats() { return CharacterStats(); }
 
-std::shared_ptr<PlayerSettings> AllocPlayerSettings() { return std::make_shared<PlayerSettings>(); }
-
-std::shared_ptr<Player> AllocPlayer(std::shared_ptr<PlayerSettings> settings) {
-  return std::make_shared<Player>(settings);
+PlayerSettings AllocPlayerSettings(Auras& auras, Talents& talents, Sets& sets, CharacterStats& stats, Items& items) {
+  return PlayerSettings(auras, talents, sets, stats, items);
 }
 
-std::shared_ptr<SimulationSettings> AllocSimSettings() { return std::make_shared<SimulationSettings>(); }
+Player AllocPlayer(PlayerSettings& settings) { return Player(settings); }
 
-std::shared_ptr<Simulation> AllocSim(std::shared_ptr<Player> player,
-                                     std::shared_ptr<SimulationSettings> simulation_settings) {
-  return std::make_shared<Simulation>(player, simulation_settings);
+SimulationSettings AllocSimSettings() { return SimulationSettings(); }
+
+Simulation AllocSim(Player& player, SimulationSettings& simulation_settings) {
+  return Simulation(player, simulation_settings);
 }
 
 std::string GetExceptionMessage(intptr_t exception_ptr) {
@@ -130,13 +129,10 @@ EMSCRIPTEN_BINDINGS(module) {
   emscripten::class_<Player>("Player").smart_ptr<std::shared_ptr<Player>>("Player");
 
   emscripten::class_<Simulation>("Simulation")
-      .smart_ptr<std::shared_ptr<Simulation>>("Simulation")
-      .property("player", &Simulation::player)
-      .property("simSettings", &Simulation::settings)
+      .constructor<Player&, SimulationSettings&>()
       .function("start", &Simulation::Start);
 
   emscripten::class_<Items>("Items")
-      .smart_ptr<std::shared_ptr<Items>>("Items")
       .property("head", &Items::head)
       .property("neck", &Items::neck)
       .property("shoulders", &Items::shoulders)
@@ -157,7 +153,7 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("wand", &Items::wand);
 
   emscripten::class_<Auras>("Auras")
-      .smart_ptr<std::shared_ptr<Auras>>("Auras")
+      .constructor<>()
       .property("felArmor", &Auras::fel_armor)
       .property("judgementOfWisdom", &Auras::judgement_of_wisdom)
       .property("manaSpringTotem", &Auras::mana_spring_totem)
@@ -223,7 +219,7 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("petSpiritScroll", &Auras::pet_spirit_scroll);
 
   emscripten::class_<Talents>("Talents")
-      .smart_ptr<std::shared_ptr<Talents>>("Talents")
+      .constructor<>()
       .property("suppression", &Talents::suppression)
       .property("improvedCorruption", &Talents::improved_corruption)
       .property("improvedLifeTap", &Talents::improved_life_tap)
@@ -267,7 +263,7 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("shadowfury", &Talents::shadowfury);
 
   emscripten::class_<Sets>("Sets")
-      .smart_ptr<std::shared_ptr<Sets>>("Sets")
+      .constructor<>()
       .property("plagueheart", &Sets::plagueheart)
       .property("spellfire", &Sets::spellfire)
       .property("spellstrike", &Sets::spellstrike)
@@ -279,7 +275,7 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("t6", &Sets::t6);
 
   emscripten::class_<CharacterStats>("CharacterStats")
-      .smart_ptr<std::shared_ptr<CharacterStats>>("CharacterStats")
+      .constructor<>()
       .property("health", &CharacterStats::health)
       .property("mana", &CharacterStats::mana)
       .property("stamina", &CharacterStats::stamina)
@@ -303,12 +299,7 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("spiritModifier", &CharacterStats::spirit_modifier);
 
   emscripten::class_<PlayerSettings>("PlayerSettings")
-      .smart_ptr<std::shared_ptr<PlayerSettings>>("PlayerSettings")
-      .property("auras", &PlayerSettings::auras)
-      .property("talents", &PlayerSettings::talents)
-      .property("sets", &PlayerSettings::sets)
-      .property("stats", &PlayerSettings::stats)
-      .property("items", &PlayerSettings::items)
+      .constructor<Auras&, Talents&, Sets&, CharacterStats&, Items&>()
       .property("itemId", &PlayerSettings::item_id)
       .property("metaGemId", &PlayerSettings::meta_gem_id)
       .property("equippedItemSimulation", &PlayerSettings::equipped_item_simulation)
@@ -380,7 +371,7 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("hasElementalShamanT4Bonus", &PlayerSettings::has_elemental_shaman_t4_bonus);
 
   emscripten::class_<SimulationSettings>("SimulationSettings")
-      .smart_ptr<std::shared_ptr<SimulationSettings>>("SimulationSettings")
+      .constructor<>()
       .property("iterations", &SimulationSettings::iterations)
       .property("minTime", &SimulationSettings::min_time)
       .property("maxTime", &SimulationSettings::max_time)

@@ -18,16 +18,15 @@
 #include "emscripten/bind.h"
 #endif
 
-std::shared_ptr<Player> AllocPlayer(std::shared_ptr<PlayerSettings> settings);
-std::shared_ptr<PlayerSettings> AllocPlayerSettings();
-std::shared_ptr<Items> AllocItems();
-std::shared_ptr<Auras> AllocAuras();
-std::shared_ptr<Talents> AllocTalents();
-std::shared_ptr<Sets> AllocSets();
-std::shared_ptr<CharacterStats> AllocStats();
-std::shared_ptr<SimulationSettings> AllocSimSettings();
-std::shared_ptr<Simulation> AllocSim(std::shared_ptr<Player> player,
-                                     std::shared_ptr<SimulationSettings> simulation_settings);
+Player AllocPlayer(PlayerSettings& settings);
+PlayerSettings AllocPlayerSettings(Auras& auras, Talents& talents, Sets& sets, CharacterStats& stats, Items& items);
+Items AllocItems();
+Auras AllocAuras();
+Talents AllocTalents();
+Sets AllocSets();
+CharacterStats AllocStats();
+SimulationSettings AllocSimSettings();
+Simulation AllocSim(Player& player, SimulationSettings& simulation_settings);
 uint32_t* AllocRandomSeeds(int amount_of_seeds);
 
 void DpsUpdate(double dps);

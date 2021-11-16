@@ -8,7 +8,7 @@ struct Player;
 #include "enums.h"
 
 struct DamageOverTime {
-  std::shared_ptr<Player> player;
+  Player& player;
   SpellSchool school;
   int duration;                 // Total duration of the dot
   int original_duration;        // Used for T4 4pc since we're increasing the duration
@@ -27,11 +27,11 @@ struct DamageOverTime {
   double coefficient;
   double t5_bonus_modifier;  // T5 4pc damage modifier
   bool active;
-  bool amplified;      // Applied while the Amplify Curse aura was active
+  bool applied_with_amplify_curse;
   bool isb_is_active;  // Siphon Life
   std::string name;
 
-  DamageOverTime(std::shared_ptr<Player> player);
+  DamageOverTime(Player& player);
   void Setup();
   virtual void Apply();
   virtual double GetModifier();
@@ -45,29 +45,29 @@ struct CorruptionDot : public DamageOverTime {
   double GetModifier();
   void Apply();
 
-  CorruptionDot(std::shared_ptr<Player> player);
+  CorruptionDot(Player& player);
 };
 
 struct UnstableAfflictionDot : public DamageOverTime {
-  UnstableAfflictionDot(std::shared_ptr<Player> player);
+  UnstableAfflictionDot(Player& player);
 };
 
 struct SiphonLifeDot : public DamageOverTime {
-  SiphonLifeDot(std::shared_ptr<Player> player);
+  SiphonLifeDot(Player& player);
 };
 
 struct ImmolateDot : public DamageOverTime {
-  ImmolateDot(std::shared_ptr<Player> player);
+  ImmolateDot(Player& player);
   void Apply();
 };
 
 struct CurseOfAgonyDot : public DamageOverTime {
-  CurseOfAgonyDot(std::shared_ptr<Player> player);
+  CurseOfAgonyDot(Player& player);
   double GetModifier();
 };
 
 struct CurseOfDoomDot : public DamageOverTime {
-  CurseOfDoomDot(std::shared_ptr<Player> player);
+  CurseOfDoomDot(Player& player);
   double GetModifier();
 };
 

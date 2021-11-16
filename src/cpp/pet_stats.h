@@ -2,10 +2,9 @@
 #define WARLOCK_SIMULATOR_TBC_PET_STATS
 
 struct Player;
-#include <memory>
 
 struct PetStats {
-  std::shared_ptr<Player> player;
+  Player& player;
   int stamina;
   int intellect;
   int strength;
@@ -29,9 +28,16 @@ struct PetStats {
   double attack_power_modifier;
   double damage_modifier;
 
-  PetStats(std::shared_ptr<Player> player = nullptr);
-  int GetStamina();
-  int GetIntellect();
+  PetStats(Player& player)
+      : player(player),
+        damage_modifier(1),
+        stamina_modifier(1),
+        intellect_modifier(1),
+        strength_modifier(1),
+        agility_modifier(1),
+        spirit_modifier(1),
+        attack_power_modifier(1),
+        haste_percent(1) {}
 };
 
 #endif

@@ -5,10 +5,10 @@
 #include "simulation_settings.h"
 
 struct Simulation {
-  std::shared_ptr<Player> player;
-  std::shared_ptr<SimulationSettings> settings;
+  Player& player;
+  SimulationSettings& settings;
 
-  Simulation(std::shared_ptr<Player> player, std::shared_ptr<SimulationSettings> sim_settings);
+  Simulation(Player& player, SimulationSettings& sim_settings);
   void Start();
   double PassTime();
   void SelectedSpellHandler(std::shared_ptr<Spell>& spell,

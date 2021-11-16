@@ -20,7 +20,7 @@
 #include "talents.h"
 #include "trinket.h"
 
-struct Player : std::enable_shared_from_this<Player> {
+struct Player {
   const double kHitRatingPerPercent = 12.62;
   const double kCritRatingPerPercent = 22.08;
   const double kHasteRatingPerPercent = 15.77;
@@ -39,12 +39,12 @@ struct Player : std::enable_shared_from_this<Player> {
                                             // seconds remaining, the sim can start precasting
                                             // Immolate and it won't refresh before it expires.
   std::shared_ptr<Pet> pet;
-  std::shared_ptr<Auras> selected_auras;
-  std::shared_ptr<Talents> talents;
-  std::shared_ptr<Sets> sets;
-  std::shared_ptr<CharacterStats> stats;
-  std::shared_ptr<Items> items;
-  std::shared_ptr<PlayerSettings> settings;
+  Auras& selected_auras;
+  Talents& talents;
+  Sets& sets;
+  CharacterStats& stats;
+  Items& items;
+  PlayerSettings& settings;
   std::unique_ptr<PlayerSpells> spells;
   std::unique_ptr<PlayerAuras> auras;
   std::vector<std::unique_ptr<Trinket>> trinkets;
@@ -53,7 +53,6 @@ struct Player : std::enable_shared_from_this<Player> {
   std::shared_ptr<Aura> curse_aura;
   std::vector<std::string> combat_log_entries;
   std::map<std::string, std::unique_ptr<CombatLogBreakdown>> combat_log_breakdown;
-  uint32_t iteration_damage;
   std::mt19937 gen;
   std::uniform_int_distribution<> random_num{1, 100 * kFloatNumberMultiplier};
   std::string customStat;
@@ -61,35 +60,38 @@ struct Player : std::enable_shared_from_this<Player> {
   double gcd_remaining;
   double total_duration;
   double fight_time;
-  int iteration;
   double mp5_timer;
   double five_second_rule_timer;
   double demonic_knowledge_spell_power;
+  int iteration_damage;
+  int iteration;
   int power_infusions_ready;
+  bool recording_combat_log_breakdown;
 
-  Player(std::shared_ptr<PlayerSettings> settings);
+  Player(PlayerSettings& settings);
   void Initialize();
   void Reset();
   void EndAuras();
   void ThrowError(const std::string& error);
-  double GetGcdValue(const std::shared_ptr<Spell>& spell);
-  double GetSpellPower(SpellSchool school = SpellSchool::kNoSchool);
-  double GetHastePercent();
-  bool IsCrit(SpellType spell_type, double extra_crit = 0);
-  bool IsHit(SpellType spell_type);
-  double GetCritChance(SpellType spell_type);
-  double GetHitChance(SpellType spell_type);
-  double GetPartialResistMultiplier(SpellSchool school);
-  double GetBaseHitChance(int player_level, int enemy_level);
-  void UseCooldowns(double fight_time_remaining);
-  int GetRand();
   void CastLifeTapOrDarkPact();
-  bool ShouldWriteToCombatLog();
+  void UseCooldowns(double fight_time_remaining);
   void AddIterationDamageAndMana(const std::string& spell_name, int mana_gain, int damage);
   void PostIterationDamageAndMana(const std::string& spell_name);
   void SendCombatLogEntries();
   void CombatLog(const std::string& entry);
   void SendPlayerInfoToCombatLog();
+  double GetGcdValue(const std::shared_ptr<Spell>& spell);
+  double GetSpellPower(SpellSchool school = SpellSchool::kNoSchool);
+  double GetHastePercent();
+  double GetCritChance(SpellType spell_type);
+  double GetHitChance(SpellType spell_type);
+  double GetPartialResistMultiplier(SpellSchool school);
+  double GetBaseHitChance(int player_level, int enemy_level);
+  int GetRand();
+  bool IsCrit(SpellType spell_type, double extra_crit = 0);
+  bool IsHit(SpellType spell_type);
+  bool ShouldWriteToCombatLog();
+  bool RollRng(double chance);
 };
 
 #endif

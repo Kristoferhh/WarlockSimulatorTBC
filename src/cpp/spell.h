@@ -9,7 +9,7 @@ struct Player;
 #include "enums.h"
 
 struct Spell : std::enable_shared_from_this<Spell> {
-  std::shared_ptr<Player> player;
+  Player& player;
   std::shared_ptr<Aura> aura_effect;
   std::shared_ptr<DamageOverTime> dot_effect;
   SpellSchool school;
@@ -48,8 +48,7 @@ struct Spell : std::enable_shared_from_this<Spell> {
   bool usable_once_per_fight;
   bool has_not_been_cast_this_fight;
 
-  Spell(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura = nullptr,
-        std::shared_ptr<DamageOverTime> dot = nullptr);
+  Spell(Player& player, std::shared_ptr<Aura> aura = nullptr, std::shared_ptr<DamageOverTime> dot = nullptr);
 
   void Reset();
   void Setup();
@@ -72,210 +71,200 @@ struct Spell : std::enable_shared_from_this<Spell> {
 };
 
 struct LifeTap : public Spell {
-  LifeTap(std::shared_ptr<Player> player);
+  LifeTap(Player& player);
   int ManaGain();
   void Cast();
 };
 
 struct ShadowBolt : public Spell {
-  ShadowBolt(std::shared_ptr<Player> player);
+  ShadowBolt(Player& player);
   void StartCast(double predicted_damage);
   double CalculateCastTime();
 };
 
 struct Incinerate : public Spell {
-  Incinerate(std::shared_ptr<Player> player);
+  Incinerate(Player& player);
 };
 
 struct SearingPain : public Spell {
-  SearingPain(std::shared_ptr<Player> player);
+  SearingPain(Player& player);
 };
 
 struct SoulFire : public Spell {
-  SoulFire(std::shared_ptr<Player> player);
+  SoulFire(Player& player);
 };
 
 struct Shadowburn : public Spell {
-  Shadowburn(std::shared_ptr<Player> player);
+  Shadowburn(Player& player);
 };
 
 struct DeathCoil : public Spell {
-  DeathCoil(std::shared_ptr<Player> player);
+  DeathCoil(Player& player);
 };
 
 struct Shadowfury : public Spell {
-  Shadowfury(std::shared_ptr<Player> player);
+  Shadowfury(Player& player);
 };
 
 struct SeedOfCorruption : public Spell {
   int aoe_cap;
-  SeedOfCorruption(std::shared_ptr<Player> player);
+  SeedOfCorruption(Player& player);
   void Damage(bool is_crit = false);
   double GetModifier();
 };
 
 struct DarkPact : public Spell {
-  DarkPact(std::shared_ptr<Player> player);
+  DarkPact(Player& player);
   void Cast();
   bool Ready();
   double ManaGain();
 };
 
 struct Corruption : public Spell {
-  Corruption(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
+  Corruption(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
 };
 
 struct UnstableAffliction : public Spell {
-  UnstableAffliction(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
+  UnstableAffliction(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
 };
 
 struct SiphonLife : public Spell {
-  SiphonLife(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
+  SiphonLife(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
 };
 
 struct Immolate : public Spell {
-  Immolate(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
+  Immolate(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
   double GetModifier();
 };
 
 struct CurseOfAgony : public Spell {
-  CurseOfAgony(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
+  CurseOfAgony(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
 };
 
 struct CurseOfTheElements : public Spell {
-  CurseOfTheElements(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  CurseOfTheElements(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct CurseOfRecklessness : public Spell {
-  CurseOfRecklessness(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  CurseOfRecklessness(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct CurseOfDoom : public Spell {
-  CurseOfDoom(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
+  CurseOfDoom(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
 };
 
 struct Conflagrate : public Spell {
-  Conflagrate(std::shared_ptr<Player> player);
+  Conflagrate(Player& player);
   void StartCast();
 };
 
 struct DestructionPotion : public Spell {
-  DestructionPotion(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
-};
-
-struct SuperManaPotion : public Spell {
-  SuperManaPotion(std::shared_ptr<Player> player);
-  void Cast();
-};
-
-struct DemonicRune : public Spell {
-  DemonicRune(std::shared_ptr<Player> player);
-  void Cast();
+  DestructionPotion(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct FlameCap : public Spell {
-  FlameCap(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  FlameCap(Player& player, std::shared_ptr<Aura> aura);
   void Cast();
 };
 
 struct BloodFury : public Spell {
-  BloodFury(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  BloodFury(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct Bloodlust : public Spell {
-  Bloodlust(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  Bloodlust(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct DrumsOfBattle : public Spell {
-  DrumsOfBattle(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  DrumsOfBattle(Player& player, std::shared_ptr<Aura> aura);
   bool Ready();
 };
 
 struct DrumsOfWar : public Spell {
-  DrumsOfWar(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  DrumsOfWar(Player& player, std::shared_ptr<Aura> aura);
   bool Ready();
 };
 
 struct DrumsOfRestoration : public Spell {
-  DrumsOfRestoration(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  DrumsOfRestoration(Player& player, std::shared_ptr<Aura> aura);
   bool Ready();
 };
 
 struct TimbalsFocusingCrystal : public Spell {
-  TimbalsFocusingCrystal(std::shared_ptr<Player> player);
+  TimbalsFocusingCrystal(Player& player);
 };
 
 struct MarkOfDefiance : public Spell {
-  MarkOfDefiance(std::shared_ptr<Player> player);
+  MarkOfDefiance(Player& player);
   void Cast();
 };
 
 struct TheLightningCapacitor : public Spell {
-  TheLightningCapacitor(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  TheLightningCapacitor(Player& player, std::shared_ptr<Aura> aura);
   void StartCast(double predicted_damage = 0);
 };
 
 struct BladeOfWizardry : public Spell {
-  BladeOfWizardry(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  BladeOfWizardry(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct ShatteredSunPendantOfAcumen : public Spell {
-  ShatteredSunPendantOfAcumen(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  ShatteredSunPendantOfAcumen(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct RobeOfTheElderScribes : public Spell {
-  RobeOfTheElderScribes(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  RobeOfTheElderScribes(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct QuagmirransEye : public Spell {
-  QuagmirransEye(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  QuagmirransEye(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct ShiffarsNexusHorn : public Spell {
-  ShiffarsNexusHorn(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  ShiffarsNexusHorn(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct SextantOfUnstableCurrents : public Spell {
-  SextantOfUnstableCurrents(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  SextantOfUnstableCurrents(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct BandOfTheEternalSage : public Spell {
-  BandOfTheEternalSage(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  BandOfTheEternalSage(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct MysticalSkyfireDiamond : public Spell {
-  MysticalSkyfireDiamond(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  MysticalSkyfireDiamond(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct InsightfulEarthstormDiamond : public Spell {
-  InsightfulEarthstormDiamond(std::shared_ptr<Player> player);
+  InsightfulEarthstormDiamond(Player& player);
   void Cast();
 };
 
 struct AmplifyCurse : public Spell {
-  AmplifyCurse(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  AmplifyCurse(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct PowerInfusion : public Spell {
-  PowerInfusion(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  PowerInfusion(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct Innervate : public Spell {
-  Innervate(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  Innervate(Player& player, std::shared_ptr<Aura> aura);
 };
 
 struct ChippedPowerCore : public Spell {
-  ChippedPowerCore(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  ChippedPowerCore(Player& player, std::shared_ptr<Aura> aura);
   void Cast();
 };
 
 struct CrackedPowerCore : public Spell {
-  CrackedPowerCore(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  CrackedPowerCore(Player& player, std::shared_ptr<Aura> aura);
   void Cast();
 };
 
 struct ManaTideTotem : public Spell {
-  ManaTideTotem(std::shared_ptr<Player> player, std::shared_ptr<Aura> aura);
+  ManaTideTotem(Player& player, std::shared_ptr<Aura> aura);
 };
 
 #endif

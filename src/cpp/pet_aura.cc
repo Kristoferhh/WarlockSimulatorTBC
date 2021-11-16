@@ -20,7 +20,7 @@ void PetAura::Apply() {
   active = true;
   duration_remaining = duration;
 
-  if (pet->player->ShouldWriteToCombatLog()) {
+  if (pet->player.ShouldWriteToCombatLog()) {
     std::string msg = pet->name + " gains " + name;
 
     if (pet->auras->demonic_frenzy != NULL) {
@@ -28,7 +28,7 @@ void PetAura::Apply() {
                  ")");
     }
 
-    pet->player->CombatLog(msg);
+    pet->player.CombatLog(msg);
   }
 }
 
@@ -36,14 +36,14 @@ void PetAura::Fade() {
   active = false;
   duration_remaining = 0;
 
-  if (pet->player->ShouldWriteToCombatLog()) {
+  if (pet->player.ShouldWriteToCombatLog()) {
     std::string msg = name;
 
     if (pet->auras->demonic_frenzy != NULL) {
       msg.append(" (" + std::to_string(stacks) + ")");
     }
 
-    pet->player->CombatLog(msg);
+    pet->player.CombatLog(msg);
   }
 }
 
@@ -75,11 +75,11 @@ BlackBook::BlackBook(std::shared_ptr<Pet> pet) : PetAura(pet) {
 void BlackBook::Apply(bool announce_in_combat_log) {
   PetAura::Apply();
 
-  if (announce_in_combat_log && pet->player->ShouldWriteToCombatLog()) {
-    pet->player->CombatLog(pet->name + " Spell Power + 200 (" + std::to_string(pet->stats->spell_power) + " -> " +
-                           std::to_string(pet->stats->spell_power + 200) + ")");
-    pet->player->CombatLog(pet->name + " Attack Power + 325 (" + std::to_string(pet->stats->attack_power) + " -> " +
-                           std::to_string(pet->stats->attack_power + 325) + ")");
+  if (announce_in_combat_log && pet->player.ShouldWriteToCombatLog()) {
+    pet->player.CombatLog(pet->name + " Spell Power + 200 (" + std::to_string(pet->stats->spell_power) + " -> " +
+                          std::to_string(pet->stats->spell_power + 200) + ")");
+    pet->player.CombatLog(pet->name + " Attack Power + 325 (" + std::to_string(pet->stats->attack_power) + " -> " +
+                          std::to_string(pet->stats->attack_power + 325) + ")");
   }
   pet->buff_stats->spell_power += 200;
   pet->buff_stats->attack_power += 325;
@@ -89,11 +89,11 @@ void BlackBook::Apply(bool announce_in_combat_log) {
 void BlackBook::Fade() {
   PetAura::Fade();
 
-  if (pet->player->ShouldWriteToCombatLog()) {
-    pet->player->CombatLog(pet->name + " Spell Power - 200 (" + std::to_string(pet->stats->spell_power) + " -> " +
-                           std::to_string(pet->stats->spell_power - 200) + ")");
-    pet->player->CombatLog(pet->name + " Attack Power - 325 (" + std::to_string(pet->stats->attack_power) + " -> " +
-                           std::to_string(pet->stats->attack_power - 325) + ")");
+  if (pet->player.ShouldWriteToCombatLog()) {
+    pet->player.CombatLog(pet->name + " Spell Power - 200 (" + std::to_string(pet->stats->spell_power) + " -> " +
+                          std::to_string(pet->stats->spell_power - 200) + ")");
+    pet->player.CombatLog(pet->name + " Attack Power - 325 (" + std::to_string(pet->stats->attack_power) + " -> " +
+                          std::to_string(pet->stats->attack_power - 325) + ")");
   }
   pet->buff_stats->spell_power -= 200;
   pet->buff_stats->attack_power -= 325;

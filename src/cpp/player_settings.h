@@ -10,11 +10,11 @@
 #include "talents.h"
 
 struct PlayerSettings {
-  std::shared_ptr<Auras> auras;
-  std::shared_ptr<Talents> talents;
-  std::shared_ptr<Sets> sets;
-  std::shared_ptr<CharacterStats> stats;
-  std::shared_ptr<Items> items;
+  Auras& auras;
+  Talents& talents;
+  Sets& sets;
+  CharacterStats& stats;
+  Items& items;
   int item_id;
   int meta_gem_id;
   bool equipped_item_simulation;
@@ -84,6 +84,9 @@ struct PlayerSettings {
   bool has_amplify_curse;
   bool has_dark_pact;
   bool has_elemental_shaman_t4_bonus;
+
+  PlayerSettings(Auras& auras, Talents& talents, Sets& sets, CharacterStats& stats, Items& items)
+      : auras(auras), talents(talents), sets(sets), stats(stats), items(items) {}
 };
 
 #endif
