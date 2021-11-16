@@ -978,11 +978,15 @@ void MarkOfDefiance::Cast() {
   if (cooldown_remaining <= 0) {
     const int kCurrentPlayerMana = player.stats.mana;
     player.stats.mana = std::min(static_cast<double>(player.stats.max_mana), kCurrentPlayerMana + average_mana_value);
+    const int kManaGained = player.stats.mana - kCurrentPlayerMana;
+    if (player.recording_combat_log_breakdown) {
+      player.combat_log_breakdown.at(name)->casts++;
+      player.AddIterationDamageAndMana(name, kManaGained, 0);
+    }
     if (player.ShouldWriteToCombatLog()) {
-      player.CombatLog("Player gains " +
-                       TruncateTrailingZeros(std::to_string(round(player.stats.mana - kCurrentPlayerMana))) +
-                       " mana from " + name + " (" + TruncateTrailingZeros(std::to_string(round(kCurrentPlayerMana))) +
-                       " -> " + TruncateTrailingZeros(std::to_string(round(player.stats.mana))) + ")");
+      player.CombatLog("Player gains " + TruncateTrailingZeros(std::to_string(round(kManaGained))) + " mana from " +
+                       name + " (" + TruncateTrailingZeros(std::to_string(round(kCurrentPlayerMana))) + " -> " +
+                       TruncateTrailingZeros(std::to_string(round(player.stats.mana))) + ")");
     }
     cooldown_remaining = cooldown;
   }
@@ -1022,7 +1026,7 @@ BladeOfWizardry::BladeOfWizardry(Player& player, std::shared_ptr<Aura> aura) : S
 
 ShatteredSunPendantOfAcumen::ShatteredSunPendantOfAcumen(Player& player, std::shared_ptr<Aura> aura)
     : Spell(player, aura) {
-  name = "Shattered Sun Pendant of Acumen";
+  name = "Shattered Sun Pendant of Acumen (Scryers)";
   cooldown = 45;
   proc_chance = 15;
   on_gcd = false;
@@ -1115,10 +1119,15 @@ void InsightfulEarthstormDiamond::Cast() {
   Spell::Cast();
   const int kCurrentPlayerMana = player.stats.mana;
   player.stats.mana = std::min(static_cast<double>(player.stats.max_mana), kCurrentPlayerMana + mana_gain);
+  const int kManaGained = player.stats.mana - kCurrentPlayerMana;
+  if (player.recording_combat_log_breakdown) {
+    player.combat_log_breakdown.at(name)->casts++;
+    player.AddIterationDamageAndMana(name, kManaGained, 0);
+  }
   if (player.ShouldWriteToCombatLog()) {
-    player.CombatLog("Player gains " + std::to_string(round(player.stats.mana - kCurrentPlayerMana)) + " mana from " +
-                     name + " (" + std::to_string(round(kCurrentPlayerMana)) + " -> " +
-                     std::to_string(round(player.stats.mana)) + ")");
+    player.CombatLog("Player gains " + std::to_string(round(kManaGained)) + " mana from " + name + " (" +
+                     std::to_string(round(kCurrentPlayerMana)) + " -> " + std::to_string(round(player.stats.mana)) +
+                     ")");
   }
 }
 
