@@ -177,26 +177,22 @@ onmessage = (event) => {
         playerSettings.metaGemId = parseInt(event.data.playerSettings.metaGemId);
         playerSettings.equippedItemSimulation = event.data.equippedItemSimulation === true;
         playerSettings.recordingCombatLogBreakdown = playerData.simSettings["automatically-open-sim-details"] === "yes";
-        playerSettings.simmingStamina = event.data.customStat === "stamina";
-        playerSettings.simmingIntellect = event.data.customStat === "intellect";
-        playerSettings.simmingSpirit = event.data.customStat === "spirit";
-        playerSettings.simmingSpellPower = event.data.customStat === "spellPower";
-        playerSettings.simmingShadowPower = event.data.customStat === "shadowPower";
-        playerSettings.simmingFirePower = event.data.customStat === "firePower";
-        playerSettings.simmingHitRating = event.data.customStat === "hitRating";
-        playerSettings.simmingCritRating = event.data.customStat === "critRating";
-        playerSettings.simmingHasteRating = event.data.customStat === "hasteRating";
-        playerSettings.simmingMp5 = event.data.customStat === "mp5";
-        playerSettings.isAldor = playerData.simSettings.shattrathFaction === "Aldor";
+        playerSettings.customStat = module.EmbindConstant[event.data.customStat];
+        playerSettings.shattrathFaction =
+          playerData.simSettings.shattrathFaction === "Aldor" ? module.EmbindConstant.aldor : module.EmbindConstant.scryers;
         playerSettings.enemyLevel = parseInt(playerData.simSettings['target-level']);
         playerSettings.enemyShadowResist = parseInt(playerData.simSettings['target-shadow-resistance']);
         playerSettings.enemyFireResist = parseInt(playerData.simSettings['target-fire-resistance']);
         playerSettings.mageAtieshAmount = parseInt(playerData.simSettings.mageAtieshAmount);
         playerSettings.totemOfWrathAmount = parseInt(playerData.simSettings.totemOfWrathAmount);
         playerSettings.sacrificingPet = playerData.simSettings.sacrificePet === "yes";
-        playerSettings.petIsImp = playerData.simSettings.petChoice === "0";
-        playerSettings.petIsSuccubus = playerData.simSettings.petChoice === "2";
-        playerSettings.petIsFelguard = playerData.simSettings.petChoice === "4";
+        if (playerData.simSettings.petChoice === '0') {
+          playerSettings.selectedPet = module.EmbindConstant.imp;
+        } else if (playerData.simSettings.petChoice === '2') {
+          playerSettings.selectedPet = module.EmbindConstant.succubus;
+        } else if (playerData.simSettings.petChoice === '4') {
+          playerSettings.selectedPet = module.EmbindConstant.felguard;
+        }
         playerSettings.ferociousInspirationAmount = parseInt(playerData.simSettings.ferociousInspirationAmount);
         playerSettings.improvedCurseOfTheElements = parseInt(playerData.simSettings.improvedCurseOfTheElements);
         playerSettings.usingCustomIsbUptime = playerData.simSettings.customIsbUptime === "yes";
@@ -206,9 +202,11 @@ onmessage = (event) => {
         playerSettings.shadowPriestDps = parseInt(playerData.simSettings.shadowPriestDps);
         playerSettings.warlockAtieshAmount = parseInt(playerData.simSettings.warlockAtieshAmount);
         playerSettings.improvedExposeArmor = parseInt(playerData.simSettings.improvedExposeArmor);
-        playerSettings.isSingleTarget = !playerData.simSettings.fightType || playerData.simSettings.fightType === "singleTarget";
+        playerSettings.fightType =
+          !playerData.simSettings.fightType || playerData.simSettings.fightType === "singleTarget" ?
+            module.EmbindConstant.singleTarget : module.EmbindConstant.aoe;
         playerSettings.enemyAmount = parseInt(playerData.simSettings.enemyAmount);
-        playerSettings.isOrc = playerData.simSettings.race === "orc";
+        playerSettings.race = module.EmbindConstant[playerData.simSettings.race];
         playerSettings.powerInfusionAmount = parseInt(playerData.simSettings.powerInfusionAmount);
         playerSettings.bloodlustAmount = parseInt(playerData.simSettings.bloodlustAmount);
         playerSettings.innervateAmount = parseInt(playerData.simSettings.innervateAmount);
@@ -217,11 +215,14 @@ onmessage = (event) => {
         playerSettings.improvedFaerieFire = playerData.simSettings.improvedFaerieFire === "yes";
         playerSettings.infinitePlayerMana = playerData.simSettings.infinitePlayerMana === "yes";
         playerSettings.infinitePetMana = playerData.simSettings.infinitePetMana === "yes";
-        playerSettings.usingLashOfPainOnCooldown = playerData.simSettings.lashOfPainUsage === "onCooldown";
-        playerSettings.petIsAggressive = playerData.simSettings.petMode === "1";
+        playerSettings.lashOfPainUsage =
+          playerData.simSettings.lashOfPainUsage === "onCooldown" ? module.EmbindConstant.onCooldown : module.EmbindConstant.noIsb;
+        playerSettings.petMode =
+          playerData.simSettings.petMode === '0' ? module.EmbindConstant.passive : module.EmbindConstant.aggressive;
         playerSettings.prepopBlackBook = playerData.simSettings.prepopBlackBook === "yes";
         playerSettings.randomizeValues = playerData.simSettings.randomizeValues === "yes";
-        playerSettings.simChoosingRotation = playerData.simSettings.rotationOption === "simChooses";
+        playerSettings.rotationOption =
+          playerData.simSettings.rotationOption === "simChooses" ? module.EmbindConstant.simChooses : module.EmbindConstant.userChooses;
         playerSettings.exaltedWithShattrathFaction = playerData.simSettings.shattrathFactionReputation === "yes";
         playerSettings.survivalHunterAgility = parseInt(playerData.simSettings.survivalHunterAgility);
         playerSettings.hasImmolate = playerData.rotation.dot && playerData.rotation.dot.immolate;
