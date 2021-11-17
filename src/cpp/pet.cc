@@ -34,7 +34,6 @@ void Pet::Initialize() {
       auras->demonic_frenzy = std::make_unique<DemonicFrenzy>(shared_from_this());
     }
     if (player.selected_auras.pet_battle_squawk) {
-      std::cout << "creating battle squawk" << std::endl;
       auras->battle_squawk = std::make_unique<BattleSquawk>(shared_from_this());
     }
   }
