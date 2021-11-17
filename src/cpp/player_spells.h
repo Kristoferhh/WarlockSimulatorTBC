@@ -48,6 +48,7 @@ struct PlayerSpells {
   std::shared_ptr<Spell> chipped_power_core;
   std::shared_ptr<Spell> cracked_power_core;
   std::shared_ptr<Spell> mana_tide_totem;
+  std::shared_ptr<Spell> judgement_of_wisdom;
   std::vector<std::shared_ptr<Spell>> power_infusion;
   std::vector<std::shared_ptr<Spell>> bloodlust;
   std::vector<std::shared_ptr<Spell>> innervate;

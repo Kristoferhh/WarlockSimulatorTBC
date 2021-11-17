@@ -83,10 +83,10 @@ void Aura::Apply() {
       }
       if (stats->haste_percent > 0) {
         if (player.ShouldWriteToCombatLog()) {
-          player.CombatLog("Haste % * " + std::to_string(stats->haste_percent) + " (" +
-                           std::to_string((player.stats.haste_percent - 1) * 100) + " -> " +
-                           std::to_string((player.stats.haste_percent * (1 + (stats->haste_percent / 100)) - 1) * 100) +
-                           ")");
+          player.CombatLog(
+              "Haste % * " + DoubleToString(stats->haste_percent, 2) + " (" +
+              DoubleToString((player.stats.haste_percent - 1) * 100, 2) + " -> " +
+              DoubleToString((player.stats.haste_percent * (1 + (stats->haste_percent / 100)) - 1) * 100, 2) + ")");
         }
         player.stats.haste_percent *= (1 + stats->haste_percent / 100.0);
         if (player.pet != NULL && group_wide) {
@@ -96,10 +96,9 @@ void Aura::Apply() {
       if (stats->mana_cost_modifier > 0) {
         if (player.ShouldWriteToCombatLog()) {
           double currentmanaCostModifier = player.stats.mana_cost_modifier;
-          player.CombatLog(
-              "Mana Cost Modifier * " + TruncateTrailingZeros(std::to_string(stats->mana_cost_modifier), 2) + " (" +
-              TruncateTrailingZeros(std::to_string(currentmanaCostModifier), 2) + " -> " +
-              TruncateTrailingZeros(std::to_string(currentmanaCostModifier * stats->mana_cost_modifier), 2) + ")");
+          player.CombatLog("Mana Cost Modifier * " + DoubleToString(stats->mana_cost_modifier, 2) + " (" +
+                           DoubleToString(currentmanaCostModifier, 2) + " -> " +
+                           DoubleToString(currentmanaCostModifier * stats->mana_cost_modifier, 2) + ")");
         }
         player.stats.mana_cost_modifier *= stats->mana_cost_modifier;
       }
@@ -178,10 +177,10 @@ void Aura::Fade() {
     }
     if (stats->haste_percent > 0) {
       if (player.ShouldWriteToCombatLog()) {
-        player.CombatLog("Haste % / " + std::to_string(stats->haste_percent) + "% (" +
-                         std::to_string((player.stats.haste_percent - 1) * 100) + " -> " +
-                         std::to_string((player.stats.haste_percent / (1 + (stats->haste_percent / 100)) - 1) * 100) +
-                         ")");
+        player.CombatLog(
+            "Haste % / " + DoubleToString(stats->haste_percent, 2) + "% (" +
+            DoubleToString((player.stats.haste_percent - 1) * 100, 2) + " -> " +
+            DoubleToString((player.stats.haste_percent / (1 + (stats->haste_percent / 100)) - 1) * 100, 2) + ")");
       }
       player.stats.haste_percent /= (1 + stats->haste_percent / 100.0);
       if (player.pet != NULL && group_wide) {
@@ -190,11 +189,9 @@ void Aura::Fade() {
     }
     if (stats->mana_cost_modifier > 0) {
       if (player.ShouldWriteToCombatLog()) {
-        player.CombatLog(
-            "Mana Cost Modifier / " + TruncateTrailingZeros(std::to_string(stats->mana_cost_modifier), 2) + " (" +
-            TruncateTrailingZeros(std::to_string(player.stats.mana_cost_modifier), 2) + " -> " +
-            TruncateTrailingZeros(std::to_string(player.stats.mana_cost_modifier / stats->mana_cost_modifier), 2) +
-            ")");
+        player.CombatLog("Mana Cost Modifier / " + DoubleToString(stats->mana_cost_modifier, 2) + " (" +
+                         DoubleToString(player.stats.mana_cost_modifier, 2) + " -> " +
+                         DoubleToString(player.stats.mana_cost_modifier / stats->mana_cost_modifier, 2) + ")");
       }
       player.stats.mana_cost_modifier /= stats->mana_cost_modifier;
     }

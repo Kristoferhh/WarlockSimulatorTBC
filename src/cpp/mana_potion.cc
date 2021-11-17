@@ -19,10 +19,9 @@ void ManaPotion::Cast() {
     player.AddIterationDamageAndMana(name, kManaGain, 0);
   }
   if (player.ShouldWriteToCombatLog()) {
-    player.CombatLog("Player gains " +
-                     TruncateTrailingZeros(std::to_string(round(player.stats.mana - kCurrentPlayerMana))) +
-                     " mana from " + name + " (" + TruncateTrailingZeros(std::to_string(round(kCurrentPlayerMana))) +
-                     " -> " + TruncateTrailingZeros(std::to_string(round(player.stats.mana))) + ")");
+    player.CombatLog("Player gains " + DoubleToString(round(player.stats.mana - kCurrentPlayerMana)) + " mana from " +
+                     name + " (" + DoubleToString(round(kCurrentPlayerMana)) + " -> " +
+                     DoubleToString(round(player.stats.mana)) + ")");
   }
 }
 

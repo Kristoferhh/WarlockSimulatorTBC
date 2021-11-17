@@ -166,14 +166,11 @@ void DamageOverTime::Tick(double t) {
       player.AddIterationDamageAndMana(name, 0, kDamage);
     }
     if (player.ShouldWriteToCombatLog()) {
-      std::string msg = name + " Tick " + TruncateTrailingZeros(std::to_string(round(kDamage))) + " (" +
-                        TruncateTrailingZeros(std::to_string(kBaseDamage)) + " Base Damage - " +
-                        TruncateTrailingZeros(std::to_string(kSpellPower)) + " Spell Power - " +
-                        TruncateTrailingZeros(std::to_string(coefficient), 3) + " Coefficient - " +
-                        TruncateTrailingZeros(std::to_string(round(kModifier * 10000) / 100), 3) +
-                        "% Damage Modifier - " +
-                        TruncateTrailingZeros(std::to_string(round(kPartialResistMultiplier * 1000) / 10)) +
-                        "% Partial Resist Multiplier";
+      std::string msg = name + " Tick " + DoubleToString(round(kDamage)) + " (" + DoubleToString(kBaseDamage) +
+                        " Base Damage - " + DoubleToString(kSpellPower) + " Spell Power - " +
+                        DoubleToString(coefficient, 3) + " Coefficient - " +
+                        DoubleToString(round(kModifier * 10000) / 100, 3) + "% Damage Modifier - " +
+                        DoubleToString(round(kPartialResistMultiplier * 1000) / 10) + "% Partial Resist Multiplier";
       if (t5_bonus_modifier > 1) {
         msg += " - " + std::to_string(round(t5_bonus_modifier * 10000) / 100) + "% Base Dmg Modifier (T5 4pc bonus)";
       }

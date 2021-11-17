@@ -13,17 +13,16 @@ Spell::Spell(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageO
   cooldown = 0;
   school = SpellSchool::kNoSchool;
   is_non_warlock_ability = false;
-  is_dot = false;
   does_damage = false;
   can_crit = false;
   is_item = false;
-  is_aura = false;
   on_gcd = true;
   is_proc = false;
   is_finisher = false;
   cast_time = 0;
   usable_once_per_fight = false;
   has_not_been_cast_this_fight = true;
+  gain_mana_on_cast = false;
 }
 
 void Spell::Reset() {
@@ -34,10 +33,10 @@ void Spell::Reset() {
 
 void Spell::Setup() {
   if (min_dmg > 0 && max_dmg > 0) {
-    dmg = (min_dmg + max_dmg) / 2;
+    dmg = (min_dmg + max_dmg) / 2.0;
   }
   if (min_mana > 0 && max_mana > 0) {
-    average_mana_value = (min_mana + max_mana) / 2;
+    mana_gain = (min_mana + max_mana) / 2.0;
   }
   if (player.recording_combat_log_breakdown && player.combat_log_breakdown.count(name) == 0) {
     player.combat_log_breakdown.insert(std::make_pair(name, new CombatLogBreakdown(name)));
@@ -86,11 +85,10 @@ void Spell::StartCast(double predicted_damage) {
     casting = true;
     player.cast_time_remaining = GetCastTime();
     if (!is_proc && player.ShouldWriteToCombatLog()) {
-      combat_log_message.append(
-          "Started casting " + name +
-          " - Cast time: " + TruncateTrailingZeros(std::to_string(player.cast_time_remaining - player.kSpellDelay), 4) +
-          " (" + TruncateTrailingZeros(std::to_string((player.GetHastePercent() - 1) * 100), 4) +
-          "% haste at a base Cast speed of " + TruncateTrailingZeros(std::to_string(cast_time), 2) + ")");
+      combat_log_message.append("Started casting " + name +
+                                " - Cast time: " + DoubleToString(player.cast_time_remaining - player.kSpellDelay, 4) +
+                                " (" + DoubleToString((player.GetHastePercent() - 1) * 100, 4) +
+                                "% haste at a base Cast speed of " + DoubleToString(cast_time, 2) + ")");
     }
   } else {
     if (!is_proc && player.ShouldWriteToCombatLog()) {
@@ -99,14 +97,13 @@ void Spell::StartCast(double predicted_damage) {
     Cast();
   }
   if (on_gcd && !is_non_warlock_ability && player.ShouldWriteToCombatLog()) {
-    combat_log_message.append(" - Global cooldown: " + TruncateTrailingZeros(std::to_string(player.gcd_remaining), 4));
+    combat_log_message.append(" - Global cooldown: " + DoubleToString(player.gcd_remaining, 4));
   }
   if (predicted_damage > 0 && player.ShouldWriteToCombatLog()) {
-    combat_log_message.append(" - Estimated Damage / Cast time: " +
-                              TruncateTrailingZeros(std::to_string(round(predicted_damage))));
+    combat_log_message.append(" - Estimated Damage / Cast time: " + DoubleToString(round(predicted_damage)));
   }
 
-  if (player.ShouldWriteToCombatLog()) {
+  if (combat_log_message.length() > 0 && player.ShouldWriteToCombatLog()) {
     player.CombatLog(combat_log_message);
   }
 }
@@ -140,7 +137,7 @@ void Spell::Cast() {
     player.power_infusions_ready--;
   }
 
-  if (!is_aura && player.recording_combat_log_breakdown) {
+  if (aura_effect == NULL && player.recording_combat_log_breakdown) {
     player.combat_log_breakdown.at(name)->casts++;
   }
 
@@ -150,10 +147,21 @@ void Spell::Cast() {
   }
 
   if (cast_time > 0 && player.ShouldWriteToCombatLog()) {
-    player.CombatLog("Finished casting " + name + " - Mana: " + TruncateTrailingZeros(std::to_string(kCurrentMana)) +
-                     " -> " + TruncateTrailingZeros(std::to_string(player.stats.mana)) + " - Mana Cost: " +
-                     TruncateTrailingZeros(std::to_string(round(GetManaCost()))) + " - Mana Cost Modifier: " +
-                     TruncateTrailingZeros(std::to_string(round(player.stats.mana_cost_modifier * 100))) + "%");
+    player.CombatLog("Finished casting " + name + " - Mana: " + DoubleToString(kCurrentMana) + " -> " +
+                     DoubleToString(player.stats.mana) + " - Mana Cost: " + DoubleToString(round(GetManaCost())) +
+                     " - Mana Cost Modifier: " + DoubleToString(round(player.stats.mana_cost_modifier * 100)) + "%");
+  }
+
+  if (gain_mana_on_cast) {
+    player.stats.mana = std::min(static_cast<double>(player.stats.max_mana), kCurrentMana + mana_gain);
+    const int kManaGained = player.stats.mana - kCurrentMana;
+    if (player.recording_combat_log_breakdown) {
+      player.AddIterationDamageAndMana(name, kManaGained, 0);
+    }
+    if (player.ShouldWriteToCombatLog()) {
+      player.CombatLog("Player gains " + DoubleToString(round(kManaGained)) + " mana from " + name + " (" +
+                       DoubleToString(round(kCurrentMana)) + " -> " + DoubleToString(round(player.stats.mana)) + ")");
+    }
   }
 
   if (can_crit) {
@@ -179,10 +187,10 @@ void Spell::Cast() {
     return;
   }
 
-  if (is_aura) {
+  if (aura_effect != NULL) {
     aura_effect->Apply();
   }
-  if (is_dot) {
+  if (dot_effect != NULL) {
     dot_effect->Apply();
   }
   if (does_damage) {
@@ -225,7 +233,7 @@ void Spell::Damage(bool isCrit) {
     crit_multiplier = GetCritMultiplier(crit_multiplier);
     total_damage *= crit_multiplier;
     OnCritProcs();
-  } else if (school == SpellSchool::kShadow && !is_dot && player.auras->improved_shadow_bolt != NULL &&
+  } else if (school == SpellSchool::kShadow && dot_effect == NULL && player.auras->improved_shadow_bolt != NULL &&
              player.auras->improved_shadow_bolt->active && !player.settings.using_custom_isb_uptime) {
     player.auras->improved_shadow_bolt->DecrementStacks();
   }
@@ -241,19 +249,17 @@ void Spell::Damage(bool isCrit) {
     if (isCrit) {
       msg += "*";
     }
-    msg += TruncateTrailingZeros(std::to_string(round(total_damage)));
+    msg += DoubleToString(round(total_damage));
     if (isCrit) {
       msg += "*";
     }
-    msg += " (" + TruncateTrailingZeros(std::to_string(dmg), 1) + " Base Damage - " +
-           TruncateTrailingZeros(std::to_string(round(coefficient * 1000) / 1000), 3) + " Coefficient - " +
-           TruncateTrailingZeros(std::to_string(round(kSpellPower))) + " Spell Power - ";
+    msg += " (" + DoubleToString(dmg, 1) + " Base Damage - " + DoubleToString(round(coefficient * 1000) / 1000, 3) +
+           " Coefficient - " + DoubleToString(round(kSpellPower)) + " Spell Power - ";
     if (isCrit) {
-      msg += TruncateTrailingZeros(std::to_string(crit_multiplier * 100), 3) + "% Crit Multiplier - ";
+      msg += DoubleToString(crit_multiplier * 100, 3) + "% Crit Multiplier - ";
     }
-    msg += TruncateTrailingZeros(std::to_string(round(kDamageModifier * 10000) / 100), 2) + "% Damage Modifier - " +
-           TruncateTrailingZeros(std::to_string(round(kPartialResistMultiplier * 1000) / 10)) +
-           "% Partial Resist Multiplier)";
+    msg += DoubleToString(round(kDamageModifier * 10000) / 100, 2) + "% Damage Modifier - " +
+           DoubleToString(round(kPartialResistMultiplier * 1000) / 10) + "% Partial Resist Multiplier)";
     player.CombatLog(msg);
   }
 
@@ -333,7 +339,7 @@ double Spell::PredictDamage() {
       can_crit ? (kNormalDamage * chance_to_not_crit) + (crit_damage * crit_chance) : kNormalDamage;
 
   // Add the predicted Damage of the DoT over its full duration
-  if (is_dot) {
+  if (dot_effect != NULL) {
     estimated_damage += dot_effect->PredictDamage();
   }
 
@@ -382,23 +388,10 @@ void Spell::OnDamageProcs() {
 }
 
 void Spell::OnHitProcs() {
-  // Judgement of Wisdom (50% proc rate)
-  if (player.selected_auras.judgement_of_wisdom && player.RollRng(50)) {
-    const int kManaValue = 74;
-    const int kCurrentMana = player.stats.mana;
-    const int kManaGained = std::min(player.stats.max_mana - kCurrentMana, kManaValue);
-    player.stats.mana += kManaGained;
-    if (player.recording_combat_log_breakdown) {
-      player.combat_log_breakdown.at("Judgement of Wisdom")->casts++;
-      player.AddIterationDamageAndMana("Judgement of Wisdom", kManaGained, 0);
-    }
-    if (player.ShouldWriteToCombatLog()) {
-      player.CombatLog("Player gains " + std::to_string(kManaGained) + " mana from Judgement of Wisdom (" +
-                       std::to_string(kCurrentMana) + " -> " + std::to_string(player.stats.mana) + ")");
-    }
+  if (player.spells->judgement_of_wisdom != NULL && player.RollRng(player.spells->judgement_of_wisdom->proc_chance)) {
+    player.spells->judgement_of_wisdom->StartCast();
   }
-  if (player.sets.t4 >= 2 && (school == SpellSchool::kShadow || school == SpellSchool::kFire) &&
-      player.RollRng(player.auras->flameshadow->proc_chance)) {
+  if (player.sets.t4 >= 2 && player.RollRng(player.auras->flameshadow->proc_chance)) {
     if (school == SpellSchool::kShadow) {
       player.auras->flameshadow->Apply();
     } else if (school == SpellSchool::kFire) {
@@ -426,7 +419,6 @@ void Spell::OnHitProcs() {
       player.RollRng(player.spells->band_of_the_eternal_sage->proc_chance)) {
     player.spells->band_of_the_eternal_sage->StartCast();
   }
-  // Blade of Wizardry
   if (player.spells->blade_of_wizardry != NULL && player.spells->blade_of_wizardry->Ready() &&
       player.RollRng(player.auras->blade_of_wizardry->proc_chance)) {
     player.spells->blade_of_wizardry->StartCast();
@@ -702,19 +694,15 @@ void SeedOfCorruption::Damage(bool isCrit) {
   player.iteration_damage += total_seed_damage;
 
   if (player.ShouldWriteToCombatLog()) {
-    std::string msg =
-        name + " " + TruncateTrailingZeros(std::to_string(round(total_seed_damage))) + " (" +
-        std::to_string(kEnemyAmount) + " Enemies (" + std::to_string(resist_amount) + " Resists & " +
-        std::to_string(crit_amount) + " Crits) - " + std::to_string(kBaseDamage) + " Base Damage - " +
-        TruncateTrailingZeros(std::to_string(coefficient), 3) + " Coefficient - " + std::to_string(kSpellPower) +
-        " Spell Power - " +
-        TruncateTrailingZeros(std::to_string(round(internal_modifier * external_modifier * 1000) / 10), 1) +
-        "% Modifier - ";
+    std::string msg = name + " " + DoubleToString(round(total_seed_damage)) + " (" + std::to_string(kEnemyAmount) +
+                      " Enemies (" + std::to_string(resist_amount) + " Resists & " + std::to_string(crit_amount) +
+                      " Crits) - " + std::to_string(kBaseDamage) + " Base Damage - " + DoubleToString(coefficient, 3) +
+                      " Coefficient - " + std::to_string(kSpellPower) + " Spell Power - " +
+                      DoubleToString(round(internal_modifier * external_modifier * 1000) / 10, 1) + "% Modifier - ";
     if (crit_amount > 0) {
-      msg += TruncateTrailingZeros(std::to_string(crit_damage_multiplier), 3) + "% Crit Multiplier";
+      msg += DoubleToString(crit_damage_multiplier, 3) + "% Crit Multiplier";
     }
-    msg += " - " + TruncateTrailingZeros(std::to_string(round(kPartialResistMultiplier * 1000) / 10)) +
-           "% Partial Resist Multiplier)";
+    msg += " - " + DoubleToString(round(kPartialResistMultiplier * 1000) / 10) + "% Partial Resist Multiplier)";
     player.CombatLog(msg);
   }
   if (player.recording_combat_log_breakdown) {
@@ -756,7 +744,6 @@ Corruption::Corruption(Player& player, std::shared_ptr<Aura> aura, std::shared_p
   name = "Corruption";
   mana_cost = 370;
   cast_time = round((2 - (0.4 * player.talents.improved_corruption)) * 100) / 100.0;
-  is_dot = true;
   school = SpellSchool::kShadow;
   type = SpellType::kAffliction;
   Setup();
@@ -767,7 +754,6 @@ UnstableAffliction::UnstableAffliction(Player& player, std::shared_ptr<Aura> aur
   name = "Unstable Affliction";
   mana_cost = 400;
   cast_time = 1.5;
-  is_dot = true;
   school = SpellSchool::kShadow;
   type = SpellType::kAffliction;
   Setup();
@@ -777,7 +763,6 @@ SiphonLife::SiphonLife(Player& player, std::shared_ptr<Aura> aura, std::shared_p
     : Spell(player, aura, dot) {
   name = "Siphon Life";
   mana_cost = 410;
-  is_dot = true;
   school = SpellSchool::kShadow;
   type = SpellType::kAffliction;
   Setup();
@@ -788,7 +773,6 @@ Immolate::Immolate(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<D
   name = "Immolate";
   mana_cost = 445 * (1 - 0.01 * player.talents.cataclysm);
   cast_time = 2 - (0.1 * player.talents.bane);
-  is_dot = true;
   does_damage = true;
   can_crit = true;
   dmg = 331;
@@ -811,7 +795,6 @@ CurseOfAgony::CurseOfAgony(Player& player, std::shared_ptr<Aura> aura, std::shar
     : Spell(player, aura, dot) {
   name = "Curse of Agony";
   mana_cost = 265;
-  is_dot = true;
   school = SpellSchool::kShadow;
   type = SpellType::kAffliction;
   Setup();
@@ -821,7 +804,6 @@ CurseOfTheElements::CurseOfTheElements(Player& player, std::shared_ptr<Aura> aur
   name = "Curse of the Elements";
   mana_cost = 260;
   type = SpellType::kAffliction;
-  is_aura = true;
   Setup();
 }
 
@@ -829,7 +811,6 @@ CurseOfRecklessness::CurseOfRecklessness(Player& player, std::shared_ptr<Aura> a
   name = "Curse of Recklessness";
   mana_cost = 160;
   type = SpellType::kAffliction;
-  is_aura = true;
   Setup();
 }
 
@@ -840,7 +821,6 @@ CurseOfDoom::CurseOfDoom(Player& player, std::shared_ptr<Aura> aura, std::shared
   cooldown = 60;
   school = SpellSchool::kShadow;
   type = SpellType::kAffliction;
-  is_dot = true;
   Setup();
 }
 
@@ -871,7 +851,6 @@ DestructionPotion::DestructionPotion(Player& player, std::shared_ptr<Aura> aura)
   name = "Destruction Potion";
   cooldown = 120;
   is_item = true;
-  is_aura = true;
   on_gcd = false;
   Setup();
 }
@@ -880,7 +859,6 @@ FlameCap::FlameCap(Player& player, std::shared_ptr<Aura> aura) : Spell(player, a
   name = "Flame Cap";
   cooldown = 180;
   is_item = true;
-  is_aura = true;
   on_gcd = false;
   Setup();
 }
@@ -899,7 +877,6 @@ void FlameCap::Cast() {
 BloodFury::BloodFury(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
   name = "Blood Fury";
   cooldown = 120;
-  is_aura = true;
   on_gcd = false;
   Setup();
 }
@@ -908,7 +885,6 @@ Bloodlust::Bloodlust(Player& player, std::shared_ptr<Aura> aura) : Spell(player,
   name = "Bloodlust";
   cooldown = 600;
   is_item = true;
-  is_aura = true;
   on_gcd = false;
   is_non_warlock_ability = true;
   Setup();
@@ -917,38 +893,29 @@ Bloodlust::Bloodlust(Player& player, std::shared_ptr<Aura> aura) : Spell(player,
 DrumsOfBattle::DrumsOfBattle(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
   name = "Drums of Battle";
   cooldown = 120;
-  is_aura = true;
   on_gcd = false;
   is_non_warlock_ability = true;
   is_item = true;
   Setup();
 }
-
-bool DrumsOfBattle::Ready() { return cooldown_remaining <= 0; }
 
 DrumsOfWar::DrumsOfWar(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
   name = "Drums of War";
   cooldown = 120;
-  is_aura = true;
   on_gcd = false;
   is_non_warlock_ability = true;
   is_item = true;
   Setup();
 }
-
-bool DrumsOfWar::Ready() { return cooldown_remaining <= 0; }
 
 DrumsOfRestoration::DrumsOfRestoration(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
   name = "Drums of Restoration";
   cooldown = 120;
-  is_aura = true;
   on_gcd = false;
   is_non_warlock_ability = true;
   is_item = true;
   Setup();
 }
-
-bool DrumsOfRestoration::Ready() { return cooldown_remaining <= 0; }
 
 TimbalsFocusingCrystal::TimbalsFocusingCrystal(Player& player) : Spell(player) {
   name = "Timbal's Focusing Crystal";
@@ -969,27 +936,12 @@ MarkOfDefiance::MarkOfDefiance(Player& player) : Spell(player) {
   cooldown = 17;
   proc_chance = 15;
   on_gcd = false;
+  is_proc = true;
+  is_item = true;
+  gain_mana_on_cast = true;
   min_mana = 128;
   max_mana = 172;
   Setup();
-}
-
-void MarkOfDefiance::Cast() {
-  if (cooldown_remaining <= 0) {
-    const int kCurrentPlayerMana = player.stats.mana;
-    player.stats.mana = std::min(static_cast<double>(player.stats.max_mana), kCurrentPlayerMana + average_mana_value);
-    const int kManaGained = player.stats.mana - kCurrentPlayerMana;
-    if (player.recording_combat_log_breakdown) {
-      player.combat_log_breakdown.at(name)->casts++;
-      player.AddIterationDamageAndMana(name, kManaGained, 0);
-    }
-    if (player.ShouldWriteToCombatLog()) {
-      player.CombatLog("Player gains " + TruncateTrailingZeros(std::to_string(round(kManaGained))) + " mana from " +
-                       name + " (" + TruncateTrailingZeros(std::to_string(round(kCurrentPlayerMana))) + " -> " +
-                       TruncateTrailingZeros(std::to_string(round(player.stats.mana))) + ")");
-    }
-    cooldown_remaining = cooldown;
-  }
 }
 
 TheLightningCapacitor::TheLightningCapacitor(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
@@ -1020,7 +972,6 @@ BladeOfWizardry::BladeOfWizardry(Player& player, std::shared_ptr<Aura> aura) : S
   on_gcd = false;
   is_item = true;
   is_proc = true;
-  is_aura = true;
   Setup();
 }
 
@@ -1033,7 +984,6 @@ ShatteredSunPendantOfAcumen::ShatteredSunPendantOfAcumen(Player& player, std::sh
   is_item = true;
   if (player.settings.shattrath_faction == EmbindConstant::kAldor) {
     this->is_proc = true;
-    this->is_aura = true;
   } else {
     this->does_damage = true;
     this->can_crit = true;
@@ -1049,7 +999,6 @@ RobeOfTheElderScribes::RobeOfTheElderScribes(Player& player, std::shared_ptr<Aur
   on_gcd = false;
   is_item = true;
   is_proc = true;
-  is_aura = true;
   Setup();
 }
 
@@ -1059,7 +1008,6 @@ QuagmirransEye::QuagmirransEye(Player& player, std::shared_ptr<Aura> aura) : Spe
   proc_chance = 10;
   on_gcd = false;
   is_item = true;
-  is_aura = true;
   Setup();
 }
 
@@ -1069,7 +1017,6 @@ ShiffarsNexusHorn::ShiffarsNexusHorn(Player& player, std::shared_ptr<Aura> aura)
   proc_chance = 20;
   on_gcd = false;
   is_item = true;
-  is_aura = true;
   Setup();
 }
 
@@ -1079,7 +1026,6 @@ SextantOfUnstableCurrents::SextantOfUnstableCurrents(Player& player, std::shared
   proc_chance = 20;
   on_gcd = false;
   is_item = true;
-  is_aura = true;
   Setup();
 }
 
@@ -1089,7 +1035,6 @@ BandOfTheEternalSage::BandOfTheEternalSage(Player& player, std::shared_ptr<Aura>
   proc_chance = 10;
   on_gcd = false;
   is_item = true;
-  is_aura = true;
   Setup();
 }
 
@@ -1100,7 +1045,6 @@ MysticalSkyfireDiamond::MysticalSkyfireDiamond(Player& player, std::shared_ptr<A
   on_gcd = false;
   is_proc = true;
   is_item = true;
-  is_aura = true;
   Setup();
 }
 
@@ -1111,30 +1055,14 @@ InsightfulEarthstormDiamond::InsightfulEarthstormDiamond(Player& player) : Spell
   on_gcd = false;
   is_proc = true;
   is_item = true;
+  gain_mana_on_cast = true;
   mana_gain = 300;
   Setup();
-}
-
-void InsightfulEarthstormDiamond::Cast() {
-  Spell::Cast();
-  const int kCurrentPlayerMana = player.stats.mana;
-  player.stats.mana = std::min(static_cast<double>(player.stats.max_mana), kCurrentPlayerMana + mana_gain);
-  const int kManaGained = player.stats.mana - kCurrentPlayerMana;
-  if (player.recording_combat_log_breakdown) {
-    player.combat_log_breakdown.at(name)->casts++;
-    player.AddIterationDamageAndMana(name, kManaGained, 0);
-  }
-  if (player.ShouldWriteToCombatLog()) {
-    player.CombatLog("Player gains " + std::to_string(round(kManaGained)) + " mana from " + name + " (" +
-                     std::to_string(round(kCurrentPlayerMana)) + " -> " + std::to_string(round(player.stats.mana)) +
-                     ")");
-  }
 }
 
 AmplifyCurse::AmplifyCurse(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
   name = "Amplify Curse";
   cooldown = 180;
-  is_aura = true;
   on_gcd = false;
   Setup();
 }
@@ -1142,7 +1070,6 @@ AmplifyCurse::AmplifyCurse(Player& player, std::shared_ptr<Aura> aura) : Spell(p
 PowerInfusion::PowerInfusion(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
   name = "Power Infusion";
   cooldown = 180;
-  is_aura = true;
   on_gcd = false;
   is_non_warlock_ability = true;
   Setup();
@@ -1151,7 +1078,6 @@ PowerInfusion::PowerInfusion(Player& player, std::shared_ptr<Aura> aura) : Spell
 Innervate::Innervate(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
   name = "Innervate";
   cooldown = 360;
-  is_aura = true;
   on_gcd = false;
   is_non_warlock_ability = true;
   Setup();
@@ -1162,7 +1088,6 @@ ChippedPowerCore::ChippedPowerCore(Player& player, std::shared_ptr<Aura> aura) :
   cooldown = 120;
   usable_once_per_fight = true;  // The item is unique so you can only carry one at a time, so I'm
                                  // just gonna limit it to 1 use per fight.
-  is_aura = true;
   on_gcd = false;
   Setup();
 };
@@ -1186,7 +1111,6 @@ CrackedPowerCore::CrackedPowerCore(Player& player, std::shared_ptr<Aura> aura) :
   cooldown = 120;
   usable_once_per_fight = true;  // The item is unique so you can only carry one at a time, so I'm
                                  // just gonna limit it to 1 use per fight.
-  is_aura = true;
   on_gcd = false;
   Setup();
 };
@@ -1206,8 +1130,17 @@ void CrackedPowerCore::Cast() {
 }
 
 ManaTideTotem::ManaTideTotem(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = aura->name;
+  name = "Mana Tide Totem";
   cooldown = 300;
-  is_aura = true;
   is_non_warlock_ability = true;
+}
+
+JudgementOfWisdom::JudgementOfWisdom(Player& player) : Spell(player) {
+  name = "Judgement of Wisdom";
+  mana_gain = 74;
+  gain_mana_on_cast = true;
+  is_proc = true;
+  on_gcd = false;
+  proc_chance = 50;
+  Setup();
 }

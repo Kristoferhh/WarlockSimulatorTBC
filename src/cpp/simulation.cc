@@ -74,7 +74,7 @@ void Simulation::Start() {
         // Spells not on the GCD
         // Demonic Rune
         if ((player.fight_time > 5 || player.stats.mp5 == 0) && player.spells->demonic_rune != NULL &&
-            (player.stats.max_mana - player.stats.mana) > player.spells->demonic_rune->average_mana_value &&
+            (player.stats.max_mana - player.stats.mana) > player.spells->demonic_rune->max_mana &&
             player.spells->demonic_rune->Ready() &&
             (!player.spells->chipped_power_core || player.spells->chipped_power_core->cooldown_remaining > 0) &&
             (!player.spells->cracked_power_core || player.spells->cracked_power_core->cooldown_remaining > 0)) {
@@ -82,7 +82,7 @@ void Simulation::Start() {
         }
         // Super Mana Potion
         if ((player.fight_time > 5 || player.stats.mp5 == 0) && player.spells->super_mana_potion != NULL &&
-            (player.stats.max_mana - player.stats.mana) > player.spells->super_mana_potion->average_mana_value &&
+            (player.stats.max_mana - player.stats.mana) > player.spells->super_mana_potion->max_mana &&
             player.spells->super_mana_potion->Ready()) {
           player.spells->super_mana_potion->StartCast();
         }
@@ -882,9 +882,8 @@ double Simulation::PassTime() {
         player.AddIterationDamageAndMana("Mp5", kManaGained, 0);
       }
       if (player.ShouldWriteToCombatLog()) {
-        player.CombatLog("Player gains " + TruncateTrailingZeros(std::to_string(round(kManaGained))) +
-                         " mana from MP5 (" + std::to_string(kCurrentPlayerMana) + " -> " +
-                         std::to_string(player.stats.mana) + ")");
+        player.CombatLog("Player gains " + DoubleToString(round(kManaGained)) + " mana from MP5 (" +
+                         std::to_string(kCurrentPlayerMana) + " -> " + std::to_string(player.stats.mana) + ")");
       }
     }
   }

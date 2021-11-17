@@ -88,11 +88,10 @@ void PetSpell::Cast() {
       combat_log_message.append(" casts " + name);
 
       if (pet->spells->melee != NULL && name == pet->spells->melee->name) {
-        combat_log_message.append(
-            " - Attack Speed: " + TruncateTrailingZeros(std::to_string(pet->spells->melee->GetCooldown()), 2) + " (" +
-            TruncateTrailingZeros(std::to_string(round(pet->stats->haste_percent * 10000) / 100.0 - 100), 4) +
-            "% haste at a base attack speed of " +
-            TruncateTrailingZeros(std::to_string(pet->spells->melee->cooldown), 2) + ")");
+        combat_log_message.append(" - Attack Speed: " + DoubleToString(pet->spells->melee->GetCooldown(), 2) + " (" +
+                                  DoubleToString(round(pet->stats->haste_percent * 10000) / 100.0 - 100, 4) +
+                                  "% haste at a base attack speed of " +
+                                  DoubleToString(pet->spells->melee->cooldown, 2) + ")");
       }
     }
   }
@@ -292,10 +291,10 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
   std::string combat_log_message = pet->name + " " + name + " ";
   if (pet->player.ShouldWriteToCombatLog()) {
     if (is_crit) combat_log_message.append("*");
-    combat_log_message.append(TruncateTrailingZeros(std::to_string(round(dmg))));
+    combat_log_message.append(DoubleToString(round(dmg)));
     if (is_crit) combat_log_message.append("*");
     if (is_glancing) combat_log_message.append(" Glancing");
-    combat_log_message.append(" (" + TruncateTrailingZeros(std::to_string(round(base_damage))) + " Base Damage");
+    combat_log_message.append(" (" + DoubleToString(round(base_damage)) + " Base Damage");
     if (type == AttackType::kMagical) {
       combat_log_message.append(" - " + std::to_string(round(coefficient * 1000) / 1000.0) + " Coefficient");
       combat_log_message.append(" - " + std::to_string(pet->stats->spell_power) + " Spell Power");
@@ -303,20 +302,14 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
                                 "% Partial Resist Multiplier");
     } else if (type == AttackType::kPhysical) {
       if (is_glancing)
-        combat_log_message.append(" - " +
-                                  TruncateTrailingZeros(std::to_string(pet->glancing_blow_multiplier * 100), 1) +
+        combat_log_message.append(" - " + DoubleToString(pet->glancing_blow_multiplier * 100, 1) +
                                   "% Glancing Blow Multiplier");
-      combat_log_message.append(" - " + TruncateTrailingZeros(std::to_string(round(pet->GetAttackPower()))) +
-                                " Attack Power");
-      combat_log_message.append(" - " +
-                                TruncateTrailingZeros(std::to_string(round(pet->armor_multiplier * 10000) / 100.0), 2) +
+      combat_log_message.append(" - " + DoubleToString(round(pet->GetAttackPower())) + " Attack Power");
+      combat_log_message.append(" - " + DoubleToString(round(pet->armor_multiplier * 10000) / 100.0, 2) +
                                 "% Damage Modifier (Armor)");
     }
-    if (is_crit)
-      combat_log_message.append(" - " + TruncateTrailingZeros(std::to_string(pet->crit_multiplier * 100), 1) +
-                                "% Crit Multiplier");
-    combat_log_message.append(" - " + TruncateTrailingZeros(std::to_string(round(damage_modifier * 10000) / 100.0), 2) +
-                              "% Damage Modifier");
+    if (is_crit) combat_log_message.append(" - " + DoubleToString(pet->crit_multiplier * 100, 1) + "% Crit Multiplier");
+    combat_log_message.append(" - " + DoubleToString(round(damage_modifier * 10000) / 100.0, 2) + "% Damage Modifier");
     combat_log_message.append(")");
     pet->player.CombatLog(combat_log_message);
   }

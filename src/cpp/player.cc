@@ -28,10 +28,6 @@ Player::Player(PlayerSettings& player_settings)
 
   if (recording_combat_log_breakdown) {
     combat_log_breakdown.insert(std::make_pair("Mp5", std::make_unique<CombatLogBreakdown>("Mp5")));
-    if (selected_auras.judgement_of_wisdom) {
-      combat_log_breakdown.insert(
-          std::make_pair("Judgement of Wisdom", std::make_unique<CombatLogBreakdown>("Judgement of Wisdom")));
-    }
   }
 
   if (settings.custom_stat == EmbindConstant::kStamina)
@@ -402,6 +398,7 @@ void Player::Initialize() {
         std::make_shared<SextantOfUnstableCurrents>(*this, auras->sextant_of_unstable_currents);
   if (items.ring_1 == 29305 || items.ring_2 == 29305)
     spells->band_of_the_eternal_sage = std::make_shared<BandOfTheEternalSage>(*this, auras->band_of_the_eternal_sage);
+  if (selected_auras.judgement_of_wisdom) spells->judgement_of_wisdom = std::make_shared<JudgementOfWisdom>(*this);
   if (auras->power_infusion != NULL) {
     for (int i = 0; i < settings.power_infusion_amount; i++) {
       spells->power_infusion.push_back(std::make_shared<PowerInfusion>(*this, auras->power_infusion));
@@ -746,72 +743,59 @@ void Player::SendCombatLogEntries() {
 }
 
 void Player::CombatLog(const std::string& entry) {
-  combat_log_entries.push_back("|" + TruncateTrailingZeros(std::to_string(fight_time), 4) + "| " + entry);
+  combat_log_entries.push_back("|" + DoubleToString(fight_time, 4) + "| " + entry);
 }
 
 void Player::SendPlayerInfoToCombatLog() {
   combat_log_entries.push_back("---------------- Player stats ----------------");
-  combat_log_entries.push_back("Health: " + TruncateTrailingZeros(std::to_string(round(stats.health))));
-  combat_log_entries.push_back("Mana: " + TruncateTrailingZeros(std::to_string(round(stats.max_mana))));
-  combat_log_entries.push_back("Stamina: " + TruncateTrailingZeros(std::to_string(round(stats.GetStamina()))));
-  combat_log_entries.push_back("Intellect: " + TruncateTrailingZeros(std::to_string(round(stats.GetIntellect()))));
-  combat_log_entries.push_back("Spell Power: " + TruncateTrailingZeros(std::to_string(round(GetSpellPower()))));
+  combat_log_entries.push_back("Health: " + DoubleToString(round(stats.health)));
+  combat_log_entries.push_back("Mana: " + DoubleToString(round(stats.max_mana)));
+  combat_log_entries.push_back("Stamina: " + DoubleToString(round(stats.GetStamina())));
+  combat_log_entries.push_back("Intellect: " + DoubleToString(round(stats.GetIntellect())));
+  combat_log_entries.push_back("Spell Power: " + DoubleToString(round(GetSpellPower())));
   combat_log_entries.push_back("Shadow Power: " + std::to_string(stats.shadow_power));
   combat_log_entries.push_back("Fire Power: " + std::to_string(stats.fire_power));
   combat_log_entries.push_back(
-      "Crit Chance: " +
-      TruncateTrailingZeros(std::to_string(round(GetCritChance(SpellType::kDestruction) * 100) / 100), 2) + "%");
+      "Crit Chance: " + DoubleToString(round(GetCritChance(SpellType::kDestruction) * 100) / 100, 2) + "%");
   combat_log_entries.push_back(
-      "Hit Chance: " +
-      TruncateTrailingZeros(std::to_string(std::min(16.0, round((stats.extra_hit_chance) * 100) / 100)), 2) + "%");
+      "Hit Chance: " + DoubleToString(std::min(16.0, round((stats.extra_hit_chance) * 100) / 100), 2) + "%");
   combat_log_entries.push_back(
-      "Haste: " +
-      TruncateTrailingZeros(std::to_string(round((stats.haste_rating / kHasteRatingPerPercent) * 100) / 100), 2) + "%");
-  combat_log_entries.push_back(
-      "Shadow Modifier: " + TruncateTrailingZeros(std::to_string(stats.shadow_modifier * 100)) + "%");
-  combat_log_entries.push_back("Fire Modifier: " + TruncateTrailingZeros(std::to_string(stats.fire_modifier * 100)) +
-                               "%");
+      "Haste: " + DoubleToString(round((stats.haste_rating / kHasteRatingPerPercent) * 100) / 100, 2) + "%");
+  combat_log_entries.push_back("Shadow Modifier: " + DoubleToString(stats.shadow_modifier * 100, 2) + "%");
+  combat_log_entries.push_back("Fire Modifier: " + DoubleToString(stats.fire_modifier * 100, 2) + "%");
   combat_log_entries.push_back("MP5: " + std::to_string(stats.mp5));
   combat_log_entries.push_back("Spell Penetration: " + std::to_string(stats.spell_penetration));
   if (pet != NULL) {
     combat_log_entries.push_back("---------------- Pet stats ----------------");
-    combat_log_entries.push_back("Stamina: " + TruncateTrailingZeros(std::to_string(pet->GetStamina())));
-    combat_log_entries.push_back("Intellect: " + TruncateTrailingZeros(std::to_string(pet->GetIntellect())));
-    combat_log_entries.push_back("Strength: " + TruncateTrailingZeros(std::to_string(pet->GetStrength())));
-    combat_log_entries.push_back("Agility: " + TruncateTrailingZeros(std::to_string(pet->GetAgility())));
-    combat_log_entries.push_back("Spirit: " + TruncateTrailingZeros(std::to_string(pet->GetSpirit())));
-    combat_log_entries.push_back(
-        "Attack Power: " + TruncateTrailingZeros(std::to_string(round(pet->stats->attack_power))) +
-        " (without attack power % modifiers)");
-    combat_log_entries.push_back("Spell Power: " + TruncateTrailingZeros(std::to_string(pet->stats->spell_power)));
-    combat_log_entries.push_back("Mana: " + TruncateTrailingZeros(std::to_string(pet->stats->max_mana)));
+    combat_log_entries.push_back("Stamina: " + DoubleToString(pet->GetStamina()));
+    combat_log_entries.push_back("Intellect: " + DoubleToString(pet->GetIntellect()));
+    combat_log_entries.push_back("Strength: " + DoubleToString(pet->GetStrength()));
+    combat_log_entries.push_back("Agility: " + DoubleToString(pet->GetAgility()));
+    combat_log_entries.push_back("Spirit: " + DoubleToString(pet->GetSpirit()));
+    combat_log_entries.push_back("Attack Power: " + DoubleToString(round(pet->stats->attack_power)) +
+                                 " (without attack power % modifiers)");
+    combat_log_entries.push_back("Spell Power: " + DoubleToString(pet->stats->spell_power));
+    combat_log_entries.push_back("Mana: " + DoubleToString(pet->stats->max_mana));
     combat_log_entries.push_back("MP5: " + std::to_string(pet->stats->mp5));
     if (pet->pet_type == PetType::kMelee) {
       combat_log_entries.push_back(
-          "Physical Hit Chance: " +
-          TruncateTrailingZeros(std::to_string(round(pet->GetMeleeHitChance() * 100) / 100.0), 2) + "%");
+          "Physical Hit Chance: " + DoubleToString(round(pet->GetMeleeHitChance() * 100) / 100.0, 2) + "%");
       combat_log_entries.push_back(
-          "Physical Crit Chance: " +
-          TruncateTrailingZeros(std::to_string(round(pet->GetMeleeCritChance() * 100) / 100.0), 2) + "% (" +
-          TruncateTrailingZeros(std::to_string(pet->crit_suppression), 2) + "% Crit Suppression Applied)");
+          "Physical Crit Chance: " + DoubleToString(round(pet->GetMeleeCritChance() * 100) / 100.0, 2) + "% (" +
+          DoubleToString(pet->crit_suppression, 2) + "% Crit Suppression Applied)");
       combat_log_entries.push_back(
-          "Glancing Blow Chance: " +
-          TruncateTrailingZeros(std::to_string(round(pet->glancing_blow_chance * 100) / 100.0), 2) + "%");
-      combat_log_entries.push_back(
-          "Attack Power Modifier: " +
-          TruncateTrailingZeros(std::to_string(round(pet->stats->attack_power_modifier * 10000) / 100.0), 2) + "%");
+          "Glancing Blow Chance: " + DoubleToString(round(pet->glancing_blow_chance * 100) / 100.0, 2) + "%");
+      combat_log_entries.push_back("Attack Power Modifier: " +
+                                   DoubleToString(round(pet->stats->attack_power_modifier * 10000) / 100.0, 2) + "%");
     }
     if (pet->pet == PetName::kImp || pet->pet == PetName::kSuccubus) {
       combat_log_entries.push_back(
-          "Spell Hit Chance: " +
-          TruncateTrailingZeros(std::to_string(round(pet->GetSpellHitChance() * 100) / 100.0), 2) + "%");
+          "Spell Hit Chance: " + DoubleToString(round(pet->GetSpellHitChance() * 100) / 100.0, 2) + "%");
       combat_log_entries.push_back(
-          "Spell Crit Chance: " +
-          TruncateTrailingZeros(std::to_string(round(pet->GetSpellCritChance() * 100) / 100.0), 2) + "%");
+          "Spell Crit Chance: " + DoubleToString(round(pet->GetSpellCritChance() * 100) / 100.0, 2) + "%");
     }
     combat_log_entries.push_back(
-        "Damage Modifier: " +
-        TruncateTrailingZeros(std::to_string(round(pet->stats->damage_modifier * 10000) / 100), 2) + "%");
+        "Damage Modifier: " + DoubleToString(round(pet->stats->damage_modifier * 10000) / 100, 2) + "%");
   }
   combat_log_entries.push_back("---------------- Enemy stats ----------------");
   combat_log_entries.push_back("Level: " + std::to_string(settings.enemy_level));

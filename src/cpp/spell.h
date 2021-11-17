@@ -29,20 +29,18 @@ struct Spell : std::enable_shared_from_this<Spell> {
   double bonus_crit;
   double cooldown_remaining;
   double dmg;
-  double average_mana_value;
   int bonus_damage_from_immolate_min;
   int bonus_damage_from_immolate_max;
   double bonus_damage_from_immolate_average;
-  bool is_dot;
   bool does_damage;
   bool can_crit;
   bool is_non_warlock_ability;
   bool casting;
   bool is_item;
-  bool is_aura;
   bool on_gcd;
   bool is_proc;
   bool is_finisher;
+  bool gain_mana_on_cast;
   std::string name;
   // For Chipped Power Core
   bool usable_once_per_fight;
@@ -177,17 +175,14 @@ struct Bloodlust : public Spell {
 
 struct DrumsOfBattle : public Spell {
   DrumsOfBattle(Player& player, std::shared_ptr<Aura> aura);
-  bool Ready();
 };
 
 struct DrumsOfWar : public Spell {
   DrumsOfWar(Player& player, std::shared_ptr<Aura> aura);
-  bool Ready();
 };
 
 struct DrumsOfRestoration : public Spell {
   DrumsOfRestoration(Player& player, std::shared_ptr<Aura> aura);
-  bool Ready();
 };
 
 struct TimbalsFocusingCrystal : public Spell {
@@ -196,7 +191,6 @@ struct TimbalsFocusingCrystal : public Spell {
 
 struct MarkOfDefiance : public Spell {
   MarkOfDefiance(Player& player);
-  void Cast();
 };
 
 struct TheLightningCapacitor : public Spell {
@@ -238,7 +232,6 @@ struct MysticalSkyfireDiamond : public Spell {
 
 struct InsightfulEarthstormDiamond : public Spell {
   InsightfulEarthstormDiamond(Player& player);
-  void Cast();
 };
 
 struct AmplifyCurse : public Spell {
@@ -265,6 +258,10 @@ struct CrackedPowerCore : public Spell {
 
 struct ManaTideTotem : public Spell {
   ManaTideTotem(Player& player, std::shared_ptr<Aura> aura);
+};
+
+struct JudgementOfWisdom : public Spell {
+  JudgementOfWisdom(Player& player);
 };
 
 #endif

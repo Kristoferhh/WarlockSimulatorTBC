@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <string>
 #include <vector>
 
 int Random(int min, int max) { return min + (rand() % (max - min + 1)); }
@@ -23,9 +24,14 @@ double Median(std::vector<double> vec) {
   }
 }
 
-std::string TruncateTrailingZeros(std::string num, int decimal_places) {
-  if (decimal_places == 0) {
-    return num.substr(0, num.find("."));
+std::string DoubleToString(double num, int decimal_places) {
+  std::string returnStr = std::to_string(num);
+
+  if (decimal_places > 0) {
+    return returnStr.substr(0, returnStr.find(".") + decimal_places + 1);
+  } else {
+    returnStr.erase(returnStr.find_last_not_of('0') + 1, std::string::npos);
+    returnStr.erase(returnStr.find_last_not_of('.') + 1, std::string::npos);
+    return returnStr;
   }
-  return num.substr(0, num.find(".") + decimal_places + 1);
 }
