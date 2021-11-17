@@ -6,6 +6,7 @@
 struct PetAuras {
   std::unique_ptr<PetAura> demonic_frenzy;
   std::unique_ptr<PetAura> black_book;
+  std::unique_ptr<PetAura> battle_squawk;
 };
 
 #endif

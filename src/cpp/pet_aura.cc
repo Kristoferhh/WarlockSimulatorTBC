@@ -1,5 +1,6 @@
 #include "pet_aura.h"
 
+#include "common.h"
 #include "player.h"
 
 PetAura::PetAura(std::shared_ptr<Pet> pet) : pet(pet) {
@@ -23,8 +24,8 @@ void PetAura::Apply() {
   if (pet->player.ShouldWriteToCombatLog()) {
     std::string msg = pet->name + " gains " + name;
 
-    if (pet->auras->demonic_frenzy != NULL) {
-      msg.append(" (" + std::to_string(stacks) + ") - Current AP: " + std::to_string(round(pet->GetAttackPower())) +
+    if (pet->auras->demonic_frenzy != NULL && name == pet->auras->demonic_frenzy->name) {
+      msg.append(" (" + std::to_string(stacks) + ") - Current AP: " + DoubleToString(round(pet->GetAttackPower())) +
                  ")");
     }
 
@@ -37,13 +38,7 @@ void PetAura::Fade() {
   duration_remaining = 0;
 
   if (pet->player.ShouldWriteToCombatLog()) {
-    std::string msg = name;
-
-    if (pet->auras->demonic_frenzy != NULL) {
-      msg.append(" (" + std::to_string(stacks) + ")");
-    }
-
-    pet->player.CombatLog(msg);
+    pet->player.CombatLog(name + " faded");
   }
 }
 
@@ -98,4 +93,32 @@ void BlackBook::Fade() {
   pet->buff_stats->spell_power -= 200;
   pet->buff_stats->attack_power -= 325;
   pet->CalculateStatsFromPlayer();
+}
+
+BattleSquawk::BattleSquawk(std::shared_ptr<Pet> pet) : PetAura(pet) {
+  name = "Battle Squawk";
+  duration = 300;
+  haste_percent = std::pow(1.05, pet->player.settings.battle_squawk_amount);
+}
+
+void BattleSquawk::Apply() {
+  PetAura::Apply();
+  const double kCurrentHastePercent = pet->GetHastePercent();
+  if (pet->player.ShouldWriteToCombatLog()) {
+    pet->player.CombatLog(pet->name + " Melee Haste % * " + DoubleToString(haste_percent * 100 - 100, 2) + " (" +
+                          DoubleToString(kCurrentHastePercent * 100 - 100, 2) + "% -> " +
+                          DoubleToString((kCurrentHastePercent * haste_percent) * 100 - 100, 2) + "%)");
+  }
+  pet->stats->melee_haste_percent = pet->stats->melee_haste_percent * haste_percent;
+}
+
+void BattleSquawk::Fade() {
+  PetAura::Fade();
+  const double kCurrentHastePercent = pet->GetHastePercent();
+  if (pet->player.ShouldWriteToCombatLog()) {
+    pet->player.CombatLog(pet->name + " Melee Haste % / " + DoubleToString(haste_percent * 100 - 100, 2) + " (" +
+                          DoubleToString(kCurrentHastePercent * 100 - 100, 2) + "% -> " +
+                          DoubleToString((kCurrentHastePercent / haste_percent) * 100 - 100, 2) + "%)");
+  }
+  pet->stats->melee_haste_percent = pet->stats->melee_haste_percent / haste_percent;
 }

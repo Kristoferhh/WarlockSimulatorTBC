@@ -51,6 +51,7 @@ struct Auras {
   bool pet_blessing_of_kings;
   bool pet_blessing_of_wisdom;
   bool pet_blessing_of_might;
+  bool pet_battle_squawk;
   bool pet_arcane_intellect;
   bool pet_mark_of_the_wild;
   bool pet_prayer_of_fortitude;

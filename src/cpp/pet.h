@@ -41,10 +41,12 @@ struct Pet : std::enable_shared_from_this<Pet> {
   void Setup();
   void Cast();
   void Reset();
+  void EndAuras();
   void Tick(double t);
   int GetAttackPower();
   double GetMeleeCritChance();
   double GetMeleeHitChance();
+  double GetHastePercent();
   double GetSpellCritChance();
   double GetSpellHitChance();
   int GetStamina();

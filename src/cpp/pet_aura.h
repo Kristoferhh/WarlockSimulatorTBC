@@ -33,4 +33,12 @@ struct BlackBook : public PetAura {
   void Fade();
 };
 
+struct BattleSquawk : public PetAura {
+  double haste_percent;
+
+  BattleSquawk(std::shared_ptr<Pet> pet);
+  void Apply();
+  void Fade();
+};
+
 #endif

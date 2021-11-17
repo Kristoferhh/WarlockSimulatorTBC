@@ -802,10 +802,10 @@ void Player::SendPlayerInfoToCombatLog() {
   combat_log_entries.push_back("Shadow Resistance: " + std::to_string(settings.enemy_shadow_resist));
   combat_log_entries.push_back("Fire Resistance: " + std::to_string(settings.enemy_fire_resist));
   if (pet != NULL && pet->pet != PetName::kImp) {
-    combat_log_entries.push_back("Dodge Chance: " + std::to_string(pet->enemy_dodge_chance) + "%");
+    combat_log_entries.push_back("Dodge Chance: " + DoubleToString(pet->enemy_dodge_chance) + "%");
     combat_log_entries.push_back("Armor: " + std::to_string(settings.enemy_armor));
     combat_log_entries.push_back(
-        "Damage Reduction From Armor: " + std::to_string(round((1 - pet->armor_multiplier) * 10000) / 100.0) + "%");
+        "Damage Reduction From Armor: " + DoubleToString(round((1 - pet->armor_multiplier) * 10000) / 100.0, 2) + "%");
   }
   combat_log_entries.push_back("---------------------------------------------");
 }

@@ -33,6 +33,10 @@ void Pet::Initialize() {
       spells->cleave = std::make_unique<FelguardCleave>(shared_from_this());
       auras->demonic_frenzy = std::make_unique<DemonicFrenzy>(shared_from_this());
     }
+    if (player.selected_auras.pet_battle_squawk) {
+      std::cout << "creating battle squawk" << std::endl;
+      auras->battle_squawk = std::make_unique<BattleSquawk>(shared_from_this());
+    }
   }
 
   if (player.settings.prepop_black_book) {
@@ -266,17 +270,18 @@ void Pet::Reset() {
   spirit_tick_timer_remaining = 2;
   cast_time_remaining = 0;
 
-  // Reset spells
   if (spells->melee != NULL) spells->melee->Reset();
   if (spells->firebolt != NULL) spells->firebolt->Reset();
   if (spells->lash_of_pain != NULL) spells->lash_of_pain->Reset();
   if (spells->cleave != NULL) spells->cleave->Reset();
 
-  // End Auras
+  CalculateStatsFromPlayer(false);
+}
+
+void Pet::EndAuras() {
   if (auras->black_book != NULL && auras->black_book->active) auras->black_book->Fade();
   if (auras->demonic_frenzy != NULL && auras->demonic_frenzy->active) auras->demonic_frenzy->Fade();
-
-  CalculateStatsFromPlayer(false);
+  if (auras->battle_squawk != NULL && auras->battle_squawk->active) auras->battle_squawk->Fade();
 }
 
 double Pet::GetMeleeCritChance() { return stats->melee_crit_chance - crit_suppression; }
@@ -298,6 +303,8 @@ bool Pet::IsHit(AttackType type) {
                         : type == AttackType::kMagical ? GetSpellHitChance()
                                                        : 0);
 }
+
+double Pet::GetHastePercent() { return stats->haste_percent * (pet != PetName::kImp ? stats->melee_haste_percent : 1); }
 
 int Pet::GetAttackPower() {
   // Remove AP from debuffs on the boss before multiplying by the AP multiplier
@@ -326,7 +333,8 @@ void Pet::Tick(double t) {
   spirit_tick_timer_remaining -= t;
 
   // Auras
-  if (auras->black_book != NULL && auras->black_book->duration_remaining > 0) auras->black_book->Tick(t);
+  if (auras->black_book != NULL && auras->black_book->active) auras->black_book->Tick(t);
+  if (auras->battle_squawk != NULL && auras->battle_squawk->active) auras->battle_squawk->Tick(t);
 
   // Spells
   if (spells->melee != NULL && spells->melee->cooldown_remaining > 0) spells->melee->Tick(t);
