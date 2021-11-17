@@ -27,7 +27,7 @@ bool PetSpell::Ready() {
 
 double PetSpell::GetBaseDamage() { return dmg; }
 
-double PetSpell::GetCastTime() { return round((cast_time / pet->stats->haste_percent) * 10000) / 10000; }
+double PetSpell::GetCastTime() { return round((cast_time / pet->GetHastePercent()) * 10000) / 10000; }
 
 double PetSpell::GetCooldown() { return cooldown; }
 
@@ -63,9 +63,9 @@ void PetSpell::StartCast() {
 
     if (pet->player.ShouldWriteToCombatLog()) {
       pet->player.CombatLog(pet->name + " started casting " + name +
-                            ". Cast time: " + std::to_string(pet->cast_time_remaining) + " (" +
-                            std::to_string(round(pet->stats->haste_percent * 10000) / 10000.0) +
-                            "% haste at a base cast speed of " + std::to_string(cast_time) + ")");
+                            ". Cast time: " + DoubleToString(pet->cast_time_remaining, 4) + " (" +
+                            DoubleToString(pet->GetHastePercent() * 100 - 100, 2) + "% haste at a base cast speed of " +
+                            DoubleToString(cast_time, 2) + ")");
     }
   } else {
     Cast();
@@ -89,7 +89,7 @@ void PetSpell::Cast() {
 
       if (pet->spells->melee != NULL && name == pet->spells->melee->name) {
         combat_log_message.append(" - Attack Speed: " + DoubleToString(pet->spells->melee->GetCooldown(), 2) + " (" +
-                                  DoubleToString(round(pet->stats->haste_percent * 10000) / 100.0 - 100, 4) +
+                                  DoubleToString(round(pet->GetHastePercent() * 10000) / 100.0 - 100, 4) +
                                   "% haste at a base attack speed of " +
                                   DoubleToString(pet->spells->melee->cooldown, 2) + ")");
       }
@@ -296,9 +296,9 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
     if (is_glancing) combat_log_message.append(" Glancing");
     combat_log_message.append(" (" + DoubleToString(round(base_damage)) + " Base Damage");
     if (type == AttackType::kMagical) {
-      combat_log_message.append(" - " + std::to_string(round(coefficient * 1000) / 1000.0) + " Coefficient");
+      combat_log_message.append(" - " + DoubleToString(coefficient, 3) + " Coefficient");
       combat_log_message.append(" - " + std::to_string(pet->stats->spell_power) + " Spell Power");
-      combat_log_message.append(" - " + std::to_string(round(partial_resist_multiplier * 1000) / 10.0) +
+      combat_log_message.append(" - " + DoubleToString(partial_resist_multiplier * 100) +
                                 "% Partial Resist Multiplier");
     } else if (type == AttackType::kPhysical) {
       if (is_glancing)
@@ -335,7 +335,7 @@ Melee::Melee(std::shared_ptr<Pet> pet) : PetSpell(pet) {
 
 double Melee::GetBaseDamage() { return pet->dmg; }
 
-double Melee::GetCooldown() { return round((cooldown / pet->stats->haste_percent) * 10000) / 10000.0; }
+double Melee::GetCooldown() { return round((cooldown / pet->GetHastePercent()) * 10000) / 10000.0; }
 
 FelguardCleave::FelguardCleave(std::shared_ptr<Pet> pet) : PetSpell(pet) {
   cooldown = 6;

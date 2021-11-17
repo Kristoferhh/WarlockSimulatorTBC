@@ -27,6 +27,7 @@ struct PetStats {
   double spirit_modifier;
   double attack_power_modifier;
   double damage_modifier;
+  double melee_haste_percent;
 
   PetStats(Player& player)
       : player(player),
@@ -37,7 +38,8 @@ struct PetStats {
         agility_modifier(1),
         spirit_modifier(1),
         attack_power_modifier(1),
-        haste_percent(1) {}
+        haste_percent(1),
+        melee_haste_percent(1) {}
 };
 
 #endif

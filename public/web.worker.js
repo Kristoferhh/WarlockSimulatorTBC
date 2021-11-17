@@ -77,6 +77,7 @@ onmessage = (event) => {
         auras.petBlessingOfKings = playerData.auras.blessingOfKingsPet || false;
         auras.petBlessingOfWisdom = playerData.auras.blessingOfWisdomPet || false;
         auras.petBlessingOfMight = playerData.auras.blessingOfMight || false;
+        auras.petBattleSquawk = playerData.auras.battleSquawk || false;
         auras.petArcaneIntellect = playerData.auras.arcaneIntellectPet || false;
         auras.petMarkOfTheWild = playerData.auras.markOfTheWildPet || false;
         auras.petPrayerOfFortitude = playerData.auras.prayerOfFortitudePet || false;
@@ -210,6 +211,7 @@ onmessage = (event) => {
         playerSettings.powerInfusionAmount = parseInt(playerData.simSettings.powerInfusionAmount);
         playerSettings.bloodlustAmount = parseInt(playerData.simSettings.bloodlustAmount);
         playerSettings.innervateAmount = parseInt(playerData.simSettings.innervateAmount);
+        playerSettings.battleSquawkAmount = parseInt(playerData.simSettings.battleSquawkAmount);
         playerSettings.enemyArmor = parseInt(playerData.simSettings.enemyArmor);
         playerSettings.exposeWeaknessUptime = parseFloat(playerData.simSettings.exposeWeaknessUptime);
         playerSettings.improvedFaerieFire = playerData.simSettings.improvedFaerieFire === "yes";

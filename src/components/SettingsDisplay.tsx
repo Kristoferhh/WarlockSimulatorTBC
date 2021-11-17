@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux"
 import { getBaseStats, isPetActive } from "../Common";
@@ -397,7 +398,7 @@ export default function SettingsDisplay() {
                 Array
                   .from(Array(12), (e, i) => i + 1)
                   .map(number =>
-                    <option value={number} key={number}>{number}</option>
+                    <option value={number} key={nanoid()}>{number}</option>
                   )
               }
             </select>
@@ -418,7 +419,7 @@ export default function SettingsDisplay() {
               {
                 Array.from(Array(15), (e, i) => i + 1).map(number =>
                   <option
-                    value={number} key={number}>{number}</option>
+                    value={number} key={nanoid()}>{number}</option>
                 )
               }
             </select>
@@ -439,7 +440,7 @@ export default function SettingsDisplay() {
               {
                 Array.from(Array(18), (e, i) => i + 1).map(number =>
                   <option
-                    value={number} key={number}>{number}</option>
+                    value={number} key={nanoid()}>{number}</option>
                 )
               }
             </select>
@@ -589,6 +590,28 @@ export default function SettingsDisplay() {
               <option value='1'>1/3</option>
               <option value='2'>2/3</option>
               <option value='3'>3/3</option>
+            </select>
+          </li>
+        }
+        {
+          playerStore.auras.battleSquawk && isPetActive(playerStore.talents, playerStore.settings, true, true) &&
+          <li>
+            <label className='settings-left' htmlFor='battleSquawkAmount'>
+              Battle Squawk amount
+            </label>
+            <select
+              className='settings-right'
+              id='battleSquawkAmount'
+              onChange={(e) => settingModifiedHandler(Setting.battleSquawkAmount, e.target.value)}
+              value={playerStore.settings.battleSquawkAmount}
+            >
+              {
+                Array
+                  .from(Array(5), (e, i) => i + 1)
+                  .map(number =>
+                    <option value={number} key={nanoid()}>{number}</option>
+                  )
+              }
             </select>
           </li>
         }

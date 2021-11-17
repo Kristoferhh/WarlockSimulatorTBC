@@ -77,6 +77,7 @@ export const Auras: Aura[] = [
   { name: 'Blessing of Kings', varName: AuraName.blessingOfKingsPet, group: AuraGroup.PetBuffs, iconName: 'spell_magic_greaterblessingofkings', id: 25898 },
   { name: 'Blessing of Wisdom', varName: AuraName.blessingOfWisdomPet, group: AuraGroup.PetBuffs, iconName: 'spell_holy_greaterblessingofwisdom', id: 27143 },
   { name: 'Blessing of Might', varName: AuraName.blessingOfMight, group: AuraGroup.PetBuffs, iconName: 'spell_holy_greaterblessingofkings', id: 27141 },
+  { name: 'Battle Squawk', varName: AuraName.battleSquawk, group: AuraGroup.PetBuffs, iconName: 'inv_misc_birdbeck_01', id: 23060 },
   { name: 'Arcane Intellect', varName: AuraName.arcaneIntellectPet, group: AuraGroup.PetBuffs, iconName: 'spell_holy_arcaneintellect', id: 27127 },
   { name: 'Mark of the Wild', varName: AuraName.markOfTheWildPet, group: AuraGroup.PetBuffs, iconName: 'spell_nature_regeneration', id: 26990 },
   { name: 'Prayer of Fortitude', varName: AuraName.prayerOfFortitudePet, group: AuraGroup.PetBuffs, iconName: 'spell_holy_prayeroffortitude', id: 25392 },

@@ -37,6 +37,10 @@ void Simulation::Start() {
     if (player.ShouldWriteToCombatLog()) {
       player.CombatLog("Fight length: " + std::to_string(kFightLength) + " seconds");
     }
+    // Apply the battle squawk buff since we're assuming the buff is active when the fight starts
+    if (player.pet->auras->battle_squawk != NULL) {
+      player.pet->auras->battle_squawk->Apply();
+    }
 
     while (player.fight_time < kFightLength) {
       const double kFightTimeRemaining = kFightLength - player.fight_time;
@@ -306,6 +310,9 @@ void Simulation::Start() {
     }
 
     player.EndAuras();
+    if (player.pet != NULL) {
+      player.pet->EndAuras();
+    }
 
     player.total_duration += kFightLength;
     const double kDps = player.iteration_damage / static_cast<double>(kFightLength);
@@ -378,6 +385,9 @@ double Simulation::PassTime() {
       if (player.pet->auras->black_book != NULL && player.pet->auras->black_book->active &&
           player.pet->auras->black_book->duration_remaining < time)
         time = player.pet->auras->black_book->duration_remaining;
+      if (player.pet->auras->battle_squawk != NULL && player.pet->auras->battle_squawk->active &&
+          player.pet->auras->battle_squawk->duration_remaining < time)
+        time = player.pet->auras->battle_squawk->duration_remaining;
     }
   }
 
