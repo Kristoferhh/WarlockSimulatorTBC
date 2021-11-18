@@ -66,9 +66,10 @@ export default function GemSelection() {
           </td>
         </tr>
         {
-          // Sort gems by favorited gems first
           Gems
-            .filter(gem => canGemColorBeInsertedIntoSocketColor(uiState.gemSelectionTable.socketColor, gem.color))
+            .filter(gem =>
+              canGemColorBeInsertedIntoSocketColor(uiState.gemSelectionTable.socketColor, gem.color) &&
+              Object.entries(uiState.sources.phase).some(p => parseInt(p[0]) >= gem.phase && p[1] === true))
             .sort(function (a, b) {
               return Number(uiState.gemPreferences.favorites.includes(b.id)) -
                 Number(uiState.gemPreferences.favorites.includes(a.id));
