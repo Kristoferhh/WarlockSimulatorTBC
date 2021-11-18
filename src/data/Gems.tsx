@@ -43,6 +43,7 @@ export const Gems: Gem[] = [
   { name: 'Brilliant Lionseye', id: 32204, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_lionseye_02', phase: 3, stats: { intellect: 10 } },
   { name: 'Great Dawnstone', id: 31861, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_dawnstone_03', phase: 1, stats: { hitRating: 8 } },
   { name: 'Great Golden Draenite', id: 31860, color: GemColor.Yellow, iconName: 'inv_misc_gem_goldendraenite_02', phase: 1, stats: { hitRating: 6 } },
+  { name: 'Gleaming Ornate Dawnstone', id: 28120, color: GemColor.Yellow, iconName: 'inv_misc_gem_topaz_02', phase: 1, stats: { critRating: 10 } },
   { name: 'Gleaming Dawnstone', id: 24050, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_dawnstone_03', phase: 1, stats: { critRating: 8 } },
   { name: 'Brilliant Dawnstone', id: 24047, color: GemColor.Yellow, iconName: 'inv_jewelcrafting_dawnstone_03', phase: 1, stats: { intellect: 8 } },
   { name: 'Gleaming Golden Draenite', id: 23114, color: GemColor.Yellow, iconName: 'inv_misc_gem_goldendraenite_02', phase: 1, stats: { critRating: 6 } },
