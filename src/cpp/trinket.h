@@ -86,4 +86,8 @@ struct DarkIronSmokingPipe : public Trinket {
   DarkIronSmokingPipe(Player& player);
 };
 
+struct HazzarahsCharmOfDestruction : public Trinket {
+  HazzarahsCharmOfDestruction(Player& player);
+};
+
 #endif

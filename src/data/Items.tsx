@@ -457,6 +457,7 @@ export const Items: Item[] = [
   { name: 'Terokkar Tablet of Vim', varName: 'terokkarTabletOfVim', itemSlot: ItemSlotKey.Trinket, hitRating: 22, unique: true, id: 25936, source: ItemSource.TerokkarForestQuest, phase: 1, quality: Quality.Uncommon, iconName: 'inv_misc_stonetablet_11' },
   { name: 'The Restrained Essence of Sapphiron', varName: 'theRestrainedEssenceOfSapphiron', itemSlot: ItemSlotKey.Trinket, spellPower: 40, unique: true, id: 23046, source: ItemSource.Naxxramas, phase: 0, quality: Quality.Epic, iconName: 'inv_trinket_naxxramas06' },
   { name: 'Mark of the Champion', varName: 'markOfTheChampion', itemSlot: ItemSlotKey.Trinket, spellPower: 85, unique: true, id: 23207, source: ItemSource.Naxxramas, phase: 0, quality: Quality.Epic, iconName: 'inv_misc_token_argentdawn3' },
+  { name: "Hazza'rah's Charm of Destruction", varName: 'hazzarahsCharmOfDestruction', itemSlot: ItemSlotKey.Trinket, id: 19957, unique: true, source: ItemSource.ZulGurub, phase: 0, quality: Quality.Epic, iconName: 'inv_jewelry_necklace_19' },
   { name: "Neltharion's Tear", varName: 'neltharionsTear', itemSlot: ItemSlotKey.Trinket, spellPower: 44, hitRating: 16, unique: true, id: 19379, source: ItemSource.BlackwingLair, phase: 0, quality: Quality.Epic, iconName: 'inv_stone_15' },
 
   // Mainhand
