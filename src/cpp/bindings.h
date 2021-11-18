@@ -26,7 +26,7 @@ Sets AllocSets();
 CharacterStats AllocStats();
 SimulationSettings AllocSimSettings();
 Simulation AllocSim(Player& player, SimulationSettings& simulation_settings);
-uint32_t* AllocRandomSeeds(int amount_of_seeds);
+std::vector<uint32_t> AllocRandomSeeds(int amount_of_seeds);
 
 void DpsUpdate(double dps);
 void ErrorCallback(const char* error_msg);

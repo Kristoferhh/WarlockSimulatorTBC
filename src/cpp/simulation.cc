@@ -15,7 +15,6 @@ Simulation::Simulation(Player& player, SimulationSettings& simulation_settings)
     : player(player), settings(simulation_settings) {}
 
 void Simulation::Start() {
-  uint32_t* random_seeds = AllocRandomSeeds(settings.iterations);
   std::vector<double> dps_vector;
   player.total_duration = 0;
   player.Initialize();
@@ -25,8 +24,8 @@ void Simulation::Start() {
   std::uniform_int_distribution<> random_fight_length(settings.min_time, settings.max_time);
 
   for (player.iteration = 0; player.iteration < settings.iterations; player.iteration++) {
-    player.gen.seed(random_seeds[player.iteration]);
-    gen.seed(random_seeds[player.iteration]);
+    player.gen.seed(player.settings.random_seeds[player.iteration]);
+    gen.seed(player.settings.random_seeds[player.iteration]);
     const int kFightLength = random_fight_length(gen);
     player.Reset();
     if (player.pet != NULL) {
@@ -335,8 +334,6 @@ void Simulation::Start() {
                        player.custom_stat.c_str());
     }
   }
-
-  delete[] random_seeds;
 
   // Send the contents of the combat log to the web worker
   if (player.settings.equipped_item_simulation) {
