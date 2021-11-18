@@ -29,4 +29,5 @@ export const Spells: Spell[] = [
   { name: 'Cleave', varName: 'cleave', iconName: 'ability_warrior_cleave', id: 30224 },
   { name: 'Lash of Pain', varName: 'lashOfPain', iconName: 'spell_shadow_curse', id: 27274 },
   { name: 'Firebolt', varName: 'firebolt', iconName: 'spell_fire_firebolt', id: 27267 },
+  { name: 'Seed of Corruption', varName: 'seedOfCorruption', iconName: 'spell_shadow_seedofdestruction', id: 27243 },
 ]
