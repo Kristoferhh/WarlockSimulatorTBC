@@ -174,7 +174,7 @@ onmessage = (event) => {
         stats.spiritModifier = parseFloat(playerData.stats.spiritModifier);
 
         const playerSettings = module.allocPlayerSettings(auras, talents, sets, stats, items);
-        playerSettings.randomSeeds = module.allocRandomSeeds(simulationData.iterations);
+        playerSettings.randomSeeds = module.allocRandomSeeds(simulationData.iterations, event.data.randomSeed);
         playerSettings.itemId = parseInt(event.data.itemId);
         playerSettings.metaGemId = parseInt(event.data.playerSettings.metaGemId);
         playerSettings.equippedItemSimulation = event.data.equippedItemSimulation === true;

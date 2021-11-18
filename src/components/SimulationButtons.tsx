@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { average, calculatePlayerStats, getItemSetCounts, getItemTableItems, getPlayerHitPercent, getStdev, ItemSlotKeyToItemSlot } from "../Common";
+import { average, calculatePlayerStats, getItemSetCounts, getItemTableItems, getPlayerHitPercent, getStdev, ItemSlotKeyToItemSlot, random } from "../Common";
 import { Gems } from "../data/Gems";
 import { Items } from "../data/Items";
 import { RootState } from "../redux/Store"
@@ -30,6 +30,7 @@ interface IGetWorkerParams {
   itemId: number,
   equippedItemId: number,
   simulationType: SimulationType,
+  randomSeed: number,
   customStat?: {
     stat: string,
     value: number
@@ -154,6 +155,7 @@ export function SimulationButtons() {
         minTime: parseInt(customPlayerState.settings["min-fight-length"]),
         maxTime: parseInt(customPlayerState.settings['max-fight-length'])
       },
+      randomSeed: params.randomSeed,
       itemId: params.itemId,
       simulationType: params.simulationType,
       itemSubSlot: uiState.selectedItemSubSlot,
@@ -193,10 +195,12 @@ export function SimulationButtons() {
     } else if (simulationParams.type === SimulationType.StatWeights) {
       dispatch(setStatWeightVisibility(true));
     }
+    const randomSeed = random(0, 4294967295);
 
     if (simulationParams.type === SimulationType.StatWeights) {
       Object.entries(statWeightValues).forEach(statWeight => {
         simWorkerParameters.push({
+          randomSeed: randomSeed,
           itemId: equippedItemId,
           equippedItemId: equippedItemId,
           simulationType: simulationParams.type,
@@ -206,6 +210,7 @@ export function SimulationButtons() {
     } else if (simulationParams.itemIdsToSim) {
       simulationParams.itemIdsToSim.forEach(itemId => {
         simWorkerParameters.push({
+          randomSeed: randomSeed,
           itemId: itemId,
           equippedItemId: equippedItemId,
           simulationType: simulationParams.type,
@@ -346,6 +351,7 @@ export function SimulationButtons() {
             }
           },
           getWorkerParams({
+            randomSeed: randomSeed,
             itemId: simWorkerParameter.itemId,
             equippedItemId: simWorkerParameter.equippedItemId,
             simulationType: simWorkerParameter.simulationType,

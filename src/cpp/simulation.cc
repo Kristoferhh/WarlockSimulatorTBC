@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <limits>
 #include <vector>
 
 #include "bindings.h"
@@ -18,12 +19,13 @@ void Simulation::Start() {
   std::vector<double> dps_vector;
   player.total_duration = 0;
   player.Initialize();
-  double min_dps = 99999;
+  double min_dps = std::numeric_limits<double>::max();
   double max_dps = 0;
   std::mt19937 gen;
   std::uniform_int_distribution<> random_fight_length(settings.min_time, settings.max_time);
 
   for (player.iteration = 0; player.iteration < settings.iterations; player.iteration++) {
+    std::cout << "iteration: " << std::to_string(player.iteration) << std::endl;
     player.gen.seed(player.settings.random_seeds[player.iteration]);
     gen.seed(player.settings.random_seeds[player.iteration]);
     const int kFightLength = random_fight_length(gen);

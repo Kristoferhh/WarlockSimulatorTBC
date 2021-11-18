@@ -578,6 +578,7 @@ export interface WorkerParams {
     minTime: number,
     maxTime: number,
   },
+  randomSeed: number,
   itemId: number,
   simulationType: SimulationType,
   itemSubSlot: SubSlotValue,

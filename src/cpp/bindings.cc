@@ -87,8 +87,8 @@ void SimulationEnd(double median_dps, double min_dps, double max_dps, int item_i
 #endif
 }
 
-std::vector<uint32_t> AllocRandomSeeds(int amount_of_seeds) {
-  srand(time(nullptr));
+std::vector<uint32_t> AllocRandomSeeds(int amount_of_seeds, uint32_t rand_seed) {
+  srand(rand_seed);
   std::vector<uint32_t> seeds(amount_of_seeds);
 
   for (int i = 0; i < amount_of_seeds; i++) {
