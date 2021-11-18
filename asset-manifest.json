@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/WarlockSimulatorTBC/static/css/main.33c6076a.chunk.css",
-    "main.js": "/WarlockSimulatorTBC/static/js/main.975bebc9.chunk.js",
-    "main.js.map": "/WarlockSimulatorTBC/static/js/main.975bebc9.chunk.js.map",
+    "main.js": "/WarlockSimulatorTBC/static/js/main.4e4d0ddc.chunk.js",
+    "main.js.map": "/WarlockSimulatorTBC/static/js/main.4e4d0ddc.chunk.js.map",
     "runtime-main.js": "/WarlockSimulatorTBC/static/js/runtime-main.d830f162.js",
     "runtime-main.js.map": "/WarlockSimulatorTBC/static/js/runtime-main.d830f162.js.map",
     "static/js/2.32d00bca.chunk.js": "/WarlockSimulatorTBC/static/js/2.32d00bca.chunk.js",
@@ -15,6 +15,6 @@
     "static/js/runtime-main.d830f162.js",
     "static/js/2.32d00bca.chunk.js",
     "static/css/main.33c6076a.chunk.css",
-    "static/js/main.975bebc9.chunk.js"
+    "static/js/main.4e4d0ddc.chunk.js"
   ]
 }
