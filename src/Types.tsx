@@ -776,6 +776,7 @@ export enum ItemSource {
   TerokkarForestQuest = "Terokkar Forest Quest",
   ShatteredHallsQuest = "Shattered Halls Quest",
   NagrandQuestHordeOnly = 'Nagrand Quest (Horde)',
+  OgrilaBoss = "Ogri'la Boss",
 }
 
 export interface Source {
