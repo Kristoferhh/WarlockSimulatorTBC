@@ -16,8 +16,8 @@ Player::Player(PlayerSettings& player_settings)
       stats(player_settings.stats),
       items(player_settings.items),
       settings(player_settings) {
-  spells = std::make_unique<PlayerSpells>();
-  auras = std::make_unique<PlayerAuras>();
+  spells = PlayerSpells();
+  auras = PlayerAuras();
   combat_log_entries = {};
   cast_time_remaining = 0;
   gcd_remaining = 0;
@@ -29,7 +29,7 @@ Player::Player(PlayerSettings& player_settings)
   recording_combat_log_breakdown = settings.recording_combat_log_breakdown && settings.equipped_item_simulation;
 
   if (recording_combat_log_breakdown) {
-    combat_log_breakdown.insert(std::make_pair("Mp5", std::make_unique<CombatLogBreakdown>("Mp5")));
+    combat_log_breakdown.insert({"Mp5", std::make_unique<CombatLogBreakdown>("Mp5")});
   }
 
   if (settings.custom_stat == EmbindConstant::kStamina)
@@ -213,231 +213,228 @@ void Player::Initialize() {
 
   std::vector<int> equipped_trinket_ids{items.trinket_1, items.trinket_2};
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 32483) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<SkullOfGuldan>(*this));
+    trinkets.push_back(SkullOfGuldan(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 34429) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<ShiftingNaaruSliver>(*this));
+    trinkets.push_back(ShiftingNaaruSliver(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 33829) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<HexShrunkenHead>(*this));
+    trinkets.push_back(HexShrunkenHead(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 29370) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<IconOfTheSilverCrescent>(*this));
+    trinkets.push_back(IconOfTheSilverCrescent(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 29132) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<ScryersBloodgem>(*this));
+    trinkets.push_back(ScryersBloodgem(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 23046) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<RestrainedEssenceOfSapphiron>(*this));
+    trinkets.push_back(RestrainedEssenceOfSapphiron(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 29179) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<XirisGift>(*this));
+    trinkets.push_back(XirisGift(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 25620) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<AncientCrystalTalisman>(*this));
+    trinkets.push_back(AncientCrystalTalisman(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 28223) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<ArcanistsStone>(*this));
+    trinkets.push_back(ArcanistsStone(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 25936) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<TerokkarTabletOfVim>(*this));
+    trinkets.push_back(TerokkarTabletOfVim(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 28040) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<VengeanceOfTheIllidari>(*this));
+    trinkets.push_back(VengeanceOfTheIllidari(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 24126) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<FigurineLivingRubySerpent>(*this));
+    trinkets.push_back(FigurineLivingRubySerpent(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 29376) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<EssenceOfTheMartyr>(*this));
+    trinkets.push_back(EssenceOfTheMartyr(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 30340) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<StarkillersBauble>(*this));
+    trinkets.push_back(StarkillersBauble(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 38290) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<DarkIronSmokingPipe>(*this));
+    trinkets.push_back(DarkIronSmokingPipe(*this));
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 19957) != equipped_trinket_ids.end())
-    trinkets.push_back(std::make_unique<HazzarahsCharmOfDestruction>(*this));
+    trinkets.push_back(HazzarahsCharmOfDestruction(*this));
 
   // Auras
   if (settings.fight_type == EmbindConstant::kSingleTarget) {
-    if (talents.improved_shadow_bolt > 0) auras->improved_shadow_bolt = std::make_shared<ImprovedShadowBoltAura>(*this);
+    if (talents.improved_shadow_bolt > 0) auras.improved_shadow_bolt = std::make_unique<ImprovedShadowBoltAura>(*this);
     if (settings.has_corruption || settings.rotation_option == EmbindConstant::kSimChooses)
-      auras->corruption = std::make_shared<CorruptionDot>(*this);
+      auras.corruption = std::make_unique<CorruptionDot>(*this);
     if (talents.unstable_affliction == 1 &&
         (settings.has_unstable_affliction || settings.rotation_option == EmbindConstant::kSimChooses))
-      auras->unstable_affliction = std::make_shared<UnstableAfflictionDot>(*this);
+      auras.unstable_affliction = std::make_unique<UnstableAfflictionDot>(*this);
     if (talents.siphon_life == 1 &&
         (settings.has_siphon_life || settings.rotation_option == EmbindConstant::kSimChooses))
-      auras->siphon_life = std::make_shared<SiphonLifeDot>(*this);
+      auras.siphon_life = std::make_unique<SiphonLifeDot>(*this);
     if (settings.has_immolate || settings.rotation_option == EmbindConstant::kSimChooses)
-      auras->immolate = std::make_shared<ImmolateDot>(*this);
+      auras.immolate = std::make_unique<ImmolateDot>(*this);
     if (settings.has_curse_of_agony || settings.has_curse_of_doom)
-      auras->curse_of_agony = std::make_shared<CurseOfAgonyDot>(*this);
+      auras.curse_of_agony = std::make_unique<CurseOfAgonyDot>(*this);
     if (settings.has_curse_of_the_elements)
-      auras->curse_of_the_elements = std::make_shared<CurseOfTheElementsAura>(*this);
+      auras.curse_of_the_elements = std::make_unique<CurseOfTheElementsAura>(*this);
     if (settings.has_curse_of_recklessness)
-      auras->curse_of_recklessness = std::make_shared<CurseOfRecklessnessAura>(*this);
-    if (settings.has_curse_of_doom) auras->curse_of_doom = std::make_shared<CurseOfDoomDot>(*this);
-    if (talents.nightfall > 0) auras->shadow_trance = std::make_shared<ShadowTranceAura>(*this);
+      auras.curse_of_recklessness = std::make_unique<CurseOfRecklessnessAura>(*this);
+    if (settings.has_curse_of_doom) auras.curse_of_doom = std::make_unique<CurseOfDoomDot>(*this);
+    if (talents.nightfall > 0) auras.shadow_trance = std::make_unique<ShadowTranceAura>(*this);
     if (talents.amplify_curse == 1 &&
         (settings.has_amplify_curse || settings.rotation_option == EmbindConstant::kSimChooses))
-      auras->amplify_curse = std::make_shared<AmplifyCurseAura>(*this);
+      auras.amplify_curse = std::make_unique<AmplifyCurseAura>(*this);
   }
-  if (selected_auras.mana_tide_totem) auras->mana_tide_totem = std::make_shared<ManaTideTotemAura>(*this);
-  if (selected_auras.chipped_power_core) auras->chipped_power_core = std::make_shared<ChippedPowerCoreAura>(*this);
-  if (selected_auras.cracked_power_core) auras->cracked_power_core = std::make_shared<CrackedPowerCoreAura>(*this);
-  if (selected_auras.power_infusion) auras->power_infusion = std::make_shared<PowerInfusionAura>(*this);
-  if (selected_auras.innervate) auras->innervate = std::make_shared<InnervateAura>(*this);
-  if (selected_auras.bloodlust) auras->bloodlust = std::make_shared<BloodlustAura>(*this);
-  if (selected_auras.destruction_potion) auras->destruction_potion = std::make_shared<DestructionPotionAura>(*this);
-  if (selected_auras.flame_cap) auras->flame_cap = std::make_shared<FlameCapAura>(*this);
-  if (settings.race == EmbindConstant::kOrc) auras->blood_fury = std::make_shared<BloodFuryAura>(*this);
+  if (selected_auras.mana_tide_totem) auras.mana_tide_totem = std::make_unique<ManaTideTotemAura>(*this);
+  if (selected_auras.chipped_power_core) auras.chipped_power_core = std::make_unique<ChippedPowerCoreAura>(*this);
+  if (selected_auras.cracked_power_core) auras.cracked_power_core = std::make_unique<CrackedPowerCoreAura>(*this);
+  if (selected_auras.power_infusion) auras.power_infusion = std::make_unique<PowerInfusionAura>(*this);
+  if (selected_auras.innervate) auras.innervate = std::make_unique<InnervateAura>(*this);
+  if (selected_auras.bloodlust) auras.bloodlust = std::make_unique<BloodlustAura>(*this);
+  if (selected_auras.destruction_potion) auras.destruction_potion = std::make_unique<DestructionPotionAura>(*this);
+  if (selected_auras.flame_cap) auras.flame_cap = std::make_unique<FlameCapAura>(*this);
+  if (settings.race == EmbindConstant::kOrc) auras.blood_fury = std::make_unique<BloodFuryAura>(*this);
   if (selected_auras.drums_of_battle)
-    auras->drums_of_battle = std::make_shared<DrumsOfBattleAura>(*this);
+    auras.drums_of_battle = std::make_unique<DrumsOfBattleAura>(*this);
   else if (selected_auras.drums_of_war)
-    auras->drums_of_war = std::make_shared<DrumsOfWarAura>(*this);
+    auras.drums_of_war = std::make_unique<DrumsOfWarAura>(*this);
   else if (selected_auras.drums_of_restoration)
-    auras->drums_of_restoration = std::make_shared<DrumsOfRestorationAura>(*this);
-  if (items.main_hand == 31336) auras->blade_of_wizardry = std::make_shared<BladeOfWizardryAura>(*this);
+    auras.drums_of_restoration = std::make_unique<DrumsOfRestorationAura>(*this);
+  if (items.main_hand == 31336) auras.blade_of_wizardry = std::make_unique<BladeOfWizardryAura>(*this);
   if (items.neck == 34678)
-    auras->shattered_sun_pendant_of_acumen = std::make_shared<ShatteredSunPendantOfAcumenAura>(*this);
-  if (items.chest == 28602) auras->robe_of_the_elder_scribes = std::make_shared<RobeOfTheElderScribesAura>(*this);
+    auras.shattered_sun_pendant_of_acumen = std::make_unique<ShatteredSunPendantOfAcumenAura>(*this);
+  if (items.chest == 28602) auras.robe_of_the_elder_scribes = std::make_unique<RobeOfTheElderScribesAura>(*this);
   if (settings.meta_gem_id == 25893)
-    auras->mystical_skyfire_diamond = std::make_shared<MysticalSkyfireDiamondAura>(*this);
+    auras.mystical_skyfire_diamond = std::make_unique<MysticalSkyfireDiamondAura>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 28789) != equipped_trinket_ids.end())
-    auras->eye_of_magtheridon = std::make_shared<EyeOfMagtheridonAura>(*this);
+    auras.eye_of_magtheridon = std::make_unique<EyeOfMagtheridonAura>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 32493) != equipped_trinket_ids.end())
-    auras->ashtongue_talisman_of_shadows = std::make_shared<AshtongueTalismanOfShadowsAura>(*this);
+    auras.ashtongue_talisman_of_shadows = std::make_unique<AshtongueTalismanOfShadowsAura>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 31856) != equipped_trinket_ids.end())
-    auras->darkmoon_card_crusade = std::make_shared<DarkmoonCardCrusadeAura>(*this);
+    auras.darkmoon_card_crusade = std::make_unique<DarkmoonCardCrusadeAura>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 28785) != equipped_trinket_ids.end())
-    auras->the_lightning_capacitor = std::make_shared<TheLightningCapacitorAura>(*this);
+    auras.the_lightning_capacitor = std::make_unique<TheLightningCapacitorAura>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 27683) != equipped_trinket_ids.end())
-    auras->quagmirrans_eye = std::make_shared<QuagmirransEyeAura>(*this);
+    auras.quagmirrans_eye = std::make_unique<QuagmirransEyeAura>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 28418) != equipped_trinket_ids.end())
-    auras->shiffars_nexus_horn = std::make_shared<ShiffarsNexusHornAura>(*this);
+    auras.shiffars_nexus_horn = std::make_unique<ShiffarsNexusHornAura>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 30626) != equipped_trinket_ids.end())
-    auras->sextant_of_unstable_currents = std::make_shared<SextantOfUnstableCurrentsAura>(*this);
+    auras.sextant_of_unstable_currents = std::make_unique<SextantOfUnstableCurrentsAura>(*this);
   if (items.ring_1 == 29305 || items.ring_2 == 29305)
-    auras->band_of_the_eternal_sage = std::make_shared<BandOfTheEternalSageAura>(*this);
+    auras.band_of_the_eternal_sage = std::make_unique<BandOfTheEternalSageAura>(*this);
   if (items.ring_1 == 21190 || items.ring_2 == 21190)
-    auras->wrath_of_cenarius = std::make_shared<WrathOfCenariusAura>(*this);
+    auras.wrath_of_cenarius = std::make_unique<WrathOfCenariusAura>(*this);
   if (sets.t4 >= 2) {
-    auras->flameshadow = std::make_shared<FlameshadowAura>(*this);
-    auras->shadowflame = std::make_shared<ShadowflameAura>(*this);
+    auras.flameshadow = std::make_unique<FlameshadowAura>(*this);
+    auras.shadowflame = std::make_unique<ShadowflameAura>(*this);
   }
-  if (sets.spellstrike >= 2) auras->spellstrike = std::make_shared<SpellstrikeAura>(*this);
-  if (sets.mana_etched >= 4) auras->mana_etched_4_set = std::make_shared<ManaEtched4SetAura>(*this);
+  if (sets.spellstrike >= 2) auras.spellstrike = std::make_unique<SpellstrikeAura>(*this);
+  if (sets.mana_etched >= 4) auras.mana_etched_4_set = std::make_unique<ManaEtched4SetAura>(*this);
 
   // Spells
-  spells->life_tap = std::make_shared<LifeTap>(*this);
+  spells.life_tap = std::make_unique<LifeTap>(*this);
   if (settings.fight_type == EmbindConstant::kAoe) {
-    spells->seed_of_corruption = std::make_shared<SeedOfCorruption>(*this);
+    spells.seed_of_corruption = std::make_unique<SeedOfCorruption>(*this);
   } else {
     if (settings.has_shadow_bolt || talents.nightfall > 0 || settings.rotation_option == EmbindConstant::kSimChooses)
-      spells->shadow_bolt = std::make_shared<ShadowBolt>(*this);
+      spells.shadow_bolt = std::make_unique<ShadowBolt>(*this);
     if (settings.has_incinerate || settings.rotation_option == EmbindConstant::kSimChooses)
-      spells->incinerate = std::make_shared<Incinerate>(*this);
+      spells.incinerate = std::make_unique<Incinerate>(*this);
     if (settings.has_searing_pain || settings.rotation_option == EmbindConstant::kSimChooses)
-      spells->searing_pain = std::make_shared<SearingPain>(*this);
+      spells.searing_pain = std::make_unique<SearingPain>(*this);
     if (settings.has_death_coil || settings.rotation_option == EmbindConstant::kSimChooses)
-      spells->death_coil = std::make_shared<DeathCoil>(*this);
+      spells.death_coil = std::make_unique<DeathCoil>(*this);
     if (talents.conflagrate == 1 &&
         (settings.has_conflagrate || settings.rotation_option == EmbindConstant::kSimChooses))
-      spells->conflagrate = std::make_shared<Conflagrate>(*this);
+      spells.conflagrate = std::make_unique<Conflagrate>(*this);
     if (talents.shadowburn == 1 &&
         (settings.has_shadow_burn || settings.rotation_option == EmbindConstant::kSimChooses))
-      spells->shadowburn = std::make_shared<Shadowburn>(*this);
+      spells.shadowburn = std::make_unique<Shadowburn>(*this);
     if (talents.shadowfury == 1 && (settings.has_shadowfury || settings.rotation_option == EmbindConstant::kSimChooses))
-      spells->shadowfury = std::make_shared<Shadowfury>(*this);
-    if (auras->corruption != NULL) spells->corruption = std::make_shared<Corruption>(*this, nullptr, auras->corruption);
-    if (auras->unstable_affliction != NULL)
-      spells->unstable_affliction = std::make_shared<UnstableAffliction>(*this, nullptr, auras->unstable_affliction);
-    if (auras->siphon_life != NULL)
-      spells->siphon_life = std::make_shared<SiphonLife>(*this, nullptr, auras->siphon_life);
-    if (auras->immolate != NULL) spells->immolate = std::make_shared<Immolate>(*this, nullptr, auras->immolate);
-    if (auras->curse_of_agony != NULL || auras->curse_of_doom != NULL)
-      spells->curse_of_agony = std::make_shared<CurseOfAgony>(*this, nullptr, auras->curse_of_agony);
-    if (auras->curse_of_the_elements != NULL)
-      spells->curse_of_the_elements = std::make_shared<CurseOfTheElements>(*this, auras->curse_of_the_elements);
-    if (auras->curse_of_recklessness != NULL)
-      spells->curse_of_recklessness = std::make_shared<CurseOfRecklessness>(*this, auras->curse_of_recklessness);
-    if (auras->curse_of_doom != NULL)
-      spells->curse_of_doom = std::make_shared<CurseOfDoom>(*this, nullptr, auras->curse_of_doom);
-    if (auras->amplify_curse != NULL)
-      spells->amplify_curse = std::make_shared<AmplifyCurse>(*this, auras->amplify_curse);
+      spells.shadowfury = std::make_unique<Shadowfury>(*this);
+    if (auras.corruption != NULL) spells.corruption = std::make_unique<Corruption>(*this, nullptr, auras.corruption);
+    if (auras.unstable_affliction != NULL)
+      spells.unstable_affliction = std::make_unique<UnstableAffliction>(*this, nullptr, auras.unstable_affliction);
+    if (auras.siphon_life != NULL) spells.siphon_life = std::make_unique<SiphonLife>(*this, nullptr, auras.siphon_life);
+    if (auras.immolate != NULL) spells.immolate = std::make_unique<Immolate>(*this, nullptr, auras.immolate);
+    if (auras.curse_of_agony != NULL || auras.curse_of_doom != NULL)
+      spells.curse_of_agony = std::make_unique<CurseOfAgony>(*this, nullptr, auras.curse_of_agony);
+    if (auras.curse_of_the_elements != NULL)
+      spells.curse_of_the_elements = std::make_unique<CurseOfTheElements>(*this, auras.curse_of_the_elements);
+    if (auras.curse_of_recklessness != NULL)
+      spells.curse_of_recklessness = std::make_unique<CurseOfRecklessness>(*this, auras.curse_of_recklessness);
+    if (auras.curse_of_doom != NULL)
+      spells.curse_of_doom = std::make_unique<CurseOfDoom>(*this, nullptr, auras.curse_of_doom);
+    if (auras.amplify_curse != NULL) spells.amplify_curse = std::make_unique<AmplifyCurse>(*this, auras.amplify_curse);
   }
-  if (auras->mana_tide_totem != NULL)
-    spells->mana_tide_totem = std::make_shared<ManaTideTotem>(*this, auras->mana_tide_totem);
-  if (auras->chipped_power_core != NULL)
-    spells->chipped_power_core = std::make_shared<ChippedPowerCore>(*this, auras->chipped_power_core);
-  if (auras->cracked_power_core != NULL)
-    spells->cracked_power_core = std::make_shared<CrackedPowerCore>(*this, auras->cracked_power_core);
-  if (selected_auras.super_mana_potion) spells->super_mana_potion = std::make_shared<SuperManaPotion>(*this);
-  if (selected_auras.demonic_rune) spells->demonic_rune = std::make_shared<DemonicRune>(*this);
+  if (auras.mana_tide_totem != NULL)
+    spells.mana_tide_totem = std::make_unique<ManaTideTotem>(*this, auras.mana_tide_totem);
+  if (auras.chipped_power_core != NULL)
+    spells.chipped_power_core = std::make_unique<ChippedPowerCore>(*this, auras.chipped_power_core);
+  if (auras.cracked_power_core != NULL)
+    spells.cracked_power_core = std::make_unique<CrackedPowerCore>(*this, auras.cracked_power_core);
+  if (selected_auras.super_mana_potion) spells.super_mana_potion = std::make_unique<SuperManaPotion>(*this);
+  if (selected_auras.demonic_rune) spells.demonic_rune = std::make_unique<DemonicRune>(*this);
   if (talents.dark_pact == 1 && (settings.has_dark_pact || settings.rotation_option == EmbindConstant::kSimChooses))
-    spells->dark_pact = std::make_shared<DarkPact>(*this);
-  if (auras->destruction_potion != NULL)
-    spells->destruction_potion = std::make_shared<DestructionPotion>(*this, auras->destruction_potion);
-  if (auras->flame_cap != NULL) spells->flame_cap = std::make_shared<FlameCap>(*this, auras->flame_cap);
-  if (auras->blood_fury != NULL) spells->blood_fury = std::make_shared<BloodFury>(*this, auras->blood_fury);
-  if (auras->drums_of_battle != NULL)
-    spells->drums_of_battle = std::make_shared<DrumsOfBattle>(*this, auras->drums_of_battle);
-  else if (auras->drums_of_war != NULL)
-    spells->drums_of_war = std::make_shared<DrumsOfWar>(*this, auras->drums_of_war);
-  else if (auras->drums_of_restoration != NULL)
-    spells->drums_of_restoration = std::make_shared<DrumsOfRestoration>(*this, auras->drums_of_restoration);
-  if (auras->blade_of_wizardry != NULL)
-    spells->blade_of_wizardry = std::make_shared<BladeOfWizardry>(*this, auras->blade_of_wizardry);
-  if (auras->shattered_sun_pendant_of_acumen != NULL)
-    spells->shattered_sun_pendant_of_acumen =
-        std::make_shared<ShatteredSunPendantOfAcumen>(*this, auras->shattered_sun_pendant_of_acumen);
-  if (auras->robe_of_the_elder_scribes != NULL)
-    spells->robe_of_the_elder_scribes =
-        std::make_shared<RobeOfTheElderScribes>(*this, auras->robe_of_the_elder_scribes);
-  if (auras->mystical_skyfire_diamond != NULL)
-    spells->mystical_skyfire_diamond = std::make_shared<MysticalSkyfireDiamond>(*this, auras->mystical_skyfire_diamond);
+    spells.dark_pact = std::make_unique<DarkPact>(*this);
+  if (auras.destruction_potion != NULL)
+    spells.destruction_potion = std::make_unique<DestructionPotion>(*this, auras.destruction_potion);
+  if (auras.flame_cap != NULL) spells.flame_cap = std::make_unique<FlameCap>(*this, auras.flame_cap);
+  if (auras.blood_fury != NULL) spells.blood_fury = std::make_unique<BloodFury>(*this, auras.blood_fury);
+  if (auras.drums_of_battle != NULL)
+    spells.drums_of_battle = std::make_unique<DrumsOfBattle>(*this, auras.drums_of_battle);
+  else if (auras.drums_of_war != NULL)
+    spells.drums_of_war = std::make_unique<DrumsOfWar>(*this, auras.drums_of_war);
+  else if (auras.drums_of_restoration != NULL)
+    spells.drums_of_restoration = std::make_unique<DrumsOfRestoration>(*this, auras.drums_of_restoration);
+  if (auras.blade_of_wizardry != NULL)
+    spells.blade_of_wizardry = std::make_unique<BladeOfWizardry>(*this, auras.blade_of_wizardry);
+  if (auras.shattered_sun_pendant_of_acumen != NULL)
+    spells.shattered_sun_pendant_of_acumen =
+        std::make_unique<ShatteredSunPendantOfAcumen>(*this, auras.shattered_sun_pendant_of_acumen);
+  if (auras.robe_of_the_elder_scribes != NULL)
+    spells.robe_of_the_elder_scribes = std::make_unique<RobeOfTheElderScribes>(*this, auras.robe_of_the_elder_scribes);
+  if (auras.mystical_skyfire_diamond != NULL)
+    spells.mystical_skyfire_diamond = std::make_unique<MysticalSkyfireDiamond>(*this, auras.mystical_skyfire_diamond);
   if (settings.meta_gem_id == 25901)
-    spells->insightful_earthstorm_diamond = std::make_shared<InsightfulEarthstormDiamond>(*this);
+    spells.insightful_earthstorm_diamond = std::make_unique<InsightfulEarthstormDiamond>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 34470) != equipped_trinket_ids.end())
-    spells->timbals_focusing_crystal = std::make_shared<TimbalsFocusingCrystal>(*this);
+    spells.timbals_focusing_crystal = std::make_unique<TimbalsFocusingCrystal>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 27922) != equipped_trinket_ids.end())
-    spells->mark_of_defiance = std::make_shared<MarkOfDefiance>(*this);
-  if (auras->the_lightning_capacitor != NULL)
-    spells->the_lightning_capacitor = std::make_shared<TheLightningCapacitor>(*this, auras->the_lightning_capacitor);
-  if (auras->quagmirrans_eye != NULL)
-    spells->quagmirrans_eye = std::make_shared<QuagmirransEye>(*this, auras->quagmirrans_eye);
-  if (auras->shiffars_nexus_horn != NULL)
-    spells->shiffars_nexus_horn = std::make_shared<ShiffarsNexusHorn>(*this, auras->shiffars_nexus_horn);
-  if (auras->sextant_of_unstable_currents != NULL)
-    spells->sextant_of_unstable_currents =
-        std::make_shared<SextantOfUnstableCurrents>(*this, auras->sextant_of_unstable_currents);
+    spells.mark_of_defiance = std::make_unique<MarkOfDefiance>(*this);
+  if (auras.the_lightning_capacitor != NULL)
+    spells.the_lightning_capacitor = std::make_unique<TheLightningCapacitor>(*this, auras.the_lightning_capacitor);
+  if (auras.quagmirrans_eye != NULL)
+    spells.quagmirrans_eye = std::make_unique<QuagmirransEye>(*this, auras.quagmirrans_eye);
+  if (auras.shiffars_nexus_horn != NULL)
+    spells.shiffars_nexus_horn = std::make_unique<ShiffarsNexusHorn>(*this, auras.shiffars_nexus_horn);
+  if (auras.sextant_of_unstable_currents != NULL)
+    spells.sextant_of_unstable_currents =
+        std::make_unique<SextantOfUnstableCurrents>(*this, auras.sextant_of_unstable_currents);
   if (items.ring_1 == 29305 || items.ring_2 == 29305)
-    spells->band_of_the_eternal_sage = std::make_shared<BandOfTheEternalSage>(*this, auras->band_of_the_eternal_sage);
-  if (selected_auras.judgement_of_wisdom) spells->judgement_of_wisdom = std::make_shared<JudgementOfWisdom>(*this);
-  if (auras->power_infusion != NULL) {
+    spells.band_of_the_eternal_sage = std::make_unique<BandOfTheEternalSage>(*this, auras.band_of_the_eternal_sage);
+  if (selected_auras.judgement_of_wisdom) spells.judgement_of_wisdom = std::make_unique<JudgementOfWisdom>(*this);
+  if (auras.power_infusion != NULL) {
     for (int i = 0; i < settings.power_infusion_amount; i++) {
-      spells->power_infusion.push_back(std::make_shared<PowerInfusion>(*this, auras->power_infusion));
+      spells.power_infusion.push_back(std::make_unique<PowerInfusion>(*this, auras.power_infusion));
     }
   }
-  if (auras->bloodlust != NULL) {
+  if (auras.bloodlust != NULL) {
     for (int i = 0; i < settings.bloodlust_amount; i++) {
-      spells->bloodlust.push_back(std::make_shared<Bloodlust>(*this, auras->bloodlust));
+      spells.bloodlust.push_back(std::make_unique<Bloodlust>(*this, auras.bloodlust));
     }
   }
-  if (auras->innervate != NULL) {
+  if (auras.innervate != NULL) {
     for (int i = 0; i < settings.innervate_amount; i++) {
-      spells->innervate.push_back(std::make_shared<Innervate>(*this, auras->innervate));
+      spells.innervate.push_back(std::make_unique<Innervate>(*this, auras.innervate));
     }
   }
 
   // Set the filler property
   if (settings.has_incinerate) {
-    filler = spells->incinerate;
+    filler = spells.incinerate;
   } else if (settings.has_searing_pain) {
-    filler = spells->searing_pain;
+    filler = spells.searing_pain;
   } else {
-    filler = spells->shadow_bolt;
+    filler = spells.shadow_bolt;
   }
 
   // Set the curseSpell and curseAura properties
-  if (spells->curse_of_the_elements != NULL) {
-    curse_spell = spells->curse_of_the_elements;
-    curse_aura = auras->curse_of_the_elements;
-  } else if (spells->curse_of_recklessness != NULL) {
-    curse_spell = spells->curse_of_recklessness;
-    curse_aura = auras->curse_of_recklessness;
-  } else if (spells->curse_of_doom != NULL) {
-    curse_spell = spells->curse_of_doom;
-  } else if (spells->curse_of_agony != NULL) {
-    curse_spell = spells->curse_of_agony;
+  if (spells.curse_of_the_elements != NULL) {
+    curse_spell = spells.curse_of_the_elements;
+    curse_aura = auras.curse_of_the_elements;
+  } else if (spells.curse_of_recklessness != NULL) {
+    curse_spell = spells.curse_of_recklessness;
+    curse_aura = auras.curse_of_recklessness;
+  } else if (spells.curse_of_doom != NULL) {
+    curse_spell = spells.curse_of_doom;
+  } else if (spells.curse_of_agony != NULL) {
+    curse_spell = spells.curse_of_agony;
   }
 
   SendPlayerInfoToCombatLog();
@@ -453,119 +450,116 @@ void Player::Reset() {
 
   // Reset trinkets
   for (auto& trinket : trinkets) {
-    trinket->Reset();
+    trinket.Reset();
   }
 
   // Reset spells
-  if (spells->life_tap != NULL) spells->life_tap->Reset();
-  if (spells->seed_of_corruption != NULL) spells->seed_of_corruption->Reset();
-  if (spells->shadow_bolt != NULL) spells->shadow_bolt->Reset();
-  if (spells->incinerate != NULL) spells->incinerate->Reset();
-  if (spells->searing_pain != NULL) spells->searing_pain->Reset();
-  if (spells->corruption != NULL) spells->corruption->Reset();
-  if (spells->unstable_affliction != NULL) spells->unstable_affliction->Reset();
-  if (spells->siphon_life != NULL) spells->siphon_life->Reset();
-  if (spells->immolate != NULL) spells->immolate->Reset();
-  if (spells->curse_of_agony != NULL) spells->curse_of_agony->Reset();
-  if (spells->curse_of_the_elements != NULL) spells->curse_of_the_elements->Reset();
-  if (spells->curse_of_recklessness != NULL) spells->curse_of_recklessness->Reset();
-  if (spells->curse_of_doom != NULL) spells->curse_of_doom->Reset();
-  if (spells->conflagrate != NULL) spells->conflagrate->Reset();
-  if (spells->shadowburn != NULL) spells->shadowburn->Reset();
-  if (spells->death_coil != NULL) spells->death_coil->Reset();
-  if (spells->shadowfury != NULL) spells->shadowfury->Reset();
-  if (spells->amplify_curse != NULL) spells->amplify_curse->Reset();
-  if (spells->dark_pact != NULL) spells->dark_pact->Reset();
-  if (spells->destruction_potion != NULL) spells->destruction_potion->Reset();
-  if (spells->super_mana_potion != NULL) spells->super_mana_potion->Reset();
-  if (spells->demonic_rune != NULL) spells->demonic_rune->Reset();
-  if (spells->flame_cap != NULL) spells->flame_cap->Reset();
-  if (spells->blood_fury != NULL) spells->blood_fury->Reset();
-  if (spells->drums_of_battle != NULL) spells->drums_of_battle->Reset();
-  if (spells->drums_of_war != NULL) spells->drums_of_war->Reset();
-  if (spells->drums_of_restoration != NULL) spells->drums_of_restoration->Reset();
-  if (spells->blade_of_wizardry != NULL) spells->blade_of_wizardry->Reset();
-  if (spells->shattered_sun_pendant_of_acumen != NULL) spells->shattered_sun_pendant_of_acumen->Reset();
-  if (spells->robe_of_the_elder_scribes != NULL) spells->robe_of_the_elder_scribes->Reset();
-  if (spells->mystical_skyfire_diamond != NULL) spells->mystical_skyfire_diamond->Reset();
-  if (spells->insightful_earthstorm_diamond != NULL) spells->insightful_earthstorm_diamond->Reset();
-  if (spells->timbals_focusing_crystal != NULL) spells->timbals_focusing_crystal->Reset();
-  if (spells->mark_of_defiance != NULL) spells->mark_of_defiance->Reset();
-  if (spells->the_lightning_capacitor != NULL) spells->the_lightning_capacitor->Reset();
-  if (spells->quagmirrans_eye != NULL) spells->quagmirrans_eye->Reset();
-  if (spells->shiffars_nexus_horn != NULL) spells->shiffars_nexus_horn->Reset();
-  if (spells->sextant_of_unstable_currents != NULL) spells->sextant_of_unstable_currents->Reset();
-  if (spells->band_of_the_eternal_sage != NULL) spells->band_of_the_eternal_sage->Reset();
-  if (spells->chipped_power_core != NULL) spells->chipped_power_core->Reset();
-  if (spells->cracked_power_core != NULL) spells->cracked_power_core->Reset();
-  if (spells->mana_tide_totem != NULL) spells->mana_tide_totem->Reset();
-  for (auto& pi : spells->power_infusion) {
+  if (spells.life_tap != NULL) spells.life_tap->Reset();
+  if (spells.seed_of_corruption != NULL) spells.seed_of_corruption->Reset();
+  if (spells.shadow_bolt != NULL) spells.shadow_bolt->Reset();
+  if (spells.incinerate != NULL) spells.incinerate->Reset();
+  if (spells.searing_pain != NULL) spells.searing_pain->Reset();
+  if (spells.corruption != NULL) spells.corruption->Reset();
+  if (spells.unstable_affliction != NULL) spells.unstable_affliction->Reset();
+  if (spells.siphon_life != NULL) spells.siphon_life->Reset();
+  if (spells.immolate != NULL) spells.immolate->Reset();
+  if (spells.curse_of_agony != NULL) spells.curse_of_agony->Reset();
+  if (spells.curse_of_the_elements != NULL) spells.curse_of_the_elements->Reset();
+  if (spells.curse_of_recklessness != NULL) spells.curse_of_recklessness->Reset();
+  if (spells.curse_of_doom != NULL) spells.curse_of_doom->Reset();
+  if (spells.conflagrate != NULL) spells.conflagrate->Reset();
+  if (spells.shadowburn != NULL) spells.shadowburn->Reset();
+  if (spells.death_coil != NULL) spells.death_coil->Reset();
+  if (spells.shadowfury != NULL) spells.shadowfury->Reset();
+  if (spells.amplify_curse != NULL) spells.amplify_curse->Reset();
+  if (spells.dark_pact != NULL) spells.dark_pact->Reset();
+  if (spells.destruction_potion != NULL) spells.destruction_potion->Reset();
+  if (spells.super_mana_potion != NULL) spells.super_mana_potion->Reset();
+  if (spells.demonic_rune != NULL) spells.demonic_rune->Reset();
+  if (spells.flame_cap != NULL) spells.flame_cap->Reset();
+  if (spells.blood_fury != NULL) spells.blood_fury->Reset();
+  if (spells.drums_of_battle != NULL) spells.drums_of_battle->Reset();
+  if (spells.drums_of_war != NULL) spells.drums_of_war->Reset();
+  if (spells.drums_of_restoration != NULL) spells.drums_of_restoration->Reset();
+  if (spells.blade_of_wizardry != NULL) spells.blade_of_wizardry->Reset();
+  if (spells.shattered_sun_pendant_of_acumen != NULL) spells.shattered_sun_pendant_of_acumen->Reset();
+  if (spells.robe_of_the_elder_scribes != NULL) spells.robe_of_the_elder_scribes->Reset();
+  if (spells.mystical_skyfire_diamond != NULL) spells.mystical_skyfire_diamond->Reset();
+  if (spells.insightful_earthstorm_diamond != NULL) spells.insightful_earthstorm_diamond->Reset();
+  if (spells.timbals_focusing_crystal != NULL) spells.timbals_focusing_crystal->Reset();
+  if (spells.mark_of_defiance != NULL) spells.mark_of_defiance->Reset();
+  if (spells.the_lightning_capacitor != NULL) spells.the_lightning_capacitor->Reset();
+  if (spells.quagmirrans_eye != NULL) spells.quagmirrans_eye->Reset();
+  if (spells.shiffars_nexus_horn != NULL) spells.shiffars_nexus_horn->Reset();
+  if (spells.sextant_of_unstable_currents != NULL) spells.sextant_of_unstable_currents->Reset();
+  if (spells.band_of_the_eternal_sage != NULL) spells.band_of_the_eternal_sage->Reset();
+  if (spells.chipped_power_core != NULL) spells.chipped_power_core->Reset();
+  if (spells.cracked_power_core != NULL) spells.cracked_power_core->Reset();
+  if (spells.mana_tide_totem != NULL) spells.mana_tide_totem->Reset();
+  for (auto& pi : spells.power_infusion) {
     pi->Reset();
   }
-  for (auto& bl : spells->bloodlust) {
+  for (auto& bl : spells.bloodlust) {
     bl->Reset();
   }
-  for (auto& innervate : spells->innervate) {
+  for (auto& innervate : spells.innervate) {
     innervate->Reset();
   }
 }
 
 void Player::EndAuras() {
   for (auto& trinket : trinkets) {
-    if (trinket->active) {
-      trinket->Fade();
+    if (trinket.active) {
+      trinket.Fade();
     }
   }
-  if (auras->corruption != NULL && auras->corruption->active) auras->corruption->Fade();
-  if (auras->unstable_affliction != NULL && auras->unstable_affliction->active) auras->unstable_affliction->Fade();
-  if (auras->siphon_life != NULL && auras->siphon_life->active) auras->siphon_life->Fade();
-  if (auras->immolate != NULL && auras->immolate->active) auras->immolate->Fade();
-  if (auras->curse_of_agony != NULL && auras->curse_of_agony->active) auras->curse_of_agony->Fade();
-  if (auras->curse_of_doom != NULL && auras->curse_of_doom->active) auras->curse_of_doom->Fade();
-  if (auras->improved_shadow_bolt != NULL && auras->improved_shadow_bolt->active) auras->improved_shadow_bolt->Fade();
-  if (auras->curse_of_the_elements != NULL && auras->curse_of_the_elements->active)
-    auras->curse_of_the_elements->Fade();
-  if (auras->curse_of_recklessness != NULL && auras->curse_of_recklessness->active)
-    auras->curse_of_recklessness->Fade();
-  if (auras->shadow_trance != NULL && auras->shadow_trance->active) auras->shadow_trance->Fade();
-  if (auras->amplify_curse != NULL && auras->amplify_curse->active) auras->amplify_curse->Fade();
-  if (auras->power_infusion != NULL && auras->power_infusion->active) auras->power_infusion->Fade();
-  if (auras->innervate != NULL && auras->innervate->active) auras->innervate->Fade();
-  if (auras->blood_fury != NULL && auras->blood_fury->active) auras->blood_fury->Fade();
-  if (auras->destruction_potion != NULL && auras->destruction_potion->active) auras->destruction_potion->Fade();
-  if (auras->flame_cap != NULL && auras->flame_cap->active) auras->flame_cap->Fade();
-  if (auras->bloodlust != NULL && auras->bloodlust->active) auras->bloodlust->Fade();
-  if (auras->drums_of_battle != NULL && auras->drums_of_battle->active) auras->drums_of_battle->Fade();
-  if (auras->drums_of_war != NULL && auras->drums_of_war->active) auras->drums_of_war->Fade();
-  if (auras->drums_of_restoration != NULL && auras->drums_of_restoration->active) auras->drums_of_restoration->Fade();
-  if (auras->band_of_the_eternal_sage != NULL && auras->band_of_the_eternal_sage->active)
-    auras->band_of_the_eternal_sage->Fade();
-  if (auras->wrath_of_cenarius != NULL && auras->wrath_of_cenarius->active) auras->wrath_of_cenarius->Fade();
-  if (auras->blade_of_wizardry != NULL && auras->blade_of_wizardry->active) auras->blade_of_wizardry->Fade();
-  if (auras->shattered_sun_pendant_of_acumen != NULL && auras->shattered_sun_pendant_of_acumen->active)
-    auras->shattered_sun_pendant_of_acumen->Fade();
-  if (auras->robe_of_the_elder_scribes != NULL && auras->robe_of_the_elder_scribes->active)
-    auras->robe_of_the_elder_scribes->Fade();
-  if (auras->mystical_skyfire_diamond != NULL && auras->mystical_skyfire_diamond->active)
-    auras->mystical_skyfire_diamond->Fade();
-  if (auras->eye_of_magtheridon != NULL && auras->eye_of_magtheridon->active) auras->eye_of_magtheridon->Fade();
-  if (auras->sextant_of_unstable_currents != NULL && auras->sextant_of_unstable_currents->active)
-    auras->sextant_of_unstable_currents->Fade();
-  if (auras->quagmirrans_eye != NULL && auras->quagmirrans_eye->active) auras->quagmirrans_eye->Fade();
-  if (auras->shiffars_nexus_horn != NULL && auras->shiffars_nexus_horn->active) auras->shiffars_nexus_horn->Fade();
-  if (auras->ashtongue_talisman_of_shadows != NULL && auras->ashtongue_talisman_of_shadows->active)
-    auras->ashtongue_talisman_of_shadows->Fade();
-  if (auras->darkmoon_card_crusade != NULL && auras->darkmoon_card_crusade->active)
-    auras->darkmoon_card_crusade->Fade();
-  if (auras->the_lightning_capacitor != NULL && auras->the_lightning_capacitor->active)
-    auras->the_lightning_capacitor->Fade();
-  if (auras->flameshadow != NULL && auras->flameshadow->active) auras->flameshadow->Fade();
-  if (auras->shadowflame != NULL && auras->shadowflame->active) auras->shadowflame->Fade();
-  if (auras->spellstrike != NULL && auras->spellstrike->active) auras->spellstrike->Fade();
-  if (auras->mana_etched_4_set != NULL && auras->mana_etched_4_set->active) auras->mana_etched_4_set->Fade();
-  if (auras->chipped_power_core != NULL && auras->chipped_power_core->active) auras->chipped_power_core->Fade();
-  if (auras->cracked_power_core != NULL && auras->cracked_power_core->active) auras->cracked_power_core->Fade();
-  if (auras->mana_tide_totem != NULL && auras->mana_tide_totem->active) auras->mana_tide_totem->Fade();
+  if (auras.corruption != NULL && auras.corruption->active) auras.corruption->Fade();
+  if (auras.unstable_affliction != NULL && auras.unstable_affliction->active) auras.unstable_affliction->Fade();
+  if (auras.siphon_life != NULL && auras.siphon_life->active) auras.siphon_life->Fade();
+  if (auras.immolate != NULL && auras.immolate->active) auras.immolate->Fade();
+  if (auras.curse_of_agony != NULL && auras.curse_of_agony->active) auras.curse_of_agony->Fade();
+  if (auras.curse_of_doom != NULL && auras.curse_of_doom->active) auras.curse_of_doom->Fade();
+  if (auras.improved_shadow_bolt != NULL && auras.improved_shadow_bolt->active) auras.improved_shadow_bolt->Fade();
+  if (auras.curse_of_the_elements != NULL && auras.curse_of_the_elements->active) auras.curse_of_the_elements->Fade();
+  if (auras.curse_of_recklessness != NULL && auras.curse_of_recklessness->active) auras.curse_of_recklessness->Fade();
+  if (auras.shadow_trance != NULL && auras.shadow_trance->active) auras.shadow_trance->Fade();
+  if (auras.amplify_curse != NULL && auras.amplify_curse->active) auras.amplify_curse->Fade();
+  if (auras.power_infusion != NULL && auras.power_infusion->active) auras.power_infusion->Fade();
+  if (auras.innervate != NULL && auras.innervate->active) auras.innervate->Fade();
+  if (auras.blood_fury != NULL && auras.blood_fury->active) auras.blood_fury->Fade();
+  if (auras.destruction_potion != NULL && auras.destruction_potion->active) auras.destruction_potion->Fade();
+  if (auras.flame_cap != NULL && auras.flame_cap->active) auras.flame_cap->Fade();
+  if (auras.bloodlust != NULL && auras.bloodlust->active) auras.bloodlust->Fade();
+  if (auras.drums_of_battle != NULL && auras.drums_of_battle->active) auras.drums_of_battle->Fade();
+  if (auras.drums_of_war != NULL && auras.drums_of_war->active) auras.drums_of_war->Fade();
+  if (auras.drums_of_restoration != NULL && auras.drums_of_restoration->active) auras.drums_of_restoration->Fade();
+  if (auras.band_of_the_eternal_sage != NULL && auras.band_of_the_eternal_sage->active)
+    auras.band_of_the_eternal_sage->Fade();
+  if (auras.wrath_of_cenarius != NULL && auras.wrath_of_cenarius->active) auras.wrath_of_cenarius->Fade();
+  if (auras.blade_of_wizardry != NULL && auras.blade_of_wizardry->active) auras.blade_of_wizardry->Fade();
+  if (auras.shattered_sun_pendant_of_acumen != NULL && auras.shattered_sun_pendant_of_acumen->active)
+    auras.shattered_sun_pendant_of_acumen->Fade();
+  if (auras.robe_of_the_elder_scribes != NULL && auras.robe_of_the_elder_scribes->active)
+    auras.robe_of_the_elder_scribes->Fade();
+  if (auras.mystical_skyfire_diamond != NULL && auras.mystical_skyfire_diamond->active)
+    auras.mystical_skyfire_diamond->Fade();
+  if (auras.eye_of_magtheridon != NULL && auras.eye_of_magtheridon->active) auras.eye_of_magtheridon->Fade();
+  if (auras.sextant_of_unstable_currents != NULL && auras.sextant_of_unstable_currents->active)
+    auras.sextant_of_unstable_currents->Fade();
+  if (auras.quagmirrans_eye != NULL && auras.quagmirrans_eye->active) auras.quagmirrans_eye->Fade();
+  if (auras.shiffars_nexus_horn != NULL && auras.shiffars_nexus_horn->active) auras.shiffars_nexus_horn->Fade();
+  if (auras.ashtongue_talisman_of_shadows != NULL && auras.ashtongue_talisman_of_shadows->active)
+    auras.ashtongue_talisman_of_shadows->Fade();
+  if (auras.darkmoon_card_crusade != NULL && auras.darkmoon_card_crusade->active) auras.darkmoon_card_crusade->Fade();
+  if (auras.the_lightning_capacitor != NULL && auras.the_lightning_capacitor->active)
+    auras.the_lightning_capacitor->Fade();
+  if (auras.flameshadow != NULL && auras.flameshadow->active) auras.flameshadow->Fade();
+  if (auras.shadowflame != NULL && auras.shadowflame->active) auras.shadowflame->Fade();
+  if (auras.spellstrike != NULL && auras.spellstrike->active) auras.spellstrike->Fade();
+  if (auras.mana_etched_4_set != NULL && auras.mana_etched_4_set->active) auras.mana_etched_4_set->Fade();
+  if (auras.chipped_power_core != NULL && auras.chipped_power_core->active) auras.chipped_power_core->Fade();
+  if (auras.cracked_power_core != NULL && auras.cracked_power_core->active) auras.cracked_power_core->Fade();
+  if (auras.mana_tide_totem != NULL && auras.mana_tide_totem->active) auras.mana_tide_totem->Fade();
 }
 
 double Player::GetHastePercent() {
@@ -573,16 +567,16 @@ double Player::GetHastePercent() {
 
   // If both Bloodlust and Power Infusion are active then remove the 20% PI
   // bonus since they don't stack
-  if (auras->bloodlust != NULL && auras->power_infusion != NULL && auras->bloodlust->active &&
-      auras->power_infusion->active) {
-    haste_percent /= (1 + auras->power_infusion->stats->haste_percent / 100);
+  if (auras.bloodlust != NULL && auras.power_infusion != NULL && auras.bloodlust->active &&
+      auras.power_infusion->active) {
+    haste_percent /= (1 + auras.power_infusion->stats->haste_percent / 100);
   }
 
   return haste_percent * (1 + stats.haste_rating / kHasteRatingPerPercent / 100.0);
 }
 
 double Player::GetGcdValue(const std::shared_ptr<Spell>& spell) {
-  if (spells->shadowfury == NULL || spell != spells->shadowfury) {
+  if (spells.shadowfury == NULL || spell != spells.shadowfury) {
     return std::max(kMinimumGcdValue, round((kGcdValue / GetHastePercent()) * 10000) / 10000);
   }
   return 0;
@@ -622,8 +616,8 @@ bool Player::IsCrit(SpellType spell_type, double extra_crit) { return RollRng(Ge
 
 bool Player::IsHit(SpellType spell_type) {
   const bool kIsHit = RollRng(GetHitChance(spell_type));
-  if (!kIsHit && auras->eye_of_magtheridon != NULL) {
-    auras->eye_of_magtheridon->Apply();
+  if (!kIsHit && auras.eye_of_magtheridon != NULL) {
+    auras.eye_of_magtheridon->Apply();
   }
   return kIsHit;
 }
@@ -646,10 +640,10 @@ double Player::GetBaseHitChance(int player_level, int enemy_level) {
 void Player::UseCooldowns(double fight_time_remaining) {
   // Only use PI if Bloodlust isn't selected or if Bloodlust isn't active since they don't stack, or if there are enough
   // Power Infusions available to last until the end of the fight for the mana cost reduction
-  if (!spells->power_infusion.empty() && !auras->power_infusion->active &&
-      (spells->bloodlust.empty() || !auras->bloodlust->active ||
-       power_infusions_ready * auras->power_infusion->duration >= fight_time_remaining)) {
-    for (auto pi : spells->power_infusion) {
+  if (!spells.power_infusion.empty() && !auras.power_infusion->active &&
+      (spells.bloodlust.empty() || !auras.bloodlust->active ||
+       power_infusions_ready * auras.power_infusion->duration >= fight_time_remaining)) {
+    for (auto& pi : spells.power_infusion) {
       if (pi->Ready()) {
         pi->StartCast();
         break;
@@ -657,48 +651,48 @@ void Player::UseCooldowns(double fight_time_remaining) {
     }
   }
   // TODO don't use innervate until x% mana
-  if (!spells->innervate.empty() && !auras->innervate->active) {
-    for (auto innervate : spells->innervate) {
+  if (!spells.innervate.empty() && !auras.innervate->active) {
+    for (auto& innervate : spells.innervate) {
       if (innervate->Ready()) {
         innervate->StartCast();
         break;
       }
     }
   }
-  if (spells->chipped_power_core != NULL && spells->chipped_power_core->Ready()) {
-    spells->chipped_power_core->StartCast();
-  } else if (spells->cracked_power_core != NULL && spells->cracked_power_core->Ready()) {
-    spells->cracked_power_core->StartCast();
+  if (spells.chipped_power_core != NULL && spells.chipped_power_core->Ready()) {
+    spells.chipped_power_core->StartCast();
+  } else if (spells.cracked_power_core != NULL && spells.cracked_power_core->Ready()) {
+    spells.cracked_power_core->StartCast();
   }
-  if (spells->destruction_potion != NULL && spells->destruction_potion->Ready()) {
-    spells->destruction_potion->StartCast();
+  if (spells.destruction_potion != NULL && spells.destruction_potion->Ready()) {
+    spells.destruction_potion->StartCast();
   }
-  if (spells->flame_cap != NULL && spells->flame_cap->Ready()) {
-    spells->flame_cap->StartCast();
+  if (spells.flame_cap != NULL && spells.flame_cap->Ready()) {
+    spells.flame_cap->StartCast();
   }
-  if (spells->blood_fury != NULL && spells->blood_fury->Ready()) {
-    spells->blood_fury->StartCast();
+  if (spells.blood_fury != NULL && spells.blood_fury->Ready()) {
+    spells.blood_fury->StartCast();
   }
   for (int i = 0; i < trinkets.size(); i++) {
-    if (trinkets[i]->Ready()) {
-      trinkets[i]->Use();
+    if (trinkets[i].Ready()) {
+      trinkets[i].Use();
       // Set the other on-use trinket (if another is equipped) on cooldown for
       // the duration of the trinket just used if the trinkets share cooldown
       const int kOtherTrinketSlot = i == 1 ? 0 : 1;
-      if (trinkets.size() > kOtherTrinketSlot && trinkets[kOtherTrinketSlot] != NULL &&
-          trinkets[kOtherTrinketSlot]->shares_cooldown && trinkets[i]->shares_cooldown) {
-        trinkets[kOtherTrinketSlot]->cooldown_remaining =
-            std::max(trinkets[kOtherTrinketSlot]->cooldown_remaining, static_cast<double>(trinkets[i]->duration));
+      if (trinkets.size() > kOtherTrinketSlot && trinkets[kOtherTrinketSlot].shares_cooldown &&
+          trinkets[i].shares_cooldown) {
+        trinkets[kOtherTrinketSlot].cooldown_remaining =
+            std::max(trinkets[kOtherTrinketSlot].cooldown_remaining, static_cast<double>(trinkets[i].duration));
       }
     }
   }
 }
 
 void Player::CastLifeTapOrDarkPact() {
-  if (spells->dark_pact != NULL && spells->dark_pact->Ready()) {
-    spells->dark_pact->StartCast();
+  if (spells.dark_pact != NULL && spells.dark_pact->Ready()) {
+    spells.dark_pact->StartCast();
   } else {
-    spells->life_tap->StartCast();
+    spells.life_tap->StartCast();
   }
 }
 
@@ -776,11 +770,11 @@ void Player::SendPlayerInfoToCombatLog() {
     combat_log_entries.push_back("Strength: " + DoubleToString(pet->GetStrength()));
     combat_log_entries.push_back("Agility: " + DoubleToString(pet->GetAgility()));
     combat_log_entries.push_back("Spirit: " + DoubleToString(pet->GetSpirit()));
-    combat_log_entries.push_back("Attack Power: " + DoubleToString(round(pet->stats->attack_power)) +
+    combat_log_entries.push_back("Attack Power: " + DoubleToString(round(pet->stats.attack_power)) +
                                  " (without attack power % modifiers)");
-    combat_log_entries.push_back("Spell Power: " + DoubleToString(pet->stats->spell_power));
-    combat_log_entries.push_back("Mana: " + DoubleToString(pet->stats->max_mana));
-    combat_log_entries.push_back("MP5: " + std::to_string(pet->stats->mp5));
+    combat_log_entries.push_back("Spell Power: " + DoubleToString(pet->stats.spell_power));
+    combat_log_entries.push_back("Mana: " + DoubleToString(pet->stats.max_mana));
+    combat_log_entries.push_back("MP5: " + std::to_string(pet->stats.mp5));
     if (pet->pet_type == PetType::kMelee) {
       combat_log_entries.push_back(
           "Physical Hit Chance: " + DoubleToString(round(pet->GetMeleeHitChance() * 100) / 100.0, 2) + "%");
@@ -789,8 +783,8 @@ void Player::SendPlayerInfoToCombatLog() {
           DoubleToString(pet->crit_suppression, 2) + "% Crit Suppression Applied)");
       combat_log_entries.push_back(
           "Glancing Blow Chance: " + DoubleToString(round(pet->glancing_blow_chance * 100) / 100.0, 2) + "%");
-      combat_log_entries.push_back("Attack Power Modifier: " +
-                                   DoubleToString(round(pet->stats->attack_power_modifier * 10000) / 100.0, 2) + "%");
+      combat_log_entries.push_back(
+          "Attack Power Modifier: " + DoubleToString(round(pet->stats.attack_power_modifier * 10000) / 100.0, 2) + "%");
     }
     if (pet->pet == PetName::kImp || pet->pet == PetName::kSuccubus) {
       combat_log_entries.push_back(
@@ -799,7 +793,7 @@ void Player::SendPlayerInfoToCombatLog() {
           "Spell Crit Chance: " + DoubleToString(round(pet->GetSpellCritChance() * 100) / 100.0, 2) + "%");
     }
     combat_log_entries.push_back(
-        "Damage Modifier: " + DoubleToString(round(pet->stats->damage_modifier * 10000) / 100, 2) + "%");
+        "Damage Modifier: " + DoubleToString(round(pet->stats.damage_modifier * 10000) / 100, 2) + "%");
   }
   combat_log_entries.push_back("---------------- Enemy stats ----------------");
   combat_log_entries.push_back("Level: " + std::to_string(settings.enemy_level));

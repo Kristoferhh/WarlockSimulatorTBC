@@ -41,10 +41,10 @@ DemonicRune::DemonicRune(Player& player) : ManaPotion(player) {
 
 void DemonicRune::Cast() {
   ManaPotion::Cast();
-  if (player.spells->chipped_power_core != NULL) {
-    player.spells->chipped_power_core->cooldown_remaining = cooldown;
+  if (player.spells.chipped_power_core != NULL) {
+    player.spells.chipped_power_core->cooldown_remaining = cooldown;
   }
-  if (player.spells->cracked_power_core != NULL) {
-    player.spells->cracked_power_core->cooldown_remaining = cooldown;
+  if (player.spells.cracked_power_core != NULL) {
+    player.spells.cracked_power_core->cooldown_remaining = cooldown;
   }
 }

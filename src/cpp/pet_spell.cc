@@ -17,12 +17,12 @@ PetSpell::PetSpell(std::shared_ptr<Pet> pet) : pet(pet) {
 
 void PetSpell::Setup() {
   if (pet->player.recording_combat_log_breakdown && pet->player.combat_log_breakdown.count(name) == 0) {
-    pet->player.combat_log_breakdown.insert(std::make_pair(name, new CombatLogBreakdown(name)));
+    pet->player.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
   }
 }
 
 bool PetSpell::Ready() {
-  return cooldown_remaining <= 0 && pet->stats->mana >= mana_cost && pet->cast_time_remaining <= 0;
+  return cooldown_remaining <= 0 && pet->stats.mana >= mana_cost && pet->cast_time_remaining <= 0;
 }
 
 double PetSpell::GetBaseDamage() { return dmg; }
@@ -87,22 +87,22 @@ void PetSpell::Cast() {
     } else {
       combat_log_message.append(" casts " + name);
 
-      if (pet->spells->melee != NULL && name == pet->spells->melee->name) {
-        combat_log_message.append(" - Attack Speed: " + DoubleToString(pet->spells->melee->GetCooldown(), 2) + " (" +
+      if (pet->spells.melee != NULL && name == pet->spells.melee->name) {
+        combat_log_message.append(" - Attack Speed: " + DoubleToString(pet->spells.melee->GetCooldown(), 2) + " (" +
                                   DoubleToString(round(pet->GetHastePercent() * 10000) / 100.0 - 100, 4) +
                                   "% haste at a base attack speed of " +
-                                  DoubleToString(pet->spells->melee->cooldown, 2) + ")");
+                                  DoubleToString(pet->spells.melee->cooldown, 2) + ")");
       }
     }
   }
 
   if (mana_cost > 0 && !pet->player.settings.infinite_pet_mana) {
-    pet->stats->mana -= mana_cost;
+    pet->stats.mana -= mana_cost;
     pet->five_second_rule_timer_remaining = 5;
 
     if (pet->player.ShouldWriteToCombatLog()) {
-      combat_log_message.append(" - Pet mana: " + std::to_string(pet->stats->mana) + "/" +
-                                std::to_string(pet->stats->max_mana));
+      combat_log_message.append(" - Pet mana: " + std::to_string(pet->stats.mana) + "/" +
+                                std::to_string(pet->stats.max_mana));
     }
   }
 
@@ -124,7 +124,7 @@ void PetSpell::Cast() {
     double glancing_chance = miss_chance;
 
     // Only check for a glancing if it's a normal melee attack
-    if (pet->spells->melee != NULL && name == pet->spells->melee->name) {
+    if (pet->spells.melee != NULL && name == pet->spells.melee->name) {
       glancing_chance += pet->glancing_blow_chance * pet->player.kFloatNumberMultiplier;
     }
 
@@ -161,7 +161,7 @@ void PetSpell::Cast() {
       return;
     }
     // Glancing Blow
-    else if (attack_roll <= glancing_chance && pet->spells->melee != NULL && name == pet->spells->melee->name) {
+    else if (attack_roll <= glancing_chance && pet->spells.melee != NULL && name == pet->spells.melee->name) {
       is_glancing = true;
       if (pet->player.recording_combat_log_breakdown) {
         pet->player.combat_log_breakdown.at(name)->glancing_blows++;
@@ -203,7 +203,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
 
   // Add damage from Spell Power
   if (type == AttackType::kMagical) {
-    dmg += pet->stats->spell_power * coefficient;
+    dmg += pet->stats.spell_power * coefficient;
   }
 
   // Multiply if it's a crit
@@ -232,7 +232,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
       }
 
       // ISB
-      if ((pet->player.auras->improved_shadow_bolt != NULL && pet->player.auras->improved_shadow_bolt->active) ||
+      if ((pet->player.auras.improved_shadow_bolt != NULL && pet->player.auras.improved_shadow_bolt->active) ||
           pet->player.settings.using_custom_isb_uptime) {
         // Custom ISB Uptime
         if (pet->player.settings.using_custom_isb_uptime) {
@@ -240,8 +240,8 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
         }
         // Normal ISB
         else {
-          damage_modifier *= pet->player.auras->improved_shadow_bolt->modifier;
-          pet->player.auras->improved_shadow_bolt->DecrementStacks();
+          damage_modifier *= pet->player.auras.improved_shadow_bolt->modifier;
+          pet->player.auras.improved_shadow_bolt->DecrementStacks();
         }
       }
     }
@@ -265,7 +265,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
   }
 
   // Pet Damage Modifier (from Unholy Power, Master Demonologist, etc.)
-  damage_modifier *= pet->stats->damage_modifier;
+  damage_modifier *= pet->stats.damage_modifier;
 
   if (is_glancing) {
     dmg *= pet->glancing_blow_multiplier;
@@ -282,7 +282,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
   pet->player.iteration_damage += dmg;
 
   if (pet->pet == PetName::kFelguard) {
-    pet->auras->demonic_frenzy->Apply();
+    pet->auras.demonic_frenzy->Apply();
   }
 
   if (pet->player.recording_combat_log_breakdown) {
@@ -297,7 +297,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
     combat_log_message.append(" (" + DoubleToString(round(base_damage)) + " Base Damage");
     if (type == AttackType::kMagical) {
       combat_log_message.append(" - " + DoubleToString(coefficient, 3) + " Coefficient");
-      combat_log_message.append(" - " + std::to_string(pet->stats->spell_power) + " Spell Power");
+      combat_log_message.append(" - " + std::to_string(pet->stats.spell_power) + " Spell Power");
       combat_log_message.append(" - " + DoubleToString(partial_resist_multiplier * 100) +
                                 "% Partial Resist Multiplier");
     } else if (type == AttackType::kPhysical) {
@@ -345,7 +345,7 @@ FelguardCleave::FelguardCleave(std::shared_ptr<Pet> pet) : PetSpell(pet) {
   Setup();
 }
 
-double FelguardCleave::GetBaseDamage() { return pet->spells->melee->GetBaseDamage() + 78; }
+double FelguardCleave::GetBaseDamage() { return pet->spells.melee->GetBaseDamage() + 78; }
 
 SuccubusLashOfPain::SuccubusLashOfPain(std::shared_ptr<Pet> pet) : PetSpell(pet) {
   cooldown = 12 - 3 * pet->player.talents.improved_lash_of_pain;

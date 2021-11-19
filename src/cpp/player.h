@@ -46,9 +46,9 @@ struct Player {
   CharacterStats& stats;
   Items& items;
   PlayerSettings& settings;
-  std::unique_ptr<PlayerSpells> spells;
-  std::unique_ptr<PlayerAuras> auras;
-  std::vector<std::unique_ptr<Trinket>> trinkets;
+  PlayerSpells spells;
+  PlayerAuras auras;
+  std::vector<Trinket> trinkets;
   std::shared_ptr<Spell> filler;
   std::shared_ptr<Spell> curse_spell;
   std::shared_ptr<Aura> curse_aura;

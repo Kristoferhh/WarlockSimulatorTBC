@@ -11,14 +11,14 @@ struct Player;
 
 struct Pet : std::enable_shared_from_this<Pet> {
   Player& player;
-  std::unique_ptr<PetSpells> spells;
-  std::unique_ptr<PetAuras> auras;
-  std::unique_ptr<PetStats> base_stats;
-  std::unique_ptr<PetStats> buff_stats;  // Certain stats from buffs need to be separated from the main
-                                         // stat so we can re-calculate the pet's stats in
-                                         // calculateStatsFromPlayer().
-  std::unique_ptr<PetStats> debuff_stats;
-  std::unique_ptr<PetStats> stats;
+  PetSpells spells;
+  PetAuras auras;
+  PetStats base_stats;
+  PetStats buff_stats;  // Certain stats from buffs need to be separated from the main
+                        // stat so we can re-calculate the pet's stats in
+                        // calculateStatsFromPlayer().
+  PetStats debuff_stats;
+  PetStats stats;
   PetName pet;
   PetType pet_type;
   std::string name;

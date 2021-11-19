@@ -39,7 +39,7 @@ void Spell::Setup() {
     mana_gain = (min_mana + max_mana) / 2.0;
   }
   if (player.recording_combat_log_breakdown && player.combat_log_breakdown.count(name) == 0) {
-    player.combat_log_breakdown.insert(std::make_pair(name, new CombatLogBreakdown(name)));
+    player.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
   }
 }
 
@@ -112,7 +112,7 @@ int Spell::GetManaCost() { return mana_cost * player.stats.mana_cost_modifier; }
 
 void Spell::Tick(double t) {
   if (cooldown_remaining > 0 && cooldown_remaining - t <= 0) {
-    if (player.auras->power_infusion != NULL && name == player.auras->power_infusion->name) {
+    if (player.auras.power_infusion != NULL && name == player.auras.power_infusion->name) {
       player.power_infusions_ready++;
     }
     if (player.ShouldWriteToCombatLog()) {
@@ -133,7 +133,7 @@ void Spell::Cast() {
   casting = false;
   has_not_been_cast_this_fight = false;
 
-  if (player.auras->power_infusion != NULL && name == player.auras->power_infusion->name) {
+  if (player.auras.power_infusion != NULL && name == player.auras.power_infusion->name) {
     player.power_infusions_ready--;
   }
 
@@ -175,7 +175,7 @@ void Spell::Cast() {
   }
 
   if (((!is_item && !is_non_warlock_ability &&
-        (!player.auras->amplify_curse || name != player.auras->amplify_curse->name)) ||
+        (!player.auras.amplify_curse || name != player.auras.amplify_curse->name)) ||
        does_damage) &&
       !player.IsHit(type)) {
     if (player.ShouldWriteToCombatLog()) {
@@ -198,7 +198,7 @@ void Spell::Cast() {
   }
 
   if (!is_item && !is_proc && !is_non_warlock_ability &&
-      (!player.auras->amplify_curse || name != player.auras->amplify_curse->name)) {
+      (!player.auras.amplify_curse || name != player.auras.amplify_curse->name)) {
     OnHitProcs();
   }
 }
@@ -209,9 +209,9 @@ double Spell::GetModifier() {
     damage_modifier *= player.stats.shadow_modifier;
 
     // Improved Shadow Bolt
-    if (!player.settings.using_custom_isb_uptime && player.auras->improved_shadow_bolt != NULL &&
-        player.auras->improved_shadow_bolt->active) {
-      damage_modifier *= player.auras->improved_shadow_bolt->modifier;
+    if (!player.settings.using_custom_isb_uptime && player.auras.improved_shadow_bolt != NULL &&
+        player.auras.improved_shadow_bolt->active) {
+      damage_modifier *= player.auras.improved_shadow_bolt->modifier;
     }
   } else if (school == SpellSchool::kFire) {
     damage_modifier *= player.stats.fire_modifier;
@@ -233,9 +233,9 @@ void Spell::Damage(bool isCrit) {
     crit_multiplier = GetCritMultiplier(crit_multiplier);
     total_damage *= crit_multiplier;
     OnCritProcs();
-  } else if (school == SpellSchool::kShadow && dot_effect == NULL && player.auras->improved_shadow_bolt != NULL &&
-             player.auras->improved_shadow_bolt->active && !player.settings.using_custom_isb_uptime) {
-    player.auras->improved_shadow_bolt->DecrementStacks();
+  } else if (school == SpellSchool::kShadow && dot_effect == NULL && player.auras.improved_shadow_bolt != NULL &&
+             player.auras.improved_shadow_bolt->active && !player.settings.using_custom_isb_uptime) {
+    player.auras.improved_shadow_bolt->DecrementStacks();
   }
 
   OnDamageProcs();
@@ -265,12 +265,12 @@ void Spell::Damage(bool isCrit) {
 
   // T5 4pc
   if (player.sets.t5 >= 4) {
-    if (player.spells->shadow_bolt != NULL && name == player.spells->shadow_bolt->name &&
-        player.auras->corruption != NULL && player.auras->corruption->active) {
-      player.auras->corruption->t5_bonus_modifier *= 1.1;
-    } else if (player.spells->incinerate != NULL && name == player.spells->incinerate->name &&
-               player.auras->immolate != NULL && player.auras->immolate->active) {
-      player.auras->immolate->t5_bonus_modifier *= 1.1;
+    if (player.spells.shadow_bolt != NULL && name == player.spells.shadow_bolt->name &&
+        player.auras.corruption != NULL && player.auras.corruption->active) {
+      player.auras.corruption->t5_bonus_modifier *= 1.1;
+    } else if (player.spells.incinerate != NULL && name == player.spells.incinerate->name &&
+               player.auras.immolate != NULL && player.auras.immolate->active) {
+      player.auras.immolate->t5_bonus_modifier *= 1.1;
     }
   }
 }
@@ -279,16 +279,17 @@ void Spell::Damage(bool isCrit) {
 // spell power + Damage modifiers, no crit/miss etc.)
 // TODO investigate this no_rng variable
 std::vector<double> Spell::GetConstantDamage(bool no_rng) {
-  double total_damage =
-      player.settings.randomize_values && min_dmg > 0 && max_dmg > 0 && !no_rng ? player.rng.range(min_dmg, max_dmg) : dmg;
+  double total_damage = player.settings.randomize_values && min_dmg > 0 && max_dmg > 0 && !no_rng
+                            ? player.rng.range(min_dmg, max_dmg)
+                            : dmg;
   const double kBaseDamage = total_damage;
   const double kSpellPower = player.GetSpellPower(school);
   const double kDamageModifier = GetModifier();
   const double kPartialResistMultiplier = player.GetPartialResistMultiplier(school);
 
   // If casting Incinerate and Immolate is up, add the bonus Damage
-  if (player.spells->incinerate != NULL && name == player.spells->incinerate->name && player.auras->immolate != NULL &&
-      player.auras->immolate->active) {
+  if (player.spells.incinerate != NULL && name == player.spells.incinerate->name && player.auras.immolate != NULL &&
+      player.auras.immolate->active) {
     total_damage += player.settings.randomize_values && no_rng
                         ? player.rng.range(bonus_damage_from_immolate_min, bonus_damage_from_immolate_max)
                         : bonus_damage_from_immolate_average;
@@ -348,7 +349,7 @@ double Spell::PredictDamage() {
   // "average" for the Damage. Without this, the sim will choose Incinerate over
   // Shadow Bolt because it basically just doesn't know that ISB exists
   if (school == SpellSchool::kShadow && !player.settings.using_custom_isb_uptime &&
-      player.auras->improved_shadow_bolt != NULL && !player.auras->improved_shadow_bolt->active) {
+      player.auras.improved_shadow_bolt != NULL && !player.auras.improved_shadow_bolt->active) {
     estimated_damage *= 1.15;  // using 75% uptime as the default for now
   }
 
@@ -357,86 +358,86 @@ double Spell::PredictDamage() {
 
 void Spell::OnCritProcs() {
   // ISB
-  if (player.spells->shadow_bolt != NULL && name == player.spells->shadow_bolt->name &&
+  if (player.spells.shadow_bolt != NULL && name == player.spells.shadow_bolt->name &&
       !player.settings.using_custom_isb_uptime && player.talents.improved_shadow_bolt > 0) {
-    player.auras->improved_shadow_bolt->Apply();
+    player.auras.improved_shadow_bolt->Apply();
   }
   // The Lightning Capacitor
-  if (player.spells->the_lightning_capacitor != NULL) {
-    player.spells->the_lightning_capacitor->StartCast();
+  if (player.spells.the_lightning_capacitor != NULL) {
+    player.spells.the_lightning_capacitor->StartCast();
   }
   // Sextant of Unstable Currents
-  if (player.spells->sextant_of_unstable_currents != NULL && player.spells->sextant_of_unstable_currents->Ready() &&
-      player.RollRng(player.spells->sextant_of_unstable_currents->proc_chance)) {
-    player.spells->sextant_of_unstable_currents->StartCast();
+  if (player.spells.sextant_of_unstable_currents != NULL && player.spells.sextant_of_unstable_currents->Ready() &&
+      player.RollRng(player.spells.sextant_of_unstable_currents->proc_chance)) {
+    player.spells.sextant_of_unstable_currents->StartCast();
   }
   // Shiffar's Nexus-Horn
-  if (player.spells->shiffars_nexus_horn != NULL && player.spells->shiffars_nexus_horn->Ready() &&
-      player.RollRng(player.spells->shiffars_nexus_horn->proc_chance)) {
-    player.spells->shiffars_nexus_horn->StartCast();
+  if (player.spells.shiffars_nexus_horn != NULL && player.spells.shiffars_nexus_horn->Ready() &&
+      player.RollRng(player.spells.shiffars_nexus_horn->proc_chance)) {
+    player.spells.shiffars_nexus_horn->StartCast();
   }
 }
 
 void Spell::OnDamageProcs() {
   // Confirm that this procs on dealing Damage
   // Shattered Sun Pendant of Acumen
-  if (player.settings.exalted_with_shattrath_faction && player.spells->shattered_sun_pendant_of_acumen != NULL &&
-      player.spells->shattered_sun_pendant_of_acumen->cooldown_remaining <= 0 &&
-      player.RollRng(player.spells->shattered_sun_pendant_of_acumen->proc_chance)) {
-    player.spells->shattered_sun_pendant_of_acumen->StartCast();
+  if (player.settings.exalted_with_shattrath_faction && player.spells.shattered_sun_pendant_of_acumen != NULL &&
+      player.spells.shattered_sun_pendant_of_acumen->cooldown_remaining <= 0 &&
+      player.RollRng(player.spells.shattered_sun_pendant_of_acumen->proc_chance)) {
+    player.spells.shattered_sun_pendant_of_acumen->StartCast();
   }
 }
 
 void Spell::OnHitProcs() {
-  if (player.spells->judgement_of_wisdom != NULL && player.RollRng(player.spells->judgement_of_wisdom->proc_chance)) {
-    player.spells->judgement_of_wisdom->StartCast();
+  if (player.spells.judgement_of_wisdom != NULL && player.RollRng(player.spells.judgement_of_wisdom->proc_chance)) {
+    player.spells.judgement_of_wisdom->StartCast();
   }
-  if (player.sets.t4 >= 2 && player.RollRng(player.auras->flameshadow->proc_chance)) {
+  if (player.sets.t4 >= 2 && player.RollRng(player.auras.flameshadow->proc_chance)) {
     if (school == SpellSchool::kShadow) {
-      player.auras->flameshadow->Apply();
+      player.auras.flameshadow->Apply();
     } else if (school == SpellSchool::kFire) {
-      player.auras->shadowflame->Apply();
+      player.auras.shadowflame->Apply();
     }
   }
-  if (player.sets.spellstrike == 2 && player.RollRng(player.auras->spellstrike->proc_chance)) {
-    player.auras->spellstrike->Apply();
+  if (player.sets.spellstrike == 2 && player.RollRng(player.auras.spellstrike->proc_chance)) {
+    player.auras.spellstrike->Apply();
   }
-  if (player.spells->quagmirrans_eye != NULL && player.spells->quagmirrans_eye->Ready() &&
-      player.RollRng(player.spells->quagmirrans_eye->proc_chance)) {
-    player.spells->quagmirrans_eye->StartCast();
+  if (player.spells.quagmirrans_eye != NULL && player.spells.quagmirrans_eye->Ready() &&
+      player.RollRng(player.spells.quagmirrans_eye->proc_chance)) {
+    player.spells.quagmirrans_eye->StartCast();
   }
-  if (player.sets.mana_etched >= 4 && player.RollRng(player.auras->mana_etched_4_set->proc_chance)) {
-    player.auras->mana_etched_4_set->Apply();
+  if (player.sets.mana_etched >= 4 && player.RollRng(player.auras.mana_etched_4_set->proc_chance)) {
+    player.auras.mana_etched_4_set->Apply();
   }
-  if (player.spells->mark_of_defiance != NULL && player.spells->mark_of_defiance->Ready() &&
-      player.RollRng(player.spells->mark_of_defiance->proc_chance)) {
-    player.spells->mark_of_defiance->StartCast();
+  if (player.spells.mark_of_defiance != NULL && player.spells.mark_of_defiance->Ready() &&
+      player.RollRng(player.spells.mark_of_defiance->proc_chance)) {
+    player.spells.mark_of_defiance->StartCast();
   }
-  if (player.auras->darkmoon_card_crusade != NULL) {
-    player.auras->darkmoon_card_crusade->Apply();
+  if (player.auras.darkmoon_card_crusade != NULL) {
+    player.auras.darkmoon_card_crusade->Apply();
   }
-  if (player.spells->band_of_the_eternal_sage != NULL && player.spells->band_of_the_eternal_sage->Ready() &&
-      player.RollRng(player.spells->band_of_the_eternal_sage->proc_chance)) {
-    player.spells->band_of_the_eternal_sage->StartCast();
+  if (player.spells.band_of_the_eternal_sage != NULL && player.spells.band_of_the_eternal_sage->Ready() &&
+      player.RollRng(player.spells.band_of_the_eternal_sage->proc_chance)) {
+    player.spells.band_of_the_eternal_sage->StartCast();
   }
-  if (player.spells->blade_of_wizardry != NULL && player.spells->blade_of_wizardry->Ready() &&
-      player.RollRng(player.auras->blade_of_wizardry->proc_chance)) {
-    player.spells->blade_of_wizardry->StartCast();
+  if (player.spells.blade_of_wizardry != NULL && player.spells.blade_of_wizardry->Ready() &&
+      player.RollRng(player.auras.blade_of_wizardry->proc_chance)) {
+    player.spells.blade_of_wizardry->StartCast();
   }
-  if (player.spells->mystical_skyfire_diamond != NULL && player.spells->mystical_skyfire_diamond->Ready() &&
-      player.RollRng(player.spells->mystical_skyfire_diamond->proc_chance)) {
-    player.spells->mystical_skyfire_diamond->StartCast();
+  if (player.spells.mystical_skyfire_diamond != NULL && player.spells.mystical_skyfire_diamond->Ready() &&
+      player.RollRng(player.spells.mystical_skyfire_diamond->proc_chance)) {
+    player.spells.mystical_skyfire_diamond->StartCast();
   }
-  if (player.spells->robe_of_the_elder_scribes != NULL && player.spells->robe_of_the_elder_scribes->Ready() &&
-      player.RollRng(player.spells->robe_of_the_elder_scribes->proc_chance)) {
-    player.spells->robe_of_the_elder_scribes->StartCast();
+  if (player.spells.robe_of_the_elder_scribes != NULL && player.spells.robe_of_the_elder_scribes->Ready() &&
+      player.RollRng(player.spells.robe_of_the_elder_scribes->proc_chance)) {
+    player.spells.robe_of_the_elder_scribes->StartCast();
   }
-  if (player.spells->insightful_earthstorm_diamond != NULL && player.spells->insightful_earthstorm_diamond->Ready() &&
-      player.RollRng(player.spells->insightful_earthstorm_diamond->proc_chance)) {
-    player.spells->insightful_earthstorm_diamond->StartCast();
+  if (player.spells.insightful_earthstorm_diamond != NULL && player.spells.insightful_earthstorm_diamond->Ready() &&
+      player.RollRng(player.spells.insightful_earthstorm_diamond->proc_chance)) {
+    player.spells.insightful_earthstorm_diamond->StartCast();
   }
-  if (player.auras->wrath_of_cenarius != NULL && player.RollRng(player.auras->wrath_of_cenarius->proc_chance)) {
-    player.auras->wrath_of_cenarius->Apply();
+  if (player.auras.wrath_of_cenarius != NULL && player.RollRng(player.auras.wrath_of_cenarius->proc_chance)) {
+    player.auras.wrath_of_cenarius->Apply();
   }
 }
 
@@ -460,17 +461,17 @@ ShadowBolt::ShadowBolt(Player& player) : Spell(player) {
 }
 
 void ShadowBolt::StartCast(double predicted_damage = 0) {
-  const bool kHasShadowTrance = player.auras->shadow_trance != NULL;
+  const bool kHasShadowTrance = player.auras.shadow_trance != NULL;
 
-  if (kHasShadowTrance && player.auras->shadow_trance->active) {
+  if (kHasShadowTrance && player.auras.shadow_trance->active) {
     cast_time = 0;
   }
 
   Spell::StartCast();
 
-  if (kHasShadowTrance && player.auras->shadow_trance->active) {
+  if (kHasShadowTrance && player.auras.shadow_trance->active) {
     cast_time = CalculateCastTime();
-    player.auras->shadow_trance->Fade();
+    player.auras.shadow_trance->Fade();
   }
 }
 
@@ -608,7 +609,8 @@ SeedOfCorruption::SeedOfCorruption(Player& player) : Spell(player) {
 };
 
 void SeedOfCorruption::Damage(bool isCrit) {
-  const int kBaseDamage = player.settings.randomize_values && min_dmg && max_dmg ? player.rng.range(min_dmg, max_dmg) : dmg;
+  const int kBaseDamage =
+      player.settings.randomize_values && min_dmg && max_dmg ? player.rng.range(min_dmg, max_dmg) : dmg;
   const int kEnemyAmount = player.settings.enemy_amount - 1;  // Minus one because the enemy that Seed is being Cast
                                                               // on doesn't get hit
   int resist_amount = 0;
@@ -840,10 +842,10 @@ Conflagrate::Conflagrate(Player& player) : Spell(player) {
 }
 
 void Conflagrate::StartCast() {
-  /*if (player.auras->Immolate != NULL && player.auras->immolate->active)
+  /*if (player.auras.Immolate != NULL && player.auras.immolate->active)
   {
       Spell::StartCast();
-      player.auras->immolate->active = false;
+      player.auras.immolate->active = false;
   }*/
 }
 
@@ -866,11 +868,11 @@ FlameCap::FlameCap(Player& player, std::shared_ptr<Aura> aura) : Spell(player, a
 void FlameCap::Cast() {
   Spell::Cast();
 
-  if (player.spells->chipped_power_core != NULL) {
-    player.spells->chipped_power_core->cooldown_remaining = cooldown;
+  if (player.spells.chipped_power_core != NULL) {
+    player.spells.chipped_power_core->cooldown_remaining = cooldown;
   }
-  if (player.spells->cracked_power_core != NULL) {
-    player.spells->cracked_power_core->cooldown_remaining = cooldown;
+  if (player.spells.cracked_power_core != NULL) {
+    player.spells.cracked_power_core->cooldown_remaining = cooldown;
   }
 }
 
@@ -957,11 +959,11 @@ TheLightningCapacitor::TheLightningCapacitor(Player& player, std::shared_ptr<Aur
 
 void TheLightningCapacitor::StartCast(double predicted_damage) {
   if (cooldown_remaining <= 0) {
-    player.auras->the_lightning_capacitor->Apply();
-    if (player.auras->the_lightning_capacitor->stacks == 3) {
+    player.auras.the_lightning_capacitor->Apply();
+    if (player.auras.the_lightning_capacitor->stacks == 3) {
       Spell::StartCast();
       cooldown_remaining = cooldown;
-      player.auras->the_lightning_capacitor->Fade();
+      player.auras.the_lightning_capacitor->Fade();
     }
   }
 }
@@ -1095,14 +1097,14 @@ ChippedPowerCore::ChippedPowerCore(Player& player, std::shared_ptr<Aura> aura) :
 void ChippedPowerCore::Cast() {
   Spell::Cast();
 
-  if (player.spells->demonic_rune != NULL) {
-    player.spells->demonic_rune->cooldown_remaining = cooldown;
+  if (player.spells.demonic_rune != NULL) {
+    player.spells.demonic_rune->cooldown_remaining = cooldown;
   }
-  if (player.spells->flame_cap != NULL) {
-    player.spells->flame_cap->cooldown_remaining = cooldown;
+  if (player.spells.flame_cap != NULL) {
+    player.spells.flame_cap->cooldown_remaining = cooldown;
   }
-  if (player.spells->cracked_power_core != NULL) {
-    player.spells->cracked_power_core->cooldown_remaining = cooldown;
+  if (player.spells.cracked_power_core != NULL) {
+    player.spells.cracked_power_core->cooldown_remaining = cooldown;
   }
 }
 
@@ -1118,14 +1120,14 @@ CrackedPowerCore::CrackedPowerCore(Player& player, std::shared_ptr<Aura> aura) :
 void CrackedPowerCore::Cast() {
   Spell::Cast();
 
-  if (player.spells->demonic_rune != NULL) {
-    player.spells->demonic_rune->cooldown_remaining = cooldown;
+  if (player.spells.demonic_rune != NULL) {
+    player.spells.demonic_rune->cooldown_remaining = cooldown;
   }
-  if (player.spells->flame_cap != NULL) {
-    player.spells->flame_cap->cooldown_remaining = cooldown;
+  if (player.spells.flame_cap != NULL) {
+    player.spells.flame_cap->cooldown_remaining = cooldown;
   }
-  if (player.spells->chipped_power_core != NULL) {
-    player.spells->chipped_power_core->cooldown_remaining = cooldown;
+  if (player.spells.chipped_power_core != NULL) {
+    player.spells.chipped_power_core->cooldown_remaining = cooldown;
   }
 }
 

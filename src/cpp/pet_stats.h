@@ -1,10 +1,7 @@
 #ifndef WARLOCK_SIMULATOR_TBC_PET_STATS
 #define WARLOCK_SIMULATOR_TBC_PET_STATS
 
-struct Player;
-
 struct PetStats {
-  Player& player;
   int stamina;
   int intellect;
   int strength;
@@ -29,9 +26,8 @@ struct PetStats {
   double damage_modifier;
   double melee_haste_percent;
 
-  PetStats(Player& player)
-      : player(player),
-        damage_modifier(1),
+  PetStats()
+      : damage_modifier(1),
         stamina_modifier(1),
         intellect_modifier(1),
         strength_modifier(1),

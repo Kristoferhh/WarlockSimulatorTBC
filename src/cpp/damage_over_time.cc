@@ -27,7 +27,7 @@ void DamageOverTime::Setup() {
   ticks_total = duration / tick_timer_total;
 
   if (player.recording_combat_log_breakdown && player.combat_log_breakdown.count(name) == 0) {
-    player.combat_log_breakdown.insert(std::make_pair(name, new CombatLogBreakdown(name)));
+    player.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
   }
 }
 
@@ -54,16 +54,16 @@ void DamageOverTime::Apply() {
   // Siphon Life snapshots the presence of ISB. So if ISB isn't up when it's
   // Cast, it doesn't get the benefit even if it comes up later during the
   // duration.
-  if (player.spells->siphon_life != NULL && name == player.spells->siphon_life->name) {
-    isb_is_active = !player.settings.using_custom_isb_uptime && player.auras->improved_shadow_bolt != NULL &&
-                    player.auras->improved_shadow_bolt->active;
+  if (player.spells.siphon_life != NULL && name == player.spells.siphon_life->name) {
+    isb_is_active = !player.settings.using_custom_isb_uptime && player.auras.improved_shadow_bolt != NULL &&
+                    player.auras.improved_shadow_bolt->active;
   }
   // Amplify Curse
-  if (((player.spells->curse_of_agony != NULL && name == player.spells->curse_of_agony->name) ||
-       (player.spells->curse_of_doom != NULL && name == player.spells->curse_of_doom->name)) &&
-      player.auras->amplify_curse != NULL && player.auras->amplify_curse->active) {
+  if (((player.spells.curse_of_agony != NULL && name == player.spells.curse_of_agony->name) ||
+       (player.spells.curse_of_doom != NULL && name == player.spells.curse_of_doom->name)) &&
+      player.auras.amplify_curse != NULL && player.auras.amplify_curse->active) {
     applied_with_amplify_curse = true;
-    player.auras->amplify_curse->Fade();
+    player.auras.amplify_curse->Fade();
   } else {
     applied_with_amplify_curse = false;
   }
@@ -75,8 +75,7 @@ void DamageOverTime::Fade() {
   ticks_remaining = 0;
 
   if (player.recording_combat_log_breakdown) {
-    player.combat_log_breakdown.at(name)->uptime +=
-        player.fight_time - player.combat_log_breakdown.at(name)->applied_at;
+    player.combat_log_breakdown.at(name)->uptime += player.fight_time - player.combat_log_breakdown.at(name)->applied_at;
   }
   if (player.ShouldWriteToCombatLog()) {
     player.CombatLog(name + " faded");
@@ -88,11 +87,11 @@ double DamageOverTime::GetModifier() {
                                        : school == SpellSchool::kFire ? player.stats.fire_modifier
                                                                       : 1);
   // Only add Improved Shadow Bolt if it's not Siphon Life or if ISB was active when the Siphon Life was cast.
-  if ((school == SpellSchool::kShadow && player.auras->improved_shadow_bolt != NULL &&
-       player.auras->improved_shadow_bolt->active &&
-       (player.spells->siphon_life == NULL || name != player.spells->siphon_life->name)) ||
-      (player.spells->siphon_life != NULL && name == player.spells->siphon_life->name && isb_is_active)) {
-    damage_modifier *= player.auras->improved_shadow_bolt->modifier;
+  if ((school == SpellSchool::kShadow && player.auras.improved_shadow_bolt != NULL &&
+       player.auras.improved_shadow_bolt->active &&
+       (player.spells.siphon_life == NULL || name != player.spells.siphon_life->name)) ||
+      (player.spells.siphon_life != NULL && name == player.spells.siphon_life->name && isb_is_active)) {
+    damage_modifier *= player.auras.improved_shadow_bolt->modifier;
   }
   return damage_modifier;
 }
@@ -112,8 +111,8 @@ std::vector<double> DamageOverTime::GetConstantDamage() {
     base_damage *= 1.5;
   }
   // Add the t5 4pc bonus modifier to the base damage
-  if (((player.spells->corruption != NULL && name == player.spells->corruption->name) ||
-       (player.spells->immolate != NULL && name == player.spells->immolate->name)) &&
+  if (((player.spells.corruption != NULL && name == player.spells.corruption->name) ||
+       (player.spells.immolate != NULL && name == player.spells.immolate->name)) &&
       player.sets.t5 >= 4) {
     base_damage *= t5_bonus_modifier;
   }
@@ -131,8 +130,8 @@ double DamageOverTime::PredictDamage() {
   // 4pc bonus since their durationTotal property is increased by 3 seconds to
   // include another tick but the damage they do stays the same which assumes
   // the normal duration without the bonus
-  if ((player.spells->corruption != NULL && name == player.spells->corruption->name) ||
-      (player.spells->immolate != NULL && name == player.spells->immolate->name)) {
+  if ((player.spells.corruption != NULL && name == player.spells.corruption->name) ||
+      (player.spells.immolate != NULL && name == player.spells.immolate->name)) {
     damage /= original_duration;
     damage *= duration;
   }
@@ -152,9 +151,9 @@ void DamageOverTime::Tick(double t) {
     const double kPartialResistMultiplier = constant_damage[4];
 
     // Check for Nightfall proc
-    if (player.spells->corruption != NULL && name == player.spells->corruption->name && player.talents.nightfall > 0) {
+    if (player.spells.corruption != NULL && name == player.spells.corruption->name && player.talents.nightfall > 0) {
       if (player.RollRng(player.talents.nightfall * 2)) {
-        player.auras->shadow_trance->Apply();
+        player.auras.shadow_trance->Apply();
       }
     }
 
@@ -179,16 +178,16 @@ void DamageOverTime::Tick(double t) {
     }
 
     // Ashtongue Talisman of Shadows
-    if (player.spells->corruption != NULL && name == player.spells->corruption->name &&
-        player.auras->ashtongue_talisman_of_shadows != NULL &&
-        player.RollRng(player.auras->ashtongue_talisman_of_shadows->proc_chance)) {
-      player.auras->ashtongue_talisman_of_shadows->Apply();
+    if (player.spells.corruption != NULL && name == player.spells.corruption->name &&
+        player.auras.ashtongue_talisman_of_shadows != NULL &&
+        player.RollRng(player.auras.ashtongue_talisman_of_shadows->proc_chance)) {
+      player.auras.ashtongue_talisman_of_shadows->Apply();
     }
     // Timbal's Focusing Crystal
-    if (player.spells->timbals_focusing_crystal != NULL &&
-        player.spells->timbals_focusing_crystal->cooldown_remaining <= 0 &&
-        player.RollRng(player.spells->timbals_focusing_crystal->proc_chance)) {
-      player.spells->timbals_focusing_crystal->StartCast();
+    if (player.spells.timbals_focusing_crystal != NULL &&
+        player.spells.timbals_focusing_crystal->cooldown_remaining <= 0 &&
+        player.RollRng(player.spells.timbals_focusing_crystal->proc_chance)) {
+      player.spells.timbals_focusing_crystal->StartCast();
     }
 
     if (ticks_remaining <= 0) {

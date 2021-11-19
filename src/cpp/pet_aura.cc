@@ -24,7 +24,7 @@ void PetAura::Apply() {
   if (pet->player.ShouldWriteToCombatLog()) {
     std::string msg = pet->name + " gains " + name;
 
-    if (pet->auras->demonic_frenzy != NULL && name == pet->auras->demonic_frenzy->name) {
+    if (pet->auras.demonic_frenzy != NULL && name == pet->auras.demonic_frenzy->name) {
       msg.append(" (" + std::to_string(stacks) + ") - Current AP: " + DoubleToString(round(pet->GetAttackPower())) +
                  ")");
     }
@@ -71,13 +71,13 @@ void BlackBook::Apply(bool announce_in_combat_log) {
   PetAura::Apply();
 
   if (announce_in_combat_log && pet->player.ShouldWriteToCombatLog()) {
-    pet->player.CombatLog(pet->name + " Spell Power + 200 (" + std::to_string(pet->stats->spell_power) + " -> " +
-                          std::to_string(pet->stats->spell_power + 200) + ")");
-    pet->player.CombatLog(pet->name + " Attack Power + 325 (" + std::to_string(pet->stats->attack_power) + " -> " +
-                          std::to_string(pet->stats->attack_power + 325) + ")");
+    pet->player.CombatLog(pet->name + " Spell Power + 200 (" + std::to_string(pet->stats.spell_power) + " -> " +
+                          std::to_string(pet->stats.spell_power + 200) + ")");
+    pet->player.CombatLog(pet->name + " Attack Power + 325 (" + std::to_string(pet->stats.attack_power) + " -> " +
+                          std::to_string(pet->stats.attack_power + 325) + ")");
   }
-  pet->buff_stats->spell_power += 200;
-  pet->buff_stats->attack_power += 325;
+  pet->buff_stats.spell_power += 200;
+  pet->buff_stats.attack_power += 325;
   pet->CalculateStatsFromPlayer(announce_in_combat_log);
 }
 
@@ -85,13 +85,13 @@ void BlackBook::Fade() {
   PetAura::Fade();
 
   if (pet->player.ShouldWriteToCombatLog()) {
-    pet->player.CombatLog(pet->name + " Spell Power - 200 (" + std::to_string(pet->stats->spell_power) + " -> " +
-                          std::to_string(pet->stats->spell_power - 200) + ")");
-    pet->player.CombatLog(pet->name + " Attack Power - 325 (" + std::to_string(pet->stats->attack_power) + " -> " +
-                          std::to_string(pet->stats->attack_power - 325) + ")");
+    pet->player.CombatLog(pet->name + " Spell Power - 200 (" + std::to_string(pet->stats.spell_power) + " -> " +
+                          std::to_string(pet->stats.spell_power - 200) + ")");
+    pet->player.CombatLog(pet->name + " Attack Power - 325 (" + std::to_string(pet->stats.attack_power) + " -> " +
+                          std::to_string(pet->stats.attack_power - 325) + ")");
   }
-  pet->buff_stats->spell_power -= 200;
-  pet->buff_stats->attack_power -= 325;
+  pet->buff_stats.spell_power -= 200;
+  pet->buff_stats.attack_power -= 325;
   pet->CalculateStatsFromPlayer();
 }
 
@@ -109,7 +109,7 @@ void BattleSquawk::Apply() {
                           DoubleToString(kCurrentHastePercent * 100 - 100, 2) + "% -> " +
                           DoubleToString((kCurrentHastePercent * haste_percent) * 100 - 100, 2) + "%)");
   }
-  pet->stats->melee_haste_percent = pet->stats->melee_haste_percent * haste_percent;
+  pet->stats.melee_haste_percent = pet->stats.melee_haste_percent * haste_percent;
 }
 
 void BattleSquawk::Fade() {
@@ -120,5 +120,5 @@ void BattleSquawk::Fade() {
                           DoubleToString(kCurrentHastePercent * 100 - 100, 2) + "% -> " +
                           DoubleToString((kCurrentHastePercent / haste_percent) * 100 - 100, 2) + "%)");
   }
-  pet->stats->melee_haste_percent = pet->stats->melee_haste_percent / haste_percent;
+  pet->stats.melee_haste_percent = pet->stats.melee_haste_percent / haste_percent;
 }
