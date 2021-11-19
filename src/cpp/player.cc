@@ -641,6 +641,8 @@ double Player::GetBaseHitChance(int player_level, int enemy_level) {
                                  : 0;
 }
 
+int Player::Random() {}
+
 void Player::UseCooldowns(double fight_time_remaining) {
   // Only use PI if Bloodlust isn't selected or if Bloodlust isn't active since they don't stack, or if there are enough
   // Power Infusions available to last until the end of the fight for the mana cost reduction

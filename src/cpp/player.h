@@ -15,6 +15,7 @@
 #include "player_auras.h"
 #include "player_settings.h"
 #include "player_spells.h"
+#include "rng.h"
 #include "sets.h"
 #include "spell.h"
 #include "talents.h"
@@ -88,6 +89,7 @@ struct Player {
   double GetPartialResistMultiplier(SpellSchool school);
   double GetBaseHitChance(int player_level, int enemy_level);
   int GetRand();
+  int Random();
   bool IsCrit(SpellType spell_type, double extra_crit = 0);
   bool IsHit(SpellType spell_type);
   bool ShouldWriteToCombatLog();

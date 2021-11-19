@@ -23,9 +23,9 @@ void Simulation::Start() {
   double max_dps = 0;
   std::mt19937 gen;
   std::uniform_int_distribution<> random_fight_length(settings.min_time, settings.max_time);
+  // std::cout << "random num: " << std::to_string(player.rng.real()) << std::endl;
 
   for (player.iteration = 0; player.iteration < settings.iterations; player.iteration++) {
-    std::cout << "iteration: " << std::to_string(player.iteration) << std::endl;
     player.gen.seed(player.settings.random_seeds[player.iteration]);
     gen.seed(player.settings.random_seeds[player.iteration]);
     const int kFightLength = random_fight_length(gen);
