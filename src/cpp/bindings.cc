@@ -87,9 +87,9 @@ void SimulationEnd(double median_dps, double min_dps, double max_dps, int item_i
 #endif
 }
 
-uint32_t* AllocRandomSeeds(int amount_of_seeds) {
-  srand(time(nullptr));
-  uint32_t* seeds = new uint32_t[amount_of_seeds];
+std::vector<uint32_t> AllocRandomSeeds(int amount_of_seeds, uint32_t rand_seed) {
+  srand(rand_seed);
+  std::vector<uint32_t> seeds(amount_of_seeds);
 
   for (int i = 0; i < amount_of_seeds; i++) {
     seeds[i] = rand();
@@ -301,6 +301,7 @@ EMSCRIPTEN_BINDINGS(module) {
 
   emscripten::class_<PlayerSettings>("PlayerSettings")
       .constructor<Auras&, Talents&, Sets&, CharacterStats&, Items&>()
+      .property("randomSeeds", &PlayerSettings::random_seeds)
       .property("itemId", &PlayerSettings::item_id)
       .property("metaGemId", &PlayerSettings::meta_gem_id)
       .property("equippedItemSimulation", &PlayerSettings::equipped_item_simulation)
@@ -373,17 +374,6 @@ EMSCRIPTEN_BINDINGS(module) {
       .value("allItems", SimulationType::kAllItems)
       .value("statWeights", SimulationType::kStatWeights);
 
-  emscripten::function("allocItems", &AllocItems);
-  emscripten::function("allocAuras", &AllocAuras);
-  emscripten::function("allocTalents", &AllocTalents);
-  emscripten::function("allocSets", &AllocSets);
-  emscripten::function("allocStats", &AllocStats);
-  emscripten::function("allocPlayerSettings", &AllocPlayerSettings);
-  emscripten::function("allocPlayer", &AllocPlayer);
-  emscripten::function("allocSimSettings", &AllocSimSettings);
-  emscripten::function("allocSim", &AllocSim);
-  emscripten::function("getExceptionMessage", &GetExceptionMessage);
-
   emscripten::enum_<EmbindConstant>("EmbindConstant")
       .value("aldor", EmbindConstant::kAldor)
       .value("scryers", EmbindConstant::kScryers)
@@ -414,5 +404,19 @@ EMSCRIPTEN_BINDINGS(module) {
       .value("felguard", EmbindConstant::kFelguard)
       .value("passive", EmbindConstant::kPassive)
       .value("aggressive", EmbindConstant::kAggressive);
+
+  emscripten::function("allocRandomSeeds", &AllocRandomSeeds);
+  emscripten::function("allocItems", &AllocItems);
+  emscripten::function("allocAuras", &AllocAuras);
+  emscripten::function("allocTalents", &AllocTalents);
+  emscripten::function("allocSets", &AllocSets);
+  emscripten::function("allocStats", &AllocStats);
+  emscripten::function("allocPlayerSettings", &AllocPlayerSettings);
+  emscripten::function("allocPlayer", &AllocPlayer);
+  emscripten::function("allocSimSettings", &AllocSimSettings);
+  emscripten::function("allocSim", &AllocSim);
+  emscripten::function("getExceptionMessage", &GetExceptionMessage);
+
+  emscripten::register_vector<uint32_t>("vector<uint32_t>");
 }
 #endif

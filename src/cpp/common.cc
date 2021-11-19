@@ -7,8 +7,6 @@
 #include <string>
 #include <vector>
 
-int Random(int min, int max) { return min + (rand() % (max - min + 1)); }
-
 double Median(std::vector<double> vec) {
   size_t size = vec.size();
 

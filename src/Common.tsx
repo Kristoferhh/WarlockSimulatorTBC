@@ -8,7 +8,7 @@ import { TalentTreeStruct } from "./data/Talents";
 import { AurasStruct, GemColor, InitialPlayerStats, InitialSetCounts, Item, ItemAndEnchantStruct, ItemSet, ItemSlot, ItemSlotKey, Languages, PetName, PlayerState, Race, SavedItemDps, SelectedGemsStruct, SetsStruct, Settings, SocketColor, SourcesStruct, Stat, StatConstant, StatsCollection, SubSlotValue, TalentStore } from "./Types";
 
 export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKey, itemSubSlot?: string): ItemSlot {
-  switch(itemSlot) {
+  switch (itemSlot) {
     case ItemSlotKey.Head: return ItemSlot.head;
     case ItemSlotKey.Neck: return ItemSlot.neck;
     case ItemSlotKey.Shoulders: return ItemSlot.shoulders;
@@ -29,7 +29,7 @@ export function ItemSlotKeyToItemSlot(forEnchants: boolean, itemSlot: ItemSlotKe
 }
 
 export function ItemSlotToItemSlotKey(forEnchants: boolean, itemSlot: ItemSlot): ItemSlotKey {
-  switch(itemSlot) {
+  switch (itemSlot) {
     case ItemSlot.head: return ItemSlotKey.Head;
     case ItemSlot.neck: return ItemSlotKey.Neck;
     case ItemSlot.shoulders: return ItemSlotKey.Shoulders;
@@ -59,7 +59,7 @@ export function itemMeetsSocketRequirements(params: { itemId: number, selectedGe
     for (const itemSlotKey of Object.keys(params.selectedGems)) {
       const itemSlot = ItemSlotToItemSlotKey(false, itemSlotKey as ItemSlot);
       const itemGemArrays = params.selectedGems[itemSlot];
-  
+
       if (itemGemArrays && itemGemArrays[params.itemId]) {
         socketArray = itemGemArrays[params.itemId];
         break;
@@ -72,11 +72,11 @@ export function itemMeetsSocketRequirements(params: { itemId: number, selectedGe
     for (const [key, value] of Object.entries(socketArray)) {
       if (value) {
         const currentGemId = value[1];
-  
+
         if (currentGemId === 0) {
           return false;
         }
-    
+
         // Find the item object to get access to the item's socket array to get the socket color
         const gem = Gems.find(e => e.id === currentGemId);
         if (gem) {
@@ -91,7 +91,7 @@ export function itemMeetsSocketRequirements(params: { itemId: number, selectedGe
         return false;
       }
     }
-  
+
     return true;
   }
 
@@ -137,7 +137,11 @@ export function getItemTableItems(itemSlotKey: ItemSlotKey, itemSubSlot: SubSlot
     });
 }
 
-export function getStdev (array: number[]) {
+export function random(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export function getStdev(array: number[]) {
   if (!array || array.length === 0) { return 0 }
   const n = array.length
   const mean = array.reduce((a, b) => a + b) / n

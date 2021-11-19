@@ -22,6 +22,7 @@ struct PlayerSettings {
   EmbindConstant lash_of_pain_usage;
   EmbindConstant pet_mode;
   EmbindConstant rotation_option;
+  std::vector<uint32_t> random_seeds;
   int item_id;
   int meta_gem_id;
   bool equipped_item_simulation;

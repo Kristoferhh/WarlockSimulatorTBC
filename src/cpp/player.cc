@@ -1,5 +1,7 @@
 #include "player.h"
 
+#include <math.h>
+
 #include "bindings.h"
 #include "common.h"
 #include "damage_over_time.h"
@@ -626,7 +628,7 @@ bool Player::IsHit(SpellType spell_type) {
   return kIsHit;
 }
 
-int Player::GetRand() { return random_num(gen); }
+int Player::GetRand() { return rng.range(0, 100 * kFloatNumberMultiplier); }
 
 bool Player::RollRng(double chance) { return GetRand() <= chance * kFloatNumberMultiplier; }
 

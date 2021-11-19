@@ -13,7 +13,7 @@ void ManaPotion::Cast() {
   Spell::Cast();
   const int kCurrentPlayerMana = player.stats.mana;
   // todo check for the randomize values option
-  const int kManaGain = Random(min_mana, max_mana);
+  const int kManaGain = player.rng.range(min_mana, max_mana);
   player.stats.mana = std::min(player.stats.max_mana, kCurrentPlayerMana + kManaGain);
   if (player.recording_combat_log_breakdown) {
     player.AddIterationDamageAndMana(name, kManaGain, 0);

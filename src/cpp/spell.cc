@@ -280,7 +280,7 @@ void Spell::Damage(bool isCrit) {
 // TODO investigate this no_rng variable
 std::vector<double> Spell::GetConstantDamage(bool no_rng) {
   double total_damage =
-      player.settings.randomize_values && min_dmg > 0 && max_dmg > 0 && !no_rng ? Random(min_dmg, max_dmg) : dmg;
+      player.settings.randomize_values && min_dmg > 0 && max_dmg > 0 && !no_rng ? player.rng.range(min_dmg, max_dmg) : dmg;
   const double kBaseDamage = total_damage;
   const double kSpellPower = player.GetSpellPower(school);
   const double kDamageModifier = GetModifier();
@@ -290,7 +290,7 @@ std::vector<double> Spell::GetConstantDamage(bool no_rng) {
   if (player.spells->incinerate != NULL && name == player.spells->incinerate->name && player.auras->immolate != NULL &&
       player.auras->immolate->active) {
     total_damage += player.settings.randomize_values && no_rng
-                        ? Random(bonus_damage_from_immolate_min, bonus_damage_from_immolate_max)
+                        ? player.rng.range(bonus_damage_from_immolate_min, bonus_damage_from_immolate_max)
                         : bonus_damage_from_immolate_average;
   }
   // Add Damage from Spell Power
@@ -608,7 +608,7 @@ SeedOfCorruption::SeedOfCorruption(Player& player) : Spell(player) {
 };
 
 void SeedOfCorruption::Damage(bool isCrit) {
-  const int kBaseDamage = player.settings.randomize_values && min_dmg && max_dmg ? Random(min_dmg, max_dmg) : dmg;
+  const int kBaseDamage = player.settings.randomize_values && min_dmg && max_dmg ? player.rng.range(min_dmg, max_dmg) : dmg;
   const int kEnemyAmount = player.settings.enemy_amount - 1;  // Minus one because the enemy that Seed is being Cast
                                                               // on doesn't get hit
   int resist_amount = 0;

@@ -15,6 +15,7 @@
 #include "player_auras.h"
 #include "player_settings.h"
 #include "player_spells.h"
+#include "rng.h"
 #include "sets.h"
 #include "spell.h"
 #include "talents.h"
@@ -53,9 +54,8 @@ struct Player {
   std::shared_ptr<Aura> curse_aura;
   std::vector<std::string> combat_log_entries;
   std::map<std::string, std::unique_ptr<CombatLogBreakdown>> combat_log_breakdown;
-  std::mt19937 gen;
-  std::uniform_int_distribution<> random_num{1, 100 * kFloatNumberMultiplier};
   std::string custom_stat;
+  Rng rng;
   double cast_time_remaining;
   double gcd_remaining;
   double total_duration;
