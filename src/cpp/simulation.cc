@@ -21,20 +21,16 @@ void Simulation::Start() {
   player.Initialize();
   double min_dps = std::numeric_limits<double>::max();
   double max_dps = 0;
-  std::mt19937 gen;
-  std::uniform_int_distribution<> random_fight_length(settings.min_time, settings.max_time);
-  // std::cout << "random num: " << std::to_string(player.rng.real()) << std::endl;
 
   for (player.iteration = 0; player.iteration < settings.iterations; player.iteration++) {
-    player.gen.seed(player.settings.random_seeds[player.iteration]);
-    gen.seed(player.settings.random_seeds[player.iteration]);
-    const int kFightLength = random_fight_length(gen);
     player.Reset();
     if (player.pet != NULL) {
       player.pet->Reset();
     }
     player.iteration_damage = 0;
     player.fight_time = 0;
+    player.rng.seed(player.settings.random_seeds[player.iteration]);
+    const int kFightLength = player.rng.range(settings.min_time, settings.max_time);
     if (player.ShouldWriteToCombatLog()) {
       player.CombatLog("Fight length: " + std::to_string(kFightLength) + " seconds");
     }

@@ -1,5 +1,7 @@
 #include "player.h"
 
+#include <math.h>
+
 #include "bindings.h"
 #include "common.h"
 #include "damage_over_time.h"
@@ -626,7 +628,7 @@ bool Player::IsHit(SpellType spell_type) {
   return kIsHit;
 }
 
-int Player::GetRand() { return random_num(gen); }
+int Player::GetRand() { return rng.range(0, 100 * kFloatNumberMultiplier); }
 
 bool Player::RollRng(double chance) { return GetRand() <= chance * kFloatNumberMultiplier; }
 
@@ -640,8 +642,6 @@ double Player::GetBaseHitChance(int player_level, int enemy_level) {
          : kLevelDifference >= 4 ? 83 - 11 * kLevelDifference
                                  : 0;
 }
-
-int Player::Random() {}
 
 void Player::UseCooldowns(double fight_time_remaining) {
   // Only use PI if Bloodlust isn't selected or if Bloodlust isn't active since they don't stack, or if there are enough

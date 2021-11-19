@@ -54,9 +54,8 @@ struct Player {
   std::shared_ptr<Aura> curse_aura;
   std::vector<std::string> combat_log_entries;
   std::map<std::string, std::unique_ptr<CombatLogBreakdown>> combat_log_breakdown;
-  std::mt19937 gen;
-  std::uniform_int_distribution<> random_num{1, 100 * kFloatNumberMultiplier};
   std::string custom_stat;
+  Rng rng;
   double cast_time_remaining;
   double gcd_remaining;
   double total_duration;
@@ -89,7 +88,6 @@ struct Player {
   double GetPartialResistMultiplier(SpellSchool school);
   double GetBaseHitChance(int player_level, int enemy_level);
   int GetRand();
-  int Random();
   bool IsCrit(SpellType spell_type, double extra_crit = 0);
   bool IsHit(SpellType spell_type);
   bool ShouldWriteToCombatLog();
