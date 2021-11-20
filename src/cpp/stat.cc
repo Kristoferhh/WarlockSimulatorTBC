@@ -3,10 +3,7 @@
 #include "common.h"
 #include "player.h"
 
-Stat::Stat(double value) {
-  this->value = value;
-  combat_log_decimal_places = 0;
-}
+Stat::Stat(double value) : value(value), combat_log_decimal_places(0) {}
 
 void Stat::AddStat(Player& player) { ModifyStat(player, "add"); }
 
@@ -34,6 +31,10 @@ void Stat::ModifyStat(Player& player, std::string action) {
                                       : (calculationType == CalculationType::kAdditive ? "-" : "/")) +
                      " " + DoubleToString(value) + " (" + DoubleToString(kCurrentStatValue, combat_log_decimal_places) +
                      " -> " + DoubleToString(new_stat_value, combat_log_decimal_places) + ")");
+
+    if (affects_pet && player.pet != NULL) {
+      player.pet->CalculateStatsFromPlayer();
+    }
   }
 }
 
