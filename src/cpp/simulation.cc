@@ -34,9 +34,12 @@ void Simulation::Start() {
     if (player.ShouldWriteToCombatLog()) {
       player.CombatLog("Fight length: " + std::to_string(kFightLength) + " seconds");
     }
-    // Apply the battle squawk buff since we're assuming the buff is active when the fight starts
+
     if (player.pet->auras.battle_squawk != NULL) {
       player.pet->auras.battle_squawk->Apply();
+    }
+    if (player.settings.prepop_black_book && player.pet->auras.black_book != NULL) {
+      player.pet->auras.black_book->Apply();
     }
 
     while (player.fight_time < kFightLength) {
@@ -856,7 +859,7 @@ double Simulation::PassTime() {
         player.stats.at(CharacterStat::kMana) += player.stats.at(CharacterStat::kMp5);
       }
       // Spirit mana regen
-      if (player.five_second_rule_timer <= 0 || kInnervateIsActive) {
+      if (kInnervateIsActive || player.five_second_rule_timer <= 0) {
         // Formula from
         // https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1572910
         int mp5_from_spirit = 5 * (0.001 + std::sqrt(player.GetIntellect()) * player.GetSpirit() * 0.009327);

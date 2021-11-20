@@ -568,7 +568,7 @@ double Player::GetHastePercent() {
       auras.power_infusion->active) {
     for (auto& stat : auras.power_infusion->stats) {
       if (stat.characterStat == CharacterStat::kSpellHastePercent) {
-        haste_percent /= (1 + stat.value / 100);
+        haste_percent /= stat.value;
       }
     }
   }
@@ -610,11 +610,8 @@ double Player::GetCritChance(SpellType spell_type) {
 }
 
 double Player::GetHitChance(SpellType spell_type) {
-  double hit_chance = stats.at(CharacterStat::kSpellHitChance) + stats.at(CharacterStat::kExtraSpellHitChance);
-  if (spell_type == SpellType::kAffliction) {
-    hit_chance += talents.suppression * 2;
-  }
-  return std::min(99.0, hit_chance);
+  return std::min(99.0, stats.at(CharacterStat::kSpellHitChance) + stats.at(CharacterStat::kExtraSpellHitChance) +
+                            (spell_type == SpellType::kAffliction ? talents.suppression * 2 : 0));
 }
 
 bool Player::IsCrit(SpellType spell_type, double extra_crit) { return RollRng(GetCritChance(spell_type) + extra_crit); }
@@ -762,8 +759,8 @@ void Player::SendPlayerInfoToCombatLog() {
   combat_log_entries.push_back("Stamina: " + DoubleToString(round(GetStamina())));
   combat_log_entries.push_back("Intellect: " + DoubleToString(round(GetIntellect())));
   combat_log_entries.push_back("Spell Power: " + DoubleToString(round(GetSpellPower())));
-  combat_log_entries.push_back("Shadow Power: " + std::to_string(stats.at(CharacterStat::kShadowPower)));
-  combat_log_entries.push_back("Fire Power: " + std::to_string(stats.at(CharacterStat::kFirePower)));
+  combat_log_entries.push_back("Shadow Power: " + DoubleToString(stats.at(CharacterStat::kShadowPower)));
+  combat_log_entries.push_back("Fire Power: " + DoubleToString(stats.at(CharacterStat::kFirePower)));
   combat_log_entries.push_back(
       "Crit Chance: " + DoubleToString(round(GetCritChance(SpellType::kDestruction) * 100) / 100, 2) + "%");
   combat_log_entries.push_back(
@@ -777,8 +774,8 @@ void Player::SendPlayerInfoToCombatLog() {
                                "%");
   combat_log_entries.push_back("Fire Modifier: " + DoubleToString(stats.at(CharacterStat::kFireModifier) * 100, 2) +
                                "%");
-  combat_log_entries.push_back("MP5: " + std::to_string(stats.at(CharacterStat::kMp5)));
-  combat_log_entries.push_back("Spell Penetration: " + std::to_string(stats.at(CharacterStat::kSpellPenetration)));
+  combat_log_entries.push_back("MP5: " + DoubleToString(stats.at(CharacterStat::kMp5)));
+  combat_log_entries.push_back("Spell Penetration: " + DoubleToString(stats.at(CharacterStat::kSpellPenetration)));
   if (pet != NULL) {
     combat_log_entries.push_back("---------------- Pet stats ----------------");
     combat_log_entries.push_back("Stamina: " + DoubleToString(pet->GetStamina()));
@@ -790,7 +787,7 @@ void Player::SendPlayerInfoToCombatLog() {
                                  " (without attack power % modifiers)");
     combat_log_entries.push_back("Spell Power: " + DoubleToString(pet->stats.at(CharacterStat::kSpellPower)));
     combat_log_entries.push_back("Mana: " + DoubleToString(pet->stats.at(CharacterStat::kMaxMana)));
-    combat_log_entries.push_back("MP5: " + std::to_string(pet->stats.at(CharacterStat::kMp5)));
+    combat_log_entries.push_back("MP5: " + DoubleToString(pet->stats.at(CharacterStat::kMp5)));
     if (pet->pet_type == PetType::kMelee) {
       combat_log_entries.push_back(
           "Physical Hit Chance: " +

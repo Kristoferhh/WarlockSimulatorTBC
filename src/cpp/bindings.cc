@@ -108,6 +108,7 @@ std::map<CharacterStat, double> AllocStats() {
   return std::map<CharacterStat, double>{
       {CharacterStat::kHealth, 0},
       {CharacterStat::kMana, 0},
+      {CharacterStat::kMaxMana, 0},
       {CharacterStat::kStamina, 0},
       {CharacterStat::kIntellect, 0},
       {CharacterStat::kSpirit, 0},

@@ -63,4 +63,8 @@ struct SpellCritRating : public Stat {
   SpellCritRating(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type, double value);
 };
 
+struct AttackPower : public Stat {
+  AttackPower(Player& player, std::map<CharacterStat, double>& stat_map, EntityType eentity_type, double value);
+};
+
 #endif

@@ -35,10 +35,10 @@ void Stat::ModifyStat(std::string action) {
                                       : (calculationType == CalculationType::kAdditive ? "-" : "/")) +
                      " " + DoubleToString(value) + " (" + DoubleToString(kCurrentStatValue, combat_log_decimal_places) +
                      " -> " + DoubleToString(new_stat_value, combat_log_decimal_places) + ")");
+  }
 
-    if (affects_pet && player.pet != NULL) {
-      player.pet->CalculateStatsFromPlayer();
-    }
+  if (affects_pet && player.pet != NULL) {
+    player.pet->CalculateStatsFromPlayer();
   }
 }
 
@@ -47,7 +47,7 @@ SpellPower::SpellPower(Player& player, std::map<CharacterStat, double>& stat_map
   name = "Spell Power";
   characterStat = CharacterStat::kSpellPower;
   calculationType = CalculationType::kAdditive;
-  affects_pet = true;
+  affects_pet = entity_type == EntityType::kPlayer;
 }
 
 ShadowPower::ShadowPower(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type,
@@ -56,7 +56,7 @@ ShadowPower::ShadowPower(Player& player, std::map<CharacterStat, double>& stat_m
   name = "Shadow Power";
   characterStat = CharacterStat::kShadowPower;
   calculationType = CalculationType::kAdditive;
-  affects_pet = true;
+  affects_pet = entity_type == EntityType::kPlayer;
 }
 
 FirePower::FirePower(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type, double value)
@@ -64,7 +64,7 @@ FirePower::FirePower(Player& player, std::map<CharacterStat, double>& stat_map, 
   name = "Fire Power";
   characterStat = CharacterStat::kFirePower;
   calculationType = CalculationType::kAdditive;
-  affects_pet = true;
+  affects_pet = entity_type == EntityType::kPlayer;
 }
 
 SpellHasteRating::SpellHasteRating(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type,
@@ -122,4 +122,12 @@ SpellCritRating::SpellCritRating(Player& player, std::map<CharacterStat, double>
   characterStat = CharacterStat::kSpellCritRating;
   calculationType = CalculationType::kAdditive;
   affects_pet = false;
+}
+
+AttackPower::AttackPower(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type,
+                         double value)
+    : Stat(player, stat_map, entity_type, value) {
+  name = "Attack Power";
+  characterStat = CharacterStat::kAttackPower;
+  calculationType = CalculationType::kAdditive;
 }

@@ -1,6 +1,7 @@
 #include "pet.h"
 
 #include "bindings.h"
+#include "common.h"
 #include "player.h"
 
 Pet::Pet(Player& player)
@@ -55,15 +56,10 @@ void Pet::CalculateStatsFromAuras() {
   // Calculate spell hit chance
   // Formula from
   // https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/
-  if (kLevelDifference <= 2) {
-    stats.at(CharacterStat::kSpellHitChance) = std::min(99, 100 - kLevelDifference - 4);
-  } else if (kLevelDifference == 3) {
-    stats.at(CharacterStat::kSpellHitChance) = 83;
-  } else if (kLevelDifference == 4) {
-    stats.at(CharacterStat::kSpellHitChance) = 72;
-  } else {
-    stats.at(CharacterStat::kSpellHitChance) = 61;
-  }
+  stats.at(CharacterStat::kSpellHitChance) = kLevelDifference <= 2   ? std::min(99, 100 - kLevelDifference - 4)
+                                             : kLevelDifference == 3 ? 83
+                                             : kLevelDifference == 4 ? 72
+                                                                     : 61;
 
   // Auras
   if (player.selected_auras.pet_blessing_of_kings) {
@@ -207,25 +203,21 @@ void Pet::CalculateStatsFromAuras() {
   }
 
   // Hidden attack power modifiers (source: Max on warlock discord)
-  if (pet == PetName::kFelguard) {
-    stats.at(CharacterStat::kAttackPowerModifier) *= 1.1;
-  } else if (pet == PetName::kSuccubus) {
-    stats.at(CharacterStat::kAttackPowerModifier) *= 1.05;
-  }
+  stats.at(CharacterStat::kAttackPowerModifier) *= (pet == PetName::kFelguard   ? 1.1
+                                                    : pet == PetName::kSuccubus ? 1.05
+                                                                                : 1);
 
   // Calculate armor
   if (pet_type == PetType::kMelee) {
     // Formula from
     // https://wowwiki-archive.fandom.com/wiki/Damage_reduction?oldid=807810
-    if (player.settings.enemy_level <= 59) {
-      armor_multiplier =
-          1 - player.settings.enemy_armor / (player.settings.enemy_armor + 400 + 85 * player.settings.enemy_level);
-    } else {
-      armor_multiplier = 1 - player.settings.enemy_armor /
-                                 (player.settings.enemy_armor - 22167.5 + 467.5 * player.settings.enemy_level);
-    }
+    armor_multiplier =
+        std::max(0.25, player.settings.enemy_level >= 60
+                           ? 1 - player.settings.enemy_armor /
+                                     (player.settings.enemy_armor - 22167.5 + 467.5 * player.settings.enemy_level)
+                           : 1 - player.settings.enemy_armor /
+                                     (player.settings.enemy_armor + 400 + 85 * player.settings.enemy_level));
   }
-  armor_multiplier = std::max(0.25, armor_multiplier);
 
   stats.at(CharacterStat::kStaminaModifier) *= 1 + (0.05 * player.talents.fel_stamina);
   stats.at(CharacterStat::kIntellectModifier) *= 1 + (0.05 * player.talents.fel_intellect);
@@ -257,10 +249,10 @@ void Pet::CalculateStatsFromPlayer(bool announce_in_combat_log) {
   if (pet_type == PetType::kMelee) {
     dmg = ((GetAttackPower() / 14) + 51.7) * base_melee_speed;
   }
-  stats.insert({CharacterStat::kMaxMana,
-                base_stats.at(CharacterStat::kMana) + (GetIntellect() * (pet_type == PetType::kMelee ? 11.555
-                                                                         : pet == PetName::kImp      ? 4.95
-                                                                                                     : 0))});
+  stats.at(CharacterStat::kMaxMana) =
+      base_stats.at(CharacterStat::kMana) + (GetIntellect() * (pet_type == PetType::kMelee ? 11.555
+                                                               : pet == PetName::kImp      ? 4.95
+                                                                                           : 0));
   if (pet == PetName::kImp || pet == PetName::kSuccubus) {
     stats.at(CharacterStat::kSpellCritChance) = (0.0125 * GetIntellect()) + 0.91 + player.talents.demonic_tactics +
                                                 buff_stats.at(CharacterStat::kSpellCritChance);
@@ -389,8 +381,8 @@ void Pet::Tick(double t) {
     stats.at(CharacterStat::kMana) =
         std::min(stats.at(CharacterStat::kMaxMana), stats.at(CharacterStat::kMana) + static_cast<int>(mana_gain));
     if (stats.at(CharacterStat::kMana) > kCurrentMana && player.ShouldWriteToCombatLog()) {
-      player.CombatLog(name + " gains " + std::to_string(round(mana_gain)) + " mana from Mp5/Spirit regeneration (" +
-                       std::to_string(kCurrentMana) + " -> " + std::to_string(stats.at(CharacterStat::kMana)) + ")");
+      player.CombatLog(name + " gains " + DoubleToString(round(mana_gain)) + " mana from Mp5/Spirit regeneration (" +
+                       DoubleToString(kCurrentMana) + " -> " + DoubleToString(stats.at(CharacterStat::kMana)) + ")");
     }
   }
 }
