@@ -9,6 +9,7 @@ enum class PetMode { kNoMode, kPassive, kAggressive };
 enum class AttackType { kNoAttackType, kPhysical, kMagical };
 enum class SimulationType { kNormal, kAllItems, kStatWeights };
 enum class CalculationType { kNoType, kAdditive, kMultiplicative };
+enum class EntityType { kNoType, kPlayer, kPet };
 enum CharacterStat {
   kHealth,
   kMana,
@@ -19,21 +20,31 @@ enum CharacterStat {
   kSpellPower,
   kShadowPower,
   kFirePower,
-  kHasteRating,
-  kHitRating,
-  kCritRating,
-  kCritChance,
-  kHitChance,
-  kExtraHitChance,
+  kSpellHasteRating,
+  kSpellHitRating,
+  kSpellCritRating,
+  kSpellCritChance,
+  kSpellHitChance,
+  kExtraSpellHitChance,
   kMp5,
   kSpellPenetration,
   kFireModifier,
-  kHastePercent,
+  kSpellHastePercent,
   kShadowModifier,
   kStaminaModifier,
   kIntellectModifier,
   kSpiritModifier,
   kManaCostModifier,
+  kStrength,
+  kAgility,
+  kAttackPower,
+  kMeleeCritChance,
+  kMeleeHitChance,
+  kStrengthModifier,
+  kAgilityModifier,
+  kAttackPowerModifier,
+  kDamageModifier,
+  kMeleeHastePercent,
 };
 
 #endif

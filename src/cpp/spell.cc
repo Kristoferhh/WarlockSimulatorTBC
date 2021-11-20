@@ -7,23 +7,24 @@
 #include "player.h"
 
 Spell::Spell(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
-    : player(player), aura_effect(aura), dot_effect(dot) {
-  modifier = 1;
-  coefficient = 0;
-  cooldown = 0;
-  school = SpellSchool::kNoSchool;
-  is_non_warlock_ability = false;
-  does_damage = false;
-  can_crit = false;
-  is_item = false;
-  on_gcd = true;
-  is_proc = false;
-  is_finisher = false;
-  cast_time = 0;
-  usable_once_per_fight = false;
-  has_not_been_cast_this_fight = true;
-  gain_mana_on_cast = false;
-}
+    : player(player),
+      aura_effect(aura),
+      dot_effect(dot),
+      modifier(1),
+      coefficient(0),
+      cooldown(0),
+      school(SpellSchool::kNoSchool),
+      is_non_warlock_ability(false),
+      does_damage(false),
+      can_crit(false),
+      is_item(false),
+      on_gcd(true),
+      is_proc(false),
+      is_finisher(false),
+      cast_time(0),
+      usable_once_per_fight(false),
+      has_not_been_cast_this_fight(true),
+      gain_mana_on_cast(false) {}
 
 void Spell::Reset() {
   cooldown_remaining = 0;

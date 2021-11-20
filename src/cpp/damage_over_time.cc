@@ -3,18 +3,18 @@
 #include "common.h"
 #include "player.h"
 
-DamageOverTime::DamageOverTime(Player& player) : player(player) {
-  duration = 0;
-  tick_timer_total = 3;
-  tick_timer_remaining = 0;
-  ticks_remaining = 0;
-  dmg = 0;
-  spell_power = 0;
-  modifier = 1;
-  active = false;
-  coefficient = 0;
-  applied_with_amplify_curse = false;
-}
+DamageOverTime::DamageOverTime(Player& player)
+    : player(player),
+      duration(0),
+      tick_timer_total(3),
+      tick_timer_remaining(0),
+      ticks_remaining(0),
+      dmg(0),
+      spell_power(0),
+      modifier(1),
+      active(false),
+      coefficient(0),
+      applied_with_amplify_curse(false) {}
 
 void DamageOverTime::Setup() {
   original_duration = duration;

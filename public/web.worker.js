@@ -159,11 +159,11 @@ onmessage = (event) => {
         stats.set(module.CharacterStat.spellPower, parseFloat(playerData.stats.spellPower));
         stats.set(module.CharacterStat.shadowPower, parseFloat(playerData.stats.shadowPower));
         stats.set(module.CharacterStat.firePower, parseFloat(playerData.stats.firePower));
-        stats.set(module.CharacterStat.hasteRating, parseFloat(playerData.stats.hasteRating));
-        stats.set(module.CharacterStat.hastePercent, 1.0);
-        stats.set(module.CharacterStat.hitRating, parseFloat(playerData.stats.hitRating));
-        stats.set(module.CharacterStat.critRating, parseFloat(playerData.stats.critRating));
-        stats.set(module.CharacterStat.critChance, 0.0);
+        stats.set(module.CharacterStat.spellHasteRating, parseFloat(playerData.stats.hasteRating));
+        stats.set(module.CharacterStat.spellHastePercent, 1.0);
+        stats.set(module.CharacterStat.spellHitRating, parseFloat(playerData.stats.hitRating));
+        stats.set(module.CharacterStat.spellCritRating, parseFloat(playerData.stats.critRating));
+        stats.set(module.CharacterStat.spellCritChance, 0.0);
         stats.set(module.CharacterStat.mp5, parseFloat(playerData.stats.mp5));
         stats.set(module.CharacterStat.manaCostModifier, 1.0);
         stats.set(module.CharacterStat.spellPenetration, parseFloat(playerData.stats.spellPenetration));

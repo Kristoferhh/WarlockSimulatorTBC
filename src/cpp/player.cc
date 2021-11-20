@@ -15,17 +15,18 @@ Player::Player(PlayerSettings& player_settings)
       sets(player_settings.sets),
       stats(player_settings.stats),
       items(player_settings.items),
-      settings(player_settings) {
-  spells = PlayerSpells();
-  auras = PlayerAuras();
-  cast_time_remaining = 0;
-  gcd_remaining = 0;
+      settings(player_settings),
+      spells(PlayerSpells()),
+      auras(PlayerAuras()),
+      cast_time_remaining(0),
+      gcd_remaining(0),
+      recording_combat_log_breakdown(settings.recording_combat_log_breakdown && settings.equipped_item_simulation),
+      entity_type(EntityType::kPlayer) {
   // I don't know if this formula only works for bosses or not, so for the
   // moment I'm only using it for targets 3+ levels above.
   const double enemy_base_resistance = settings.enemy_level >= (kLevel + 3) ? (6 * kLevel * 5) / 75.0 : 0;
   settings.enemy_shadow_resist = std::max(static_cast<double>(settings.enemy_shadow_resist), enemy_base_resistance);
   settings.enemy_fire_resist = std::max(static_cast<double>(settings.enemy_fire_resist), enemy_base_resistance);
-  recording_combat_log_breakdown = settings.recording_combat_log_breakdown && settings.equipped_item_simulation;
 
   if (recording_combat_log_breakdown) {
     combat_log_breakdown.insert({"Mp5", std::make_unique<CombatLogBreakdown>("Mp5")});
@@ -56,35 +57,35 @@ Player::Player(PlayerSettings& player_settings)
 
   // Crit chance
   if (selected_auras.atiesh_mage) {
-    stats.at(CharacterStat::kCritRating) += 28 * settings.mage_atiesh_amount;
+    stats.at(CharacterStat::kSpellCritRating) += 28 * settings.mage_atiesh_amount;
   }
-  stats.at(CharacterStat::kCritChance) =
+  stats.at(CharacterStat::kSpellCritChance) =
       kBaseCritChancePercent + talents.devastation + talents.backlash + talents.demonic_tactics;
   if (selected_auras.moonkin_aura) {
-    stats.at(CharacterStat::kCritChance) += 5;
+    stats.at(CharacterStat::kSpellCritChance) += 5;
   }
   if (selected_auras.judgement_of_the_crusader) {
-    stats.at(CharacterStat::kCritChance) += 3;
+    stats.at(CharacterStat::kSpellCritChance) += 3;
   }
   if (selected_auras.totem_of_wrath) {
-    stats.at(CharacterStat::kCritChance) += (3 * settings.totem_of_wrath_amount);
+    stats.at(CharacterStat::kSpellCritChance) += (3 * settings.totem_of_wrath_amount);
   }
   if (selected_auras.chain_of_the_twilight_owl) {
-    stats.at(CharacterStat::kCritChance) += 2;
+    stats.at(CharacterStat::kSpellCritChance) += 2;
   }
 
   // Hit chance
   if (sets.mana_etched >= 2) {
-    stats.at(CharacterStat::kHitRating) += 35;
+    stats.at(CharacterStat::kSpellHitRating) += 35;
   }
-  stats.insert({CharacterStat::kExtraHitChance, stats.at(CharacterStat::kHitRating) / kHitRatingPerPercent});
+  stats.insert({CharacterStat::kExtraSpellHitChance, stats.at(CharacterStat::kSpellHitRating) / kHitRatingPerPercent});
   if (selected_auras.totem_of_wrath) {
-    stats.at(CharacterStat::kExtraHitChance) += (3 * settings.totem_of_wrath_amount);
+    stats.at(CharacterStat::kExtraSpellHitChance) += (3 * settings.totem_of_wrath_amount);
   }
   if (selected_auras.inspiring_presence) {
-    stats.at(CharacterStat::kExtraHitChance) += 1;
+    stats.at(CharacterStat::kExtraSpellHitChance) += 1;
   }
-  stats.at(CharacterStat::kHitChance) = round(GetBaseHitChance(kLevel, settings.enemy_level));
+  stats.at(CharacterStat::kSpellHitChance) = round(GetBaseHitChance(kLevel, settings.enemy_level));
 
   // Add bonus damage % from Demonic Sacrifice
   if (talents.demonic_sacrifice == 1 && settings.sacrificing_pet) {
@@ -559,20 +560,20 @@ void Player::EndAuras() {
 }
 
 double Player::GetHastePercent() {
-  double haste_percent = stats.at(CharacterStat::kHastePercent);
+  double haste_percent = stats.at(CharacterStat::kSpellHastePercent);
 
   // If both Bloodlust and Power Infusion are active then remove the 20% PI
   // bonus since they don't stack
   if (auras.bloodlust != NULL && auras.power_infusion != NULL && auras.bloodlust->active &&
       auras.power_infusion->active) {
     for (auto& stat : auras.power_infusion->stats) {
-      if (stat.characterStat == CharacterStat::kHastePercent) {
+      if (stat.characterStat == CharacterStat::kSpellHastePercent) {
         haste_percent /= (1 + stat.value / 100);
       }
     }
   }
 
-  return haste_percent * (1 + stats.at(CharacterStat::kHasteRating) / kHasteRatingPerPercent / 100.0);
+  return haste_percent * (1 + stats.at(CharacterStat::kSpellHasteRating) / kHasteRatingPerPercent / 100.0);
 }
 
 double Player::GetGcdValue(const std::shared_ptr<Spell>& spell) {
@@ -600,8 +601,8 @@ double Player::GetSpellPower(SpellSchool school) {
 }
 
 double Player::GetCritChance(SpellType spell_type) {
-  double crit_chance = stats.at(CharacterStat::kCritChance) + (GetIntellect() * kCritChancePerIntellect) +
-                       (stats.at(CharacterStat::kCritRating) / kCritRatingPerPercent);
+  double crit_chance = stats.at(CharacterStat::kSpellCritChance) + (GetIntellect() * kCritChancePerIntellect) +
+                       (stats.at(CharacterStat::kSpellCritRating) / kCritRatingPerPercent);
   if (spell_type != SpellType::kDestruction) {
     crit_chance -= talents.devastation;
   }
@@ -609,7 +610,7 @@ double Player::GetCritChance(SpellType spell_type) {
 }
 
 double Player::GetHitChance(SpellType spell_type) {
-  double hit_chance = stats.at(CharacterStat::kHitChance) + stats.at(CharacterStat::kExtraHitChance);
+  double hit_chance = stats.at(CharacterStat::kSpellHitChance) + stats.at(CharacterStat::kExtraSpellHitChance);
   if (spell_type == SpellType::kAffliction) {
     hit_chance += talents.suppression * 2;
   }
@@ -767,10 +768,11 @@ void Player::SendPlayerInfoToCombatLog() {
       "Crit Chance: " + DoubleToString(round(GetCritChance(SpellType::kDestruction) * 100) / 100, 2) + "%");
   combat_log_entries.push_back(
       "Hit Chance: " +
-      DoubleToString(std::min(16.0, round((stats.at(CharacterStat::kExtraHitChance)) * 100) / 100), 2) + "%");
+      DoubleToString(std::min(16.0, round((stats.at(CharacterStat::kExtraSpellHitChance)) * 100) / 100), 2) + "%");
   combat_log_entries.push_back(
       "Haste: " +
-      DoubleToString(round((stats.at(CharacterStat::kHasteRating) / kHasteRatingPerPercent) * 100) / 100, 2) + "%");
+      DoubleToString(round((stats.at(CharacterStat::kSpellHasteRating) / kHasteRatingPerPercent) * 100) / 100, 2) +
+      "%");
   combat_log_entries.push_back("Shadow Modifier: " + DoubleToString(stats.at(CharacterStat::kShadowModifier) * 100, 2) +
                                "%");
   combat_log_entries.push_back("Fire Modifier: " + DoubleToString(stats.at(CharacterStat::kFireModifier) * 100, 2) +
@@ -784,30 +786,34 @@ void Player::SendPlayerInfoToCombatLog() {
     combat_log_entries.push_back("Strength: " + DoubleToString(pet->GetStrength()));
     combat_log_entries.push_back("Agility: " + DoubleToString(pet->GetAgility()));
     combat_log_entries.push_back("Spirit: " + DoubleToString(pet->GetSpirit()));
-    combat_log_entries.push_back("Attack Power: " + DoubleToString(round(pet->stats.attack_power)) +
+    combat_log_entries.push_back("Attack Power: " + DoubleToString(round(pet->stats.at(CharacterStat::kAttackPower))) +
                                  " (without attack power % modifiers)");
-    combat_log_entries.push_back("Spell Power: " + DoubleToString(pet->stats.spell_power));
-    combat_log_entries.push_back("Mana: " + DoubleToString(pet->stats.max_mana));
-    combat_log_entries.push_back("MP5: " + std::to_string(pet->stats.mp5));
+    combat_log_entries.push_back("Spell Power: " + DoubleToString(pet->stats.at(CharacterStat::kSpellPower)));
+    combat_log_entries.push_back("Mana: " + DoubleToString(pet->stats.at(CharacterStat::kMaxMana)));
+    combat_log_entries.push_back("MP5: " + std::to_string(pet->stats.at(CharacterStat::kMp5)));
     if (pet->pet_type == PetType::kMelee) {
       combat_log_entries.push_back(
-          "Physical Hit Chance: " + DoubleToString(round(pet->GetMeleeHitChance() * 100) / 100.0, 2) + "%");
+          "Physical Hit Chance: " +
+          DoubleToString(round(pet->stats.at(CharacterStat::kMeleeHitChance) * 100) / 100.0, 2) + "%");
       combat_log_entries.push_back(
           "Physical Crit Chance: " + DoubleToString(round(pet->GetMeleeCritChance() * 100) / 100.0, 2) + "% (" +
           DoubleToString(pet->crit_suppression, 2) + "% Crit Suppression Applied)");
       combat_log_entries.push_back(
           "Glancing Blow Chance: " + DoubleToString(round(pet->glancing_blow_chance * 100) / 100.0, 2) + "%");
       combat_log_entries.push_back(
-          "Attack Power Modifier: " + DoubleToString(round(pet->stats.attack_power_modifier * 10000) / 100.0, 2) + "%");
+          "Attack Power Modifier: " +
+          DoubleToString(round(pet->stats.at(CharacterStat::kAttackPowerModifier) * 10000) / 100.0, 2) + "%");
     }
     if (pet->pet == PetName::kImp || pet->pet == PetName::kSuccubus) {
       combat_log_entries.push_back(
-          "Spell Hit Chance: " + DoubleToString(round(pet->GetSpellHitChance() * 100) / 100.0, 2) + "%");
+          "Spell Hit Chance: " + DoubleToString(round(pet->stats.at(CharacterStat::kSpellHitChance) * 100) / 100.0, 2) +
+          "%");
       combat_log_entries.push_back(
           "Spell Crit Chance: " + DoubleToString(round(pet->GetSpellCritChance() * 100) / 100.0, 2) + "%");
     }
     combat_log_entries.push_back(
-        "Damage Modifier: " + DoubleToString(round(pet->stats.damage_modifier * 10000) / 100, 2) + "%");
+        "Damage Modifier: " + DoubleToString(round(pet->stats.at(CharacterStat::kDamageModifier) * 10000) / 100, 2) +
+        "%");
   }
   combat_log_entries.push_back("---------------- Enemy stats ----------------");
   combat_log_entries.push_back("Level: " + std::to_string(settings.enemy_level));

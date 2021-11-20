@@ -55,6 +55,7 @@ struct Player {
   std::map<std::string, std::unique_ptr<CombatLogBreakdown>> combat_log_breakdown;
   std::string custom_stat;
   Rng rng;
+  EntityType entity_type;
   double cast_time_remaining;
   double gcd_remaining;
   double total_duration;

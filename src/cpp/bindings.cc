@@ -106,17 +106,38 @@ Sets AllocSets() { return Sets(); }
 
 std::map<CharacterStat, double> AllocStats() {
   return std::map<CharacterStat, double>{
-      {CharacterStat::kHealth, 0},           {CharacterStat::kMana, 0},
-      {CharacterStat::kStamina, 0},          {CharacterStat::kIntellect, 0},
-      {CharacterStat::kSpirit, 0},           {CharacterStat::kSpellPower, 0},
-      {CharacterStat::kShadowPower, 0},      {CharacterStat::kFirePower, 0},
-      {CharacterStat::kHasteRating, 0},      {CharacterStat::kHitRating, 0},
-      {CharacterStat::kCritRating, 0},       {CharacterStat::kCritChance, 0},
-      {CharacterStat::kHitChance, 0},        {CharacterStat::kMp5, 0},
-      {CharacterStat::kSpellPenetration, 0}, {CharacterStat::kFireModifier, 0},
-      {CharacterStat::kHastePercent, 0},     {CharacterStat::kShadowModifier, 0},
-      {CharacterStat::kStaminaModifier, 0},  {CharacterStat::kIntellectModifier, 0},
-      {CharacterStat::kSpiritModifier, 0},   {CharacterStat::kManaCostModifier, 0},
+      {CharacterStat::kHealth, 0},
+      {CharacterStat::kMana, 0},
+      {CharacterStat::kStamina, 0},
+      {CharacterStat::kIntellect, 0},
+      {CharacterStat::kSpirit, 0},
+      {CharacterStat::kSpellPower, 0},
+      {CharacterStat::kShadowPower, 0},
+      {CharacterStat::kFirePower, 0},
+      {CharacterStat::kSpellHasteRating, 0},
+      {CharacterStat::kSpellHitRating, 0},
+      {CharacterStat::kSpellCritRating, 0},
+      {CharacterStat::kSpellCritChance, 0},
+      {CharacterStat::kSpellHitChance, 0},
+      {CharacterStat::kMp5, 0},
+      {CharacterStat::kSpellPenetration, 0},
+      {CharacterStat::kFireModifier, 1},
+      {CharacterStat::kSpellHastePercent, 1},
+      {CharacterStat::kShadowModifier, 1},
+      {CharacterStat::kStaminaModifier, 1},
+      {CharacterStat::kIntellectModifier, 1},
+      {CharacterStat::kSpiritModifier, 1},
+      {CharacterStat::kManaCostModifier, 1},
+      {CharacterStat::kStrength, 0},
+      {CharacterStat::kAgility, 0},
+      {CharacterStat::kAttackPower, 0},
+      {CharacterStat::kMeleeCritChance, 0},
+      {CharacterStat::kMeleeHitChance, 0},
+      {CharacterStat::kStrengthModifier, 1},
+      {CharacterStat::kAgilityModifier, 1},
+      {CharacterStat::kAttackPowerModifier, 1},
+      {CharacterStat::kDamageModifier, 1},
+      {CharacterStat::kMeleeHastePercent, 1},
   };
 }
 
@@ -403,20 +424,30 @@ EMSCRIPTEN_BINDINGS(module) {
       .value("spellPower", CharacterStat::kSpellPower)
       .value("shadowPower", CharacterStat::kShadowPower)
       .value("firePower", CharacterStat::kFirePower)
-      .value("hasteRating", CharacterStat::kHasteRating)
-      .value("hitRating", CharacterStat::kHitRating)
-      .value("critRating", CharacterStat::kCritRating)
-      .value("critChance", CharacterStat::kCritChance)
-      .value("hitChance", CharacterStat::kHitChance)
+      .value("spellHasteRating", CharacterStat::kSpellHasteRating)
+      .value("spellHitRating", CharacterStat::kSpellHitRating)
+      .value("spellCritRating", CharacterStat::kSpellCritRating)
+      .value("spellCritChance", CharacterStat::kSpellCritChance)
+      .value("spellHitChance", CharacterStat::kSpellHitChance)
       .value("mp5", CharacterStat::kMp5)
       .value("spellPenetration", CharacterStat::kSpellPenetration)
       .value("fireModifier", CharacterStat::kFireModifier)
-      .value("hastePercent", CharacterStat::kHastePercent)
+      .value("spellHastePercent", CharacterStat::kSpellHastePercent)
       .value("shadowModifier", CharacterStat::kShadowModifier)
       .value("staminaModifier", CharacterStat::kStaminaModifier)
       .value("intellectModifier", CharacterStat::kIntellectModifier)
       .value("spiritModifier", CharacterStat::kSpiritModifier)
-      .value("manaCostModifier", CharacterStat::kManaCostModifier);
+      .value("manaCostModifier", CharacterStat::kManaCostModifier)
+      .value("strength", CharacterStat::kStrength)
+      .value("agility", CharacterStat::kAgility)
+      .value("attackPower", CharacterStat::kAttackPower)
+      .value("meleeCritChance", CharacterStat::kMeleeCritChance)
+      .value("meleeHitChance", CharacterStat::kMeleeHitChance)
+      .value("strengthModifier", CharacterStat::kStrengthModifier)
+      .value("agilityModifier", CharacterStat::kAgilityModifier)
+      .value("attackPowerModifier", CharacterStat::kAttackPowerModifier)
+      .value("damageModifier", CharacterStat::kDamageModifier)
+      .value("meleeHastePercent", CharacterStat::kMeleeHastePercent);
 
   emscripten::function("allocRandomSeeds", &AllocRandomSeeds);
   emscripten::function("allocItems", &AllocItems);
