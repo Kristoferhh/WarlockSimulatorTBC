@@ -75,7 +75,8 @@ void DamageOverTime::Fade() {
   ticks_remaining = 0;
 
   if (player.recording_combat_log_breakdown) {
-    player.combat_log_breakdown.at(name)->uptime += player.fight_time - player.combat_log_breakdown.at(name)->applied_at;
+    player.combat_log_breakdown.at(name)->uptime +=
+        player.fight_time - player.combat_log_breakdown.at(name)->applied_at;
   }
   if (player.ShouldWriteToCombatLog()) {
     player.CombatLog(name + " faded");
@@ -83,8 +84,8 @@ void DamageOverTime::Fade() {
 }
 
 double DamageOverTime::GetModifier() {
-  double damage_modifier = modifier * (school == SpellSchool::kShadow ? player.stats.shadow_modifier
-                                       : school == SpellSchool::kFire ? player.stats.fire_modifier
+  double damage_modifier = modifier * (school == SpellSchool::kShadow ? player.stats.at(CharacterStat::kShadowModifier)
+                                       : school == SpellSchool::kFire ? player.stats.at(CharacterStat::kFireModifier)
                                                                       : 1);
   // Only add Improved Shadow Bolt if it's not Siphon Life or if ISB was active when the Siphon Life was cast.
   if ((school == SpellSchool::kShadow && player.auras.improved_shadow_bolt != NULL &&

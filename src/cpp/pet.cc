@@ -229,12 +229,13 @@ void Pet::CalculateStatsFromAuras() {
 }
 
 int Pet::GetPlayerSpellPower() {
-  return player.GetSpellPower() + std::max(player.stats.shadow_power, player.stats.fire_power);
+  return player.GetSpellPower() +
+         std::max(player.stats.at(CharacterStat::kShadowPower), player.stats.at(CharacterStat::kFirePower));
 }
 
 void Pet::CalculateStatsFromPlayer(bool announce_in_combat_log) {
-  stats.stamina = base_stats.stamina + buff_stats.stamina + 0.3 * player.stats.GetStamina();
-  stats.intellect = base_stats.intellect + buff_stats.intellect + (0.3 * player.stats.GetIntellect());
+  stats.stamina = base_stats.stamina + buff_stats.stamina + 0.3 * player.GetStamina();
+  stats.intellect = base_stats.intellect + buff_stats.intellect + (0.3 * player.GetIntellect());
   player.demonic_knowledge_spell_power = (GetStamina() + GetIntellect()) * (0.04 * player.talents.demonic_knowledge);
   base_stats.attack_power = (GetStrength() * 2) - 20;
   stats.attack_power =

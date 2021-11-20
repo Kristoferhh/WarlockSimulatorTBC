@@ -4,12 +4,13 @@
 struct Player;
 #include <iostream>
 #include <optional>
+#include <vector>
 
-#include "aura_stats.h"
+#include "stat.h"
 
 struct Trinket {
   Player& player;
-  std::optional<AuraStats> stats;
+  std::vector<Stat> stats;
   int duration;
   double duration_remaining;
   int cooldown;

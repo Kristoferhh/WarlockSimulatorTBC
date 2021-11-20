@@ -23,48 +23,17 @@ void Trinket::Setup() {
 }
 
 void Trinket::Use() {
-  bool recalculating_pet_stats = false;
   if (player.ShouldWriteToCombatLog()) {
     player.CombatLog(name + " used");
   }
+
   if (player.recording_combat_log_breakdown) {
     player.combat_log_breakdown.at(name)->applied_at = player.fight_time;
     player.combat_log_breakdown.at(name)->count++;
   }
 
-  if (duration > 0) {
-    if (stats->spell_power > 0) {
-      if (player.ShouldWriteToCombatLog()) {
-        int kCurrentSpellPower = player.GetSpellPower();
-        player.CombatLog("Spell Power + " + std::to_string(stats->spell_power) + " (" +
-                         std::to_string(kCurrentSpellPower) + " -> " +
-                         std::to_string(kCurrentSpellPower + stats->spell_power) + ")");
-      }
-      player.stats.spell_power += stats->spell_power;
-      recalculating_pet_stats = true;
-    }
-    if (stats->haste_rating > 0) {
-      if (player.ShouldWriteToCombatLog()) {
-        const int kCurrentHasteRating = player.stats.haste_rating;
-        player.CombatLog("Haste Rating + " + std::to_string(stats->haste_rating) + " (" +
-                         std::to_string(kCurrentHasteRating) + " -> " +
-                         std::to_string(kCurrentHasteRating + stats->haste_rating) + ")");
-      }
-      player.stats.haste_rating += stats->haste_rating;
-    }
-    if (stats->crit_rating > 0) {
-      if (player.ShouldWriteToCombatLog()) {
-        const int kCurrentCritRating = player.stats.crit_rating;
-        player.CombatLog("Crit Rating + " + std::to_string(stats->crit_rating) + " (" +
-                         std::to_string(kCurrentCritRating) + " -> " +
-                         std::to_string(kCurrentCritRating + stats->crit_rating) + ")");
-      }
-      player.stats.crit_rating += stats->crit_rating;
-    }
-  }
-
-  if (recalculating_pet_stats && player.pet != NULL) {
-    player.pet->CalculateStatsFromPlayer();
+  for (auto& stat : stats) {
+    stat.AddStat(player);
   }
 
   active = true;
@@ -73,46 +42,17 @@ void Trinket::Use() {
 }
 
 void Trinket::Fade() {
-  bool recalculating_pet_stats = false;
   if (player.ShouldWriteToCombatLog()) {
     player.CombatLog(name + " faded");
   }
 
-  if (stats->spell_power > 0) {
-    if (player.ShouldWriteToCombatLog()) {
-      const int kCurrentSpellPower = player.GetSpellPower();
-      player.CombatLog("Spell Power - " + std::to_string(stats->spell_power) + " (" +
-                       std::to_string(kCurrentSpellPower) + " -> " +
-                       std::to_string(kCurrentSpellPower - stats->spell_power) + ")");
-    }
-    player.stats.spell_power -= stats->spell_power;
-    recalculating_pet_stats = true;
-  }
-  if (stats->haste_rating > 0) {
-    if (player.ShouldWriteToCombatLog()) {
-      int kCurrentHasteRating = player.stats.haste_rating;
-      player.CombatLog("Haste Rating - " + std::to_string(stats->haste_rating) + " (" +
-                       std::to_string(kCurrentHasteRating) + " -> " +
-                       std::to_string(kCurrentHasteRating - stats->haste_rating) + ")");
-    }
-    player.stats.haste_rating -= stats->haste_rating;
-  }
-  if (stats->crit_rating > 0) {
-    if (player.ShouldWriteToCombatLog()) {
-      int kCurrentCritRating = player.stats.crit_rating;
-      player.CombatLog("Crit Rating - " + std::to_string(stats->crit_rating) + " (" +
-                       std::to_string(kCurrentCritRating) + " -> " +
-                       std::to_string(kCurrentCritRating - stats->crit_rating) + ")");
-    }
-    player.stats.crit_rating -= stats->crit_rating;
-  }
-
-  if (recalculating_pet_stats && player.pet != NULL) {
-    player.pet->CalculateStatsFromPlayer();
-  }
   if (player.recording_combat_log_breakdown) {
     player.combat_log_breakdown.at(name)->uptime +=
         player.fight_time - player.combat_log_breakdown.at(name)->applied_at;
+  }
+
+  for (auto& stat : stats) {
+    stat.RemoveStat(player);
   }
 
   active = false;
@@ -133,7 +73,7 @@ RestrainedEssenceOfSapphiron::RestrainedEssenceOfSapphiron(Player& player) : Tri
   name = "Restrained Essence of Sapphiron";
   cooldown = 120;
   duration = 20;
-  Trinket::stats = std::make_optional<AuraStats>(130, 0, 0, 0, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{SpellPower(130)};
   Setup();
 }
 
@@ -141,7 +81,7 @@ ShiftingNaaruSliver::ShiftingNaaruSliver(Player& player) : Trinket(player) {
   name = "Shifting Naaru Sliver";
   cooldown = 90;
   duration = 15;
-  Trinket::stats = std::make_optional<AuraStats>(320, 0, 0, 0, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{SpellPower(320)};
   Setup();
 }
 
@@ -149,7 +89,7 @@ SkullOfGuldan::SkullOfGuldan(Player& player) : Trinket(player) {
   name = "Skull of Gul'dan";
   cooldown = 120;
   duration = 20;
-  Trinket::stats = std::make_optional<AuraStats>(0, 0, 0, 175, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{HasteRating(175)};
   Setup();
 }
 
@@ -157,7 +97,7 @@ HexShrunkenHead::HexShrunkenHead(Player& player) : Trinket(player) {
   name = "Hex Shrunken Head";
   cooldown = 120;
   duration = 20;
-  Trinket::stats = std::make_optional<AuraStats>(211, 0, 0, 0, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{SpellPower(211)};
   Setup();
 }
 
@@ -165,7 +105,7 @@ IconOfTheSilverCrescent::IconOfTheSilverCrescent(Player& player) : Trinket(playe
   name = "Icon of the Silver Crescent";
   cooldown = 120;
   duration = 20;
-  Trinket::stats = std::make_optional<AuraStats>(155, 0, 0, 0, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{SpellPower(155)};
   Setup();
 }
 
@@ -173,7 +113,7 @@ ScryersBloodgem::ScryersBloodgem(Player& player) : Trinket(player) {
   name = "Scryer's Bloodgem";
   cooldown = 90;
   duration = 15;
-  Trinket::stats = std::make_optional<AuraStats>(150, 0, 0, 0, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{SpellPower(150)};
   Setup();
 }
 
@@ -181,7 +121,7 @@ AncientCrystalTalisman::AncientCrystalTalisman(Player& player) : Trinket(player)
   name = "Ancient Crystal Talisman";
   cooldown = 120;
   duration = 20;
-  Trinket::stats = std::make_optional<AuraStats>(104, 0, 0, 0, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{SpellPower(104)};
   Setup();
 }
 
@@ -189,7 +129,7 @@ ArcanistsStone::ArcanistsStone(Player& player) : Trinket(player) {
   name = "Arcanist's Stone";
   cooldown = 120;
   duration = 20;
-  Trinket::stats = std::make_optional<AuraStats>(167, 0, 0, 0, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{SpellPower(167)};
   Setup();
 }
 
@@ -197,7 +137,7 @@ TerokkarTabletOfVim::TerokkarTabletOfVim(Player& player) : Trinket(player) {
   name = "Terokkar Table of Vim";
   cooldown = 90;
   duration = 15;
-  Trinket::stats = std::make_optional<AuraStats>(84, 0, 0, 0, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{SpellPower(84)};
   Setup();
 }
 
@@ -205,7 +145,7 @@ XirisGift::XirisGift(Player& player) : Trinket(player) {
   name = "Xi'ri's Gift";
   cooldown = 90;
   duration = 15;
-  Trinket::stats = std::make_optional<AuraStats>(150, 0, 0, 0, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{SpellPower(150)};
   Setup();
 }
 
@@ -213,7 +153,7 @@ VengeanceOfTheIllidari::VengeanceOfTheIllidari(Player& player) : Trinket(player)
   name = "Vengeance of the Illidari";
   cooldown = 90;
   duration = 15;
-  Trinket::stats = std::make_optional<AuraStats>(120, 0, 0, 0, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{SpellPower(120)};
   Setup();
 }
 
@@ -221,7 +161,7 @@ FigurineLivingRubySerpent::FigurineLivingRubySerpent(Player& player) : Trinket(p
   name = "Figurine: Living Ruby Serpent";
   cooldown = 300;
   duration = 20;
-  Trinket::stats = std::make_optional<AuraStats>(150, 0, 0, 0, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{SpellPower(150)};
   Setup();
 }
 
@@ -230,7 +170,7 @@ EssenceOfTheMartyr::EssenceOfTheMartyr(Player& player) : Trinket(player) {
   cooldown = 120;
   duration = 20;
   shares_cooldown = false;
-  Trinket::stats = std::make_optional<AuraStats>(99, 0, 0, 0, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{SpellPower(99)};
   Setup();
 }
 
@@ -238,7 +178,7 @@ StarkillersBauble::StarkillersBauble(Player& player) : Trinket(player) {
   name = "Starkiller's Bauble";
   cooldown = 90;
   duration = 15;
-  Trinket::stats = std::make_optional<AuraStats>(125, 0, 0, 0, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{SpellPower(125)};
   Setup();
 }
 
@@ -246,7 +186,7 @@ DarkIronSmokingPipe::DarkIronSmokingPipe(Player& player) : Trinket(player) {
   name = "Dark Iron Smoking Pipe";
   cooldown = 120;
   duration = 20;
-  Trinket::stats = std::make_optional<AuraStats>(155, 0, 0, 0, 0, 0, 0, 0);
+  Trinket::stats = std::vector<Stat>{SpellPower(155)};
   Setup();
 }
 
@@ -254,6 +194,6 @@ HazzarahsCharmOfDestruction::HazzarahsCharmOfDestruction(Player& player) : Trink
   name = "Hazza'rah's Charm of Destruction";
   cooldown = 180;
   duration = 20;
-  Trinket::stats = std::make_optional<AuraStats>(0, 0, 0, 0, 0, 0, 0, 140);
+  Trinket::stats = std::vector<Stat>{CritRating(140)};
   Setup();
 }

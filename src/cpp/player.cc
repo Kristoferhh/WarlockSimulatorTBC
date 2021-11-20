@@ -18,12 +18,11 @@ Player::Player(PlayerSettings& player_settings)
       settings(player_settings) {
   spells = PlayerSpells();
   auras = PlayerAuras();
-  combat_log_entries = {};
   cast_time_remaining = 0;
   gcd_remaining = 0;
   // I don't know if this formula only works for bosses or not, so for the
-  // moment I'm only using it for lvl >=73 targets.
-  const double enemy_base_resistance = settings.enemy_level >= 73 ? (6 * kLevel * 5) / 75.0 : 0;
+  // moment I'm only using it for targets 3+ levels above.
+  const double enemy_base_resistance = settings.enemy_level >= (kLevel + 3) ? (6 * kLevel * 5) / 75.0 : 0;
   settings.enemy_shadow_resist = std::max(static_cast<double>(settings.enemy_shadow_resist), enemy_base_resistance);
   settings.enemy_fire_resist = std::max(static_cast<double>(settings.enemy_fire_resist), enemy_base_resistance);
   recording_combat_log_breakdown = settings.recording_combat_log_breakdown && settings.equipped_item_simulation;
@@ -57,94 +56,91 @@ Player::Player(PlayerSettings& player_settings)
 
   // Crit chance
   if (selected_auras.atiesh_mage) {
-    stats.crit_rating += 28 * settings.mage_atiesh_amount;
+    stats.at(CharacterStat::kCritRating) += 28 * settings.mage_atiesh_amount;
   }
-  stats.crit_chance = kBaseCritChancePercent + talents.devastation + talents.backlash + talents.demonic_tactics;
+  stats.at(CharacterStat::kCritChance) =
+      kBaseCritChancePercent + talents.devastation + talents.backlash + talents.demonic_tactics;
   if (selected_auras.moonkin_aura) {
-    stats.crit_chance += 5;
+    stats.at(CharacterStat::kCritChance) += 5;
   }
   if (selected_auras.judgement_of_the_crusader) {
-    stats.crit_chance += 3;
+    stats.at(CharacterStat::kCritChance) += 3;
   }
   if (selected_auras.totem_of_wrath) {
-    stats.crit_chance += (3 * settings.totem_of_wrath_amount);
+    stats.at(CharacterStat::kCritChance) += (3 * settings.totem_of_wrath_amount);
   }
   if (selected_auras.chain_of_the_twilight_owl) {
-    stats.crit_chance += 2;
+    stats.at(CharacterStat::kCritChance) += 2;
   }
 
   // Hit chance
   if (sets.mana_etched >= 2) {
-    stats.hit_rating += 35;
+    stats.at(CharacterStat::kHitRating) += 35;
   }
-  stats.extra_hit_chance = stats.hit_rating / kHitRatingPerPercent;
+  stats.insert({CharacterStat::kExtraHitChance, stats.at(CharacterStat::kHitRating) / kHitRatingPerPercent});
   if (selected_auras.totem_of_wrath) {
-    stats.extra_hit_chance += (3 * settings.totem_of_wrath_amount);
+    stats.at(CharacterStat::kExtraHitChance) += (3 * settings.totem_of_wrath_amount);
   }
   if (selected_auras.inspiring_presence) {
-    stats.extra_hit_chance += 1;
+    stats.at(CharacterStat::kExtraHitChance) += 1;
   }
-  stats.hit_chance = round(GetBaseHitChance(kLevel, settings.enemy_level));
+  stats.at(CharacterStat::kHitChance) = round(GetBaseHitChance(kLevel, settings.enemy_level));
 
   // Add bonus damage % from Demonic Sacrifice
   if (talents.demonic_sacrifice == 1 && settings.sacrificing_pet) {
     if (settings.selected_pet == EmbindConstant::kImp) {
-      stats.fire_modifier *= 1.15;
+      stats.at(CharacterStat::kFireModifier) *= 1.15;
     } else if (settings.selected_pet == EmbindConstant::kSuccubus) {
-      stats.shadow_modifier *= 1.15;
+      stats.at(CharacterStat::kShadowModifier) *= 1.15;
     } else if (settings.selected_pet == EmbindConstant::kFelguard) {
-      stats.shadow_modifier *= 1.1;
+      stats.at(CharacterStat::kShadowModifier) *= 1.1;
     }
     // todo add felhunter mana regen maybe
   } else {
     // Add damage % multiplier from Master Demonologist and Soul Link
     if (talents.soul_link == 1) {
-      stats.shadow_modifier *= 1.05;
-      stats.fire_modifier *= 1.05;
+      stats.at(CharacterStat::kShadowModifier) *= 1.05;
+      stats.at(CharacterStat::kFireModifier) *= 1.05;
     }
     if (talents.master_demonologist > 0) {
       if (settings.selected_pet == EmbindConstant::kSuccubus) {
-        stats.shadow_modifier *= (1 + 0.02 * talents.master_demonologist);
-        stats.fire_modifier *= (1 + 0.02 * talents.master_demonologist);
+        stats.at(CharacterStat::kShadowModifier) *= (1 + 0.02 * talents.master_demonologist);
+        stats.at(CharacterStat::kFireModifier) *= (1 + 0.02 * talents.master_demonologist);
       } else if (settings.selected_pet == EmbindConstant::kFelguard) {
-        stats.shadow_modifier *= (1 + 0.01 * talents.master_demonologist);
-        stats.fire_modifier *= (1 + 0.01 * talents.master_demonologist);
+        stats.at(CharacterStat::kShadowModifier) *= (1 + 0.01 * talents.master_demonologist);
+        stats.at(CharacterStat::kFireModifier) *= (1 + 0.01 * talents.master_demonologist);
       }
     }
   }
   // Shadow Mastery
-  stats.shadow_modifier *= (1 + (0.02 * talents.shadow_mastery));
+  stats.at(CharacterStat::kShadowModifier) *= (1 + (0.02 * talents.shadow_mastery));
   // Ferocious Inspiration
   if (selected_auras.ferocious_inspiration) {
-    stats.shadow_modifier *= std::pow(1.03, settings.ferocious_inspiration_amount);
-    stats.fire_modifier *= std::pow(1.03, settings.ferocious_inspiration_amount);
+    stats.at(CharacterStat::kShadowModifier) *= std::pow(1.03, settings.ferocious_inspiration_amount);
+    stats.at(CharacterStat::kFireModifier) *= std::pow(1.03, settings.ferocious_inspiration_amount);
   }
   // Add % dmg modifiers from Curse of the Elements + Malediction
   if (selected_auras.curse_of_the_elements) {
-    stats.shadow_modifier *= 1.1 + (0.01 * settings.improved_curse_of_the_elements);
-    stats.fire_modifier *= 1.1 + (0.01 * settings.improved_curse_of_the_elements);
+    stats.at(CharacterStat::kShadowModifier) *= 1.1 + (0.01 * settings.improved_curse_of_the_elements);
+    stats.at(CharacterStat::kFireModifier) *= 1.1 + (0.01 * settings.improved_curse_of_the_elements);
   }
   // Add fire dmg % from Emberstorm
   if (talents.emberstorm > 0) {
-    stats.fire_modifier *= 1 + (0.02 * talents.emberstorm);
+    stats.at(CharacterStat::kFireModifier) *= 1 + (0.02 * talents.emberstorm);
   }
   // Add spell power from Fel Armor
   if (selected_auras.fel_armor) {
-    stats.spell_power += 100 * (0 + 0.1 * talents.demonic_aegis);
+    stats.at(CharacterStat::kSpellPower) += 100 * (0 + 0.1 * talents.demonic_aegis);
   }
   // If using a custom isb uptime % then just add to the shadow modifier % (this
   // assumes 5/5 ISB giving 20% shadow Damage)
   if (settings.using_custom_isb_uptime) {
-    stats.shadow_modifier *= (1.0 + 0.2 * (settings.custom_isb_uptime_value / 100.0));
+    stats.at(CharacterStat::kShadowModifier) *= (1.0 + 0.2 * (settings.custom_isb_uptime_value / 100.0));
   }
-  // Add spell power from Improved Divine Spirit
-  stats.spirit_modifier *= (1 - (0.01 * talents.demonic_embrace));
-  if (selected_auras.prayer_of_spirit && settings.improved_divine_spirit > 0) {
-    stats.spell_power += stats.GetSpirit() * (0 + (static_cast<double>(settings.improved_divine_spirit) / 20.0));
-  }
+  stats.at(CharacterStat::kSpiritModifier) *= (1 - (0.01 * talents.demonic_embrace));
   // Elemental shaman t4 2pc bonus
   if (selected_auras.wrath_of_air_totem && settings.has_elemental_shaman_t4_bonus) {
-    stats.spell_power += 20;
+    stats.at(CharacterStat::kSpellPower) += 20;
   }
   // Add extra stamina from Blood Pact from Improved Imp
   if (selected_auras.blood_pact) {
@@ -155,20 +151,20 @@ Player::Player(PlayerSettings& player_settings)
       improved_imp_points = talents.improved_imp;
     }
 
-    stats.stamina += 70 * 0.1 * improved_imp_points;
+    stats.at(CharacterStat::kStamina) += 70 * 0.1 * improved_imp_points;
   }
   // Add stamina from Demonic Embrace
-  stats.stamina_modifier *= 1 + (0.03 * talents.demonic_embrace);
+  stats.at(CharacterStat::kStaminaModifier) *= 1 + (0.03 * talents.demonic_embrace);
   // Add mp5 from Vampiric Touch (add 25% instead of 5% since we're adding it to
   // the mana per 5 seconds variable)
   if (selected_auras.vampiric_touch) {
-    stats.mp5 += settings.shadow_priest_dps * 0.25;
+    stats.at(CharacterStat::kMp5) += settings.shadow_priest_dps * 0.25;
   }
   if (selected_auras.atiesh_warlock) {
-    stats.spell_power += 33 * settings.warlock_atiesh_amount;
+    stats.at(CharacterStat::kSpellPower) += 33 * settings.warlock_atiesh_amount;
   }
   if (sets.twin_stars == 2) {
-    stats.spell_power += 15;
+    stats.at(CharacterStat::kSpellPower) += 15;
   }
 
   // Enemy Armor Reduction
@@ -190,10 +186,10 @@ Player::Player(PlayerSettings& player_settings)
   settings.enemy_armor = std::max(0, settings.enemy_armor);
 
   // Health & Mana
-  stats.health =
-      (stats.health + stats.GetStamina() * kHealthPerStamina) * (1 + (0.01 * static_cast<double>(talents.fel_stamina)));
-  stats.max_mana = (stats.mana + stats.GetIntellect() * kManaPerIntellect) *
-                   (1 + (0.01 * static_cast<double>(talents.fel_intellect)));
+  stats.at(CharacterStat::kHealth) = (stats.at(CharacterStat::kHealth) + GetStamina() * kHealthPerStamina) *
+                                     (1 + (0.01 * static_cast<double>(talents.fel_stamina)));
+  stats.insert({CharacterStat::kMaxMana, (stats.at(CharacterStat::kMana) + GetIntellect() * kManaPerIntellect) *
+                                             (1 + (0.01 * static_cast<double>(talents.fel_intellect)))});
 }
 
 void Player::Initialize() {
@@ -445,7 +441,7 @@ void Player::Reset() {
   gcd_remaining = 0;
   mp5_timer = 5;
   five_second_rule_timer = 5;
-  stats.mana = stats.max_mana;
+  stats.at(CharacterStat::kMana) = stats.at(CharacterStat::kMaxMana);
   power_infusions_ready = settings.power_infusion_amount;
 
   // Reset trinkets
@@ -563,16 +559,20 @@ void Player::EndAuras() {
 }
 
 double Player::GetHastePercent() {
-  double haste_percent = stats.haste_percent;
+  double haste_percent = stats.at(CharacterStat::kHastePercent);
 
   // If both Bloodlust and Power Infusion are active then remove the 20% PI
   // bonus since they don't stack
   if (auras.bloodlust != NULL && auras.power_infusion != NULL && auras.bloodlust->active &&
       auras.power_infusion->active) {
-    haste_percent /= (1 + auras.power_infusion->stats->haste_percent / 100);
+    for (auto& stat : auras.power_infusion->stats) {
+      if (stat.characterStat == CharacterStat::kHastePercent) {
+        haste_percent /= (1 + stat.value / 100);
+      }
+    }
   }
 
-  return haste_percent * (1 + stats.haste_rating / kHasteRatingPerPercent / 100.0);
+  return haste_percent * (1 + stats.at(CharacterStat::kHasteRating) / kHasteRatingPerPercent / 100.0);
 }
 
 double Player::GetGcdValue(const std::shared_ptr<Spell>& spell) {
@@ -583,21 +583,25 @@ double Player::GetGcdValue(const std::shared_ptr<Spell>& spell) {
 }
 
 double Player::GetSpellPower(SpellSchool school) {
-  double spell_power = stats.spell_power + demonic_knowledge_spell_power;
+  double spell_power = stats.at(CharacterStat::kSpellPower) + demonic_knowledge_spell_power;
   if (sets.spellfire == 3) {
-    spell_power += stats.GetIntellect() * 0.07;
+    spell_power += GetIntellect() * 0.07;
   }
   if (school == SpellSchool::kShadow) {
-    spell_power += stats.shadow_power;
+    spell_power += stats.at(CharacterStat::kShadowPower);
   } else if (school == SpellSchool::kFire) {
-    spell_power += stats.fire_power;
+    spell_power += stats.at(CharacterStat::kFirePower);
+  }
+  // Spell Power from spirit if player has Improved Divine Spirit buffed
+  if (selected_auras.prayer_of_spirit && settings.improved_divine_spirit > 0) {
+    spell_power += GetSpirit() * (0 + (static_cast<double>(settings.improved_divine_spirit) / 20.0));
   }
   return spell_power;
 }
 
 double Player::GetCritChance(SpellType spell_type) {
-  double crit_chance = stats.crit_chance + (stats.GetIntellect() * kCritChancePerIntellect) +
-                       (stats.crit_rating / kCritRatingPerPercent);
+  double crit_chance = stats.at(CharacterStat::kCritChance) + (GetIntellect() * kCritChancePerIntellect) +
+                       (stats.at(CharacterStat::kCritRating) / kCritRatingPerPercent);
   if (spell_type != SpellType::kDestruction) {
     crit_chance -= talents.devastation;
   }
@@ -605,7 +609,7 @@ double Player::GetCritChance(SpellType spell_type) {
 }
 
 double Player::GetHitChance(SpellType spell_type) {
-  double hit_chance = stats.hit_chance + stats.extra_hit_chance;
+  double hit_chance = stats.at(CharacterStat::kHitChance) + stats.at(CharacterStat::kExtraHitChance);
   if (spell_type == SpellType::kAffliction) {
     hit_chance += talents.suppression * 2;
   }
@@ -625,6 +629,12 @@ bool Player::IsHit(SpellType spell_type) {
 int Player::GetRand() { return rng.range(0, 100 * kFloatNumberMultiplier); }
 
 bool Player::RollRng(double chance) { return GetRand() <= chance * kFloatNumberMultiplier; }
+
+int Player::GetStamina() { return stats.at(CharacterStat::kStamina) * stats.at(CharacterStat::kStaminaModifier); }
+
+int Player::GetIntellect() { return stats.at(CharacterStat::kIntellect) * stats.at(CharacterStat::kIntellectModifier); }
+
+int Player::GetSpirit() { return stats.at(CharacterStat::kSpirit) * stats.at(CharacterStat::kSpiritModifier); }
 
 // formula from
 // https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/
@@ -746,23 +756,27 @@ void Player::CombatLog(const std::string& entry) {
 
 void Player::SendPlayerInfoToCombatLog() {
   combat_log_entries.push_back("---------------- Player stats ----------------");
-  combat_log_entries.push_back("Health: " + DoubleToString(round(stats.health)));
-  combat_log_entries.push_back("Mana: " + DoubleToString(round(stats.max_mana)));
-  combat_log_entries.push_back("Stamina: " + DoubleToString(round(stats.GetStamina())));
-  combat_log_entries.push_back("Intellect: " + DoubleToString(round(stats.GetIntellect())));
+  combat_log_entries.push_back("Health: " + DoubleToString(round(stats.at(CharacterStat::kHealth))));
+  combat_log_entries.push_back("Mana: " + DoubleToString(round(stats.at(CharacterStat::kMaxMana))));
+  combat_log_entries.push_back("Stamina: " + DoubleToString(round(GetStamina())));
+  combat_log_entries.push_back("Intellect: " + DoubleToString(round(GetIntellect())));
   combat_log_entries.push_back("Spell Power: " + DoubleToString(round(GetSpellPower())));
-  combat_log_entries.push_back("Shadow Power: " + std::to_string(stats.shadow_power));
-  combat_log_entries.push_back("Fire Power: " + std::to_string(stats.fire_power));
+  combat_log_entries.push_back("Shadow Power: " + std::to_string(stats.at(CharacterStat::kShadowPower)));
+  combat_log_entries.push_back("Fire Power: " + std::to_string(stats.at(CharacterStat::kFirePower)));
   combat_log_entries.push_back(
       "Crit Chance: " + DoubleToString(round(GetCritChance(SpellType::kDestruction) * 100) / 100, 2) + "%");
   combat_log_entries.push_back(
-      "Hit Chance: " + DoubleToString(std::min(16.0, round((stats.extra_hit_chance) * 100) / 100), 2) + "%");
+      "Hit Chance: " +
+      DoubleToString(std::min(16.0, round((stats.at(CharacterStat::kExtraHitChance)) * 100) / 100), 2) + "%");
   combat_log_entries.push_back(
-      "Haste: " + DoubleToString(round((stats.haste_rating / kHasteRatingPerPercent) * 100) / 100, 2) + "%");
-  combat_log_entries.push_back("Shadow Modifier: " + DoubleToString(stats.shadow_modifier * 100, 2) + "%");
-  combat_log_entries.push_back("Fire Modifier: " + DoubleToString(stats.fire_modifier * 100, 2) + "%");
-  combat_log_entries.push_back("MP5: " + std::to_string(stats.mp5));
-  combat_log_entries.push_back("Spell Penetration: " + std::to_string(stats.spell_penetration));
+      "Haste: " +
+      DoubleToString(round((stats.at(CharacterStat::kHasteRating) / kHasteRatingPerPercent) * 100) / 100, 2) + "%");
+  combat_log_entries.push_back("Shadow Modifier: " + DoubleToString(stats.at(CharacterStat::kShadowModifier) * 100, 2) +
+                               "%");
+  combat_log_entries.push_back("Fire Modifier: " + DoubleToString(stats.at(CharacterStat::kFireModifier) * 100, 2) +
+                               "%");
+  combat_log_entries.push_back("MP5: " + std::to_string(stats.at(CharacterStat::kMp5)));
+  combat_log_entries.push_back("Spell Penetration: " + std::to_string(stats.at(CharacterStat::kSpellPenetration)));
   if (pet != NULL) {
     combat_log_entries.push_back("---------------- Pet stats ----------------");
     combat_log_entries.push_back("Stamina: " + DoubleToString(pet->GetStamina()));
