@@ -105,6 +105,8 @@ Talents AllocTalents() { return Talents(); }
 Sets AllocSets() { return Sets(); }
 
 std::map<CharacterStat, double> AllocStats() {
+  // I'm fairly certain that the order of the stats here needs to match the order of the values in the enum because
+  // embind indexes the map's position by integer rather than the key itself
   return std::map<CharacterStat, double>{
       {CharacterStat::kHealth, 0},
       {CharacterStat::kMana, 0},

@@ -19,14 +19,10 @@ void PetAura::Tick(double t) {
 }
 
 void PetAura::Apply() {
-  active = true;
   duration_remaining = duration;
-  if (stacks < max_stacks) {
-    stacks++;
-  }
 
   if (pet->player.ShouldWriteToCombatLog()) {
-    std::string msg = pet->name + " gains " + name;
+    std::string msg = pet->name + " " + (active && stacks == max_stacks ? "refreshed" : "gains") + " " + name;
 
     if (pet->auras.demonic_frenzy != NULL && name == pet->auras.demonic_frenzy->name) {
       msg.append(" (" + std::to_string(stacks) + ") - Current AP: " + DoubleToString(round(pet->GetAttackPower())) +
@@ -38,8 +34,13 @@ void PetAura::Apply() {
     }
 
     pet->player.CombatLog(msg);
-    pet->CalculateStatsFromPlayer();
   }
+
+  if (stacks < max_stacks) {
+    stacks++;
+  }
+  active = true;
+  pet->CalculateStatsFromPlayer();
 }
 
 void PetAura::Fade() {

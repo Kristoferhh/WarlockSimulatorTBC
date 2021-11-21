@@ -189,8 +189,8 @@ Player::Player(PlayerSettings& player_settings)
   // Health & Mana
   stats.at(CharacterStat::kHealth) = (stats.at(CharacterStat::kHealth) + GetStamina() * kHealthPerStamina) *
                                      (1 + (0.01 * static_cast<double>(talents.fel_stamina)));
-  stats.insert({CharacterStat::kMaxMana, (stats.at(CharacterStat::kMana) + GetIntellect() * kManaPerIntellect) *
-                                             (1 + (0.01 * static_cast<double>(talents.fel_intellect)))});
+  stats.at(CharacterStat::kMaxMana) = (stats.at(CharacterStat::kMana) + GetIntellect() * kManaPerIntellect) *
+                                      (1 + (0.01 * static_cast<double>(talents.fel_intellect)));
 }
 
 void Player::Initialize() {

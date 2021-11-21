@@ -15,7 +15,7 @@ void Stat::ModifyStat(std::string action) {
   double new_stat_value = kCurrentStatValue;
 
   if (calculationType == CalculationType::kAdditive) {
-    new_stat_value += value * (action == "remove" ? -1 : 1);
+    new_stat_value += value * (action == "remove" ? -1 : action == "add" ? 1 : 0);
   } else if (calculationType == CalculationType::kMultiplicative) {
     if (action == "add") {
       new_stat_value *= value;
@@ -37,7 +37,7 @@ void Stat::ModifyStat(std::string action) {
                      " -> " + DoubleToString(new_stat_value, combat_log_decimal_places) + ")");
   }
 
-  if (affects_pet && player.pet != NULL) {
+  if (affects_pet && entity_type == EntityType::kPlayer && player.pet != NULL) {
     player.pet->CalculateStatsFromPlayer();
   }
 }
@@ -47,7 +47,7 @@ SpellPower::SpellPower(Player& player, std::map<CharacterStat, double>& stat_map
   name = "Spell Power";
   characterStat = CharacterStat::kSpellPower;
   calculationType = CalculationType::kAdditive;
-  affects_pet = entity_type == EntityType::kPlayer;
+  affects_pet = true;
 }
 
 ShadowPower::ShadowPower(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type,
@@ -56,7 +56,7 @@ ShadowPower::ShadowPower(Player& player, std::map<CharacterStat, double>& stat_m
   name = "Shadow Power";
   characterStat = CharacterStat::kShadowPower;
   calculationType = CalculationType::kAdditive;
-  affects_pet = entity_type == EntityType::kPlayer;
+  affects_pet = true;
 }
 
 FirePower::FirePower(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type, double value)
@@ -64,7 +64,7 @@ FirePower::FirePower(Player& player, std::map<CharacterStat, double>& stat_map, 
   name = "Fire Power";
   characterStat = CharacterStat::kFirePower;
   calculationType = CalculationType::kAdditive;
-  affects_pet = entity_type == EntityType::kPlayer;
+  affects_pet = true;
 }
 
 SpellHasteRating::SpellHasteRating(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type,
