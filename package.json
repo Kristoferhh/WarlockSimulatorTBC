@@ -9,7 +9,7 @@
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@mui/material": "^5.1.1",
     "@reduxjs/toolkit": "^1.6.2",
-    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/chart.js": "^2.9.34",
@@ -23,9 +23,9 @@
     "jshint": "^2.13.1",
     "nanoid": "^3.1.30",
     "react": "^17.0.2",
-    "react-chartjs-2": "^3.3.0",
+    "react-chartjs-2": "^4.0.0",
     "react-dom": "^17.0.2",
-    "react-i18next": "^11.14.2",
+    "react-i18next": "^11.14.3",
     "react-redux": "^7.2.6",
     "react-scripts": "4.0.3",
     "typescript": "^4.5.2",
@@ -58,7 +58,7 @@
     ]
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.8",
+    "@types/jquery": "^3.5.9",
     "react-app-rewired": "^2.1.8",
     "worker-loader": "^3.0.8"
   }
