@@ -23,13 +23,6 @@ double Median(std::vector<double> vec) {
 }
 
 std::string DoubleToString(double num, int decimal_places) {
-  std::string returnStr = std::to_string(num);
-
-  if (decimal_places > 0) {
-    return returnStr.substr(0, returnStr.find(".") + decimal_places + 1);
-  } else {
-    returnStr.erase(returnStr.find_last_not_of('0') + 1, std::string::npos);
-    returnStr.erase(returnStr.find_last_not_of('.') + 1, std::string::npos);
-    return returnStr;
-  }
+  std::string str = std::to_string(num);
+  return str.substr(0, str.find(".") + (decimal_places > 0 ? decimal_places + 1 : 0));
 }

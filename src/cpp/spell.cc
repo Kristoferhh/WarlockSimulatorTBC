@@ -481,32 +481,6 @@ void ShadowBolt::StartCast(double predicted_damage = 0) {
 
 double ShadowBolt::CalculateCastTime() { return 3 - (0.1 * player.talents.bane); }
 
-LifeTap::LifeTap(Player& player) : Spell(player) {
-  name = "Life Tap";
-  mana_return = 582;
-  coefficient = 0.8;
-  modifier = 1 * (1 + 0.1 * player.talents.improved_life_tap);
-  school = SpellSchool::kShadow;
-  Setup();
-}
-
-int LifeTap::ManaGain() { return (mana_return + ((player.GetSpellPower(school)) * coefficient)) * modifier; }
-
-void LifeTap::Cast() {
-  const int kManaGain = this->ManaGain();
-
-  if (player.recording_combat_log_breakdown) {
-    player.combat_log_breakdown.at(name)->casts++;
-    player.AddIterationDamageAndMana(name, kManaGain, 0);
-  }
-  if (player.ShouldWriteToCombatLog() &&
-      player.stats.at(CharacterStat::kMana) + kManaGain > player.stats.at(CharacterStat::kMaxMana)) {
-    player.CombatLog("Life Tap used at too high mana (mana wasted)");
-  }
-  player.stats.at(CharacterStat::kMana) =
-      std::min(player.stats.at(CharacterStat::kMaxMana), player.stats.at(CharacterStat::kMana) + kManaGain);
-}
-
 Incinerate::Incinerate(Player& player) : Spell(player) {
   name = "Incinerate";
   cast_time = round((2.5 * (1 - 0.02 * player.talents.emberstorm)) * 100) / 100;
@@ -733,19 +707,6 @@ double SeedOfCorruption::GetModifier() {
   }
   return modifier;
 }
-
-DarkPact::DarkPact(Player& player) : Spell(player) {
-  name = "Dark Pact";
-  mana_return = 700;
-  coefficient = 0.96;
-  Setup();
-}
-
-double DarkPact::ManaGain() { return 0; }
-
-bool DarkPact::Ready() { return false; }
-
-void DarkPact::Cast() {}
 
 Corruption::Corruption(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
     : Spell(player, aura, dot) {

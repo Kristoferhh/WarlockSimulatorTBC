@@ -5,6 +5,7 @@
 #include "bindings.h"
 #include "common.h"
 #include "damage_over_time.h"
+#include "life_tap.h"
 #include "mana_over_time.h"
 #include "mana_potion.h"
 #include "spell.h"
@@ -397,19 +398,16 @@ void Player::Initialize() {
     spells.band_of_the_eternal_sage = std::make_unique<BandOfTheEternalSage>(*this, auras.band_of_the_eternal_sage);
   if (selected_auras.judgement_of_wisdom) spells.judgement_of_wisdom = std::make_unique<JudgementOfWisdom>(*this);
   if (auras.power_infusion != NULL) {
-    for (int i = 0; i < settings.power_infusion_amount; i++) {
-      spells.power_infusion.push_back(std::make_unique<PowerInfusion>(*this, auras.power_infusion));
-    }
+    spells.power_infusion.insert(spells.power_infusion.end(), settings.power_infusion_amount,
+                                 std::make_unique<PowerInfusion>(*this, auras.power_infusion));
   }
   if (auras.bloodlust != NULL) {
-    for (int i = 0; i < settings.bloodlust_amount; i++) {
-      spells.bloodlust.push_back(std::make_unique<Bloodlust>(*this, auras.bloodlust));
-    }
+    spells.bloodlust.insert(spells.bloodlust.end(), settings.bloodlust_amount,
+                            std::make_unique<Bloodlust>(*this, auras.bloodlust));
   }
   if (auras.innervate != NULL) {
-    for (int i = 0; i < settings.innervate_amount; i++) {
-      spells.innervate.push_back(std::make_unique<Innervate>(*this, auras.innervate));
-    }
+    spells.innervate.insert(spells.innervate.end(), settings.innervate_amount,
+                            std::make_unique<Innervate>(*this, auras.innervate));
   }
 
   // Set the filler property

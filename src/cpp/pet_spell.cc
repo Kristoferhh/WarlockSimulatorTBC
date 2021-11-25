@@ -101,8 +101,8 @@ void PetSpell::Cast() {
     pet->five_second_rule_timer_remaining = 5;
 
     if (pet->player.ShouldWriteToCombatLog()) {
-      combat_log_message.append(" - Pet mana: " + DoubleToString(pet->stats.at(CharacterStat::kMana)) + "/" +
-                                DoubleToString(pet->stats.at(CharacterStat::kMaxMana)));
+      combat_log_message.append(" - Pet mana: " + DoubleToString(pet->stats.at(CharacterStat::kMana), 0) + "/" +
+                                DoubleToString(pet->stats.at(CharacterStat::kMaxMana), 0));
     }
   }
 
@@ -298,7 +298,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
     combat_log_message.append(" (" + DoubleToString(round(base_damage)) + " Base Damage");
     if (type == AttackType::kMagical) {
       combat_log_message.append(" - " + DoubleToString(coefficient, 3) + " Coefficient");
-      combat_log_message.append(" - " + std::to_string(pet->stats.at(CharacterStat::kSpellPower)) + " Spell Power");
+      combat_log_message.append(" - " + DoubleToString(pet->stats.at(CharacterStat::kSpellPower), 0) + " Spell Power");
       combat_log_message.append(" - " + DoubleToString(partial_resist_multiplier * 100) +
                                 "% Partial Resist Multiplier");
     } else if (type == AttackType::kPhysical) {

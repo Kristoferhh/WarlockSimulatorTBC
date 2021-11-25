@@ -14,6 +14,7 @@ struct Spell : std::enable_shared_from_this<Spell> {
   std::shared_ptr<DamageOverTime> dot_effect;
   SpellSchool school;
   SpellType type;
+  std::string name;
   int min_dmg;
   int max_dmg;
   int min_mana;
@@ -23,7 +24,6 @@ struct Spell : std::enable_shared_from_this<Spell> {
   double cast_time;
   double mana_cost;
   double coefficient;
-  double mana_return;
   double cooldown;
   double modifier;
   double bonus_crit;
@@ -41,7 +41,6 @@ struct Spell : std::enable_shared_from_this<Spell> {
   bool is_proc;
   bool is_finisher;
   bool gain_mana_on_cast;
-  std::string name;
   // For Chipped Power Core
   bool usable_once_per_fight;
   bool has_not_been_cast_this_fight;
@@ -66,12 +65,6 @@ struct Spell : std::enable_shared_from_this<Spell> {
   void OnCritProcs();
   void OnDamageProcs();
   void OnHitProcs();
-};
-
-struct LifeTap : public Spell {
-  LifeTap(Player& player);
-  int ManaGain();
-  void Cast();
 };
 
 struct ShadowBolt : public Spell {
@@ -109,13 +102,6 @@ struct SeedOfCorruption : public Spell {
   SeedOfCorruption(Player& player);
   void Damage(bool is_crit = false);
   double GetModifier();
-};
-
-struct DarkPact : public Spell {
-  DarkPact(Player& player);
-  void Cast();
-  bool Ready();
-  double ManaGain();
 };
 
 struct Corruption : public Spell {
