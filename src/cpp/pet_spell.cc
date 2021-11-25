@@ -101,7 +101,7 @@ void PetSpell::Cast() {
     pet->five_second_rule_timer_remaining = 5;
 
     if (pet->player.ShouldWriteToCombatLog()) {
-      combat_log_message.append(" - Pet mana: " + DoubleToString(pet->stats.at(CharacterStat::kMana), 0) + "/" +
+      combat_log_message.append(" - Pet mana: " + DoubleToString(pet->stats.at(CharacterStat::kMana)) + "/" +
                                 DoubleToString(pet->stats.at(CharacterStat::kMaxMana), 0));
     }
   }

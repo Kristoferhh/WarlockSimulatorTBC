@@ -31,6 +31,20 @@ void LifeTap::Cast() {
     }
   }
 
+  if (player.talents.mana_feed > 0 && player.pet != NULL) {
+    const int kCurrentPetMana = player.pet->stats.at(CharacterStat::kMana);
+
+    player.pet->stats.at(CharacterStat::kMana) =
+        std::min(kCurrentPetMana + (kManaGain * (player.talents.mana_feed / 3.0)),
+                 player.pet->stats.at(CharacterStat::kMaxMana));
+
+    if (player.ShouldWriteToCombatLog()) {
+      player.CombatLog(player.pet->name + " gains " +
+                       (DoubleToString(player.pet->stats.at(CharacterStat::kMana) - kCurrentPetMana)) +
+                       " mana from Mana Feed");
+    }
+  }
+
   player.stats.at(CharacterStat::kMana) =
       std::min(player.stats.at(CharacterStat::kMaxMana), player.stats.at(CharacterStat::kMana) + kManaGain);
   if (player.spells.dark_pact != NULL && name == player.spells.dark_pact->name) {
