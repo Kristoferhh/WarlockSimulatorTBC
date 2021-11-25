@@ -5,8 +5,8 @@
 
 #include "aura.h"
 #include "auras.h"
-#include "character_stats.h"
 #include "combat_log_breakdown.h"
+#include "enums.h"
 #include "items.h"
 #include "sets.h"
 #include "simulation.h"
@@ -18,12 +18,13 @@
 #endif
 
 Player AllocPlayer(PlayerSettings& settings);
-PlayerSettings AllocPlayerSettings(Auras& auras, Talents& talents, Sets& sets, CharacterStats& stats, Items& items);
+PlayerSettings AllocPlayerSettings(Auras& auras, Talents& talents, Sets& sets, std::map<CharacterStat, double>& stats,
+                                   Items& items);
 Items AllocItems();
 Auras AllocAuras();
 Talents AllocTalents();
 Sets AllocSets();
-CharacterStats AllocStats();
+std::map<CharacterStat, double> AllocStats();
 SimulationSettings AllocSimSettings();
 Simulation AllocSim(Player& player, SimulationSettings& simulation_settings);
 std::vector<uint32_t> AllocRandomSeeds(int amount_of_seeds, uint32_t rand_seed);

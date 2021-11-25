@@ -7,23 +7,24 @@
 #include "player.h"
 
 Spell::Spell(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
-    : player(player), aura_effect(aura), dot_effect(dot) {
-  modifier = 1;
-  coefficient = 0;
-  cooldown = 0;
-  school = SpellSchool::kNoSchool;
-  is_non_warlock_ability = false;
-  does_damage = false;
-  can_crit = false;
-  is_item = false;
-  on_gcd = true;
-  is_proc = false;
-  is_finisher = false;
-  cast_time = 0;
-  usable_once_per_fight = false;
-  has_not_been_cast_this_fight = true;
-  gain_mana_on_cast = false;
-}
+    : player(player),
+      aura_effect(aura),
+      dot_effect(dot),
+      modifier(1),
+      coefficient(0),
+      cooldown(0),
+      school(SpellSchool::kNoSchool),
+      is_non_warlock_ability(false),
+      does_damage(false),
+      can_crit(false),
+      is_item(false),
+      on_gcd(true),
+      is_proc(false),
+      is_finisher(false),
+      cast_time(0),
+      usable_once_per_fight(false),
+      has_not_been_cast_this_fight(true),
+      gain_mana_on_cast(false) {}
 
 void Spell::Reset() {
   cooldown_remaining = 0;
@@ -54,7 +55,7 @@ bool Spell::CanCast() {
          (!usable_once_per_fight || has_not_been_cast_this_fight);
 }
 
-bool Spell::HasEnoughMana() { return GetManaCost() <= player.stats.mana; }
+bool Spell::HasEnoughMana() { return GetManaCost() <= player.stats.at(CharacterStat::kMana); }
 
 bool Spell::Ready() { return CanCast() && HasEnoughMana(); }
 
@@ -108,7 +109,7 @@ void Spell::StartCast(double predicted_damage) {
   }
 }
 
-int Spell::GetManaCost() { return mana_cost * player.stats.mana_cost_modifier; }
+int Spell::GetManaCost() { return mana_cost * player.stats.at(CharacterStat::kManaCostModifier); }
 
 void Spell::Tick(double t) {
   if (cooldown_remaining > 0 && cooldown_remaining - t <= 0) {
@@ -127,7 +128,7 @@ void Spell::Tick(double t) {
 }
 
 void Spell::Cast() {
-  const int kCurrentMana = player.stats.mana;
+  const int kCurrentMana = player.stats.at(CharacterStat::kMana);
   bool is_crit = false;
   cooldown_remaining = cooldown;
   casting = false;
@@ -142,25 +143,28 @@ void Spell::Cast() {
   }
 
   if (mana_cost > 0 && !player.settings.infinite_player_mana) {
-    player.stats.mana -= GetManaCost();
+    player.stats.at(CharacterStat::kMana) -= GetManaCost();
     player.five_second_rule_timer = 5;
   }
 
   if (cast_time > 0 && player.ShouldWriteToCombatLog()) {
     player.CombatLog("Finished casting " + name + " - Mana: " + DoubleToString(kCurrentMana) + " -> " +
-                     DoubleToString(player.stats.mana) + " - Mana Cost: " + DoubleToString(round(GetManaCost())) +
-                     " - Mana Cost Modifier: " + DoubleToString(round(player.stats.mana_cost_modifier * 100)) + "%");
+                     DoubleToString(player.stats.at(CharacterStat::kMana)) +
+                     " - Mana Cost: " + DoubleToString(round(GetManaCost())) + " - Mana Cost Modifier: " +
+                     DoubleToString(round(player.stats.at(CharacterStat::kManaCostModifier) * 100)) + "%");
   }
 
   if (gain_mana_on_cast) {
-    player.stats.mana = std::min(static_cast<double>(player.stats.max_mana), kCurrentMana + mana_gain);
-    const int kManaGained = player.stats.mana - kCurrentMana;
+    player.stats.at(CharacterStat::kMana) =
+        std::min(static_cast<double>(player.stats.at(CharacterStat::kMaxMana)), kCurrentMana + mana_gain);
+    const int kManaGained = player.stats.at(CharacterStat::kMana) - kCurrentMana;
     if (player.recording_combat_log_breakdown) {
       player.AddIterationDamageAndMana(name, kManaGained, 0);
     }
     if (player.ShouldWriteToCombatLog()) {
       player.CombatLog("Player gains " + DoubleToString(round(kManaGained)) + " mana from " + name + " (" +
-                       DoubleToString(round(kCurrentMana)) + " -> " + DoubleToString(round(player.stats.mana)) + ")");
+                       DoubleToString(round(kCurrentMana)) + " -> " +
+                       DoubleToString(round(player.stats.at(CharacterStat::kMana))) + ")");
     }
   }
 
@@ -206,7 +210,7 @@ void Spell::Cast() {
 double Spell::GetModifier() {
   double damage_modifier = modifier;
   if (school == SpellSchool::kShadow) {
-    damage_modifier *= player.stats.shadow_modifier;
+    damage_modifier *= player.stats.at(CharacterStat::kShadowModifier);
 
     // Improved Shadow Bolt
     if (!player.settings.using_custom_isb_uptime && player.auras.improved_shadow_bolt != NULL &&
@@ -214,7 +218,7 @@ double Spell::GetModifier() {
       damage_modifier *= player.auras.improved_shadow_bolt->modifier;
     }
   } else if (school == SpellSchool::kFire) {
-    damage_modifier *= player.stats.fire_modifier;
+    damage_modifier *= player.stats.at(CharacterStat::kFireModifier);
   }
 
   return damage_modifier;
@@ -495,10 +499,12 @@ void LifeTap::Cast() {
     player.combat_log_breakdown.at(name)->casts++;
     player.AddIterationDamageAndMana(name, kManaGain, 0);
   }
-  if (player.ShouldWriteToCombatLog() && player.stats.mana + kManaGain > player.stats.max_mana) {
+  if (player.ShouldWriteToCombatLog() &&
+      player.stats.at(CharacterStat::kMana) + kManaGain > player.stats.at(CharacterStat::kMaxMana)) {
     player.CombatLog("Life Tap used at too high mana (mana wasted)");
   }
-  player.stats.mana = std::min(player.stats.max_mana, player.stats.mana + kManaGain);
+  player.stats.at(CharacterStat::kMana) =
+      std::min(player.stats.at(CharacterStat::kMaxMana), player.stats.at(CharacterStat::kMana) + kManaGain);
 }
 
 Incinerate::Incinerate(Player& player) : Spell(player) {

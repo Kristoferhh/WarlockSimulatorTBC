@@ -1,7 +1,5 @@
 #include "bindings.h"
 
-#include <random>
-
 #include "embind_constant.h"
 #include "simulation.h"
 
@@ -106,9 +104,48 @@ Talents AllocTalents() { return Talents(); }
 
 Sets AllocSets() { return Sets(); }
 
-CharacterStats AllocStats() { return CharacterStats(); }
+std::map<CharacterStat, double> AllocStats() {
+  // I'm fairly certain that the order of the stats here needs to match the order of the values in the enum because
+  // embind indexes the map's position by integer rather than the key itself
+  return std::map<CharacterStat, double>{
+      {CharacterStat::kHealth, 0},
+      {CharacterStat::kMana, 0},
+      {CharacterStat::kMaxMana, 0},
+      {CharacterStat::kStamina, 0},
+      {CharacterStat::kIntellect, 0},
+      {CharacterStat::kSpirit, 0},
+      {CharacterStat::kSpellPower, 0},
+      {CharacterStat::kShadowPower, 0},
+      {CharacterStat::kFirePower, 0},
+      {CharacterStat::kSpellHasteRating, 0},
+      {CharacterStat::kSpellHitRating, 0},
+      {CharacterStat::kSpellCritRating, 0},
+      {CharacterStat::kSpellCritChance, 0},
+      {CharacterStat::kSpellHitChance, 0},
+      {CharacterStat::kMp5, 0},
+      {CharacterStat::kSpellPenetration, 0},
+      {CharacterStat::kFireModifier, 1},
+      {CharacterStat::kSpellHastePercent, 1},
+      {CharacterStat::kShadowModifier, 1},
+      {CharacterStat::kStaminaModifier, 1},
+      {CharacterStat::kIntellectModifier, 1},
+      {CharacterStat::kSpiritModifier, 1},
+      {CharacterStat::kManaCostModifier, 1},
+      {CharacterStat::kStrength, 0},
+      {CharacterStat::kAgility, 0},
+      {CharacterStat::kAttackPower, 0},
+      {CharacterStat::kMeleeCritChance, 0},
+      {CharacterStat::kMeleeHitChance, 0},
+      {CharacterStat::kStrengthModifier, 1},
+      {CharacterStat::kAgilityModifier, 1},
+      {CharacterStat::kAttackPowerModifier, 1},
+      {CharacterStat::kDamageModifier, 1},
+      {CharacterStat::kMeleeHastePercent, 1},
+  };
+}
 
-PlayerSettings AllocPlayerSettings(Auras& auras, Talents& talents, Sets& sets, CharacterStats& stats, Items& items) {
+PlayerSettings AllocPlayerSettings(Auras& auras, Talents& talents, Sets& sets, std::map<CharacterStat, double>& stats,
+                                   Items& items) {
   return PlayerSettings(auras, talents, sets, stats, items);
 }
 
@@ -275,32 +312,8 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("t5", &Sets::t5)
       .property("t6", &Sets::t6);
 
-  emscripten::class_<CharacterStats>("CharacterStats")
-      .constructor<>()
-      .property("health", &CharacterStats::health)
-      .property("mana", &CharacterStats::mana)
-      .property("stamina", &CharacterStats::stamina)
-      .property("intellect", &CharacterStats::intellect)
-      .property("spirit", &CharacterStats::spirit)
-      .property("spellPower", &CharacterStats::spell_power)
-      .property("shadowPower", &CharacterStats::shadow_power)
-      .property("firePower", &CharacterStats::fire_power)
-      .property("hasteRating", &CharacterStats::haste_rating)
-      .property("hastePercent", &CharacterStats::haste_percent)
-      .property("hitRating", &CharacterStats::hit_rating)
-      .property("critRating", &CharacterStats::crit_rating)
-      .property("critChance", &CharacterStats::crit_chance)
-      .property("mp5", &CharacterStats::mp5)
-      .property("manaCostModifier", &CharacterStats::mana_cost_modifier)
-      .property("spellPenetration", &CharacterStats::spell_penetration)
-      .property("fireModifier", &CharacterStats::fire_modifier)
-      .property("shadowModifier", &CharacterStats::shadow_modifier)
-      .property("staminaModifier", &CharacterStats::stamina_modifier)
-      .property("intellectModifier", &CharacterStats::intellect_modifier)
-      .property("spiritModifier", &CharacterStats::spirit_modifier);
-
   emscripten::class_<PlayerSettings>("PlayerSettings")
-      .constructor<Auras&, Talents&, Sets&, CharacterStats&, Items&>()
+      .constructor<Auras&, Talents&, Sets&, std::map<CharacterStat, double>&, Items&>()
       .property("randomSeeds", &PlayerSettings::random_seeds)
       .property("itemId", &PlayerSettings::item_id)
       .property("metaGemId", &PlayerSettings::meta_gem_id)
@@ -405,6 +418,40 @@ EMSCRIPTEN_BINDINGS(module) {
       .value("passive", EmbindConstant::kPassive)
       .value("aggressive", EmbindConstant::kAggressive);
 
+  emscripten::enum_<CharacterStat>("CharacterStat")
+      .value("health", CharacterStat::kHealth)
+      .value("mana", CharacterStat::kMana)
+      .value("stamina", CharacterStat::kStamina)
+      .value("intellect", CharacterStat::kIntellect)
+      .value("spirit", CharacterStat::kSpirit)
+      .value("spellPower", CharacterStat::kSpellPower)
+      .value("shadowPower", CharacterStat::kShadowPower)
+      .value("firePower", CharacterStat::kFirePower)
+      .value("spellHasteRating", CharacterStat::kSpellHasteRating)
+      .value("spellHitRating", CharacterStat::kSpellHitRating)
+      .value("spellCritRating", CharacterStat::kSpellCritRating)
+      .value("spellCritChance", CharacterStat::kSpellCritChance)
+      .value("spellHitChance", CharacterStat::kSpellHitChance)
+      .value("mp5", CharacterStat::kMp5)
+      .value("spellPenetration", CharacterStat::kSpellPenetration)
+      .value("fireModifier", CharacterStat::kFireModifier)
+      .value("spellHastePercent", CharacterStat::kSpellHastePercent)
+      .value("shadowModifier", CharacterStat::kShadowModifier)
+      .value("staminaModifier", CharacterStat::kStaminaModifier)
+      .value("intellectModifier", CharacterStat::kIntellectModifier)
+      .value("spiritModifier", CharacterStat::kSpiritModifier)
+      .value("manaCostModifier", CharacterStat::kManaCostModifier)
+      .value("strength", CharacterStat::kStrength)
+      .value("agility", CharacterStat::kAgility)
+      .value("attackPower", CharacterStat::kAttackPower)
+      .value("meleeCritChance", CharacterStat::kMeleeCritChance)
+      .value("meleeHitChance", CharacterStat::kMeleeHitChance)
+      .value("strengthModifier", CharacterStat::kStrengthModifier)
+      .value("agilityModifier", CharacterStat::kAgilityModifier)
+      .value("attackPowerModifier", CharacterStat::kAttackPowerModifier)
+      .value("damageModifier", CharacterStat::kDamageModifier)
+      .value("meleeHastePercent", CharacterStat::kMeleeHastePercent);
+
   emscripten::function("allocRandomSeeds", &AllocRandomSeeds);
   emscripten::function("allocItems", &AllocItems);
   emscripten::function("allocAuras", &AllocAuras);
@@ -418,5 +465,6 @@ EMSCRIPTEN_BINDINGS(module) {
   emscripten::function("getExceptionMessage", &GetExceptionMessage);
 
   emscripten::register_vector<uint32_t>("vector<uint32_t>");
+  emscripten::register_map<CharacterStat, double>("MapCharacterStatDouble");
 }
 #endif

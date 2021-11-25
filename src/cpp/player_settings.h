@@ -2,7 +2,6 @@
 #define WARLOCK_SIMULATOR_TBC_PLAYER_SETTINGS
 
 #include "auras.h"
-#include "character_stats.h"
 #include "embind_constant.h"
 #include "items.h"
 #include "sets.h"
@@ -12,7 +11,7 @@ struct PlayerSettings {
   Auras& auras;
   Talents& talents;
   Sets& sets;
-  CharacterStats& stats;
+  std::map<CharacterStat, double> stats;
   Items& items;
   EmbindConstant custom_stat;
   EmbindConstant shattrath_faction;
@@ -75,7 +74,7 @@ struct PlayerSettings {
   bool has_dark_pact;
   bool has_elemental_shaman_t4_bonus;
 
-  PlayerSettings(Auras& auras, Talents& talents, Sets& sets, CharacterStats& stats, Items& items)
+  PlayerSettings(Auras& auras, Talents& talents, Sets& sets, std::map<CharacterStat, double>& stats, Items& items)
       : auras(auras), talents(talents), sets(sets), stats(stats), items(items) {}
 };
 

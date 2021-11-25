@@ -3,24 +3,25 @@
 
 struct Player;
 #include <iostream>
+#include <map>
 
 #include "enums.h"
 #include "pet_auras.h"
 #include "pet_spells.h"
-#include "pet_stats.h"
 
 struct Pet : std::enable_shared_from_this<Pet> {
   Player& player;
   PetSpells spells;
   PetAuras auras;
-  PetStats base_stats;
-  PetStats buff_stats;  // Certain stats from buffs need to be separated from the main
-                        // stat so we can re-calculate the pet's stats in
-                        // calculateStatsFromPlayer().
-  PetStats debuff_stats;
-  PetStats stats;
+  std::map<CharacterStat, double> base_stats;
+  std::map<CharacterStat, double> buff_stats;  // Certain stats from buffs need to be separated from the main
+                                               // stat so we can re-calculate the pet's stats in
+                                               // calculateStatsFromPlayer().
+  std::map<CharacterStat, double> debuff_stats;
+  std::map<CharacterStat, double> stats;
   PetName pet;
   PetType pet_type;
+  EntityType entity_type;
   std::string name;
   double enemy_dodge_chance;
   double cast_time_remaining;
@@ -45,10 +46,8 @@ struct Pet : std::enable_shared_from_this<Pet> {
   void Tick(double t);
   int GetAttackPower();
   double GetMeleeCritChance();
-  double GetMeleeHitChance();
   double GetHastePercent();
   double GetSpellCritChance();
-  double GetSpellHitChance();
   int GetStamina();
   int GetIntellect();
   int GetSpirit();

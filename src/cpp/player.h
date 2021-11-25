@@ -2,7 +2,6 @@
 #define WARLOCK_SIMULATOR_TBC_PLAYER
 
 #include <map>
-#include <random>
 #include <string>
 #include <vector>
 
@@ -43,9 +42,9 @@ struct Player {
   Auras& selected_auras;
   Talents& talents;
   Sets& sets;
-  CharacterStats& stats;
   Items& items;
   PlayerSettings& settings;
+  std::map<CharacterStat, double> stats;
   PlayerSpells spells;
   PlayerAuras auras;
   std::vector<Trinket> trinkets;
@@ -56,6 +55,7 @@ struct Player {
   std::map<std::string, std::unique_ptr<CombatLogBreakdown>> combat_log_breakdown;
   std::string custom_stat;
   Rng rng;
+  EntityType entity_type;
   double cast_time_remaining;
   double gcd_remaining;
   double total_duration;
@@ -87,6 +87,9 @@ struct Player {
   double GetHitChance(SpellType spell_type);
   double GetPartialResistMultiplier(SpellSchool school);
   double GetBaseHitChance(int player_level, int enemy_level);
+  int GetStamina();
+  int GetIntellect();
+  int GetSpirit();
   int GetRand();
   bool IsCrit(SpellType spell_type, double extra_crit = 0);
   bool IsHit(SpellType spell_type);

@@ -5,16 +5,16 @@
 #include "common.h"
 #include "player.h"
 
-Aura::Aura(Player& player) : player(player) {
-  duration_remaining = 0;
-  has_duration = true;
-  group_wide = false;
-  modifier = 1;
-  stacks = 0;
-  ticks_remaining = 0;
-  tick_timer_remaining = 0;
-  active = false;
-}
+Aura::Aura(Player& player)
+    : player(player),
+      duration_remaining(0),
+      has_duration(true),
+      group_wide(false),
+      modifier(1),
+      stacks(0),
+      ticks_remaining(0),
+      tick_timer_remaining(0),
+      active(false) {}
 
 void Aura::Setup() {
   if (player.recording_combat_log_breakdown && player.combat_log_breakdown.count(name) == 0) {
@@ -41,81 +41,10 @@ void Aura::Apply() {
       player.combat_log_breakdown.at(name)->applied_at = player.fight_time;
     }
 
-    if (stats != std::nullopt) {
-      if (stats->spell_power > 0) {
-        if (player.ShouldWriteToCombatLog()) {
-          int currentSpellPower = player.GetSpellPower();
-          player.CombatLog("Spell Power + " + std::to_string(stats->spell_power) + " (" +
-                           std::to_string(currentSpellPower) + " -> " +
-                           std::to_string(currentSpellPower + stats->spell_power) + ")");
-        }
-        player.stats.spell_power += stats->spell_power;
-        recalculatePetStats = true;
-      }
-      if (stats->shadow_power > 0) {
-        if (player.ShouldWriteToCombatLog()) {
-          int currentShadowPower = player.stats.shadow_power;
-          player.CombatLog("Shadow Power + " + std::to_string(stats->shadow_power) + " (" +
-                           std::to_string(currentShadowPower) + " -> " +
-                           std::to_string(currentShadowPower + stats->shadow_power) + ")");
-        }
-        player.stats.shadow_power += stats->shadow_power;
-        recalculatePetStats = true;
-      }
-      if (stats->fire_power > 0) {
-        if (player.ShouldWriteToCombatLog()) {
-          int currentFirePower = player.stats.fire_power;
-          player.CombatLog("Fire Power + " + std::to_string(stats->fire_power) + " (" +
-                           std::to_string(currentFirePower) + " -> " +
-                           std::to_string(currentFirePower + stats->fire_power) + ")");
-        }
-        player.stats.fire_power += stats->fire_power;
-        recalculatePetStats = true;
-      }
-      if (stats->haste_rating > 0) {
-        if (player.ShouldWriteToCombatLog()) {
-          int currentHasteRating = player.stats.haste_rating;
-          player.CombatLog("Haste Rating + " + std::to_string(stats->haste_rating) + " (" +
-                           std::to_string(currentHasteRating) + " -> " +
-                           std::to_string(currentHasteRating + stats->haste_rating) + ")");
-        }
-        player.stats.haste_rating += stats->haste_rating;
-      }
-      if (stats->haste_percent > 0) {
-        if (player.ShouldWriteToCombatLog()) {
-          player.CombatLog(
-              "Haste % * " + DoubleToString(stats->haste_percent, 2) + " (" +
-              DoubleToString((player.stats.haste_percent - 1) * 100, 2) + " -> " +
-              DoubleToString((player.stats.haste_percent * (1 + (stats->haste_percent / 100)) - 1) * 100, 2) + ")");
-        }
-        player.stats.haste_percent *= (1 + stats->haste_percent / 100.0);
-        if (player.pet != NULL && group_wide) {
-          player.pet->stats.haste_percent *= (1 + stats->haste_percent / 100.0);
-        }
-      }
-      if (stats->mana_cost_modifier > 0) {
-        if (player.ShouldWriteToCombatLog()) {
-          double currentmanaCostModifier = player.stats.mana_cost_modifier;
-          player.CombatLog("Mana Cost Modifier * " + DoubleToString(stats->mana_cost_modifier, 2) + " (" +
-                           DoubleToString(currentmanaCostModifier, 2) + " -> " +
-                           DoubleToString(currentmanaCostModifier * stats->mana_cost_modifier, 2) + ")");
-        }
-        player.stats.mana_cost_modifier *= stats->mana_cost_modifier;
-      }
-      if (stats->crit_chance > 0) {
-        if (player.ShouldWriteToCombatLog()) {
-          double currentCritChance = player.GetCritChance(SpellType::kDestruction);
-          player.CombatLog("Crit Chance + " + std::to_string(stats->crit_chance) + "% (" +
-                           std::to_string(round(currentCritChance * 100) / 100) + "% -> " +
-                           std::to_string(round((currentCritChance + 2) * 100) / 100) + "%)");
-        }
-        player.stats.crit_chance += stats->crit_chance;
-      }
+    for (auto& stat : stats) {
+      stat.AddStat();
     }
 
-    if (recalculatePetStats && player.pet != NULL) {
-      player.pet->CalculateStatsFromPlayer();
-    }
     if (player.ShouldWriteToCombatLog()) {
       player.CombatLog(name + " applied");
     }
@@ -137,77 +66,8 @@ void Aura::Fade() {
   active = false;
   bool recalculatePetStats = false;
 
-  if (stats != std::nullopt) {
-    if (stats->spell_power > 0) {
-      if (player.ShouldWriteToCombatLog()) {
-        const int kCurrentSpellPower = player.GetSpellPower();
-        player.CombatLog("Spell Power - " + std::to_string(stats->spell_power) + " (" +
-                         std::to_string(kCurrentSpellPower) + " -> " +
-                         std::to_string(kCurrentSpellPower - stats->spell_power) + ")");
-      }
-
-      player.stats.spell_power -= stats->spell_power;
-      recalculatePetStats = true;
-    }
-    if (stats->shadow_power > 0) {
-      if (player.ShouldWriteToCombatLog()) {
-        player.CombatLog("Shadow Power - " + std::to_string(stats->shadow_power) + " (" +
-                         std::to_string(player.stats.shadow_power) + " -> " +
-                         std::to_string(player.stats.shadow_power - stats->shadow_power) + ")");
-      }
-      player.stats.shadow_power -= stats->shadow_power;
-      recalculatePetStats = true;
-    }
-    if (stats->fire_power > 0) {
-      if (player.ShouldWriteToCombatLog()) {
-        player.CombatLog("Fire Power - " + std::to_string(stats->fire_power) + " (" +
-                         std::to_string(player.stats.fire_power) + " -> " +
-                         std::to_string(player.stats.fire_power - stats->fire_power) + ")");
-      }
-      player.stats.fire_power -= stats->fire_power;
-      recalculatePetStats = true;
-    }
-    if (stats->haste_rating > 0) {
-      if (player.ShouldWriteToCombatLog()) {
-        player.CombatLog("Haste Rating - " + std::to_string(stats->haste_rating) + " (" +
-                         std::to_string(player.stats.haste_rating) + " -> " +
-                         std::to_string(player.stats.haste_rating - stats->haste_rating) + ")");
-      }
-      player.stats.haste_rating -= stats->haste_rating;
-    }
-    if (stats->haste_percent > 0) {
-      if (player.ShouldWriteToCombatLog()) {
-        player.CombatLog(
-            "Haste % / " + DoubleToString(stats->haste_percent, 2) + "% (" +
-            DoubleToString((player.stats.haste_percent - 1) * 100, 2) + " -> " +
-            DoubleToString((player.stats.haste_percent / (1 + (stats->haste_percent / 100)) - 1) * 100, 2) + ")");
-      }
-      player.stats.haste_percent /= (1 + stats->haste_percent / 100.0);
-      if (player.pet != NULL && group_wide) {
-        player.pet->stats.haste_percent /= (1 + stats->haste_percent / 100.0);
-      }
-    }
-    if (stats->mana_cost_modifier > 0) {
-      if (player.ShouldWriteToCombatLog()) {
-        player.CombatLog("Mana Cost Modifier / " + DoubleToString(stats->mana_cost_modifier, 2) + " (" +
-                         DoubleToString(player.stats.mana_cost_modifier, 2) + " -> " +
-                         DoubleToString(player.stats.mana_cost_modifier / stats->mana_cost_modifier, 2) + ")");
-      }
-      player.stats.mana_cost_modifier /= stats->mana_cost_modifier;
-    }
-    if (stats->crit_chance > 0) {
-      if (player.ShouldWriteToCombatLog()) {
-        const double kCurrentCritChance = player.GetCritChance(SpellType::kDestruction);
-        player.CombatLog("Crit Chance - " + std::to_string(stats->crit_chance) + "% (" +
-                         std::to_string(round(kCurrentCritChance * 100) / 100) + "% -> " +
-                         std::to_string(round((kCurrentCritChance - 2) * 100) / 100) + "%)");
-      }
-      player.stats.crit_chance -= 2;
-    }
-  }
-
-  if (recalculatePetStats && player.pet != NULL) {
-    player.pet->CalculateStatsFromPlayer();
+  for (auto& stat : stats) {
+    stat.RemoveStat();
   }
 
   if (player.ShouldWriteToCombatLog()) {
@@ -268,7 +128,7 @@ FlameshadowAura::FlameshadowAura(Player& player) : Aura(player) {
   name = "Flameshadow";
   duration = 15;
   proc_chance = 5;
-  Aura::stats = std::make_optional<AuraStats>(0, 135, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{ShadowPower(player, player.stats, EntityType::kPlayer, 135)};
   Setup();
 }
 
@@ -276,7 +136,7 @@ ShadowflameAura::ShadowflameAura(Player& player) : Aura(player) {
   name = "Shadowflame";
   duration = 15;
   proc_chance = 5;
-  Aura::stats = std::make_optional<AuraStats>(0, 0, 135, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{FirePower(player, player.stats, EntityType::kPlayer, 135)};
   Setup();
 }
 
@@ -284,42 +144,43 @@ SpellstrikeAura::SpellstrikeAura(Player& player) : Aura(player) {
   name = "Spellstrike";
   duration = 10;
   proc_chance = 5;
-  Aura::stats = std::make_optional<AuraStats>(92, 0, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 92)};
   Setup();
 }
 
 PowerInfusionAura::PowerInfusionAura(Player& player) : Aura(player) {
   name = "Power Infusion";
   duration = 15;
-  Aura::stats = std::make_optional<AuraStats>(0, 0, 0, 0, 20, 0.8, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellHastePercent(player, player.stats, EntityType::kPlayer, 1.2),
+                                  ManaCostModifier(player, player.stats, EntityType::kPlayer, 0.8)};
   Setup();
 }
 
 EyeOfMagtheridonAura::EyeOfMagtheridonAura(Player& player) : Aura(player) {
   name = "Eye of Magtheridon";
   duration = 10;
-  Aura::stats = std::make_optional<AuraStats>(170, 0, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 170)};
   Setup();
 }
 
 SextantOfUnstableCurrentsAura::SextantOfUnstableCurrentsAura(Player& player) : Aura(player) {
   name = "Sextant of Unstable Currents";
   duration = 15;
-  Aura::stats = std::make_optional<AuraStats>(190, 0, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 190)};
   Setup();
 }
 
 QuagmirransEyeAura::QuagmirransEyeAura(Player& player) : Aura(player) {
   name = "Quagmirran's Eye";
   duration = 6;
-  Aura::stats = std::make_optional<AuraStats>(0, 0, 0, 320, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellHasteRating(player, player.stats, EntityType::kPlayer, 320)};
   Setup();
 }
 
 ShiffarsNexusHornAura::ShiffarsNexusHornAura(Player& player) : Aura(player) {
   name = "Shiffar's Nexus-Horn";
   duration = 10;
-  Aura::stats = std::make_optional<AuraStats>(225, 0, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 225)};
   Setup();
 }
 
@@ -327,28 +188,29 @@ ManaEtched4SetAura::ManaEtched4SetAura(Player& player) : Aura(player) {
   name = "Mana-Etched 4-Set Bonus";
   duration = 15;
   proc_chance = 2;
-  Aura::stats = std::make_optional<AuraStats>(110, 0, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 110)};
   Setup();
 }
 
 DestructionPotionAura::DestructionPotionAura(Player& player) : Aura(player) {
   name = "Destruction Potion";
   duration = 15;
-  Aura::stats = std::make_optional<AuraStats>(120, 0, 0, 0, 0, 0, 2, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 120),
+                                  SpellCritChance(player, player.stats, EntityType::kPlayer, 2)};
   Setup();
 }
 
 FlameCapAura::FlameCapAura(Player& player) : Aura(player) {
   name = "Flame Cap";
   duration = 60;
-  Aura::stats = std::make_optional<AuraStats>(0, 0, 80, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{FirePower(player, player.stats, EntityType::kPlayer, 80)};
   Setup();
 }
 
 BloodFuryAura::BloodFuryAura(Player& player) : Aura(player) {
   name = "Blood Fury";
   duration = 15;
-  Aura::stats = std::make_optional<AuraStats>(140, 0, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 140)};
   Setup();
 }
 
@@ -356,7 +218,11 @@ BloodlustAura::BloodlustAura(Player& player) : Aura(player) {
   name = "Bloodlust";
   duration = 40;
   group_wide = true;
-  Aura::stats = std::make_optional<AuraStats>(0, 0, 0, 0, 30, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellHastePercent(player, player.stats, EntityType::kPlayer, 1.3)};
+  if (player.pet != NULL) {
+    Aura::stats.push_back(SpellHastePercent(player, player.pet->stats, EntityType::kPet, 1.3));
+    Aura::stats.push_back(MeleeHastePercent(player, player.pet->stats, EntityType::kPet, 1.3));
+  }
   Setup();
 }
 
@@ -364,7 +230,7 @@ DrumsOfBattleAura::DrumsOfBattleAura(Player& player) : Aura(player) {
   name = "Drums of Battle";
   duration = 30;
   group_wide = true;
-  Aura::stats = std::make_optional<AuraStats>(0, 0, 0, 80, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellHasteRating(player, player.stats, EntityType::kPlayer, 80)};
   Setup();
 }
 
@@ -372,7 +238,7 @@ DrumsOfWarAura::DrumsOfWarAura(Player& player) : Aura(player) {
   name = "Drums of War";
   duration = 30;
   group_wide = true;
-  Aura::stats = std::make_optional<AuraStats>(30, 0, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 30)};
   Setup();
 }
 
@@ -380,7 +246,7 @@ AshtongueTalismanOfShadowsAura::AshtongueTalismanOfShadowsAura(Player& player) :
   name = "Ashtongue Talisman of Shadows";
   duration = 5;
   proc_chance = 20;
-  Aura::stats = std::make_optional<AuraStats>(220, 0, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 220)};
   Setup();
 }
 
@@ -399,7 +265,7 @@ void DarkmoonCardCrusadeAura::Apply() {
       const int kCurrentSpellPower = player.GetSpellPower();
       player.CombatLog("Spell Power + " + std::to_string(spell_power_per_stack) + " (" + std::to_string(kCurrentSpellPower) + " -> " + std::to_string(kCurrentSpellPower + spell_power_per_stack) +  + ")"")");
     }
-    player.stats.spell_power += spell_power_per_stack;
+    player.stats.at(CharacterStat::kSpellPower) += spell_power_per_stack;
     stacks++;
     if (player.pet != NULL) {
       player.pet->CalculateStatsFromPlayer();
@@ -416,7 +282,7 @@ void DarkmoonCardCrusadeAura::Fade() {
   if (player.pet != NULL) {
     player.pet->CalculateStatsFromPlayer();
   }
-  player.stats.spell_power -= spell_power_per_stack * stacks;
+  player.stats.at(CharacterStat::kSpellPower) -= spell_power_per_stack * stacks;
   stacks = 0;
   Aura::Fade();
 }
@@ -447,7 +313,7 @@ void TheLightningCapacitorAura::Fade() {
 BandOfTheEternalSageAura::BandOfTheEternalSageAura(Player& player) : Aura(player) {
   name = "Band of the Eternal Sage";
   duration = 10;
-  Aura::stats = std::make_optional<AuraStats>(95, 0, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 95)};
   Setup();
 }
 
@@ -455,28 +321,28 @@ BladeOfWizardryAura::BladeOfWizardryAura(Player& player) : Aura(player) {
   name = "Blade of Wizardry";
   duration = 6;
   proc_chance = 15;
-  Aura::stats = std::make_optional<AuraStats>(0, 0, 0, 280, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellHasteRating(player, player.stats, EntityType::kPlayer, 280)};
   Setup();
 }
 
 ShatteredSunPendantOfAcumenAura::ShatteredSunPendantOfAcumenAura(Player& player) : Aura(player) {
   name = "Shattered Sun Pendant of Acumen (Aldor)";
   duration = 10;
-  Aura::stats = std::make_optional<AuraStats>(120, 0, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 120)};
   Setup();
 }
 
 RobeOfTheElderScribesAura::RobeOfTheElderScribesAura(Player& player) : Aura(player) {
   name = "Robe of the Elder Scribes";
   duration = 10;
-  Aura::stats = std::make_optional<AuraStats>(130, 0, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 130)};
   Setup();
 }
 
 MysticalSkyfireDiamondAura::MysticalSkyfireDiamondAura(Player& player) : Aura(player) {
   name = "Mystical Skyfire Diamond";
   duration = 4;
-  Aura::stats = std::make_optional<AuraStats>(0, 0, 0, 320, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellHasteRating(player, player.stats, EntityType::kPlayer, 320)};
   Setup();
 }
 
@@ -490,7 +356,7 @@ WrathOfCenariusAura::WrathOfCenariusAura(Player& player) : Aura(player) {
   name = "Wrath of Cenarius";
   duration = 10;
   proc_chance = 5;
-  Aura::stats = std::make_optional<AuraStats>(132, 0, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 132)};
   Setup();
 }
 
@@ -503,13 +369,13 @@ InnervateAura::InnervateAura(Player& player) : Aura(player) {
 ChippedPowerCoreAura::ChippedPowerCoreAura(Player& player) : Aura(player) {
   name = "Chipped Power Core";
   duration = 30;
-  Aura::stats = std::make_optional<AuraStats>(25, 0, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 25)};
   Setup();
 }
 
 CrackedPowerCoreAura::CrackedPowerCoreAura(Player& player) : Aura(player) {
   name = "Cracked Power Core";
   duration = 30;
-  Aura::stats = std::make_optional<AuraStats>(15, 0, 0, 0, 0, 0, 0, 0);
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 15)};
   Setup();
 }

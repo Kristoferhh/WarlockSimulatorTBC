@@ -4,10 +4,14 @@
 struct Pet;
 struct Player;
 #include <iostream>
+#include <vector>
+
+#include "stat.h"
 
 struct PetAura {
   std::shared_ptr<Pet> pet;
   std::string name;
+  std::vector<Stat> stats;
   int duration;
   double duration_remaining;
   bool active;
@@ -17,28 +21,20 @@ struct PetAura {
 
   PetAura(std::shared_ptr<Pet> pet);
   void Tick(double time);
-  virtual void Apply();
-  virtual void Fade();
+  void Apply();
+  void Fade();
 };
 
 struct DemonicFrenzy : public PetAura {
   DemonicFrenzy(std::shared_ptr<Pet> pet);
-  void Apply();
-  void Fade();
 };
 
 struct BlackBook : public PetAura {
   BlackBook(std::shared_ptr<Pet> pet);
-  void Apply(bool announce_in_combat_log = true);
-  void Fade();
 };
 
 struct BattleSquawk : public PetAura {
-  double haste_percent;
-
   BattleSquawk(std::shared_ptr<Pet> pet);
-  void Apply();
-  void Fade();
 };
 
 #endif

@@ -4,16 +4,16 @@
 #include "pet_aura.h"
 #include "player.h"
 
-PetSpell::PetSpell(std::shared_ptr<Pet> pet) : pet(pet) {
-  casting = false;
-  can_crit = true;
-  cooldown_remaining = 0;
-  cast_time = 0;
-  mana_cost = 0;
-  modifier = 1;
-  school = SpellSchool::kNoSchool;
-  cooldown = 0;
-}
+PetSpell::PetSpell(std::shared_ptr<Pet> pet)
+    : pet(pet),
+      casting(false),
+      can_crit(true),
+      cooldown_remaining(0),
+      cast_time(0),
+      mana_cost(0),
+      modifier(1),
+      school(SpellSchool::kNoSchool),
+      cooldown(0) {}
 
 void PetSpell::Setup() {
   if (pet->player.recording_combat_log_breakdown && pet->player.combat_log_breakdown.count(name) == 0) {
@@ -22,7 +22,7 @@ void PetSpell::Setup() {
 }
 
 bool PetSpell::Ready() {
-  return cooldown_remaining <= 0 && pet->stats.mana >= mana_cost && pet->cast_time_remaining <= 0;
+  return cooldown_remaining <= 0 && pet->stats.at(CharacterStat::kMana) >= mana_cost && pet->cast_time_remaining <= 0;
 }
 
 double PetSpell::GetBaseDamage() { return dmg; }
@@ -97,12 +97,12 @@ void PetSpell::Cast() {
   }
 
   if (mana_cost > 0 && !pet->player.settings.infinite_pet_mana) {
-    pet->stats.mana -= mana_cost;
+    pet->stats.at(CharacterStat::kMana) -= mana_cost;
     pet->five_second_rule_timer_remaining = 5;
 
     if (pet->player.ShouldWriteToCombatLog()) {
-      combat_log_message.append(" - Pet mana: " + std::to_string(pet->stats.mana) + "/" +
-                                std::to_string(pet->stats.max_mana));
+      combat_log_message.append(" - Pet mana: " + DoubleToString(pet->stats.at(CharacterStat::kMana)) + "/" +
+                                DoubleToString(pet->stats.at(CharacterStat::kMaxMana)));
     }
   }
 
@@ -120,7 +120,8 @@ void PetSpell::Cast() {
     bool is_glancing = false;
     double crit_chance = pet->GetMeleeCritChance() * pet->player.kFloatNumberMultiplier;
     double dodge_chance = crit_chance + pet->enemy_dodge_chance * pet->player.kFloatNumberMultiplier;
-    double miss_chance = dodge_chance + (100 - pet->GetMeleeHitChance()) * pet->player.kFloatNumberMultiplier;
+    double miss_chance =
+        dodge_chance + (100 - pet->stats.at(CharacterStat::kMeleeHitChance)) * pet->player.kFloatNumberMultiplier;
     double glancing_chance = miss_chance;
 
     // Only check for a glancing if it's a normal melee attack
@@ -203,7 +204,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
 
   // Add damage from Spell Power
   if (type == AttackType::kMagical) {
-    dmg += pet->stats.spell_power * coefficient;
+    dmg += pet->stats.at(CharacterStat::kSpellPower) * coefficient;
   }
 
   // Multiply if it's a crit
@@ -265,7 +266,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
   }
 
   // Pet Damage Modifier (from Unholy Power, Master Demonologist, etc.)
-  damage_modifier *= pet->stats.damage_modifier;
+  damage_modifier *= pet->stats.at(CharacterStat::kDamageModifier);
 
   if (is_glancing) {
     dmg *= pet->glancing_blow_multiplier;
@@ -297,7 +298,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
     combat_log_message.append(" (" + DoubleToString(round(base_damage)) + " Base Damage");
     if (type == AttackType::kMagical) {
       combat_log_message.append(" - " + DoubleToString(coefficient, 3) + " Coefficient");
-      combat_log_message.append(" - " + std::to_string(pet->stats.spell_power) + " Spell Power");
+      combat_log_message.append(" - " + std::to_string(pet->stats.at(CharacterStat::kSpellPower)) + " Spell Power");
       combat_log_message.append(" - " + DoubleToString(partial_resist_multiplier * 100) +
                                 "% Partial Resist Multiplier");
     } else if (type == AttackType::kPhysical) {
