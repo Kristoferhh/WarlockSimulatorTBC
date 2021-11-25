@@ -29,11 +29,11 @@ void PetAura::Apply() {
                  ")");
     }
 
-    for (auto& stat : stats) {
-      stat.AddStat();
-    }
-
     pet->player.CombatLog(msg);
+  }
+
+  for (auto& stat : stats) {
+    stat.AddStat();
   }
 
   if (stacks < max_stacks) {

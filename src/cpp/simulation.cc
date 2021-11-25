@@ -12,7 +12,7 @@
 #include "enums.h"
 #include "spell.h"
 
-Simulation::Simulation(Player& player, SimulationSettings& simulation_settings)
+Simulation::Simulation(Player& player, const SimulationSettings& simulation_settings)
     : player(player), settings(simulation_settings) {}
 
 void Simulation::Start() {
@@ -889,7 +889,7 @@ double Simulation::PassTime() {
   return time;
 }
 
-void Simulation::SelectedSpellHandler(std::shared_ptr<Spell>& spell,
+void Simulation::SelectedSpellHandler(const std::shared_ptr<Spell>& spell,
                                       std::map<std::shared_ptr<Spell>, double>& predicted_damage_of_spells,
                                       double fight_time_remaining) {
   if ((player.settings.rotation_option == EmbindConstant::kSimChooses || spell->is_finisher) &&
@@ -902,7 +902,7 @@ void Simulation::SelectedSpellHandler(std::shared_ptr<Spell>& spell,
   }
 }
 
-void Simulation::CastSelectedSpell(std::shared_ptr<Spell>& spell, double fight_time_remaining,
+void Simulation::CastSelectedSpell(const std::shared_ptr<Spell>& spell, double fight_time_remaining,
                                    double predicted_damage) {
   player.UseCooldowns(fight_time_remaining);
 
