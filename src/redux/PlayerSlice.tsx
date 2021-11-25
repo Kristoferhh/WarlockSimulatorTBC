@@ -48,7 +48,7 @@ export const PlayerSlice = createSlice({
       const isSpellDisabled = spellState == null || spellState === false;
       // If a filler/curse is being enabled then disable all other curses/fillers
       if (isSpellDisabled) {
-        if ([RotationGroup.Finishers, RotationGroup.Curse].includes(rotationGroup.header)) {
+        if ([RotationGroup.Filler, RotationGroup.Curse].includes(rotationGroup.header)) {
           Spells
             .filter(e => e.group === action.payload.group)
             .forEach((e) => {
