@@ -23,6 +23,7 @@ struct PetAura {
   void Tick(double time);
   void Apply();
   void Fade();
+  void Setup();
 };
 
 struct DemonicFrenzy : public PetAura {

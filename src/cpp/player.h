@@ -59,6 +59,8 @@ struct Player {
   std::vector<Spell*> spell_list;
   std::vector<Aura*> aura_list;
   std::vector<DamageOverTime*> dot_list;
+  std::vector<PetSpell*> pet_spell_list;
+  std::vector<PetAura*> pet_aura_list;
   Rng rng;
   EntityType entity_type;
   double cast_time_remaining;

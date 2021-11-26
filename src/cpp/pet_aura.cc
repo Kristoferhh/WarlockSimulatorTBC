@@ -6,6 +6,8 @@
 PetAura::PetAura(std::shared_ptr<Pet> pet)
     : pet(pet), duration(0), duration_remaining(0), active(false), stacks(0), max_stacks(0) {}
 
+void PetAura::Setup() { pet->player.pet_aura_list.push_back(this); }
+
 void PetAura::Tick(double t) {
   if (!active) {
     pet->player.ThrowError("Error: Ticking " + name + " when it isn't active");
