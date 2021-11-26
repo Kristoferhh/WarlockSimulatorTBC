@@ -750,6 +750,177 @@ void Player::CombatLog(const std::string& entry) {
   combat_log_entries.push_back("|" + DoubleToString(fight_time, 4) + "| " + entry);
 }
 
+double Player::FindTimeUntilNextAction() {
+  double time = cast_time_remaining;
+  if (time <= 0) {
+    time = gcd_remaining;
+  }
+
+  // Find the lowest time until the next action needs to be taken
+  // Pet
+  if (pet != NULL) {
+    if ((talents.dark_pact > 0 || settings.pet_mode == EmbindConstant::kAggressive) &&
+        pet->spirit_tick_timer_remaining < time)
+      time = pet->spirit_tick_timer_remaining;
+
+    // Pet's attacks/abilities and such
+    if (settings.pet_mode == EmbindConstant::kAggressive) {
+      if (pet->spells.melee != NULL && pet->spells.melee->cooldown_remaining > 0 &&
+          pet->spells.melee->cooldown_remaining < time)
+        time = pet->spells.melee->cooldown_remaining;
+      else if (pet->cast_time_remaining > 0 && pet->cast_time_remaining < time)
+        time = pet->cast_time_remaining;
+      if (pet->spells.lash_of_pain != NULL && pet->spells.lash_of_pain->cooldown_remaining > 0 &&
+          pet->spells.lash_of_pain->cooldown_remaining < time)
+        time = pet->spells.lash_of_pain->cooldown_remaining;
+      else if (pet->spells.cleave != NULL && pet->spells.cleave->cooldown_remaining > 0 &&
+               pet->spells.cleave->cooldown_remaining < time)
+        time = pet->spells.cleave->cooldown_remaining;
+      if (pet->auras.black_book != NULL && pet->auras.black_book->active &&
+          pet->auras.black_book->duration_remaining < time)
+        time = pet->auras.black_book->duration_remaining;
+      if (pet->auras.battle_squawk != NULL && pet->auras.battle_squawk->active &&
+          pet->auras.battle_squawk->duration_remaining < time)
+        time = pet->auras.battle_squawk->duration_remaining;
+    }
+  }
+
+  // Spells
+  for (auto& spell : spell_list) {
+    if (spell->cooldown_remaining < time && spell->cooldown_remaining > 0) {
+      time = spell->cooldown_remaining;
+    }
+  }
+  for (auto& pi : spells.power_infusion) {
+    if (pi->cooldown_remaining > 0 && pi->cooldown_remaining < time) time = pi->cooldown_remaining;
+  }
+  for (auto& bloodlust : spells.bloodlust) {
+    if (bloodlust->cooldown_remaining > 0 && bloodlust->cooldown_remaining < time) time = bloodlust->cooldown_remaining;
+  }
+  for (auto& innervate : spells.innervate) {
+    if (innervate->cooldown_remaining > 0 && innervate->cooldown_remaining < time) time = innervate->cooldown_remaining;
+  }
+
+  // Auras
+  for (auto& aura : aura_list) {
+    if (aura->active && aura->duration_remaining < time) {
+      time = aura->duration_remaining;
+    }
+  }
+
+  // Dots
+  for (auto& dot : dot_list) {
+    if (dot->active && dot->tick_timer_remaining < time) {
+      time = dot->tick_timer_remaining;
+    }
+  }
+
+  // MP5
+  if (mp5_timer < time && mp5_timer > 0) {
+    time = mp5_timer;
+  }
+
+  // Trinkets
+  for (auto& trinket : trinkets) {
+    if (trinket.active && trinket.duration_remaining < time) {
+      time = trinket.duration_remaining;
+    }
+    if (trinket.cooldown_remaining > 0 && trinket.cooldown_remaining < time) {
+      time = trinket.cooldown_remaining;
+    }
+  }
+
+  return time;
+}
+
+void Player::Tick(double time) {
+  fight_time += time;  // This needs to be the first modified value since the time in combat needs to be updated before
+                       // spells start dealing Damage/auras expiring etc. for the combat logging.
+  cast_time_remaining -= time;
+  gcd_remaining -= time;
+  mp5_timer -= time;
+  five_second_rule_timer -= time;
+
+  // Pet
+  if (pet != NULL) {
+    pet->Tick(time);
+  }
+
+  // Auras need to tick before Spells because otherwise you'll, for example,
+  // finish casting Corruption and then immediately afterwards, in the same
+  // millisecond, immediately tick down the aura This was also causing buffs like
+  // e.g. the t4 4pc buffs to expire sooner than they should.
+  for (auto& aura : aura_list) {
+    if (aura->active && aura->duration_remaining > 0) {
+      aura->Tick(time);
+    }
+  }
+
+  for (auto& dot : dot_list) {
+    if (dot->active && dot->tick_timer_remaining > 0) {
+      dot->Tick(time);
+    }
+  }
+
+  for (auto& spell : spell_list) {
+    if (spell->casting || spell->cooldown_remaining > 0) {
+      spell->Tick(time);
+    }
+  }
+  for (auto& pi : spells.power_infusion) {
+    if (pi->cooldown_remaining > 0) pi->Tick(time);
+  }
+  for (auto& bloodlust : spells.bloodlust) {
+    if (bloodlust->cooldown_remaining > 0) bloodlust->Tick(time);
+  }
+  for (auto& innervate : spells.innervate) {
+    if (innervate->cooldown_remaining > 0) innervate->Tick(time);
+  }
+
+  for (auto& trinket : trinkets) {
+    trinket.Tick(time);
+  }
+
+  if (mp5_timer <= 0) {
+    mp5_timer = 5;
+
+    if (stats.at(CharacterStat::kMp5) > 0 || five_second_rule_timer <= 0 ||
+        (auras.innervate != NULL && auras.innervate->active)) {
+      const bool kInnervateIsActive = auras.innervate != NULL && auras.innervate->active;
+      const int kCurrentPlayerMana = stats.at(CharacterStat::kMana);
+
+      // MP5
+      if (stats.at(CharacterStat::kMp5) > 0) {
+        stats.at(CharacterStat::kMana) += stats.at(CharacterStat::kMp5);
+      }
+      // Spirit mana regen
+      if (kInnervateIsActive || five_second_rule_timer <= 0) {
+        // Formula from
+        // https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1572910
+        int mp5_from_spirit = 5 * (0.001 + std::sqrt(GetIntellect()) * GetSpirit() * 0.009327);
+        if (kInnervateIsActive) {
+          mp5_from_spirit *= 4;
+        }
+        stats.at(CharacterStat::kMana) += mp5_from_spirit;
+      }
+
+      if (stats.at(CharacterStat::kMana) > stats.at(CharacterStat::kMaxMana)) {
+        stats.at(CharacterStat::kMana) = stats.at(CharacterStat::kMaxMana);
+      }
+
+      const int kManaGained = stats.at(CharacterStat::kMana) - kCurrentPlayerMana;
+      if (recording_combat_log_breakdown) {
+        combat_log_breakdown.at("Mp5")->casts++;
+        AddIterationDamageAndMana("Mp5", kManaGained, 0);
+      }
+      if (ShouldWriteToCombatLog()) {
+        CombatLog("Player gains " + DoubleToString(round(kManaGained)) + " mana from MP5 (" +
+                  std::to_string(kCurrentPlayerMana) + " -> " + DoubleToString(stats.at(CharacterStat::kMana)) + ")");
+      }
+    }
+  }
+}
+
 void Player::SendPlayerInfoToCombatLog() {
   combat_log_entries.push_back("---------------- Player stats ----------------");
   combat_log_entries.push_back("Health: " + DoubleToString(round(stats.at(CharacterStat::kHealth))));

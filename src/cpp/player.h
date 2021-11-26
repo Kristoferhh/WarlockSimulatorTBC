@@ -96,6 +96,8 @@ struct Player {
   int GetIntellect();
   int GetSpirit();
   int GetRand();
+  void Tick(double time);
+  double FindTimeUntilNextAction();
   bool IsCrit(SpellType spell_type, double extra_crit = 0);
   bool IsHit(SpellType spell_type);
   bool ShouldWriteToCombatLog();
