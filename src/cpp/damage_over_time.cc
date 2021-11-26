@@ -29,6 +29,8 @@ void DamageOverTime::Setup() {
   if (player.recording_combat_log_breakdown && player.combat_log_breakdown.count(name) == 0) {
     player.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
   }
+
+  player.dot_list.push_back(this);
 }
 
 void DamageOverTime::Apply() {
