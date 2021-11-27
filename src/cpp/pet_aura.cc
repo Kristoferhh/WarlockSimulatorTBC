@@ -22,6 +22,9 @@ void PetAura::Tick(double t) {
 
 void PetAura::Apply() {
   duration_remaining = duration;
+  if (stacks < max_stacks) {
+    stacks++;
+  }
 
   if (pet->player.ShouldWriteToCombatLog()) {
     std::string msg = pet->name + " " + (active && stacks == max_stacks ? "refreshed" : "gains") + " " + name;
@@ -38,9 +41,6 @@ void PetAura::Apply() {
     stat.AddStat();
   }
 
-  if (stacks < max_stacks) {
-    stacks++;
-  }
   active = true;
   pet->CalculateStatsFromPlayer();
 }
@@ -74,13 +74,13 @@ DemonicFrenzy::DemonicFrenzy(std::shared_ptr<Pet> pet) : PetAura(pet) {
 BlackBook::BlackBook(std::shared_ptr<Pet> pet) : PetAura(pet) {
   name = "Black Book";
   duration = 30;
-  stats = std::vector<Stat>{SpellPower(pet->player, pet->buff_stats, EntityType::kPet, 200),
-                            AttackPower(pet->player, pet->buff_stats, EntityType::kPet, 325)};
+  stats = std::vector<Stat>{SpellPower(pet->player, pet->buff_stats.spell_power, EntityType::kPet, 200),
+                            AttackPower(pet->player, pet->buff_stats.attack_power, EntityType::kPet, 325)};
 }
 
 BattleSquawk::BattleSquawk(std::shared_ptr<Pet> pet) : PetAura(pet) {
   name = "Battle Squawk";
   duration = 300;
-  stats = std::vector<Stat>{MeleeHastePercent(pet->player, pet->stats, EntityType::kPet,
+  stats = std::vector<Stat>{MeleeHastePercent(pet->player, pet->stats.melee_haste_percent, EntityType::kPet,
                                               std::pow(1.05, pet->player.settings.battle_squawk_amount))};
 }

@@ -69,8 +69,7 @@ void Simulation::Start() {
       // is at 50% or lower
       if (player.spells.mana_tide_totem != NULL && player.spells.mana_tide_totem->Ready() &&
           (kFightTimeRemaining <= player.auras.mana_tide_totem->duration ||
-           player.stats.at(CharacterStat::kMana) / static_cast<double>(player.stats.at(CharacterStat::kMaxMana)) <=
-               0.50)) {
+           player.stats.mana / static_cast<double>(player.stats.max_mana) <= 0.50)) {
         player.spells.mana_tide_totem->StartCast();
       }
 
@@ -78,20 +77,16 @@ void Simulation::Start() {
       if (player.cast_time_remaining <= 0) {
         // Spells not on the GCD
         // Demonic Rune
-        if ((player.fight_time > 5 || player.stats.at(CharacterStat::kMp5) == 0) &&
-            player.spells.demonic_rune != NULL &&
-            (player.stats.at(CharacterStat::kMaxMana) - player.stats.at(CharacterStat::kMana)) >
-                player.spells.demonic_rune->max_mana &&
+        if ((player.fight_time > 5 || player.stats.mp5 == 0) && player.spells.demonic_rune != NULL &&
+            (player.stats.max_mana - player.stats.mana) > player.spells.demonic_rune->max_mana &&
             player.spells.demonic_rune->Ready() &&
             (!player.spells.chipped_power_core || player.spells.chipped_power_core->cooldown_remaining > 0) &&
             (!player.spells.cracked_power_core || player.spells.cracked_power_core->cooldown_remaining > 0)) {
           player.spells.demonic_rune->StartCast();
         }
         // Super Mana Potion
-        if ((player.fight_time > 5 || player.stats.at(CharacterStat::kMp5) == 0) &&
-            player.spells.super_mana_potion != NULL &&
-            (player.stats.at(CharacterStat::kMaxMana) - player.stats.at(CharacterStat::kMana)) >
-                player.spells.super_mana_potion->max_mana &&
+        if ((player.fight_time > 5 || player.stats.mp5 == 0) && player.spells.super_mana_potion != NULL &&
+            (player.stats.max_mana - player.stats.mana) > player.spells.super_mana_potion->max_mana &&
             player.spells.super_mana_potion->Ready()) {
           player.spells.super_mana_potion->StartCast();
         }

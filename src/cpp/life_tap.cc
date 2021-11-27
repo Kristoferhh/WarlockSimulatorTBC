@@ -26,29 +26,26 @@ void LifeTap::Cast() {
                      " Spell Power - " + DoubleToString(coefficient, 3) + " Coefficient - " +
                      DoubleToString(modifier * 100, 2) + "% Modifier)");
 
-    if (player.stats.at(CharacterStat::kMana) + kManaGain > player.stats.at(CharacterStat::kMaxMana)) {
+    if (player.stats.mana + kManaGain > player.stats.max_mana) {
       player.CombatLog(name + " used at too high mana (mana wasted)");
     }
   }
 
   if (player.talents.mana_feed > 0 && player.pet != NULL) {
-    const int kCurrentPetMana = player.pet->stats.at(CharacterStat::kMana);
+    const int kCurrentPetMana = player.pet->stats.mana;
 
-    player.pet->stats.at(CharacterStat::kMana) =
-        std::min(kCurrentPetMana + (kManaGain * (player.talents.mana_feed / 3.0)),
-                 player.pet->stats.at(CharacterStat::kMaxMana));
+    player.pet->stats.mana =
+        std::min(kCurrentPetMana + (kManaGain * (player.talents.mana_feed / 3.0)), player.pet->stats.max_mana);
 
     if (player.ShouldWriteToCombatLog()) {
-      player.CombatLog(player.pet->name + " gains " +
-                       (DoubleToString(player.pet->stats.at(CharacterStat::kMana) - kCurrentPetMana)) +
+      player.CombatLog(player.pet->name + " gains " + (DoubleToString(player.pet->stats.mana - kCurrentPetMana)) +
                        " mana from Mana Feed");
     }
   }
 
-  player.stats.at(CharacterStat::kMana) =
-      std::min(player.stats.at(CharacterStat::kMaxMana), player.stats.at(CharacterStat::kMana) + kManaGain);
+  player.stats.mana = std::min(player.stats.max_mana, player.stats.mana + kManaGain);
   if (player.spells.dark_pact != NULL && name == player.spells.dark_pact->name) {
-    player.pet->stats.at(CharacterStat::kMana) = std::max(0.0, player.pet->stats.at(CharacterStat::kMana) - kManaGain);
+    player.pet->stats.mana = std::max(0.0, player.pet->stats.mana - kManaGain);
   }
 }
 
@@ -61,4 +58,4 @@ DarkPact::DarkPact(Player& player) : LifeTap(player) {
   Setup();
 }
 
-bool DarkPact::Ready() { return Spell::Ready() && player.pet->stats.at(CharacterStat::kMana) >= ManaGain(); }
+bool DarkPact::Ready() { return Spell::Ready() && player.pet->stats.mana >= ManaGain(); }

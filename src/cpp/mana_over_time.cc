@@ -19,14 +19,12 @@ void ManaOverTime::Tick(double t) {
   tick_timer_remaining -= t;
 
   if (tick_timer_remaining <= 0) {
-    const int kCurrentMana = player.stats.at(CharacterStat::kMana);
-    player.stats.at(CharacterStat::kMana) =
-        std::min(player.stats.at(CharacterStat::kMaxMana), player.stats.at(CharacterStat::kMana) + GetManaGain());
-    const int kManaGained = player.stats.at(CharacterStat::kMana) - kCurrentMana;
+    const int kCurrentMana = player.stats.mana;
+    player.stats.mana = std::min(player.stats.max_mana, player.stats.mana + GetManaGain());
+    const int kManaGained = player.stats.mana - kCurrentMana;
     if (player.ShouldWriteToCombatLog()) {
       player.CombatLog("Player gains " + std::to_string(kManaGained) + " mana from " + name + " (" +
-                       std::to_string(kCurrentMana) + " -> " + std::to_string(player.stats.at(CharacterStat::kMana)) +
-                       ")" + ")");
+                       std::to_string(kCurrentMana) + " -> " + std::to_string(player.stats.mana) + ")" + ")");
     }
     if (player.recording_combat_log_breakdown) {
       player.combat_log_breakdown.at(name)->casts++;
@@ -59,4 +57,4 @@ ManaTideTotemAura::ManaTideTotemAura(Player& player) : ManaOverTime(player) {
   Setup();
 }
 
-int ManaTideTotemAura::GetManaGain() { return player.stats.at(CharacterStat::kMaxMana) * 0.06; }
+int ManaTideTotemAura::GetManaGain() { return player.stats.max_mana * 0.06; }

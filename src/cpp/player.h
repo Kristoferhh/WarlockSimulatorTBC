@@ -7,6 +7,7 @@
 
 #include "aura.h"
 #include "auras.h"
+#include "character_stats.h"
 #include "combat_log_breakdown.h"
 #include "damage_over_time.h"
 #include "items.h"
@@ -44,7 +45,7 @@ struct Player {
   Sets& sets;
   Items& items;
   PlayerSettings& settings;
-  std::map<CharacterStat, double> stats;
+  CharacterStats stats;
   PlayerSpells spells;
   PlayerAuras auras;
   std::vector<Trinket> trinkets;
@@ -54,8 +55,6 @@ struct Player {
   std::vector<std::string> combat_log_entries;
   std::map<std::string, std::unique_ptr<CombatLogBreakdown>> combat_log_breakdown;
   std::string custom_stat;
-  // These two lists are basically just for when we need to loop through all the spells/auras that the player has, like
-  // in Simulation.PassTime()
   std::vector<Spell*> spell_list;
   std::vector<Aura*> aura_list;
   std::vector<DamageOverTime*> dot_list;

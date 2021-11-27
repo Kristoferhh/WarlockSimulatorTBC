@@ -11,7 +11,7 @@ struct PlayerSettings {
   Auras& auras;
   Talents& talents;
   Sets& sets;
-  std::map<CharacterStat, double> stats;
+  CharacterStats stats;
   Items& items;
   EmbindConstant custom_stat;
   EmbindConstant shattrath_faction;
@@ -74,7 +74,7 @@ struct PlayerSettings {
   bool has_dark_pact;
   bool has_elemental_shaman_t4_bonus;
 
-  PlayerSettings(Auras& auras, Talents& talents, Sets& sets, std::map<CharacterStat, double>& stats, Items& items)
+  PlayerSettings(Auras& auras, Talents& talents, Sets& sets, CharacterStats& stats, Items& items)
       : auras(auras), talents(talents), sets(sets), stats(stats), items(items) {}
 };
 

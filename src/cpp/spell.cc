@@ -57,7 +57,7 @@ bool Spell::CanCast() {
          (!usable_once_per_fight || has_not_been_cast_this_fight);
 }
 
-bool Spell::HasEnoughMana() { return GetManaCost() <= player.stats.at(CharacterStat::kMana); }
+bool Spell::HasEnoughMana() { return GetManaCost() <= player.stats.mana; }
 
 bool Spell::Ready() { return CanCast() && HasEnoughMana(); }
 
@@ -111,7 +111,7 @@ void Spell::StartCast(double predicted_damage) {
   }
 }
 
-int Spell::GetManaCost() { return mana_cost * player.stats.at(CharacterStat::kManaCostModifier); }
+int Spell::GetManaCost() { return mana_cost * player.stats.mana_cost_modifier; }
 
 void Spell::Tick(double t) {
   if (cooldown_remaining > 0 && cooldown_remaining - t <= 0) {
@@ -130,7 +130,7 @@ void Spell::Tick(double t) {
 }
 
 void Spell::Cast() {
-  const int kCurrentMana = player.stats.at(CharacterStat::kMana);
+  const int kCurrentMana = player.stats.mana;
   bool is_crit = false;
   cooldown_remaining = cooldown;
   casting = false;
@@ -145,28 +145,25 @@ void Spell::Cast() {
   }
 
   if (mana_cost > 0 && !player.settings.infinite_player_mana) {
-    player.stats.at(CharacterStat::kMana) -= GetManaCost();
+    player.stats.mana -= GetManaCost();
     player.five_second_rule_timer = 5;
   }
 
   if (cast_time > 0 && player.ShouldWriteToCombatLog()) {
     player.CombatLog("Finished casting " + name + " - Mana: " + DoubleToString(kCurrentMana) + " -> " +
-                     DoubleToString(player.stats.at(CharacterStat::kMana)) +
-                     " - Mana Cost: " + DoubleToString(round(GetManaCost())) + " - Mana Cost Modifier: " +
-                     DoubleToString(round(player.stats.at(CharacterStat::kManaCostModifier) * 100)) + "%");
+                     DoubleToString(player.stats.mana) + " - Mana Cost: " + DoubleToString(round(GetManaCost())) +
+                     " - Mana Cost Modifier: " + DoubleToString(round(player.stats.mana_cost_modifier * 100)) + "%");
   }
 
   if (gain_mana_on_cast) {
-    player.stats.at(CharacterStat::kMana) =
-        std::min(static_cast<double>(player.stats.at(CharacterStat::kMaxMana)), kCurrentMana + mana_gain);
-    const int kManaGained = player.stats.at(CharacterStat::kMana) - kCurrentMana;
+    player.stats.mana = std::min(static_cast<double>(player.stats.max_mana), kCurrentMana + mana_gain);
+    const int kManaGained = player.stats.mana - kCurrentMana;
     if (player.recording_combat_log_breakdown) {
       player.AddIterationDamageAndMana(name, kManaGained, 0);
     }
     if (player.ShouldWriteToCombatLog()) {
       player.CombatLog("Player gains " + DoubleToString(round(kManaGained)) + " mana from " + name + " (" +
-                       DoubleToString(round(kCurrentMana)) + " -> " +
-                       DoubleToString(round(player.stats.at(CharacterStat::kMana))) + ")");
+                       DoubleToString(round(kCurrentMana)) + " -> " + DoubleToString(round(player.stats.mana)) + ")");
     }
   }
 
@@ -212,7 +209,7 @@ void Spell::Cast() {
 double Spell::GetModifier() {
   double damage_modifier = modifier;
   if (school == SpellSchool::kShadow) {
-    damage_modifier *= player.stats.at(CharacterStat::kShadowModifier);
+    damage_modifier *= player.stats.shadow_modifier;
 
     // Improved Shadow Bolt
     if (!player.settings.using_custom_isb_uptime && player.auras.improved_shadow_bolt != NULL &&
@@ -220,7 +217,7 @@ double Spell::GetModifier() {
       damage_modifier *= player.auras.improved_shadow_bolt->modifier;
     }
   } else if (school == SpellSchool::kFire) {
-    damage_modifier *= player.stats.at(CharacterStat::kFireModifier);
+    damage_modifier *= player.stats.fire_modifier;
   }
 
   return damage_modifier;
