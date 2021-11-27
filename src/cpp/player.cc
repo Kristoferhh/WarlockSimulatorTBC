@@ -443,62 +443,12 @@ void Player::Reset() {
   stats.at(CharacterStat::kMana) = stats.at(CharacterStat::kMaxMana);
   power_infusions_ready = settings.power_infusion_amount;
 
-  // Reset trinkets
   for (auto& trinket : trinkets) {
     trinket.Reset();
   }
 
-  // Reset spells
-  if (spells.life_tap != NULL) spells.life_tap->Reset();
-  if (spells.seed_of_corruption != NULL) spells.seed_of_corruption->Reset();
-  if (spells.shadow_bolt != NULL) spells.shadow_bolt->Reset();
-  if (spells.incinerate != NULL) spells.incinerate->Reset();
-  if (spells.searing_pain != NULL) spells.searing_pain->Reset();
-  if (spells.corruption != NULL) spells.corruption->Reset();
-  if (spells.unstable_affliction != NULL) spells.unstable_affliction->Reset();
-  if (spells.siphon_life != NULL) spells.siphon_life->Reset();
-  if (spells.immolate != NULL) spells.immolate->Reset();
-  if (spells.curse_of_agony != NULL) spells.curse_of_agony->Reset();
-  if (spells.curse_of_the_elements != NULL) spells.curse_of_the_elements->Reset();
-  if (spells.curse_of_recklessness != NULL) spells.curse_of_recklessness->Reset();
-  if (spells.curse_of_doom != NULL) spells.curse_of_doom->Reset();
-  if (spells.conflagrate != NULL) spells.conflagrate->Reset();
-  if (spells.shadowburn != NULL) spells.shadowburn->Reset();
-  if (spells.death_coil != NULL) spells.death_coil->Reset();
-  if (spells.shadowfury != NULL) spells.shadowfury->Reset();
-  if (spells.amplify_curse != NULL) spells.amplify_curse->Reset();
-  if (spells.dark_pact != NULL) spells.dark_pact->Reset();
-  if (spells.destruction_potion != NULL) spells.destruction_potion->Reset();
-  if (spells.super_mana_potion != NULL) spells.super_mana_potion->Reset();
-  if (spells.demonic_rune != NULL) spells.demonic_rune->Reset();
-  if (spells.flame_cap != NULL) spells.flame_cap->Reset();
-  if (spells.blood_fury != NULL) spells.blood_fury->Reset();
-  if (spells.drums_of_battle != NULL) spells.drums_of_battle->Reset();
-  if (spells.drums_of_war != NULL) spells.drums_of_war->Reset();
-  if (spells.drums_of_restoration != NULL) spells.drums_of_restoration->Reset();
-  if (spells.blade_of_wizardry != NULL) spells.blade_of_wizardry->Reset();
-  if (spells.shattered_sun_pendant_of_acumen != NULL) spells.shattered_sun_pendant_of_acumen->Reset();
-  if (spells.robe_of_the_elder_scribes != NULL) spells.robe_of_the_elder_scribes->Reset();
-  if (spells.mystical_skyfire_diamond != NULL) spells.mystical_skyfire_diamond->Reset();
-  if (spells.insightful_earthstorm_diamond != NULL) spells.insightful_earthstorm_diamond->Reset();
-  if (spells.timbals_focusing_crystal != NULL) spells.timbals_focusing_crystal->Reset();
-  if (spells.mark_of_defiance != NULL) spells.mark_of_defiance->Reset();
-  if (spells.the_lightning_capacitor != NULL) spells.the_lightning_capacitor->Reset();
-  if (spells.quagmirrans_eye != NULL) spells.quagmirrans_eye->Reset();
-  if (spells.shiffars_nexus_horn != NULL) spells.shiffars_nexus_horn->Reset();
-  if (spells.sextant_of_unstable_currents != NULL) spells.sextant_of_unstable_currents->Reset();
-  if (spells.band_of_the_eternal_sage != NULL) spells.band_of_the_eternal_sage->Reset();
-  if (spells.chipped_power_core != NULL) spells.chipped_power_core->Reset();
-  if (spells.cracked_power_core != NULL) spells.cracked_power_core->Reset();
-  if (spells.mana_tide_totem != NULL) spells.mana_tide_totem->Reset();
-  for (auto& pi : spells.power_infusion) {
-    pi->Reset();
-  }
-  for (auto& bl : spells.bloodlust) {
-    bl->Reset();
-  }
-  for (auto& innervate : spells.innervate) {
-    innervate->Reset();
+  for (auto& spell : spell_list) {
+    spell->Reset();
   }
 }
 
@@ -508,53 +458,18 @@ void Player::EndAuras() {
       trinket.Fade();
     }
   }
-  if (auras.corruption != NULL && auras.corruption->active) auras.corruption->Fade();
-  if (auras.unstable_affliction != NULL && auras.unstable_affliction->active) auras.unstable_affliction->Fade();
-  if (auras.siphon_life != NULL && auras.siphon_life->active) auras.siphon_life->Fade();
-  if (auras.immolate != NULL && auras.immolate->active) auras.immolate->Fade();
-  if (auras.curse_of_agony != NULL && auras.curse_of_agony->active) auras.curse_of_agony->Fade();
-  if (auras.curse_of_doom != NULL && auras.curse_of_doom->active) auras.curse_of_doom->Fade();
-  if (auras.improved_shadow_bolt != NULL && auras.improved_shadow_bolt->active) auras.improved_shadow_bolt->Fade();
-  if (auras.curse_of_the_elements != NULL && auras.curse_of_the_elements->active) auras.curse_of_the_elements->Fade();
-  if (auras.curse_of_recklessness != NULL && auras.curse_of_recklessness->active) auras.curse_of_recklessness->Fade();
-  if (auras.shadow_trance != NULL && auras.shadow_trance->active) auras.shadow_trance->Fade();
-  if (auras.amplify_curse != NULL && auras.amplify_curse->active) auras.amplify_curse->Fade();
-  if (auras.power_infusion != NULL && auras.power_infusion->active) auras.power_infusion->Fade();
-  if (auras.innervate != NULL && auras.innervate->active) auras.innervate->Fade();
-  if (auras.blood_fury != NULL && auras.blood_fury->active) auras.blood_fury->Fade();
-  if (auras.destruction_potion != NULL && auras.destruction_potion->active) auras.destruction_potion->Fade();
-  if (auras.flame_cap != NULL && auras.flame_cap->active) auras.flame_cap->Fade();
-  if (auras.bloodlust != NULL && auras.bloodlust->active) auras.bloodlust->Fade();
-  if (auras.drums_of_battle != NULL && auras.drums_of_battle->active) auras.drums_of_battle->Fade();
-  if (auras.drums_of_war != NULL && auras.drums_of_war->active) auras.drums_of_war->Fade();
-  if (auras.drums_of_restoration != NULL && auras.drums_of_restoration->active) auras.drums_of_restoration->Fade();
-  if (auras.band_of_the_eternal_sage != NULL && auras.band_of_the_eternal_sage->active)
-    auras.band_of_the_eternal_sage->Fade();
-  if (auras.wrath_of_cenarius != NULL && auras.wrath_of_cenarius->active) auras.wrath_of_cenarius->Fade();
-  if (auras.blade_of_wizardry != NULL && auras.blade_of_wizardry->active) auras.blade_of_wizardry->Fade();
-  if (auras.shattered_sun_pendant_of_acumen != NULL && auras.shattered_sun_pendant_of_acumen->active)
-    auras.shattered_sun_pendant_of_acumen->Fade();
-  if (auras.robe_of_the_elder_scribes != NULL && auras.robe_of_the_elder_scribes->active)
-    auras.robe_of_the_elder_scribes->Fade();
-  if (auras.mystical_skyfire_diamond != NULL && auras.mystical_skyfire_diamond->active)
-    auras.mystical_skyfire_diamond->Fade();
-  if (auras.eye_of_magtheridon != NULL && auras.eye_of_magtheridon->active) auras.eye_of_magtheridon->Fade();
-  if (auras.sextant_of_unstable_currents != NULL && auras.sextant_of_unstable_currents->active)
-    auras.sextant_of_unstable_currents->Fade();
-  if (auras.quagmirrans_eye != NULL && auras.quagmirrans_eye->active) auras.quagmirrans_eye->Fade();
-  if (auras.shiffars_nexus_horn != NULL && auras.shiffars_nexus_horn->active) auras.shiffars_nexus_horn->Fade();
-  if (auras.ashtongue_talisman_of_shadows != NULL && auras.ashtongue_talisman_of_shadows->active)
-    auras.ashtongue_talisman_of_shadows->Fade();
-  if (auras.darkmoon_card_crusade != NULL && auras.darkmoon_card_crusade->active) auras.darkmoon_card_crusade->Fade();
-  if (auras.the_lightning_capacitor != NULL && auras.the_lightning_capacitor->active)
-    auras.the_lightning_capacitor->Fade();
-  if (auras.flameshadow != NULL && auras.flameshadow->active) auras.flameshadow->Fade();
-  if (auras.shadowflame != NULL && auras.shadowflame->active) auras.shadowflame->Fade();
-  if (auras.spellstrike != NULL && auras.spellstrike->active) auras.spellstrike->Fade();
-  if (auras.mana_etched_4_set != NULL && auras.mana_etched_4_set->active) auras.mana_etched_4_set->Fade();
-  if (auras.chipped_power_core != NULL && auras.chipped_power_core->active) auras.chipped_power_core->Fade();
-  if (auras.cracked_power_core != NULL && auras.cracked_power_core->active) auras.cracked_power_core->Fade();
-  if (auras.mana_tide_totem != NULL && auras.mana_tide_totem->active) auras.mana_tide_totem->Fade();
+
+  for (auto& aura : aura_list) {
+    if (aura->active) {
+      aura->Fade();
+    }
+  }
+
+  for (auto& dot : dot_list) {
+    if (dot->active) {
+      dot->Fade();
+    }
+  }
 }
 
 double Player::GetHastePercent() {
@@ -748,6 +663,157 @@ void Player::SendCombatLogEntries() {
 
 void Player::CombatLog(const std::string& entry) {
   combat_log_entries.push_back("|" + DoubleToString(fight_time, 4) + "| " + entry);
+}
+
+double Player::FindTimeUntilNextAction() {
+  double time = cast_time_remaining;
+  if (time <= 0) {
+    time = gcd_remaining;
+  }
+
+  // Pet
+  if (pet != NULL) {
+    if ((talents.dark_pact > 0 || settings.pet_mode == EmbindConstant::kAggressive) &&
+        pet->spirit_tick_timer_remaining < time)
+      time = pet->spirit_tick_timer_remaining;
+
+    if (settings.pet_mode == EmbindConstant::kAggressive) {
+      if (pet->cast_time_remaining > 0 && pet->cast_time_remaining < time) {
+        time = pet->cast_time_remaining;
+      }
+
+      // Pet spells
+      for (auto& pet_spell : pet_spell_list) {
+        if (pet_spell->cooldown_remaining > 0 && pet_spell->cooldown_remaining < time) {
+          time = pet_spell->cooldown_remaining;
+        }
+      }
+
+      // Pet auras
+      for (auto& pet_aura : pet_aura_list) {
+        if (pet_aura->active && pet_aura->duration_remaining < time) {
+          time = pet_aura->duration_remaining;
+        }
+      }
+    }
+  }
+
+  // Spells
+  for (auto& spell : spell_list) {
+    if (spell->cooldown_remaining < time && spell->cooldown_remaining > 0) {
+      time = spell->cooldown_remaining;
+    }
+  }
+
+  // Auras
+  for (auto& aura : aura_list) {
+    if (aura->active && aura->duration_remaining < time) {
+      time = aura->duration_remaining;
+    }
+  }
+
+  // Dots
+  for (auto& dot : dot_list) {
+    if (dot->active && dot->tick_timer_remaining < time) {
+      time = dot->tick_timer_remaining;
+    }
+  }
+
+  // MP5
+  if (mp5_timer < time && mp5_timer > 0) {
+    time = mp5_timer;
+  }
+
+  // Trinkets
+  for (auto& trinket : trinkets) {
+    if (trinket.active && trinket.duration_remaining < time) {
+      time = trinket.duration_remaining;
+    }
+    if (trinket.cooldown_remaining > 0 && trinket.cooldown_remaining < time) {
+      time = trinket.cooldown_remaining;
+    }
+  }
+
+  return time;
+}
+
+void Player::Tick(double time) {
+  fight_time += time;  // This needs to be the first modified value since the time in combat needs to be updated before
+                       // spells start dealing Damage/auras expiring etc. for the combat logging.
+  cast_time_remaining -= time;
+  gcd_remaining -= time;
+  mp5_timer -= time;
+  five_second_rule_timer -= time;
+
+  // Pet
+  if (pet != NULL) {
+    pet->Tick(time);
+  }
+
+  // Auras need to tick before Spells because otherwise you'll, for example,
+  // finish casting Corruption and then immediately afterwards, in the same
+  // millisecond, immediately tick down the aura This was also causing buffs like
+  // e.g. the t4 4pc buffs to expire sooner than they should.
+  for (auto& aura : aura_list) {
+    if (aura->active && aura->duration_remaining > 0) {
+      aura->Tick(time);
+    }
+  }
+
+  for (auto& dot : dot_list) {
+    if (dot->active && dot->tick_timer_remaining > 0) {
+      dot->Tick(time);
+    }
+  }
+
+  for (auto& spell : spell_list) {
+    if (spell->casting || spell->cooldown_remaining > 0) {
+      spell->Tick(time);
+    }
+  }
+
+  for (auto& trinket : trinkets) {
+    trinket.Tick(time);
+  }
+
+  if (mp5_timer <= 0) {
+    mp5_timer = 5;
+
+    if (stats.at(CharacterStat::kMp5) > 0 || five_second_rule_timer <= 0 ||
+        (auras.innervate != NULL && auras.innervate->active)) {
+      const bool kInnervateIsActive = auras.innervate != NULL && auras.innervate->active;
+      const int kCurrentPlayerMana = stats.at(CharacterStat::kMana);
+
+      // MP5
+      if (stats.at(CharacterStat::kMp5) > 0) {
+        stats.at(CharacterStat::kMana) += stats.at(CharacterStat::kMp5);
+      }
+      // Spirit mana regen
+      if (kInnervateIsActive || five_second_rule_timer <= 0) {
+        // Formula from
+        // https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1572910
+        int mp5_from_spirit = 5 * (0.001 + std::sqrt(GetIntellect()) * GetSpirit() * 0.009327);
+        if (kInnervateIsActive) {
+          mp5_from_spirit *= 4;
+        }
+        stats.at(CharacterStat::kMana) += mp5_from_spirit;
+      }
+
+      if (stats.at(CharacterStat::kMana) > stats.at(CharacterStat::kMaxMana)) {
+        stats.at(CharacterStat::kMana) = stats.at(CharacterStat::kMaxMana);
+      }
+
+      const int kManaGained = stats.at(CharacterStat::kMana) - kCurrentPlayerMana;
+      if (recording_combat_log_breakdown) {
+        combat_log_breakdown.at("Mp5")->casts++;
+        AddIterationDamageAndMana("Mp5", kManaGained, 0);
+      }
+      if (ShouldWriteToCombatLog()) {
+        CombatLog("Player gains " + DoubleToString(round(kManaGained)) + " mana from MP5 (" +
+                  std::to_string(kCurrentPlayerMana) + " -> " + DoubleToString(stats.at(CharacterStat::kMana)) + ")");
+      }
+    }
+  }
 }
 
 void Player::SendPlayerInfoToCombatLog() {

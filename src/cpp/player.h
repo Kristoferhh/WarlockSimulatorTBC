@@ -54,6 +54,13 @@ struct Player {
   std::vector<std::string> combat_log_entries;
   std::map<std::string, std::unique_ptr<CombatLogBreakdown>> combat_log_breakdown;
   std::string custom_stat;
+  // These two lists are basically just for when we need to loop through all the spells/auras that the player has, like
+  // in Simulation.PassTime()
+  std::vector<Spell*> spell_list;
+  std::vector<Aura*> aura_list;
+  std::vector<DamageOverTime*> dot_list;
+  std::vector<PetSpell*> pet_spell_list;
+  std::vector<PetAura*> pet_aura_list;
   Rng rng;
   EntityType entity_type;
   double cast_time_remaining;
@@ -91,6 +98,8 @@ struct Player {
   int GetIntellect();
   int GetSpirit();
   int GetRand();
+  void Tick(double time);
+  double FindTimeUntilNextAction();
   bool IsCrit(SpellType spell_type, double extra_crit = 0);
   bool IsHit(SpellType spell_type);
   bool ShouldWriteToCombatLog();

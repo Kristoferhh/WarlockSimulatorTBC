@@ -19,6 +19,7 @@ void PetSpell::Setup() {
   if (pet->player.recording_combat_log_breakdown && pet->player.combat_log_breakdown.count(name) == 0) {
     pet->player.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
   }
+  pet->player.pet_spell_list.push_back(this);
 }
 
 bool PetSpell::Ready() {
