@@ -86,8 +86,8 @@ void DamageOverTime::Fade() {
 }
 
 double DamageOverTime::GetModifier() {
-  double damage_modifier = modifier * (school == SpellSchool::kShadow ? player.stats.at(CharacterStat::kShadowModifier)
-                                       : school == SpellSchool::kFire ? player.stats.at(CharacterStat::kFireModifier)
+  double damage_modifier = modifier * (school == SpellSchool::kShadow ? player.stats.shadow_modifier
+                                       : school == SpellSchool::kFire ? player.stats.fire_modifier
                                                                       : 1);
   // Only add Improved Shadow Bolt if it's not Siphon Life or if ISB was active when the Siphon Life was cast.
   if ((school == SpellSchool::kShadow && player.auras.improved_shadow_bolt != NULL &&

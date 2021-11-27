@@ -10,16 +10,15 @@ struct Player;
 
 struct Stat {
   Player& player;
-  std::map<CharacterStat, double>& stat_map;
-  CharacterStat characterStat;
-  CalculationType calculationType;
+  double& character_stat;
+  CalculationType calculation_type;
   EntityType entity_type;
   std::string name;
   double value;
   bool affects_pet;  // true for stats like spell power where the pet scales from the player's spell power
   int combat_log_decimal_places;
 
-  Stat(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type, double value);
+  Stat(Player& player, double& character_stat, EntityType entity_type, double value);
   void AddStat();
   void RemoveStat();
 
@@ -28,43 +27,43 @@ struct Stat {
 };
 
 struct SpellPower : public Stat {
-  SpellPower(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type, double value);
+  SpellPower(Player& player, double& character_stat, EntityType entity_type, double value);
 };
 
 struct ShadowPower : public Stat {
-  ShadowPower(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type, double value);
+  ShadowPower(Player& player, double& character_stat, EntityType entity_type, double value);
 };
 
 struct FirePower : public Stat {
-  FirePower(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type, double value);
+  FirePower(Player& player, double& character_stat, EntityType entity_type, double value);
 };
 
 struct SpellHasteRating : public Stat {
-  SpellHasteRating(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type, double value);
+  SpellHasteRating(Player& player, double& character_stat, EntityType entity_type, double value);
 };
 
 struct SpellHastePercent : public Stat {
-  SpellHastePercent(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type, double value);
+  SpellHastePercent(Player& player, double& character_stat, EntityType entity_type, double value);
 };
 
 struct MeleeHastePercent : public Stat {
-  MeleeHastePercent(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type, double value);
+  MeleeHastePercent(Player& player, double& character_stat, EntityType entity_type, double value);
 };
 
 struct ManaCostModifier : public Stat {
-  ManaCostModifier(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type, double value);
+  ManaCostModifier(Player& player, double& character_stat, EntityType entity_type, double value);
 };
 
 struct SpellCritChance : public Stat {
-  SpellCritChance(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type, double value);
+  SpellCritChance(Player& player, double& character_stat, EntityType entity_type, double value);
 };
 
 struct SpellCritRating : public Stat {
-  SpellCritRating(Player& player, std::map<CharacterStat, double>& stat_map, EntityType entity_type, double value);
+  SpellCritRating(Player& player, double& character_stat, EntityType entity_type, double value);
 };
 
 struct AttackPower : public Stat {
-  AttackPower(Player& player, std::map<CharacterStat, double>& stat_map, EntityType eentity_type, double value);
+  AttackPower(Player& player, double& character_stat, EntityType eentity_type, double value);
 };
 
 #endif

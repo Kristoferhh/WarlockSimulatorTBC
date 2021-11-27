@@ -5,6 +5,7 @@ struct Player;
 #include <iostream>
 #include <map>
 
+#include "character_stats.h"
 #include "enums.h"
 #include "pet_auras.h"
 #include "pet_spells.h"
@@ -13,12 +14,12 @@ struct Pet : std::enable_shared_from_this<Pet> {
   Player& player;
   PetSpells spells;
   PetAuras auras;
-  std::map<CharacterStat, double> base_stats;
-  std::map<CharacterStat, double> buff_stats;  // Certain stats from buffs need to be separated from the main
-                                               // stat so we can re-calculate the pet's stats in
-                                               // calculateStatsFromPlayer().
-  std::map<CharacterStat, double> debuff_stats;
-  std::map<CharacterStat, double> stats;
+  CharacterStats base_stats;
+  CharacterStats buff_stats;  // Certain stats from buffs need to be separated from the main
+                              // stat so we can re-calculate the pet's stats in
+                              // calculateStatsFromPlayer().
+  CharacterStats debuff_stats;
+  CharacterStats stats;
   PetName pet;
   PetType pet_type;
   EntityType entity_type;

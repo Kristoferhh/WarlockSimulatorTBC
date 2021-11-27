@@ -73,7 +73,7 @@ RestrainedEssenceOfSapphiron::RestrainedEssenceOfSapphiron(Player& player) : Tri
   name = "Restrained Essence of Sapphiron";
   cooldown = 120;
   duration = 20;
-  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 130)};
+  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 130)};
   Setup();
 }
 
@@ -81,7 +81,7 @@ ShiftingNaaruSliver::ShiftingNaaruSliver(Player& player) : Trinket(player) {
   name = "Shifting Naaru Sliver";
   cooldown = 90;
   duration = 15;
-  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 320)};
+  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 320)};
   Setup();
 }
 
@@ -89,7 +89,8 @@ SkullOfGuldan::SkullOfGuldan(Player& player) : Trinket(player) {
   name = "Skull of Gul'dan";
   cooldown = 120;
   duration = 20;
-  Trinket::stats = std::vector<Stat>{SpellHasteRating(player, player.stats, EntityType::kPlayer, 175)};
+  Trinket::stats =
+      std::vector<Stat>{SpellHasteRating(player, player.stats.spell_haste_rating, EntityType::kPlayer, 175)};
   Setup();
 }
 
@@ -97,7 +98,7 @@ HexShrunkenHead::HexShrunkenHead(Player& player) : Trinket(player) {
   name = "Hex Shrunken Head";
   cooldown = 120;
   duration = 20;
-  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 211)};
+  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 211)};
   Setup();
 }
 
@@ -105,7 +106,7 @@ IconOfTheSilverCrescent::IconOfTheSilverCrescent(Player& player) : Trinket(playe
   name = "Icon of the Silver Crescent";
   cooldown = 120;
   duration = 20;
-  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 155)};
+  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 155)};
   Setup();
 }
 
@@ -113,7 +114,7 @@ ScryersBloodgem::ScryersBloodgem(Player& player) : Trinket(player) {
   name = "Scryer's Bloodgem";
   cooldown = 90;
   duration = 15;
-  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 150)};
+  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 150)};
   Setup();
 }
 
@@ -121,7 +122,7 @@ AncientCrystalTalisman::AncientCrystalTalisman(Player& player) : Trinket(player)
   name = "Ancient Crystal Talisman";
   cooldown = 120;
   duration = 20;
-  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 104)};
+  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 104)};
   Setup();
 }
 
@@ -129,7 +130,7 @@ ArcanistsStone::ArcanistsStone(Player& player) : Trinket(player) {
   name = "Arcanist's Stone";
   cooldown = 120;
   duration = 20;
-  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 167)};
+  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 167)};
   Setup();
 }
 
@@ -137,7 +138,7 @@ TerokkarTabletOfVim::TerokkarTabletOfVim(Player& player) : Trinket(player) {
   name = "Terokkar Table of Vim";
   cooldown = 90;
   duration = 15;
-  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 84)};
+  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 84)};
   Setup();
 }
 
@@ -145,7 +146,7 @@ XirisGift::XirisGift(Player& player) : Trinket(player) {
   name = "Xi'ri's Gift";
   cooldown = 90;
   duration = 15;
-  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 150)};
+  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 150)};
   Setup();
 }
 
@@ -153,7 +154,7 @@ VengeanceOfTheIllidari::VengeanceOfTheIllidari(Player& player) : Trinket(player)
   name = "Vengeance of the Illidari";
   cooldown = 90;
   duration = 15;
-  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 120)};
+  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 120)};
   Setup();
 }
 
@@ -161,7 +162,7 @@ FigurineLivingRubySerpent::FigurineLivingRubySerpent(Player& player) : Trinket(p
   name = "Figurine: Living Ruby Serpent";
   cooldown = 300;
   duration = 20;
-  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 150)};
+  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 150)};
   Setup();
 }
 
@@ -170,7 +171,7 @@ EssenceOfTheMartyr::EssenceOfTheMartyr(Player& player) : Trinket(player) {
   cooldown = 120;
   duration = 20;
   shares_cooldown = false;
-  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 99)};
+  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 99)};
   Setup();
 }
 
@@ -178,7 +179,7 @@ StarkillersBauble::StarkillersBauble(Player& player) : Trinket(player) {
   name = "Starkiller's Bauble";
   cooldown = 90;
   duration = 15;
-  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 125)};
+  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 125)};
   Setup();
 }
 
@@ -186,7 +187,7 @@ DarkIronSmokingPipe::DarkIronSmokingPipe(Player& player) : Trinket(player) {
   name = "Dark Iron Smoking Pipe";
   cooldown = 120;
   duration = 20;
-  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 155)};
+  Trinket::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 155)};
   Setup();
 }
 
@@ -194,6 +195,6 @@ HazzarahsCharmOfDestruction::HazzarahsCharmOfDestruction(Player& player) : Trink
   name = "Hazza'rah's Charm of Destruction";
   cooldown = 180;
   duration = 20;
-  Trinket::stats = std::vector<Stat>{SpellCritRating(player, player.stats, EntityType::kPlayer, 140)};
+  Trinket::stats = std::vector<Stat>{SpellCritRating(player, player.stats.spell_crit_rating, EntityType::kPlayer, 140)};
   Setup();
 }

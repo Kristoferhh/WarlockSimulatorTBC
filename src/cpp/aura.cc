@@ -129,7 +129,7 @@ FlameshadowAura::FlameshadowAura(Player& player) : Aura(player) {
   name = "Flameshadow";
   duration = 15;
   proc_chance = 5;
-  Aura::stats = std::vector<Stat>{ShadowPower(player, player.stats, EntityType::kPlayer, 135)};
+  Aura::stats = std::vector<Stat>{ShadowPower(player, player.stats.shadow_power, EntityType::kPlayer, 135)};
   Setup();
 }
 
@@ -137,7 +137,7 @@ ShadowflameAura::ShadowflameAura(Player& player) : Aura(player) {
   name = "Shadowflame";
   duration = 15;
   proc_chance = 5;
-  Aura::stats = std::vector<Stat>{FirePower(player, player.stats, EntityType::kPlayer, 135)};
+  Aura::stats = std::vector<Stat>{FirePower(player, player.stats.fire_power, EntityType::kPlayer, 135)};
   Setup();
 }
 
@@ -145,43 +145,43 @@ SpellstrikeAura::SpellstrikeAura(Player& player) : Aura(player) {
   name = "Spellstrike";
   duration = 10;
   proc_chance = 5;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 92)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 92)};
   Setup();
 }
 
 PowerInfusionAura::PowerInfusionAura(Player& player) : Aura(player) {
   name = "Power Infusion";
   duration = 15;
-  Aura::stats = std::vector<Stat>{SpellHastePercent(player, player.stats, EntityType::kPlayer, 1.2),
-                                  ManaCostModifier(player, player.stats, EntityType::kPlayer, 0.8)};
+  Aura::stats = std::vector<Stat>{SpellHastePercent(player, player.stats.spell_haste_percent, EntityType::kPlayer, 1.2),
+                                  ManaCostModifier(player, player.stats.mana_cost_modifier, EntityType::kPlayer, 0.8)};
   Setup();
 }
 
 EyeOfMagtheridonAura::EyeOfMagtheridonAura(Player& player) : Aura(player) {
   name = "Eye of Magtheridon";
   duration = 10;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 170)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 170)};
   Setup();
 }
 
 SextantOfUnstableCurrentsAura::SextantOfUnstableCurrentsAura(Player& player) : Aura(player) {
   name = "Sextant of Unstable Currents";
   duration = 15;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 190)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 190)};
   Setup();
 }
 
 QuagmirransEyeAura::QuagmirransEyeAura(Player& player) : Aura(player) {
   name = "Quagmirran's Eye";
   duration = 6;
-  Aura::stats = std::vector<Stat>{SpellHasteRating(player, player.stats, EntityType::kPlayer, 320)};
+  Aura::stats = std::vector<Stat>{SpellHasteRating(player, player.stats.spell_haste_rating, EntityType::kPlayer, 320)};
   Setup();
 }
 
 ShiffarsNexusHornAura::ShiffarsNexusHornAura(Player& player) : Aura(player) {
   name = "Shiffar's Nexus-Horn";
   duration = 10;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 225)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 225)};
   Setup();
 }
 
@@ -189,29 +189,29 @@ ManaEtched4SetAura::ManaEtched4SetAura(Player& player) : Aura(player) {
   name = "Mana-Etched 4-Set Bonus";
   duration = 15;
   proc_chance = 2;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 110)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 110)};
   Setup();
 }
 
 DestructionPotionAura::DestructionPotionAura(Player& player) : Aura(player) {
   name = "Destruction Potion";
   duration = 15;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 120),
-                                  SpellCritChance(player, player.stats, EntityType::kPlayer, 2)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 120),
+                                  SpellCritChance(player, player.stats.spell_crit_chance, EntityType::kPlayer, 2)};
   Setup();
 }
 
 FlameCapAura::FlameCapAura(Player& player) : Aura(player) {
   name = "Flame Cap";
   duration = 60;
-  Aura::stats = std::vector<Stat>{FirePower(player, player.stats, EntityType::kPlayer, 80)};
+  Aura::stats = std::vector<Stat>{FirePower(player, player.stats.fire_power, EntityType::kPlayer, 80)};
   Setup();
 }
 
 BloodFuryAura::BloodFuryAura(Player& player) : Aura(player) {
   name = "Blood Fury";
   duration = 15;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 140)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 140)};
   Setup();
 }
 
@@ -219,10 +219,11 @@ BloodlustAura::BloodlustAura(Player& player) : Aura(player) {
   name = "Bloodlust";
   duration = 40;
   group_wide = true;
-  Aura::stats = std::vector<Stat>{SpellHastePercent(player, player.stats, EntityType::kPlayer, 1.3)};
+  Aura::stats =
+      std::vector<Stat>{SpellHastePercent(player, player.stats.spell_haste_percent, EntityType::kPlayer, 1.3)};
   if (player.pet != NULL) {
-    Aura::stats.push_back(SpellHastePercent(player, player.pet->stats, EntityType::kPet, 1.3));
-    Aura::stats.push_back(MeleeHastePercent(player, player.pet->stats, EntityType::kPet, 1.3));
+    Aura::stats.push_back(SpellHastePercent(player, player.pet->stats.spell_haste_percent, EntityType::kPet, 1.3));
+    Aura::stats.push_back(MeleeHastePercent(player, player.pet->stats.melee_haste_percent, EntityType::kPet, 1.3));
   }
   Setup();
 }
@@ -231,7 +232,7 @@ DrumsOfBattleAura::DrumsOfBattleAura(Player& player) : Aura(player) {
   name = "Drums of Battle";
   duration = 30;
   group_wide = true;
-  Aura::stats = std::vector<Stat>{SpellHasteRating(player, player.stats, EntityType::kPlayer, 80)};
+  Aura::stats = std::vector<Stat>{SpellHasteRating(player, player.stats.spell_haste_rating, EntityType::kPlayer, 80)};
   Setup();
 }
 
@@ -239,7 +240,7 @@ DrumsOfWarAura::DrumsOfWarAura(Player& player) : Aura(player) {
   name = "Drums of War";
   duration = 30;
   group_wide = true;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 30)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 30)};
   Setup();
 }
 
@@ -247,7 +248,7 @@ AshtongueTalismanOfShadowsAura::AshtongueTalismanOfShadowsAura(Player& player) :
   name = "Ashtongue Talisman of Shadows";
   duration = 5;
   proc_chance = 20;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 220)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 220)};
   Setup();
 }
 
@@ -266,7 +267,7 @@ void DarkmoonCardCrusadeAura::Apply() {
       const int kCurrentSpellPower = player.GetSpellPower();
       player.CombatLog("Spell Power + " + std::to_string(spell_power_per_stack) + " (" + std::to_string(kCurrentSpellPower) + " -> " + std::to_string(kCurrentSpellPower + spell_power_per_stack) +  + ")"")");
     }
-    player.stats.at(CharacterStat::kSpellPower) += spell_power_per_stack;
+    player.stats.spell_power += spell_power_per_stack;
     stacks++;
     if (player.pet != NULL) {
       player.pet->CalculateStatsFromPlayer();
@@ -283,7 +284,7 @@ void DarkmoonCardCrusadeAura::Fade() {
   if (player.pet != NULL) {
     player.pet->CalculateStatsFromPlayer();
   }
-  player.stats.at(CharacterStat::kSpellPower) -= spell_power_per_stack * stacks;
+  player.stats.spell_power -= spell_power_per_stack * stacks;
   stacks = 0;
   Aura::Fade();
 }
@@ -314,7 +315,7 @@ void TheLightningCapacitorAura::Fade() {
 BandOfTheEternalSageAura::BandOfTheEternalSageAura(Player& player) : Aura(player) {
   name = "Band of the Eternal Sage";
   duration = 10;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 95)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 95)};
   Setup();
 }
 
@@ -322,28 +323,28 @@ BladeOfWizardryAura::BladeOfWizardryAura(Player& player) : Aura(player) {
   name = "Blade of Wizardry";
   duration = 6;
   proc_chance = 15;
-  Aura::stats = std::vector<Stat>{SpellHasteRating(player, player.stats, EntityType::kPlayer, 280)};
+  Aura::stats = std::vector<Stat>{SpellHasteRating(player, player.stats.spell_haste_rating, EntityType::kPlayer, 280)};
   Setup();
 }
 
 ShatteredSunPendantOfAcumenAura::ShatteredSunPendantOfAcumenAura(Player& player) : Aura(player) {
   name = "Shattered Sun Pendant of Acumen (Aldor)";
   duration = 10;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 120)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 120)};
   Setup();
 }
 
 RobeOfTheElderScribesAura::RobeOfTheElderScribesAura(Player& player) : Aura(player) {
   name = "Robe of the Elder Scribes";
   duration = 10;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 130)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 130)};
   Setup();
 }
 
 MysticalSkyfireDiamondAura::MysticalSkyfireDiamondAura(Player& player) : Aura(player) {
   name = "Mystical Skyfire Diamond";
   duration = 4;
-  Aura::stats = std::vector<Stat>{SpellHasteRating(player, player.stats, EntityType::kPlayer, 320)};
+  Aura::stats = std::vector<Stat>{SpellHasteRating(player, player.stats.spell_haste_rating, EntityType::kPlayer, 320)};
   Setup();
 }
 
@@ -357,7 +358,7 @@ WrathOfCenariusAura::WrathOfCenariusAura(Player& player) : Aura(player) {
   name = "Wrath of Cenarius";
   duration = 10;
   proc_chance = 5;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 132)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 132)};
   Setup();
 }
 
@@ -370,13 +371,13 @@ InnervateAura::InnervateAura(Player& player) : Aura(player) {
 ChippedPowerCoreAura::ChippedPowerCoreAura(Player& player) : Aura(player) {
   name = "Chipped Power Core";
   duration = 30;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 25)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 25)};
   Setup();
 }
 
 CrackedPowerCoreAura::CrackedPowerCoreAura(Player& player) : Aura(player) {
   name = "Cracked Power Core";
   duration = 30;
-  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats, EntityType::kPlayer, 15)};
+  Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 15)};
   Setup();
 }

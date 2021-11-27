@@ -18,13 +18,12 @@
 #endif
 
 Player AllocPlayer(PlayerSettings& settings);
-PlayerSettings AllocPlayerSettings(Auras& auras, Talents& talents, Sets& sets, std::map<CharacterStat, double>& stats,
-                                   Items& items);
+PlayerSettings AllocPlayerSettings(Auras& auras, Talents& talents, Sets& sets, CharacterStats& stats, Items& items);
 Items AllocItems();
 Auras AllocAuras();
 Talents AllocTalents();
 Sets AllocSets();
-std::map<CharacterStat, double> AllocStats();
+CharacterStats AllocStats();
 SimulationSettings AllocSimSettings();
 Simulation AllocSim(Player& player, SimulationSettings& simulation_settings);
 std::vector<uint32_t> AllocRandomSeeds(int amount_of_seeds, uint32_t rand_seed);

@@ -10,41 +10,5 @@ enum class AttackType { kNoAttackType, kPhysical, kMagical };
 enum class SimulationType { kNormal, kAllItems, kStatWeights };
 enum class CalculationType { kNoType, kAdditive, kMultiplicative };
 enum class EntityType { kNoType, kPlayer, kPet };
-enum CharacterStat {
-  kHealth,
-  kMana,
-  kMaxMana,
-  kStamina,
-  kIntellect,
-  kSpirit,
-  kSpellPower,
-  kShadowPower,
-  kFirePower,
-  kSpellHasteRating,
-  kSpellHitRating,
-  kSpellCritRating,
-  kSpellCritChance,
-  kSpellHitChance,
-  kExtraSpellHitChance,
-  kMp5,
-  kSpellPenetration,
-  kFireModifier,
-  kSpellHastePercent,
-  kShadowModifier,
-  kStaminaModifier,
-  kIntellectModifier,
-  kSpiritModifier,
-  kManaCostModifier,
-  kStrength,
-  kAgility,
-  kAttackPower,
-  kMeleeCritChance,
-  kMeleeHitChance,
-  kStrengthModifier,
-  kAgilityModifier,
-  kAttackPowerModifier,
-  kDamageModifier,
-  kMeleeHastePercent,
-};
 
 #endif
