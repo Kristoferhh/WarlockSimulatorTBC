@@ -9,15 +9,16 @@
 #include "../auras.h"
 #include "../character_stats.h"
 #include "../combat_log_breakdown.h"
-#include "../spell/damage_over_time.h"
 #include "../items.h"
+#include "../pet/pet.h"
+#include "../rng.h"
+#include "../sets.h"
+#include "../spell/damage_over_time.h"
 #include "../spell/on_crit_proc.h"
 #include "../spell/on_damage_proc.h"
 #include "../spell/on_dot_tick_proc.h"
 #include "../spell/on_hit_proc.h"
-#include "../pet/pet.h"
-#include "../rng.h"
-#include "../sets.h"
+#include "../spell/on_resist_proc.h"
 #include "../spell/spell.h"
 #include "../talents.h"
 #include "../trinket.h"
@@ -68,6 +69,7 @@ struct Player {
   std::vector<OnCritProc*> on_crit_procs;
   std::vector<OnDotTickProc*> on_dot_tick_procs;
   std::vector<OnDamageProc*> on_damage_procs;
+  std::vector<OnResistProc*> on_resist_procs;
   Rng rng;
   EntityType entity_type;
   double cast_time_remaining;

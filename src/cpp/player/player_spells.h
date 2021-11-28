@@ -57,6 +57,7 @@ struct PlayerSpells {
   std::shared_ptr<Spell> ashtongue_talisman_of_shadows;
   std::shared_ptr<Spell> wrath_of_cenarius;
   std::shared_ptr<Spell> darkmoon_card_crusade;
+  std::shared_ptr<Spell> eye_of_magtheridon;
   std::shared_ptr<Spell> improved_shadow_bolt;
   std::vector<std::shared_ptr<Spell>> power_infusion;
   std::vector<std::shared_ptr<Spell>> bloodlust;

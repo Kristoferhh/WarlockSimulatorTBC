@@ -5,8 +5,8 @@ struct Player;
 #include <cmath>
 #include <string>
 
-#include "damage_over_time.h"
 #include "../enums.h"
+#include "damage_over_time.h"
 
 struct Spell : std::enable_shared_from_this<Spell> {
   Player& player;
@@ -51,6 +51,8 @@ struct Spell : std::enable_shared_from_this<Spell> {
   bool on_dot_tick_procs_enabled;
   bool procs_on_damage;
   bool on_damage_procs_enabled;
+  bool procs_on_resist;
+  bool on_resist_procs_enabled;
   // For Chipped Power Core
   bool usable_once_per_fight;
   bool has_not_been_cast_this_fight;
@@ -73,6 +75,7 @@ struct Spell : std::enable_shared_from_this<Spell> {
   int GetManaCost();
   void Tick(double time);
   void OnCritProcs();
+  void OnResistProcs();
   void OnDamageProcs();
   void OnHitProcs();
 };

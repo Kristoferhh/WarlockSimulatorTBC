@@ -292,8 +292,10 @@ void Player::Initialize() {
   if (items.chest == 28602) auras.robe_of_the_elder_scribes = std::make_unique<RobeOfTheElderScribesAura>(*this);
   if (settings.meta_gem_id == 25893)
     auras.mystical_skyfire_diamond = std::make_unique<MysticalSkyfireDiamondAura>(*this);
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 28789) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 28789) != equipped_trinket_ids.end()) {
     auras.eye_of_magtheridon = std::make_unique<EyeOfMagtheridonAura>(*this);
+    spells.eye_of_magtheridon = std::make_unique<EyeOfMagtheridon>(*this, auras.eye_of_magtheridon);
+  }
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 32493) != equipped_trinket_ids.end())
     auras.ashtongue_talisman_of_shadows = std::make_unique<AshtongueTalismanOfShadowsAura>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 31856) != equipped_trinket_ids.end())
@@ -545,13 +547,7 @@ double Player::GetHitChance(SpellType spell_type) {
 
 bool Player::IsCrit(SpellType spell_type, double extra_crit) { return RollRng(GetCritChance(spell_type) + extra_crit); }
 
-bool Player::IsHit(SpellType spell_type) {
-  const bool kIsHit = RollRng(GetHitChance(spell_type));
-  if (!kIsHit && auras.eye_of_magtheridon != NULL) {
-    auras.eye_of_magtheridon->Apply();
-  }
-  return kIsHit;
-}
+bool Player::IsHit(SpellType spell_type) { return RollRng(GetHitChance(spell_type)); }
 
 int Player::GetRand() { return rng.range(0, 100 * kFloatNumberMultiplier); }
 

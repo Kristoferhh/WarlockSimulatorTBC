@@ -30,7 +30,9 @@ Spell::Spell(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageO
       on_crit_procs_enabled(true),
       can_miss(false),
       procs_on_dot_ticks(false),
-      on_dot_tick_procs_enabled(true) {}
+      on_dot_tick_procs_enabled(true),
+      procs_on_resist(false),
+      on_resist_procs_enabled(true) {}
 
 void Spell::Reset() {
   cooldown_remaining = 0;
@@ -203,6 +205,8 @@ void Spell::Cast() {
     if (player.recording_combat_log_breakdown) {
       player.combat_log_breakdown.at(name)->misses++;
     }
+    OnResistProcs();
+
     return;
   }
 
@@ -373,6 +377,14 @@ double Spell::PredictDamage() {
 
 void Spell::OnCritProcs() {
   for (auto& proc : player.on_crit_procs) {
+    if (proc->Ready() && proc->ShouldProc(this) && player.RollRng(proc->proc_chance)) {
+      proc->StartCast();
+    }
+  }
+}
+
+void Spell::OnResistProcs() {
+  for (auto& proc : player.on_resist_procs) {
     if (proc->Ready() && proc->ShouldProc(this) && player.RollRng(proc->proc_chance)) {
       proc->StartCast();
     }
@@ -580,6 +592,7 @@ void SeedOfCorruption::Damage(bool isCrit) {
     // Check for a resist
     if (!player.IsHit(type)) {
       resist_amount++;
+      OnResistProcs();
     } else {
       OnDamageProcs();
       // Check for a crit

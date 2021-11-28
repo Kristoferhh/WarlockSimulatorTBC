@@ -52,7 +52,7 @@ const std::string kBladeOfWizardry = "Blade of Wizardry";
 const std::string kShatteredSunPendantOfAcumenAldor = "Shattered Sun Pendant of Acumen (Aldor)";
 const std::string kShatteredSunPendantOfAcumenScryers = "Shattered Sun Pendant of Acumen (Scryers)";
 const std::string kRobeOfTheElderScribes = "Robe of the Elder Scribes";
-const std::string kQuagmirransEye = "QuagmirransEye";
+const std::string kQuagmirransEye = "Quagmirrans Eye";
 const std::string kShiffarsNexusHorn = "Shiffar's Nexus Horn";
 const std::string kSextantOfUnstableCurrents = "Sextant of Unstable Currents";
 const std::string kBandOfTheEternalSage = "Band of the Eternal Sage";
@@ -63,6 +63,7 @@ const std::string kPowerInfusion = "Power Infusion";
 const std::string kInnervate = "Innervate";
 const std::string kChippedPowerCore = "Chipped Power Core";
 const std::string kCrackedPowerCore = "Cracked Power Core";
+const std::string kNightfall = "Nightfall";
 const std::string kManaTideTotem = "Mana Tide Totem";
 const std::string kJudgementOfWisdom = "Judgement of Wisdom";
 const std::string kFlameshadow = "Flameshadow";
@@ -83,6 +84,7 @@ const std::string kCleave = "Cleave";
 const std::string kBlackBook = "Black Book";
 const std::string kBattleSquawk = "Battle Squawk";
 const std::string kImprovedShadowBolt = "Improved Shadow Bolt";
+const std::string kEyeOfMagtheridon = "Eye of Magtheridon";
 }  // namespace SpellName
 
 namespace StatName {
