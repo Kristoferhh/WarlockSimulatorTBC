@@ -121,8 +121,8 @@ void Simulation::Start() {
 
             // Cast Conflagrate if there's not enough time for another filler
             // and Immolate is up
-            if (kNotEnoughTimeForFillerSpell && player.spells.conflagrate != NULL && player.auras.immolate != NULL &&
-                player.spells.conflagrate->CanCast() && player.auras.immolate->active) {
+            if (kNotEnoughTimeForFillerSpell && player.spells.conflagrate != NULL &&
+                player.spells.conflagrate->CanCast()) {
               SelectedSpellHandler(player.spells.conflagrate, predicted_damage_of_spells, kFightTimeRemaining);
             }
             // Cast Shadowburn if there's not enough time for another filler

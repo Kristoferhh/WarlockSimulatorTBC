@@ -788,12 +788,11 @@ Conflagrate::Conflagrate(Player& player) : Spell(player) {
   Setup();
 }
 
-void Conflagrate::StartCast() {
-  /*if (player.auras.Immolate != NULL && player.auras.immolate->active)
-  {
-      Spell::StartCast();
-      player.auras.immolate->active = false;
-  }*/
+bool Conflagrate::Ready() { return player.auras.immolate != NULL && player.auras.immolate->active && Spell::Ready(); }
+
+void Conflagrate::Damage(bool is_crit) {
+  Spell::Damage(is_crit);
+  player.auras.immolate->Fade();
 }
 
 DestructionPotion::DestructionPotion(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {

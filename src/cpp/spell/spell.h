@@ -152,7 +152,8 @@ struct CurseOfDoom : public Spell {
 
 struct Conflagrate : public Spell {
   Conflagrate(Player& player);
-  void StartCast();
+  void Damage(bool is_crit = false);
+  bool Ready();
 };
 
 struct DestructionPotion : public Spell {
