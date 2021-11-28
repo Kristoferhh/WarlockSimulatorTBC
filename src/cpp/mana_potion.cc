@@ -13,7 +13,7 @@ void ManaPotion::Cast() {
   Spell::Cast();
   const double kCurrentPlayerMana = player.stats.mana;
   // todo check for the randomize values option
-  const int kManaGain = player.rng.range(min_mana, max_mana);
+  const int kManaGain = player.rng.range(min_mana_gain, max_mana_gain);
   player.stats.mana = std::min(player.stats.max_mana, kCurrentPlayerMana + kManaGain);
   if (player.recording_combat_log_breakdown) {
     player.AddIterationDamageAndMana(name, kManaGain, 0);
@@ -26,16 +26,16 @@ void ManaPotion::Cast() {
 }
 
 SuperManaPotion::SuperManaPotion(Player& player) : ManaPotion(player) {
-  name = "Super Mana Potion";
-  min_mana = 1800;
-  max_mana = 3000;
+  name = SpellName::kSuperManaPotion;
+  min_mana_gain = 1800;
+  max_mana_gain = 3000;
   Setup();
 }
 
 DemonicRune::DemonicRune(Player& player) : ManaPotion(player) {
-  name = "Demonic Rune";
-  min_mana = 900;
-  max_mana = 1500;
+  name = SpellName::kDemonicRune;
+  min_mana_gain = 900;
+  max_mana_gain = 1500;
   Setup();
 }
 

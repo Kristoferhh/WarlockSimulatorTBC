@@ -48,35 +48,35 @@ void Stat::ModifyStat(std::string action) {
 
 SpellPower::SpellPower(Player& player, double& character_stat, EntityType entity_type, double value)
     : Stat(player, character_stat, entity_type, value) {
-  name = "Spell Power";
+  name = StatName::kSpellPower;
   calculation_type = CalculationType::kAdditive;
   affects_pet = true;
 }
 
 ShadowPower::ShadowPower(Player& player, double& character_stat, EntityType entity_type, double value)
     : Stat(player, character_stat, entity_type, value) {
-  name = "Shadow Power";
+  name = StatName::kShadowPower;
   calculation_type = CalculationType::kAdditive;
   affects_pet = true;
 }
 
 FirePower::FirePower(Player& player, double& character_stat, EntityType entity_type, double value)
     : Stat(player, character_stat, entity_type, value) {
-  name = "Fire Power";
+  name = StatName::kFirePower;
   calculation_type = CalculationType::kAdditive;
   affects_pet = true;
 }
 
 SpellHasteRating::SpellHasteRating(Player& player, double& character_stat, EntityType entity_type, double value)
     : Stat(player, character_stat, entity_type, value) {
-  name = "Spell Haste Rating";
+  name = StatName::kSpellHasteRating;
   calculation_type = CalculationType::kAdditive;
   affects_pet = false;
 }
 
 SpellHastePercent::SpellHastePercent(Player& player, double& character_stat, EntityType entity_type, double value)
     : Stat(player, character_stat, entity_type, value) {
-  name = "Spell Haste Percent";
+  name = StatName::kSpellHastePercent;
   calculation_type = CalculationType::kMultiplicative;
   affects_pet = false;
   combat_log_decimal_places = 4;
@@ -84,14 +84,14 @@ SpellHastePercent::SpellHastePercent(Player& player, double& character_stat, Ent
 
 MeleeHastePercent::MeleeHastePercent(Player& player, double& character_stat, EntityType entity_type, double value)
     : Stat(player, character_stat, entity_type, value) {
-  name = "Melee Haste Percent";
+  name = StatName::kMeleeHastePercent;
   calculation_type = CalculationType::kMultiplicative;
   combat_log_decimal_places = 4;
 }
 
 ManaCostModifier::ManaCostModifier(Player& player, double& character_stat, EntityType entity_type, double value)
     : Stat(player, character_stat, entity_type, value) {
-  name = "Mana Cost Modifier";
+  name = StatName::kManaCostModifier;
   calculation_type = CalculationType::kMultiplicative;
   affects_pet = false;
   combat_log_decimal_places = 2;
@@ -99,7 +99,7 @@ ManaCostModifier::ManaCostModifier(Player& player, double& character_stat, Entit
 
 SpellCritChance::SpellCritChance(Player& player, double& character_stat, EntityType entity_type, double value)
     : Stat(player, character_stat, entity_type, value) {
-  name = "Spell Crit Chance";
+  name = StatName::kSpellCritChance;
   calculation_type = CalculationType::kAdditive;
   affects_pet = false;
   combat_log_decimal_places = 2;
@@ -107,13 +107,13 @@ SpellCritChance::SpellCritChance(Player& player, double& character_stat, EntityT
 
 SpellCritRating::SpellCritRating(Player& player, double& character_stat, EntityType entity_type, double value)
     : Stat(player, character_stat, entity_type, value) {
-  name = "Spell Crit Rating";
+  name = StatName::kSpellCritRating;
   calculation_type = CalculationType::kAdditive;
   affects_pet = false;
 }
 
 AttackPower::AttackPower(Player& player, double& character_stat, EntityType entity_type, double value)
     : Stat(player, character_stat, entity_type, value) {
-  name = "Attack Power";
+  name = StatName::kAttackPower;
   calculation_type = CalculationType::kAdditive;
 }

@@ -29,7 +29,7 @@ void PetAura::Apply() {
   if (pet->player.ShouldWriteToCombatLog()) {
     std::string msg = pet->name + " " + (active && stacks == max_stacks ? "refreshed" : "gains") + " " + name;
 
-    if (pet->auras.demonic_frenzy != NULL && name == pet->auras.demonic_frenzy->name) {
+    if (name == SpellName::kDemonicFrenzy) {
       msg.append(" (" + std::to_string(stacks) + ") - Current AP: " + DoubleToString(round(pet->GetAttackPower())) +
                  ")");
     }
@@ -66,20 +66,20 @@ void PetAura::Fade() {
 }
 
 DemonicFrenzy::DemonicFrenzy(std::shared_ptr<Pet> pet) : PetAura(pet) {
-  name = "Demonic Frenzy";
+  name = SpellName::kDemonicFrenzy;
   duration = 10;
   max_stacks = 10;
 }
 
 BlackBook::BlackBook(std::shared_ptr<Pet> pet) : PetAura(pet) {
-  name = "Black Book";
+  name = SpellName::kBlackBook;
   duration = 30;
   stats = std::vector<Stat>{SpellPower(pet->player, pet->buff_stats.spell_power, EntityType::kPet, 200),
                             AttackPower(pet->player, pet->buff_stats.attack_power, EntityType::kPet, 325)};
 }
 
 BattleSquawk::BattleSquawk(std::shared_ptr<Pet> pet) : PetAura(pet) {
-  name = "Battle Squawk";
+  name = SpellName::kBattleSquawk;
   duration = 300;
   stats = std::vector<Stat>{MeleeHastePercent(pet->player, pet->stats.melee_haste_percent, EntityType::kPet,
                                               std::pow(1.05, pet->player.settings.battle_squawk_amount))};

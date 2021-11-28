@@ -11,6 +11,10 @@
 #include "combat_log_breakdown.h"
 #include "damage_over_time.h"
 #include "items.h"
+#include "on_crit_proc.h"
+#include "on_damage_proc.h"
+#include "on_dot_tick_proc.h"
+#include "on_hit_proc.h"
 #include "pet.h"
 #include "player_auras.h"
 #include "player_settings.h"
@@ -60,6 +64,10 @@ struct Player {
   std::vector<DamageOverTime*> dot_list;
   std::vector<PetSpell*> pet_spell_list;
   std::vector<PetAura*> pet_aura_list;
+  std::vector<OnHitProc*> on_hit_procs;
+  std::vector<OnCritProc*> on_crit_procs;
+  std::vector<OnDotTickProc*> on_dot_tick_procs;
+  std::vector<OnDamageProc*> on_damage_procs;
   Rng rng;
   EntityType entity_type;
   double cast_time_remaining;

@@ -84,7 +84,7 @@ void Aura::Fade() {
 void Aura::DecrementStacks() {}
 
 ImprovedShadowBoltAura::ImprovedShadowBoltAura(Player& player) : Aura(player) {
-  name = "Improved Shadow Bolt";
+  name = SpellName::kImprovedShadowBolt;
   duration = 12;
   stacks = 0;
   max_stacks = 4;
@@ -128,7 +128,6 @@ ShadowTranceAura::ShadowTranceAura(Player& player) : Aura(player) {
 FlameshadowAura::FlameshadowAura(Player& player) : Aura(player) {
   name = "Flameshadow";
   duration = 15;
-  proc_chance = 5;
   Aura::stats = std::vector<Stat>{ShadowPower(player, player.stats.shadow_power, EntityType::kPlayer, 135)};
   Setup();
 }
@@ -136,7 +135,6 @@ FlameshadowAura::FlameshadowAura(Player& player) : Aura(player) {
 ShadowflameAura::ShadowflameAura(Player& player) : Aura(player) {
   name = "Shadowflame";
   duration = 15;
-  proc_chance = 5;
   Aura::stats = std::vector<Stat>{FirePower(player, player.stats.fire_power, EntityType::kPlayer, 135)};
   Setup();
 }
@@ -144,7 +142,6 @@ ShadowflameAura::ShadowflameAura(Player& player) : Aura(player) {
 SpellstrikeAura::SpellstrikeAura(Player& player) : Aura(player) {
   name = "Spellstrike";
   duration = 10;
-  proc_chance = 5;
   Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 92)};
   Setup();
 }
@@ -188,7 +185,6 @@ ShiffarsNexusHornAura::ShiffarsNexusHornAura(Player& player) : Aura(player) {
 ManaEtched4SetAura::ManaEtched4SetAura(Player& player) : Aura(player) {
   name = "Mana-Etched 4-Set Bonus";
   duration = 15;
-  proc_chance = 2;
   Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 110)};
   Setup();
 }
@@ -247,7 +243,6 @@ DrumsOfWarAura::DrumsOfWarAura(Player& player) : Aura(player) {
 AshtongueTalismanOfShadowsAura::AshtongueTalismanOfShadowsAura(Player& player) : Aura(player) {
   name = "Ashtongue Talisman of Shadows";
   duration = 5;
-  proc_chance = 20;
   Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 220)};
   Setup();
 }
@@ -322,13 +317,12 @@ BandOfTheEternalSageAura::BandOfTheEternalSageAura(Player& player) : Aura(player
 BladeOfWizardryAura::BladeOfWizardryAura(Player& player) : Aura(player) {
   name = "Blade of Wizardry";
   duration = 6;
-  proc_chance = 15;
   Aura::stats = std::vector<Stat>{SpellHasteRating(player, player.stats.spell_haste_rating, EntityType::kPlayer, 280)};
   Setup();
 }
 
-ShatteredSunPendantOfAcumenAura::ShatteredSunPendantOfAcumenAura(Player& player) : Aura(player) {
-  name = "Shattered Sun Pendant of Acumen (Aldor)";
+ShatteredSunPendantOfAcumenAldorAura::ShatteredSunPendantOfAcumenAldorAura(Player& player) : Aura(player) {
+  name = SpellName::kShatteredSunPendantOfAcumenAldor;
   duration = 10;
   Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 120)};
   Setup();
@@ -357,7 +351,6 @@ AmplifyCurseAura::AmplifyCurseAura(Player& player) : Aura(player) {
 WrathOfCenariusAura::WrathOfCenariusAura(Player& player) : Aura(player) {
   name = "Wrath of Cenarius";
   duration = 10;
-  proc_chance = 5;
   Aura::stats = std::vector<Stat>{SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 132)};
   Setup();
 }

@@ -14,7 +14,6 @@ struct Aura {
   std::string name;
   int duration;
   double duration_remaining;
-  int proc_chance;
   bool active;
   bool has_duration;
   bool group_wide;  // true if it's an aura that applies to everyone in the group
@@ -149,8 +148,8 @@ struct BladeOfWizardryAura : public Aura {
   BladeOfWizardryAura(Player& player);
 };
 
-struct ShatteredSunPendantOfAcumenAura : public Aura {
-  ShatteredSunPendantOfAcumenAura(Player& player);
+struct ShatteredSunPendantOfAcumenAldorAura : public Aura {
+  ShatteredSunPendantOfAcumenAldorAura(Player& player);
 };
 
 struct RobeOfTheElderScribesAura : public Aura {

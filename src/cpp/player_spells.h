@@ -34,7 +34,8 @@ struct PlayerSpells {
   std::shared_ptr<Spell> drums_of_war;
   std::shared_ptr<Spell> drums_of_restoration;
   std::shared_ptr<Spell> blade_of_wizardry;
-  std::shared_ptr<Spell> shattered_sun_pendant_of_acumen;
+  std::shared_ptr<Spell> shattered_sun_pendant_of_acumen_aldor;
+  std::shared_ptr<Spell> shattered_sun_pendant_of_acumen_scryers;
   std::shared_ptr<Spell> robe_of_the_elder_scribes;
   std::shared_ptr<Spell> mystical_skyfire_diamond;
   std::shared_ptr<Spell> insightful_earthstorm_diamond;
@@ -49,6 +50,14 @@ struct PlayerSpells {
   std::shared_ptr<Spell> cracked_power_core;
   std::shared_ptr<Spell> mana_tide_totem;
   std::shared_ptr<Spell> judgement_of_wisdom;
+  std::shared_ptr<Spell> flameshadow;
+  std::shared_ptr<Spell> shadowflame;
+  std::shared_ptr<Spell> spellstrike;
+  std::shared_ptr<Spell> mana_etched_4_set;
+  std::shared_ptr<Spell> ashtongue_talisman_of_shadows;
+  std::shared_ptr<Spell> wrath_of_cenarius;
+  std::shared_ptr<Spell> darkmoon_card_crusade;
+  std::shared_ptr<Spell> improved_shadow_bolt;
   std::vector<std::shared_ptr<Spell>> power_infusion;
   std::vector<std::shared_ptr<Spell>> bloodlust;
   std::vector<std::shared_ptr<Spell>> innervate;
