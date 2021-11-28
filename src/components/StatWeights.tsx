@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux"
 import { getAllocatedTalentsPointsInTree } from "../Common";
 import { Talents } from "../data/Talents";
@@ -6,23 +7,24 @@ import { RootState } from "../redux/Store"
 import { setStatWeightVisibility } from "../redux/UiSlice";
 import { Stat, StatWeightStats, TalentTree } from "../Types";
 
-const statDisplay: { displayName: string, stat: [keyof StatWeightStats] }[] = [
-  { displayName: 'Stamina', stat: [Stat.stamina] },
-  { displayName: 'Intellect', stat: [Stat.intellect] },
-  { displayName: 'Spirit', stat: [Stat.spirit] },
-  { displayName: 'Spell Power', stat: [Stat.spellPower] },
-  { displayName: 'Shadow Power', stat: [Stat.shadowPower] },
-  { displayName: 'Fire Power', stat: [Stat.firePower] },
-  { displayName: 'Hit Rating', stat: [Stat.hitRating] },
-  { displayName: 'Crit Rating', stat: [Stat.critRating] },
-  { displayName: 'Haste Rating', stat: [Stat.hasteRating] },
-  { displayName: 'Mp5', stat: [Stat.mp5] },
-]
-
 export default function StatWeights() {
   const playerState = useSelector((state: RootState) => state.player);
   const uiState = useSelector((state: RootState) => state.ui);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
+
+  const statDisplay: { displayName: string, stat: [keyof StatWeightStats] }[] = [
+    { displayName: t('Stamina'), stat: [Stat.stamina] },
+    { displayName: t('Intellect'), stat: [Stat.intellect] },
+    { displayName: t('Spirit'), stat: [Stat.spirit] },
+    { displayName: t('Spell Power'), stat: [Stat.spellPower] },
+    { displayName: t('Shadow Power'), stat: [Stat.shadowPower] },
+    { displayName: t('Fire Power'), stat: [Stat.firePower] },
+    { displayName: t('Hit Rating'), stat: [Stat.hitRating] },
+    { displayName: t('Crit Rating'), stat: [Stat.critRating] },
+    { displayName: t('Haste Rating'), stat: [Stat.hasteRating] },
+    { displayName: t('Mp5'), stat: [Stat.mp5] },
+  ]
 
   return (
     <section id="stat-weights-section" style={{ display: uiState.statWeights.visible ? '' : 'none' }}>
