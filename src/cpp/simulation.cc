@@ -10,7 +10,7 @@
 #include "bindings.h"
 #include "common.h"
 #include "enums.h"
-#include "spell.h"
+#include "spell/spell.h"
 
 Simulation::Simulation(Player& player, const SimulationSettings& simulation_settings)
     : player(player), settings(simulation_settings) {}

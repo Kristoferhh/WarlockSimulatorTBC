@@ -1,6 +1,6 @@
 #include "mana_over_time.h"
 
-#include "player.h"
+#include "../player/player.h"
 
 ManaOverTime::ManaOverTime(Player& player) : Aura(player) { tick_timer_total = 3; }
 

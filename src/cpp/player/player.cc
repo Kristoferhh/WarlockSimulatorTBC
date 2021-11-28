@@ -2,13 +2,13 @@
 
 #include <math.h>
 
-#include "bindings.h"
-#include "common.h"
-#include "damage_over_time.h"
-#include "life_tap.h"
-#include "mana_over_time.h"
-#include "mana_potion.h"
-#include "spell.h"
+#include "../bindings.h"
+#include "../common.h"
+#include "../spell/damage_over_time.h"
+#include "../spell/life_tap.h"
+#include "../spell/mana_over_time.h"
+#include "../spell/mana_potion.h"
+#include "../spell/spell.h"
 
 Player::Player(PlayerSettings& player_settings)
     : selected_auras(player_settings.auras),

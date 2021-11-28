@@ -1,11 +1,11 @@
 #ifndef WARLOCK_SIMULATOR_TBC_PLAYER_SETTINGS
 #define WARLOCK_SIMULATOR_TBC_PLAYER_SETTINGS
 
-#include "auras.h"
-#include "embind_constant.h"
-#include "items.h"
-#include "sets.h"
-#include "talents.h"
+#include "../auras.h"
+#include "../embind_constant.h"
+#include "../items.h"
+#include "../sets.h"
+#include "../talents.h"
 
 struct PlayerSettings {
   Auras& auras;

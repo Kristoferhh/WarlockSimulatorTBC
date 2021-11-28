@@ -1,8 +1,8 @@
 #include "pet_spell.h"
 
-#include "common.h"
+#include "../common.h"
 #include "pet_aura.h"
-#include "player.h"
+#include "../player/player.h"
 
 PetSpell::PetSpell(std::shared_ptr<Pet> pet)
     : pet(pet),
@@ -12,7 +12,6 @@ PetSpell::PetSpell(std::shared_ptr<Pet> pet)
       cast_time(0),
       mana_cost(0),
       modifier(1),
-      school(SpellSchool::kNoSchool),
       cooldown(0) {}
 
 void PetSpell::Setup() {

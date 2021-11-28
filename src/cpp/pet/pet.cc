@@ -1,8 +1,8 @@
 #include "pet.h"
 
-#include "bindings.h"
-#include "common.h"
-#include "player.h"
+#include "../bindings.h"
+#include "../common.h"
+#include "../player/player.h"
 
 Pet::Pet(Player& player)
     : player(player),

@@ -4,7 +4,7 @@
 struct Pet;
 #include <iostream>
 
-#include "enums.h"
+#include "../enums.h"
 
 struct PetSpell {
   std::shared_ptr<Pet> pet;

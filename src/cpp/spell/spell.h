@@ -6,7 +6,7 @@ struct Player;
 #include <string>
 
 #include "damage_over_time.h"
-#include "enums.h"
+#include "../enums.h"
 
 struct Spell : std::enable_shared_from_this<Spell> {
   Player& player;

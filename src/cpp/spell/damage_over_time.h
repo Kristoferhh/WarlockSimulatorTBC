@@ -4,8 +4,8 @@
 struct Player;
 #include <iostream>
 
-#include "aura.h"
-#include "enums.h"
+#include "../aura.h"
+#include "../enums.h"
 
 struct DamageOverTime {
   Player& player;

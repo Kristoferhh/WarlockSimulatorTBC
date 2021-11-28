@@ -2,9 +2,9 @@
 
 #include <iomanip>
 
-#include "bindings.h"
-#include "common.h"
-#include "player.h"
+#include "../bindings.h"
+#include "../common.h"
+#include "../player/player.h"
 
 Spell::Spell(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
     : player(player),

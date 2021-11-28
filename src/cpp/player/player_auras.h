@@ -1,8 +1,8 @@
 #ifndef WARLOCK_SIMULATOR_TBC_PLAYER_AURAS
 #define WARLOCK_SIMULATOR_TBC_PLAYER_AURAS
 
-#include "aura.h"
-#include "damage_over_time.h"
+#include "../aura.h"
+#include "../spell/damage_over_time.h"
 
 struct PlayerAuras {
   std::shared_ptr<DamageOverTime> corruption;

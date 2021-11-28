@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "spell.h"
+#include "../spell/spell.h"
 
 struct PlayerSpells {
   std::shared_ptr<Spell> life_tap;

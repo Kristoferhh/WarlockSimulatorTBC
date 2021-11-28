@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "common.h"
-#include "player.h"
+#include "player/player.h"
 
 Aura::Aura(Player& player)
     : player(player),

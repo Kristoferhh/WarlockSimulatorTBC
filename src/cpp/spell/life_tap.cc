@@ -1,7 +1,7 @@
 #include "life_tap.h"
 
-#include "common.h"
-#include "player.h"
+#include "../common.h"
+#include "../player/player.h"
 
 LifeTap::LifeTap(Player& player) : Spell(player), player(player) {
   name = SpellName::kLifeTap;

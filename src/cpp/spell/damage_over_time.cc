@@ -1,7 +1,7 @@
 #include "damage_over_time.h"
 
-#include "common.h"
-#include "player.h"
+#include "../common.h"
+#include "../player/player.h"
 
 DamageOverTime::DamageOverTime(Player& player)
     : player(player),

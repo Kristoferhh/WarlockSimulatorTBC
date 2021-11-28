@@ -1,7 +1,7 @@
 #ifndef WARLOCK_SIMULATOR_TBC_SIMULATION
 #define WARLOCK_SIMULATOR_TBC_SIMULATION
 
-#include "player.h"
+#include "player/player.h"
 #include "simulation_settings.h"
 
 struct Simulation {

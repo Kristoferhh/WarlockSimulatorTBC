@@ -1,7 +1,7 @@
 #include "stat.h"
 
 #include "common.h"
-#include "player.h"
+#include "player/player.h"
 
 Stat::Stat(Player& player, double& character_stat, EntityType entity_type, double value)
     : player(player),

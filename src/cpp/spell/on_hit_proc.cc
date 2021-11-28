@@ -1,6 +1,6 @@
 #include "on_hit_proc.h"
 
-#include "player.h"
+#include "../player/player.h"
 
 OnHitProc::OnHitProc(Player& player, std::shared_ptr<Aura> aura) : SpellProc(player, aura) { procs_on_hit = true; }
 

@@ -1,7 +1,7 @@
 #include "mana_potion.h"
 
-#include "common.h"
-#include "player.h"
+#include "../common.h"
+#include "../player/player.h"
 
 ManaPotion::ManaPotion(Player& player) : Spell(player) {
   cooldown = 120;

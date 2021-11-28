@@ -6,7 +6,7 @@ struct Player;
 #include <iostream>
 #include <vector>
 
-#include "stat.h"
+#include "../stat.h"
 
 struct PetAura {
   std::shared_ptr<Pet> pet;

@@ -5,8 +5,8 @@ struct Player;
 #include <iostream>
 #include <map>
 
-#include "character_stats.h"
-#include "enums.h"
+#include "../character_stats.h"
+#include "../enums.h"
 #include "pet_auras.h"
 #include "pet_spells.h"
 

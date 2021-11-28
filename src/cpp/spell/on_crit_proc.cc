@@ -1,6 +1,6 @@
 #include "on_crit_proc.h"
 
-#include "player.h"
+#include "../player/player.h"
 
 OnCritProc::OnCritProc(Player& player, std::shared_ptr<Aura> aura) : SpellProc(player, aura) { procs_on_crit = true; }
 

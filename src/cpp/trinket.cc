@@ -1,7 +1,7 @@
 #include "trinket.h"
 
 #include "common.h"
-#include "player.h"
+#include "player/player.h"
 
 Trinket::Trinket(Player& player)
     : player(player),

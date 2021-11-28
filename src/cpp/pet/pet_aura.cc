@@ -1,7 +1,7 @@
 #include "pet_aura.h"
 
-#include "common.h"
-#include "player.h"
+#include "../common.h"
+#include "../player/player.h"
 
 PetAura::PetAura(std::shared_ptr<Pet> pet)
     : pet(pet), duration(0), duration_remaining(0), active(false), stacks(0), max_stacks(0) {}
