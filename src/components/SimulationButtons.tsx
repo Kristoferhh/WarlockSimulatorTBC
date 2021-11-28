@@ -100,13 +100,11 @@ export function SimulationButtons() {
     let iterationAmount = parseInt(customPlayerState.settings.iterations);
 
     if (params.simulationType === SimulationType.StatWeights) {
-      // Set minimum iteration amount to 30,000 for stat weight sims
-      if (iterationAmount < 30000) {
-        iterationAmount = 30000;
-      }
-      // Double the iteration amount for stat weight sims if it's not the 'normal' sim with no added stats.
+      // Set minimum iteration amount to 100,000 for stat weight sims
+      iterationAmount = Math.max(iterationAmount, 100000);
+      // Increase the iteration amount for stat weight sims if it's not the 'normal' sim with no added stats.
       if (params.customStat?.stat !== 'normal') {
-        iterationAmount *= 2;
+        iterationAmount += 20000;
       }
     }
 
