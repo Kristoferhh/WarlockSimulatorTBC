@@ -147,6 +147,14 @@ void Spell::Cast() {
   casting = false;
   has_not_been_cast_this_fight = false;
 
+  for (auto& spell_name : shared_cooldown_spells) {
+    for (auto& player_spell : player.spell_list) {
+      if (player_spell->name == spell_name) {
+        player_spell->cooldown_remaining = cooldown;
+      }
+    }
+  }
+
   if (name == SpellName::kPowerInfusion) {
     player.power_infusions_ready--;
   }
@@ -788,18 +796,9 @@ FlameCap::FlameCap(Player& player, std::shared_ptr<Aura> aura) : Spell(player, a
   cooldown = 180;
   is_item = true;
   on_gcd = false;
+  shared_cooldown_spells.insert(shared_cooldown_spells.end(),
+                                {SpellName::kChippedPowerCore, SpellName::kCrackedPowerCore});
   Setup();
-}
-
-void FlameCap::Cast() {
-  Spell::Cast();
-
-  if (player.spells.chipped_power_core != NULL) {
-    player.spells.chipped_power_core->cooldown_remaining = cooldown;
-  }
-  if (player.spells.cracked_power_core != NULL) {
-    player.spells.cracked_power_core->cooldown_remaining = cooldown;
-  }
 }
 
 BloodFury::BloodFury(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
@@ -874,44 +873,20 @@ ChippedPowerCore::ChippedPowerCore(Player& player, std::shared_ptr<Aura> aura) :
   usable_once_per_fight = true;  // The item is unique so you can only carry one at a time, so I'm
                                  // just gonna limit it to 1 use per fight.
   on_gcd = false;
+  shared_cooldown_spells.insert(shared_cooldown_spells.end(),
+                                {SpellName::kDemonicRune, SpellName::kFlameCap, SpellName::kCrackedPowerCore});
   Setup();
 };
-
-void ChippedPowerCore::Cast() {
-  Spell::Cast();
-
-  if (player.spells.demonic_rune != NULL) {
-    player.spells.demonic_rune->cooldown_remaining = cooldown;
-  }
-  if (player.spells.flame_cap != NULL) {
-    player.spells.flame_cap->cooldown_remaining = cooldown;
-  }
-  if (player.spells.cracked_power_core != NULL) {
-    player.spells.cracked_power_core->cooldown_remaining = cooldown;
-  }
-}
 
 CrackedPowerCore::CrackedPowerCore(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
   name = SpellName::kCrackedPowerCore;
   cooldown = 120;
   usable_once_per_fight = true;
   on_gcd = false;
+  shared_cooldown_spells.insert(shared_cooldown_spells.end(),
+                                {SpellName::kDemonicRune, SpellName::kFlameCap, SpellName::kChippedPowerCore});
   Setup();
 };
-
-void CrackedPowerCore::Cast() {
-  Spell::Cast();
-
-  if (player.spells.demonic_rune != NULL) {
-    player.spells.demonic_rune->cooldown_remaining = cooldown;
-  }
-  if (player.spells.flame_cap != NULL) {
-    player.spells.flame_cap->cooldown_remaining = cooldown;
-  }
-  if (player.spells.chipped_power_core != NULL) {
-    player.spells.chipped_power_core->cooldown_remaining = cooldown;
-  }
-}
 
 ManaTideTotem::ManaTideTotem(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
   name = SpellName::kManaTideTotem;

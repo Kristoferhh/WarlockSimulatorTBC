@@ -12,6 +12,7 @@ struct Spell : std::enable_shared_from_this<Spell> {
   Player& player;
   std::shared_ptr<Aura> aura_effect;
   std::shared_ptr<DamageOverTime> dot_effect;
+  std::vector<std::string> shared_cooldown_spells;
   SpellSchool school;
   SpellType type;
   std::string name;
@@ -157,7 +158,6 @@ struct DestructionPotion : public Spell {
 
 struct FlameCap : public Spell {
   FlameCap(Player& player, std::shared_ptr<Aura> aura);
-  void Cast();
 };
 
 struct BloodFury : public Spell {
@@ -194,12 +194,10 @@ struct Innervate : public Spell {
 
 struct ChippedPowerCore : public Spell {
   ChippedPowerCore(Player& player, std::shared_ptr<Aura> aura);
-  void Cast();
 };
 
 struct CrackedPowerCore : public Spell {
   CrackedPowerCore(Player& player, std::shared_ptr<Aura> aura);
-  void Cast();
 };
 
 struct ManaTideTotem : public Spell {
