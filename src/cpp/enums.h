@@ -85,4 +85,17 @@ const std::string kBattleSquawk = "Battle Squawk";
 const std::string kImprovedShadowBolt = "Improved Shadow Bolt";
 }  // namespace SpellName
 
+namespace StatName {
+const std::string kSpellPower = "Spell Power";
+const std::string kShadowPower = "Shadow Power";
+const std::string kFirePower = "Fire Power";
+const std::string kSpellHasteRating = "Spell Haste Rating";
+const std::string kSpellHastePercent = "Spell Haste Percent";
+const std::string kMeleeHastePercent = "Melee Haste Percent";
+const std::string kManaCostModifier = "Mana Cost Modifier";
+const std::string kSpellCritChance = "Spell Crit Chance";
+const std::string kSpellCritRating = "Spell Crit Rating";
+const std::string kAttackPower = "Attack Power";
+}  // namespace StatName
+
 #endif

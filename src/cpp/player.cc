@@ -497,7 +497,7 @@ double Player::GetHastePercent() {
   if (auras.bloodlust != NULL && auras.power_infusion != NULL && auras.bloodlust->active &&
       auras.power_infusion->active) {
     for (auto& stat : auras.power_infusion->stats) {
-      if (stat.name == "Spell Haste Percent") {
+      if (stat.name == StatName::kSpellHastePercent) {
         haste_percent /= stat.value;
       }
     }

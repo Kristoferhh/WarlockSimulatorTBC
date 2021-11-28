@@ -20,7 +20,7 @@ void DamageOverTime::Setup() {
   original_duration = duration;
 
   // T4 4pc
-  if ((name == "Corruption" || name == "Immolate") && player.sets.t4 >= 4) {
+  if ((name == SpellName::kCorruption || name == SpellName::kImmolate) && player.sets.t4 >= 4) {
     duration += 3;
   }
 
