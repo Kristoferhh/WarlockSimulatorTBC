@@ -107,6 +107,7 @@ struct Player {
   int GetIntellect();
   int GetSpirit();
   int GetRand();
+  double GetCustomImprovedShadowBoltDamageModifier();
   void Tick(double time);
   double FindTimeUntilNextAction();
   bool IsCrit(SpellType spell_type, double extra_crit = 0);

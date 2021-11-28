@@ -136,7 +136,7 @@ Player::Player(PlayerSettings& player_settings)
   // If using a custom isb uptime % then just add to the shadow modifier % (this
   // assumes 5/5 ISB giving 20% shadow Damage)
   if (settings.using_custom_isb_uptime) {
-    stats.shadow_modifier *= (1.0 + 0.2 * (settings.custom_isb_uptime_value / 100.0));
+    stats.shadow_modifier *= 1.0 + GetCustomImprovedShadowBoltDamageModifier();
   }
   stats.spirit_modifier *= (1 - (0.01 * talents.demonic_embrace));
   // Elemental shaman t4 2pc bonus
@@ -826,6 +826,8 @@ void Player::Tick(double time) {
     }
   }
 }
+
+double Player::GetCustomImprovedShadowBoltDamageModifier() { return 0.2 * (settings.custom_isb_uptime_value / 100.0); }
 
 void Player::SendPlayerInfoToCombatLog() {
   combat_log_entries.push_back("---------------- Player stats ----------------");

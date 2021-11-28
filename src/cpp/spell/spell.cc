@@ -570,6 +570,11 @@ void SeedOfCorruption::Damage(bool isCrit) {
   double internal_modifier = GetModifier();
   double external_modifier = 1;
 
+  // If using a custom ISB uptime % then remove the damage bonus since ISB won't be up on the mobs
+  if (player.settings.using_custom_isb_uptime) {
+    internal_modifier /= 1 + player.GetCustomImprovedShadowBoltDamageModifier();
+  }
+
   // Remove debuffs from the modifier since they ignore the AOE cap, so we'll
   // add the debuff % modifiers after the Damage has been calculated.
   if (player.selected_auras.curse_of_the_elements) {
