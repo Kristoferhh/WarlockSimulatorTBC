@@ -11,6 +11,7 @@ struct Player;
 struct Aura {
   Player& player;
   std::vector<Stat> stats;
+  std::vector<Stat> stats_per_stack;
   std::string name;
   int duration;
   double duration_remaining;
@@ -24,7 +25,6 @@ struct Aura {
   int ticks_remaining;
   int ticks_total;
   int minimum_duration;
-  // The Lightning Capacitor & ISB
   int stacks;
   int max_stacks;
   // ISB
@@ -36,7 +36,7 @@ struct Aura {
   virtual void Setup();
   virtual void Tick(double time);
   virtual void Apply();
-  virtual void Fade();
+  void Fade();
   virtual void DecrementStacks();  // ISB
 };
 
@@ -125,19 +125,11 @@ struct AshtongueTalismanOfShadowsAura : public Aura {
 };
 
 struct DarkmoonCardCrusadeAura : public Aura {
-  int stacks;
-  int max_stacks;
-  int spell_power_per_stack;
-
   DarkmoonCardCrusadeAura(Player& player);
-  void Apply();
-  void Fade();
 };
 
 struct TheLightningCapacitorAura : public Aura {
   TheLightningCapacitorAura(Player& player);
-  void Apply();
-  void Fade();
 };
 
 struct BandOfTheEternalSageAura : public Aura {

@@ -14,7 +14,7 @@ struct ImprovedShadowBolt : public OnCritProc {
 };
 
 struct TheLightningCapacitor : public OnCritProc {
-  TheLightningCapacitor(Player& player, std::shared_ptr<Aura> aura);
+  TheLightningCapacitor(Player& player);
   void StartCast(double predicted_damage = 0);
 };
 

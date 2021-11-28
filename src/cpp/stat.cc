@@ -12,19 +12,19 @@ Stat::Stat(Player& player, double& character_stat, EntityType entity_type, doubl
 
 void Stat::AddStat() { ModifyStat("add"); }
 
-void Stat::RemoveStat() { ModifyStat("remove"); }
+void Stat::RemoveStat(int stacks) { ModifyStat("remove", stacks); }
 
-void Stat::ModifyStat(std::string action) {
+void Stat::ModifyStat(std::string action, int stacks) {
   const double kCurrentStatValue = character_stat;
   double new_stat_value = kCurrentStatValue;
 
   if (calculation_type == CalculationType::kAdditive) {
-    new_stat_value += value * (action == "remove" ? -1 : action == "add" ? 1 : 0);
+    new_stat_value += (value * stacks) * (action == "remove" ? -1 : action == "add" ? 1 : 0);
   } else if (calculation_type == CalculationType::kMultiplicative) {
     if (action == "add") {
-      new_stat_value *= value;
+      new_stat_value *= (value * stacks);
     } else if (action == "remove") {
-      new_stat_value /= value;
+      new_stat_value /= (value * stacks);
     }
   }
 
@@ -37,8 +37,9 @@ void Stat::ModifyStat(std::string action) {
                      name + " " +
                      (action == "add" ? (calculation_type == CalculationType::kAdditive ? "+" : "*")
                                       : (calculation_type == CalculationType::kAdditive ? "-" : "/")) +
-                     " " + DoubleToString(value) + " (" + DoubleToString(kCurrentStatValue, combat_log_decimal_places) +
-                     " -> " + DoubleToString(new_stat_value, combat_log_decimal_places) + ")");
+                     " " + DoubleToString(value * stacks) + " (" +
+                     DoubleToString(kCurrentStatValue, combat_log_decimal_places) + " -> " +
+                     DoubleToString(new_stat_value, combat_log_decimal_places) + ")");
   }
 
   if (affects_pet && entity_type == EntityType::kPlayer && player.pet != NULL) {

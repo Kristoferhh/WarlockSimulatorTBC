@@ -20,10 +20,10 @@ struct Stat {
 
   Stat(Player& player, double& character_stat, EntityType entity_type, double value);
   void AddStat();
-  void RemoveStat();
+  void RemoveStat(int stacks = 1);
 
  private:
-  void ModifyStat(std::string action);
+  void ModifyStat(std::string action, int stacks = 1);
 };
 
 struct SpellPower : public Stat {

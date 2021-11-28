@@ -21,7 +21,7 @@ ImprovedShadowBolt::ImprovedShadowBolt(Player& player, std::shared_ptr<Aura> aur
 
 bool ImprovedShadowBolt::ShouldProc(Spell* spell) { return spell->name == SpellName::kShadowBolt; }
 
-TheLightningCapacitor::TheLightningCapacitor(Player& player, std::shared_ptr<Aura> aura) : OnCritProc(player, aura) {
+TheLightningCapacitor::TheLightningCapacitor(Player& player) : OnCritProc(player) {
   name = SpellName::kTheLightningCapacitor;
   cooldown = 2.5;
   min_dmg = 694;
@@ -36,7 +36,7 @@ TheLightningCapacitor::TheLightningCapacitor(Player& player, std::shared_ptr<Aur
 void TheLightningCapacitor::StartCast(double predicted_damage) {
   if (cooldown_remaining <= 0) {
     player.auras.the_lightning_capacitor->Apply();
-    if (player.auras.the_lightning_capacitor->stacks == 3) {
+    if (player.auras.the_lightning_capacitor->stacks == player.auras.the_lightning_capacitor->max_stacks) {
       Spell::StartCast();
       cooldown_remaining = cooldown;
       player.auras.the_lightning_capacitor->Fade();

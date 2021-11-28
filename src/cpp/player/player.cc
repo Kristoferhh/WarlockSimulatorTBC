@@ -393,7 +393,7 @@ void Player::Initialize() {
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 27922) != equipped_trinket_ids.end())
     spells.mark_of_defiance = std::make_unique<MarkOfDefiance>(*this);
   if (auras.the_lightning_capacitor != NULL)
-    spells.the_lightning_capacitor = std::make_unique<TheLightningCapacitor>(*this, auras.the_lightning_capacitor);
+    spells.the_lightning_capacitor = std::make_unique<TheLightningCapacitor>(*this);
   if (auras.quagmirrans_eye != NULL)
     spells.quagmirrans_eye = std::make_unique<QuagmirransEye>(*this, auras.quagmirrans_eye);
   if (auras.shiffars_nexus_horn != NULL)
