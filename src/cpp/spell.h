@@ -17,8 +17,8 @@ struct Spell : std::enable_shared_from_this<Spell> {
   std::string name;
   int min_dmg;
   int max_dmg;
-  int min_mana;
-  int max_mana;
+  int min_mana_gain;
+  int max_mana_gain;
   int proc_chance;
   double mana_gain;
   double cast_time;
@@ -26,7 +26,7 @@ struct Spell : std::enable_shared_from_this<Spell> {
   double coefficient;
   double cooldown;
   double modifier;
-  double bonus_crit;
+  double bonus_crit_chance;
   double cooldown_remaining;
   double dmg;
   int bonus_damage_from_immolate_min;
@@ -50,8 +50,6 @@ struct Spell : std::enable_shared_from_this<Spell> {
   bool on_dot_tick_procs_enabled;
   bool procs_on_damage;
   bool on_damage_procs_enabled;
-  bool procs_from_shadow_spells;
-  bool procs_from_fire_spells;
   // For Chipped Power Core
   bool usable_once_per_fight;
   bool has_not_been_cast_this_fight;
@@ -182,59 +180,6 @@ struct DrumsOfRestoration : public Spell {
   DrumsOfRestoration(Player& player, std::shared_ptr<Aura> aura);
 };
 
-struct TimbalsFocusingCrystal : public Spell {
-  TimbalsFocusingCrystal(Player& player);
-};
-
-struct MarkOfDefiance : public Spell {
-  MarkOfDefiance(Player& player);
-};
-
-struct TheLightningCapacitor : public Spell {
-  TheLightningCapacitor(Player& player, std::shared_ptr<Aura> aura);
-  void StartCast(double predicted_damage = 0);
-};
-
-struct BladeOfWizardry : public Spell {
-  BladeOfWizardry(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct ShatteredSunPendantOfAcumenAldor : public Spell {
-  ShatteredSunPendantOfAcumenAldor(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct ShatteredSunPendantOfAcumenScryers : public Spell {
-  ShatteredSunPendantOfAcumenScryers(Player& player);
-};
-
-struct RobeOfTheElderScribes : public Spell {
-  RobeOfTheElderScribes(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct QuagmirransEye : public Spell {
-  QuagmirransEye(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct ShiffarsNexusHorn : public Spell {
-  ShiffarsNexusHorn(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct SextantOfUnstableCurrents : public Spell {
-  SextantOfUnstableCurrents(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct BandOfTheEternalSage : public Spell {
-  BandOfTheEternalSage(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct MysticalSkyfireDiamond : public Spell {
-  MysticalSkyfireDiamond(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct InsightfulEarthstormDiamond : public Spell {
-  InsightfulEarthstormDiamond(Player& player);
-};
-
 struct AmplifyCurse : public Spell {
   AmplifyCurse(Player& player, std::shared_ptr<Aura> aura);
 };
@@ -259,42 +204,6 @@ struct CrackedPowerCore : public Spell {
 
 struct ManaTideTotem : public Spell {
   ManaTideTotem(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct JudgementOfWisdom : public Spell {
-  JudgementOfWisdom(Player& player);
-};
-
-struct Flameshadow : public Spell {
-  Flameshadow(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct Shadowflame : public Spell {
-  Shadowflame(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct Spellstrike : public Spell {
-  Spellstrike(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct ManaEtched4Set : public Spell {
-  ManaEtched4Set(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct AshtongueTalismanOfShadows : public Spell {
-  AshtongueTalismanOfShadows(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct WrathOfCenarius : public Spell {
-  WrathOfCenarius(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct DarkmoonCardCrusade : public Spell {
-  DarkmoonCardCrusade(Player& player, std::shared_ptr<Aura> aura);
-};
-
-struct ImprovedShadowBolt : public Spell {
-  ImprovedShadowBolt(Player& player, std::shared_ptr<Aura> aura);
 };
 
 #endif

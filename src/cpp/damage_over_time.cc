@@ -176,10 +176,7 @@ void DamageOverTime::Tick(double t) {
     }
 
     for (auto& proc : player.on_dot_tick_procs) {
-      // Ashtongue Talisman of Shadows only procs from Corruption
-      // TODO: Implement a better way to handle a check like this
-      if (proc->Ready() && (proc->name != SpellName::kAshtongueTalismanOfShadows || name == SpellName::kCorruption) &&
-          player.RollRng(proc->proc_chance)) {
+      if (proc->Ready() && proc->ShouldProc(this) && player.RollRng(proc->proc_chance)) {
         proc->StartCast();
       }
     }
