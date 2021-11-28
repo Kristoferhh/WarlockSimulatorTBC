@@ -506,11 +506,10 @@ double Player::GetHastePercent() {
   return haste_percent * (1 + stats.spell_haste_rating / kHasteRatingPerPercent / 100.0);
 }
 
-double Player::GetGcdValue(const std::shared_ptr<Spell>& spell) {
-  if (spells.shadowfury == NULL || spell != spells.shadowfury) {
-    return std::max(kMinimumGcdValue, round((kGcdValue / GetHastePercent()) * 10000) / 10000);
-  }
-  return 0;
+double Player::GetGcdValue(const std::string& spell_name) {
+  return spell_name == SpellName::kShadowfury
+             ? 0
+             : std::max(kMinimumGcdValue, round((kGcdValue / GetHastePercent()) * 10000) / 10000);
 }
 
 double Player::GetSpellPower(SpellSchool school) {

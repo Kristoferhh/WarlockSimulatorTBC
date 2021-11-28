@@ -79,7 +79,7 @@ void Spell::StartCast(double predicted_damage) {
       player.ThrowError("Attempting to Cast " + name + " while player's GCD is at " +
                         std::to_string(player.gcd_remaining) + " seconds remaining");
     }
-    player.gcd_remaining = player.GetGcdValue(shared_from_this());
+    player.gcd_remaining = player.GetGcdValue(name);
   }
 
   // Error: Starting to Cast a spell while casting another spell
@@ -368,7 +368,7 @@ double Spell::PredictDamage() {
     estimated_damage *= 1.15;  // using 75% uptime as the default for now
   }
 
-  return (estimated_damage * hit_chance) / std::max(player.GetGcdValue(shared_from_this()), GetCastTime());
+  return (estimated_damage * hit_chance) / std::max(player.GetGcdValue(name), GetCastTime());
 }
 
 void Spell::OnCritProcs() {

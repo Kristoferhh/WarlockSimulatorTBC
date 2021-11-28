@@ -94,7 +94,7 @@ struct Player {
   void SendCombatLogEntries();
   void CombatLog(const std::string& entry);
   void SendPlayerInfoToCombatLog();
-  double GetGcdValue(const std::shared_ptr<Spell>& spell);
+  double GetGcdValue(const std::string& spell_name);
   double GetSpellPower(SpellSchool school = SpellSchool::kNoSchool);
   double GetHastePercent();
   double GetCritChance(SpellType spell_type);
