@@ -42,7 +42,7 @@ void ManaOverTime::Tick(double t) {
 }
 
 DrumsOfRestorationAura::DrumsOfRestorationAura(Player& player) : ManaOverTime(player) {
-  name = "Drums of Restoration";
+  name = SpellName::kDrumsOfRestoration;
   duration = 15;
   group_wide = true;
   Setup();
@@ -51,7 +51,7 @@ DrumsOfRestorationAura::DrumsOfRestorationAura(Player& player) : ManaOverTime(pl
 int DrumsOfRestorationAura::GetManaGain() { return 600 / ticks_total; }
 
 ManaTideTotemAura::ManaTideTotemAura(Player& player) : ManaOverTime(player) {
-  name = "Mana Tide Totem";
+  name = SpellName::kManaTideTotem;
   duration = 12;
   group_wide = true;
   Setup();

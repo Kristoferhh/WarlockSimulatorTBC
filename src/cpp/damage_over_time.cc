@@ -56,14 +56,13 @@ void DamageOverTime::Apply() {
   // Siphon Life snapshots the presence of ISB. So if ISB isn't up when it's
   // Cast, it doesn't get the benefit even if it comes up later during the
   // duration.
-  if (player.spells.siphon_life != NULL && name == player.spells.siphon_life->name) {
+  if (name == SpellName::kSiphonLife) {
     isb_is_active = !player.settings.using_custom_isb_uptime && player.auras.improved_shadow_bolt != NULL &&
                     player.auras.improved_shadow_bolt->active;
   }
   // Amplify Curse
-  if (((player.spells.curse_of_agony != NULL && name == player.spells.curse_of_agony->name) ||
-       (player.spells.curse_of_doom != NULL && name == player.spells.curse_of_doom->name)) &&
-      player.auras.amplify_curse != NULL && player.auras.amplify_curse->active) {
+  if ((name == SpellName::kCurseOfAgony || name == SpellName::kCurseOfDoom) && player.auras.amplify_curse != NULL &&
+      player.auras.amplify_curse->active) {
     applied_with_amplify_curse = true;
     player.auras.amplify_curse->Fade();
   } else {
@@ -91,9 +90,8 @@ double DamageOverTime::GetModifier() {
                                                                       : 1);
   // Only add Improved Shadow Bolt if it's not Siphon Life or if ISB was active when the Siphon Life was cast.
   if ((school == SpellSchool::kShadow && player.auras.improved_shadow_bolt != NULL &&
-       player.auras.improved_shadow_bolt->active &&
-       (player.spells.siphon_life == NULL || name != player.spells.siphon_life->name)) ||
-      (player.spells.siphon_life != NULL && name == player.spells.siphon_life->name && isb_is_active)) {
+       player.auras.improved_shadow_bolt->active && name != SpellName::kSiphonLife) ||
+      (name == SpellName::kSiphonLife && isb_is_active)) {
     damage_modifier *= player.auras.improved_shadow_bolt->modifier;
   }
   return damage_modifier;
@@ -114,9 +112,7 @@ std::vector<double> DamageOverTime::GetConstantDamage() {
     base_damage *= 1.5;
   }
   // Add the t5 4pc bonus modifier to the base damage
-  if (((player.spells.corruption != NULL && name == player.spells.corruption->name) ||
-       (player.spells.immolate != NULL && name == player.spells.immolate->name)) &&
-      player.sets.t5 >= 4) {
+  if ((name == SpellName::kCorruption || name == SpellName::kImmolate) && player.sets.t5 >= 4) {
     base_damage *= t5_bonus_modifier;
   }
   double total_damage = base_damage;
@@ -133,8 +129,7 @@ double DamageOverTime::PredictDamage() {
   // 4pc bonus since their durationTotal property is increased by 3 seconds to
   // include another tick but the damage they do stays the same which assumes
   // the normal duration without the bonus
-  if ((player.spells.corruption != NULL && name == player.spells.corruption->name) ||
-      (player.spells.immolate != NULL && name == player.spells.immolate->name)) {
+  if (name == SpellName::kCorruption || name == SpellName::kImmolate) {
     damage /= original_duration;
     damage *= duration;
   }
@@ -154,7 +149,7 @@ void DamageOverTime::Tick(double t) {
     const double kPartialResistMultiplier = constant_damage[4];
 
     // Check for Nightfall proc
-    if (player.spells.corruption != NULL && name == player.spells.corruption->name && player.talents.nightfall > 0) {
+    if (name == SpellName::kCorruption && player.talents.nightfall > 0) {
       if (player.RollRng(player.talents.nightfall * 2)) {
         player.auras.shadow_trance->Apply();
       }
@@ -180,17 +175,13 @@ void DamageOverTime::Tick(double t) {
       player.CombatLog(msg);
     }
 
-    // Ashtongue Talisman of Shadows
-    if (player.spells.corruption != NULL && name == player.spells.corruption->name &&
-        player.auras.ashtongue_talisman_of_shadows != NULL &&
-        player.RollRng(player.auras.ashtongue_talisman_of_shadows->proc_chance)) {
-      player.auras.ashtongue_talisman_of_shadows->Apply();
-    }
-    // Timbal's Focusing Crystal
-    if (player.spells.timbals_focusing_crystal != NULL &&
-        player.spells.timbals_focusing_crystal->cooldown_remaining <= 0 &&
-        player.RollRng(player.spells.timbals_focusing_crystal->proc_chance)) {
-      player.spells.timbals_focusing_crystal->StartCast();
+    for (auto& proc : player.on_dot_tick_procs) {
+      // Ashtongue Talisman of Shadows only procs from Corruption
+      // TODO: Implement a better way to handle a check like this
+      if (proc->Ready() && (proc->name != SpellName::kAshtongueTalismanOfShadows || name == SpellName::kCorruption) &&
+          player.RollRng(proc->proc_chance)) {
+        proc->StartCast();
+      }
     }
 
     if (ticks_remaining <= 0) {
@@ -200,7 +191,7 @@ void DamageOverTime::Tick(double t) {
 }
 
 CorruptionDot::CorruptionDot(Player& player) : DamageOverTime(player) {
-  name = "Corruption";
+  name = SpellName::kCorruption;
   duration = 18;
   tick_timer_total = 3;
   dmg = 900;
@@ -231,7 +222,7 @@ void CorruptionDot::Apply() {
 }
 
 UnstableAfflictionDot::UnstableAfflictionDot(Player& player) : DamageOverTime(player) {
-  name = "Unstable Affliction";
+  name = SpellName::kUnstableAffliction;
   duration = 18;
   tick_timer_total = 3;
   dmg = 1050;
@@ -242,7 +233,7 @@ UnstableAfflictionDot::UnstableAfflictionDot(Player& player) : DamageOverTime(pl
 }
 
 SiphonLifeDot::SiphonLifeDot(Player& player) : DamageOverTime(player) {
-  name = "Siphon Life";
+  name = SpellName::kSiphonLife;
   duration = 30;
   tick_timer_total = 3;
   dmg = 630;
@@ -253,7 +244,7 @@ SiphonLifeDot::SiphonLifeDot(Player& player) : DamageOverTime(player) {
 }
 
 ImmolateDot::ImmolateDot(Player& player) : DamageOverTime(player) {
-  name = "Immolate";
+  name = SpellName::kImmolate;
   duration = 15;
   tick_timer_total = 3;
   dmg = 615;
@@ -270,7 +261,7 @@ void ImmolateDot::Apply() {
 }
 
 CurseOfAgonyDot::CurseOfAgonyDot(Player& player) : DamageOverTime(player) {
-  name = "Curse of Agony";
+  name = SpellName::kCurseOfAgony;
   duration = 24;
   tick_timer_total = 3;
   dmg = 1356;
@@ -289,7 +280,7 @@ double CurseOfAgonyDot::GetModifier() {
 }
 
 CurseOfDoomDot::CurseOfDoomDot(Player& player) : DamageOverTime(player) {
-  name = "Curse of Doom";
+  name = SpellName::kCurseOfDoom;
   duration = 60;
   tick_timer_total = 60;
   dmg = 4200;

@@ -26,14 +26,14 @@ void ManaPotion::Cast() {
 }
 
 SuperManaPotion::SuperManaPotion(Player& player) : ManaPotion(player) {
-  name = "Super Mana Potion";
+  name = SpellName::kSuperManaPotion;
   min_mana = 1800;
   max_mana = 3000;
   Setup();
 }
 
 DemonicRune::DemonicRune(Player& player) : ManaPotion(player) {
-  name = "Demonic Rune";
+  name = SpellName::kDemonicRune;
   min_mana = 900;
   max_mana = 1500;
   Setup();

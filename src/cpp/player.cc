@@ -283,8 +283,12 @@ void Player::Initialize() {
   else if (selected_auras.drums_of_restoration)
     auras.drums_of_restoration = std::make_unique<DrumsOfRestorationAura>(*this);
   if (items.main_hand == 31336) auras.blade_of_wizardry = std::make_unique<BladeOfWizardryAura>(*this);
-  if (items.neck == 34678)
-    auras.shattered_sun_pendant_of_acumen = std::make_unique<ShatteredSunPendantOfAcumenAura>(*this);
+  if (items.neck == 34678 && settings.exalted_with_shattrath_faction) {
+    if (settings.shattrath_faction == EmbindConstant::kAldor)
+      auras.shattered_sun_pendant_of_acumen_aldor = std::make_unique<ShatteredSunPendantOfAcumenAldorAura>(*this);
+    else if (settings.shattrath_faction == EmbindConstant::kScryers)
+      spells.shattered_sun_pendant_of_acumen_scryers = std::make_unique<ShatteredSunPendantOfAcumenScryers>(*this);
+  }
   if (items.chest == 28602) auras.robe_of_the_elder_scribes = std::make_unique<RobeOfTheElderScribesAura>(*this);
   if (settings.meta_gem_id == 25893)
     auras.mystical_skyfire_diamond = std::make_unique<MysticalSkyfireDiamondAura>(*this);
@@ -349,6 +353,8 @@ void Player::Initialize() {
       spells.curse_of_doom = std::make_unique<CurseOfDoom>(*this, nullptr, auras.curse_of_doom);
     if (auras.amplify_curse != NULL) spells.amplify_curse = std::make_unique<AmplifyCurse>(*this, auras.amplify_curse);
   }
+  if (auras.improved_shadow_bolt != NULL)
+    spells.improved_shadow_bolt = std::make_unique<ImprovedShadowBolt>(*this, auras.improved_shadow_bolt);
   if (auras.mana_tide_totem != NULL)
     spells.mana_tide_totem = std::make_unique<ManaTideTotem>(*this, auras.mana_tide_totem);
   if (auras.chipped_power_core != NULL)
@@ -371,9 +377,9 @@ void Player::Initialize() {
     spells.drums_of_restoration = std::make_unique<DrumsOfRestoration>(*this, auras.drums_of_restoration);
   if (auras.blade_of_wizardry != NULL)
     spells.blade_of_wizardry = std::make_unique<BladeOfWizardry>(*this, auras.blade_of_wizardry);
-  if (auras.shattered_sun_pendant_of_acumen != NULL)
-    spells.shattered_sun_pendant_of_acumen =
-        std::make_unique<ShatteredSunPendantOfAcumen>(*this, auras.shattered_sun_pendant_of_acumen);
+  if (auras.shattered_sun_pendant_of_acumen_aldor != NULL)
+    spells.shattered_sun_pendant_of_acumen_aldor =
+        std::make_unique<ShatteredSunPendantOfAcumenAldor>(*this, auras.shattered_sun_pendant_of_acumen_aldor);
   if (auras.robe_of_the_elder_scribes != NULL)
     spells.robe_of_the_elder_scribes = std::make_unique<RobeOfTheElderScribes>(*this, auras.robe_of_the_elder_scribes);
   if (auras.mystical_skyfire_diamond != NULL)
@@ -396,6 +402,18 @@ void Player::Initialize() {
   if (items.ring_1 == 29305 || items.ring_2 == 29305)
     spells.band_of_the_eternal_sage = std::make_unique<BandOfTheEternalSage>(*this, auras.band_of_the_eternal_sage);
   if (selected_auras.judgement_of_wisdom) spells.judgement_of_wisdom = std::make_unique<JudgementOfWisdom>(*this);
+  if (auras.flameshadow != NULL) spells.flameshadow = std::make_unique<Flameshadow>(*this, auras.flameshadow);
+  if (auras.shadowflame != NULL) spells.shadowflame = std::make_unique<Shadowflame>(*this, auras.shadowflame);
+  if (auras.spellstrike != NULL) spells.spellstrike = std::make_unique<Spellstrike>(*this, auras.spellstrike);
+  if (auras.mana_etched_4_set != NULL)
+    spells.mana_etched_4_set = std::make_unique<ManaEtched4Set>(*this, auras.mana_etched_4_set);
+  if (auras.ashtongue_talisman_of_shadows != NULL)
+    spells.ashtongue_talisman_of_shadows =
+        std::make_unique<AshtongueTalismanOfShadows>(*this, auras.ashtongue_talisman_of_shadows);
+  if (auras.wrath_of_cenarius != NULL)
+    spells.wrath_of_cenarius = std::make_unique<WrathOfCenarius>(*this, auras.wrath_of_cenarius);
+  if (auras.darkmoon_card_crusade != NULL)
+    spells.darkmoon_card_crusade = std::make_unique<DarkmoonCardCrusade>(*this, auras.darkmoon_card_crusade);
   if (auras.power_infusion != NULL) {
     spells.power_infusion.insert(spells.power_infusion.end(), settings.power_infusion_amount,
                                  std::make_unique<PowerInfusion>(*this, auras.power_infusion));
@@ -706,7 +724,7 @@ double Player::FindTimeUntilNextAction() {
 
   // Auras
   for (auto& aura : aura_list) {
-    if (aura->active && aura->duration_remaining < time) {
+    if (aura->active && aura->has_duration && aura->duration_remaining < time) {
       time = aura->duration_remaining;
     }
   }

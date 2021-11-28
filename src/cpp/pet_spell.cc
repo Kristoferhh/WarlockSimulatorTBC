@@ -88,7 +88,7 @@ void PetSpell::Cast() {
     } else {
       combat_log_message.append(" casts " + name);
 
-      if (pet->spells.melee != NULL && name == pet->spells.melee->name) {
+      if (name == SpellName::kMelee) {
         combat_log_message.append(" - Attack Speed: " + DoubleToString(pet->spells.melee->GetCooldown(), 2) + " (" +
                                   DoubleToString(round(pet->GetHastePercent() * 10000) / 100.0 - 100, 4) +
                                   "% haste at a base attack speed of " +
@@ -125,7 +125,7 @@ void PetSpell::Cast() {
     double glancing_chance = miss_chance;
 
     // Only check for a glancing if it's a normal melee attack
-    if (pet->spells.melee != NULL && name == pet->spells.melee->name) {
+    if (name == SpellName::kMelee) {
       glancing_chance += pet->glancing_blow_chance * pet->player.kFloatNumberMultiplier;
     }
 
@@ -162,7 +162,7 @@ void PetSpell::Cast() {
       return;
     }
     // Glancing Blow
-    else if (attack_roll <= glancing_chance && pet->spells.melee != NULL && name == pet->spells.melee->name) {
+    else if (attack_roll <= glancing_chance && name == SpellName::kMelee) {
       is_glancing = true;
       if (pet->player.recording_combat_log_breakdown) {
         pet->player.combat_log_breakdown.at(name)->glancing_blows++;
@@ -317,7 +317,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
 }
 
 ImpFirebolt::ImpFirebolt(std::shared_ptr<Pet> pet) : PetSpell(pet) {
-  name = "Firebolt";
+  name = SpellName::kFirebolt;
   cast_time = 2 - (0.25 * pet->player.talents.improved_firebolt);
   mana_cost = 145;
   dmg = 119.5 * (1 + 0.1 * pet->player.talents.improved_imp);
@@ -328,8 +328,8 @@ ImpFirebolt::ImpFirebolt(std::shared_ptr<Pet> pet) : PetSpell(pet) {
 }
 
 Melee::Melee(std::shared_ptr<Pet> pet) : PetSpell(pet) {
+  name = SpellName::kMelee;
   cooldown = 2;
-  name = "Melee";
   type = AttackType::kPhysical;
   Setup();
 }
@@ -339,9 +339,9 @@ double Melee::GetBaseDamage() { return pet->dmg; }
 double Melee::GetCooldown() { return round((cooldown / pet->GetHastePercent()) * 10000) / 10000.0; }
 
 FelguardCleave::FelguardCleave(std::shared_ptr<Pet> pet) : PetSpell(pet) {
+  name = SpellName::kCleave;
   cooldown = 6;
   mana_cost = 417;
-  name = "Cleave";
   type = AttackType::kPhysical;
   Setup();
 }
@@ -349,9 +349,9 @@ FelguardCleave::FelguardCleave(std::shared_ptr<Pet> pet) : PetSpell(pet) {
 double FelguardCleave::GetBaseDamage() { return pet->spells.melee->GetBaseDamage() + 78; }
 
 SuccubusLashOfPain::SuccubusLashOfPain(std::shared_ptr<Pet> pet) : PetSpell(pet) {
+  name = SpellName::kLashOfPain;
   cooldown = 12 - 3 * pet->player.talents.improved_lash_of_pain;
   mana_cost = 190;
-  name = "Lash of Pain";
   dmg = 123;
   school = SpellSchool::kShadow;
   coefficient = 0.429;

@@ -4,7 +4,7 @@
 #include "player.h"
 
 LifeTap::LifeTap(Player& player) : Spell(player), player(player) {
-  name = "Life Tap";
+  name = SpellName::kLifeTap;
   mana_return = 582;
   coefficient = 0.8;
   modifier = 1 * (1 + 0.1 * player.talents.improved_life_tap);
@@ -44,13 +44,13 @@ void LifeTap::Cast() {
   }
 
   player.stats.mana = std::min(player.stats.max_mana, player.stats.mana + kManaGain);
-  if (player.spells.dark_pact != NULL && name == player.spells.dark_pact->name) {
+  if (name == SpellName::kDarkPact) {
     player.pet->stats.mana = std::max(0.0, player.pet->stats.mana - kManaGain);
   }
 }
 
 DarkPact::DarkPact(Player& player) : LifeTap(player) {
-  name = "Dark Pact";
+  name = SpellName::kDarkPact;
   mana_return = 700;
   coefficient = 0.96;
   modifier = 1;

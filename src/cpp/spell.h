@@ -39,8 +39,19 @@ struct Spell : std::enable_shared_from_this<Spell> {
   bool is_item;
   bool on_gcd;
   bool is_proc;
+  bool can_miss;
   bool is_finisher;
   bool gain_mana_on_cast;
+  bool procs_on_hit;
+  bool on_hit_procs_enabled;
+  bool procs_on_crit;
+  bool on_crit_procs_enabled;
+  bool procs_on_dot_ticks;
+  bool on_dot_tick_procs_enabled;
+  bool procs_on_damage;
+  bool on_damage_procs_enabled;
+  bool procs_from_shadow_spells;
+  bool procs_from_fire_spells;
   // For Chipped Power Core
   bool usable_once_per_fight;
   bool has_not_been_cast_this_fight;
@@ -188,8 +199,12 @@ struct BladeOfWizardry : public Spell {
   BladeOfWizardry(Player& player, std::shared_ptr<Aura> aura);
 };
 
-struct ShatteredSunPendantOfAcumen : public Spell {
-  ShatteredSunPendantOfAcumen(Player& player, std::shared_ptr<Aura> aura);
+struct ShatteredSunPendantOfAcumenAldor : public Spell {
+  ShatteredSunPendantOfAcumenAldor(Player& player, std::shared_ptr<Aura> aura);
+};
+
+struct ShatteredSunPendantOfAcumenScryers : public Spell {
+  ShatteredSunPendantOfAcumenScryers(Player& player);
 };
 
 struct RobeOfTheElderScribes : public Spell {
@@ -248,6 +263,38 @@ struct ManaTideTotem : public Spell {
 
 struct JudgementOfWisdom : public Spell {
   JudgementOfWisdom(Player& player);
+};
+
+struct Flameshadow : public Spell {
+  Flameshadow(Player& player, std::shared_ptr<Aura> aura);
+};
+
+struct Shadowflame : public Spell {
+  Shadowflame(Player& player, std::shared_ptr<Aura> aura);
+};
+
+struct Spellstrike : public Spell {
+  Spellstrike(Player& player, std::shared_ptr<Aura> aura);
+};
+
+struct ManaEtched4Set : public Spell {
+  ManaEtched4Set(Player& player, std::shared_ptr<Aura> aura);
+};
+
+struct AshtongueTalismanOfShadows : public Spell {
+  AshtongueTalismanOfShadows(Player& player, std::shared_ptr<Aura> aura);
+};
+
+struct WrathOfCenarius : public Spell {
+  WrathOfCenarius(Player& player, std::shared_ptr<Aura> aura);
+};
+
+struct DarkmoonCardCrusade : public Spell {
+  DarkmoonCardCrusade(Player& player, std::shared_ptr<Aura> aura);
+};
+
+struct ImprovedShadowBolt : public Spell {
+  ImprovedShadowBolt(Player& player, std::shared_ptr<Aura> aura);
 };
 
 #endif

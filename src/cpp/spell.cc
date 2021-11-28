@@ -24,7 +24,16 @@ Spell::Spell(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageO
       cast_time(0),
       usable_once_per_fight(false),
       has_not_been_cast_this_fight(true),
-      gain_mana_on_cast(false) {}
+      gain_mana_on_cast(false),
+      procs_on_hit(false),
+      on_hit_procs_enabled(false),
+      procs_on_crit(false),
+      on_crit_procs_enabled(false),
+      procs_from_shadow_spells(true),
+      procs_from_fire_spells(true),
+      can_miss(false),
+      procs_on_dot_ticks(false),
+      on_dot_tick_procs_enabled(false) {}
 
 void Spell::Reset() {
   cooldown_remaining = 0;
@@ -41,6 +50,22 @@ void Spell::Setup() {
   }
   if (player.recording_combat_log_breakdown && player.combat_log_breakdown.count(name) == 0) {
     player.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
+  }
+
+  if (procs_on_hit && on_hit_procs_enabled) {
+    player.on_hit_procs.push_back(this);
+  }
+
+  if (procs_on_crit && on_crit_procs_enabled) {
+    player.on_crit_procs.push_back(this);
+  }
+
+  if (procs_on_dot_ticks && on_dot_tick_procs_enabled) {
+    player.on_dot_tick_procs.push_back(this);
+  }
+
+  if (procs_on_damage && on_damage_procs_enabled) {
+    player.on_damage_procs.push_back(this);
   }
 
   player.spell_list.push_back(this);
@@ -115,7 +140,7 @@ int Spell::GetManaCost() { return mana_cost * player.stats.mana_cost_modifier; }
 
 void Spell::Tick(double t) {
   if (cooldown_remaining > 0 && cooldown_remaining - t <= 0) {
-    if (player.auras.power_infusion != NULL && name == player.auras.power_infusion->name) {
+    if (name == SpellName::kPowerInfusion) {
       player.power_infusions_ready++;
     }
     if (player.ShouldWriteToCombatLog()) {
@@ -136,7 +161,7 @@ void Spell::Cast() {
   casting = false;
   has_not_been_cast_this_fight = false;
 
-  if (player.auras.power_infusion != NULL && name == player.auras.power_infusion->name) {
+  if (name == SpellName::kPowerInfusion) {
     player.power_infusions_ready--;
   }
 
@@ -177,10 +202,7 @@ void Spell::Cast() {
     }
   }
 
-  if (((!is_item && !is_non_warlock_ability &&
-        (!player.auras.amplify_curse || name != player.auras.amplify_curse->name)) ||
-       does_damage) &&
-      !player.IsHit(type)) {
+  if (can_miss && !player.IsHit(type)) {
     if (player.ShouldWriteToCombatLog()) {
       player.CombatLog(name + " *resist*");
     }
@@ -200,8 +222,7 @@ void Spell::Cast() {
     Damage(is_crit);
   }
 
-  if (!is_item && !is_proc && !is_non_warlock_ability &&
-      (!player.auras.amplify_curse || name != player.auras.amplify_curse->name)) {
+  if (!is_item && !is_proc && !is_non_warlock_ability && name != SpellName::kAmplifyCurse) {
     OnHitProcs();
   }
 }
@@ -268,11 +289,9 @@ void Spell::Damage(bool isCrit) {
 
   // T5 4pc
   if (player.sets.t5 >= 4) {
-    if (player.spells.shadow_bolt != NULL && name == player.spells.shadow_bolt->name &&
-        player.auras.corruption != NULL && player.auras.corruption->active) {
+    if (name == SpellName::kShadowBolt && player.auras.corruption != NULL && player.auras.corruption->active) {
       player.auras.corruption->t5_bonus_modifier *= 1.1;
-    } else if (player.spells.incinerate != NULL && name == player.spells.incinerate->name &&
-               player.auras.immolate != NULL && player.auras.immolate->active) {
+    } else if (name == SpellName::kIncinerate && player.auras.immolate != NULL && player.auras.immolate->active) {
       player.auras.immolate->t5_bonus_modifier *= 1.1;
     }
   }
@@ -291,8 +310,7 @@ std::vector<double> Spell::GetConstantDamage(bool no_rng) {
   const double kPartialResistMultiplier = player.GetPartialResistMultiplier(school);
 
   // If casting Incinerate and Immolate is up, add the bonus Damage
-  if (player.spells.incinerate != NULL && name == player.spells.incinerate->name && player.auras.immolate != NULL &&
-      player.auras.immolate->active) {
+  if (name == SpellName::kIncinerate && player.auras.immolate != NULL && player.auras.immolate->active) {
     total_damage += player.settings.randomize_values && no_rng
                         ? player.rng.range(bonus_damage_from_immolate_min, bonus_damage_from_immolate_max)
                         : bonus_damage_from_immolate_average;
@@ -360,101 +378,45 @@ double Spell::PredictDamage() {
 }
 
 void Spell::OnCritProcs() {
-  // ISB
-  if (player.spells.shadow_bolt != NULL && name == player.spells.shadow_bolt->name &&
-      !player.settings.using_custom_isb_uptime && player.talents.improved_shadow_bolt > 0) {
-    player.auras.improved_shadow_bolt->Apply();
-  }
-  // The Lightning Capacitor
-  if (player.spells.the_lightning_capacitor != NULL) {
-    player.spells.the_lightning_capacitor->StartCast();
-  }
-  // Sextant of Unstable Currents
-  if (player.spells.sextant_of_unstable_currents != NULL && player.spells.sextant_of_unstable_currents->Ready() &&
-      player.RollRng(player.spells.sextant_of_unstable_currents->proc_chance)) {
-    player.spells.sextant_of_unstable_currents->StartCast();
-  }
-  // Shiffar's Nexus-Horn
-  if (player.spells.shiffars_nexus_horn != NULL && player.spells.shiffars_nexus_horn->Ready() &&
-      player.RollRng(player.spells.shiffars_nexus_horn->proc_chance)) {
-    player.spells.shiffars_nexus_horn->StartCast();
+  for (auto& proc : player.on_crit_procs) {
+    if (proc->Ready() && (proc->name != SpellName::kImprovedShadowBolt || name == SpellName::kShadowBolt) &&
+        player.RollRng(proc->proc_chance)) {
+      proc->StartCast();
+    }
   }
 }
 
 void Spell::OnDamageProcs() {
-  // Confirm that this procs on dealing Damage
-  // Shattered Sun Pendant of Acumen
-  if (player.settings.exalted_with_shattrath_faction && player.spells.shattered_sun_pendant_of_acumen != NULL &&
-      player.spells.shattered_sun_pendant_of_acumen->cooldown_remaining <= 0 &&
-      player.RollRng(player.spells.shattered_sun_pendant_of_acumen->proc_chance)) {
-    player.spells.shattered_sun_pendant_of_acumen->StartCast();
+  for (auto& proc : player.on_damage_procs) {
+    if (proc->Ready() && player.RollRng(proc->proc_chance)) {
+      proc->StartCast();
+    }
   }
 }
 
 void Spell::OnHitProcs() {
-  if (player.spells.judgement_of_wisdom != NULL && player.RollRng(player.spells.judgement_of_wisdom->proc_chance)) {
-    player.spells.judgement_of_wisdom->StartCast();
-  }
-  if (player.sets.t4 >= 2 && player.RollRng(player.auras.flameshadow->proc_chance)) {
-    if (school == SpellSchool::kShadow) {
-      player.auras.flameshadow->Apply();
-    } else if (school == SpellSchool::kFire) {
-      player.auras.shadowflame->Apply();
+  for (auto& proc : player.on_hit_procs) {
+    if (proc->Ready() &&
+        ((school == SpellSchool::kShadow && proc->procs_from_shadow_spells) ||
+         (school == SpellSchool::kFire && proc->procs_from_fire_spells)) &&
+        player.RollRng(proc->proc_chance)) {
+      proc->StartCast();
     }
-  }
-  if (player.sets.spellstrike == 2 && player.RollRng(player.auras.spellstrike->proc_chance)) {
-    player.auras.spellstrike->Apply();
-  }
-  if (player.spells.quagmirrans_eye != NULL && player.spells.quagmirrans_eye->Ready() &&
-      player.RollRng(player.spells.quagmirrans_eye->proc_chance)) {
-    player.spells.quagmirrans_eye->StartCast();
-  }
-  if (player.sets.mana_etched >= 4 && player.RollRng(player.auras.mana_etched_4_set->proc_chance)) {
-    player.auras.mana_etched_4_set->Apply();
-  }
-  if (player.spells.mark_of_defiance != NULL && player.spells.mark_of_defiance->Ready() &&
-      player.RollRng(player.spells.mark_of_defiance->proc_chance)) {
-    player.spells.mark_of_defiance->StartCast();
-  }
-  if (player.auras.darkmoon_card_crusade != NULL) {
-    player.auras.darkmoon_card_crusade->Apply();
-  }
-  if (player.spells.band_of_the_eternal_sage != NULL && player.spells.band_of_the_eternal_sage->Ready() &&
-      player.RollRng(player.spells.band_of_the_eternal_sage->proc_chance)) {
-    player.spells.band_of_the_eternal_sage->StartCast();
-  }
-  if (player.spells.blade_of_wizardry != NULL && player.spells.blade_of_wizardry->Ready() &&
-      player.RollRng(player.auras.blade_of_wizardry->proc_chance)) {
-    player.spells.blade_of_wizardry->StartCast();
-  }
-  if (player.spells.mystical_skyfire_diamond != NULL && player.spells.mystical_skyfire_diamond->Ready() &&
-      player.RollRng(player.spells.mystical_skyfire_diamond->proc_chance)) {
-    player.spells.mystical_skyfire_diamond->StartCast();
-  }
-  if (player.spells.robe_of_the_elder_scribes != NULL && player.spells.robe_of_the_elder_scribes->Ready() &&
-      player.RollRng(player.spells.robe_of_the_elder_scribes->proc_chance)) {
-    player.spells.robe_of_the_elder_scribes->StartCast();
-  }
-  if (player.spells.insightful_earthstorm_diamond != NULL && player.spells.insightful_earthstorm_diamond->Ready() &&
-      player.RollRng(player.spells.insightful_earthstorm_diamond->proc_chance)) {
-    player.spells.insightful_earthstorm_diamond->StartCast();
-  }
-  if (player.auras.wrath_of_cenarius != NULL && player.RollRng(player.auras.wrath_of_cenarius->proc_chance)) {
-    player.auras.wrath_of_cenarius->Apply();
   }
 }
 
 ShadowBolt::ShadowBolt(Player& player) : Spell(player) {
+  name = SpellName::kShadowBolt;
   cast_time = CalculateCastTime();
   mana_cost = 420 * (1 - 0.01 * player.talents.cataclysm);
   coefficient = (3 / 3.5) + (0.04 * player.talents.shadow_and_flame);
   min_dmg = 544;
   max_dmg = 607;
-  name = "Shadow Bolt";
   does_damage = true;
   can_crit = true;
   school = SpellSchool::kShadow;
   type = SpellType::kDestruction;
+  can_miss = true;
   Setup();
 
   // T6 4pc bonus
@@ -481,7 +443,7 @@ void ShadowBolt::StartCast(double predicted_damage = 0) {
 double ShadowBolt::CalculateCastTime() { return 3 - (0.1 * player.talents.bane); }
 
 Incinerate::Incinerate(Player& player) : Spell(player) {
-  name = "Incinerate";
+  name = SpellName::kIncinerate;
   cast_time = round((2.5 * (1 - 0.02 * player.talents.emberstorm)) * 100) / 100;
   mana_cost = 355 * (1 - 0.01 * player.talents.cataclysm);
   coefficient = (2.5 / 3.5) + (0.04 * player.talents.shadow_and_flame);
@@ -494,6 +456,7 @@ Incinerate::Incinerate(Player& player) : Spell(player) {
   can_crit = true;
   school = SpellSchool::kFire;
   type = SpellType::kDestruction;
+  can_miss = true;
   Setup();
 
   if (player.sets.t6 >= 4) {
@@ -502,7 +465,7 @@ Incinerate::Incinerate(Player& player) : Spell(player) {
 }
 
 SearingPain::SearingPain(Player& player) : Spell(player) {
-  name = "Searing Pain";
+  name = SpellName::kSearingPain;
   cast_time = 1.5;
   mana_cost = 205 * (1 - 0.01 * player.talents.cataclysm);
   coefficient = 1.5 / 3.5;
@@ -513,11 +476,12 @@ SearingPain::SearingPain(Player& player) : Spell(player) {
   school = SpellSchool::kFire;
   type = SpellType::kDestruction;
   bonus_crit = 4 * player.talents.improved_searing_pain;
+  can_miss = true;
   Setup();
 };
 
 SoulFire::SoulFire(Player& player) : Spell(player) {
-  name = "Soul Fire";
+  name = SpellName::kSoulFire;
   cast_time = 6 - (0.4 * player.talents.bane);
   mana_cost = 250 * (1 - 0.01 * player.talents.cataclysm);
   coefficient = 1.15;
@@ -527,11 +491,12 @@ SoulFire::SoulFire(Player& player) : Spell(player) {
   can_crit = true;
   school = SpellSchool::kFire;
   type = SpellType::kDestruction;
+  can_miss = true;
   Setup();
 };
 
 Shadowburn::Shadowburn(Player& player) : Spell(player) {
-  name = "Shadowburn";
+  name = SpellName::kShadowburn;
   cooldown = 15;
   mana_cost = 515 * (1 - 0.01 * player.talents.cataclysm);
   coefficient = 0.22;
@@ -542,11 +507,12 @@ Shadowburn::Shadowburn(Player& player) : Spell(player) {
   is_finisher = true;
   school = SpellSchool::kShadow;
   type = SpellType::kDestruction;
+  can_miss = true;
   Setup();
 };
 
 DeathCoil::DeathCoil(Player& player) : Spell(player) {
-  name = "Death Coil";
+  name = SpellName::kDeathCoil;
   cooldown = 120;
   mana_cost = 600;
   coefficient = 0.4286;
@@ -555,11 +521,12 @@ DeathCoil::DeathCoil(Player& player) : Spell(player) {
   is_finisher = true;
   school = SpellSchool::kShadow;
   type = SpellType::kAffliction;
+  can_miss = true;
   Setup();
 };
 
 Shadowfury::Shadowfury(Player& player) : Spell(player) {
-  name = "Shadowfury";
+  name = SpellName::kShadowfury;
   cast_time = 0.5;
   mana_cost = 710 * (1 - 0.01 * player.talents.cataclysm);
   min_dmg = 612;
@@ -570,11 +537,12 @@ Shadowfury::Shadowfury(Player& player) : Spell(player) {
   type = SpellType::kDestruction;
   cooldown = 20;
   coefficient = 0.195;
+  can_miss = true;
   Setup();
 }
 
 SeedOfCorruption::SeedOfCorruption(Player& player) : Spell(player) {
-  name = "Seed of Corruption";
+  name = SpellName::kSeedOfCorruption;
   min_dmg = 1110;
   max_dmg = 1290;
   mana_cost = 882;
@@ -584,6 +552,7 @@ SeedOfCorruption::SeedOfCorruption(Player& player) : Spell(player) {
   school = SpellSchool::kShadow;
   type = SpellType::kAffliction;
   coefficient = 0.214;
+  can_miss = true;
   Setup();
 };
 
@@ -709,36 +678,39 @@ double SeedOfCorruption::GetModifier() {
 
 Corruption::Corruption(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
     : Spell(player, aura, dot) {
-  name = "Corruption";
+  name = SpellName::kCorruption;
   mana_cost = 370;
   cast_time = round((2 - (0.4 * player.talents.improved_corruption)) * 100) / 100.0;
   school = SpellSchool::kShadow;
   type = SpellType::kAffliction;
+  can_miss = true;
   Setup();
 }
 
 UnstableAffliction::UnstableAffliction(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
     : Spell(player, aura, dot) {
-  name = "Unstable Affliction";
+  name = SpellName::kUnstableAffliction;
   mana_cost = 400;
   cast_time = 1.5;
   school = SpellSchool::kShadow;
   type = SpellType::kAffliction;
+  can_miss = true;
   Setup();
 }
 
 SiphonLife::SiphonLife(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
     : Spell(player, aura, dot) {
-  name = "Siphon Life";
+  name = SpellName::kSiphonLife;
   mana_cost = 410;
   school = SpellSchool::kShadow;
   type = SpellType::kAffliction;
+  can_miss = true;
   Setup();
 }
 
 Immolate::Immolate(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
     : Spell(player, aura, dot) {
-  name = "Immolate";
+  name = SpellName::kImmolate;
   mana_cost = 445 * (1 - 0.01 * player.talents.cataclysm);
   cast_time = 2 - (0.1 * player.talents.bane);
   does_damage = true;
@@ -747,6 +719,7 @@ Immolate::Immolate(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<D
   coefficient = 0.2;
   school = SpellSchool::kFire;
   type = SpellType::kDestruction;
+  can_miss = true;
   Setup();
 }
 
@@ -761,39 +734,43 @@ double Immolate::GetModifier() {
 
 CurseOfAgony::CurseOfAgony(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
     : Spell(player, aura, dot) {
-  name = "Curse of Agony";
+  name = SpellName::kCurseOfAgony;
   mana_cost = 265;
   school = SpellSchool::kShadow;
   type = SpellType::kAffliction;
+  can_miss = true;
   Setup();
 }
 
 CurseOfTheElements::CurseOfTheElements(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Curse of the Elements";
+  name = SpellName::kCurseOfTheElements;
   mana_cost = 260;
   type = SpellType::kAffliction;
+  can_miss = true;
   Setup();
 }
 
 CurseOfRecklessness::CurseOfRecklessness(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Curse of Recklessness";
+  name = SpellName::kCurseOfRecklessness;
   mana_cost = 160;
   type = SpellType::kAffliction;
+  can_miss = true;
   Setup();
 }
 
 CurseOfDoom::CurseOfDoom(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
     : Spell(player, aura, dot) {
-  name = "Curse of Doom";
+  name = SpellName::kCurseOfDoom;
   mana_cost = 380;
   cooldown = 60;
   school = SpellSchool::kShadow;
   type = SpellType::kAffliction;
+  can_miss = true;
   Setup();
 }
 
 Conflagrate::Conflagrate(Player& player) : Spell(player) {
-  name = "Conflagrate";
+  name = SpellName::kConflagrate;
   mana_cost = 305 * (1 - 0.01 * player.talents.cataclysm);
   cooldown = 10;
   min_dmg = 579;
@@ -804,6 +781,7 @@ Conflagrate::Conflagrate(Player& player) : Spell(player) {
   can_crit = true;
   school = SpellSchool::kFire;
   type = SpellType::kDestruction;
+  can_miss = true;
   Setup();
 }
 
@@ -816,7 +794,7 @@ void Conflagrate::StartCast() {
 }
 
 DestructionPotion::DestructionPotion(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Destruction Potion";
+  name = SpellName::kDestructionPotion;
   cooldown = 120;
   is_item = true;
   on_gcd = false;
@@ -824,7 +802,7 @@ DestructionPotion::DestructionPotion(Player& player, std::shared_ptr<Aura> aura)
 }
 
 FlameCap::FlameCap(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Flame Cap";
+  name = SpellName::kFlameCap;
   cooldown = 180;
   is_item = true;
   on_gcd = false;
@@ -843,14 +821,14 @@ void FlameCap::Cast() {
 }
 
 BloodFury::BloodFury(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Blood Fury";
+  name = SpellName::kBloodFury;
   cooldown = 120;
   on_gcd = false;
   Setup();
 }
 
 Bloodlust::Bloodlust(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Bloodlust";
+  name = SpellName::kBloodlust;
   cooldown = 600;
   is_item = true;
   on_gcd = false;
@@ -859,7 +837,7 @@ Bloodlust::Bloodlust(Player& player, std::shared_ptr<Aura> aura) : Spell(player,
 }
 
 DrumsOfBattle::DrumsOfBattle(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Drums of Battle";
+  name = SpellName::kDrumsOfBattle;
   cooldown = 120;
   on_gcd = false;
   is_non_warlock_ability = true;
@@ -868,7 +846,7 @@ DrumsOfBattle::DrumsOfBattle(Player& player, std::shared_ptr<Aura> aura) : Spell
 }
 
 DrumsOfWar::DrumsOfWar(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Drums of War";
+  name = SpellName::kDrumsOfWar;
   cooldown = 120;
   on_gcd = false;
   is_non_warlock_ability = true;
@@ -877,7 +855,7 @@ DrumsOfWar::DrumsOfWar(Player& player, std::shared_ptr<Aura> aura) : Spell(playe
 }
 
 DrumsOfRestoration::DrumsOfRestoration(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Drums of Restoration";
+  name = SpellName::kDrumsOfRestoration;
   cooldown = 120;
   on_gcd = false;
   is_non_warlock_ability = true;
@@ -886,7 +864,7 @@ DrumsOfRestoration::DrumsOfRestoration(Player& player, std::shared_ptr<Aura> aur
 }
 
 TimbalsFocusingCrystal::TimbalsFocusingCrystal(Player& player) : Spell(player) {
-  name = "Timbal's Focusing Crystal";
+  name = SpellName::kTimbalsFocusingCrystal;
   cooldown = 15;
   on_gcd = false;
   proc_chance = 10;
@@ -896,11 +874,14 @@ TimbalsFocusingCrystal::TimbalsFocusingCrystal(Player& player) : Spell(player) {
   is_proc = true;
   school = SpellSchool::kShadow;
   can_crit = true;
+  can_miss = true;
+  procs_on_dot_ticks = true;
+  on_dot_tick_procs_enabled = true;
   Setup();
 }
 
 MarkOfDefiance::MarkOfDefiance(Player& player) : Spell(player) {
-  name = "Mark of Defiance";
+  name = SpellName::kMarkOfDefiance;
   cooldown = 17;
   proc_chance = 15;
   on_gcd = false;
@@ -909,17 +890,23 @@ MarkOfDefiance::MarkOfDefiance(Player& player) : Spell(player) {
   gain_mana_on_cast = true;
   min_mana = 128;
   max_mana = 172;
+  procs_on_hit = true;
+  on_hit_procs_enabled = true;
   Setup();
 }
 
 TheLightningCapacitor::TheLightningCapacitor(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "The Lightning Capacitor";
+  name = SpellName::kTheLightningCapacitor;
   cooldown = 2.5;
   min_dmg = 694;
   max_dmg = 806;
+  proc_chance = 100;
   does_damage = true;
   can_crit = true;
   on_gcd = false;
+  procs_on_crit = true;
+  on_crit_procs_enabled = true;
+  can_miss = true;
   Setup();
 }
 
@@ -935,89 +922,116 @@ void TheLightningCapacitor::StartCast(double predicted_damage) {
 }
 
 BladeOfWizardry::BladeOfWizardry(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Blade of Wizardry";
+  name = SpellName::kBladeOfWizardry;
   cooldown = 50;
-  on_gcd = false;
-  is_item = true;
-  is_proc = true;
-  Setup();
-}
-
-ShatteredSunPendantOfAcumen::ShatteredSunPendantOfAcumen(Player& player, std::shared_ptr<Aura> aura)
-    : Spell(player, aura) {
-  name = "Shattered Sun Pendant of Acumen (Scryers)";
-  cooldown = 45;
   proc_chance = 15;
   on_gcd = false;
   is_item = true;
-  if (player.settings.shattrath_faction == EmbindConstant::kAldor) {
-    this->is_proc = true;
-  } else {
-    this->does_damage = true;
-    this->can_crit = true;
-    this->dmg = 333;
-  }
+  is_proc = true;
+  procs_on_hit = true;
+  on_hit_procs_enabled = true;
+  Setup();
+}
+
+ShatteredSunPendantOfAcumenAldor::ShatteredSunPendantOfAcumenAldor(Player& player, std::shared_ptr<Aura> aura)
+    : Spell(player, aura) {
+  name = SpellName::kShatteredSunPendantOfAcumenAldor;
+  cooldown = 45;
+  proc_chance = 15;
+  is_proc = true;
+  on_gcd = false;
+  is_item = true;
+  procs_on_damage = true;
+  on_damage_procs_enabled = player.settings.exalted_with_shattrath_faction;
+  Setup();
+}
+
+ShatteredSunPendantOfAcumenScryers::ShatteredSunPendantOfAcumenScryers(Player& player) : Spell(player) {
+  name = SpellName::kShatteredSunPendantOfAcumenScryers;
+  cooldown = 45;
+  proc_chance = 15;
+  min_dmg = 333;
+  max_dmg = 367;
+  on_gcd = false;
+  is_item = true;
+  does_damage = true;
+  can_crit = true;
+  can_miss = true;
+  procs_on_damage = true;
+  on_damage_procs_enabled = player.settings.exalted_with_shattrath_faction;
   Setup();
 }
 
 RobeOfTheElderScribes::RobeOfTheElderScribes(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Robe of the Elder Scribes";
+  name = SpellName::kRobeOfTheElderScribes;
   cooldown = 50;
   proc_chance = 20;
   on_gcd = false;
   is_item = true;
   is_proc = true;
+  procs_on_hit = true;
+  on_hit_procs_enabled = true;
   Setup();
 }
 
 QuagmirransEye::QuagmirransEye(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Quagmirran's Eye";
+  name = SpellName::kQuagmirransEye;
   cooldown = 45;
   proc_chance = 10;
   on_gcd = false;
   is_item = true;
+  procs_on_hit = true;
+  on_hit_procs_enabled = true;
   Setup();
 }
 
 ShiffarsNexusHorn::ShiffarsNexusHorn(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Shiffar's Nexus-Horn";
+  name = SpellName::kShiffarsNexusHorn;
   cooldown = 45;
   proc_chance = 20;
   on_gcd = false;
   is_item = true;
+  procs_on_crit = true;
+  on_crit_procs_enabled = true;
   Setup();
 }
 
 SextantOfUnstableCurrents::SextantOfUnstableCurrents(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Sextant of Unstable Currents";
+  name = SpellName::kSextantOfUnstableCurrents;
   cooldown = 45;
   proc_chance = 20;
   on_gcd = false;
   is_item = true;
+  procs_on_crit = true;
+  on_crit_procs_enabled = true;
   Setup();
 }
 
 BandOfTheEternalSage::BandOfTheEternalSage(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Band of the Eternal Sage";
+  name = SpellName::kBandOfTheEternalSage;
   cooldown = 60;
   proc_chance = 10;
   on_gcd = false;
   is_item = true;
+  procs_on_hit = true;
+  on_hit_procs_enabled = true;
   Setup();
 }
 
 MysticalSkyfireDiamond::MysticalSkyfireDiamond(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Mystical Skyfire Diamond";
+  name = SpellName::kMysticalSkyfireDiamond;
   cooldown = 35;
   proc_chance = 15;
   on_gcd = false;
   is_proc = true;
   is_item = true;
+  procs_on_hit = true;
+  on_hit_procs_enabled = true;
   Setup();
 }
 
 InsightfulEarthstormDiamond::InsightfulEarthstormDiamond(Player& player) : Spell(player) {
-  name = "Insightful Earthstorm Diamond";
+  name = SpellName::kInsightfulEarthstormDiamond;
   cooldown = 15;
   proc_chance = 5;
   on_gcd = false;
@@ -1025,18 +1039,20 @@ InsightfulEarthstormDiamond::InsightfulEarthstormDiamond(Player& player) : Spell
   is_item = true;
   gain_mana_on_cast = true;
   mana_gain = 300;
+  procs_on_hit = true;
+  on_hit_procs_enabled = true;
   Setup();
 }
 
 AmplifyCurse::AmplifyCurse(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Amplify Curse";
+  name = SpellName::kAmplifyCurse;
   cooldown = 180;
   on_gcd = false;
   Setup();
 }
 
 PowerInfusion::PowerInfusion(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Power Infusion";
+  name = SpellName::kPowerInfusion;
   cooldown = 180;
   on_gcd = false;
   is_non_warlock_ability = true;
@@ -1044,7 +1060,7 @@ PowerInfusion::PowerInfusion(Player& player, std::shared_ptr<Aura> aura) : Spell
 }
 
 Innervate::Innervate(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Innervate";
+  name = SpellName::kInnervate;
   cooldown = 360;
   on_gcd = false;
   is_non_warlock_ability = true;
@@ -1052,7 +1068,7 @@ Innervate::Innervate(Player& player, std::shared_ptr<Aura> aura) : Spell(player,
 }
 
 ChippedPowerCore::ChippedPowerCore(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Chipped Power Core";
+  name = SpellName::kChippedPowerCore;
   cooldown = 120;
   usable_once_per_fight = true;  // The item is unique so you can only carry one at a time, so I'm
                                  // just gonna limit it to 1 use per fight.
@@ -1075,10 +1091,9 @@ void ChippedPowerCore::Cast() {
 }
 
 CrackedPowerCore::CrackedPowerCore(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Cracked Power Core";
+  name = SpellName::kCrackedPowerCore;
   cooldown = 120;
-  usable_once_per_fight = true;  // The item is unique so you can only carry one at a time, so I'm
-                                 // just gonna limit it to 1 use per fight.
+  usable_once_per_fight = true;
   on_gcd = false;
   Setup();
 };
@@ -1098,17 +1113,102 @@ void CrackedPowerCore::Cast() {
 }
 
 ManaTideTotem::ManaTideTotem(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
-  name = "Mana Tide Totem";
+  name = SpellName::kManaTideTotem;
   cooldown = 300;
   is_non_warlock_ability = true;
 }
 
 JudgementOfWisdom::JudgementOfWisdom(Player& player) : Spell(player) {
-  name = "Judgement of Wisdom";
+  name = SpellName::kJudgementOfWisdom;
   mana_gain = 74;
   gain_mana_on_cast = true;
   is_proc = true;
   on_gcd = false;
   proc_chance = 50;
+  procs_on_hit = true;
+  on_hit_procs_enabled = true;
+  Setup();
+}
+
+Flameshadow::Flameshadow(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+  name = SpellName::kFlameshadow;
+  is_proc = true;
+  on_gcd = false;
+  proc_chance = 5;
+  procs_on_hit = true;
+  on_hit_procs_enabled = player.sets.t4 >= 2;
+  procs_from_fire_spells = false;
+  Setup();
+}
+
+Shadowflame::Shadowflame(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+  name = SpellName::kShadowflame;
+  is_proc = true;
+  on_gcd = false;
+  proc_chance = 5;
+  procs_on_hit = true;
+  on_hit_procs_enabled = player.sets.t4 >= 2;
+  procs_from_shadow_spells = false;
+  Setup();
+}
+
+Spellstrike::Spellstrike(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+  name = SpellName::kSpellstrike;
+  is_proc = true;
+  on_gcd = false;
+  proc_chance = 5;
+  procs_on_hit = true;
+  on_hit_procs_enabled = player.sets.spellstrike == 2;
+  Setup();
+}
+
+ManaEtched4Set::ManaEtched4Set(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+  name = SpellName::kManaEtched4Set;
+  is_proc = true;
+  on_gcd = false;
+  proc_chance = 2;
+  procs_on_hit = true;
+  on_hit_procs_enabled = player.sets.mana_etched >= 4;
+  Setup();
+}
+
+AshtongueTalismanOfShadows::AshtongueTalismanOfShadows(Player& player, std::shared_ptr<Aura> aura)
+    : Spell(player, aura) {
+  name = SpellName::kAshtongueTalismanOfShadows;
+  is_proc = true;
+  on_gcd = false;
+  proc_chance = 20;
+  procs_on_dot_ticks = true;
+  on_dot_tick_procs_enabled = true;
+  Setup();
+}
+
+WrathOfCenarius::WrathOfCenarius(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+  name = SpellName::kWrathOfCenarius;
+  is_proc = true;
+  on_gcd = false;
+  proc_chance = 5;
+  procs_on_hit = true;
+  on_hit_procs_enabled = true;
+  Setup();
+}
+
+DarkmoonCardCrusade::DarkmoonCardCrusade(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+  name = SpellName::kDarkmoonCardCrusade;
+  is_proc = true;
+  on_gcd = false;
+  proc_chance = 100;
+  procs_on_hit = true;
+  on_hit_procs_enabled = true;
+  Setup();
+}
+
+ImprovedShadowBolt::ImprovedShadowBolt(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+  name = SpellName::kImprovedShadowBolt;
+  proc_chance = 100;
+  procs_on_crit = true;
+  on_crit_procs_enabled = !player.settings.using_custom_isb_uptime && player.talents.improved_shadow_bolt > 0;
+  on_gcd = false;
+  is_proc = true;
   Setup();
 }

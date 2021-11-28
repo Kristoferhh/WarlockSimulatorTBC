@@ -28,7 +28,7 @@ struct PlayerAuras {
   std::shared_ptr<Aura> band_of_the_eternal_sage;
   std::shared_ptr<Aura> wrath_of_cenarius;
   std::shared_ptr<Aura> blade_of_wizardry;
-  std::shared_ptr<Aura> shattered_sun_pendant_of_acumen;
+  std::shared_ptr<Aura> shattered_sun_pendant_of_acumen_aldor;
   std::shared_ptr<Aura> robe_of_the_elder_scribes;
   std::shared_ptr<Aura> mystical_skyfire_diamond;
   std::shared_ptr<Aura> eye_of_magtheridon;
