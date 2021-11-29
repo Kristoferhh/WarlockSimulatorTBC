@@ -86,7 +86,7 @@ ShiftingNaaruSliver::ShiftingNaaruSliver(Player& player) : Trinket(player) {
 }
 
 SkullOfGuldan::SkullOfGuldan(Player& player) : Trinket(player) {
-  name = "Skull of Gul'dan";
+  name = "The Skull of Gul'dan";
   cooldown = 120;
   duration = 20;
   Trinket::stats =
