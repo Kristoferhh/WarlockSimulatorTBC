@@ -137,9 +137,9 @@ void Simulation::Start() {
             }
             // Cast Curse of the Elements or Curse of Recklessness if they're
             // the selected curse and they're not active
-            if (kFightTimeRemaining >= 10 && player.gcd_remaining <= 0 &&
-                (player.curse_spell == player.spells.curse_of_recklessness ||
-                 player.curse_spell == player.spells.curse_of_the_elements) &&
+            if (kFightTimeRemaining >= 10 && player.gcd_remaining <= 0 && player.curse_spell != NULL &&
+                (player.curse_spell->name == SpellName::kCurseOfRecklessness ||
+                 player.curse_spell->name == SpellName::kCurseOfTheElements) &&
                 !player.curse_aura->active && player.curse_spell->CanCast()) {
               if (player.curse_spell->HasEnoughMana()) {
                 player.curse_spell->StartCast();
@@ -149,8 +149,8 @@ void Simulation::Start() {
             }
             // Cast Curse of Doom if it's the selected curse and there's more
             // than 60 seconds remaining
-            if (player.gcd_remaining <= 0 && kFightTimeRemaining > 60 &&
-                player.curse_spell == player.spells.curse_of_doom && !player.auras.curse_of_doom->active &&
+            if (player.gcd_remaining <= 0 && kFightTimeRemaining > 60 && player.curse_spell != NULL &&
+                player.curse_spell->name == SpellName::kCurseOfDoom && !player.auras.curse_of_doom->active &&
                 player.spells.curse_of_doom->CanCast()) {
               SelectedSpellHandler(player.spells.curse_of_doom, predicted_damage_of_spells, kFightTimeRemaining);
             }
@@ -160,10 +160,10 @@ void Simulation::Start() {
             if (player.gcd_remaining <= 0 && player.auras.curse_of_agony != NULL &&
                 !player.auras.curse_of_agony->active && player.spells.curse_of_agony->CanCast() &&
                 kFightTimeRemaining > player.auras.curse_of_agony->minimum_duration &&
-                ((player.curse_spell == player.spells.curse_of_doom && !player.auras.curse_of_doom->active &&
+                ((player.curse_spell->name == SpellName::kCurseOfDoom && !player.auras.curse_of_doom->active &&
                   (player.spells.curse_of_doom->cooldown_remaining > player.auras.curse_of_agony->minimum_duration ||
                    kFightTimeRemaining < 60)) ||
-                 player.curse_spell == player.spells.curse_of_agony)) {
+                 player.curse_spell->name == SpellName::kCurseOfAgony)) {
               SelectedSpellHandler(player.spells.curse_of_agony, predicted_damage_of_spells, kFightTimeRemaining);
             }
             // Cast Corruption if Corruption isn't up or if it will expire
