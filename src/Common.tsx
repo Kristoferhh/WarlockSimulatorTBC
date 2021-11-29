@@ -115,17 +115,18 @@ export function canGemColorBeInsertedIntoSocketColor(socketColor: SocketColor, g
  * The item needs to be of the specified item slot, the item's phase needs to be selected, it needs to not be hidden unless the player is showing hidden items
  * and the item needs to not be unique unless it is not equipped in the other item slot (only applicable to rings and trinkets).
  */
-export function getItemTableItems(itemSlotKey: ItemSlotKey, itemSubSlot: SubSlotValue, selectedItems: ItemAndEnchantStruct, sources: SourcesStruct, hiddenItems: number[], hidingItems: boolean, savedItemDps: SavedItemDps): Item[] {
+export function getItemTableItems(itemSlotKey: ItemSlotKey, itemSubSlot: SubSlotValue, selectedItems: ItemAndEnchantStruct, sources: SourcesStruct, hiddenItems: number[], hidingItems: boolean, savedItemDps: SavedItemDps, isMultiItemSimulation: boolean): Item[] {
   const itemSlot = ItemSlotKeyToItemSlot(false, itemSlotKey, itemSubSlot);
   const savedItemSlotDpsExists = savedItemDps[itemSlot] != null;
   const secondRingOrTrinket = selectedItems[ItemSlotKeyToItemSlot(false, itemSlotKey, itemSubSlot === '1' ? '2' : '1')];
+
   return Items
     .filter((e) => {
       return e.itemSlot === itemSlotKey && sources.phase[e.phase] === true && (!hiddenItems.includes(e.id) || hidingItems) && (!e.unique || (secondRingOrTrinket !== e.id));
     })
     .sort((a, b) => {
-      // Sort by the saved dps or by phase as backup
-      if (!savedItemSlotDpsExists || (!savedItemDps[itemSlot][a.id] && !savedItemDps[itemSlot][b.id])) {
+      // If it's a multi-item simulation then sort by phase from highest to lowest, otherwise sort by the saved dps or by phase as backup
+      if (isMultiItemSimulation || !savedItemSlotDpsExists || (!savedItemDps[itemSlot][a.id] && !savedItemDps[itemSlot][b.id])) {
         return a.phase < b.phase ? 1 : -1;
       } else if (!savedItemDps[itemSlot][b.id]) {
         return -1;

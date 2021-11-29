@@ -214,7 +214,8 @@ export default function ItemSelection() {
               uiStore.sources,
               uiStore.hiddenItems,
               hidingItems,
-              uiStore.savedItemDps)
+              uiStore.savedItemDps,
+              false)
               .map(item =>
                 <tr
                   key={item.id}

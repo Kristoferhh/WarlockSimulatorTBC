@@ -488,7 +488,8 @@ export function SimulationButtons() {
             uiState.sources,
             uiState.hiddenItems,
             false,
-            uiState.savedItemDps)
+            uiState.savedItemDps,
+            true)
             .map(item => item.id),
           type: SimulationType.AllItems
         })}
