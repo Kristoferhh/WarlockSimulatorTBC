@@ -793,7 +793,9 @@ Conflagrate::Conflagrate(Player& player) : Spell(player) {
   Setup();
 }
 
-bool Conflagrate::Ready() { return player.auras.immolate != NULL && player.auras.immolate->active && Spell::Ready(); }
+bool Conflagrate::CanCast() {
+  return player.auras.immolate != NULL && player.auras.immolate->active && Spell::CanCast();
+}
 
 void Conflagrate::Damage(bool is_crit) {
   Spell::Damage(is_crit);

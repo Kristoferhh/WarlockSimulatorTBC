@@ -61,9 +61,9 @@ struct Spell : std::enable_shared_from_this<Spell> {
 
   void Reset();
   void Setup();
-  bool CanCast();
+  virtual bool CanCast();
   bool HasEnoughMana();
-  virtual bool Ready();
+  bool Ready();
   virtual double GetCastTime();
   virtual void StartCast(double predicted_damage = 0);
   virtual void Cast();
@@ -153,7 +153,7 @@ struct CurseOfDoom : public Spell {
 struct Conflagrate : public Spell {
   Conflagrate(Player& player);
   void Damage(bool is_crit = false);
-  bool Ready();
+  bool CanCast();
 };
 
 struct DestructionPotion : public Spell {
