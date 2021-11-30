@@ -797,8 +797,8 @@ bool Conflagrate::CanCast() {
   return player.auras.immolate != NULL && player.auras.immolate->active && Spell::CanCast();
 }
 
-void Conflagrate::Damage(bool is_crit) {
-  Spell::Damage(is_crit);
+void Conflagrate::Cast() {
+  Spell::Cast();
   player.auras.immolate->Fade();
 }
 

@@ -152,7 +152,7 @@ struct CurseOfDoom : public Spell {
 
 struct Conflagrate : public Spell {
   Conflagrate(Player& player);
-  void Damage(bool is_crit = false);
+  void Cast();
   bool CanCast();
 };
 
