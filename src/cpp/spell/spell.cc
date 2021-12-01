@@ -911,4 +911,5 @@ ManaTideTotem::ManaTideTotem(Player& player, std::shared_ptr<Aura> aura) : Spell
   name = SpellName::kManaTideTotem;
   cooldown = 300;
   is_non_warlock_ability = true;
+  Setup();
 }
