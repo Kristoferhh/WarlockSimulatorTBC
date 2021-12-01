@@ -6,7 +6,12 @@
 PetAura::PetAura(std::shared_ptr<Pet> pet)
     : pet(pet), duration(0), duration_remaining(0), active(false), stacks(0), max_stacks(0) {}
 
-void PetAura::Setup() { pet->player.pet_aura_list.push_back(this); }
+void PetAura::Setup() {
+  if (pet->player.recording_combat_log_breakdown && pet->player.combat_log_breakdown.count(name) == 0) {
+    pet->player.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
+  }
+  pet->player.pet_aura_list.push_back(this);
+}
 
 void PetAura::Tick(double t) {
   if (!active) {
@@ -21,7 +26,6 @@ void PetAura::Tick(double t) {
 }
 
 void PetAura::Apply() {
-  duration_remaining = duration;
   if (stacks < max_stacks) {
     stacks++;
   }
@@ -37,12 +41,22 @@ void PetAura::Apply() {
     pet->player.CombatLog(msg);
   }
 
-  for (auto& stat : stats) {
-    stat.AddStat();
+  if (!active) {
+    if (pet->player.recording_combat_log_breakdown) {
+      pet->player.combat_log_breakdown.at(name)->applied_at = pet->player.fight_time;
+    }
+
+    for (auto& stat : stats) {
+      stat.AddStat();
+    }
   }
 
   active = true;
   pet->CalculateStatsFromPlayer();
+  duration_remaining = duration;
+  if (pet->player.recording_combat_log_breakdown) {
+    pet->player.combat_log_breakdown.at(name)->count++;
+  }
 }
 
 void PetAura::Fade() {
@@ -58,6 +72,11 @@ void PetAura::Fade() {
     pet->player.CombatLog(name + " faded");
   }
 
+  if (pet->player.recording_combat_log_breakdown) {
+    pet->player.combat_log_breakdown.at(name)->uptime +=
+        pet->player.fight_time - pet->player.combat_log_breakdown.at(name)->applied_at;
+  }
+
   for (auto& stat : stats) {
     stat.RemoveStat();
   }
@@ -69,6 +88,7 @@ DemonicFrenzy::DemonicFrenzy(std::shared_ptr<Pet> pet) : PetAura(pet) {
   name = SpellName::kDemonicFrenzy;
   duration = 10;
   max_stacks = 10;
+  Setup();
 }
 
 BlackBook::BlackBook(std::shared_ptr<Pet> pet) : PetAura(pet) {
@@ -76,6 +96,7 @@ BlackBook::BlackBook(std::shared_ptr<Pet> pet) : PetAura(pet) {
   duration = 30;
   stats = std::vector<Stat>{SpellPower(pet->player, pet->buff_stats.spell_power, EntityType::kPet, 200),
                             AttackPower(pet->player, pet->buff_stats.attack_power, EntityType::kPet, 325)};
+  Setup();
 }
 
 BattleSquawk::BattleSquawk(std::shared_ptr<Pet> pet) : PetAura(pet) {
@@ -83,4 +104,5 @@ BattleSquawk::BattleSquawk(std::shared_ptr<Pet> pet) : PetAura(pet) {
   duration = 300;
   stats = std::vector<Stat>{MeleeHastePercent(pet->player, pet->stats.melee_haste_percent, EntityType::kPet,
                                               std::pow(1.05, pet->player.settings.battle_squawk_amount))};
+  Setup();
 }

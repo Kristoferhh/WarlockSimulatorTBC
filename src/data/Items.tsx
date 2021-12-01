@@ -461,6 +461,7 @@ export const Items: Item[] = [
   { name: 'Mark of the Champion', varName: 'markOfTheChampion', itemSlot: ItemSlotKey.Trinket, spellPower: 85, unique: true, id: 23207, source: ItemSource.Naxxramas, phase: 0, quality: Quality.Epic, iconName: 'inv_misc_token_argentdawn3' },
   { name: "Hazza'rah's Charm of Destruction", varName: 'hazzarahsCharmOfDestruction', itemSlot: ItemSlotKey.Trinket, id: 19957, unique: true, source: ItemSource.ZulGurub, phase: 0, quality: Quality.Epic, iconName: 'inv_jewelry_necklace_19' },
   { name: "Neltharion's Tear", varName: 'neltharionsTear', itemSlot: ItemSlotKey.Trinket, spellPower: 44, hitRating: 16, unique: true, id: 19379, source: ItemSource.BlackwingLair, phase: 0, quality: Quality.Epic, iconName: 'inv_stone_15' },
+  { name: "The Black Book", varName: 'blackBook', itemSlot: ItemSlotKey.Trinket, unique: true, id: 19337, source: ItemSource.BlackwingLair, phase: 0, quality: Quality.Epic, iconName: 'inv_misc_book_06' },
 
   // Mainhand
   { name: 'Sunflare', varName: 'sunflare', itemSlot: ItemSlotKey.Mainhand, stamina: 17, intellect: 20, spellPower: 292, critRating: 30, hasteRating: 23, id: 34336, source: ItemSource.Sunwell, phase: 5, quality: Quality.Epic, iconName: 'inv_weapon_shortblade_73' },

@@ -963,4 +963,6 @@ export enum AuraName {
   shatteredSunPendantOfAcumenAldor = 'shatteredSunPendantOfAcumenAldor',
   shatteredSunPendantOfAcumenScryers = 'shatteredSunPendantOfAcumenScryers',
   mysticalSkyfireDiamond = 'mysticalSkyfireDiamond',
+  demonicFrenzy = 'demonicFrenzy',
+  blackBook = 'theBlackBook',
 }
