@@ -167,7 +167,7 @@ void Spell::Cast() {
 
   if (mana_cost > 0 && !player.settings.infinite_player_mana) {
     player.stats.mana -= GetManaCost();
-    player.five_second_rule_timer = 5;
+    player.five_second_rule_timer_remaining = 5;
   }
 
   if (cast_time > 0 && player.ShouldWriteToCombatLog()) {

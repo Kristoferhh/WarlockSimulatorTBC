@@ -11,7 +11,8 @@
 #include "../spell/spell.h"
 
 Player::Player(PlayerSettings& player_settings)
-    : selected_auras(player_settings.auras),
+    : Entity(this, EntityType::kPlayer),
+      selected_auras(player_settings.auras),
       talents(player_settings.talents),
       sets(player_settings.sets),
       stats(player_settings.stats),
@@ -19,10 +20,8 @@ Player::Player(PlayerSettings& player_settings)
       settings(player_settings),
       spells(PlayerSpells()),
       auras(PlayerAuras()),
-      cast_time_remaining(0),
-      gcd_remaining(0),
-      recording_combat_log_breakdown(settings.recording_combat_log_breakdown && settings.equipped_item_simulation),
-      entity_type(EntityType::kPlayer) {
+      recording_combat_log_breakdown(settings.recording_combat_log_breakdown && settings.equipped_item_simulation) {
+  name = "Player";
   // I don't know if this formula only works for bosses or not, so for the
   // moment I'm only using it for targets 3+ levels above.
   const double enemy_base_resistance = settings.enemy_level >= (kLevel + 3) ? (6 * kLevel * 5) / 75.0 : 0;
@@ -60,7 +59,8 @@ Player::Player(PlayerSettings& player_settings)
   if (selected_auras.atiesh_mage) {
     stats.spell_crit_rating += 28 * settings.mage_atiesh_amount;
   }
-  stats.spell_crit_chance = kBaseCritChancePercent + talents.devastation + talents.backlash + talents.demonic_tactics;
+  stats.spell_crit_chance =
+      StatConstant::kBaseCritChancePercent + talents.devastation + talents.backlash + talents.demonic_tactics;
   if (selected_auras.moonkin_aura) {
     stats.spell_crit_chance += 5;
   }
@@ -78,7 +78,7 @@ Player::Player(PlayerSettings& player_settings)
   if (sets.mana_etched >= 2) {
     stats.spell_hit_rating += 35;
   }
-  stats.extra_spell_hit_chance = stats.spell_hit_rating / kHitRatingPerPercent;
+  stats.extra_spell_hit_chance = stats.spell_hit_rating / StatConstant::kHitRatingPerPercent;
   if (selected_auras.totem_of_wrath) {
     stats.extra_spell_hit_chance += (3 * settings.totem_of_wrath_amount);
   }
@@ -187,21 +187,21 @@ Player::Player(PlayerSettings& player_settings)
   settings.enemy_armor = std::max(0, settings.enemy_armor);
 
   // Health & Mana
-  stats.health =
-      (stats.health + GetStamina() * kHealthPerStamina) * (1 + (0.01 * static_cast<double>(talents.fel_stamina)));
-  stats.max_mana =
-      (stats.mana + GetIntellect() * kManaPerIntellect) * (1 + (0.01 * static_cast<double>(talents.fel_intellect)));
+  stats.health = (stats.health + GetStamina() * StatConstant::kHealthPerStamina) *
+                 (1 + (0.01 * static_cast<double>(talents.fel_stamina)));
+  stats.max_mana = (stats.mana + GetIntellect() * StatConstant::kManaPerIntellect) *
+                   (1 + (0.01 * static_cast<double>(talents.fel_intellect)));
 }
 
 void Player::Initialize() {
   demonic_knowledge_spell_power = 0;
   if (!settings.sacrificing_pet || talents.demonic_sacrifice == 0) {
     if (settings.selected_pet == EmbindConstant::kImp) {
-      pet = std::make_shared<Imp>(*this);
+      pet = std::make_shared<Imp>(this);
     } else if (settings.selected_pet == EmbindConstant::kSuccubus) {
-      pet = std::make_shared<Succubus>(*this);
+      pet = std::make_shared<Succubus>(this);
     } else if (settings.selected_pet == EmbindConstant::kFelguard) {
-      pet = std::make_shared<Felguard>(*this);
+      pet = std::make_shared<Felguard>(this);
     }
     if (pet != NULL) {
       pet->Initialize();
@@ -458,7 +458,7 @@ void Player::Reset() {
   cast_time_remaining = 0;
   gcd_remaining = 0;
   mp5_timer = 5;
-  five_second_rule_timer = 5;
+  five_second_rule_timer_remaining = 5;
   stats.mana = stats.max_mana;
   power_infusions_ready = settings.power_infusion_amount;
 
@@ -505,7 +505,7 @@ double Player::GetHastePercent() {
     }
   }
 
-  return haste_percent * (1 + stats.spell_haste_rating / kHasteRatingPerPercent / 100.0);
+  return haste_percent * (1 + stats.spell_haste_rating / StatConstant::kHasteRatingPerPercent / 100.0);
 }
 
 double Player::GetGcdValue(const std::string& spell_name) {
@@ -532,8 +532,8 @@ double Player::GetSpellPower(SpellSchool school) {
 }
 
 double Player::GetCritChance(SpellType spell_type) {
-  double crit_chance = stats.spell_crit_chance + (GetIntellect() * kCritChancePerIntellect) +
-                       (stats.spell_crit_rating / kCritRatingPerPercent);
+  double crit_chance = stats.spell_crit_chance + (GetIntellect() * StatConstant::kCritChancePerIntellect) +
+                       (stats.spell_crit_rating / StatConstant::kCritRatingPerPercent);
   if (spell_type != SpellType::kDestruction) {
     crit_chance -= talents.devastation;
   }
@@ -755,7 +755,7 @@ void Player::Tick(double time) {
   cast_time_remaining -= time;
   gcd_remaining -= time;
   mp5_timer -= time;
-  five_second_rule_timer -= time;
+  five_second_rule_timer_remaining -= time;
 
   // Pet
   if (pet != NULL) {
@@ -791,7 +791,8 @@ void Player::Tick(double time) {
   if (mp5_timer <= 0) {
     mp5_timer = 5;
 
-    if (stats.mp5 > 0 || five_second_rule_timer <= 0 || (auras.innervate != NULL && auras.innervate->active)) {
+    if (stats.mp5 > 0 || five_second_rule_timer_remaining <= 0 ||
+        (auras.innervate != NULL && auras.innervate->active)) {
       const bool kInnervateIsActive = auras.innervate != NULL && auras.innervate->active;
       const int kCurrentPlayerMana = stats.mana;
 
@@ -800,7 +801,7 @@ void Player::Tick(double time) {
         stats.mana += stats.mp5;
       }
       // Spirit mana regen
-      if (kInnervateIsActive || five_second_rule_timer <= 0) {
+      if (kInnervateIsActive || five_second_rule_timer_remaining <= 0) {
         // Formula from
         // https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1572910
         int mp5_from_spirit = 5 * (0.001 + std::sqrt(GetIntellect()) * GetSpirit() * 0.009327);
@@ -843,7 +844,8 @@ void Player::SendPlayerInfoToCombatLog() {
   combat_log_entries.push_back(
       "Hit Chance: " + DoubleToString(std::min(16.0, round((stats.extra_spell_hit_chance) * 100) / 100), 2) + "%");
   combat_log_entries.push_back(
-      "Haste: " + DoubleToString(round((stats.spell_haste_rating / kHasteRatingPerPercent) * 100) / 100, 2) + "%");
+      "Haste: " +
+      DoubleToString(round((stats.spell_haste_rating / StatConstant::kHasteRatingPerPercent) * 100) / 100, 2) + "%");
   combat_log_entries.push_back("Shadow Modifier: " + DoubleToString(stats.shadow_modifier * 100, 2) + "%");
   combat_log_entries.push_back("Fire Modifier: " + DoubleToString(stats.fire_modifier * 100, 2) + "%");
   combat_log_entries.push_back("MP5: " + DoubleToString(stats.mp5));
@@ -865,13 +867,13 @@ void Player::SendPlayerInfoToCombatLog() {
           "Physical Hit Chance: " + DoubleToString(round(pet->stats.melee_hit_chance * 100) / 100.0, 2) + "%");
       combat_log_entries.push_back(
           "Physical Crit Chance: " + DoubleToString(round(pet->GetMeleeCritChance() * 100) / 100.0, 2) + "% (" +
-          DoubleToString(pet->crit_suppression, 2) + "% Crit Suppression Applied)");
+          DoubleToString(StatConstant::kMeleeCritChanceSuppression, 2) + "% Crit Suppression Applied)");
       combat_log_entries.push_back(
           "Glancing Blow Chance: " + DoubleToString(round(pet->glancing_blow_chance * 100) / 100.0, 2) + "%");
       combat_log_entries.push_back(
           "Attack Power Modifier: " + DoubleToString(round(pet->stats.attack_power_modifier * 10000) / 100.0, 2) + "%");
     }
-    if (pet->pet == PetName::kImp || pet->pet == PetName::kSuccubus) {
+    if (pet->pet_name == PetName::kImp || pet->pet_name == PetName::kSuccubus) {
       combat_log_entries.push_back(
           "Spell Hit Chance: " + DoubleToString(round(pet->stats.spell_hit_chance * 100) / 100.0, 2) + "%");
       combat_log_entries.push_back(
@@ -884,7 +886,7 @@ void Player::SendPlayerInfoToCombatLog() {
   combat_log_entries.push_back("Level: " + std::to_string(settings.enemy_level));
   combat_log_entries.push_back("Shadow Resistance: " + std::to_string(settings.enemy_shadow_resist));
   combat_log_entries.push_back("Fire Resistance: " + std::to_string(settings.enemy_fire_resist));
-  if (pet != NULL && pet->pet != PetName::kImp) {
+  if (pet != NULL && pet->pet_name != PetName::kImp) {
     combat_log_entries.push_back("Dodge Chance: " + DoubleToString(pet->enemy_dodge_chance) + "%");
     combat_log_entries.push_back("Armor: " + std::to_string(settings.enemy_armor));
     combat_log_entries.push_back(

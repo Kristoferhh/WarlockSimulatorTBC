@@ -9,6 +9,7 @@
 #include "../auras.h"
 #include "../character_stats.h"
 #include "../combat_log_breakdown.h"
+#include "../entity.h"
 #include "../items.h"
 #include "../pet/pet.h"
 #include "../rng.h"
@@ -26,25 +27,13 @@
 #include "player_settings.h"
 #include "player_spells.h"
 
-struct Player {
-  const double kHitRatingPerPercent = 12.62;
-  const double kCritRatingPerPercent = 22.08;
-  const double kHasteRatingPerPercent = 15.77;
-  const double kManaPerIntellect = 15;
-  const double kHealthPerStamina = 10;
-  const double kCritChancePerIntellect = 1 / 81.95;
-  const double kBaseCritChancePercent = 1.701;
-  const double kGcdValue = 1.5;
-  const double kMinimumGcdValue = 1;
-  const double kCritDamageMultiplier = 1.5;
-  const int kLevel = 70;
+struct Player : public Entity {
   const int kFloatNumberMultiplier = 1000;  // Multiply hit and crit percent by this number to get rid of the
                                             // decimals when calling Random() since we need integers
   const double kSpellDelay = 0.0001;        // Increases the Cast time of spells by a very small
                                             // amount to e.g. make it so that if Immolate has 1.5
                                             // seconds remaining, the sim can start precasting
                                             // Immolate and it won't refresh before it expires.
-  std::shared_ptr<Pet> pet;
   Auras& selected_auras;
   Talents& talents;
   Sets& sets;
@@ -71,13 +60,9 @@ struct Player {
   std::vector<OnDamageProc*> on_damage_procs;
   std::vector<OnResistProc*> on_resist_procs;
   Rng rng;
-  EntityType entity_type;
-  double cast_time_remaining;
-  double gcd_remaining;
   double total_duration;
   double fight_time;
   double mp5_timer;
-  double five_second_rule_timer;
   double demonic_knowledge_spell_power;
   int iteration_damage;
   int iteration;

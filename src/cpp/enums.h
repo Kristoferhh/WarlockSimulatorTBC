@@ -100,4 +100,16 @@ const std::string kSpellCritRating = "Spell Crit Rating";
 const std::string kAttackPower = "Attack Power";
 }  // namespace StatName
 
+namespace StatConstant {
+const double kHitRatingPerPercent = 12.62;
+const double kCritRatingPerPercent = 22.08;
+const double kHasteRatingPerPercent = 15.77;
+const double kManaPerIntellect = 15;
+const double kHealthPerStamina = 10;
+const double kCritChancePerIntellect = 1 / 81.95;
+const double kBaseCritChancePercent = 1.701;
+const double kMeleeCritChanceSuppression = 4.73;  // Source: Fierywind from Warlock discord and maybe Fight Club discord
+const double kBaseEnemyDodgeChance = 6.5;
+}  // namespace StatConstant
+
 #endif

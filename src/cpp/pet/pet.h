@@ -10,8 +10,7 @@ struct Player;
 #include "pet_auras.h"
 #include "pet_spells.h"
 
-struct Pet : std::enable_shared_from_this<Pet> {
-  Player& player;
+struct Pet : public Entity, std::enable_shared_from_this<Pet> {
   PetSpells spells;
   PetAuras auras;
   CharacterStats base_stats;
@@ -19,24 +18,16 @@ struct Pet : std::enable_shared_from_this<Pet> {
                               // stat so we can re-calculate the pet's stats in
                               // calculateStatsFromPlayer().
   CharacterStats debuff_stats;
-  CharacterStats stats;
-  PetName pet;
+  PetName pet_name;
   PetType pet_type;
-  EntityType entity_type;
-  std::string name;
   double enemy_dodge_chance;
-  double cast_time_remaining;
-  double five_second_rule_timer_remaining;
-  double spirit_tick_timer_remaining;
-  double crit_multiplier;
   double glancing_blow_multiplier;
   double glancing_blow_chance;
-  double crit_suppression;
   double armor_multiplier;
   double dmg;
   double base_melee_speed;
 
-  Pet(Player& player);
+  Pet(Player* player);
   void Initialize();
   void CalculateStatsFromAuras();
   void CalculateStatsFromPlayer(bool announce_in_combat_log = true);
@@ -60,15 +51,15 @@ struct Pet : std::enable_shared_from_this<Pet> {
 };
 
 struct Imp : public Pet {
-  Imp(Player& player);
+  Imp(Player* player);
 };
 
 struct Succubus : public Pet {
-  Succubus(Player& player);
+  Succubus(Player* player);
 };
 
 struct Felguard : public Pet {
-  Felguard(Player& player);
+  Felguard(Player* player);
 };
 
 #endif
