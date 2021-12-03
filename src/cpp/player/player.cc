@@ -447,16 +447,19 @@ void Player::Initialize() {
   if (auras.darkmoon_card_crusade != NULL)
     spells.darkmoon_card_crusade = std::make_unique<DarkmoonCardCrusade>(*this, auras.darkmoon_card_crusade);
   if (auras.power_infusion != NULL) {
-    spells.power_infusion.insert(spells.power_infusion.end(), settings.power_infusion_amount,
-                                 std::make_unique<PowerInfusion>(*this, auras.power_infusion));
+    for (int i = 0; i < settings.power_infusion_amount; i++) {
+      spells.power_infusion.push_back(std::make_unique<PowerInfusion>(*this, auras.power_infusion));
+    }
   }
   if (auras.bloodlust != NULL) {
-    spells.bloodlust.insert(spells.bloodlust.end(), settings.bloodlust_amount,
-                            std::make_unique<Bloodlust>(*this, auras.bloodlust));
+    for (int i = 0; i < settings.bloodlust_amount; i++) {
+      spells.bloodlust.push_back(std::make_unique<Bloodlust>(*this, auras.bloodlust));
+    }
   }
   if (auras.innervate != NULL) {
-    spells.innervate.insert(spells.innervate.end(), settings.innervate_amount,
-                            std::make_unique<Innervate>(*this, auras.innervate));
+    for (int i = 0; i < settings.innervate_amount; i++) {
+      spells.innervate.push_back(std::make_unique<Innervate>(*this, auras.innervate));
+    }
   }
 
   // Set the filler property
