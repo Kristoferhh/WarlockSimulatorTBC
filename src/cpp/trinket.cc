@@ -70,7 +70,7 @@ void Trinket::Tick(double t) {
 }
 
 RestrainedEssenceOfSapphiron::RestrainedEssenceOfSapphiron(Player& player) : Trinket(player) {
-  name = "Restrained Essence of Sapphiron";
+  name = "The Restrained Essence of Sapphiron";
   cooldown = 120;
   duration = 20;
   stats.push_back(SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 130));

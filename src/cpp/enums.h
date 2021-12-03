@@ -100,4 +100,40 @@ const std::string kSpellCritRating = "Spell Crit Rating";
 const std::string kAttackPower = "Attack Power";
 }  // namespace StatName
 
+namespace ItemId {
+const int kDarkIronSmokingPipe = 38290;
+const int kShatteredSunPendantOfAcumen = 34678;
+const int kTimbalsFocusingCrystal = 34470;
+const int kShiftingNaaruSliver = 34429;
+const int kHexShrunkenHead = 33829;
+const int kAshtongueTalismanOfShadows = 32493;
+const int kSkullOfGuldan = 32483;
+const int kDarkmoonCardCrusade = 31856;
+const int kBladeOfWizardry = 31336;
+const int kSextantOfUnstableCurrents = 30626;
+const int kStarkillersBauble = 30340;
+const int kEssenceOfTheMartyr = 29376;
+const int kIconOfTheSilverCrescent = 29370;
+const int kBandOfTheEternalSage = 29305;
+const int kXirisGift = 29179;
+const int kScryersBloodgem = 29132;
+const int kEyeOfMagtheridon = 28789;
+const int kRobeOfTheElderScribes = 28602;
+const int kShiffarsNexusHorn = 28418;
+const int kTheLightningCapacitor = 28785;
+const int kArcanistsStone = 28223;
+const int kVengeanceOfTheIllidari = 28040;
+const int kMarkOfDefiance = 27922;
+const int kQuagmirransEye = 27683;
+const int kTerokkarTabletOfVim = 25936;
+const int kInsightfulEarthstormDiamond = 25901;
+const int kMysticalSkyfireDiamond = 25893;
+const int kAncientCrystalTalisman = 25620;
+const int kFigurineLivingRubySerpent = 24126;
+const int kMarkOfTheChampion = 23207;
+const int kRestrainedEssenceOfSapphiron = 23046;
+const int kWrathOfCenarius = 21190;
+const int kHazzarahsCharmOfDestruction = 19957;
+}  // namespace ItemId
+
 #endif

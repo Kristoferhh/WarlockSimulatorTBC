@@ -40,7 +40,7 @@ void DamageOverTime::Apply() {
     player.combat_log_breakdown.at(name)->applied_at = player.fight_time;
   }
   const bool kIsAlreadyActive = active;
-  spell_power = player.GetSpellPower(school);
+  spell_power = player.GetSpellPower(true, school);
 
   active = true;
   tick_timer_remaining = tick_timer_total;
@@ -102,7 +102,7 @@ std::vector<double> DamageOverTime::GetConstantDamage() {
   // If the DoT isn't currently active then this.spell_power will be 0, so use
   // the player's current Spell Power
   if (!active) {
-    spell_power = player.GetSpellPower(school);
+    spell_power = player.GetSpellPower(true, school);
   }
   double modifier = GetModifier();
   double partial_resist_multiplier = player.GetPartialResistMultiplier(school);

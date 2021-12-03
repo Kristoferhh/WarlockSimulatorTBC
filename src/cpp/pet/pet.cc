@@ -223,7 +223,7 @@ void Pet::CalculateStatsFromAuras() {
 }
 
 int Pet::GetPlayerSpellPower() {
-  return player.GetSpellPower() + std::max(player.stats.shadow_power, player.stats.fire_power);
+  return player.GetSpellPower(false) + std::max(player.stats.shadow_power, player.stats.fire_power);
 }
 
 void Pet::CalculateStatsFromPlayer(bool announce_in_combat_log) {
