@@ -209,37 +209,54 @@ void Player::Initialize() {
   }
 
   std::vector<int> equipped_trinket_ids{items.trinket_1, items.trinket_2};
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 32483) != equipped_trinket_ids.end())
+  std::vector<int> equipped_ring_ids{items.ring_1, items.ring_2};
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kSkullOfGuldan) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(SkullOfGuldan(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 34429) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kShiftingNaaruSliver) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(ShiftingNaaruSliver(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 33829) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kHexShrunkenHead) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(HexShrunkenHead(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 29370) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kIconOfTheSilverCrescent) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(IconOfTheSilverCrescent(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 29132) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kScryersBloodgem) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(ScryersBloodgem(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 23046) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kRestrainedEssenceOfSapphiron) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(RestrainedEssenceOfSapphiron(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 29179) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kXirisGift) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(XirisGift(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 25620) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kAncientCrystalTalisman) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(AncientCrystalTalisman(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 28223) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kArcanistsStone) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(ArcanistsStone(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 25936) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kTerokkarTabletOfVim) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(TerokkarTabletOfVim(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 28040) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kVengeanceOfTheIllidari) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(VengeanceOfTheIllidari(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 24126) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kFigurineLivingRubySerpent) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(FigurineLivingRubySerpent(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 29376) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kEssenceOfTheMartyr) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(EssenceOfTheMartyr(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 30340) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kStarkillersBauble) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(StarkillersBauble(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 38290) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kDarkIronSmokingPipe) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(DarkIronSmokingPipe(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 19957) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kHazzarahsCharmOfDestruction) !=
+      equipped_trinket_ids.end())
     trinkets.push_back(HazzarahsCharmOfDestruction(*this));
 
   // Auras
@@ -282,35 +299,46 @@ void Player::Initialize() {
     auras.drums_of_war = std::make_unique<DrumsOfWarAura>(*this);
   else if (selected_auras.drums_of_restoration)
     auras.drums_of_restoration = std::make_unique<DrumsOfRestorationAura>(*this);
-  if (items.main_hand == 31336) auras.blade_of_wizardry = std::make_unique<BladeOfWizardryAura>(*this);
-  if (items.neck == 34678 && settings.exalted_with_shattrath_faction) {
+  if (items.main_hand == ItemId::kBladeOfWizardry)
+    auras.blade_of_wizardry = std::make_unique<BladeOfWizardryAura>(*this);
+  if (items.neck == ItemId::kShatteredSunPendantOfAcumen && settings.exalted_with_shattrath_faction) {
     if (settings.shattrath_faction == EmbindConstant::kAldor)
       auras.shattered_sun_pendant_of_acumen_aldor = std::make_unique<ShatteredSunPendantOfAcumenAldorAura>(*this);
     else if (settings.shattrath_faction == EmbindConstant::kScryers)
       spells.shattered_sun_pendant_of_acumen_scryers = std::make_unique<ShatteredSunPendantOfAcumenScryers>(*this);
   }
-  if (items.chest == 28602) auras.robe_of_the_elder_scribes = std::make_unique<RobeOfTheElderScribesAura>(*this);
-  if (settings.meta_gem_id == 25893)
+  if (items.chest == ItemId::kRobeOfTheElderScribes)
+    auras.robe_of_the_elder_scribes = std::make_unique<RobeOfTheElderScribesAura>(*this);
+  if (settings.meta_gem_id == ItemId::kMysticalSkyfireDiamond)
     auras.mystical_skyfire_diamond = std::make_unique<MysticalSkyfireDiamondAura>(*this);
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 28789) != equipped_trinket_ids.end()) {
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kEyeOfMagtheridon) !=
+      equipped_trinket_ids.end()) {
     auras.eye_of_magtheridon = std::make_unique<EyeOfMagtheridonAura>(*this);
     spells.eye_of_magtheridon = std::make_unique<EyeOfMagtheridon>(*this, auras.eye_of_magtheridon);
   }
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 32493) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kAshtongueTalismanOfShadows) !=
+      equipped_trinket_ids.end())
     auras.ashtongue_talisman_of_shadows = std::make_unique<AshtongueTalismanOfShadowsAura>(*this);
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 31856) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kDarkmoonCardCrusade) !=
+      equipped_trinket_ids.end())
     auras.darkmoon_card_crusade = std::make_unique<DarkmoonCardCrusadeAura>(*this);
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 28785) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kTheLightningCapacitor) !=
+      equipped_trinket_ids.end())
     auras.the_lightning_capacitor = std::make_unique<TheLightningCapacitorAura>(*this);
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 27683) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kQuagmirransEye) !=
+      equipped_trinket_ids.end())
     auras.quagmirrans_eye = std::make_unique<QuagmirransEyeAura>(*this);
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 28418) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kShiffarsNexusHorn) !=
+      equipped_trinket_ids.end())
     auras.shiffars_nexus_horn = std::make_unique<ShiffarsNexusHornAura>(*this);
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 30626) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kSextantOfUnstableCurrents) !=
+      equipped_trinket_ids.end())
     auras.sextant_of_unstable_currents = std::make_unique<SextantOfUnstableCurrentsAura>(*this);
-  if (items.ring_1 == 29305 || items.ring_2 == 29305)
+  if (std::find(equipped_ring_ids.begin(), equipped_ring_ids.end(), ItemId::kBandOfTheEternalSage) !=
+      equipped_ring_ids.end())
     auras.band_of_the_eternal_sage = std::make_unique<BandOfTheEternalSageAura>(*this);
-  if (items.ring_1 == 21190 || items.ring_2 == 21190)
+  if (std::find(equipped_ring_ids.begin(), equipped_ring_ids.end(), ItemId::kWrathOfCenarius) !=
+      equipped_ring_ids.end())
     auras.wrath_of_cenarius = std::make_unique<WrathOfCenariusAura>(*this);
   if (sets.t4 >= 2) {
     auras.flameshadow = std::make_unique<FlameshadowAura>(*this);
@@ -386,11 +414,13 @@ void Player::Initialize() {
     spells.robe_of_the_elder_scribes = std::make_unique<RobeOfTheElderScribes>(*this, auras.robe_of_the_elder_scribes);
   if (auras.mystical_skyfire_diamond != NULL)
     spells.mystical_skyfire_diamond = std::make_unique<MysticalSkyfireDiamond>(*this, auras.mystical_skyfire_diamond);
-  if (settings.meta_gem_id == 25901)
+  if (settings.meta_gem_id == ItemId::kInsightfulEarthstormDiamond)
     spells.insightful_earthstorm_diamond = std::make_unique<InsightfulEarthstormDiamond>(*this);
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 34470) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kTimbalsFocusingCrystal) !=
+      equipped_trinket_ids.end())
     spells.timbals_focusing_crystal = std::make_unique<TimbalsFocusingCrystal>(*this);
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), 27922) != equipped_trinket_ids.end())
+  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kMarkOfDefiance) !=
+      equipped_trinket_ids.end())
     spells.mark_of_defiance = std::make_unique<MarkOfDefiance>(*this);
   if (auras.the_lightning_capacitor != NULL)
     spells.the_lightning_capacitor = std::make_unique<TheLightningCapacitor>(*this);
@@ -401,7 +431,7 @@ void Player::Initialize() {
   if (auras.sextant_of_unstable_currents != NULL)
     spells.sextant_of_unstable_currents =
         std::make_unique<SextantOfUnstableCurrents>(*this, auras.sextant_of_unstable_currents);
-  if (items.ring_1 == 29305 || items.ring_2 == 29305)
+  if (auras.band_of_the_eternal_sage != NULL)
     spells.band_of_the_eternal_sage = std::make_unique<BandOfTheEternalSage>(*this, auras.band_of_the_eternal_sage);
   if (selected_auras.judgement_of_wisdom) spells.judgement_of_wisdom = std::make_unique<JudgementOfWisdom>(*this);
   if (auras.flameshadow != NULL) spells.flameshadow = std::make_unique<Flameshadow>(*this, auras.flameshadow);
@@ -514,8 +544,15 @@ double Player::GetGcdValue(const std::string& spell_name) {
              : std::max(kMinimumGcdValue, round((kGcdValue / GetHastePercent()) * 10000) / 10000);
 }
 
-double Player::GetSpellPower(SpellSchool school) {
+double Player::GetSpellPower(bool dealing_damage, SpellSchool school) {
   double spell_power = stats.spell_power + demonic_knowledge_spell_power;
+
+  // If Mark of the Champion is equipped and the player isn't dealing damage then remove the spell power so it doesn't
+  // affect spells like Life Tap
+  if (!dealing_damage &&
+      (items.trinket_1 == ItemId::kMarkOfTheChampion || items.trinket_2 == ItemId::kMarkOfTheChampion)) {
+    spell_power -= 85;
+  }
   if (sets.spellfire == 3) {
     spell_power += GetIntellect() * 0.07;
   }
@@ -836,7 +873,7 @@ void Player::SendPlayerInfoToCombatLog() {
   combat_log_entries.push_back("Mana: " + DoubleToString(round(stats.max_mana)));
   combat_log_entries.push_back("Stamina: " + DoubleToString(round(GetStamina())));
   combat_log_entries.push_back("Intellect: " + DoubleToString(round(GetIntellect())));
-  combat_log_entries.push_back("Spell Power: " + DoubleToString(round(GetSpellPower())));
+  combat_log_entries.push_back("Spell Power: " + DoubleToString(round(GetSpellPower(true))));
   combat_log_entries.push_back("Shadow Power: " + DoubleToString(stats.shadow_power));
   combat_log_entries.push_back("Fire Power: " + DoubleToString(stats.fire_power));
   combat_log_entries.push_back(

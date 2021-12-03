@@ -303,7 +303,7 @@ std::vector<double> Spell::GetConstantDamage(bool no_rng) {
                             ? player.rng.range(min_dmg, max_dmg)
                             : dmg;
   const double kBaseDamage = total_damage;
-  const double kSpellPower = player.GetSpellPower(school);
+  const double kSpellPower = player.GetSpellPower(true, school);
   const double kDamageModifier = GetModifier();
   const double kPartialResistMultiplier = player.GetPartialResistMultiplier(school);
 
@@ -565,7 +565,7 @@ void SeedOfCorruption::Damage(bool isCrit) {
                                                               // on doesn't get hit
   int resist_amount = 0;
   int crit_amount = 0;
-  const int kSpellPower = player.GetSpellPower(school);
+  const int kSpellPower = player.GetSpellPower(true, school);
   double crit_damage_multiplier = 0;
   double internal_modifier = GetModifier();
   double external_modifier = 1;

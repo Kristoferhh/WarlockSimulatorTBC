@@ -82,7 +82,7 @@ struct Player : public Entity {
   void CombatLog(const std::string& entry);
   void SendPlayerInfoToCombatLog();
   double GetGcdValue(const std::string& spell_name);
-  double GetSpellPower(SpellSchool school = SpellSchool::kNoSchool);
+  double GetSpellPower(bool dealing_damage, SpellSchool school = SpellSchool::kNoSchool);
   double GetHastePercent();
   double GetCritChance(SpellType spell_type);
   double GetHitChance(SpellType spell_type);

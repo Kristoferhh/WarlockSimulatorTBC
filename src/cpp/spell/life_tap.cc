@@ -12,7 +12,7 @@ LifeTap::LifeTap(Player& player) : Spell(player), player(player) {
   Setup();
 }
 
-int LifeTap::ManaGain() { return (mana_return + ((player.GetSpellPower(school)) * coefficient)) * modifier; }
+int LifeTap::ManaGain() { return (mana_return + ((player.GetSpellPower(false, school)) * coefficient)) * modifier; }
 
 void LifeTap::Cast() {
   const int kManaGain = this->ManaGain();
@@ -22,7 +22,7 @@ void LifeTap::Cast() {
     player.AddIterationDamageAndMana(name, kManaGain, 0);
   }
   if (player.ShouldWriteToCombatLog()) {
-    player.CombatLog(name + " " + DoubleToString(kManaGain) + " (" + DoubleToString(player.GetSpellPower(school)) +
+    player.CombatLog(name + " " + DoubleToString(kManaGain) + " (" + DoubleToString(player.GetSpellPower(false, school)) +
                      " Spell Power - " + DoubleToString(coefficient, 3) + " Coefficient - " +
                      DoubleToString(modifier * 100, 2) + "% Modifier)");
 
