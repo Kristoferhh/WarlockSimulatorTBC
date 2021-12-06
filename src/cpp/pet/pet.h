@@ -32,7 +32,7 @@ struct Pet : std::enable_shared_from_this<Pet> {
   double glancing_blow_multiplier;
   double glancing_blow_chance;
   double crit_suppression;
-  double armor_multiplier;
+  double enemy_damage_reduction_from_armor;
   double dmg;
   double base_melee_speed;
 
@@ -45,16 +45,16 @@ struct Pet : std::enable_shared_from_this<Pet> {
   void Reset();
   void EndAuras();
   void Tick(double t);
-  int GetAttackPower();
+  double GetAttackPower();
   double GetMeleeCritChance();
   double GetHastePercent();
   double GetSpellCritChance();
-  int GetStamina();
-  int GetIntellect();
-  int GetSpirit();
-  int GetAgility();
-  int GetStrength();
-  int GetPlayerSpellPower();
+  double GetStamina();
+  double GetIntellect();
+  double GetSpirit();
+  double GetAgility();
+  double GetStrength();
+  double GetPlayerSpellPower();
   bool IsCrit(AttackType type);
   bool IsHit(AttackType type);
 };

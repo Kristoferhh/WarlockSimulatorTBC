@@ -30,7 +30,7 @@ std::vector<uint32_t> AllocRandomSeeds(int amount_of_seeds, uint32_t rand_seed);
 
 void DpsUpdate(double dps);
 void ErrorCallback(const char* error_msg);
-void PostCombatLogBreakdownVector(const char* name, int mana_gain, int damage);
+void PostCombatLogBreakdownVector(const char* name, double mana_gain, double damage);
 void PostCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, uint32_t misses, uint32_t count,
                             double uptime, uint32_t dodges, uint32_t glancing_blows);
 void CombatLogUpdate(const char* combat_log_entry);

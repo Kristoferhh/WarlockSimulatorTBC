@@ -8,7 +8,7 @@ struct LifeTap : public Spell {
   int mana_return;
 
   LifeTap(Player& player);
-  int ManaGain();
+  double ManaGain();
   void Cast();
 };
 

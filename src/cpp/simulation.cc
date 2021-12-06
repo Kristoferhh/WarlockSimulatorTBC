@@ -159,9 +159,9 @@ void Simulation::Start() {
             // remaining of the fight
             if (player.gcd_remaining <= 0 && player.auras.curse_of_agony != NULL &&
                 !player.auras.curse_of_agony->active && player.spells.curse_of_agony->CanCast() &&
-                kFightTimeRemaining > player.auras.curse_of_agony->minimum_duration &&
+                kFightTimeRemaining > player.auras.curse_of_agony->duration &&
                 ((player.curse_spell->name == SpellName::kCurseOfDoom && !player.auras.curse_of_doom->active &&
-                  (player.spells.curse_of_doom->cooldown_remaining > player.auras.curse_of_agony->minimum_duration ||
+                  (player.spells.curse_of_doom->cooldown_remaining > player.auras.curse_of_agony->duration ||
                    kFightTimeRemaining < 60)) ||
                  player.curse_spell->name == SpellName::kCurseOfAgony)) {
               SelectedSpellHandler(player.spells.curse_of_agony, predicted_damage_of_spells, kFightTimeRemaining);
@@ -173,8 +173,7 @@ void Simulation::Start() {
                  (player.auras.corruption->ticks_remaining == 1 &&
                   player.auras.corruption->tick_timer_remaining < player.spells.corruption->GetCastTime())) &&
                 player.spells.corruption->CanCast() &&
-                (kFightTimeRemaining - player.spells.corruption->GetCastTime()) >=
-                    player.auras.corruption->minimum_duration) {
+                (kFightTimeRemaining - player.spells.corruption->GetCastTime()) >= player.auras.corruption->duration) {
               SelectedSpellHandler(player.spells.corruption, predicted_damage_of_spells, kFightTimeRemaining);
             }
             // Cast Shadow Bolt if Shadow Trance (Nightfall) is active and
@@ -193,14 +192,13 @@ void Simulation::Start() {
                                                                player.auras.unstable_affliction->tick_timer_remaining <
                                                                    player.spells.unstable_affliction->GetCastTime())) &&
                 (kFightTimeRemaining - player.spells.unstable_affliction->GetCastTime()) >=
-                    player.auras.unstable_affliction->minimum_duration) {
+                    player.auras.unstable_affliction->duration) {
               SelectedSpellHandler(player.spells.unstable_affliction, predicted_damage_of_spells, kFightTimeRemaining);
             }
             // Cast Siphon Life if it's not up (todo: add option to only Cast it
             // while ISB is active if not using custom ISB uptime %)
             if (player.gcd_remaining <= 0 && player.spells.siphon_life != NULL && !player.auras.siphon_life->active &&
-                player.spells.siphon_life->CanCast() &&
-                kFightTimeRemaining >= player.auras.siphon_life->minimum_duration) {
+                player.spells.siphon_life->CanCast() && kFightTimeRemaining >= player.auras.siphon_life->duration) {
               SelectedSpellHandler(player.spells.siphon_life, predicted_damage_of_spells, kFightTimeRemaining);
             }
             // Cast Immolate if it's not up or about to expire
@@ -208,8 +206,7 @@ void Simulation::Start() {
                 (!player.auras.immolate->active ||
                  (player.auras.immolate->ticks_remaining == 1 &&
                   player.auras.immolate->tick_timer_remaining < player.spells.immolate->GetCastTime())) &&
-                (kFightTimeRemaining - player.spells.immolate->GetCastTime()) >=
-                    player.auras.immolate->minimum_duration) {
+                (kFightTimeRemaining - player.spells.immolate->GetCastTime()) >= player.auras.immolate->duration) {
               SelectedSpellHandler(player.spells.immolate, predicted_damage_of_spells, kFightTimeRemaining);
             }
             // Cast Shadow Bolt if Shadow Trance (Nightfall) is active

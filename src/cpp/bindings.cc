@@ -15,7 +15,7 @@ void ErrorCallback(const char* error_msg) {
 #endif
 }
 
-void PostCombatLogBreakdownVector(const char* name, int mana_gain, int damage) {
+void PostCombatLogBreakdownVector(const char* name, double mana_gain, double damage) {
 #ifdef EMSCRIPTEN
   EM_ASM({postMessage({event : "combatLogVector", data : {name : UTF8ToString($0), manaGain : $1, damage : $2}})}, name,
          mana_gain, damage);

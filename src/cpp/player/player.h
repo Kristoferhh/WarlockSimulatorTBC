@@ -40,10 +40,6 @@ struct Player {
   const int kLevel = 70;
   const int kFloatNumberMultiplier = 1000;  // Multiply hit and crit percent by this number to get rid of the
                                             // decimals when calling Random() since we need integers
-  const double kSpellDelay = 0.0001;        // Increases the Cast time of spells by a very small
-                                            // amount to e.g. make it so that if Immolate has 1.5
-                                            // seconds remaining, the sim can start precasting
-                                            // Immolate and it won't refresh before it expires.
   std::shared_ptr<Pet> pet;
   Auras& selected_auras;
   Talents& talents;
@@ -79,7 +75,7 @@ struct Player {
   double mp5_timer;
   double five_second_rule_timer;
   double demonic_knowledge_spell_power;
-  int iteration_damage;
+  double iteration_damage;
   int iteration;
   int power_infusions_ready;
   bool recording_combat_log_breakdown;
@@ -91,7 +87,7 @@ struct Player {
   void ThrowError(const std::string& error);
   void CastLifeTapOrDarkPact();
   void UseCooldowns(double fight_time_remaining);
-  void AddIterationDamageAndMana(const std::string& spell_name, int mana_gain, int damage);
+  void AddIterationDamageAndMana(const std::string& spell_name, double mana_gain, double damage);
   void PostIterationDamageAndMana(const std::string& spell_name);
   void SendCombatLogEntries();
   void CombatLog(const std::string& entry);
@@ -103,9 +99,9 @@ struct Player {
   double GetHitChance(SpellType spell_type);
   double GetPartialResistMultiplier(SpellSchool school);
   double GetBaseHitChance(int player_level, int enemy_level);
-  int GetStamina();
-  int GetIntellect();
-  int GetSpirit();
+  double GetStamina();
+  double GetIntellect();
+  double GetSpirit();
   int GetRand();
   double GetCustomImprovedShadowBoltDamageModifier();
   void Tick(double time);

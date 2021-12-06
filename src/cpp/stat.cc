@@ -37,7 +37,7 @@ void Stat::ModifyStat(std::string action, int stacks) {
                      name + " " +
                      (action == "add" ? (calculation_type == CalculationType::kAdditive ? "+" : "*")
                                       : (calculation_type == CalculationType::kAdditive ? "-" : "/")) +
-                     " " + DoubleToString(value * stacks) + " (" +
+                     " " + DoubleToString(value * stacks, combat_log_decimal_places) + " (" +
                      DoubleToString(kCurrentStatValue, combat_log_decimal_places) + " -> " +
                      DoubleToString(new_stat_value, combat_log_decimal_places) + ")");
   }

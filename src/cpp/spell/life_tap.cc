@@ -12,10 +12,10 @@ LifeTap::LifeTap(Player& player) : Spell(player), player(player) {
   Setup();
 }
 
-int LifeTap::ManaGain() { return (mana_return + ((player.GetSpellPower(false, school)) * coefficient)) * modifier; }
+double LifeTap::ManaGain() { return (mana_return + ((player.GetSpellPower(false, school)) * coefficient)) * modifier; }
 
 void LifeTap::Cast() {
-  const int kManaGain = this->ManaGain();
+  const double kManaGain = this->ManaGain();
 
   if (player.recording_combat_log_breakdown) {
     player.combat_log_breakdown.at(name)->casts++;
@@ -32,7 +32,7 @@ void LifeTap::Cast() {
   }
 
   if (player.talents.mana_feed > 0 && player.pet != NULL) {
-    const int kCurrentPetMana = player.pet->stats.mana;
+    const double kCurrentPetMana = player.pet->stats.mana;
 
     player.pet->stats.mana =
         std::min(kCurrentPetMana + (kManaGain * (player.talents.mana_feed / 3.0)), player.pet->stats.max_mana);

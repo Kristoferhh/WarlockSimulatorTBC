@@ -1,8 +1,8 @@
 #include "pet_spell.h"
 
 #include "../common.h"
-#include "pet_aura.h"
 #include "../player/player.h"
+#include "pet_aura.h"
 
 PetSpell::PetSpell(std::shared_ptr<Pet> pet)
     : pet(pet),
@@ -27,7 +27,7 @@ bool PetSpell::Ready() {
 
 double PetSpell::GetBaseDamage() { return dmg; }
 
-double PetSpell::GetCastTime() { return round((cast_time / pet->GetHastePercent()) * 10000) / 10000; }
+double PetSpell::GetCastTime() { return cast_time / pet->GetHastePercent(); }
 
 double PetSpell::GetCooldown() { return cooldown; }
 
@@ -261,7 +261,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
     }
 
     // Armor Damage Reduction
-    dmg *= pet->armor_multiplier;
+    dmg *= pet->enemy_damage_reduction_from_armor;
   }
 
   // Pet Damage Modifier (from Unholy Power, Master Demonologist, etc.)
@@ -305,7 +305,8 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
         combat_log_message.append(" - " + DoubleToString(pet->glancing_blow_multiplier * 100, 1) +
                                   "% Glancing Blow Multiplier");
       combat_log_message.append(" - " + DoubleToString(round(pet->GetAttackPower())) + " Attack Power");
-      combat_log_message.append(" - " + DoubleToString(round(pet->armor_multiplier * 10000) / 100.0, 2) +
+      combat_log_message.append(" - " +
+                                DoubleToString(round(pet->enemy_damage_reduction_from_armor * 10000) / 100.0, 2) +
                                 "% Damage Modifier (Armor)");
     }
     if (is_crit) combat_log_message.append(" - " + DoubleToString(pet->crit_multiplier * 100, 1) + "% Crit Multiplier");
@@ -335,7 +336,7 @@ Melee::Melee(std::shared_ptr<Pet> pet) : PetSpell(pet) {
 
 double Melee::GetBaseDamage() { return pet->dmg; }
 
-double Melee::GetCooldown() { return round((cooldown / pet->GetHastePercent()) * 10000) / 10000.0; }
+double Melee::GetCooldown() { return cooldown / pet->GetHastePercent(); }
 
 FelguardCleave::FelguardCleave(std::shared_ptr<Pet> pet) : PetSpell(pet) {
   name = SpellName::kCleave;

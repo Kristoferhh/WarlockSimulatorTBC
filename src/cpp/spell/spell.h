@@ -72,7 +72,7 @@ struct Spell : std::enable_shared_from_this<Spell> {
   std::vector<double> GetConstantDamage(bool no_rng = true);
   double GetCritMultiplier(double player_crit_multiplier);
   double PredictDamage();
-  int GetManaCost();
+  double GetManaCost();
   void Tick(double time);
   void OnCritProcs();
   void OnResistProcs();

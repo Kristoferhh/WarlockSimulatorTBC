@@ -24,7 +24,6 @@ struct Aura {
   double tick_timer_remaining;
   int ticks_remaining;
   int ticks_total;
-  int minimum_duration;
   int stacks;
   int max_stacks;
   // ISB

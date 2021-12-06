@@ -542,9 +542,7 @@ double Player::GetHastePercent() {
 }
 
 double Player::GetGcdValue(const std::string& spell_name) {
-  return spell_name == SpellName::kShadowfury
-             ? 0
-             : std::max(kMinimumGcdValue, round((kGcdValue / GetHastePercent()) * 10000) / 10000);
+  return spell_name == SpellName::kShadowfury ? 0 : std::max(kMinimumGcdValue, kGcdValue / GetHastePercent());
 }
 
 double Player::GetSpellPower(bool dealing_damage, SpellSchool school) {
@@ -593,11 +591,11 @@ int Player::GetRand() { return rng.range(0, 100 * kFloatNumberMultiplier); }
 
 bool Player::RollRng(double chance) { return GetRand() <= chance * kFloatNumberMultiplier; }
 
-int Player::GetStamina() { return stats.stamina * stats.stamina_modifier; }
+double Player::GetStamina() { return stats.stamina * stats.stamina_modifier; }
 
-int Player::GetIntellect() { return stats.intellect * stats.intellect_modifier; }
+double Player::GetIntellect() { return stats.intellect * stats.intellect_modifier; }
 
-int Player::GetSpirit() { return stats.spirit * stats.spirit_modifier; }
+double Player::GetSpirit() { return stats.spirit * stats.spirit_modifier; }
 
 // formula from
 // https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/
@@ -606,8 +604,7 @@ double Player::GetBaseHitChance(int player_level, int enemy_level) {
   const int kLevelDifference = enemy_level - player_level;
   return kLevelDifference <= 2   ? std::min(99, 100 - kLevelDifference - 4)
          : kLevelDifference == 3 ? 83
-         : kLevelDifference >= 4 ? 83 - 11 * kLevelDifference
-                                 : 0;
+                                 : 83 - 11 * kLevelDifference;
 }
 
 void Player::UseCooldowns(double fight_time_remaining) {
@@ -679,14 +676,14 @@ double Player::GetPartialResistMultiplier(SpellSchool school) {
   return 1.0 - ((75 * kEnemyResist) / (kLevel * 5)) / 100.0;
 }
 
-void Player::AddIterationDamageAndMana(const std::string& spell_name, int mana_gain, int damage) {
-  const int kCurrentManaGain = combat_log_breakdown.at(spell_name)->iteration_mana_gain;
-  const int kCurrentDamage = combat_log_breakdown.at(spell_name)->iteration_damage;
+void Player::AddIterationDamageAndMana(const std::string& spell_name, double mana_gain, double damage) {
+  const double kCurrentManaGain = combat_log_breakdown.at(spell_name)->iteration_mana_gain;
+  const double kCurrentDamage = combat_log_breakdown.at(spell_name)->iteration_damage;
 
   // Check for integer overflow
-  if (kCurrentManaGain + mana_gain < 0 || kCurrentDamage + damage < 0) {
+  /*if (kCurrentManaGain + mana_gain < 0 || kCurrentDamage + damage < 0) {
     PostIterationDamageAndMana(spell_name);
-  }
+  }*/
 
   combat_log_breakdown.at(spell_name)->iteration_mana_gain += mana_gain;
   combat_log_breakdown.at(spell_name)->iteration_damage += damage;
@@ -833,7 +830,7 @@ void Player::Tick(double time) {
 
     if (stats.mp5 > 0 || five_second_rule_timer <= 0 || (auras.innervate != NULL && auras.innervate->active)) {
       const bool kInnervateIsActive = auras.innervate != NULL && auras.innervate->active;
-      const int kCurrentPlayerMana = stats.mana;
+      const double kCurrentPlayerMana = stats.mana;
 
       // MP5
       if (stats.mp5 > 0) {
@@ -841,9 +838,8 @@ void Player::Tick(double time) {
       }
       // Spirit mana regen
       if (kInnervateIsActive || five_second_rule_timer <= 0) {
-        // Formula from
-        // https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1572910
-        int mp5_from_spirit = 5 * (0.001 + std::sqrt(GetIntellect()) * GetSpirit() * 0.009327);
+        // Formula from https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1572910
+        double mp5_from_spirit = 5 * (0.001 + std::sqrt(GetIntellect()) * GetSpirit() * 0.009327);
         if (kInnervateIsActive) {
           mp5_from_spirit *= 4;
         }
@@ -854,14 +850,14 @@ void Player::Tick(double time) {
         stats.mana = stats.max_mana;
       }
 
-      const int kManaGained = stats.mana - kCurrentPlayerMana;
+      const double kManaGained = stats.mana - kCurrentPlayerMana;
       if (recording_combat_log_breakdown) {
         combat_log_breakdown.at("Mp5")->casts++;
         AddIterationDamageAndMana("Mp5", kManaGained, 0);
       }
       if (ShouldWriteToCombatLog()) {
         CombatLog("Player gains " + DoubleToString(round(kManaGained)) + " mana from MP5 (" +
-                  std::to_string(kCurrentPlayerMana) + " -> " + DoubleToString(stats.mana) + ")");
+                  DoubleToString(kCurrentPlayerMana) + " -> " + DoubleToString(stats.mana) + ")");
       }
     }
   }
@@ -928,7 +924,8 @@ void Player::SendPlayerInfoToCombatLog() {
     combat_log_entries.push_back("Dodge Chance: " + DoubleToString(pet->enemy_dodge_chance) + "%");
     combat_log_entries.push_back("Armor: " + std::to_string(settings.enemy_armor));
     combat_log_entries.push_back(
-        "Damage Reduction From Armor: " + DoubleToString(round((1 - pet->armor_multiplier) * 10000) / 100.0, 2) + "%");
+        "Damage Reduction From Armor: " +
+        DoubleToString(round((1 - pet->enemy_damage_reduction_from_armor) * 10000) / 100.0, 2) + "%");
   }
   combat_log_entries.push_back("---------------------------------------------");
 }

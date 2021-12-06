@@ -207,7 +207,7 @@ void Pet::CalculateStatsFromAuras() {
   if (pet_type == PetType::kMelee) {
     // Formula from
     // https://wowwiki-archive.fandom.com/wiki/Damage_reduction?oldid=807810
-    armor_multiplier =
+    enemy_damage_reduction_from_armor =
         std::max(0.25, player.settings.enemy_level >= 60
                            ? 1 - player.settings.enemy_armor /
                                      (player.settings.enemy_armor - 22167.5 + 467.5 * player.settings.enemy_level)
@@ -222,7 +222,7 @@ void Pet::CalculateStatsFromAuras() {
   stats.spell_hit_chance = std::min(99.0, stats.spell_hit_chance);
 }
 
-int Pet::GetPlayerSpellPower() {
+double Pet::GetPlayerSpellPower() {
   return player.GetSpellPower(false) + std::max(player.stats.shadow_power, player.stats.fire_power);
 }
 
@@ -297,7 +297,7 @@ double Pet::GetHastePercent() {
   return pet_type == PetType::kMelee ? stats.melee_haste_percent : stats.spell_haste_percent;
 }
 
-int Pet::GetAttackPower() {
+double Pet::GetAttackPower() {
   // Remove AP from debuffs on the boss before multiplying by the AP multiplier
   // since it doesn't affect those debuffs
   double attack_power = (stats.attack_power - debuff_stats.attack_power) * stats.attack_power_modifier;
@@ -308,15 +308,15 @@ int Pet::GetAttackPower() {
   return attack_power + debuff_stats.attack_power;
 }
 
-int Pet::GetSpirit() { return (base_stats.spirit + buff_stats.spirit + stats.spirit) * stats.spirit_modifier; }
+double Pet::GetSpirit() { return (base_stats.spirit + buff_stats.spirit + stats.spirit) * stats.spirit_modifier; }
 
-int Pet::GetStamina() { return stats.stamina * stats.stamina_modifier; }
+double Pet::GetStamina() { return stats.stamina * stats.stamina_modifier; }
 
-int Pet::GetIntellect() { return stats.intellect * stats.intellect_modifier; }
+double Pet::GetIntellect() { return stats.intellect * stats.intellect_modifier; }
 
-int Pet::GetAgility() { return stats.agility * stats.agility_modifier; }
+double Pet::GetAgility() { return stats.agility * stats.agility_modifier; }
 
-int Pet::GetStrength() { return (base_stats.strength + buff_stats.strength) * stats.strength_modifier; }
+double Pet::GetStrength() { return (base_stats.strength + buff_stats.strength) * stats.strength_modifier; }
 
 void Pet::Tick(double t) {
   cast_time_remaining -= t;
