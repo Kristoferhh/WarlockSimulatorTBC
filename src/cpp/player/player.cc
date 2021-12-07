@@ -620,8 +620,8 @@ void Player::UseCooldowns(double fight_time_remaining) {
       }
     }
   }
-  // TODO don't use innervate until x% mana
-  if (!spells.innervate.empty() && !auras.innervate->active) {
+
+  if (stats.mana / stats.max_mana <= 0.5 && !spells.innervate.empty() && !auras.innervate->active) {
     for (auto& innervate : spells.innervate) {
       if (innervate->Ready()) {
         innervate->StartCast();
@@ -629,20 +629,25 @@ void Player::UseCooldowns(double fight_time_remaining) {
       }
     }
   }
+
   if (spells.chipped_power_core != NULL && spells.chipped_power_core->Ready()) {
     spells.chipped_power_core->StartCast();
   } else if (spells.cracked_power_core != NULL && spells.cracked_power_core->Ready()) {
     spells.cracked_power_core->StartCast();
   }
+
   if (spells.destruction_potion != NULL && spells.destruction_potion->Ready()) {
     spells.destruction_potion->StartCast();
   }
+
   if (spells.flame_cap != NULL && spells.flame_cap->Ready()) {
     spells.flame_cap->StartCast();
   }
+
   if (spells.blood_fury != NULL && spells.blood_fury->Ready()) {
     spells.blood_fury->StartCast();
   }
+
   for (int i = 0; i < trinkets.size(); i++) {
     if (trinkets[i].Ready()) {
       trinkets[i].Use();

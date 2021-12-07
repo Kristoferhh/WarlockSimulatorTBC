@@ -131,7 +131,6 @@ void PetSpell::Cast() {
 
     // Check whether the roll is a crit, dodge, miss, glancing, or just a normal
     // hit.
-    // todo should maybe give the pet its own Random generator object
     int attack_roll = pet->player.GetRand();
 
     // Crit
