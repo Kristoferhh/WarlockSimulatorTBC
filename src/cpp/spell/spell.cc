@@ -53,7 +53,6 @@ void Spell::Setup() {
     player.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
   }
 
-  // Cataclysm talent
   if (type == SpellType::kDestruction) {
     mana_cost *= 1 - 0.01 * player.talents.cataclysm;
   }
@@ -239,10 +238,10 @@ void Spell::Cast() {
 
 double Spell::GetModifier() {
   double damage_modifier = modifier;
+
   if (school == SpellSchool::kShadow) {
     damage_modifier *= player.stats.shadow_modifier;
 
-    // Improved Shadow Bolt
     if (!player.settings.using_custom_isb_uptime && player.auras.improved_shadow_bolt != NULL &&
         player.auras.improved_shadow_bolt->active) {
       damage_modifier *= player.auras.improved_shadow_bolt->modifier;
@@ -288,8 +287,9 @@ void Spell::Damage(bool isCrit) {
     if (isCrit) {
       msg += "*";
     }
-    msg += " (" + DoubleToString(dmg, 1) + " Base Damage - " + DoubleToString(round(coefficient * 1000) / 1000, 3) +
-           " Coefficient - " + DoubleToString(round(kSpellPower)) + " Spell Power - ";
+    msg += " (" + DoubleToString(kBaseDamage, 1) + " Base Damage - " +
+           DoubleToString(round(coefficient * 1000) / 1000, 3) + " Coefficient - " +
+           DoubleToString(round(kSpellPower)) + " Spell Power - ";
     if (isCrit) {
       msg += DoubleToString(crit_multiplier * 100, 3) + "% Crit Multiplier - ";
     }
@@ -310,11 +310,9 @@ void Spell::Damage(bool isCrit) {
 
 // Returns the non-RNG Damage of the spell (basically just the base Damage +
 // spell power + Damage modifiers, no crit/miss etc.)
-// TODO investigate this no_rng variable
-std::vector<double> Spell::GetConstantDamage(bool no_rng) {
-  double total_damage = player.settings.randomize_values && min_dmg > 0 && max_dmg > 0 && !no_rng
-                            ? player.rng.range(min_dmg, max_dmg)
-                            : dmg;
+std::vector<double> Spell::GetConstantDamage() {
+  double total_damage =
+      player.settings.randomize_values && min_dmg > 0 && max_dmg > 0 ? player.rng.range(min_dmg, max_dmg) : dmg;
   const double kBaseDamage = total_damage;
   const double kSpellPower = player.GetSpellPower(true, school);
   const double kDamageModifier = GetModifier();
@@ -322,9 +320,10 @@ std::vector<double> Spell::GetConstantDamage(bool no_rng) {
 
   // If casting Incinerate and Immolate is up, add the bonus Damage
   if (name == SpellName::kIncinerate && player.auras.immolate != NULL && player.auras.immolate->active) {
-    total_damage += player.settings.randomize_values && no_rng
-                        ? player.rng.range(bonus_damage_from_immolate_min, bonus_damage_from_immolate_max)
-                        : bonus_damage_from_immolate_average;
+    total_damage +=
+        (player.settings.randomize_values && bonus_damage_from_immolate_min > 0 && bonus_damage_from_immolate_max > 0
+             ? player.rng.range(bonus_damage_from_immolate_min, bonus_damage_from_immolate_max)
+             : bonus_damage_from_immolate);
   }
 
   // Add Damage from Spell Power
@@ -469,7 +468,7 @@ Incinerate::Incinerate(Player& player) : Spell(player) {
   max_dmg = 514;
   bonus_damage_from_immolate_min = 111;
   bonus_damage_from_immolate_max = 128;
-  bonus_damage_from_immolate_average = (bonus_damage_from_immolate_min + bonus_damage_from_immolate_max) / 2;
+  bonus_damage_from_immolate = (bonus_damage_from_immolate_min + bonus_damage_from_immolate_max) / 2.0;
   does_damage = true;
   can_crit = true;
   school = SpellSchool::kFire;
@@ -576,7 +575,7 @@ SeedOfCorruption::SeedOfCorruption(Player& player) : Spell(player) {
 
 void SeedOfCorruption::Damage(bool isCrit) {
   const double kBaseDamage =
-      player.settings.randomize_values && min_dmg && max_dmg ? player.rng.range(min_dmg, max_dmg) : dmg;
+      player.settings.randomize_values && min_dmg > 0 && max_dmg > 0 ? player.rng.range(min_dmg, max_dmg) : dmg;
   const int kEnemyAmount = player.settings.enemy_amount - 1;  // Minus one because the enemy that Seed is being Cast
                                                               // on doesn't get hit
   int resist_amount = 0;

@@ -31,6 +31,7 @@ void Simulation::Start() {
     player.fight_time = 0;
     player.rng.seed(player.settings.random_seeds[player.iteration]);
     const int kFightLength = player.rng.range(settings.min_time, settings.max_time);
+
     if (player.ShouldWriteToCombatLog()) {
       player.CombatLog("Fight length: " + std::to_string(kFightLength) + " seconds");
     }
@@ -38,6 +39,7 @@ void Simulation::Start() {
     if (player.pet->auras.battle_squawk != NULL) {
       player.pet->auras.battle_squawk->Apply();
     }
+
     if (player.settings.prepop_black_book && player.pet->auras.black_book != NULL) {
       player.pet->auras.black_book->Apply();
     }

@@ -18,10 +18,11 @@ struct Spell : std::enable_shared_from_this<Spell> {
   std::string name;
   int min_dmg;
   int max_dmg;
+  double dmg;
   int min_mana_gain;
   int max_mana_gain;
-  int proc_chance;
   double mana_gain;
+  int proc_chance;
   double cast_time;
   double mana_cost;
   double coefficient;
@@ -29,10 +30,9 @@ struct Spell : std::enable_shared_from_this<Spell> {
   double modifier;
   double bonus_crit_chance;
   double cooldown_remaining;
-  double dmg;
   int bonus_damage_from_immolate_min;
   int bonus_damage_from_immolate_max;
-  double bonus_damage_from_immolate_average;
+  double bonus_damage_from_immolate;
   bool does_damage;
   bool can_crit;
   bool is_non_warlock_ability;
@@ -69,7 +69,7 @@ struct Spell : std::enable_shared_from_this<Spell> {
   virtual void Cast();
   virtual double GetModifier();
   virtual void Damage(bool is_crit = false);
-  std::vector<double> GetConstantDamage(bool no_rng = true);
+  std::vector<double> GetConstantDamage();
   double GetCritMultiplier(double player_crit_multiplier);
   double PredictDamage();
   double GetManaCost();

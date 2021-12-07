@@ -12,10 +12,12 @@ ManaPotion::ManaPotion(Player& player) : Spell(player) {
 void ManaPotion::Cast() {
   Spell::Cast();
   const double kCurrentPlayerMana = player.stats.mana;
-  // todo check for the randomize values option
 
   player.stats.mana =
-      std::min(player.stats.max_mana, kCurrentPlayerMana + player.rng.range(min_mana_gain, max_mana_gain));
+      std::min(player.stats.max_mana,
+               kCurrentPlayerMana + (player.settings.randomize_values && min_mana_gain > 0 && max_mana_gain > 0
+                                         ? player.rng.range(min_mana_gain, max_mana_gain)
+                                         : mana_gain));
   const double kManaGained = player.stats.mana - kCurrentPlayerMana;
 
   if (player.recording_combat_log_breakdown) {
