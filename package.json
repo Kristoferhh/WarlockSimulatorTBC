@@ -9,7 +9,7 @@
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@mui/material": "^5.2.2",
     "@reduxjs/toolkit": "^1.6.2",
-    "@testing-library/jest-dom": "^5.15.1",
+    "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/chart.js": "^2.9.34",
