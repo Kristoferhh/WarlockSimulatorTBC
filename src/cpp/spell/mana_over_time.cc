@@ -32,7 +32,7 @@ void ManaOverTime::Tick(double t) {
 
     if (player.recording_combat_log_breakdown) {
       player.combat_log_breakdown.at(name)->casts++;
-      player.AddIterationDamageAndMana(name, kManaGained, 0);
+      player.combat_log_breakdown.at(name)->iteration_mana_gain += kManaGained;
     }
     // todo pet
 

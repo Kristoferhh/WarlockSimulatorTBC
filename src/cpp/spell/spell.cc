@@ -44,7 +44,7 @@ void Spell::Setup() {
   if (min_dmg > 0 && max_dmg > 0) {
     dmg = (min_dmg + max_dmg) / 2.0;
   }
-  
+
   if (min_mana_gain > 0 && max_mana_gain > 0) {
     mana_gain = (min_mana_gain + max_mana_gain) / 2.0;
   }
@@ -187,12 +187,12 @@ void Spell::Cast() {
     const double kManaGained = player.stats.mana - kCurrentMana;
 
     if (player.recording_combat_log_breakdown) {
-      player.AddIterationDamageAndMana(name, kManaGained, 0);
+      player.combat_log_breakdown.at(name)->iteration_mana_gain += kManaGained;
     }
 
     if (player.ShouldWriteToCombatLog()) {
-      player.CombatLog("Player gains " + DoubleToString(round(kManaGained)) + " mana from " + name + " (" +
-                       DoubleToString(round(kCurrentMana)) + " -> " + DoubleToString(round(player.stats.mana)) + ")");
+      player.CombatLog("Player gains " + DoubleToString(kManaGained) + " mana from " + name + " (" +
+                       DoubleToString(kCurrentMana) + " -> " + DoubleToString(player.stats.mana) + ")");
     }
   }
 
@@ -276,7 +276,7 @@ void Spell::Damage(bool isCrit) {
   player.iteration_damage += total_damage;
 
   if (player.recording_combat_log_breakdown) {
-    player.AddIterationDamageAndMana(name, 0, total_damage);
+    player.combat_log_breakdown.at(name)->iteration_damage += total_damage;
   }
 
   if (player.ShouldWriteToCombatLog()) {
@@ -681,7 +681,7 @@ void SeedOfCorruption::Damage(bool isCrit) {
     player.CombatLog(msg);
   }
   if (player.recording_combat_log_breakdown) {
-    player.AddIterationDamageAndMana(name, 0, total_seed_damage);
+    player.combat_log_breakdown.at(name)->iteration_damage += total_seed_damage;
     player.combat_log_breakdown.at(name)->crits += crit_amount;
     player.combat_log_breakdown.at(name)->misses += resist_amount;
     // the Cast() function already adds 1 to the amount of casts so we only need

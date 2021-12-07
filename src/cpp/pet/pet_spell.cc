@@ -292,7 +292,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
   }
 
   if (pet->player.recording_combat_log_breakdown) {
-    pet->player.AddIterationDamageAndMana(name, 0, dmg);
+    pet->player.combat_log_breakdown.at(name)->iteration_damage += dmg;
   }
 
   std::string combat_log_message = pet->name + " " + name + " ";

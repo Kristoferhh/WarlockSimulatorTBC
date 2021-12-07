@@ -160,8 +160,9 @@ void DamageOverTime::Tick(double t) {
     tick_timer_remaining = tick_timer_total;
 
     if (player.recording_combat_log_breakdown) {
-      player.AddIterationDamageAndMana(name, 0, kDamage);
+      player.combat_log_breakdown.at(name)->iteration_damage += kDamage;
     }
+
     if (player.ShouldWriteToCombatLog()) {
       std::string msg = name + " Tick " + DoubleToString(round(kDamage)) + " (" + DoubleToString(kBaseDamage) +
                         " Base Damage - " + DoubleToString(kSpellPower) + " Spell Power - " +
@@ -172,6 +173,7 @@ void DamageOverTime::Tick(double t) {
         msg += " - " + DoubleToString(round(t5_bonus_modifier * 10000) / 100, 3) + "% Base Dmg Modifier (T5 4pc bonus)";
       }
       msg += ")";
+
       player.CombatLog(msg);
     }
 

@@ -12,19 +12,20 @@ ManaPotion::ManaPotion(Player& player) : Spell(player) {
 void ManaPotion::Cast() {
   Spell::Cast();
   const double kCurrentPlayerMana = player.stats.mana;
-
   // todo check for the randomize values option
-  const double kManaGain = player.rng.range(min_mana_gain, max_mana_gain);
-  player.stats.mana = std::min(player.stats.max_mana, kCurrentPlayerMana + kManaGain);
+
+  player.stats.mana =
+      std::min(player.stats.max_mana, kCurrentPlayerMana + player.rng.range(min_mana_gain, max_mana_gain));
+  const double kManaGained = player.stats.mana - kCurrentPlayerMana;
 
   if (player.recording_combat_log_breakdown) {
-    player.AddIterationDamageAndMana(name, kManaGain, 0);
+    player.combat_log_breakdown.at(name)->iteration_mana_gain += kManaGained;
   }
 
   if (player.ShouldWriteToCombatLog()) {
-    player.CombatLog("Player gains " + DoubleToString(round(player.stats.mana - kCurrentPlayerMana)) + " mana from " +
-                     name + " (" + DoubleToString(round(kCurrentPlayerMana)) + " -> " +
-                     DoubleToString(round(player.stats.mana)) + ")");
+    player.CombatLog("Player gains " + DoubleToString(kManaGained) + " mana from " + name + " (" +
+                     DoubleToString(round(kCurrentPlayerMana)) + " -> " + DoubleToString(round(player.stats.mana)) +
+                     ")");
   }
 }
 

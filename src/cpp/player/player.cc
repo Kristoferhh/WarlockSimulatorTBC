@@ -85,7 +85,7 @@ Player::Player(PlayerSettings& player_settings)
   if (selected_auras.inspiring_presence) {
     stats.extra_spell_hit_chance += 1;
   }
-  stats.spell_hit_chance = round(GetBaseHitChance(kLevel, settings.enemy_level));
+  stats.spell_hit_chance = GetBaseHitChance(kLevel, settings.enemy_level);
 
   // Add bonus damage % from Demonic Sacrifice
   if (talents.demonic_sacrifice == 1 && settings.sacrificing_pet) {
@@ -676,19 +676,6 @@ double Player::GetPartialResistMultiplier(SpellSchool school) {
   return 1.0 - ((75 * kEnemyResist) / (kLevel * 5)) / 100.0;
 }
 
-void Player::AddIterationDamageAndMana(const std::string& spell_name, double mana_gain, double damage) {
-  const double kCurrentManaGain = combat_log_breakdown.at(spell_name)->iteration_mana_gain;
-  const double kCurrentDamage = combat_log_breakdown.at(spell_name)->iteration_damage;
-
-  // Check for integer overflow
-  /*if (kCurrentManaGain + mana_gain < 0 || kCurrentDamage + damage < 0) {
-    PostIterationDamageAndMana(spell_name);
-  }*/
-
-  combat_log_breakdown.at(spell_name)->iteration_mana_gain += mana_gain;
-  combat_log_breakdown.at(spell_name)->iteration_damage += damage;
-}
-
 void Player::PostIterationDamageAndMana(const std::string& spell_name) {
   PostCombatLogBreakdownVector(spell_name.c_str(), combat_log_breakdown.at(spell_name)->iteration_mana_gain,
                                combat_log_breakdown.at(spell_name)->iteration_damage);
@@ -853,10 +840,11 @@ void Player::Tick(double time) {
       const double kManaGained = stats.mana - kCurrentPlayerMana;
       if (recording_combat_log_breakdown) {
         combat_log_breakdown.at("Mp5")->casts++;
-        AddIterationDamageAndMana("Mp5", kManaGained, 0);
+        combat_log_breakdown.at("Mp5")->iteration_mana_gain += kManaGained;
       }
+
       if (ShouldWriteToCombatLog()) {
-        CombatLog("Player gains " + DoubleToString(round(kManaGained)) + " mana from MP5 (" +
+        CombatLog("Player gains " + DoubleToString(kManaGained) + " mana from MP5 (" +
                   DoubleToString(kCurrentPlayerMana) + " -> " + DoubleToString(stats.mana) + ")");
       }
     }

@@ -15,18 +15,23 @@ LifeTap::LifeTap(Player& player) : Spell(player), player(player) {
 double LifeTap::ManaGain() { return (mana_return + ((player.GetSpellPower(false, school)) * coefficient)) * modifier; }
 
 void LifeTap::Cast() {
+  const double kCurrentPlayerMana = player.stats.mana;
   const double kManaGain = this->ManaGain();
+
+  player.stats.mana = std::min(player.stats.max_mana, player.stats.mana + kManaGain);
+  const double kManaGained = player.stats.mana - kCurrentPlayerMana;
 
   if (player.recording_combat_log_breakdown) {
     player.combat_log_breakdown.at(name)->casts++;
-    player.AddIterationDamageAndMana(name, kManaGain, 0);
+    player.combat_log_breakdown.at(name)->iteration_mana_gain += kManaGained;
   }
   if (player.ShouldWriteToCombatLog()) {
-    player.CombatLog(name + " " + DoubleToString(kManaGain) + " (" + DoubleToString(player.GetSpellPower(false, school)) +
-                     " Spell Power - " + DoubleToString(coefficient, 3) + " Coefficient - " +
-                     DoubleToString(modifier * 100, 2) + "% Modifier)");
+    player.CombatLog(name + " " + DoubleToString(kManaGained) + " (" +
+                     DoubleToString(player.GetSpellPower(false, school)) + " Spell Power - " +
+                     DoubleToString(coefficient, 3) + " Coefficient - " + DoubleToString(modifier * 100, 2) +
+                     "% Modifier)");
 
-    if (player.stats.mana + kManaGain > player.stats.max_mana) {
+    if (kCurrentPlayerMana + kManaGain > player.stats.max_mana) {
       player.CombatLog(name + " used at too high mana (mana wasted)");
     }
   }
@@ -43,7 +48,6 @@ void LifeTap::Cast() {
     }
   }
 
-  player.stats.mana = std::min(player.stats.max_mana, player.stats.mana + kManaGain);
   if (name == SpellName::kDarkPact) {
     player.pet->stats.mana = std::max(0.0, player.pet->stats.mana - kManaGain);
   }

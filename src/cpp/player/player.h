@@ -87,7 +87,6 @@ struct Player {
   void ThrowError(const std::string& error);
   void CastLifeTapOrDarkPact();
   void UseCooldowns(double fight_time_remaining);
-  void AddIterationDamageAndMana(const std::string& spell_name, double mana_gain, double damage);
   void PostIterationDamageAndMana(const std::string& spell_name);
   void SendCombatLogEntries();
   void CombatLog(const std::string& entry);
