@@ -18,6 +18,7 @@ void PetSpell::Setup() {
   if (pet->player.recording_combat_log_breakdown && pet->player.combat_log_breakdown.count(name) == 0) {
     pet->player.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
   }
+
   pet->player.pet_spell_list.push_back(this);
 }
 
@@ -136,6 +137,7 @@ void PetSpell::Cast() {
     // Crit
     if (attack_roll <= crit_chance) {
       is_crit = true;
+
       if (pet->player.recording_combat_log_breakdown) {
         pet->player.combat_log_breakdown.at(name)->crits++;
       }
@@ -145,9 +147,11 @@ void PetSpell::Cast() {
       if (pet->player.recording_combat_log_breakdown) {
         pet->player.combat_log_breakdown.at(name)->dodge++;
       }
+
       if (pet->player.ShouldWriteToCombatLog()) {
         pet->player.CombatLog(pet->name + " " + name + " *dodge*");
       }
+
       return;
     }
     // Miss
@@ -155,14 +159,17 @@ void PetSpell::Cast() {
       if (pet->player.recording_combat_log_breakdown) {
         pet->player.combat_log_breakdown.at(name)->misses++;
       }
+
       if (pet->player.ShouldWriteToCombatLog()) {
         pet->player.CombatLog(pet->name + " " + name + " *miss*");
       }
+
       return;
     }
     // Glancing Blow
     else if (attack_roll <= glancing_chance && name == SpellName::kMelee) {
       is_glancing = true;
+
       if (pet->player.recording_combat_log_breakdown) {
         pet->player.combat_log_breakdown.at(name)->glancing_blows++;
       }
@@ -177,6 +184,7 @@ void PetSpell::Cast() {
       if (pet->player.recording_combat_log_breakdown) {
         pet->player.combat_log_breakdown.at(name)->misses++;
       }
+
       if (pet->player.ShouldWriteToCombatLog()) {
         pet->player.CombatLog(pet->name + " " + name + " *resist*");
       }
@@ -186,6 +194,7 @@ void PetSpell::Cast() {
 
       if (can_crit && pet->IsCrit(type)) {
         is_crit = true;
+
         if (pet->player.recording_combat_log_breakdown) {
           pet->player.combat_log_breakdown.at(name)->crits++;
         }
@@ -234,12 +243,9 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
       // ISB
       if ((pet->player.auras.improved_shadow_bolt != NULL && pet->player.auras.improved_shadow_bolt->active) ||
           pet->player.settings.using_custom_isb_uptime) {
-        // Custom ISB Uptime
         if (pet->player.settings.using_custom_isb_uptime) {
           damage_modifier *= (1 + 0.2 * (pet->player.settings.custom_isb_uptime_value / 100.0));
-        }
-        // Normal ISB
-        else {
+        } else {
           damage_modifier *= pet->player.auras.improved_shadow_bolt->modifier;
           pet->player.auras.improved_shadow_bolt->DecrementStacks();
         }
@@ -288,6 +294,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
   if (pet->player.recording_combat_log_breakdown) {
     pet->player.AddIterationDamageAndMana(name, 0, dmg);
   }
+
   std::string combat_log_message = pet->name + " " + name + " ";
   if (pet->player.ShouldWriteToCombatLog()) {
     if (is_crit) combat_log_message.append("*");
@@ -312,6 +319,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
     if (is_crit) combat_log_message.append(" - " + DoubleToString(pet->crit_multiplier * 100, 1) + "% Crit Multiplier");
     combat_log_message.append(" - " + DoubleToString(round(damage_modifier * 10000) / 100.0, 2) + "% Damage Modifier");
     combat_log_message.append(")");
+
     pet->player.CombatLog(combat_log_message);
   }
 }

@@ -36,6 +36,7 @@ void Pet::Initialize() {
       spells.cleave = std::make_unique<FelguardCleave>(shared_from_this());
       auras.demonic_frenzy = std::make_unique<DemonicFrenzy>(shared_from_this());
     }
+
     if (player.selected_auras.pet_battle_squawk) {
       auras.battle_squawk = std::make_unique<BattleSquawk>(shared_from_this());
     }
@@ -68,21 +69,26 @@ void Pet::CalculateStatsFromAuras() {
     stats.strength_modifier *= 1.1;
     stats.spirit_modifier *= 1.1;
   }
+
   if (player.selected_auras.pet_blessing_of_wisdom) {
     stats.mp5 += 41;
   }
+
   if (player.selected_auras.mana_spring_totem) {
     stats.mp5 += 50;
   }
+
   if (player.selected_auras.wrath_of_air_totem) {
     buff_stats.spell_power += 101;
   }
+
   if (player.selected_auras.totem_of_wrath) {
     const int kHitAndCritAmount = player.settings.totem_of_wrath_amount * 3;
 
     buff_stats.spell_crit_chance += kHitAndCritAmount;
     stats.spell_hit_chance = std::min(99.0, stats.spell_hit_chance + kHitAndCritAmount);
   }
+
   // todo improved motw
   if (player.selected_auras.pet_mark_of_the_wild) {
     buff_stats.stamina += 14;
@@ -91,31 +97,40 @@ void Pet::CalculateStatsFromAuras() {
     buff_stats.agility += 14;
     stats.spirit += 14;
   }
+
   // todo improved imp
   if (player.selected_auras.blood_pact) {
     buff_stats.stamina += 70;
   }
+
   if (player.selected_auras.pet_arcane_intellect) {
     buff_stats.intellect += 40;
   }
+
   if (player.selected_auras.pet_prayer_of_fortitude) {
     buff_stats.stamina += 79;
   }
+
   if (player.selected_auras.pet_prayer_of_spirit) {
     stats.spirit += 50 * (1 + (0.1 * player.settings.improved_divine_spirit));
   }
+
   if (player.selected_auras.inspiring_presence) {
     stats.spell_hit_chance = std::min(99.0, stats.spell_hit_chance + 1);
   }
+
   if (player.selected_auras.moonkin_aura) {
     buff_stats.spell_crit_chance += 5;
   }
+
   if (player.selected_auras.eye_of_the_night) {
     buff_stats.spell_power += 34;
   }
+
   if (player.selected_auras.chain_of_the_twilight_owl) {
     buff_stats.spell_crit_chance += 2;
   }
+
   if (player.selected_auras.jade_pendant_of_blasting) {
     buff_stats.spell_power += 15;
   }
@@ -125,12 +140,15 @@ void Pet::CalculateStatsFromAuras() {
   if (player.items.two_hand == 22630) {
     buff_stats.spell_power += 33;
   }
+
   if (player.selected_auras.atiesh_warlock) {
     buff_stats.spell_power += 33 * player.settings.warlock_atiesh_amount;
   }
+
   if (player.selected_auras.wrath_of_air_totem && player.settings.has_elemental_shaman_t4_bonus) {
     buff_stats.spell_power += 20;
   }
+
   if (player.selected_auras.judgement_of_the_crusader) {
     buff_stats.melee_crit_chance += 3;
     buff_stats.spell_crit_chance += 3;
@@ -140,62 +158,81 @@ void Pet::CalculateStatsFromAuras() {
   if (player.selected_auras.vampiric_touch) {
     stats.mp5 += player.settings.shadow_priest_dps * 0.25;
   }
+
   if (player.selected_auras.faerie_fire && player.settings.improved_faerie_fire) {
     stats.melee_hit_chance += 3;
   }
+
   if (player.selected_auras.expose_weakness) {
     debuff_stats.attack_power +=
         (player.settings.survival_hunter_agility * 0.25 * (player.settings.expose_weakness_uptime / 100.0));
   }
+
   if (player.selected_auras.improved_hunters_mark) {
     debuff_stats.attack_power += 110;
   }
+
   if (player.selected_auras.pet_heroic_presence) {
     stats.melee_hit_chance++;
   }
+
   if (player.selected_auras.pet_blessing_of_might) {
     buff_stats.attack_power += 220;
   }
+
   if (player.selected_auras.pet_strength_of_earth_totem) {
     buff_stats.strength += 86;
   }
+
   if (player.selected_auras.pet_grace_of_air_totem) {
     buff_stats.agility += 67;
   }
+
   if (player.selected_auras.pet_battle_shout) {
     buff_stats.attack_power += 306;
   }
+
   if (player.selected_auras.pet_trueshot_aura) {
     buff_stats.attack_power += 300;
   }
+
   if (player.selected_auras.pet_leader_of_the_pack) {
     buff_stats.melee_crit_chance += 5;
   }
+
   if (player.selected_auras.pet_unleashed_rage) {
     stats.attack_power_modifier *= 1.1;
   }
+
   if (player.selected_auras.pet_stamina_scroll) {
     buff_stats.stamina += 20;
   }
+
   if (player.selected_auras.pet_intellect_scroll) {
     buff_stats.intellect += 20;
   }
+
   if (player.selected_auras.pet_strength_scroll) {
     buff_stats.strength += 20;
   }
+
   if (player.selected_auras.pet_agility_scroll) {
     buff_stats.agility += 20;
   }
+
   if (player.selected_auras.pet_spirit_scroll) {
     stats.spirit += 20;
   }
+
   if (player.selected_auras.pet_kiblers_bits) {
     buff_stats.strength += 20;
     stats.spirit += 20;
   }
+
   if (player.selected_auras.ferocious_inspiration) {
     stats.damage_modifier *= std::pow(1.03, player.settings.ferocious_inspiration_amount);
   }
+
   if (player.settings.race == EmbindConstant::kOrc) {
     stats.damage_modifier *= 1.05;
   }
@@ -218,7 +255,6 @@ void Pet::CalculateStatsFromAuras() {
   stats.stamina_modifier *= 1 + (0.05 * player.talents.fel_stamina);
   stats.intellect_modifier *= 1 + (0.05 * player.talents.fel_intellect);
   stats.damage_modifier *= (1 + 0.04 * player.talents.unholy_power) * (1 + 0.05 * player.talents.soul_link);
-
   stats.spell_hit_chance = std::min(99.0, stats.spell_hit_chance);
 }
 
@@ -247,6 +283,7 @@ void Pet::CalculateStatsFromPlayer(bool announce_in_combat_log) {
     stats.spell_crit_chance =
         (0.0125 * GetIntellect()) + 0.91 + player.talents.demonic_tactics + buff_stats.spell_crit_chance;
   }
+
   if (announce_in_combat_log && player.ShouldWriteToCombatLog()) {
     player.CombatLog("Recalculated " + name + "'s stats");
   }
@@ -301,6 +338,7 @@ double Pet::GetAttackPower() {
   // Remove AP from debuffs on the boss before multiplying by the AP multiplier
   // since it doesn't affect those debuffs
   double attack_power = (stats.attack_power - debuff_stats.attack_power) * stats.attack_power_modifier;
+
   if (auras.demonic_frenzy != NULL) {
     attack_power *= (1 + 0.05 * auras.demonic_frenzy->stacks);
   }
@@ -358,8 +396,8 @@ void Pet::Tick(double t) {
     }
 
     const int kCurrentMana = stats.mana;
-
     stats.mana = std::min(stats.max_mana, stats.mana + static_cast<int>(mana_gain));
+
     if (stats.mana > kCurrentMana && player.ShouldWriteToCombatLog()) {
       player.CombatLog(name + " gains " + DoubleToString(round(mana_gain)) + " mana from Mp5/Spirit regeneration (" +
                        DoubleToString(kCurrentMana) + " -> " + DoubleToString(stats.mana) + ")");
