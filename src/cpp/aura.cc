@@ -343,3 +343,10 @@ CrackedPowerCoreAura::CrackedPowerCoreAura(Player& player) : Aura(player) {
   stats.push_back(SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 15));
   Setup();
 }
+
+AirmansRibbonOfGallantryAura::AirmansRibbonOfGallantryAura(Player& player) : Aura(player) {
+  name = SpellName::kAirmansRibbonOfGallantry;
+  duration = 30;  // should maybe lower this to 25 or so for more realism
+  stats.push_back(SpellPower(player, player.stats.spell_power, EntityType::kPlayer, 80));
+  Setup();
+}

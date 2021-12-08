@@ -29,6 +29,7 @@ export const Auras: Aura[] = [
   { name: 'Ferocious Inspiration', varName: AuraName.ferociousInspiration, group: AuraGroup.Buffs, iconName: 'ability_hunter_ferociousinspiration', id: 34460 },
   { name: 'Innervate', varName: AuraName.innervate, group: AuraGroup.Buffs, iconName: 'spell_nature_lightning', id: 29166 },
   { name: 'Mana Tide Totem', varName: AuraName.manaTideTotem, group: AuraGroup.Buffs, iconName: 'spell_frost_summonwaterelemental', id: 16190 },
+  { name: "Airman's Ribbon of Gallantry", varName: AuraName.airmansRibbonOfGallantry, group: AuraGroup.Buffs, iconName: 'inv_misc_ribbon_01', id: 41262 },
 
   // Debuffs
   { name: 'Curse of the Elements', varName: AuraName.curseOfTheElements, group: AuraGroup.Debuffs, iconName: 'spell_shadow_chilltouch', id: 27228, stats: { spellPenetration: 88, } },

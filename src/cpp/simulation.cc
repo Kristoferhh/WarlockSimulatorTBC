@@ -44,6 +44,10 @@ void Simulation::Start() {
       player.pet->auras.black_book->Apply();
     }
 
+    if (player.auras.airmans_ribbon_of_gallantry != NULL) {
+      player.auras.airmans_ribbon_of_gallantry->Apply();
+    }
+
     while (player.fight_time < kFightLength) {
       const double kFightTimeRemaining = kFightLength - player.fight_time;
 

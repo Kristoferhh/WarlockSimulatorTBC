@@ -175,6 +175,7 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("ferociousInspiration", &Auras::ferocious_inspiration)
       .property("innervate", &Auras::innervate)
       .property("manaTideTotem", &Auras::mana_tide_totem)
+      .property("airmansRibbonOfGallantry", &Auras::airmans_ribbon_of_gallantry)
       .property("curseOfTheElements", &Auras::curse_of_the_elements)
       .property("shadowWeaving", &Auras::shadow_weaving)
       .property("improvedScorch", &Auras::improved_scorch)

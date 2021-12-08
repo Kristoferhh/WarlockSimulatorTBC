@@ -54,6 +54,7 @@ onmessage = (event) => {
         auras.ferociousInspiration = playerData.auras.ferociousInspiration || false;
         auras.innervate = playerData.auras.innervate || false;
         auras.manaTideTotem = playerData.auras.manaTideTotem || false;
+        auras.airmansRibbonOfGallantry = playerData.auras.airmansRibbonOfGallantry || false;
         auras.curseOfTheElements = playerData.auras.curseOfTheElements || false;
         auras.shadowWeaving = playerData.auras.shadowWeaving || false;
         auras.improvedScorch = playerData.auras.improvedScorch || false;

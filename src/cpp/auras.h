@@ -25,6 +25,7 @@ struct Auras {
   bool ferocious_inspiration;
   bool innervate;
   bool mana_tide_totem;
+  bool airmans_ribbon_of_gallantry;
 
   bool curse_of_the_elements;
   bool shadow_weaving;

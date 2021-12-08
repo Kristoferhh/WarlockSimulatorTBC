@@ -894,6 +894,7 @@ export enum AuraName {
   ferociousInspiration = 'ferociousInspiration',
   innervate = 'innervate',
   manaTideTotem = 'manaTideTotem',
+  airmansRibbonOfGallantry = 'airmansRibbonOfGallantry',
   curseOfTheElements = 'curseOfTheElements',
   shadowWeaving = 'shadowWeaving',
   improvedScorch = 'improvedScorch',

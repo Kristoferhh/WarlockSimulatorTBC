@@ -284,6 +284,8 @@ void Player::Initialize() {
         (settings.has_amplify_curse || settings.rotation_option == EmbindConstant::kSimChooses))
       auras.amplify_curse = std::make_unique<AmplifyCurseAura>(*this);
   }
+  if (selected_auras.airmans_ribbon_of_gallantry)
+    auras.airmans_ribbon_of_gallantry = std::make_unique<AirmansRibbonOfGallantryAura>(*this);
   if (selected_auras.mana_tide_totem) auras.mana_tide_totem = std::make_unique<ManaTideTotemAura>(*this);
   if (selected_auras.chipped_power_core) auras.chipped_power_core = std::make_unique<ChippedPowerCoreAura>(*this);
   if (selected_auras.cracked_power_core) auras.cracked_power_core = std::make_unique<CrackedPowerCoreAura>(*this);

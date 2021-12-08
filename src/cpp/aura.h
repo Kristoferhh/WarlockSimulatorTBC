@@ -171,4 +171,8 @@ struct CrackedPowerCoreAura : public Aura {
   CrackedPowerCoreAura(Player& player);
 };
 
+struct AirmansRibbonOfGallantryAura : public Aura {
+  AirmansRibbonOfGallantryAura(Player& player);
+};
+
 #endif

@@ -45,6 +45,7 @@ struct PlayerAuras {
   std::shared_ptr<Aura> chipped_power_core;
   std::shared_ptr<Aura> cracked_power_core;
   std::shared_ptr<Aura> mana_tide_totem;
+  std::shared_ptr<Aura> airmans_ribbon_of_gallantry;
 };
 
 #endif
