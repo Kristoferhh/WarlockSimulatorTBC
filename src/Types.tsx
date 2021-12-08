@@ -245,6 +245,8 @@ export enum Setting {
   'target-level' = 'target-level',
   petChoice = 'petChoice',
   totemOfWrathAmount = 'totemOfWrathAmount',
+  chippedPowerCoreAmount = 'chippedPowerCoreAmount',
+  crackedPowerCoreAmount = 'crackedPowerCoreAmount',
   petMode = 'petMode',
   sacrificePet = 'sacrificePet',
   enemyArmor = 'enemyArmor',
@@ -327,6 +329,8 @@ export const InitialSettings: { [key in Setting]: string } = {
   improvedImpSetting: '0',
   improvedWrathOfAirTotem: 'no',
   maxWebWorkers: '0',
+  chippedPowerCoreAmount: '1',
+  crackedPowerCoreAmount: '1',
 }
 
 export type TalentStore = {

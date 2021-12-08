@@ -312,6 +312,8 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("enemyFireResist", &PlayerSettings::enemy_fire_resist)
       .property("mageAtieshAmount", &PlayerSettings::mage_atiesh_amount)
       .property("totemOfWrathAmount", &PlayerSettings::totem_of_wrath_amount)
+      .property("chippedPowerCoreAmount", &PlayerSettings::chipped_power_core_amount)
+      .property("crackedPowerCoreAmount", &PlayerSettings::cracked_power_core_amount)
       .property("sacrificingPet", &PlayerSettings::sacrificing_pet)
       .property("selectedPet", &PlayerSettings::selected_pet)
       .property("ferociousInspirationAmount", &PlayerSettings::ferocious_inspiration_amount)

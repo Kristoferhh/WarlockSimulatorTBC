@@ -45,6 +45,8 @@ struct PlayerSettings {
   int power_infusion_amount;
   int bloodlust_amount;
   int innervate_amount;
+  int chipped_power_core_amount;
+  int cracked_power_core_amount;
   int battle_squawk_amount;
   int enemy_armor;
   int expose_weakness_uptime;

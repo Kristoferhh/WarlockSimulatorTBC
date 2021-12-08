@@ -16,13 +16,18 @@ struct Spell : std::enable_shared_from_this<Spell> {
   SpellSchool school;
   SpellType type;
   std::string name;
+  int amount_of_casts_per_fight;
+  int amount_of_casts_this_fight;
+  int proc_chance;
   int min_dmg;
   int max_dmg;
   double dmg;
   int min_mana_gain;
   int max_mana_gain;
   double mana_gain;
-  int proc_chance;
+  int bonus_damage_from_immolate_min;
+  int bonus_damage_from_immolate_max;
+  double bonus_damage_from_immolate;
   double cast_time;
   double mana_cost;
   double coefficient;
@@ -30,9 +35,6 @@ struct Spell : std::enable_shared_from_this<Spell> {
   double modifier;
   double bonus_crit_chance;
   double cooldown_remaining;
-  int bonus_damage_from_immolate_min;
-  int bonus_damage_from_immolate_max;
-  double bonus_damage_from_immolate;
   bool does_damage;
   bool can_crit;
   bool is_non_warlock_ability;
@@ -53,9 +55,7 @@ struct Spell : std::enable_shared_from_this<Spell> {
   bool on_damage_procs_enabled;
   bool procs_on_resist;
   bool on_resist_procs_enabled;
-  // For Chipped Power Core
-  bool usable_once_per_fight;
-  bool has_not_been_cast_this_fight;
+  bool limited_amount_of_casts;
 
   Spell(Player& player, std::shared_ptr<Aura> aura = nullptr, std::shared_ptr<DamageOverTime> dot = nullptr);
 

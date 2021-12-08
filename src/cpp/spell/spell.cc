@@ -21,8 +21,9 @@ Spell::Spell(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageO
       is_proc(false),
       is_finisher(false),
       cast_time(0),
-      usable_once_per_fight(false),
-      has_not_been_cast_this_fight(true),
+      limited_amount_of_casts(false),
+      amount_of_casts_this_fight(0),
+      amount_of_casts_per_fight(0),
       gain_mana_on_cast(false),
       procs_on_hit(false),
       on_hit_procs_enabled(true),
@@ -35,9 +36,9 @@ Spell::Spell(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageO
       on_resist_procs_enabled(true) {}
 
 void Spell::Reset() {
-  cooldown_remaining = 0;
   casting = false;
-  has_not_been_cast_this_fight = true;
+  cooldown_remaining = 0;
+  amount_of_casts_this_fight = 0;
 }
 
 void Spell::Setup() {
@@ -66,7 +67,7 @@ bool Spell::CanCast() {
   return cooldown_remaining <= 0 &&
          (is_non_warlock_ability ||
           ((!on_gcd || player.gcd_remaining <= 0) && (is_proc || player.cast_time_remaining <= 0))) &&
-         (!usable_once_per_fight || has_not_been_cast_this_fight);
+         (!limited_amount_of_casts || amount_of_casts_this_fight < amount_of_casts_per_fight);
 }
 
 bool Spell::HasEnoughMana() { return GetManaCost() <= player.stats.mana; }
@@ -152,7 +153,7 @@ void Spell::Cast() {
   bool is_crit = false;
   cooldown_remaining = cooldown;
   casting = false;
-  has_not_been_cast_this_fight = false;
+  amount_of_casts_this_fight++;
 
   for (auto& spell_name : shared_cooldown_spells) {
     for (auto& player_spell : player.spell_list) {
@@ -905,9 +906,9 @@ Innervate::Innervate(Player& player, std::shared_ptr<Aura> aura) : Spell(player,
 ChippedPowerCore::ChippedPowerCore(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
   name = SpellName::kChippedPowerCore;
   cooldown = 120;
-  usable_once_per_fight = true;  // The item is unique so you can only carry one at a time, so I'm
-                                 // just gonna limit it to 1 use per fight.
   on_gcd = false;
+  limited_amount_of_casts = true;
+  amount_of_casts_per_fight = player.settings.chipped_power_core_amount;
   shared_cooldown_spells.insert(shared_cooldown_spells.end(),
                                 {SpellName::kDemonicRune, SpellName::kFlameCap, SpellName::kCrackedPowerCore});
   Setup();
@@ -916,8 +917,9 @@ ChippedPowerCore::ChippedPowerCore(Player& player, std::shared_ptr<Aura> aura) :
 CrackedPowerCore::CrackedPowerCore(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
   name = SpellName::kCrackedPowerCore;
   cooldown = 120;
-  usable_once_per_fight = true;
   on_gcd = false;
+  limited_amount_of_casts = true;
+  amount_of_casts_per_fight = player.settings.cracked_power_core_amount;
   shared_cooldown_spells.insert(shared_cooldown_spells.end(),
                                 {SpellName::kDemonicRune, SpellName::kFlameCap, SpellName::kChippedPowerCore});
   Setup();

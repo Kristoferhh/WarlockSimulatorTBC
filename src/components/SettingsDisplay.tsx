@@ -523,6 +523,38 @@ export default function SettingsDisplay() {
           </li>
         }
         {
+          playerStore.auras.chippedPowerCore &&
+          <li id="chippedPowerCoreAmount">
+            <label className="settings-left" htmlFor="chippedPowerCoreAmount">
+              {t('Chipped Power Core amount')}
+            </label>
+            <input
+              className='settings-right'
+              onChange={(e) => settingModifiedHandler(Setting.chippedPowerCoreAmount, e.target.value)}
+              value={playerStore.settings.chippedPowerCoreAmount}
+              type="number"
+              min='0'
+              name="chippedPowerCoreAmount"
+            />
+          </li>
+        }
+        {
+          playerStore.auras.crackedPowerCore &&
+          <li id="crackedPowerCoreAmount">
+            <label className="settings-left" htmlFor="crackedPowerCoreAmount">
+              {t('Cracked Power Core amount')}
+            </label>
+            <input
+              className='settings-right'
+              onChange={(e) => settingModifiedHandler(Setting.crackedPowerCoreAmount, e.target.value)}
+              value={playerStore.settings.crackedPowerCoreAmount}
+              type="number"
+              min='0'
+              name="crackedPowerCoreAmount"
+            />
+          </li>
+        }
+        {
           playerStore.auras.ferociousInspiration &&
           <li id="ferociousInspirationAmount">
             <label className="settings-left" htmlFor="ferociousInspirationAmount">

@@ -62,6 +62,7 @@ void Simulation::Start() {
                  player.spells.drums_of_restoration->Ready()) {
         player.spells.drums_of_restoration->StartCast();
       }
+
       // Use Bloodlust
       if (!player.spells.bloodlust.empty() && !player.auras.bloodlust->active) {
         for (auto bloodlust : player.spells.bloodlust) {
@@ -71,6 +72,7 @@ void Simulation::Start() {
           }
         }
       }
+
       // Use Mana Tide Totem if there's <= 12 sec remaning or the player's mana
       // is at 50% or lower
       if (player.spells.mana_tide_totem != NULL && player.spells.mana_tide_totem->Ready() &&
@@ -86,10 +88,11 @@ void Simulation::Start() {
         if ((player.fight_time > 5 || player.stats.mp5 == 0) && player.spells.demonic_rune != NULL &&
             (player.stats.max_mana - player.stats.mana) > player.spells.demonic_rune->max_mana_gain &&
             player.spells.demonic_rune->Ready() &&
-            (!player.spells.chipped_power_core || player.spells.chipped_power_core->cooldown_remaining > 0) &&
-            (!player.spells.cracked_power_core || player.spells.cracked_power_core->cooldown_remaining > 0)) {
+            (!player.spells.chipped_power_core || !player.spells.chipped_power_core->Ready()) &&
+            (!player.spells.cracked_power_core || !player.spells.cracked_power_core->Ready())) {
           player.spells.demonic_rune->StartCast();
         }
+
         // Super Mana Potion
         if ((player.fight_time > 5 || player.stats.mp5 == 0) && player.spells.super_mana_potion != NULL &&
             (player.stats.max_mana - player.stats.mana) > player.spells.super_mana_potion->max_mana_gain &&
@@ -115,10 +118,12 @@ void Simulation::Start() {
                 predicted_damage_of_spells.insert(
                     {player.spells.shadow_bolt, player.spells.shadow_bolt->PredictDamage()});
               }
+
               if (kFightTimeRemaining >= player.spells.incinerate->GetCastTime()) {
                 predicted_damage_of_spells.insert(
                     {player.spells.incinerate, player.spells.incinerate->PredictDamage()});
               }
+
               if (kFightTimeRemaining >= player.spells.searing_pain->GetCastTime()) {
                 predicted_damage_of_spells.insert(
                     {player.spells.searing_pain, player.spells.searing_pain->PredictDamage()});
@@ -131,16 +136,19 @@ void Simulation::Start() {
                 player.spells.conflagrate->CanCast()) {
               SelectedSpellHandler(player.spells.conflagrate, predicted_damage_of_spells, kFightTimeRemaining);
             }
+
             // Cast Shadowburn if there's not enough time for another filler
             if (player.gcd_remaining <= 0 && kNotEnoughTimeForFillerSpell && player.spells.shadowburn != NULL &&
                 player.spells.shadowburn->CanCast()) {
               SelectedSpellHandler(player.spells.shadowburn, predicted_damage_of_spells, kFightTimeRemaining);
             }
+
             // Cast Death Coil if there's not enough time for another filler
             if (player.gcd_remaining <= 0 && kNotEnoughTimeForFillerSpell && player.spells.death_coil != NULL &&
                 player.spells.death_coil->CanCast()) {
               SelectedSpellHandler(player.spells.death_coil, predicted_damage_of_spells, kFightTimeRemaining);
             }
+
             // Cast Curse of the Elements or Curse of Recklessness if they're
             // the selected curse and they're not active
             if (kFightTimeRemaining >= 10 && player.gcd_remaining <= 0 && player.curse_spell != NULL &&
@@ -153,6 +161,7 @@ void Simulation::Start() {
                 player.CastLifeTapOrDarkPact();
               }
             }
+
             // Cast Curse of Doom if it's the selected curse and there's more
             // than 60 seconds remaining
             if (player.gcd_remaining <= 0 && kFightTimeRemaining > 60 && player.curse_spell != NULL &&
@@ -160,6 +169,7 @@ void Simulation::Start() {
                 player.spells.curse_of_doom->CanCast()) {
               SelectedSpellHandler(player.spells.curse_of_doom, predicted_damage_of_spells, kFightTimeRemaining);
             }
+
             // Cast Curse of Agony if CoA is the selected curse or if Curse of
             // Doom is the selected curse and there's less than 60 seconds
             // remaining of the fight
@@ -172,6 +182,7 @@ void Simulation::Start() {
                  player.curse_spell->name == SpellName::kCurseOfAgony)) {
               SelectedSpellHandler(player.spells.curse_of_agony, predicted_damage_of_spells, kFightTimeRemaining);
             }
+
             // Cast Corruption if Corruption isn't up or if it will expire
             // before the Cast finishes (if no instant Corruption)
             if (player.gcd_remaining <= 0 && player.spells.corruption != NULL &&
@@ -182,6 +193,7 @@ void Simulation::Start() {
                 (kFightTimeRemaining - player.spells.corruption->GetCastTime()) >= player.auras.corruption->duration) {
               SelectedSpellHandler(player.spells.corruption, predicted_damage_of_spells, kFightTimeRemaining);
             }
+
             // Cast Shadow Bolt if Shadow Trance (Nightfall) is active and
             // Corruption is active as well to avoid potentially wasting another
             // Nightfall proc
@@ -190,6 +202,7 @@ void Simulation::Start() {
                 player.spells.shadow_bolt->CanCast()) {
               SelectedSpellHandler(player.spells.shadow_bolt, predicted_damage_of_spells, kFightTimeRemaining);
             }
+
             // Cast Unstable Affliction if it's not up or if it's about to
             // expire
             if (player.gcd_remaining <= 0 && player.spells.unstable_affliction != NULL &&
@@ -201,12 +214,14 @@ void Simulation::Start() {
                     player.auras.unstable_affliction->duration) {
               SelectedSpellHandler(player.spells.unstable_affliction, predicted_damage_of_spells, kFightTimeRemaining);
             }
+
             // Cast Siphon Life if it's not up (todo: add option to only Cast it
             // while ISB is active if not using custom ISB uptime %)
             if (player.gcd_remaining <= 0 && player.spells.siphon_life != NULL && !player.auras.siphon_life->active &&
                 player.spells.siphon_life->CanCast() && kFightTimeRemaining >= player.auras.siphon_life->duration) {
               SelectedSpellHandler(player.spells.siphon_life, predicted_damage_of_spells, kFightTimeRemaining);
             }
+
             // Cast Immolate if it's not up or about to expire
             if (player.gcd_remaining <= 0 && player.spells.immolate != NULL && player.spells.immolate->CanCast() &&
                 (!player.auras.immolate->active ||
@@ -215,15 +230,18 @@ void Simulation::Start() {
                 (kFightTimeRemaining - player.spells.immolate->GetCastTime()) >= player.auras.immolate->duration) {
               SelectedSpellHandler(player.spells.immolate, predicted_damage_of_spells, kFightTimeRemaining);
             }
+
             // Cast Shadow Bolt if Shadow Trance (Nightfall) is active
             if (player.gcd_remaining <= 0 && player.spells.shadow_bolt != NULL && player.auras.shadow_trance != NULL &&
                 player.auras.shadow_trance->active && player.spells.shadow_bolt->CanCast()) {
               SelectedSpellHandler(player.spells.shadow_bolt, predicted_damage_of_spells, kFightTimeRemaining);
             }
+
             // Cast Shadowfury
             if (player.gcd_remaining <= 0 && player.spells.shadowfury != NULL && player.spells.shadowfury->CanCast()) {
               SelectedSpellHandler(player.spells.shadowfury, predicted_damage_of_spells, kFightTimeRemaining);
             }
+
             // Cast filler spell if sim is not choosing the rotation for the
             // user or if the predicted_damage_of_spells map is empty
             if (player.gcd_remaining <= 0 &&
@@ -275,10 +293,12 @@ void Simulation::Start() {
         if (player.pet->spells.melee != NULL && player.pet->spells.melee->Ready()) {
           player.pet->spells.melee->StartCast();
         }
+
         // Felguard Cleave
         if (player.pet->spells.cleave != NULL && player.pet->spells.cleave->Ready()) {
           player.pet->spells.cleave->StartCast();
         }
+
         // Succubus Lash of Pain
         if (player.pet->spells.lash_of_pain != NULL && player.pet->spells.lash_of_pain->Ready() &&
             (player.settings.lash_of_pain_usage == EmbindConstant::kOnCooldown ||
@@ -286,6 +306,7 @@ void Simulation::Start() {
               (player.auras.improved_shadow_bolt == NULL || !player.auras.improved_shadow_bolt->active)))) {
           player.pet->spells.lash_of_pain->StartCast();
         }
+
         // Imp Firebolt
         if (player.pet->spells.firebolt != NULL && player.pet->spells.firebolt->Ready()) {
           player.pet->spells.firebolt->StartCast();
@@ -315,12 +336,15 @@ void Simulation::Start() {
 
     player.total_duration += kFightLength;
     const double kDps = player.iteration_damage / static_cast<double>(kFightLength);
+
     if (kDps > max_dps) {
       max_dps = kDps;
     }
+
     if (kDps < min_dps) {
       min_dps = kDps;
     }
+
     dps_vector.push_back(kDps);
 
     // Only send the iteration's dps to the web worker if we're doing a normal
@@ -352,6 +376,7 @@ void Simulation::Start() {
                              combat_log_breakdown.second->dodge, combat_log_breakdown.second->glancing_blows);
     }
   }
+
   SimulationEnd(Median(dps_vector), min_dps, max_dps, player.settings.item_id, settings.iterations,
                 player.total_duration, player.custom_stat.c_str());
 }

@@ -187,6 +187,8 @@ onmessage = (event) => {
         playerSettings.enemyFireResist = parseInt(playerData.simSettings['target-fire-resistance']);
         playerSettings.mageAtieshAmount = parseInt(playerData.simSettings.mageAtieshAmount);
         playerSettings.totemOfWrathAmount = parseInt(playerData.simSettings.totemOfWrathAmount);
+        playerSettings.chippedPowerCoreAmount = parseInt(playerData.simSettings.chippedPowerCoreAmount);
+        playerSettings.crackedPowerCoreAmount = parseInt(playerData.simSettings.crackedPowerCoreAmount);
         playerSettings.sacrificingPet = playerData.simSettings.sacrificePet === "yes";
         if (playerData.simSettings.petChoice === '0') {
           playerSettings.selectedPet = module.EmbindConstant.imp;

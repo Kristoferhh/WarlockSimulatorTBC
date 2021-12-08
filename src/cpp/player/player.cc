@@ -556,27 +556,33 @@ double Player::GetSpellPower(bool dealing_damage, SpellSchool school) {
       (items.trinket_1 == ItemId::kMarkOfTheChampion || items.trinket_2 == ItemId::kMarkOfTheChampion)) {
     spell_power -= 85;
   }
+
   if (sets.spellfire == 3) {
     spell_power += GetIntellect() * 0.07;
   }
+
   if (school == SpellSchool::kShadow) {
     spell_power += stats.shadow_power;
   } else if (school == SpellSchool::kFire) {
     spell_power += stats.fire_power;
   }
+
   // Spell Power from spirit if player has Improved Divine Spirit buffed
   if (selected_auras.prayer_of_spirit && settings.improved_divine_spirit > 0) {
     spell_power += GetSpirit() * (0 + (static_cast<double>(settings.improved_divine_spirit) / 20.0));
   }
+
   return spell_power;
 }
 
 double Player::GetCritChance(SpellType spell_type) {
   double crit_chance = stats.spell_crit_chance + (GetIntellect() * kCritChancePerIntellect) +
                        (stats.spell_crit_rating / kCritRatingPerPercent);
+
   if (spell_type != SpellType::kDestruction) {
     crit_chance -= talents.devastation;
   }
+
   return crit_chance;
 }
 
