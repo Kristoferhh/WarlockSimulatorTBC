@@ -85,7 +85,7 @@ Player::Player(PlayerSettings& player_settings)
   if (selected_auras.inspiring_presence) {
     stats.extra_spell_hit_chance += 1;
   }
-  stats.spell_hit_chance = round(GetBaseHitChance(kLevel, settings.enemy_level));
+  stats.spell_hit_chance = GetBaseHitChance(kLevel, settings.enemy_level);
 
   // Add bonus damage % from Demonic Sacrifice
   if (talents.demonic_sacrifice == 1 && settings.sacrificing_pet) {
@@ -284,6 +284,8 @@ void Player::Initialize() {
         (settings.has_amplify_curse || settings.rotation_option == EmbindConstant::kSimChooses))
       auras.amplify_curse = std::make_unique<AmplifyCurseAura>(*this);
   }
+  if (selected_auras.airmans_ribbon_of_gallantry)
+    auras.airmans_ribbon_of_gallantry = std::make_unique<AirmansRibbonOfGallantryAura>(*this);
   if (selected_auras.mana_tide_totem) auras.mana_tide_totem = std::make_unique<ManaTideTotemAura>(*this);
   if (selected_auras.chipped_power_core) auras.chipped_power_core = std::make_unique<ChippedPowerCoreAura>(*this);
   if (selected_auras.cracked_power_core) auras.cracked_power_core = std::make_unique<CrackedPowerCoreAura>(*this);
@@ -447,16 +449,19 @@ void Player::Initialize() {
   if (auras.darkmoon_card_crusade != NULL)
     spells.darkmoon_card_crusade = std::make_unique<DarkmoonCardCrusade>(*this, auras.darkmoon_card_crusade);
   if (auras.power_infusion != NULL) {
-    spells.power_infusion.insert(spells.power_infusion.end(), settings.power_infusion_amount,
-                                 std::make_unique<PowerInfusion>(*this, auras.power_infusion));
+    for (int i = 0; i < settings.power_infusion_amount; i++) {
+      spells.power_infusion.push_back(std::make_unique<PowerInfusion>(*this, auras.power_infusion));
+    }
   }
   if (auras.bloodlust != NULL) {
-    spells.bloodlust.insert(spells.bloodlust.end(), settings.bloodlust_amount,
-                            std::make_unique<Bloodlust>(*this, auras.bloodlust));
+    for (int i = 0; i < settings.bloodlust_amount; i++) {
+      spells.bloodlust.push_back(std::make_unique<Bloodlust>(*this, auras.bloodlust));
+    }
   }
   if (auras.innervate != NULL) {
-    spells.innervate.insert(spells.innervate.end(), settings.innervate_amount,
-                            std::make_unique<Innervate>(*this, auras.innervate));
+    for (int i = 0; i < settings.innervate_amount; i++) {
+      spells.innervate.push_back(std::make_unique<Innervate>(*this, auras.innervate));
+    }
   }
 
   // Set the filler property
@@ -539,9 +544,7 @@ double Player::GetHastePercent() {
 }
 
 double Player::GetGcdValue(const std::string& spell_name) {
-  return spell_name == SpellName::kShadowfury
-             ? 0
-             : std::max(kMinimumGcdValue, round((kGcdValue / GetHastePercent()) * 10000) / 10000);
+  return spell_name == SpellName::kShadowfury ? 0 : std::max(kMinimumGcdValue, kGcdValue / GetHastePercent());
 }
 
 double Player::GetSpellPower(bool dealing_damage, SpellSchool school) {
@@ -553,27 +556,33 @@ double Player::GetSpellPower(bool dealing_damage, SpellSchool school) {
       (items.trinket_1 == ItemId::kMarkOfTheChampion || items.trinket_2 == ItemId::kMarkOfTheChampion)) {
     spell_power -= 85;
   }
+
   if (sets.spellfire == 3) {
     spell_power += GetIntellect() * 0.07;
   }
+
   if (school == SpellSchool::kShadow) {
     spell_power += stats.shadow_power;
   } else if (school == SpellSchool::kFire) {
     spell_power += stats.fire_power;
   }
+
   // Spell Power from spirit if player has Improved Divine Spirit buffed
   if (selected_auras.prayer_of_spirit && settings.improved_divine_spirit > 0) {
     spell_power += GetSpirit() * (0 + (static_cast<double>(settings.improved_divine_spirit) / 20.0));
   }
+
   return spell_power;
 }
 
 double Player::GetCritChance(SpellType spell_type) {
   double crit_chance = stats.spell_crit_chance + (GetIntellect() * StatConstant::kCritChancePerIntellect) +
                        (stats.spell_crit_rating / StatConstant::kCritRatingPerPercent);
+
   if (spell_type != SpellType::kDestruction) {
     crit_chance -= talents.devastation;
   }
+
   return crit_chance;
 }
 
@@ -590,11 +599,11 @@ int Player::GetRand() { return rng.range(0, 100 * kFloatNumberMultiplier); }
 
 bool Player::RollRng(double chance) { return GetRand() <= chance * kFloatNumberMultiplier; }
 
-int Player::GetStamina() { return stats.stamina * stats.stamina_modifier; }
+double Player::GetStamina() { return stats.stamina * stats.stamina_modifier; }
 
-int Player::GetIntellect() { return stats.intellect * stats.intellect_modifier; }
+double Player::GetIntellect() { return stats.intellect * stats.intellect_modifier; }
 
-int Player::GetSpirit() { return stats.spirit * stats.spirit_modifier; }
+double Player::GetSpirit() { return stats.spirit * stats.spirit_modifier; }
 
 // formula from
 // https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/
@@ -603,8 +612,7 @@ double Player::GetBaseHitChance(int player_level, int enemy_level) {
   const int kLevelDifference = enemy_level - player_level;
   return kLevelDifference <= 2   ? std::min(99, 100 - kLevelDifference - 4)
          : kLevelDifference == 3 ? 83
-         : kLevelDifference >= 4 ? 83 - 11 * kLevelDifference
-                                 : 0;
+                                 : 83 - 11 * kLevelDifference;
 }
 
 void Player::UseCooldowns(double fight_time_remaining) {
@@ -620,8 +628,8 @@ void Player::UseCooldowns(double fight_time_remaining) {
       }
     }
   }
-  // TODO don't use innervate until x% mana
-  if (!spells.innervate.empty() && !auras.innervate->active) {
+
+  if (stats.mana / stats.max_mana <= 0.5 && !spells.innervate.empty() && !auras.innervate->active) {
     for (auto& innervate : spells.innervate) {
       if (innervate->Ready()) {
         innervate->StartCast();
@@ -629,20 +637,25 @@ void Player::UseCooldowns(double fight_time_remaining) {
       }
     }
   }
+
   if (spells.chipped_power_core != NULL && spells.chipped_power_core->Ready()) {
     spells.chipped_power_core->StartCast();
   } else if (spells.cracked_power_core != NULL && spells.cracked_power_core->Ready()) {
     spells.cracked_power_core->StartCast();
   }
+
   if (spells.destruction_potion != NULL && spells.destruction_potion->Ready()) {
     spells.destruction_potion->StartCast();
   }
+
   if (spells.flame_cap != NULL && spells.flame_cap->Ready()) {
     spells.flame_cap->StartCast();
   }
+
   if (spells.blood_fury != NULL && spells.blood_fury->Ready()) {
     spells.blood_fury->StartCast();
   }
+
   for (int i = 0; i < trinkets.size(); i++) {
     if (trinkets[i].Ready()) {
       trinkets[i].Use();
@@ -674,19 +687,6 @@ double Player::GetPartialResistMultiplier(SpellSchool school) {
   const int kEnemyResist = school == SpellSchool::kShadow ? settings.enemy_shadow_resist : settings.enemy_fire_resist;
 
   return 1.0 - ((75 * kEnemyResist) / (kLevel * 5)) / 100.0;
-}
-
-void Player::AddIterationDamageAndMana(const std::string& spell_name, int mana_gain, int damage) {
-  const int kCurrentManaGain = combat_log_breakdown.at(spell_name)->iteration_mana_gain;
-  const int kCurrentDamage = combat_log_breakdown.at(spell_name)->iteration_damage;
-
-  // Check for integer overflow
-  if (kCurrentManaGain + mana_gain < 0 || kCurrentDamage + damage < 0) {
-    PostIterationDamageAndMana(spell_name);
-  }
-
-  combat_log_breakdown.at(spell_name)->iteration_mana_gain += mana_gain;
-  combat_log_breakdown.at(spell_name)->iteration_damage += damage;
 }
 
 void Player::PostIterationDamageAndMana(const std::string& spell_name) {
@@ -831,7 +831,7 @@ void Player::Tick(double time) {
     if (stats.mp5 > 0 || five_second_rule_timer_remaining <= 0 ||
         (auras.innervate != NULL && auras.innervate->active)) {
       const bool kInnervateIsActive = auras.innervate != NULL && auras.innervate->active;
-      const int kCurrentPlayerMana = stats.mana;
+      const double kCurrentPlayerMana = stats.mana;
 
       // MP5
       if (stats.mp5 > 0) {
@@ -839,12 +839,13 @@ void Player::Tick(double time) {
       }
       // Spirit mana regen
       if (kInnervateIsActive || five_second_rule_timer_remaining <= 0) {
-        // Formula from
-        // https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1572910
-        int mp5_from_spirit = 5 * (0.001 + std::sqrt(GetIntellect()) * GetSpirit() * 0.009327);
+        // Formula from https://wowwiki-archive.fandom.com/wiki/Spirit?oldid=1572910
+        double mp5_from_spirit = 5 * (0.001 + std::sqrt(GetIntellect()) * GetSpirit() * 0.009327);
+
         if (kInnervateIsActive) {
           mp5_from_spirit *= 4;
         }
+
         stats.mana += mp5_from_spirit;
       }
 
@@ -852,14 +853,15 @@ void Player::Tick(double time) {
         stats.mana = stats.max_mana;
       }
 
-      const int kManaGained = stats.mana - kCurrentPlayerMana;
+      const double kManaGained = stats.mana - kCurrentPlayerMana;
       if (recording_combat_log_breakdown) {
         combat_log_breakdown.at("Mp5")->casts++;
-        AddIterationDamageAndMana("Mp5", kManaGained, 0);
+        combat_log_breakdown.at("Mp5")->iteration_mana_gain += kManaGained;
       }
+
       if (ShouldWriteToCombatLog()) {
-        CombatLog("Player gains " + DoubleToString(round(kManaGained)) + " mana from MP5 (" +
-                  std::to_string(kCurrentPlayerMana) + " -> " + DoubleToString(stats.mana) + ")");
+        CombatLog("Player gains " + DoubleToString(kManaGained) + " mana from MP5 (" +
+                  DoubleToString(kCurrentPlayerMana) + " -> " + DoubleToString(stats.mana) + ")");
       }
     }
   }
@@ -927,7 +929,8 @@ void Player::SendPlayerInfoToCombatLog() {
     combat_log_entries.push_back("Dodge Chance: " + DoubleToString(pet->enemy_dodge_chance) + "%");
     combat_log_entries.push_back("Armor: " + std::to_string(settings.enemy_armor));
     combat_log_entries.push_back(
-        "Damage Reduction From Armor: " + DoubleToString(round((1 - pet->armor_multiplier) * 10000) / 100.0, 2) + "%");
+        "Damage Reduction From Armor: " +
+        DoubleToString(round((1 - pet->enemy_damage_reduction_from_armor) * 10000) / 100.0, 2) + "%");
   }
   combat_log_entries.push_back("---------------------------------------------");
 }

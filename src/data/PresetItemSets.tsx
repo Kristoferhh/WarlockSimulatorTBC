@@ -1,6 +1,6 @@
 import { ItemSlot } from "../Types";
 
-export const PresetItemSets: {name: string, items: {[key in ItemSlot]?: {itemId: number, gemIds?: number[], enchantId?: number}}}[] = [
+export const PresetItemSets: { name: string, items: { [key in ItemSlot]?: { itemId: number, gemIds?: number[], enchantId?: number } } }[] = [
   {
     name: "Shadow Destruction Pre-BiS",
     items: {

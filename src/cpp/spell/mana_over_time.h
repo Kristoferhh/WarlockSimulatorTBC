@@ -8,17 +8,17 @@ struct ManaOverTime : public Aura {
   void Apply();
   void Tick(double time);
   void Setup();
-  virtual int GetManaGain();
+  virtual double GetManaGain();
 };
 
 struct DrumsOfRestorationAura : public ManaOverTime {
   DrumsOfRestorationAura(Player& player);
-  int GetManaGain();
+  double GetManaGain();
 };
 
 struct ManaTideTotemAura : public ManaOverTime {
   ManaTideTotemAura(Player& player);
-  int GetManaGain();
+  double GetManaGain();
 };
 
 #endif

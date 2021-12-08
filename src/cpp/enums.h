@@ -85,6 +85,7 @@ const std::string kBlackBook = "The Black Book";
 const std::string kBattleSquawk = "Battle Squawk";
 const std::string kImprovedShadowBolt = "Improved Shadow Bolt";
 const std::string kEyeOfMagtheridon = "Eye of Magtheridon";
+const std::string kAirmansRibbonOfGallantry = "Airman's Ribbon of Gallantry";
 }  // namespace SpellName
 
 namespace StatName {

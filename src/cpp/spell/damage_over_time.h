@@ -19,9 +19,7 @@ struct DamageOverTime {
   double tick_timer_remaining;  // Time until next tick
   int ticks_remaining;          // Amount of ticks remaining before the dot expires
   int ticks_total;
-  int spell_power;       // Spell Power amount when dot was applied
-  int minimum_duration;  // Minimum time left of the fight for the sim to
-                         // consider casting the dot
+  double spell_power;  // Spell Power amount when dot was applied
   double dmg;
   double modifier;
   double coefficient;

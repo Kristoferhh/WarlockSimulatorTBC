@@ -15,7 +15,7 @@ void ErrorCallback(const char* error_msg) {
 #endif
 }
 
-void PostCombatLogBreakdownVector(const char* name, int mana_gain, int damage) {
+void PostCombatLogBreakdownVector(const char* name, double mana_gain, double damage) {
 #ifdef EMSCRIPTEN
   EM_ASM({postMessage({event : "combatLogVector", data : {name : UTF8ToString($0), manaGain : $1, damage : $2}})}, name,
          mana_gain, damage);
@@ -175,6 +175,7 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("ferociousInspiration", &Auras::ferocious_inspiration)
       .property("innervate", &Auras::innervate)
       .property("manaTideTotem", &Auras::mana_tide_totem)
+      .property("airmansRibbonOfGallantry", &Auras::airmans_ribbon_of_gallantry)
       .property("curseOfTheElements", &Auras::curse_of_the_elements)
       .property("shadowWeaving", &Auras::shadow_weaving)
       .property("improvedScorch", &Auras::improved_scorch)
@@ -311,6 +312,8 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("enemyFireResist", &PlayerSettings::enemy_fire_resist)
       .property("mageAtieshAmount", &PlayerSettings::mage_atiesh_amount)
       .property("totemOfWrathAmount", &PlayerSettings::totem_of_wrath_amount)
+      .property("chippedPowerCoreAmount", &PlayerSettings::chipped_power_core_amount)
+      .property("crackedPowerCoreAmount", &PlayerSettings::cracked_power_core_amount)
       .property("sacrificingPet", &PlayerSettings::sacrificing_pet)
       .property("selectedPet", &PlayerSettings::selected_pet)
       .property("ferociousInspirationAmount", &PlayerSettings::ferocious_inspiration_amount)

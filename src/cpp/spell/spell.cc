@@ -21,8 +21,9 @@ Spell::Spell(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageO
       is_proc(false),
       is_finisher(false),
       cast_time(0),
-      usable_once_per_fight(false),
-      has_not_been_cast_this_fight(true),
+      limited_amount_of_casts(false),
+      amount_of_casts_this_fight(0),
+      amount_of_casts_per_fight(0),
       gain_mana_on_cast(false),
       procs_on_hit(false),
       on_hit_procs_enabled(true),
@@ -35,23 +36,24 @@ Spell::Spell(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageO
       on_resist_procs_enabled(true) {}
 
 void Spell::Reset() {
-  cooldown_remaining = 0;
   casting = false;
-  has_not_been_cast_this_fight = true;
+  cooldown_remaining = 0;
+  amount_of_casts_this_fight = 0;
 }
 
 void Spell::Setup() {
   if (min_dmg > 0 && max_dmg > 0) {
     dmg = (min_dmg + max_dmg) / 2.0;
   }
+
   if (min_mana_gain > 0 && max_mana_gain > 0) {
     mana_gain = (min_mana_gain + max_mana_gain) / 2.0;
   }
+
   if (player.recording_combat_log_breakdown && player.combat_log_breakdown.count(name) == 0) {
     player.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
   }
 
-  // Cataclysm talent
   if (type == SpellType::kDestruction) {
     mana_cost *= 1 - 0.01 * player.talents.cataclysm;
   }
@@ -59,15 +61,13 @@ void Spell::Setup() {
   player.spell_list.push_back(this);
 }
 
-double Spell::GetCastTime() {
-  return round((cast_time / player.GetHastePercent()) * 10000) / 10000 + player.kSpellDelay;
-}
+double Spell::GetCastTime() { return cast_time / player.GetHastePercent(); }
 
 bool Spell::CanCast() {
   return cooldown_remaining <= 0 &&
          (is_non_warlock_ability ||
           ((!on_gcd || player.gcd_remaining <= 0) && (is_proc || player.cast_time_remaining <= 0))) &&
-         (!usable_once_per_fight || has_not_been_cast_this_fight);
+         (!limited_amount_of_casts || amount_of_casts_this_fight < amount_of_casts_per_fight);
 }
 
 bool Spell::HasEnoughMana() { return GetManaCost() <= player.stats.mana; }
@@ -81,6 +81,7 @@ void Spell::StartCast(double predicted_damage) {
       player.ThrowError("Attempting to Cast " + name + " while player's GCD is at " +
                         std::to_string(player.gcd_remaining) + " seconds remaining");
     }
+
     player.gcd_remaining = player.GetGcdValue(name);
   }
 
@@ -100,21 +101,25 @@ void Spell::StartCast(double predicted_damage) {
   if (cast_time > 0) {
     casting = true;
     player.cast_time_remaining = GetCastTime();
+
     if (!is_proc && player.ShouldWriteToCombatLog()) {
       combat_log_message.append("Started casting " + name +
-                                " - Cast time: " + DoubleToString(player.cast_time_remaining - player.kSpellDelay, 4) +
-                                " (" + DoubleToString((player.GetHastePercent() - 1) * 100, 4) +
+                                " - Cast time: " + DoubleToString(player.cast_time_remaining, 4) + " (" +
+                                DoubleToString((player.GetHastePercent() - 1) * 100, 4) +
                                 "% haste at a base Cast speed of " + DoubleToString(cast_time, 2) + ")");
     }
   } else {
     if (!is_proc && player.ShouldWriteToCombatLog()) {
       combat_log_message.append("Cast " + name);
     }
+
     Cast();
   }
+
   if (on_gcd && !is_non_warlock_ability && player.ShouldWriteToCombatLog()) {
     combat_log_message.append(" - Global cooldown: " + DoubleToString(player.gcd_remaining, 4));
   }
+
   if (predicted_damage > 0 && player.ShouldWriteToCombatLog()) {
     combat_log_message.append(" - Estimated Damage / Cast time: " + DoubleToString(round(predicted_damage)));
   }
@@ -124,13 +129,14 @@ void Spell::StartCast(double predicted_damage) {
   }
 }
 
-int Spell::GetManaCost() { return mana_cost * player.stats.mana_cost_modifier; }
+double Spell::GetManaCost() { return mana_cost * player.stats.mana_cost_modifier; }
 
 void Spell::Tick(double t) {
   if (cooldown_remaining > 0 && cooldown_remaining - t <= 0) {
     if (name == SpellName::kPowerInfusion) {
       player.power_infusions_ready++;
     }
+
     if (player.ShouldWriteToCombatLog()) {
       player.CombatLog(name + " is off cooldown");
     }
@@ -143,11 +149,11 @@ void Spell::Tick(double t) {
 }
 
 void Spell::Cast() {
-  const int kCurrentMana = player.stats.mana;
+  const double kCurrentMana = player.stats.mana;
   bool is_crit = false;
   cooldown_remaining = cooldown;
   casting = false;
-  has_not_been_cast_this_fight = false;
+  amount_of_casts_this_fight++;
 
   for (auto& spell_name : shared_cooldown_spells) {
     for (auto& player_spell : player.spell_list) {
@@ -178,18 +184,21 @@ void Spell::Cast() {
 
   if (gain_mana_on_cast) {
     player.stats.mana = std::min(static_cast<double>(player.stats.max_mana), kCurrentMana + mana_gain);
-    const int kManaGained = player.stats.mana - kCurrentMana;
+    const double kManaGained = player.stats.mana - kCurrentMana;
+
     if (player.recording_combat_log_breakdown) {
-      player.AddIterationDamageAndMana(name, kManaGained, 0);
+      player.combat_log_breakdown.at(name)->iteration_mana_gain += kManaGained;
     }
+
     if (player.ShouldWriteToCombatLog()) {
-      player.CombatLog("Player gains " + DoubleToString(round(kManaGained)) + " mana from " + name + " (" +
-                       DoubleToString(round(kCurrentMana)) + " -> " + DoubleToString(round(player.stats.mana)) + ")");
+      player.CombatLog("Player gains " + DoubleToString(kManaGained) + " mana from " + name + " (" +
+                       DoubleToString(kCurrentMana) + " -> " + DoubleToString(player.stats.mana) + ")");
     }
   }
 
   if (can_crit) {
     is_crit = player.IsCrit(type, bonus_crit_chance);
+
     if (is_crit && player.recording_combat_log_breakdown) {
       // Increment the crit counter whether the spell hits or not so that the
       // crit % on the Damage breakdown is correct. Otherwise the crit % will be
@@ -202,6 +211,7 @@ void Spell::Cast() {
     if (player.ShouldWriteToCombatLog()) {
       player.CombatLog(name + " *resist*");
     }
+
     if (player.recording_combat_log_breakdown) {
       player.combat_log_breakdown.at(name)->misses++;
     }
@@ -213,9 +223,11 @@ void Spell::Cast() {
   if (aura_effect != NULL) {
     aura_effect->Apply();
   }
+
   if (dot_effect != NULL) {
     dot_effect->Apply();
   }
+
   if (does_damage) {
     Damage(is_crit);
   }
@@ -227,10 +239,10 @@ void Spell::Cast() {
 
 double Spell::GetModifier() {
   double damage_modifier = modifier;
+
   if (school == SpellSchool::kShadow) {
     damage_modifier *= player.stats.shadow_modifier;
 
-    // Improved Shadow Bolt
     if (!player.settings.using_custom_isb_uptime && player.auras.improved_shadow_bolt != NULL &&
         player.auras.improved_shadow_bolt->active) {
       damage_modifier *= player.auras.improved_shadow_bolt->modifier;
@@ -264,8 +276,9 @@ void Spell::Damage(bool isCrit) {
   player.iteration_damage += total_damage;
 
   if (player.recording_combat_log_breakdown) {
-    player.AddIterationDamageAndMana(name, 0, total_damage);
+    player.combat_log_breakdown.at(name)->iteration_damage += total_damage;
   }
+
   if (player.ShouldWriteToCombatLog()) {
     std::string msg = name + " ";
     if (isCrit) {
@@ -275,8 +288,9 @@ void Spell::Damage(bool isCrit) {
     if (isCrit) {
       msg += "*";
     }
-    msg += " (" + DoubleToString(dmg, 1) + " Base Damage - " + DoubleToString(round(coefficient * 1000) / 1000, 3) +
-           " Coefficient - " + DoubleToString(round(kSpellPower)) + " Spell Power - ";
+    msg += " (" + DoubleToString(kBaseDamage, 1) + " Base Damage - " +
+           DoubleToString(round(coefficient * 1000) / 1000, 3) + " Coefficient - " +
+           DoubleToString(round(kSpellPower)) + " Spell Power - ";
     if (isCrit) {
       msg += DoubleToString(crit_multiplier * 100, 3) + "% Crit Multiplier - ";
     }
@@ -297,11 +311,9 @@ void Spell::Damage(bool isCrit) {
 
 // Returns the non-RNG Damage of the spell (basically just the base Damage +
 // spell power + Damage modifiers, no crit/miss etc.)
-// TODO investigate this no_rng variable
-std::vector<double> Spell::GetConstantDamage(bool no_rng) {
-  double total_damage = player.settings.randomize_values && min_dmg > 0 && max_dmg > 0 && !no_rng
-                            ? player.rng.range(min_dmg, max_dmg)
-                            : dmg;
+std::vector<double> Spell::GetConstantDamage() {
+  double total_damage =
+      player.settings.randomize_values && min_dmg > 0 && max_dmg > 0 ? player.rng.range(min_dmg, max_dmg) : dmg;
   const double kBaseDamage = total_damage;
   const double kSpellPower = player.GetSpellPower(true, school);
   const double kDamageModifier = GetModifier();
@@ -309,10 +321,12 @@ std::vector<double> Spell::GetConstantDamage(bool no_rng) {
 
   // If casting Incinerate and Immolate is up, add the bonus Damage
   if (name == SpellName::kIncinerate && player.auras.immolate != NULL && player.auras.immolate->active) {
-    total_damage += player.settings.randomize_values && no_rng
-                        ? player.rng.range(bonus_damage_from_immolate_min, bonus_damage_from_immolate_max)
-                        : bonus_damage_from_immolate_average;
+    total_damage +=
+        (player.settings.randomize_values && bonus_damage_from_immolate_min > 0 && bonus_damage_from_immolate_max > 0
+             ? player.rng.range(bonus_damage_from_immolate_min, bonus_damage_from_immolate_max)
+             : bonus_damage_from_immolate);
   }
+
   // Add Damage from Spell Power
   total_damage += kSpellPower * coefficient;
   // Modifier & Partial Resist
@@ -329,6 +343,7 @@ double Spell::GetCritMultiplier(double player_crit_multiplier) {
   if (player.settings.meta_gem_id == 34220) {
     crit_multiplier *= 1.03;
   }
+
   // Ruin
   if (type == SpellType::kDestruction && player.talents.ruin == 1) {
     // Ruin doubles the *bonus* of your crits, not the Damage of the crit itself
@@ -338,6 +353,7 @@ double Spell::GetCritMultiplier(double player_crit_multiplier) {
     crit_multiplier *= 2;
     crit_multiplier += 1;
   }
+
   return crit_multiplier;
 }
 
@@ -446,14 +462,14 @@ double ShadowBolt::CalculateCastTime() { return 3 - (0.1 * player.talents.bane);
 
 Incinerate::Incinerate(Player& player) : Spell(player) {
   name = SpellName::kIncinerate;
-  cast_time = round((2.5 * (1 - 0.02 * player.talents.emberstorm)) * 100) / 100;
+  cast_time = 2.5 * (1 - 0.02 * player.talents.emberstorm);
   mana_cost = 355;
   coefficient = (2.5 / 3.5) + (0.04 * player.talents.shadow_and_flame);
   min_dmg = 444;
   max_dmg = 514;
   bonus_damage_from_immolate_min = 111;
   bonus_damage_from_immolate_max = 128;
-  bonus_damage_from_immolate_average = (bonus_damage_from_immolate_min + bonus_damage_from_immolate_max) / 2;
+  bonus_damage_from_immolate = (bonus_damage_from_immolate_min + bonus_damage_from_immolate_max) / 2.0;
   does_damage = true;
   can_crit = true;
   school = SpellSchool::kFire;
@@ -559,13 +575,13 @@ SeedOfCorruption::SeedOfCorruption(Player& player) : Spell(player) {
 };
 
 void SeedOfCorruption::Damage(bool isCrit) {
-  const int kBaseDamage =
-      player.settings.randomize_values && min_dmg && max_dmg ? player.rng.range(min_dmg, max_dmg) : dmg;
+  const double kBaseDamage =
+      player.settings.randomize_values && min_dmg > 0 && max_dmg > 0 ? player.rng.range(min_dmg, max_dmg) : dmg;
   const int kEnemyAmount = player.settings.enemy_amount - 1;  // Minus one because the enemy that Seed is being Cast
                                                               // on doesn't get hit
   int resist_amount = 0;
   int crit_amount = 0;
-  const int kSpellPower = player.GetSpellPower(true, school);
+  const double kSpellPower = player.GetSpellPower(true, school);
   double crit_damage_multiplier = 0;
   double internal_modifier = GetModifier();
   double external_modifier = 1;
@@ -654,9 +670,10 @@ void SeedOfCorruption::Damage(bool isCrit) {
   if (player.ShouldWriteToCombatLog()) {
     std::string msg = name + " " + DoubleToString(round(total_seed_damage)) + " (" + std::to_string(kEnemyAmount) +
                       " Enemies (" + std::to_string(resist_amount) + " Resists & " + std::to_string(crit_amount) +
-                      " Crits) - " + std::to_string(kBaseDamage) + " Base Damage - " + DoubleToString(coefficient, 3) +
-                      " Coefficient - " + std::to_string(kSpellPower) + " Spell Power - " +
-                      DoubleToString(round(internal_modifier * external_modifier * 1000) / 10, 1) + "% Modifier - ";
+                      " Crits) - " + DoubleToString(kBaseDamage, 1) + " Base Damage - " +
+                      DoubleToString(coefficient, 3) + " Coefficient - " + DoubleToString(kSpellPower) +
+                      " Spell Power - " + DoubleToString(round(internal_modifier * external_modifier * 1000) / 10, 1) +
+                      "% Modifier - ";
     if (crit_amount > 0) {
       msg += DoubleToString(crit_damage_multiplier, 3) + "% Crit Multiplier";
     }
@@ -664,7 +681,7 @@ void SeedOfCorruption::Damage(bool isCrit) {
     player.CombatLog(msg);
   }
   if (player.recording_combat_log_breakdown) {
-    player.AddIterationDamageAndMana(name, 0, total_seed_damage);
+    player.combat_log_breakdown.at(name)->iteration_damage += total_seed_damage;
     player.combat_log_breakdown.at(name)->crits += crit_amount;
     player.combat_log_breakdown.at(name)->misses += resist_amount;
     // the Cast() function already adds 1 to the amount of casts so we only need
@@ -688,7 +705,7 @@ Corruption::Corruption(Player& player, std::shared_ptr<Aura> aura, std::shared_p
     : Spell(player, aura, dot) {
   name = SpellName::kCorruption;
   mana_cost = 370;
-  cast_time = round((2 - (0.4 * player.talents.improved_corruption)) * 100) / 100.0;
+  cast_time = 2 - (0.4 * player.talents.improved_corruption);
   school = SpellSchool::kShadow;
   type = SpellType::kAffliction;
   can_miss = true;
@@ -889,9 +906,9 @@ Innervate::Innervate(Player& player, std::shared_ptr<Aura> aura) : Spell(player,
 ChippedPowerCore::ChippedPowerCore(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
   name = SpellName::kChippedPowerCore;
   cooldown = 120;
-  usable_once_per_fight = true;  // The item is unique so you can only carry one at a time, so I'm
-                                 // just gonna limit it to 1 use per fight.
   on_gcd = false;
+  limited_amount_of_casts = true;
+  amount_of_casts_per_fight = player.settings.chipped_power_core_amount;
   shared_cooldown_spells.insert(shared_cooldown_spells.end(),
                                 {SpellName::kDemonicRune, SpellName::kFlameCap, SpellName::kCrackedPowerCore});
   Setup();
@@ -900,8 +917,9 @@ ChippedPowerCore::ChippedPowerCore(Player& player, std::shared_ptr<Aura> aura) :
 CrackedPowerCore::CrackedPowerCore(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
   name = SpellName::kCrackedPowerCore;
   cooldown = 120;
-  usable_once_per_fight = true;
   on_gcd = false;
+  limited_amount_of_casts = true;
+  amount_of_casts_per_fight = player.settings.cracked_power_core_amount;
   shared_cooldown_spells.insert(shared_cooldown_spells.end(),
                                 {SpellName::kDemonicRune, SpellName::kFlameCap, SpellName::kChippedPowerCore});
   Setup();

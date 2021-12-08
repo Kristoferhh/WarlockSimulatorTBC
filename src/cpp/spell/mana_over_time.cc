@@ -1,5 +1,6 @@
 #include "mana_over_time.h"
 
+#include "../common.h"
 #include "../player/player.h"
 
 ManaOverTime::ManaOverTime(Player& player) : Aura(player) { tick_timer_total = 3; }
@@ -19,16 +20,19 @@ void ManaOverTime::Tick(double t) {
   tick_timer_remaining -= t;
 
   if (tick_timer_remaining <= 0) {
-    const int kCurrentMana = player.stats.mana;
+    const double kCurrentMana = player.stats.mana;
+
     player.stats.mana = std::min(player.stats.max_mana, player.stats.mana + GetManaGain());
-    const int kManaGained = player.stats.mana - kCurrentMana;
+    const double kManaGained = player.stats.mana - kCurrentMana;
+
     if (player.ShouldWriteToCombatLog()) {
-      player.CombatLog("Player gains " + std::to_string(kManaGained) + " mana from " + name + " (" +
-                       std::to_string(kCurrentMana) + " -> " + std::to_string(player.stats.mana) + ")" + ")");
+      player.CombatLog("Player gains " + DoubleToString(kManaGained) + " mana from " + name + " (" +
+                       DoubleToString(kCurrentMana) + " -> " + DoubleToString(player.stats.mana) + ")" + ")");
     }
+
     if (player.recording_combat_log_breakdown) {
       player.combat_log_breakdown.at(name)->casts++;
-      player.AddIterationDamageAndMana(name, kManaGained, 0);
+      player.combat_log_breakdown.at(name)->iteration_mana_gain += kManaGained;
     }
     // todo pet
 
@@ -48,7 +52,7 @@ DrumsOfRestorationAura::DrumsOfRestorationAura(Player& player) : ManaOverTime(pl
   Setup();
 }
 
-int DrumsOfRestorationAura::GetManaGain() { return 600 / ticks_total; }
+double DrumsOfRestorationAura::GetManaGain() { return 600 / ticks_total; }
 
 ManaTideTotemAura::ManaTideTotemAura(Player& player) : ManaOverTime(player) {
   name = SpellName::kManaTideTotem;
@@ -57,4 +61,4 @@ ManaTideTotemAura::ManaTideTotemAura(Player& player) : ManaOverTime(player) {
   Setup();
 }
 
-int ManaTideTotemAura::GetManaGain() { return player.stats.max_mana * 0.06; }
+double ManaTideTotemAura::GetManaGain() { return player.stats.max_mana * 0.06; }

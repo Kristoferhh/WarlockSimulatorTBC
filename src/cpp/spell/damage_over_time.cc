@@ -50,7 +50,7 @@ void DamageOverTime::Apply() {
     player.combat_log_breakdown.at(name)->count++;
   }
   if (player.ShouldWriteToCombatLog()) {
-    player.CombatLog(name + " " + (kIsAlreadyActive ? "refreshed" : "applied") + " (" + std::to_string(spell_power) +
+    player.CombatLog(name + " " + (kIsAlreadyActive ? "refreshed" : "applied") + " (" + DoubleToString(spell_power) +
                      " Spell Power)");
   }
   // Siphon Life snapshots the presence of ISB. So if ISB isn't up when it's
@@ -160,8 +160,9 @@ void DamageOverTime::Tick(double t) {
     tick_timer_remaining = tick_timer_total;
 
     if (player.recording_combat_log_breakdown) {
-      player.AddIterationDamageAndMana(name, 0, kDamage);
+      player.combat_log_breakdown.at(name)->iteration_damage += kDamage;
     }
+
     if (player.ShouldWriteToCombatLog()) {
       std::string msg = name + " Tick " + DoubleToString(round(kDamage)) + " (" + DoubleToString(kBaseDamage) +
                         " Base Damage - " + DoubleToString(kSpellPower) + " Spell Power - " +
@@ -169,9 +170,10 @@ void DamageOverTime::Tick(double t) {
                         DoubleToString(round(kModifier * 10000) / 100, 3) + "% Damage Modifier - " +
                         DoubleToString(round(kPartialResistMultiplier * 1000) / 10) + "% Partial Resist Multiplier";
       if (t5_bonus_modifier > 1) {
-        msg += " - " + std::to_string(round(t5_bonus_modifier * 10000) / 100) + "% Base Dmg Modifier (T5 4pc bonus)";
+        msg += " - " + DoubleToString(round(t5_bonus_modifier * 10000) / 100, 3) + "% Base Dmg Modifier (T5 4pc bonus)";
       }
       msg += ")";
+
       player.CombatLog(msg);
     }
 
@@ -194,7 +196,6 @@ CorruptionDot::CorruptionDot(Player& player) : DamageOverTime(player) {
   dmg = 900;
   school = SpellSchool::kShadow;
   coefficient = 0.936 + (0.12 * player.talents.empowered_corruption);
-  minimum_duration = 9;
   t5_bonus_modifier = 1;
   Setup();
 
@@ -225,7 +226,6 @@ UnstableAfflictionDot::UnstableAfflictionDot(Player& player) : DamageOverTime(pl
   dmg = 1050;
   school = SpellSchool::kShadow;
   coefficient = 1.2;
-  minimum_duration = 9;
   Setup();
 }
 
@@ -236,7 +236,6 @@ SiphonLifeDot::SiphonLifeDot(Player& player) : DamageOverTime(player) {
   dmg = 630;
   school = SpellSchool::kShadow;
   coefficient = 1;
-  minimum_duration = 30;
   Setup();
 }
 
@@ -247,7 +246,6 @@ ImmolateDot::ImmolateDot(Player& player) : DamageOverTime(player) {
   dmg = 615;
   school = SpellSchool::kFire;
   coefficient = 0.65;
-  minimum_duration = 12;
   t5_bonus_modifier = 1;
   Setup();
 }
@@ -264,7 +262,6 @@ CurseOfAgonyDot::CurseOfAgonyDot(Player& player) : DamageOverTime(player) {
   dmg = 1356;
   school = SpellSchool::kShadow;
   coefficient = 1.2;
-  minimum_duration = 15;
   Setup();
 }
 
@@ -283,7 +280,6 @@ CurseOfDoomDot::CurseOfDoomDot(Player& player) : DamageOverTime(player) {
   dmg = 4200;
   school = SpellSchool::kShadow;
   coefficient = 2;
-  minimum_duration = 60;
   Setup();
 }
 

@@ -219,15 +219,26 @@ export default function StatsDisplay() {
   function getEnemyArmor(): number {
     let armor = parseInt(playerState.settings.enemyArmor);
 
-    if (playerState.auras.faerieFire) armor -= 610;
+    if (playerState.auras.faerieFire) {
+      armor -= 610;
+    }
+
     if ((playerState.auras.sunderArmor &&
       playerState.auras.exposeArmor && playerState.settings.improvedExposeArmor === '2') ||
       (playerState.auras.exposeArmor && !playerState.auras.sunderArmor)) {
       armor -= 2050 * (1 + 0.25 * parseInt(playerState.settings.improvedExposeArmor));
     }
-    else if (playerState.auras.sunderArmor) armor -= 520 * 5;
-    if (playerState.auras.curseOfRecklessness) armor -= 800;
-    if (playerState.auras.annihilator) armor -= 600;
+    else if (playerState.auras.sunderArmor) {
+      armor -= 520 * 5;
+    }
+
+    if (playerState.auras.curseOfRecklessness) {
+      armor -= 800;
+    }
+
+    if (playerState.auras.annihilator) {
+      armor -= 600;
+    }
 
     return Math.max(0, armor);
   }
