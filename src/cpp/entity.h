@@ -4,7 +4,12 @@
 struct Player;
 struct Pet;
 
+#include "character_stats.h"
+#include "enums.h"
+
 struct Entity {
+  const int kFloatNumberMultiplier = 1000;  // Multiply doubles such as hit and crit chance with this since we need an
+                                            // integer when calling player.rng.range()
   const int kLevel = 70;
   const double kGcdValue = 1.5;
   const double kMinimumGcdValue = 1;

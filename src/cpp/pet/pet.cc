@@ -11,33 +11,31 @@ Pet::Pet(Player* player)
       base_stats(CharacterStats()),
       buff_stats(CharacterStats()),
       debuff_stats(CharacterStats()),
-      glancing_blow_multiplier(1 - (0.1 + (player->settings.enemy_level * 5 - player->kLevel * 5) / 100.0)),
-      glancing_blow_chance(std::max(0.0, 6 + (player->settings.enemy_level * 5 - player->kLevel * 5) * 1.2)) {
-  pet = shared_from_this();
-}
+      glancing_blow_multiplier(1 - (0.1 + (player->settings.enemy_level * 5 - kLevel * 5) / 100.0)),
+      glancing_blow_chance(std::max(0.0, 6 + (player->settings.enemy_level * 5 - kLevel * 5) * 1.2)) {}
 
 void Pet::Initialize() {
   Setup();
 
   if (pet_name == PetName::kImp) {
-    spells.firebolt = std::make_unique<ImpFirebolt>(shared_from_this());
+    spells.firebolt = std::make_unique<ImpFirebolt>(*this);
   } else {
-    spells.melee = std::make_unique<Melee>(shared_from_this());
+    spells.melee = std::make_unique<Melee>(*this);
 
     if (pet_name == PetName::kSuccubus) {
-      spells.lash_of_pain = std::make_unique<SuccubusLashOfPain>(shared_from_this());
+      spells.lash_of_pain = std::make_unique<SuccubusLashOfPain>(*this);
     } else if (pet_name == PetName::kFelguard) {
-      spells.cleave = std::make_unique<FelguardCleave>(shared_from_this());
-      auras.demonic_frenzy = std::make_unique<DemonicFrenzy>(shared_from_this());
+      spells.cleave = std::make_unique<FelguardCleave>(*this);
+      auras.demonic_frenzy = std::make_unique<DemonicFrenzy>(*this);
     }
 
     if (player->selected_auras.pet_battle_squawk) {
-      auras.battle_squawk = std::make_unique<BattleSquawk>(shared_from_this());
+      auras.battle_squawk = std::make_unique<BattleSquawk>(*this);
     }
   }
 
   if (player->settings.prepop_black_book) {
-    auras.black_book = std::make_unique<BlackBook>(shared_from_this());
+    auras.black_book = std::make_unique<BlackBook>(*this);
   }
 }
 

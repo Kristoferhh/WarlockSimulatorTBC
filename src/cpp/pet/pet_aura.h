@@ -9,7 +9,7 @@ struct Player;
 #include "../stat.h"
 
 struct PetAura {
-  std::shared_ptr<Pet> pet;
+  Pet& pet;
   std::string name;
   std::vector<Stat> stats;
   int duration;
@@ -19,7 +19,7 @@ struct PetAura {
   int max_stacks;
   int stacks;
 
-  PetAura(std::shared_ptr<Pet> pet);
+  PetAura(Pet& pet);
   void Tick(double time);
   void Apply();
   void Fade();
@@ -27,15 +27,15 @@ struct PetAura {
 };
 
 struct DemonicFrenzy : public PetAura {
-  DemonicFrenzy(std::shared_ptr<Pet> pet);
+  DemonicFrenzy(Pet& pet);
 };
 
 struct BlackBook : public PetAura {
-  BlackBook(std::shared_ptr<Pet> pet);
+  BlackBook(Pet& pet);
 };
 
 struct BattleSquawk : public PetAura {
-  BattleSquawk(std::shared_ptr<Pet> pet);
+  BattleSquawk(Pet& pet);
 };
 
 #endif

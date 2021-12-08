@@ -7,7 +7,7 @@ struct Pet;
 #include "../enums.h"
 
 struct PetSpell {
-  std::shared_ptr<Pet> pet;
+  Pet& pet;
   SpellSchool school;
   AttackType type;
   std::string name;
@@ -21,7 +21,7 @@ struct PetSpell {
   double modifier;
   int cooldown;
 
-  PetSpell(std::shared_ptr<Pet> pet);
+  PetSpell(Pet& pet);
   bool Ready();
   void Setup();
   void Reset();
@@ -35,21 +35,21 @@ struct PetSpell {
 };
 
 struct Melee : public PetSpell {
-  Melee(std::shared_ptr<Pet> pet);
+  Melee(Pet& pet);
   double GetBaseDamage();
   double GetCooldown();
 };
 
 struct ImpFirebolt : public PetSpell {
-  ImpFirebolt(std::shared_ptr<Pet> pet);
+  ImpFirebolt(Pet& pet);
 };
 
 struct SuccubusLashOfPain : public PetSpell {
-  SuccubusLashOfPain(std::shared_ptr<Pet> pet);
+  SuccubusLashOfPain(Pet& pet);
 };
 
 struct FelguardCleave : public PetSpell {
-  FelguardCleave(std::shared_ptr<Pet> pet);
+  FelguardCleave(Pet& pet);
   double GetBaseDamage();
 };
 

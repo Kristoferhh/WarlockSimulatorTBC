@@ -28,9 +28,6 @@
 #include "player_spells.h"
 
 struct Player : public Entity {
-  const int kFloatNumberMultiplier = 1000;  // Multiply hit and crit percent by this number to get rid of the
-                                            // decimals when calling Random() since we need integers
-  std::shared_ptr<Pet> pet;
   Auras& selected_auras;
   Talents& talents;
   Sets& sets;

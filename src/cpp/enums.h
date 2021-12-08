@@ -1,6 +1,8 @@
 #ifndef WARLOCK_SIMULATOR_TBC_ENUMS
 #define WARLOCK_SIMULATOR_TBC_ENUMS
 
+#include <string>
+
 enum class SpellSchool { kNoSchool, kShadow, kFire };
 
 enum class SpellType { kNoSpellType, kAffliction, kDestruction };
