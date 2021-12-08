@@ -3,10 +3,13 @@
 
 #include "player/player.h"
 #include "simulation_settings.h"
+#include "spell/spell.h"
 
 struct Simulation {
   Player& player;
   const SimulationSettings& settings;
+  int iteration;
+  double fight_time;
 
   Simulation(Player& player, const SimulationSettings& sim_settings);
   void Start();

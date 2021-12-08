@@ -8,20 +8,15 @@ struct Player;
 #include "../character_stats.h"
 #include "../entity.h"
 #include "../enums.h"
+#include "../simulation.h"
 #include "pet_auras.h"
 #include "pet_spells.h"
 
 struct Pet : public Entity, std::enable_shared_from_this<Pet> {
   PetSpells spells;
   PetAuras auras;
-  CharacterStats base_stats;
-  CharacterStats buff_stats;  // Certain stats from buffs need to be separated from the main
-                              // stat so we can re-calculate the pet's stats in
-                              // calculateStatsFromPlayer().
-  CharacterStats debuff_stats;
   PetName pet_name;
   PetType pet_type;
-  double enemy_dodge_chance;
   double glancing_blow_multiplier;
   double glancing_blow_chance;
   double crit_suppression;
@@ -30,11 +25,10 @@ struct Pet : public Entity, std::enable_shared_from_this<Pet> {
   double base_melee_speed;
 
   Pet(Player* player);
-  void Initialize();
+  void Initialize(Simulation* simulation);
   void CalculateStatsFromAuras();
   void CalculateStatsFromPlayer(bool announce_in_combat_log = true);
   void Setup();
-  void Cast();
   void Reset();
   void EndAuras();
   void Tick(double t);
@@ -42,8 +36,6 @@ struct Pet : public Entity, std::enable_shared_from_this<Pet> {
   double GetMeleeCritChance();
   double GetHastePercent();
   double GetSpellCritChance();
-  double GetStamina();
-  double GetIntellect();
   double GetSpirit();
   double GetAgility();
   double GetStrength();

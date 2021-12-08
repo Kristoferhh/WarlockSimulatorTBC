@@ -11,17 +11,16 @@
 #include "../spell/spell.h"
 
 Player::Player(PlayerSettings& player_settings)
-    : Entity(this, EntityType::kPlayer),
+    : Entity(this, player_settings, EntityType::kPlayer),
       selected_auras(player_settings.auras),
       talents(player_settings.talents),
       sets(player_settings.sets),
-      stats(player_settings.stats),
       items(player_settings.items),
       settings(player_settings),
       spells(PlayerSpells()),
-      auras(PlayerAuras()),
-      recording_combat_log_breakdown(settings.recording_combat_log_breakdown && settings.equipped_item_simulation) {
+      auras(PlayerAuras()) {
   name = "Player";
+
   // I don't know if this formula only works for bosses or not, so for the
   // moment I'm only using it for targets 3+ levels above.
   const double enemy_base_resistance = settings.enemy_level >= (kLevel + 3) ? (6 * kLevel * 5) / 75.0 : 0;
@@ -29,7 +28,7 @@ Player::Player(PlayerSettings& player_settings)
   settings.enemy_fire_resist = std::max(static_cast<double>(settings.enemy_fire_resist), enemy_base_resistance);
 
   if (recording_combat_log_breakdown) {
-    combat_log_breakdown.insert({"Mp5", std::make_unique<CombatLogBreakdown>("Mp5")});
+    combat_log_breakdown.insert({StatName::kMp5, std::make_unique<CombatLogBreakdown>(StatName::kMp5)});
   }
 
   if (settings.custom_stat == EmbindConstant::kStamina)
@@ -193,8 +192,10 @@ Player::Player(PlayerSettings& player_settings)
                    (1 + (0.01 * static_cast<double>(talents.fel_intellect)));
 }
 
-void Player::Initialize() {
+void Player::Initialize(Simulation* simulationPtr) {
+  simulation = simulationPtr;
   demonic_knowledge_spell_power = 0;
+
   if (!settings.sacrificing_pet || talents.demonic_sacrifice == 0) {
     if (settings.selected_pet == EmbindConstant::kImp) {
       pet = std::make_shared<Imp>(this);
@@ -203,8 +204,9 @@ void Player::Initialize() {
     } else if (settings.selected_pet == EmbindConstant::kFelguard) {
       pet = std::make_shared<Felguard>(this);
     }
+
     if (pet != NULL) {
-      pet->Initialize();
+      pet->Initialize(simulationPtr);
     }
   }
 
@@ -493,6 +495,7 @@ void Player::Reset() {
   cast_time_remaining = 0;
   gcd_remaining = 0;
   mp5_timer = 5;
+  iteration_damage = 0;
   five_second_rule_timer_remaining = 5;
   stats.mana = stats.max_mana;
   power_infusions_ready = settings.power_infusion_amount;
@@ -599,10 +602,6 @@ int Player::GetRand() { return rng.range(0, 100 * kFloatNumberMultiplier); }
 
 bool Player::RollRng(double chance) { return GetRand() <= chance * kFloatNumberMultiplier; }
 
-double Player::GetStamina() { return stats.stamina * stats.stamina_modifier; }
-
-double Player::GetIntellect() { return stats.intellect * stats.intellect_modifier; }
-
 double Player::GetSpirit() { return stats.spirit * stats.spirit_modifier; }
 
 // formula from
@@ -689,20 +688,11 @@ double Player::GetPartialResistMultiplier(SpellSchool school) {
   return 1.0 - ((75 * kEnemyResist) / (kLevel * 5)) / 100.0;
 }
 
-void Player::PostIterationDamageAndMana(const std::string& spell_name) {
-  PostCombatLogBreakdownVector(spell_name.c_str(), combat_log_breakdown.at(spell_name)->iteration_mana_gain,
-                               combat_log_breakdown.at(spell_name)->iteration_damage);
-  combat_log_breakdown.at(spell_name)->iteration_damage = 0;
-  combat_log_breakdown.at(spell_name)->iteration_mana_gain = 0;
-}
-
 void Player::ThrowError(const std::string& error) {
   SendCombatLogEntries();
   ErrorCallback(error.c_str());
   throw std::runtime_error(error);
 }
-
-bool Player::ShouldWriteToCombatLog() { return iteration == 10 && settings.equipped_item_simulation; }
 
 void Player::SendCombatLogEntries() {
   for (const auto& value : combat_log_entries) {
@@ -711,7 +701,7 @@ void Player::SendCombatLogEntries() {
 }
 
 void Player::CombatLog(const std::string& entry) {
-  combat_log_entries.push_back("|" + DoubleToString(fight_time, 4) + "| " + entry);
+  combat_log_entries.push_back("|" + DoubleToString(simulation->fight_time, 4) + "| " + entry);
 }
 
 double Player::FindTimeUntilNextAction() {
@@ -787,8 +777,7 @@ double Player::FindTimeUntilNextAction() {
 }
 
 void Player::Tick(double time) {
-  fight_time += time;  // This needs to be the first modified value since the time in combat needs to be updated before
-                       // spells start dealing Damage/auras expiring etc. for the combat logging.
+  simulation->fight_time += time;
   cast_time_remaining -= time;
   gcd_remaining -= time;
   mp5_timer -= time;
@@ -855,8 +844,8 @@ void Player::Tick(double time) {
 
       const double kManaGained = stats.mana - kCurrentPlayerMana;
       if (recording_combat_log_breakdown) {
-        combat_log_breakdown.at("Mp5")->casts++;
-        combat_log_breakdown.at("Mp5")->iteration_mana_gain += kManaGained;
+        combat_log_breakdown.at(StatName::kMp5)->casts++;
+        combat_log_breakdown.at(StatName::kMp5)->iteration_mana_gain += kManaGained;
       }
 
       if (ShouldWriteToCombatLog()) {
@@ -926,7 +915,7 @@ void Player::SendPlayerInfoToCombatLog() {
   combat_log_entries.push_back("Shadow Resistance: " + std::to_string(settings.enemy_shadow_resist));
   combat_log_entries.push_back("Fire Resistance: " + std::to_string(settings.enemy_fire_resist));
   if (pet != NULL && pet->pet_name != PetName::kImp) {
-    combat_log_entries.push_back("Dodge Chance: " + DoubleToString(pet->enemy_dodge_chance) + "%");
+    combat_log_entries.push_back("Dodge Chance: " + DoubleToString(StatConstant::kBaseEnemyDodgeChance, 2) + "%");
     combat_log_entries.push_back("Armor: " + std::to_string(settings.enemy_armor));
     combat_log_entries.push_back(
         "Damage Reduction From Armor: " +

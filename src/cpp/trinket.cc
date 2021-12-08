@@ -28,7 +28,7 @@ void Trinket::Use() {
   }
 
   if (player.recording_combat_log_breakdown) {
-    player.combat_log_breakdown.at(name)->applied_at = player.fight_time;
+    player.combat_log_breakdown.at(name)->applied_at = player.simulation->fight_time;
     player.combat_log_breakdown.at(name)->count++;
   }
 
@@ -48,7 +48,7 @@ void Trinket::Fade() {
 
   if (player.recording_combat_log_breakdown) {
     player.combat_log_breakdown.at(name)->uptime +=
-        player.fight_time - player.combat_log_breakdown.at(name)->applied_at;
+        player.simulation->fight_time - player.combat_log_breakdown.at(name)->applied_at;
   }
 
   for (auto& stat : stats) {
@@ -73,7 +73,7 @@ RestrainedEssenceOfSapphiron::RestrainedEssenceOfSapphiron(Player& player) : Tri
   name = "The Restrained Essence of Sapphiron";
   cooldown = 120;
   duration = 20;
-  stats.push_back(SpellPower(&player, player.stats.spell_power, EntityType::kPlayer, 130));
+  stats.push_back(SpellPower(player, player.stats.spell_power, 130));
   Setup();
 }
 
@@ -81,7 +81,7 @@ ShiftingNaaruSliver::ShiftingNaaruSliver(Player& player) : Trinket(player) {
   name = "Shifting Naaru Sliver";
   cooldown = 90;
   duration = 15;
-  stats.push_back(SpellPower(&player, player.stats.spell_power, EntityType::kPlayer, 320));
+  stats.push_back(SpellPower(player, player.stats.spell_power, 320));
   Setup();
 }
 
@@ -89,7 +89,7 @@ SkullOfGuldan::SkullOfGuldan(Player& player) : Trinket(player) {
   name = "The Skull of Gul'dan";
   cooldown = 120;
   duration = 20;
-  stats.push_back(SpellHasteRating(&player, player.stats.spell_haste_rating, EntityType::kPlayer, 175));
+  stats.push_back(SpellHasteRating(player, 175));
   Setup();
 }
 
@@ -97,7 +97,7 @@ HexShrunkenHead::HexShrunkenHead(Player& player) : Trinket(player) {
   name = "Hex Shrunken Head";
   cooldown = 120;
   duration = 20;
-  stats.push_back(SpellPower(&player, player.stats.spell_power, EntityType::kPlayer, 211));
+  stats.push_back(SpellPower(player, player.stats.spell_power, 211));
   Setup();
 }
 
@@ -105,7 +105,7 @@ IconOfTheSilverCrescent::IconOfTheSilverCrescent(Player& player) : Trinket(playe
   name = "Icon of the Silver Crescent";
   cooldown = 120;
   duration = 20;
-  stats.push_back(SpellPower(&player, player.stats.spell_power, EntityType::kPlayer, 155));
+  stats.push_back(SpellPower(player, player.stats.spell_power, 155));
   Setup();
 }
 
@@ -113,7 +113,7 @@ ScryersBloodgem::ScryersBloodgem(Player& player) : Trinket(player) {
   name = "Scryer's Bloodgem";
   cooldown = 90;
   duration = 15;
-  stats.push_back(SpellPower(&player, player.stats.spell_power, EntityType::kPlayer, 150));
+  stats.push_back(SpellPower(player, player.stats.spell_power, 150));
   Setup();
 }
 
@@ -121,7 +121,7 @@ AncientCrystalTalisman::AncientCrystalTalisman(Player& player) : Trinket(player)
   name = "Ancient Crystal Talisman";
   cooldown = 120;
   duration = 20;
-  stats.push_back(SpellPower(&player, player.stats.spell_power, EntityType::kPlayer, 104));
+  stats.push_back(SpellPower(player, player.stats.spell_power, 104));
   Setup();
 }
 
@@ -129,7 +129,7 @@ ArcanistsStone::ArcanistsStone(Player& player) : Trinket(player) {
   name = "Arcanist's Stone";
   cooldown = 120;
   duration = 20;
-  stats.push_back(SpellPower(&player, player.stats.spell_power, EntityType::kPlayer, 167));
+  stats.push_back(SpellPower(player, player.stats.spell_power, 167));
   Setup();
 }
 
@@ -137,7 +137,7 @@ TerokkarTabletOfVim::TerokkarTabletOfVim(Player& player) : Trinket(player) {
   name = "Terokkar Table of Vim";
   cooldown = 90;
   duration = 15;
-  stats.push_back(SpellPower(&player, player.stats.spell_power, EntityType::kPlayer, 84));
+  stats.push_back(SpellPower(player, player.stats.spell_power, 84));
   Setup();
 }
 
@@ -145,7 +145,7 @@ XirisGift::XirisGift(Player& player) : Trinket(player) {
   name = "Xi'ri's Gift";
   cooldown = 90;
   duration = 15;
-  stats.push_back(SpellPower(&player, player.stats.spell_power, EntityType::kPlayer, 150));
+  stats.push_back(SpellPower(player, player.stats.spell_power, 150));
   Setup();
 }
 
@@ -153,7 +153,7 @@ VengeanceOfTheIllidari::VengeanceOfTheIllidari(Player& player) : Trinket(player)
   name = "Vengeance of the Illidari";
   cooldown = 90;
   duration = 15;
-  stats.push_back(SpellPower(&player, player.stats.spell_power, EntityType::kPlayer, 120));
+  stats.push_back(SpellPower(player, player.stats.spell_power, 120));
   Setup();
 }
 
@@ -161,7 +161,7 @@ FigurineLivingRubySerpent::FigurineLivingRubySerpent(Player& player) : Trinket(p
   name = "Figurine: Living Ruby Serpent";
   cooldown = 300;
   duration = 20;
-  stats.push_back(SpellPower(&player, player.stats.spell_power, EntityType::kPlayer, 150));
+  stats.push_back(SpellPower(player, player.stats.spell_power, 150));
   Setup();
 }
 
@@ -170,7 +170,7 @@ EssenceOfTheMartyr::EssenceOfTheMartyr(Player& player) : Trinket(player) {
   cooldown = 120;
   duration = 20;
   shares_cooldown = false;
-  stats.push_back(SpellPower(&player, player.stats.spell_power, EntityType::kPlayer, 99));
+  stats.push_back(SpellPower(player, player.stats.spell_power, 99));
   Setup();
 }
 
@@ -178,7 +178,7 @@ StarkillersBauble::StarkillersBauble(Player& player) : Trinket(player) {
   name = "Starkiller's Bauble";
   cooldown = 90;
   duration = 15;
-  stats.push_back(SpellPower(&player, player.stats.spell_power, EntityType::kPlayer, 125));
+  stats.push_back(SpellPower(player, player.stats.spell_power, 125));
   Setup();
 }
 
@@ -186,7 +186,7 @@ DarkIronSmokingPipe::DarkIronSmokingPipe(Player& player) : Trinket(player) {
   name = "Dark Iron Smoking Pipe";
   cooldown = 120;
   duration = 20;
-  stats.push_back(SpellPower(&player, player.stats.spell_power, EntityType::kPlayer, 155));
+  stats.push_back(SpellPower(player, player.stats.spell_power, 155));
   Setup();
 }
 
@@ -194,6 +194,6 @@ HazzarahsCharmOfDestruction::HazzarahsCharmOfDestruction(Player& player) : Trink
   name = "Hazza'rah's Charm of Destruction";
   cooldown = 180;
   duration = 20;
-  stats.push_back(SpellCritRating(&player, player.stats.spell_crit_rating, EntityType::kPlayer, 140));
+  stats.push_back(SpellCritRating(player, 140));
   Setup();
 }

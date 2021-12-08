@@ -15,8 +15,8 @@ PetSpell::PetSpell(Pet& pet)
       cooldown(0) {}
 
 void PetSpell::Setup() {
-  if (pet.player->recording_combat_log_breakdown && pet.player->combat_log_breakdown.count(name) == 0) {
-    pet.player->combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
+  if (pet.recording_combat_log_breakdown && pet.combat_log_breakdown.count(name) == 0) {
+    pet.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
   }
 
   pet.player->pet_spell_list.push_back(this);
@@ -33,7 +33,7 @@ double PetSpell::GetCastTime() { return cast_time / pet.GetHastePercent(); }
 double PetSpell::GetCooldown() { return cooldown; }
 
 void PetSpell::Tick(double t) {
-  if (pet.player->ShouldWriteToCombatLog() && cooldown_remaining > 0 && cooldown_remaining - t <= 0) {
+  if (pet.ShouldWriteToCombatLog() && cooldown_remaining > 0 && cooldown_remaining - t <= 0) {
     pet.player->CombatLog(pet.name + "'s " + name + " off cooldown");
   }
 
@@ -62,7 +62,7 @@ void PetSpell::StartCast() {
     casting = true;
     pet.cast_time_remaining = GetCastTime();
 
-    if (pet.player->ShouldWriteToCombatLog()) {
+    if (pet.ShouldWriteToCombatLog()) {
       pet.player->CombatLog(pet.name + " started casting " + name +
                             ". Cast time: " + DoubleToString(pet.cast_time_remaining, 4) + " (" +
                             DoubleToString(pet.GetHastePercent() * 100 - 100, 2) + "% haste at a base cast speed of " +
@@ -82,7 +82,7 @@ void PetSpell::Cast() {
   cooldown_remaining = GetCooldown();
 
   std::string combat_log_message = pet.name;
-  if (pet.player->ShouldWriteToCombatLog()) {
+  if (pet.ShouldWriteToCombatLog()) {
     if (cast_time > 0) {
       combat_log_message.append(" finished casting " + name);
     } else {
@@ -101,17 +101,17 @@ void PetSpell::Cast() {
     pet.stats.mana -= mana_cost;
     pet.five_second_rule_timer_remaining = 5;
 
-    if (pet.player->ShouldWriteToCombatLog()) {
+    if (pet.ShouldWriteToCombatLog()) {
       combat_log_message.append(" - Pet mana: " + DoubleToString(pet.stats.mana) + "/" +
                                 DoubleToString(pet.stats.max_mana, 0));
     }
   }
 
-  if (pet.player->recording_combat_log_breakdown) {
-    pet.player->combat_log_breakdown.at(name)->casts++;
+  if (pet.recording_combat_log_breakdown) {
+    pet.combat_log_breakdown.at(name)->casts++;
   }
 
-  if (pet.player->ShouldWriteToCombatLog()) {
+  if (pet.ShouldWriteToCombatLog()) {
     pet.player->CombatLog(combat_log_message);
   }
 
@@ -119,14 +119,14 @@ void PetSpell::Cast() {
   if (type == AttackType::kPhysical) {
     bool is_crit = false;
     bool is_glancing = false;
-    double crit_chance = pet.GetMeleeCritChance() * pet.player->kFloatNumberMultiplier;
-    double dodge_chance = crit_chance + pet.enemy_dodge_chance * pet.player->kFloatNumberMultiplier;
-    double miss_chance = dodge_chance + (100 - pet.stats.melee_hit_chance) * pet.player->kFloatNumberMultiplier;
+    double crit_chance = pet.GetMeleeCritChance() * pet.kFloatNumberMultiplier;
+    double dodge_chance = crit_chance + StatConstant::kBaseEnemyDodgeChance * pet.kFloatNumberMultiplier;
+    double miss_chance = dodge_chance + (100 - pet.stats.melee_hit_chance) * pet.kFloatNumberMultiplier;
     double glancing_chance = miss_chance;
 
     // Only check for a glancing if it's a normal melee attack
     if (name == SpellName::kMelee) {
-      glancing_chance += pet.glancing_blow_chance * pet.player->kFloatNumberMultiplier;
+      glancing_chance += pet.glancing_blow_chance * pet.kFloatNumberMultiplier;
     }
 
     // Check whether the roll is a crit, dodge, miss, glancing, or just a normal
@@ -137,17 +137,17 @@ void PetSpell::Cast() {
     if (attack_roll <= crit_chance) {
       is_crit = true;
 
-      if (pet.player->recording_combat_log_breakdown) {
-        pet.player->combat_log_breakdown.at(name)->crits++;
+      if (pet.recording_combat_log_breakdown) {
+        pet.combat_log_breakdown.at(name)->crits++;
       }
     }
     // Dodge
     else if (attack_roll <= dodge_chance) {
-      if (pet.player->recording_combat_log_breakdown) {
-        pet.player->combat_log_breakdown.at(name)->dodge++;
+      if (pet.recording_combat_log_breakdown) {
+        pet.combat_log_breakdown.at(name)->dodge++;
       }
 
-      if (pet.player->ShouldWriteToCombatLog()) {
+      if (pet.ShouldWriteToCombatLog()) {
         pet.player->CombatLog(pet.name + " " + name + " *dodge*");
       }
 
@@ -155,11 +155,11 @@ void PetSpell::Cast() {
     }
     // Miss
     else if (attack_roll <= miss_chance) {
-      if (pet.player->recording_combat_log_breakdown) {
-        pet.player->combat_log_breakdown.at(name)->misses++;
+      if (pet.recording_combat_log_breakdown) {
+        pet.combat_log_breakdown.at(name)->misses++;
       }
 
-      if (pet.player->ShouldWriteToCombatLog()) {
+      if (pet.ShouldWriteToCombatLog()) {
         pet.player->CombatLog(pet.name + " " + name + " *miss*");
       }
 
@@ -169,8 +169,8 @@ void PetSpell::Cast() {
     else if (attack_roll <= glancing_chance && name == SpellName::kMelee) {
       is_glancing = true;
 
-      if (pet.player->recording_combat_log_breakdown) {
-        pet.player->combat_log_breakdown.at(name)->glancing_blows++;
+      if (pet.recording_combat_log_breakdown) {
+        pet.combat_log_breakdown.at(name)->glancing_blows++;
       }
     }
 
@@ -180,11 +180,11 @@ void PetSpell::Cast() {
   else if (type == AttackType::kMagical) {
     // Check for resist
     if (!pet.IsHit(type)) {
-      if (pet.player->recording_combat_log_breakdown) {
-        pet.player->combat_log_breakdown.at(name)->misses++;
+      if (pet.recording_combat_log_breakdown) {
+        pet.combat_log_breakdown.at(name)->misses++;
       }
 
-      if (pet.player->ShouldWriteToCombatLog()) {
+      if (pet.ShouldWriteToCombatLog()) {
         pet.player->CombatLog(pet.name + " " + name + " *resist*");
       }
     } else {
@@ -194,8 +194,8 @@ void PetSpell::Cast() {
       if (can_crit && pet.IsCrit(type)) {
         is_crit = true;
 
-        if (pet.player->recording_combat_log_breakdown) {
-          pet.player->combat_log_breakdown.at(name)->crits++;
+        if (pet.recording_combat_log_breakdown) {
+          pet.combat_log_breakdown.at(name)->crits++;
         }
       }
 
@@ -287,12 +287,12 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
     pet.auras.demonic_frenzy->Apply();
   }
 
-  if (pet.player->recording_combat_log_breakdown) {
-    pet.player->combat_log_breakdown.at(name)->iteration_damage += dmg;
+  if (pet.recording_combat_log_breakdown) {
+    pet.combat_log_breakdown.at(name)->iteration_damage += dmg;
   }
 
   std::string combat_log_message = pet.name + " " + name + " ";
-  if (pet.player->ShouldWriteToCombatLog()) {
+  if (pet.ShouldWriteToCombatLog()) {
     if (is_crit) combat_log_message.append("*");
     combat_log_message.append(DoubleToString(round(dmg)));
     if (is_crit) combat_log_message.append("*");

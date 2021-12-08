@@ -12,6 +12,8 @@
 #include "../entity.h"
 #include "../items.h"
 #include "../pet/pet.h"
+#include "../pet/pet_aura.h"
+#include "../pet/pet_spell.h"
 #include "../rng.h"
 #include "../sets.h"
 #include "../spell/damage_over_time.h"
@@ -33,7 +35,6 @@ struct Player : public Entity {
   Sets& sets;
   Items& items;
   PlayerSettings& settings;
-  CharacterStats stats;
   PlayerSpells spells;
   PlayerAuras auras;
   std::vector<Trinket> trinkets;
@@ -41,7 +42,6 @@ struct Player : public Entity {
   std::shared_ptr<Spell> curse_spell;
   std::shared_ptr<Aura> curse_aura;
   std::vector<std::string> combat_log_entries;
-  std::map<std::string, std::unique_ptr<CombatLogBreakdown>> combat_log_breakdown;
   std::string custom_stat;
   std::vector<Spell*> spell_list;
   std::vector<Aura*> aura_list;
@@ -55,22 +55,18 @@ struct Player : public Entity {
   std::vector<OnResistProc*> on_resist_procs;
   Rng rng;
   double total_duration;
-  double fight_time;
   double mp5_timer;
   double demonic_knowledge_spell_power;
   double iteration_damage;
-  int iteration;
   int power_infusions_ready;
-  bool recording_combat_log_breakdown;
 
   Player(PlayerSettings& settings);
-  void Initialize();
+  void Initialize(Simulation* simulation);
   void Reset();
   void EndAuras();
   void ThrowError(const std::string& error);
   void CastLifeTapOrDarkPact();
   void UseCooldowns(double fight_time_remaining);
-  void PostIterationDamageAndMana(const std::string& spell_name);
   void SendCombatLogEntries();
   void CombatLog(const std::string& entry);
   void SendPlayerInfoToCombatLog();
@@ -81,8 +77,6 @@ struct Player : public Entity {
   double GetHitChance(SpellType spell_type);
   double GetPartialResistMultiplier(SpellSchool school);
   double GetBaseHitChance(int player_level, int enemy_level);
-  double GetStamina();
-  double GetIntellect();
   double GetSpirit();
   int GetRand();
   double GetCustomImprovedShadowBoltDamageModifier();
@@ -90,7 +84,6 @@ struct Player : public Entity {
   double FindTimeUntilNextAction();
   bool IsCrit(SpellType spell_type, double extra_crit = 0);
   bool IsHit(SpellType spell_type);
-  bool ShouldWriteToCombatLog();
   bool RollRng(double chance);
 };
 

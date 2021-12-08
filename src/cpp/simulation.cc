@@ -18,18 +18,17 @@ Simulation::Simulation(Player& player, const SimulationSettings& simulation_sett
 void Simulation::Start() {
   std::vector<double> dps_vector;
   player.total_duration = 0;
-  player.Initialize();
+  player.Initialize(this);
   double min_dps = std::numeric_limits<double>::max();
   double max_dps = 0;
 
-  for (player.iteration = 0; player.iteration < settings.iterations; player.iteration++) {
+  for (iteration = 0; iteration < settings.iterations; iteration++) {
+    fight_time = 0;
     player.Reset();
     if (player.pet != NULL) {
       player.pet->Reset();
     }
-    player.iteration_damage = 0;
-    player.fight_time = 0;
-    player.rng.seed(player.settings.random_seeds[player.iteration]);
+    player.rng.seed(player.settings.random_seeds[iteration]);
     const int kFightLength = player.rng.range(settings.min_time, settings.max_time);
 
     if (player.ShouldWriteToCombatLog()) {
@@ -48,8 +47,8 @@ void Simulation::Start() {
       player.auras.airmans_ribbon_of_gallantry->Apply();
     }
 
-    while (player.fight_time < kFightLength) {
-      const double kFightTimeRemaining = kFightLength - player.fight_time;
+    while (fight_time < kFightLength) {
+      const double kFightTimeRemaining = kFightLength - fight_time;
 
       // Use Drums
       if (player.spells.drums_of_battle != NULL && !player.auras.drums_of_battle->active &&
@@ -85,7 +84,7 @@ void Simulation::Start() {
       if (player.cast_time_remaining <= 0) {
         // Spells not on the GCD
         // Demonic Rune
-        if ((player.fight_time > 5 || player.stats.mp5 == 0) && player.spells.demonic_rune != NULL &&
+        if ((fight_time > 5 || player.stats.mp5 == 0) && player.spells.demonic_rune != NULL &&
             (player.stats.max_mana - player.stats.mana) > player.spells.demonic_rune->max_mana_gain &&
             player.spells.demonic_rune->Ready() &&
             (!player.spells.chipped_power_core || !player.spells.chipped_power_core->Ready()) &&
@@ -94,7 +93,7 @@ void Simulation::Start() {
         }
 
         // Super Mana Potion
-        if ((player.fight_time > 5 || player.stats.mp5 == 0) && player.spells.super_mana_potion != NULL &&
+        if ((fight_time > 5 || player.stats.mp5 == 0) && player.spells.super_mana_potion != NULL &&
             (player.stats.max_mana - player.stats.mana) > player.spells.super_mana_potion->max_mana_gain &&
             player.spells.super_mana_potion->Ready()) {
           player.spells.super_mana_potion->StartCast();
@@ -314,9 +313,8 @@ void Simulation::Start() {
       }
 
       if (PassTime() <= 0) {
-        std::cout << "Iteration " << std::to_string(player.iteration)
-                  << " fightTime: " << std::to_string(player.fight_time) << "/" << std::to_string(kFightLength)
-                  << " PassTime() returned <= 0" << std::endl;
+        std::cout << "Iteration " << std::to_string(iteration) << " fightTime: " << std::to_string(fight_time) << "/"
+                  << std::to_string(kFightLength) << " PassTime() returned <= 0" << std::endl;
         player.ThrowError(
             "The simulation got stuck in an endless loop. If you'd like to "
             "help with fixing this bug then please "
@@ -353,27 +351,23 @@ void Simulation::Start() {
       DpsUpdate(kDps);
     }
 
-    if (player.iteration % static_cast<int>(std::floor(settings.iterations / 100.0)) == 0) {
-      SimulationUpdate(player.iteration, settings.iterations, Median(dps_vector), player.settings.item_id,
+    if (iteration % static_cast<int>(std::floor(settings.iterations / 100.0)) == 0) {
+      SimulationUpdate(iteration, settings.iterations, Median(dps_vector), player.settings.item_id,
                        player.custom_stat.c_str());
     }
   }
 
   // Send the contents of the combat log to the web worker
-  if (player.settings.equipped_item_simulation) {
+  if (player.equipped_item_simulation) {
     player.SendCombatLogEntries();
   }
 
   // Send the combat log breakdown info
   if (player.recording_combat_log_breakdown) {
-    for (auto& combat_log_breakdown : player.combat_log_breakdown) {
-      if (combat_log_breakdown.second->iteration_damage > 0 || combat_log_breakdown.second->iteration_mana_gain > 0) {
-        player.PostIterationDamageAndMana(combat_log_breakdown.first);
-      }
-      PostCombatLogBreakdown(combat_log_breakdown.second->name.c_str(), combat_log_breakdown.second->casts,
-                             combat_log_breakdown.second->crits, combat_log_breakdown.second->misses,
-                             combat_log_breakdown.second->count, combat_log_breakdown.second->uptime,
-                             combat_log_breakdown.second->dodge, combat_log_breakdown.second->glancing_blows);
+    player.SendCombatLogBreakdown();
+
+    if (player.pet != NULL) {
+      player.pet->SendCombatLogBreakdown();
     }
   }
 

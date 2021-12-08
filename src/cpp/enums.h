@@ -101,6 +101,7 @@ const std::string kManaCostModifier = "Mana Cost Modifier";
 const std::string kSpellCritChance = "Spell Crit Chance";
 const std::string kSpellCritRating = "Spell Crit Rating";
 const std::string kAttackPower = "Attack Power";
+const std::string kMp5 = "Mp5";
 }  // namespace StatName
 
 namespace StatConstant {

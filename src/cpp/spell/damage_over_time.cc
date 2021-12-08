@@ -37,7 +37,7 @@ void DamageOverTime::Apply() {
   if (active && player.ShouldWriteToCombatLog()) {
     std::string msg = name + " refreshed before letting it expire";
   } else if (!active && player.recording_combat_log_breakdown) {
-    player.combat_log_breakdown.at(name)->applied_at = player.fight_time;
+    player.combat_log_breakdown.at(name)->applied_at = player.simulation->fight_time;
   }
   const bool kIsAlreadyActive = active;
   spell_power = player.GetSpellPower(true, school);
@@ -77,8 +77,9 @@ void DamageOverTime::Fade() {
 
   if (player.recording_combat_log_breakdown) {
     player.combat_log_breakdown.at(name)->uptime +=
-        player.fight_time - player.combat_log_breakdown.at(name)->applied_at;
+        player.simulation->fight_time - player.combat_log_breakdown.at(name)->applied_at;
   }
+
   if (player.ShouldWriteToCombatLog()) {
     player.CombatLog(name + " faded");
   }

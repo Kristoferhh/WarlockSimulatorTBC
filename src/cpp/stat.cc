@@ -3,12 +3,8 @@
 #include "common.h"
 #include "player/player.h"
 
-Stat::Stat(Player* player, double& character_stat, EntityType entity_type, double value)
-    : player(player),
-      character_stat(character_stat),
-      entity_type(entity_type),
-      value(value),
-      combat_log_decimal_places(0) {}
+Stat::Stat(Entity& entity, double& character_stat, double value)
+    : entity(entity), character_stat(character_stat), value(value), combat_log_decimal_places(0) {}
 
 void Stat::AddStat() { ModifyStat("add"); }
 
@@ -30,91 +26,85 @@ void Stat::ModifyStat(std::string action, int stacks) {
 
   character_stat = new_stat_value;
 
-  if (player->ShouldWriteToCombatLog()) {
-    player->CombatLog((entity_type == EntityType::kPlayer ? "Player "
-                      : entity_type == EntityType::kPet  ? "Pet "
-                                                         : "") +
-                     name + " " +
-                     (action == "add" ? (calculation_type == CalculationType::kAdditive ? "+" : "*")
-                                      : (calculation_type == CalculationType::kAdditive ? "-" : "/")) +
-                     " " + DoubleToString(value * stacks, combat_log_decimal_places) + " (" +
-                     DoubleToString(kCurrentStatValue, combat_log_decimal_places) + " -> " +
-                     DoubleToString(new_stat_value, combat_log_decimal_places) + ")");
+  if (entity.ShouldWriteToCombatLog()) {
+    entity.player->CombatLog((entity.entity_type == EntityType::kPlayer ? "Player "
+                              : entity.entity_type == EntityType::kPet  ? "Pet "
+                                                                        : "") +
+                             name + " " +
+                             (action == "add" ? (calculation_type == CalculationType::kAdditive ? "+" : "*")
+                                              : (calculation_type == CalculationType::kAdditive ? "-" : "/")) +
+                             " " + DoubleToString(value * stacks, combat_log_decimal_places) + " (" +
+                             DoubleToString(kCurrentStatValue, combat_log_decimal_places) + " -> " +
+                             DoubleToString(new_stat_value, combat_log_decimal_places) + ")");
   }
 
-  if (affects_pet && entity_type == EntityType::kPlayer && player->pet != NULL) {
-    player->pet->CalculateStatsFromPlayer();
+  if (affects_pet && entity.pet != NULL) {
+    entity.pet->CalculateStatsFromPlayer();
   }
 }
 
-SpellPower::SpellPower(Player* player, double& character_stat, EntityType entity_type, double value)
-    : Stat(player, character_stat, entity_type, value) {
+SpellPower::SpellPower(Entity& entity, double& character_stat, double value) : Stat(entity, character_stat, value) {
   name = StatName::kSpellPower;
   calculation_type = CalculationType::kAdditive;
   affects_pet = true;
 }
 
-ShadowPower::ShadowPower(Player* player, double& character_stat, EntityType entity_type, double value)
-    : Stat(player, character_stat, entity_type, value) {
+ShadowPower::ShadowPower(Entity& entity, double value) : Stat(entity, entity.stats.shadow_power, value) {
   name = StatName::kShadowPower;
   calculation_type = CalculationType::kAdditive;
   affects_pet = true;
 }
 
-FirePower::FirePower(Player* player, double& character_stat, EntityType entity_type, double value)
-    : Stat(player, character_stat, entity_type, value) {
+FirePower::FirePower(Entity& entity, double value) : Stat(entity, entity.stats.fire_power, value) {
   name = StatName::kFirePower;
   calculation_type = CalculationType::kAdditive;
   affects_pet = true;
 }
 
-SpellHasteRating::SpellHasteRating(Player* player, double& character_stat, EntityType entity_type, double value)
-    : Stat(player, character_stat, entity_type, value) {
+SpellHasteRating::SpellHasteRating(Entity& entity, double value)
+    : Stat(entity, entity.stats.spell_haste_rating, value) {
   name = StatName::kSpellHasteRating;
   calculation_type = CalculationType::kAdditive;
   affects_pet = false;
 }
 
-SpellHastePercent::SpellHastePercent(Player* player, double& character_stat, EntityType entity_type, double value)
-    : Stat(player, character_stat, entity_type, value) {
+SpellHastePercent::SpellHastePercent(Entity& entity, double value)
+    : Stat(entity, entity.stats.spell_haste_percent, value) {
   name = StatName::kSpellHastePercent;
   calculation_type = CalculationType::kMultiplicative;
   affects_pet = false;
   combat_log_decimal_places = 4;
 }
 
-MeleeHastePercent::MeleeHastePercent(Player* player, double& character_stat, EntityType entity_type, double value)
-    : Stat(player, character_stat, entity_type, value) {
+MeleeHastePercent::MeleeHastePercent(Entity& entity, double value)
+    : Stat(entity, entity.stats.melee_haste_percent, value) {
   name = StatName::kMeleeHastePercent;
   calculation_type = CalculationType::kMultiplicative;
   combat_log_decimal_places = 4;
 }
 
-ManaCostModifier::ManaCostModifier(Player* player, double& character_stat, EntityType entity_type, double value)
-    : Stat(player, character_stat, entity_type, value) {
+ManaCostModifier::ManaCostModifier(Entity& entity, double value)
+    : Stat(entity, entity.stats.mana_cost_modifier, value) {
   name = StatName::kManaCostModifier;
   calculation_type = CalculationType::kMultiplicative;
   affects_pet = false;
   combat_log_decimal_places = 2;
 }
 
-SpellCritChance::SpellCritChance(Player* player, double& character_stat, EntityType entity_type, double value)
-    : Stat(player, character_stat, entity_type, value) {
+SpellCritChance::SpellCritChance(Entity& entity, double value) : Stat(entity, entity.stats.spell_crit_chance, value) {
   name = StatName::kSpellCritChance;
   calculation_type = CalculationType::kAdditive;
   affects_pet = false;
   combat_log_decimal_places = 2;
 }
 
-SpellCritRating::SpellCritRating(Player* player, double& character_stat, EntityType entity_type, double value)
-    : Stat(player, character_stat, entity_type, value) {
+SpellCritRating::SpellCritRating(Entity& entity, double value) : Stat(entity, entity.stats.spell_crit_rating, value) {
   name = StatName::kSpellCritRating;
   calculation_type = CalculationType::kAdditive;
   affects_pet = false;
 }
 
-AttackPower::AttackPower(Player* player, double& character_stat, EntityType entity_type, double value)
-    : Stat(player, character_stat, entity_type, value) {
+AttackPower::AttackPower(Entity& entity, double value) : Stat(entity, entity.buff_stats.attack_power, value) {
   name = StatName::kAttackPower;
   calculation_type = CalculationType::kAdditive;
 }

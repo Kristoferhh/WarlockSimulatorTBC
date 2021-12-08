@@ -5,16 +5,14 @@
 #include "../player/player.h"
 
 Pet::Pet(Player* player)
-    : Entity(player, EntityType::kPet),
+    : Entity(player, player->settings, EntityType::kPet),
       spells(PetSpells()),
       auras(PetAuras()),
-      base_stats(CharacterStats()),
-      buff_stats(CharacterStats()),
-      debuff_stats(CharacterStats()),
       glancing_blow_multiplier(1 - (0.1 + (player->settings.enemy_level * 5 - kLevel * 5) / 100.0)),
       glancing_blow_chance(std::max(0.0, 6 + (player->settings.enemy_level * 5 - kLevel * 5) * 1.2)) {}
 
-void Pet::Initialize() {
+void Pet::Initialize(Simulation* simulationPtr) {
+  simulation = simulationPtr;
   Setup();
 
   if (pet_name == PetName::kImp) {
@@ -242,7 +240,7 @@ void Pet::CalculateStatsFromPlayer(bool announce_in_combat_log) {
     stats.spell_crit_chance =
         (0.0125 * GetIntellect()) + 0.91 + player->talents.demonic_tactics + buff_stats.spell_crit_chance;
   }
-  if (announce_in_combat_log && player->ShouldWriteToCombatLog()) {
+  if (announce_in_combat_log && ShouldWriteToCombatLog()) {
     player->CombatLog("Recalculated " + name + "'s stats");
   }
 }
@@ -306,10 +304,6 @@ double Pet::GetAttackPower() {
 
 double Pet::GetSpirit() { return (base_stats.spirit + buff_stats.spirit + stats.spirit) * stats.spirit_modifier; }
 
-double Pet::GetStamina() { return stats.stamina * stats.stamina_modifier; }
-
-double Pet::GetIntellect() { return stats.intellect * stats.intellect_modifier; }
-
 double Pet::GetAgility() { return stats.agility * stats.agility_modifier; }
 
 double Pet::GetStrength() { return (base_stats.strength + buff_stats.strength) * stats.strength_modifier; }
@@ -355,7 +349,7 @@ void Pet::Tick(double t) {
 
     const int kCurrentMana = stats.mana;
     stats.mana = std::min(stats.max_mana, stats.mana + static_cast<int>(mana_gain));
-    if (stats.mana > kCurrentMana && player->ShouldWriteToCombatLog()) {
+    if (stats.mana > kCurrentMana && ShouldWriteToCombatLog()) {
       player->CombatLog(name + " gains " + DoubleToString(round(mana_gain)) + " mana from Mp5/Spirit regeneration (" +
                         DoubleToString(kCurrentMana) + " -> " + DoubleToString(stats.mana) + ")");
     }
