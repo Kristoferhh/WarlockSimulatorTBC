@@ -52,7 +52,6 @@ void PetAura::Apply() {
   }
 
   active = true;
-  pet.CalculateStatsFromPlayer();
   duration_remaining = duration;
   if (pet.recording_combat_log_breakdown) {
     pet.combat_log_breakdown.at(name)->count++;
@@ -80,8 +79,6 @@ void PetAura::Fade() {
   for (auto& stat : stats) {
     stat.RemoveStat();
   }
-
-  pet.CalculateStatsFromPlayer();
 }
 
 DemonicFrenzy::DemonicFrenzy(Pet& pet) : PetAura(pet) {
@@ -94,7 +91,7 @@ DemonicFrenzy::DemonicFrenzy(Pet& pet) : PetAura(pet) {
 BlackBook::BlackBook(Pet& pet) : PetAura(pet) {
   name = SpellName::kBlackBook;
   duration = 30;
-  stats.push_back(SpellPower(pet, pet.buff_stats.spell_power, 200));
+  stats.push_back(SpellPower(pet, 200));
   stats.push_back(AttackPower(pet, 325));
   Setup();
 }

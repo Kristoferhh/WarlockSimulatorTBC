@@ -40,7 +40,7 @@ void LifeTap::Cast() {
     const double kCurrentPetMana = player.pet->stats.mana;
 
     player.pet->stats.mana =
-        std::min(kCurrentPetMana + (kManaGain * (player.talents.mana_feed / 3.0)), player.pet->stats.max_mana);
+        std::min(kCurrentPetMana + (kManaGain * (player.talents.mana_feed / 3.0)), player.pet->CalculateMaxMana());
 
     if (player.ShouldWriteToCombatLog()) {
       player.CombatLog(player.pet->name + " gains " + (DoubleToString(player.pet->stats.mana - kCurrentPetMana)) +

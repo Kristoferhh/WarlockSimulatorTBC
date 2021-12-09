@@ -9,7 +9,8 @@ Pet::Pet(Player* player)
       spells(PetSpells()),
       auras(PetAuras()),
       glancing_blow_multiplier(1 - (0.1 + (player->settings.enemy_level * 5 - kLevel * 5) / 100.0)),
-      glancing_blow_chance(std::max(0.0, 6 + (player->settings.enemy_level * 5 - kLevel * 5) * 1.2)) {}
+      glancing_blow_chance(std::max(0.0, 6 + (player->settings.enemy_level * 5 - kLevel * 5) * 1.2)),
+      base_melee_speed(2) {}
 
 void Pet::Initialize(Simulation* simulationPtr) {
   simulation = simulationPtr;
@@ -66,33 +67,37 @@ void Pet::CalculateStatsFromAuras() {
     stats.mp5 += 50;
   }
   if (player->selected_auras.wrath_of_air_totem) {
-    buff_stats.spell_power += 101;
+    stats.spell_power += 101;
   }
   if (player->selected_auras.totem_of_wrath) {
     const int kHitAndCritAmount = player->settings.totem_of_wrath_amount * 3;
 
-    buff_stats.spell_crit_chance += kHitAndCritAmount;
+    stats.spell_crit_chance += kHitAndCritAmount;
     stats.spell_hit_chance = std::min(99.0, stats.spell_hit_chance + kHitAndCritAmount);
   }
 
+  stats.spell_crit_chance += player->talents.demonic_tactics;
+  stats.melee_crit_chance += player->talents.demonic_tactics;
+  stats.attack_power += GetDebuffAttackPower();
+
   // todo improved motw
   if (player->selected_auras.pet_mark_of_the_wild) {
-    buff_stats.stamina += 14;
-    buff_stats.intellect += 14;
-    buff_stats.strength += 14;
-    buff_stats.agility += 14;
+    stats.stamina += 14;
+    stats.intellect += 14;
+    stats.strength += 14;
+    stats.agility += 14;
     stats.spirit += 14;
   }
 
   // todo improved imp
   if (player->selected_auras.blood_pact) {
-    buff_stats.stamina += 70;
+    stats.stamina += 70;
   }
   if (player->selected_auras.pet_arcane_intellect) {
-    buff_stats.intellect += 40;
+    stats.intellect += 40;
   }
   if (player->selected_auras.pet_prayer_of_fortitude) {
-    buff_stats.stamina += 79;
+    stats.stamina += 79;
   }
   if (player->selected_auras.pet_prayer_of_spirit) {
     stats.spirit += 50 * (1 + (0.1 * player->settings.improved_divine_spirit));
@@ -101,32 +106,32 @@ void Pet::CalculateStatsFromAuras() {
     stats.spell_hit_chance = std::min(99.0, stats.spell_hit_chance + 1);
   }
   if (player->selected_auras.moonkin_aura) {
-    buff_stats.spell_crit_chance += 5;
+    stats.spell_crit_chance += 5;
   }
   if (player->selected_auras.eye_of_the_night) {
-    buff_stats.spell_power += 34;
+    stats.spell_power += 34;
   }
   if (player->selected_auras.chain_of_the_twilight_owl) {
-    buff_stats.spell_crit_chance += 2;
+    stats.spell_crit_chance += 2;
   }
   if (player->selected_auras.jade_pendant_of_blasting) {
-    buff_stats.spell_power += 15;
+    stats.spell_power += 15;
   }
   // Atiesh auras
   // Add 33sp if the player has Atiesh equipped since the aura's spell power is
   // just added to the item itself
   if (player->items.two_hand == 22630) {
-    buff_stats.spell_power += 33;
+    stats.spell_power += 33;
   }
   if (player->selected_auras.atiesh_warlock) {
-    buff_stats.spell_power += 33 * player->settings.warlock_atiesh_amount;
+    stats.spell_power += 33 * player->settings.warlock_atiesh_amount;
   }
   if (player->selected_auras.wrath_of_air_totem && player->settings.has_elemental_shaman_t4_bonus) {
-    buff_stats.spell_power += 20;
+    stats.spell_power += 20;
   }
   if (player->selected_auras.judgement_of_the_crusader) {
-    buff_stats.melee_crit_chance += 3;
-    buff_stats.spell_crit_chance += 3;
+    stats.melee_crit_chance += 3;
+    stats.spell_crit_chance += 3;
   }
   // Multiply by 25% instead of 5% since it's happening every 5 seconds instead
   // of every 1 second
@@ -136,54 +141,47 @@ void Pet::CalculateStatsFromAuras() {
   if (player->selected_auras.faerie_fire && player->settings.improved_faerie_fire) {
     stats.melee_hit_chance += 3;
   }
-  if (player->selected_auras.expose_weakness) {
-    debuff_stats.attack_power +=
-        (player->settings.survival_hunter_agility * 0.25 * (player->settings.expose_weakness_uptime / 100.0));
-  }
-  if (player->selected_auras.improved_hunters_mark) {
-    debuff_stats.attack_power += 110;
-  }
   if (player->selected_auras.pet_heroic_presence) {
     stats.melee_hit_chance++;
   }
   if (player->selected_auras.pet_blessing_of_might) {
-    buff_stats.attack_power += 220;
+    stats.attack_power += 220;
   }
   if (player->selected_auras.pet_strength_of_earth_totem) {
-    buff_stats.strength += 86;
+    stats.strength += 86;
   }
   if (player->selected_auras.pet_grace_of_air_totem) {
-    buff_stats.agility += 67;
+    stats.agility += 67;
   }
   if (player->selected_auras.pet_battle_shout) {
-    buff_stats.attack_power += 306;
+    stats.attack_power += 306;
   }
   if (player->selected_auras.pet_trueshot_aura) {
-    buff_stats.attack_power += 300;
+    stats.attack_power += 300;
   }
   if (player->selected_auras.pet_leader_of_the_pack) {
-    buff_stats.melee_crit_chance += 5;
+    stats.melee_crit_chance += 5;
   }
   if (player->selected_auras.pet_unleashed_rage) {
     stats.attack_power_modifier *= 1.1;
   }
   if (player->selected_auras.pet_stamina_scroll) {
-    buff_stats.stamina += 20;
+    stats.stamina += 20;
   }
   if (player->selected_auras.pet_intellect_scroll) {
-    buff_stats.intellect += 20;
+    stats.intellect += 20;
   }
   if (player->selected_auras.pet_strength_scroll) {
-    buff_stats.strength += 20;
+    stats.strength += 20;
   }
   if (player->selected_auras.pet_agility_scroll) {
-    buff_stats.agility += 20;
+    stats.agility += 20;
   }
   if (player->selected_auras.pet_spirit_scroll) {
     stats.spirit += 20;
   }
   if (player->selected_auras.pet_kiblers_bits) {
-    buff_stats.strength += 20;
+    stats.strength += 20;
     stats.spirit += 20;
   }
   if (player->selected_auras.ferocious_inspiration) {
@@ -213,45 +211,33 @@ void Pet::CalculateStatsFromAuras() {
   stats.damage_modifier *= (1 + 0.04 * player->talents.unholy_power) * (1 + 0.05 * player->talents.soul_link);
 
   stats.spell_hit_chance = std::min(99.0, stats.spell_hit_chance);
+  stats.max_mana = CalculateMaxMana();
 }
 
 double Pet::GetPlayerSpellPower() {
   return player->GetSpellPower(false) + std::max(player->stats.shadow_power, player->stats.fire_power);
 }
 
-void Pet::CalculateStatsFromPlayer(bool announce_in_combat_log) {
-  stats.stamina = base_stats.stamina + buff_stats.stamina + 0.3 * player->GetStamina();
-  stats.intellect = base_stats.intellect + buff_stats.intellect + (0.3 * player->GetIntellect());
-  player->demonic_knowledge_spell_power = (GetStamina() + GetIntellect()) * (0.04 * player->talents.demonic_knowledge);
-  base_stats.attack_power = (GetStrength() * 2) - 20;
-  stats.attack_power =
-      base_stats.attack_power + buff_stats.attack_power + debuff_stats.attack_power + (GetPlayerSpellPower() * 0.57);
-  stats.agility = base_stats.agility + buff_stats.agility;
-  stats.melee_crit_chance =
-      player->talents.demonic_tactics + (GetAgility() * 0.04) + 0.65 + buff_stats.melee_crit_chance;
-  stats.spell_power = buff_stats.spell_power + (GetPlayerSpellPower() * 0.15);
-  if (pet_type == PetType::kMelee) {
-    dmg = ((GetAttackPower() / 14) + 51.7) * base_melee_speed;
-  }
-  stats.max_mana = base_stats.mana + (GetIntellect() * (pet_type == PetType::kMelee ? 11.555
-                                                        : pet_name == PetName::kImp ? 4.95
-                                                                                    : 0));
-  if (pet_name == PetName::kImp || pet_name == PetName::kSuccubus) {
-    stats.spell_crit_chance =
-        (0.0125 * GetIntellect()) + 0.91 + player->talents.demonic_tactics + buff_stats.spell_crit_chance;
-  }
-  if (announce_in_combat_log && ShouldWriteToCombatLog()) {
-    player->CombatLog("Recalculated " + name + "'s stats");
-  }
+double Pet::GetStamina() { return (stats.stamina + 0.3 * player->GetStamina()) * stats.stamina_modifier; }
+
+double Pet::GetIntellect() { return (stats.intellect + 0.3 * player->GetIntellect()) * stats.intellect_modifier; }
+
+double Pet::GetSpellPower() { return stats.spell_power + GetPlayerSpellPower() * 0.15; }
+
+double Pet::CalculateMaxMana() {
+  return GetIntellect() * (pet_type == PetType::kMelee ? 11.555
+                           : pet_name == PetName::kImp ? 4.95
+                                                       : 0) +
+         (pet_name == PetName::kImp        ? 756
+          : pet_name == PetName::kSuccubus ? 849
+          : pet_name == PetName::kFelguard ? 893
+                                           : 0);
 }
 
-void Pet::Setup() {
-  CalculateStatsFromAuras();
-  CalculateStatsFromPlayer(false);
-}
+void Pet::Setup() { CalculateStatsFromAuras(); }
 
 void Pet::Reset() {
-  stats.mana = stats.max_mana;
+  stats.mana = CalculateMaxMana();
   five_second_rule_timer_remaining = 5;
   spirit_tick_timer_remaining = 2;
   cast_time_remaining = 0;
@@ -260,8 +246,6 @@ void Pet::Reset() {
   if (spells.firebolt != NULL) spells.firebolt->Reset();
   if (spells.lash_of_pain != NULL) spells.lash_of_pain->Reset();
   if (spells.cleave != NULL) spells.cleave->Reset();
-
-  CalculateStatsFromPlayer(false);
 }
 
 void Pet::EndAuras() {
@@ -270,9 +254,11 @@ void Pet::EndAuras() {
   if (auras.battle_squawk != NULL && auras.battle_squawk->active) auras.battle_squawk->Fade();
 }
 
-double Pet::GetMeleeCritChance() { return stats.melee_crit_chance - StatConstant::kMeleeCritChanceSuppression; }
+double Pet::GetMeleeCritChance() {
+  return GetAgility() * 0.04 + 0.65 + stats.melee_crit_chance - StatConstant::kMeleeCritChanceSuppression;
+}
 
-double Pet::GetSpellCritChance() { return stats.spell_crit_chance; }
+double Pet::GetSpellCritChance() { return (0.0125 * GetIntellect()) + 0.91 + stats.spell_crit_chance; }
 
 bool Pet::IsCrit(AttackType type) {
   return player->RollRng(type == AttackType::kPhysical  ? GetMeleeCritChance()
@@ -293,20 +279,36 @@ double Pet::GetHastePercent() {
 double Pet::GetAttackPower() {
   // Remove AP from debuffs on the boss before multiplying by the AP multiplier
   // since it doesn't affect those debuffs
-  double attack_power = (stats.attack_power - debuff_stats.attack_power) * stats.attack_power_modifier;
+  double attack_power_from_debuffs = GetDebuffAttackPower();
+  double attack_power =
+      ((GetStrength() * 2 - 20 + GetPlayerSpellPower() * 0.57) - attack_power_from_debuffs + stats.attack_power) *
+      stats.attack_power_modifier;
 
   if (auras.demonic_frenzy != NULL) {
     attack_power *= (1 + 0.05 * auras.demonic_frenzy->stacks);
   }
 
-  return attack_power + debuff_stats.attack_power;
+  return attack_power + attack_power_from_debuffs;
 }
 
-double Pet::GetSpirit() { return (base_stats.spirit + buff_stats.spirit + stats.spirit) * stats.spirit_modifier; }
+double Pet::GetDebuffAttackPower() {
+  double debuff_attack_power = 0;
+
+  if (player->selected_auras.expose_weakness) {
+    debuff_attack_power +=
+        (player->settings.survival_hunter_agility * 0.25 * (player->settings.expose_weakness_uptime / 100.0));
+  }
+
+  if (player->selected_auras.improved_hunters_mark) {
+    debuff_attack_power += 110;
+  }
+
+  return debuff_attack_power;
+}
 
 double Pet::GetAgility() { return stats.agility * stats.agility_modifier; }
 
-double Pet::GetStrength() { return (base_stats.strength + buff_stats.strength) * stats.strength_modifier; }
+double Pet::GetStrength() { return stats.strength * stats.strength_modifier; }
 
 void Pet::Tick(double t) {
   cast_time_remaining -= t;
@@ -348,7 +350,7 @@ void Pet::Tick(double t) {
     }
 
     const int kCurrentMana = stats.mana;
-    stats.mana = std::min(stats.max_mana, stats.mana + static_cast<int>(mana_gain));
+    stats.mana = std::min(CalculateMaxMana(), stats.mana + static_cast<int>(mana_gain));
     if (stats.mana > kCurrentMana && ShouldWriteToCombatLog()) {
       player->CombatLog(name + " gains " + DoubleToString(round(mana_gain)) + " mana from Mp5/Spirit regeneration (" +
                         DoubleToString(kCurrentMana) + " -> " + DoubleToString(stats.mana) + ")");
@@ -360,25 +362,22 @@ Imp::Imp(Player* player) : Pet(player) {
   name = "Imp";
   pet_name = PetName::kImp;
   pet_type = PetType::kRanged;
-  base_stats.stamina = 101;
-  base_stats.intellect = 327;
-  base_stats.mana = 756;
-  base_stats.spirit = 263;
-  base_stats.strength = 145;
-  base_stats.agility = 38;
+  stats.stamina += 101;
+  stats.intellect += 327;
+  stats.spirit += 263;
+  stats.strength += 145;
+  stats.agility += 38;
 }
 
 Succubus::Succubus(Player* player) : Pet(player) {
   name = "Succubus";
   pet_name = PetName::kSuccubus;
   pet_type = PetType::kMelee;
-  base_stats.stamina = 280;
-  base_stats.intellect = 133;
-  base_stats.mana = 849;
-  base_stats.spirit = 122;
-  base_stats.strength = 153;
-  base_stats.agility = 109;
-  base_melee_speed = 2;
+  stats.stamina += 280;
+  stats.intellect += 133;
+  stats.spirit += 122;
+  stats.strength += 153;
+  stats.agility += 109;
   stats.damage_modifier *= 1 + (0.02 * player->talents.master_demonologist);
 }
 
@@ -386,12 +385,10 @@ Felguard::Felguard(Player* player) : Pet(player) {
   name = "Felguard";
   pet_type = PetType::kMelee;
   pet_name = PetName::kFelguard;
-  base_stats.stamina = 280;
-  base_stats.strength = 153;
-  base_stats.agility = 108;
-  base_stats.intellect = 133;
-  base_stats.spirit = 122;
-  base_stats.mana = 893;
-  base_melee_speed = 2;
+  stats.stamina += 280;
+  stats.strength += 153;
+  stats.agility += 108;
+  stats.intellect += 133;
+  stats.spirit += 122;
   stats.damage_modifier *= 1 + (0.01 * player->talents.master_demonologist);
 }

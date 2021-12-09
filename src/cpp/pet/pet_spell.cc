@@ -208,10 +208,11 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
   double base_damage = GetBaseDamage();
   double dmg = base_damage;
   double damage_modifier = modifier;
+  double spell_power = pet.GetSpellPower();
 
   // Add damage from Spell Power
   if (type == AttackType::kMagical) {
-    dmg += pet.stats.spell_power * coefficient;
+    dmg += spell_power * coefficient;
   }
 
   // Multiply if it's a crit
@@ -300,7 +301,7 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
     combat_log_message.append(" (" + DoubleToString(round(base_damage)) + " Base Damage");
     if (type == AttackType::kMagical) {
       combat_log_message.append(" - " + DoubleToString(coefficient, 3) + " Coefficient");
-      combat_log_message.append(" - " + DoubleToString(pet.stats.spell_power, 0) + " Spell Power");
+      combat_log_message.append(" - " + DoubleToString(spell_power, 0) + " Spell Power");
       combat_log_message.append(" - " + DoubleToString(partial_resist_multiplier * 100) +
                                 "% Partial Resist Multiplier");
     } else if (type == AttackType::kPhysical) {
@@ -339,7 +340,7 @@ Melee::Melee(Pet& pet) : PetSpell(pet) {
   Setup();
 }
 
-double Melee::GetBaseDamage() { return pet.dmg; }
+double Melee::GetBaseDamage() { return (pet.GetAttackPower() / 14 + 51.7) * pet.base_melee_speed; }
 
 double Melee::GetCooldown() { return cooldown / pet.GetHastePercent(); }
 

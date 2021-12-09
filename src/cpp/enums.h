@@ -102,6 +102,7 @@ const std::string kSpellCritChance = "Spell Crit Chance";
 const std::string kSpellCritRating = "Spell Crit Rating";
 const std::string kAttackPower = "Attack Power";
 const std::string kMp5 = "Mp5";
+const std::string kAttackPowerModifier = "Attack Power Modifier";
 }  // namespace StatName
 
 namespace StatConstant {

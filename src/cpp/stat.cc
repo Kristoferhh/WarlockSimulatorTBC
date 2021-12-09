@@ -37,42 +37,33 @@ void Stat::ModifyStat(std::string action, int stacks) {
                              DoubleToString(kCurrentStatValue, combat_log_decimal_places) + " -> " +
                              DoubleToString(new_stat_value, combat_log_decimal_places) + ")");
   }
-
-  if (affects_pet && entity.pet != NULL) {
-    entity.pet->CalculateStatsFromPlayer();
-  }
 }
 
-SpellPower::SpellPower(Entity& entity, double& character_stat, double value) : Stat(entity, character_stat, value) {
+SpellPower::SpellPower(Entity& entity, double value) : Stat(entity, entity.stats.spell_power, value) {
   name = StatName::kSpellPower;
   calculation_type = CalculationType::kAdditive;
-  affects_pet = true;
 }
 
 ShadowPower::ShadowPower(Entity& entity, double value) : Stat(entity, entity.stats.shadow_power, value) {
   name = StatName::kShadowPower;
   calculation_type = CalculationType::kAdditive;
-  affects_pet = true;
 }
 
 FirePower::FirePower(Entity& entity, double value) : Stat(entity, entity.stats.fire_power, value) {
   name = StatName::kFirePower;
   calculation_type = CalculationType::kAdditive;
-  affects_pet = true;
 }
 
 SpellHasteRating::SpellHasteRating(Entity& entity, double value)
     : Stat(entity, entity.stats.spell_haste_rating, value) {
   name = StatName::kSpellHasteRating;
   calculation_type = CalculationType::kAdditive;
-  affects_pet = false;
 }
 
 SpellHastePercent::SpellHastePercent(Entity& entity, double value)
     : Stat(entity, entity.stats.spell_haste_percent, value) {
   name = StatName::kSpellHastePercent;
   calculation_type = CalculationType::kMultiplicative;
-  affects_pet = false;
   combat_log_decimal_places = 4;
 }
 
@@ -87,24 +78,27 @@ ManaCostModifier::ManaCostModifier(Entity& entity, double value)
     : Stat(entity, entity.stats.mana_cost_modifier, value) {
   name = StatName::kManaCostModifier;
   calculation_type = CalculationType::kMultiplicative;
-  affects_pet = false;
   combat_log_decimal_places = 2;
 }
 
 SpellCritChance::SpellCritChance(Entity& entity, double value) : Stat(entity, entity.stats.spell_crit_chance, value) {
   name = StatName::kSpellCritChance;
   calculation_type = CalculationType::kAdditive;
-  affects_pet = false;
   combat_log_decimal_places = 2;
 }
 
 SpellCritRating::SpellCritRating(Entity& entity, double value) : Stat(entity, entity.stats.spell_crit_rating, value) {
   name = StatName::kSpellCritRating;
   calculation_type = CalculationType::kAdditive;
-  affects_pet = false;
 }
 
-AttackPower::AttackPower(Entity& entity, double value) : Stat(entity, entity.buff_stats.attack_power, value) {
+AttackPower::AttackPower(Entity& entity, double value) : Stat(entity, entity.stats.attack_power, value) {
   name = StatName::kAttackPower;
   calculation_type = CalculationType::kAdditive;
+}
+
+AttackPowerModifier::AttackPowerModifier(Entity& entity, double value)
+    : Stat(entity, entity.stats.attack_power_modifier, value) {
+  name = StatName::kAttackPowerModifier;
+  calculation_type = CalculationType::kMultiplicative;
 }

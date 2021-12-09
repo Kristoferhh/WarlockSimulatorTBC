@@ -27,7 +27,6 @@ struct Pet : public Entity, std::enable_shared_from_this<Pet> {
   Pet(Player* player);
   void Initialize(Simulation* simulation);
   void CalculateStatsFromAuras();
-  void CalculateStatsFromPlayer(bool announce_in_combat_log = true);
   void Setup();
   void Reset();
   void EndAuras();
@@ -36,10 +35,14 @@ struct Pet : public Entity, std::enable_shared_from_this<Pet> {
   double GetMeleeCritChance();
   double GetHastePercent();
   double GetSpellCritChance();
-  double GetSpirit();
+  double GetStamina();
+  double GetIntellect();
   double GetAgility();
   double GetStrength();
   double GetPlayerSpellPower();
+  double GetSpellPower();
+  double GetDebuffAttackPower();
+  double CalculateMaxMana();
   bool IsCrit(AttackType type);
   bool IsHit(AttackType type);
 };

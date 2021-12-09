@@ -194,7 +194,6 @@ Player::Player(PlayerSettings& player_settings)
 
 void Player::Initialize(Simulation* simulationPtr) {
   simulation = simulationPtr;
-  demonic_knowledge_spell_power = 0;
 
   if (!settings.sacrificing_pet || talents.demonic_sacrifice == 0) {
     if (settings.selected_pet == EmbindConstant::kImp) {
@@ -551,7 +550,11 @@ double Player::GetGcdValue(const std::string& spell_name) {
 }
 
 double Player::GetSpellPower(bool dealing_damage, SpellSchool school) {
-  double spell_power = stats.spell_power + demonic_knowledge_spell_power;
+  double spell_power = stats.spell_power;
+
+  if (pet != NULL && talents.demonic_knowledge > 0) {
+    spell_power += (pet->GetStamina() + pet->GetIntellect()) * 0.04 * talents.demonic_knowledge;
+  }
 
   // If Mark of the Champion is equipped and the player isn't dealing damage then remove the spell power so it doesn't
   // affect spells like Life Tap
@@ -601,8 +604,6 @@ bool Player::IsHit(SpellType spell_type) { return RollRng(GetHitChance(spell_typ
 int Player::GetRand() { return rng.range(0, 100 * kFloatNumberMultiplier); }
 
 bool Player::RollRng(double chance) { return GetRand() <= chance * kFloatNumberMultiplier; }
-
-double Player::GetSpirit() { return stats.spirit * stats.spirit_modifier; }
 
 // formula from
 // https://web.archive.org/web/20161015101615/https://dwarfpriest.wordpress.com/2008/01/07/spell-hit-spell-penetration-and-resistances/
@@ -885,10 +886,9 @@ void Player::SendPlayerInfoToCombatLog() {
     combat_log_entries.push_back("Strength: " + DoubleToString(pet->GetStrength()));
     combat_log_entries.push_back("Agility: " + DoubleToString(pet->GetAgility()));
     combat_log_entries.push_back("Spirit: " + DoubleToString(pet->GetSpirit()));
-    combat_log_entries.push_back("Attack Power: " + DoubleToString(round(pet->stats.attack_power)) +
-                                 " (without attack power % modifiers)");
-    combat_log_entries.push_back("Spell Power: " + DoubleToString(pet->stats.spell_power));
-    combat_log_entries.push_back("Mana: " + DoubleToString(pet->stats.max_mana));
+    combat_log_entries.push_back("Attack Power: " + DoubleToString(round(pet->GetAttackPower())));
+    combat_log_entries.push_back("Spell Power: " + DoubleToString(pet->GetSpellPower()));
+    combat_log_entries.push_back("Mana: " + DoubleToString(pet->CalculateMaxMana()));
     combat_log_entries.push_back("MP5: " + DoubleToString(pet->stats.mp5));
     if (pet->pet_type == PetType::kMelee) {
       combat_log_entries.push_back(
@@ -896,10 +896,9 @@ void Player::SendPlayerInfoToCombatLog() {
       combat_log_entries.push_back(
           "Physical Crit Chance: " + DoubleToString(round(pet->GetMeleeCritChance() * 100) / 100.0, 2) + "% (" +
           DoubleToString(StatConstant::kMeleeCritChanceSuppression, 2) + "% Crit Suppression Applied)");
+      combat_log_entries.push_back("Glancing Blow Chance: " + DoubleToString(pet->glancing_blow_chance, 2) + "%");
       combat_log_entries.push_back(
-          "Glancing Blow Chance: " + DoubleToString(round(pet->glancing_blow_chance * 100) / 100.0, 2) + "%");
-      combat_log_entries.push_back(
-          "Attack Power Modifier: " + DoubleToString(round(pet->stats.attack_power_modifier * 10000) / 100.0, 2) + "%");
+          "Attack Power Modifier: " + DoubleToString(pet->stats.attack_power_modifier * 100, 2) + "%");
     }
     if (pet->pet_name == PetName::kImp || pet->pet_name == PetName::kSuccubus) {
       combat_log_entries.push_back(

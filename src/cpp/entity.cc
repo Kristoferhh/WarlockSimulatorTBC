@@ -6,9 +6,6 @@
 Entity::Entity(Player* player, PlayerSettings& player_settings, EntityType entity_type)
     : player(player),
       entity_type(entity_type),
-      base_stats(CharacterStats()),
-      buff_stats(CharacterStats()),
-      debuff_stats(CharacterStats()),
       stats(entity_type == EntityType::kPlayer ? player_settings.stats : CharacterStats()),
       cast_time_remaining(0),
       gcd_remaining(0),
@@ -41,5 +38,7 @@ void Entity::SendCombatLogBreakdown() {
 double Entity::GetStamina() { return stats.stamina * stats.stamina_modifier; }
 
 double Entity::GetIntellect() { return stats.intellect * stats.intellect_modifier; }
+
+double Entity::GetSpirit() { return stats.spirit * stats.spirit_modifier; }
 
 bool Entity::ShouldWriteToCombatLog() { return simulation->iteration == 10 && equipped_item_simulation; }

@@ -14,7 +14,6 @@ struct Stat {
   CalculationType calculation_type;
   std::string name;
   double value;
-  bool affects_pet;  // true for stats like spell power where the pet scales from the player's spell power
   int combat_log_decimal_places;
 
   Stat(Entity& entity, double& character_stat, double value);
@@ -26,7 +25,7 @@ struct Stat {
 };
 
 struct SpellPower : public Stat {
-  SpellPower(Entity& entity, double& character_stat, double value);
+  SpellPower(Entity& entity, double value);
 };
 
 struct ShadowPower : public Stat {
@@ -63,6 +62,10 @@ struct SpellCritRating : public Stat {
 
 struct AttackPower : public Stat {
   AttackPower(Entity& entity, double value);
+};
+
+struct AttackPowerModifier : public Stat {
+  AttackPowerModifier(Entity& entity, double value);
 };
 
 #endif

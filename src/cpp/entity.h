@@ -22,13 +22,6 @@ struct Entity {
   Simulation* simulation;
   Player* player;
   std::shared_ptr<Pet> pet;
-  // base_stats, buff_stats, and debuff_stats are only used by Pet
-  // but needs to be in this class for now because of the Stat class
-  CharacterStats base_stats;
-  CharacterStats buff_stats;  // Certain stats from buffs need to be separated from the main
-                              // stat so we can re-calculate the pet's stats in
-                              // calculateStatsFromPlayer().
-  CharacterStats debuff_stats;
   CharacterStats stats;
   EntityType entity_type;
   std::string name;
@@ -44,8 +37,9 @@ struct Entity {
   bool ShouldWriteToCombatLog();
   void PostIterationDamageAndMana(const std::string& spell_name);
   void SendCombatLogBreakdown();
-  double GetStamina();
-  double GetIntellect();
+  virtual double GetStamina();
+  virtual double GetIntellect();
+  double GetSpirit();
 };
 
 #endif

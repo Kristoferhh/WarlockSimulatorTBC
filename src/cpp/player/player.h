@@ -56,7 +56,6 @@ struct Player : public Entity {
   Rng rng;
   double total_duration;
   double mp5_timer;
-  double demonic_knowledge_spell_power;
   double iteration_damage;
   int power_infusions_ready;
 
@@ -77,7 +76,6 @@ struct Player : public Entity {
   double GetHitChance(SpellType spell_type);
   double GetPartialResistMultiplier(SpellSchool school);
   double GetBaseHitChance(int player_level, int enemy_level);
-  double GetSpirit();
   int GetRand();
   double GetCustomImprovedShadowBoltDamageModifier();
   void Tick(double time);
