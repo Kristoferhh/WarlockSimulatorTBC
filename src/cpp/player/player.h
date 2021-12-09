@@ -12,7 +12,6 @@
 #include "../entity.h"
 #include "../items.h"
 #include "../pet/pet.h"
-#include "../pet/pet_aura.h"
 #include "../pet/pet_spell.h"
 #include "../rng.h"
 #include "../sets.h"
@@ -43,11 +42,8 @@ struct Player : public Entity {
   std::shared_ptr<Aura> curse_aura;
   std::vector<std::string> combat_log_entries;
   std::string custom_stat;
-  std::vector<Spell*> spell_list;
-  std::vector<Aura*> aura_list;
   std::vector<DamageOverTime*> dot_list;
   std::vector<PetSpell*> pet_spell_list;
-  std::vector<PetAura*> pet_aura_list;
   std::vector<OnHitProc*> on_hit_procs;
   std::vector<OnCritProc*> on_crit_procs;
   std::vector<OnDotTickProc*> on_dot_tick_procs;

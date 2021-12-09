@@ -249,9 +249,11 @@ void Pet::Reset() {
 }
 
 void Pet::EndAuras() {
-  if (auras.black_book != NULL && auras.black_book->active) auras.black_book->Fade();
-  if (auras.demonic_frenzy != NULL && auras.demonic_frenzy->active) auras.demonic_frenzy->Fade();
-  if (auras.battle_squawk != NULL && auras.battle_squawk->active) auras.battle_squawk->Fade();
+  for (auto& aura : aura_list) {
+    if (aura->active) {
+      aura->Fade();
+    }
+  }
 }
 
 double Pet::GetMeleeCritChance() {
@@ -315,9 +317,11 @@ void Pet::Tick(double t) {
   five_second_rule_timer_remaining -= t;
   spirit_tick_timer_remaining -= t;
 
-  // Auras
-  if (auras.black_book != NULL && auras.black_book->active) auras.black_book->Tick(t);
-  if (auras.battle_squawk != NULL && auras.battle_squawk->active) auras.battle_squawk->Tick(t);
+  for (auto& aura : aura_list) {
+    if (aura->active) {
+      aura->Tick(t);
+    }
+  }
 
   // Spells
   if (spells.melee != NULL && spells.melee->cooldown_remaining > 0) spells.melee->Tick(t);

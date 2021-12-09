@@ -2,7 +2,6 @@
 
 #include "../common.h"
 #include "../player/player.h"
-#include "pet_aura.h"
 
 PetSpell::PetSpell(Pet& pet)
     : pet(pet),

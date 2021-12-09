@@ -4,7 +4,7 @@
 #include "../aura.h"
 
 struct ManaOverTime : public Aura {
-  ManaOverTime(Player& player);
+  ManaOverTime(Entity& Entity);
   void Apply();
   void Tick(double time);
   void Setup();
@@ -12,12 +12,12 @@ struct ManaOverTime : public Aura {
 };
 
 struct DrumsOfRestorationAura : public ManaOverTime {
-  DrumsOfRestorationAura(Player& player);
+  DrumsOfRestorationAura(Entity& Entity);
   double GetManaGain();
 };
 
 struct ManaTideTotemAura : public ManaOverTime {
-  ManaTideTotemAura(Player& player);
+  ManaTideTotemAura(Entity& Entity);
   double GetManaGain();
 };
 

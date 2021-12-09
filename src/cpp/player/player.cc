@@ -730,7 +730,7 @@ double Player::FindTimeUntilNextAction() {
       }
 
       // Pet auras
-      for (auto& pet_aura : pet_aura_list) {
+      for (auto& pet_aura : pet->aura_list) {
         if (pet_aura->active && pet_aura->duration_remaining < time) {
           time = pet_aura->duration_remaining;
         }

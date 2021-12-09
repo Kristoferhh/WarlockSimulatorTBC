@@ -11,6 +11,7 @@ struct Simulation;
 #include "combat_log_breakdown.h"
 #include "enums.h"
 #include "player/player_settings.h"
+#include "spell/spell.h"
 
 struct Entity {
   const int kFloatNumberMultiplier = 1000;  // Multiply doubles such as hit and crit chance with this since we need an
@@ -26,6 +27,8 @@ struct Entity {
   EntityType entity_type;
   std::string name;
   std::map<std::string, std::unique_ptr<CombatLogBreakdown>> combat_log_breakdown;
+  std::vector<Spell*> spell_list;
+  std::vector<Aura*> aura_list;
   double cast_time_remaining;
   double gcd_remaining;
   double five_second_rule_timer_remaining;
