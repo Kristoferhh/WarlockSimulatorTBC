@@ -58,7 +58,7 @@
     ]
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.9",
+    "@types/jquery": "^3.5.10",
     "react-app-rewired": "^2.1.8",
     "worker-loader": "^3.0.8"
   }
