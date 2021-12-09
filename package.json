@@ -1,7 +1,7 @@
 {
   "homepage": "https://kristoferhh.github.io/WarlockSimulatorTBC",
   "name": "warlock-simulator-tbc",
-  "version": "1.0.45",
+  "version": "1.0.46",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.7.0",
