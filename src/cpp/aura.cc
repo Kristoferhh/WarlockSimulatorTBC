@@ -74,7 +74,7 @@ void Aura::Apply() {
 
 void Aura::Fade() {
   if (!active) {
-    entity.player.ThrowError("Attempting to fade " + name + " when it isn't active");
+    entity.player->ThrowError("Attempting to fade " + name + " when it isn't active");
   }
 
   for (auto& stat : stats) {
@@ -106,7 +106,7 @@ ImprovedShadowBoltAura::ImprovedShadowBoltAura(Entity& entity) : Aura(entity) {
   name = SpellName::kImprovedShadowBolt;
   duration = 12;
   max_stacks = 4;
-  Aura::modifier = 1 + entity.player.talents.improved_shadow_bolt * 0.04;
+  Aura::modifier = 1 + entity.player->talents.improved_shadow_bolt * 0.04;
   Setup();
 }
 
@@ -372,6 +372,6 @@ BlackBook::BlackBook(Entity& entity) : Aura(entity) {
 BattleSquawk::BattleSquawk(Entity& entity) : Aura(entity) {
   name = SpellName::kBattleSquawk;
   duration = 300;
-  stats.push_back(MeleeHastePercent(entity, std::pow(1.05, entity.player.settings.battle_squawk_amount)));
+  stats.push_back(MeleeHastePercent(entity, std::pow(1.05, entity.player->settings.battle_squawk_amount)));
   Setup();
 }

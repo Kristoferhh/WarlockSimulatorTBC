@@ -11,7 +11,7 @@
 #include "../spell/spell.h"
 
 Player::Player(PlayerSettings& player_settings)
-    : Entity(*this, player_settings, EntityType::kPlayer),
+    : Entity(nullptr, player_settings, EntityType::kPlayer),
       selected_auras(player_settings.auras),
       talents(player_settings.talents),
       sets(player_settings.sets),
@@ -193,6 +193,7 @@ Player::Player(PlayerSettings& player_settings)
 }
 
 void Player::Initialize(Simulation* simulationPtr) {
+  player = this;
   simulation = simulationPtr;
 
   if (!settings.sacrificing_pet || talents.demonic_sacrifice == 0) {

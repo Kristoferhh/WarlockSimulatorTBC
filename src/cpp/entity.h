@@ -21,7 +21,7 @@ struct Entity {
   const double kMinimumGcdValue = 1;
   const double kCritDamageMultiplier = 1.5;
   Simulation* simulation;
-  Player& player;
+  Player* player;
   std::shared_ptr<Pet> pet;
   CharacterStats stats;
   EntityType entity_type;
@@ -35,7 +35,7 @@ struct Entity {
   bool recording_combat_log_breakdown;
   bool equipped_item_simulation;
 
-  Entity(Player& player, PlayerSettings& player_settings, EntityType entity_type);
+  Entity(Player* player, PlayerSettings& player_settings, EntityType entity_type);
   bool ShouldWriteToCombatLog();
   void PostIterationDamageAndMana(const std::string& spell_name);
   void SendCombatLogBreakdown();

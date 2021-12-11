@@ -5,9 +5,9 @@
 #include "simulation.h"
 
 // We need the PlayerSettings struct that is passed to the Player struct because if we try to access the settings via
-// Player.settings then that struct won't be initialized yet when the Entity constructor is called during the Player
+// Player->settings then that struct won't be initialized yet when the Entity constructor is called during the Player
 // constructor
-Entity::Entity(Player& player, PlayerSettings& player_settings, EntityType entity_type)
+Entity::Entity(Player* player, PlayerSettings& player_settings, EntityType entity_type)
     : player(player),
       entity_type(entity_type),
       stats(entity_type == EntityType::kPlayer ? player_settings.stats : CharacterStats()),
@@ -48,7 +48,7 @@ double Entity::GetSpirit() { return stats.spirit * stats.spirit_modifier; }
 bool Entity::ShouldWriteToCombatLog() { return simulation->iteration == 10 && equipped_item_simulation; }
 
 void Entity::CombatLog(const std::string& entry) {
-  player.combat_log_entries.push_back("|" + DoubleToString(simulation->fight_time, 4) + "| " + entry);
+  player->combat_log_entries.push_back("|" + DoubleToString(simulation->fight_time, 4) + "| " + entry);
 }
 
 double Entity::FindTimeUntilNextAction() {
