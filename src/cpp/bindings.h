@@ -36,7 +36,7 @@ void PostCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, ui
 void CombatLogUpdate(const char* combat_log_entry);
 void SimulationUpdate(int iteration, int iteration_amount, double median_dps, int item_id, const char* custom_stat);
 void SimulationEnd(double median_dps, double min_dps, double max_dps, int item_id, int iteration_amount,
-                   int total_duration, const char* custom_stat);
+                   int total_fight_duration, const char* custom_stat);
 std::string GetExceptionMessage(intptr_t exception_ptr);
 
 #endif

@@ -292,6 +292,7 @@ void Spell::Damage(bool isCrit) {
            DoubleToString(round(coefficient * 1000) / 1000, 3) + " Coefficient - " +
            DoubleToString(round(kSpellPower)) + " Spell Power - ";
     if (isCrit) {
+    https:  // www.bilibili.com/video/BV1WS4y1Q7jH?spm_id_from=333.999.0.0
       msg += DoubleToString(crit_multiplier * 100, 3) + "% Crit Multiplier - ";
     }
     msg += DoubleToString(round(kDamageModifier * 10000) / 100, 2) + "% Damage Modifier - " +
@@ -588,7 +589,7 @@ void SeedOfCorruption::Damage(bool isCrit) {
 
   // If using a custom ISB uptime % then remove the damage bonus since ISB won't be up on the mobs
   if (player.settings.using_custom_isb_uptime) {
-    internal_modifier /= 1 + player.GetCustomImprovedShadowBoltDamageModifier();
+    internal_modifier /= player.GetCustomImprovedShadowBoltDamageModifier();
   }
 
   // Remove debuffs from the modifier since they ignore the AOE cap, so we'll

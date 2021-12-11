@@ -17,7 +17,7 @@ Simulation::Simulation(Player& player, const SimulationSettings& simulation_sett
 
 void Simulation::Start() {
   std::vector<double> dps_vector;
-  player.total_duration = 0;
+  player.total_fight_duration = 0;
   player.Initialize(this);
   double min_dps = std::numeric_limits<double>::max();
   double max_dps = 0;
@@ -332,7 +332,7 @@ void Simulation::Start() {
       player.pet->EndAuras();
     }
 
-    player.total_duration += kFightLength;
+    player.total_fight_duration += kFightLength;
     const double kDps = player.iteration_damage / static_cast<double>(kFightLength);
 
     if (kDps > max_dps) {
@@ -372,13 +372,13 @@ void Simulation::Start() {
   }
 
   SimulationEnd(Median(dps_vector), min_dps, max_dps, player.settings.item_id, settings.iterations,
-                player.total_duration, player.custom_stat.c_str());
+                player.total_fight_duration, player.custom_stat.c_str());
 }
 
 double Simulation::PassTime() {
   double time_until_next_action = player.FindTimeUntilNextAction();
 
-  player.Tick(time_until_next_action);
+  Tick(time_until_next_action);
 
   return time_until_next_action;
 }
@@ -401,10 +401,17 @@ void Simulation::CastSelectedSpell(const std::shared_ptr<Spell>& spell, double f
   player.UseCooldowns(fight_time_remaining);
 
   if (player.spells.amplify_curse != NULL && player.spells.amplify_curse->Ready() &&
-      ((player.spells.curse_of_agony != NULL && spell == player.spells.curse_of_agony) ||
-       (player.spells.curse_of_doom != NULL && spell == player.spells.curse_of_doom))) {
+      (spell->name == SpellName::kCurseOfAgony || spell->name == SpellName::kCurseOfDoom)) {
     player.spells.amplify_curse->StartCast();
   }
 
   spell->StartCast(predicted_damage);
+}
+
+void Simulation::Tick(double time) {
+  fight_time += time;
+  player.Tick(time);
+  if (player.pet != NULL) {
+    player.pet->Tick(time);
+  }
 }

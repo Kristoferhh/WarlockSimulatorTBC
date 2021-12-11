@@ -18,7 +18,7 @@ void PetSpell::Setup() {
     pet.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
   }
 
-  pet.player->pet_spell_list.push_back(this);
+  pet.spell_list.push_back(this);
 }
 
 bool PetSpell::Ready() {
@@ -33,7 +33,7 @@ double PetSpell::GetCooldown() { return cooldown; }
 
 void PetSpell::Tick(double t) {
   if (pet.ShouldWriteToCombatLog() && cooldown_remaining > 0 && cooldown_remaining - t <= 0) {
-    pet.player->CombatLog(pet.name + "'s " + name + " off cooldown");
+    pet.CombatLog(pet.name + "'s " + name + " off cooldown");
   }
 
   cooldown_remaining -= t;
@@ -47,14 +47,14 @@ void PetSpell::Tick(double t) {
 void PetSpell::StartCast() {
   // Error: Starting to cast a spell while casting another spell
   if (pet.cast_time_remaining > 0) {
-    pet.player->ThrowError("Pet attempting to cast " + name + " while pet's cast time remaining is at " +
-                           std::to_string(pet.cast_time_remaining) + " sec");
+    pet.player.ThrowError("Pet attempting to cast " + name + " while pet's cast time remaining is at " +
+                          std::to_string(pet.cast_time_remaining) + " sec");
   }
 
   // Error: Casting a spell while it's on cooldown
   if (cooldown_remaining > 0) {
-    pet.player->ThrowError("Pet attempting to cast " + name + " while it's still on cooldown (" +
-                           std::to_string(cooldown_remaining) + " seconds remaining)");
+    pet.player.ThrowError("Pet attempting to cast " + name + " while it's still on cooldown (" +
+                          std::to_string(cooldown_remaining) + " seconds remaining)");
   }
 
   if (cast_time > 0) {
@@ -62,10 +62,10 @@ void PetSpell::StartCast() {
     pet.cast_time_remaining = GetCastTime();
 
     if (pet.ShouldWriteToCombatLog()) {
-      pet.player->CombatLog(pet.name + " started casting " + name +
-                            ". Cast time: " + DoubleToString(pet.cast_time_remaining, 4) + " (" +
-                            DoubleToString(pet.GetHastePercent() * 100 - 100, 2) + "% haste at a base cast speed of " +
-                            DoubleToString(cast_time, 2) + ")");
+      pet.CombatLog(pet.name + " started casting " + name +
+                    ". Cast time: " + DoubleToString(pet.cast_time_remaining, 4) + " (" +
+                    DoubleToString(pet.GetHastePercent() * 100 - 100, 2) + "% haste at a base cast speed of " +
+                    DoubleToString(cast_time, 2) + ")");
     }
   } else {
     Cast();
@@ -96,7 +96,7 @@ void PetSpell::Cast() {
     }
   }
 
-  if (mana_cost > 0 && !pet.player->settings.infinite_pet_mana) {
+  if (mana_cost > 0 && !pet.player.settings.infinite_pet_mana) {
     pet.stats.mana -= mana_cost;
     pet.five_second_rule_timer_remaining = 5;
 
@@ -111,7 +111,7 @@ void PetSpell::Cast() {
   }
 
   if (pet.ShouldWriteToCombatLog()) {
-    pet.player->CombatLog(combat_log_message);
+    pet.CombatLog(combat_log_message);
   }
 
   // Physical dmg spell
@@ -130,7 +130,7 @@ void PetSpell::Cast() {
 
     // Check whether the roll is a crit, dodge, miss, glancing, or just a normal
     // hit.
-    int attack_roll = pet.player->GetRand();
+    int attack_roll = pet.player.GetRand();
 
     // Crit
     if (attack_roll <= crit_chance) {
@@ -147,7 +147,7 @@ void PetSpell::Cast() {
       }
 
       if (pet.ShouldWriteToCombatLog()) {
-        pet.player->CombatLog(pet.name + " " + name + " *dodge*");
+        pet.CombatLog(pet.name + " " + name + " *dodge*");
       }
 
       return;
@@ -159,7 +159,7 @@ void PetSpell::Cast() {
       }
 
       if (pet.ShouldWriteToCombatLog()) {
-        pet.player->CombatLog(pet.name + " " + name + " *miss*");
+        pet.CombatLog(pet.name + " " + name + " *miss*");
       }
 
       return;
@@ -184,7 +184,7 @@ void PetSpell::Cast() {
       }
 
       if (pet.ShouldWriteToCombatLog()) {
-        pet.player->CombatLog(pet.name + " " + name + " *resist*");
+        pet.CombatLog(pet.name + " " + name + " *resist*");
       }
     } else {
       // Check for crit
@@ -222,44 +222,44 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
   // Magic damage multipliers
   if (type == AttackType::kMagical) {
     // Curse of the Elements
-    if (pet.player->selected_auras.curse_of_the_elements &&
+    if (pet.player.selected_auras.curse_of_the_elements &&
         (school == SpellSchool::kShadow || school == SpellSchool::kFire)) {
-      damage_modifier *= (1.1 + 0.01 * pet.player->settings.improved_curse_of_the_elements);
+      damage_modifier *= (1.1 + 0.01 * pet.player.settings.improved_curse_of_the_elements);
     }
 
     // Misery
-    if (pet.player->selected_auras.misery) {
+    if (pet.player.selected_auras.misery) {
       damage_modifier *= 1.05;
     }
 
     // Shadow Damage Multipliers
     if (school == SpellSchool::kShadow) {
       // Shadow Weaving
-      if (pet.player->selected_auras.shadow_weaving) {
+      if (pet.player.selected_auras.shadow_weaving) {
         damage_modifier *= 1.1;
       }
 
       // ISB
-      if ((pet.player->auras.improved_shadow_bolt != NULL && pet.player->auras.improved_shadow_bolt->active) ||
-          pet.player->settings.using_custom_isb_uptime) {
-        if (pet.player->settings.using_custom_isb_uptime) {
-          damage_modifier *= (1 + 0.2 * (pet.player->settings.custom_isb_uptime_value / 100.0));
+      if ((pet.player.auras.improved_shadow_bolt != NULL && pet.player.auras.improved_shadow_bolt->active) ||
+          pet.player.settings.using_custom_isb_uptime) {
+        if (pet.player.settings.using_custom_isb_uptime) {
+          damage_modifier *= pet.player.GetCustomImprovedShadowBoltDamageModifier();
         } else {
-          damage_modifier *= pet.player->auras.improved_shadow_bolt->modifier;
-          pet.player->auras.improved_shadow_bolt->DecrementStacks();
+          damage_modifier *= pet.player.auras.improved_shadow_bolt->modifier;
+          pet.player.auras.improved_shadow_bolt->DecrementStacks();
         }
       }
     }
     // Fire Damage Multipliers
     else if (school == SpellSchool::kFire) {
-      if (pet.player->selected_auras.improved_scorch) {
+      if (pet.player.selected_auras.improved_scorch) {
         damage_modifier *= 1.15;
       }
     }
   }
   // Physical Damage Multipliers
   else if (type == AttackType::kPhysical) {
-    if (pet.player->selected_auras.blood_frenzy) {
+    if (pet.player.selected_auras.blood_frenzy) {
       damage_modifier *= 1.04;
     }
 
@@ -276,12 +276,12 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
   dmg *= damage_modifier;
 
   // Partial Resist Reduction
-  double partial_resist_multiplier = pet.player->GetPartialResistMultiplier(school);
+  double partial_resist_multiplier = pet.player.GetPartialResistMultiplier(school);
   if (type == AttackType::kMagical) {
     dmg *= partial_resist_multiplier;
   }
 
-  pet.player->iteration_damage += dmg;
+  pet.player.iteration_damage += dmg;
 
   if (pet.pet_name == PetName::kFelguard) {
     pet.auras.demonic_frenzy->Apply();
@@ -317,15 +317,15 @@ void PetSpell::Damage(bool is_crit, bool is_glancing) {
     combat_log_message.append(" - " + DoubleToString(round(damage_modifier * 10000) / 100.0, 2) + "% Damage Modifier");
     combat_log_message.append(")");
 
-    pet.player->CombatLog(combat_log_message);
+    pet.CombatLog(combat_log_message);
   }
 }
 
 ImpFirebolt::ImpFirebolt(Pet& pet) : PetSpell(pet) {
   name = SpellName::kFirebolt;
-  cast_time = 2 - (0.25 * pet.player->talents.improved_firebolt);
+  cast_time = 2 - (0.25 * pet.player.talents.improved_firebolt);
   mana_cost = 145;
-  dmg = 119.5 * (1 + 0.1 * pet.player->talents.improved_imp);
+  dmg = 119.5 * (1 + 0.1 * pet.player.talents.improved_imp);
   coefficient = 2 / 3.5;
   school = SpellSchool::kFire;
   type = AttackType::kMagical;
@@ -355,13 +355,13 @@ double FelguardCleave::GetBaseDamage() { return pet.spells.melee->GetBaseDamage(
 
 SuccubusLashOfPain::SuccubusLashOfPain(Pet& pet) : PetSpell(pet) {
   name = SpellName::kLashOfPain;
-  cooldown = 12 - 3 * pet.player->talents.improved_lash_of_pain;
+  cooldown = 12 - 3 * pet.player.talents.improved_lash_of_pain;
   mana_cost = 190;
   dmg = 123;
   school = SpellSchool::kShadow;
   coefficient = 0.429;
   type = AttackType::kMagical;
   can_crit = true;
-  modifier *= 1 + pet.player->talents.improved_succubus / 10.0;
+  modifier *= 1 + pet.player.talents.improved_succubus / 10.0;
   Setup();
 }

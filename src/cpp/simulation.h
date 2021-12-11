@@ -14,6 +14,7 @@ struct Simulation {
   Simulation(Player& player, const SimulationSettings& sim_settings);
   void Start();
   double PassTime();
+  void Tick(double time);
   void SelectedSpellHandler(const std::shared_ptr<Spell>& spell,
                             std::map<std::shared_ptr<Spell>, double>& predicted_damage_of_spells,
                             double fight_time_remaining);

@@ -42,16 +42,15 @@ struct Player : public Entity {
   std::shared_ptr<Aura> curse_aura;
   std::vector<std::string> combat_log_entries;
   std::string custom_stat;
+  std::vector<Spell*> spell_list;
   std::vector<DamageOverTime*> dot_list;
-  std::vector<PetSpell*> pet_spell_list;
   std::vector<OnHitProc*> on_hit_procs;
   std::vector<OnCritProc*> on_crit_procs;
   std::vector<OnDotTickProc*> on_dot_tick_procs;
   std::vector<OnDamageProc*> on_damage_procs;
   std::vector<OnResistProc*> on_resist_procs;
   Rng rng;
-  double total_duration;
-  double mp5_timer;
+  double total_fight_duration;
   double iteration_damage;
   int power_infusions_ready;
 
@@ -63,7 +62,6 @@ struct Player : public Entity {
   void CastLifeTapOrDarkPact();
   void UseCooldowns(double fight_time_remaining);
   void SendCombatLogEntries();
-  void CombatLog(const std::string& entry);
   void SendPlayerInfoToCombatLog();
   double GetGcdValue(const std::string& spell_name);
   double GetSpellPower(bool dealing_damage, SpellSchool school = SpellSchool::kNoSchool);

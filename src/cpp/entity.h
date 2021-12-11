@@ -21,28 +21,30 @@ struct Entity {
   const double kMinimumGcdValue = 1;
   const double kCritDamageMultiplier = 1.5;
   Simulation* simulation;
-  Player* player;
+  Player& player;
   std::shared_ptr<Pet> pet;
   CharacterStats stats;
   EntityType entity_type;
   std::string name;
   std::map<std::string, std::unique_ptr<CombatLogBreakdown>> combat_log_breakdown;
-  std::vector<Spell*> spell_list;
   std::vector<Aura*> aura_list;
   double cast_time_remaining;
   double gcd_remaining;
   double five_second_rule_timer_remaining;
-  double spirit_tick_timer_remaining;
+  double mp5_timer_remaining;
   bool recording_combat_log_breakdown;
   bool equipped_item_simulation;
 
-  Entity(Player* player, PlayerSettings& player_settings, EntityType entity_type);
+  Entity(Player& player, PlayerSettings& player_settings, EntityType entity_type);
   bool ShouldWriteToCombatLog();
   void PostIterationDamageAndMana(const std::string& spell_name);
   void SendCombatLogBreakdown();
   virtual double GetStamina();
   virtual double GetIntellect();
   double GetSpirit();
+  virtual void Tick(double time);
+  virtual double FindTimeUntilNextAction();
+  void CombatLog(const std::string& entry);
 };
 
 #endif

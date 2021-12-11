@@ -27,8 +27,8 @@ void ManaOverTime::Tick(double t) {
     const double kManaGained = entity.stats.mana - kCurrentMana;
 
     if (entity.ShouldWriteToCombatLog()) {
-      entity.player->CombatLog(entity.name + " gains " + DoubleToString(kManaGained) + " mana from " + name + " (" +
-                               DoubleToString(kCurrentMana) + " -> " + DoubleToString(entity.stats.mana) + ")" + ")");
+      entity.CombatLog(entity.name + " gains " + DoubleToString(kManaGained) + " mana from " + name + " (" +
+                       DoubleToString(kCurrentMana) + " -> " + DoubleToString(entity.stats.mana) + ")" + ")");
     }
 
     if (entity.recording_combat_log_breakdown) {

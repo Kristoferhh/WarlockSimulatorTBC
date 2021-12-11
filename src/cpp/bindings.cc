@@ -64,7 +64,7 @@ void SimulationUpdate(int iteration, int iteration_amount, double median_dps, in
 }
 
 void SimulationEnd(double median_dps, double min_dps, double max_dps, int item_id, int iteration_amount,
-                   int total_duration, const char* custom_stat) {
+                   int total_fight_duration, const char* custom_stat) {
 #ifdef EMSCRIPTEN
   EM_ASM({postMessage({
            event : "end",
@@ -78,7 +78,7 @@ void SimulationEnd(double median_dps, double min_dps, double max_dps, int item_i
              customStat : UTF8ToString($6)
            }
          })},
-         median_dps, min_dps, max_dps, item_id, iteration_amount, total_duration, custom_stat);
+         median_dps, min_dps, max_dps, item_id, iteration_amount, total_fight_duration, custom_stat);
 #else
   std::cout << "Median DPS: " << std::to_string(median_dps) << ". Min DPS: " << std::to_string(min_dps)
             << ". Max DPS: " << std::to_string(max_dps) << std::endl;

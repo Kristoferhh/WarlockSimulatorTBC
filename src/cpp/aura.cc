@@ -36,7 +36,7 @@ void Aura::Tick(double t) {
 
 void Aura::Apply() {
   if (active && entity.ShouldWriteToCombatLog() && (stacks == max_stacks)) {
-    entity.player->CombatLog(name + " refreshed");
+    entity.CombatLog(name + " refreshed");
   } else if (!active) {
     if (entity.recording_combat_log_breakdown) {
       entity.combat_log_breakdown.at(name)->applied_at = entity.simulation->fight_time;
@@ -47,7 +47,7 @@ void Aura::Apply() {
     }
 
     if (entity.ShouldWriteToCombatLog()) {
-      entity.player->CombatLog(name + " applied");
+      entity.CombatLog(name + " applied");
     }
 
     active = true;
@@ -57,7 +57,7 @@ void Aura::Apply() {
     stacks++;
 
     if (entity.ShouldWriteToCombatLog()) {
-      entity.player->CombatLog(name + " (" + std::to_string(stacks) + ")");
+      entity.CombatLog(name + " (" + std::to_string(stacks) + ")");
     }
 
     for (auto& stat : stats_per_stack) {
@@ -74,7 +74,7 @@ void Aura::Apply() {
 
 void Aura::Fade() {
   if (!active) {
-    entity.player->ThrowError("Attempting to fade " + name + " when it isn't active");
+    entity.player.ThrowError("Attempting to fade " + name + " when it isn't active");
   }
 
   for (auto& stat : stats) {
@@ -82,7 +82,7 @@ void Aura::Fade() {
   }
 
   if (entity.ShouldWriteToCombatLog()) {
-    entity.player->CombatLog(name + " faded");
+    entity.CombatLog(name + " faded");
   }
 
   if (entity.recording_combat_log_breakdown) {
@@ -106,7 +106,7 @@ ImprovedShadowBoltAura::ImprovedShadowBoltAura(Entity& entity) : Aura(entity) {
   name = SpellName::kImprovedShadowBolt;
   duration = 12;
   max_stacks = 4;
-  Aura::modifier = 1 + entity.player->talents.improved_shadow_bolt * 0.04;
+  Aura::modifier = 1 + entity.player.talents.improved_shadow_bolt * 0.04;
   Setup();
 }
 
@@ -121,7 +121,7 @@ void ImprovedShadowBoltAura::DecrementStacks() {
   if (stacks <= 0) {
     Fade();
   } else if (entity.ShouldWriteToCombatLog()) {
-    entity.player->CombatLog(name + " (" + std::to_string(stacks) + ")");
+    entity.CombatLog(name + " (" + std::to_string(stacks) + ")");
   }
 }
 
@@ -372,6 +372,6 @@ BlackBook::BlackBook(Entity& entity) : Aura(entity) {
 BattleSquawk::BattleSquawk(Entity& entity) : Aura(entity) {
   name = SpellName::kBattleSquawk;
   duration = 300;
-  stats.push_back(MeleeHastePercent(entity, std::pow(1.05, entity.player->settings.battle_squawk_amount)));
+  stats.push_back(MeleeHastePercent(entity, std::pow(1.05, entity.player.settings.battle_squawk_amount)));
   Setup();
 }

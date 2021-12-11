@@ -11,7 +11,7 @@
 #include "../spell/spell.h"
 
 Player::Player(PlayerSettings& player_settings)
-    : Entity(this, player_settings, EntityType::kPlayer),
+    : Entity(*this, player_settings, EntityType::kPlayer),
       selected_auras(player_settings.auras),
       talents(player_settings.talents),
       sets(player_settings.sets),
@@ -135,7 +135,7 @@ Player::Player(PlayerSettings& player_settings)
   // If using a custom isb uptime % then just add to the shadow modifier % (this
   // assumes 5/5 ISB giving 20% shadow Damage)
   if (settings.using_custom_isb_uptime) {
-    stats.shadow_modifier *= 1.0 + GetCustomImprovedShadowBoltDamageModifier();
+    stats.shadow_modifier *= GetCustomImprovedShadowBoltDamageModifier();
   }
   stats.spirit_modifier *= (1 - (0.01 * talents.demonic_embrace));
   // Elemental shaman t4 2pc bonus
@@ -197,11 +197,11 @@ void Player::Initialize(Simulation* simulationPtr) {
 
   if (!settings.sacrificing_pet || talents.demonic_sacrifice == 0) {
     if (settings.selected_pet == EmbindConstant::kImp) {
-      pet = std::make_shared<Imp>(this);
+      pet = std::make_shared<Imp>(*this);
     } else if (settings.selected_pet == EmbindConstant::kSuccubus) {
-      pet = std::make_shared<Succubus>(this);
+      pet = std::make_shared<Succubus>(*this);
     } else if (settings.selected_pet == EmbindConstant::kFelguard) {
-      pet = std::make_shared<Felguard>(this);
+      pet = std::make_shared<Felguard>(*this);
     }
 
     if (pet != NULL) {
@@ -493,7 +493,7 @@ void Player::Initialize(Simulation* simulationPtr) {
 void Player::Reset() {
   cast_time_remaining = 0;
   gcd_remaining = 0;
-  mp5_timer = 5;
+  mp5_timer_remaining = 5;
   iteration_damage = 0;
   five_second_rule_timer_remaining = 5;
   stats.mana = stats.max_mana;
@@ -701,40 +701,15 @@ void Player::SendCombatLogEntries() {
   }
 }
 
-void Player::CombatLog(const std::string& entry) {
-  combat_log_entries.push_back("|" + DoubleToString(simulation->fight_time, 4) + "| " + entry);
-}
-
 double Player::FindTimeUntilNextAction() {
-  double time = cast_time_remaining;
-  if (time <= 0) {
-    time = gcd_remaining;
-  }
+  double time = Entity::FindTimeUntilNextAction();
 
   // Pet
   if (pet != NULL) {
-    if ((talents.dark_pact > 0 || settings.pet_mode == EmbindConstant::kAggressive) &&
-        pet->spirit_tick_timer_remaining < time)
-      time = pet->spirit_tick_timer_remaining;
+    const double kTimeUntilNextPetAction = pet->FindTimeUntilNextAction();
 
-    if (settings.pet_mode == EmbindConstant::kAggressive) {
-      if (pet->cast_time_remaining > 0 && pet->cast_time_remaining < time) {
-        time = pet->cast_time_remaining;
-      }
-
-      // Pet spells
-      for (auto& pet_spell : pet_spell_list) {
-        if (pet_spell->cooldown_remaining > 0 && pet_spell->cooldown_remaining < time) {
-          time = pet_spell->cooldown_remaining;
-        }
-      }
-
-      // Pet auras
-      for (auto& pet_aura : pet->aura_list) {
-        if (pet_aura->active && pet_aura->duration_remaining < time) {
-          time = pet_aura->duration_remaining;
-        }
-      }
+    if (kTimeUntilNextPetAction > 0 && kTimeUntilNextPetAction < time) {
+      time = kTimeUntilNextPetAction;
     }
   }
 
@@ -760,8 +735,8 @@ double Player::FindTimeUntilNextAction() {
   }
 
   // MP5
-  if (mp5_timer < time && mp5_timer > 0) {
-    time = mp5_timer;
+  if (mp5_timer_remaining < time && mp5_timer_remaining > 0) {
+    time = mp5_timer_remaining;
   }
 
   // Trinkets
@@ -778,26 +753,7 @@ double Player::FindTimeUntilNextAction() {
 }
 
 void Player::Tick(double time) {
-  simulation->fight_time += time;
-  cast_time_remaining -= time;
-  gcd_remaining -= time;
-  mp5_timer -= time;
-  five_second_rule_timer_remaining -= time;
-
-  // Pet
-  if (pet != NULL) {
-    pet->Tick(time);
-  }
-
-  // Auras need to tick before Spells because otherwise you'll, for example,
-  // finish casting Corruption and then immediately afterwards, in the same
-  // millisecond, immediately tick down the aura This was also causing buffs like
-  // e.g. the t4 4pc buffs to expire sooner than they should.
-  for (auto& aura : aura_list) {
-    if (aura->active && aura->duration_remaining > 0) {
-      aura->Tick(time);
-    }
-  }
+  Entity::Tick(time);
 
   for (auto& dot : dot_list) {
     if (dot->active && dot->tick_timer_remaining > 0) {
@@ -815,8 +771,8 @@ void Player::Tick(double time) {
     trinket.Tick(time);
   }
 
-  if (mp5_timer <= 0) {
-    mp5_timer = 5;
+  if (mp5_timer_remaining <= 0) {
+    mp5_timer_remaining = 5;
 
     if (stats.mp5 > 0 || five_second_rule_timer_remaining <= 0 ||
         (auras.innervate != NULL && auras.innervate->active)) {
@@ -857,7 +813,9 @@ void Player::Tick(double time) {
   }
 }
 
-double Player::GetCustomImprovedShadowBoltDamageModifier() { return 0.2 * (settings.custom_isb_uptime_value / 100.0); }
+double Player::GetCustomImprovedShadowBoltDamageModifier() {
+  return 1 + 0.2 * (settings.custom_isb_uptime_value / 100.0);
+}
 
 void Player::SendPlayerInfoToCombatLog() {
   combat_log_entries.push_back("---------------- Player stats ----------------");
