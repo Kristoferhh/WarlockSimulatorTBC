@@ -259,7 +259,7 @@ void Simulation::Start() {
 
               for (auto& spell : predicted_damage_of_spells) {
                 if (spell.second > max_damage_spell_value &&
-                    (kFightTimeRemaining > player.GetGcdValue(spell.first->name) || spell.first->HasEnoughMana())) {
+                    (kFightTimeRemaining > player.GetGcdValue() || spell.first->HasEnoughMana())) {
                   max_damage_spell = spell.first;
                   max_damage_spell_value = spell.second;
                 }

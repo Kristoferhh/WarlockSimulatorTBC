@@ -3,122 +3,18 @@
 #include "../common.h"
 #include "../player/player.h"
 
-PetSpell::PetSpell(Pet& pet)
-    : pet(pet),
-      casting(false),
-      can_crit(true),
-      cooldown_remaining(0),
-      cast_time(0),
-      mana_cost(0),
-      modifier(1),
-      cooldown(0) {}
-
-void PetSpell::Setup() {
-  if (pet.recording_combat_log_breakdown && pet.combat_log_breakdown.count(name) == 0) {
-    pet.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
-  }
-
-  pet.spell_list.push_back(this);
-}
-
-bool PetSpell::Ready() {
-  return cooldown_remaining <= 0 && pet.stats.mana >= mana_cost && pet.cast_time_remaining <= 0;
-}
+PetSpell::PetSpell(Pet& pet) : Spell(pet), pet(pet) {}
 
 double PetSpell::GetBaseDamage() { return base_damage; }
 
-double PetSpell::GetCastTime() { return cast_time / pet.GetHastePercent(); }
-
-double PetSpell::GetCooldown() { return cooldown; }
-
-void PetSpell::Tick(double t) {
-  if (pet.ShouldWriteToCombatLog() && cooldown_remaining > 0 && cooldown_remaining - t <= 0) {
-    pet.CombatLog(pet.name + "'s " + name + " off cooldown");
-  }
-
-  cooldown_remaining -= t;
-
-  if (casting && pet.cast_time_remaining <= 0) {
-    casting = false;
-    Cast();
-  }
-}
-
-void PetSpell::StartCast() {
-  // Error: Starting to cast a spell while casting another spell
-  if (pet.cast_time_remaining > 0) {
-    pet.player->ThrowError("Pet attempting to cast " + name + " while pet's cast time remaining is at " +
-                           std::to_string(pet.cast_time_remaining) + " sec");
-  }
-
-  // Error: Casting a spell while it's on cooldown
-  if (cooldown_remaining > 0) {
-    pet.player->ThrowError("Pet attempting to cast " + name + " while it's still on cooldown (" +
-                           std::to_string(cooldown_remaining) + " seconds remaining)");
-  }
-
-  if (cast_time > 0) {
-    casting = true;
-    pet.cast_time_remaining = GetCastTime();
-
-    if (pet.ShouldWriteToCombatLog()) {
-      pet.CombatLog(pet.name + " started casting " + name +
-                    ". Cast time: " + DoubleToString(pet.cast_time_remaining, 4) + " (" +
-                    DoubleToString(pet.GetHastePercent() * 100 - 100, 2) + "% haste at a base cast speed of " +
-                    DoubleToString(cast_time, 2) + ")");
-    }
-  } else {
-    Cast();
-  }
-}
-
-void PetSpell::Reset() {
-  cooldown_remaining = 0;
-  casting = false;
-}
-
 void PetSpell::Cast() {
-  cooldown_remaining = GetCooldown();
-
-  std::string combat_log_message = pet.name;
-  if (pet.ShouldWriteToCombatLog()) {
-    if (cast_time > 0) {
-      combat_log_message.append(" finished casting " + name);
-    } else {
-      combat_log_message.append(" casts " + name);
-
-      if (name == SpellName::kMelee) {
-        combat_log_message.append(" - Attack Speed: " + DoubleToString(pet.spells.melee->GetCooldown(), 2) + " (" +
-                                  DoubleToString(round(pet.GetHastePercent() * 10000) / 100.0 - 100, 4) +
-                                  "% haste at a base attack speed of " + DoubleToString(pet.spells.melee->cooldown, 2) +
-                                  ")");
-      }
-    }
-  }
-
-  if (mana_cost > 0 && !pet.player->settings.infinite_pet_mana) {
-    pet.stats.mana -= mana_cost;
-    pet.five_second_rule_timer_remaining = 5;
-
-    if (pet.ShouldWriteToCombatLog()) {
-      combat_log_message.append(" - Pet mana: " + DoubleToString(pet.stats.mana) + "/" +
-                                DoubleToString(pet.stats.max_mana, 0));
-    }
-  }
-
-  if (pet.recording_combat_log_breakdown) {
-    pet.combat_log_breakdown.at(name)->casts++;
-  }
-
-  if (pet.ShouldWriteToCombatLog()) {
-    pet.CombatLog(combat_log_message);
-  }
+  Spell::Cast();
 
   // Physical dmg spell
   if (type == AttackType::kPhysical) {
     bool is_crit = false;
     bool is_glancing = false;
-    double crit_chance = pet.GetMeleeCritChance() * pet.kFloatNumberMultiplier;
+    double crit_chance = can_crit ? (pet.GetMeleeCritChance() * pet.kFloatNumberMultiplier) : 0;
     double dodge_chance = crit_chance + StatConstant::kBaseEnemyDodgeChance * pet.kFloatNumberMultiplier;
     double miss_chance = dodge_chance + (100 - pet.stats.melee_hit_chance) * pet.kFloatNumberMultiplier;
     double glancing_chance = miss_chance;
@@ -133,7 +29,7 @@ void PetSpell::Cast() {
     int attack_roll = pet.player->GetRand();
 
     // Crit
-    if (attack_roll <= crit_chance) {
+    if (can_crit && attack_roll <= crit_chance) {
       is_crit = true;
 
       if (pet.recording_combat_log_breakdown) {
@@ -329,6 +225,7 @@ ImpFirebolt::ImpFirebolt(Pet& pet) : PetSpell(pet) {
   coefficient = 2 / 3.5;
   school = SpellSchool::kFire;
   type = AttackType::kMagical;
+  can_crit = true;
   Setup();
 }
 
@@ -336,6 +233,8 @@ Melee::Melee(Pet& pet) : PetSpell(pet) {
   name = SpellName::kMelee;
   type = AttackType::kPhysical;
   cooldown = 2;
+  on_gcd = false;
+  can_crit = true;
   Setup();
 }
 
@@ -348,6 +247,7 @@ FelguardCleave::FelguardCleave(Pet& pet) : PetSpell(pet) {
   cooldown = 6;
   mana_cost = 417;
   type = AttackType::kPhysical;
+  can_crit = true;
   Setup();
 }
 
@@ -363,5 +263,6 @@ SuccubusLashOfPain::SuccubusLashOfPain(Pet& pet) : PetSpell(pet) {
   type = AttackType::kMagical;
   can_crit = true;
   modifier *= 1 + pet.player->talents.improved_succubus / 10.0;
+  can_crit = true;
   Setup();
 }

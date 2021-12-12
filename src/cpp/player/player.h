@@ -15,6 +15,10 @@
 #include "../pet/pet_spell.h"
 #include "../rng.h"
 #include "../sets.h"
+#include "../talents.h"
+#include "../trinket.h"
+#include "player_auras.h"
+#include "player_settings.h"
 #include "player_spell/damage_over_time.h"
 #include "player_spell/on_crit_proc.h"
 #include "player_spell/on_damage_proc.h"
@@ -22,10 +26,6 @@
 #include "player_spell/on_hit_proc.h"
 #include "player_spell/on_resist_proc.h"
 #include "player_spell/player_spell.h"
-#include "../talents.h"
-#include "../trinket.h"
-#include "player_auras.h"
-#include "player_settings.h"
 #include "player_spells.h"
 
 struct Player : public Entity {
@@ -42,8 +42,6 @@ struct Player : public Entity {
   std::shared_ptr<Aura> curse_aura;
   std::vector<std::string> combat_log_entries;
   std::string custom_stat;
-  std::vector<PlayerSpell*> spell_list;
-  std::vector<DamageOverTime*> dot_list;
   std::vector<OnHitProc*> on_hit_procs;
   std::vector<OnCritProc*> on_crit_procs;
   std::vector<OnDotTickProc*> on_dot_tick_procs;
@@ -64,7 +62,6 @@ struct Player : public Entity {
   void SendCombatLogEntries();
   void SendPlayerInfoToCombatLog();
   void Tick(double time);
-  double GetGcdValue(const std::string& spell_name);
   double GetSpellPower(bool dealing_damage, SpellSchool school = SpellSchool::kNoSchool);
   double GetHastePercent();
   double GetCritChance(SpellType spell_type);

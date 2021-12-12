@@ -9,7 +9,9 @@ Pet::Pet(Player& player)
       spells(PetSpells()),
       auras(PetAuras()),
       glancing_blow_multiplier(1 - (0.1 + (player.settings.enemy_level * 5 - kLevel * 5) / 100.0)),
-      glancing_blow_chance(std::max(0.0, 6 + (player.settings.enemy_level * 5 - kLevel * 5) * 1.2)) {}
+      glancing_blow_chance(std::max(0.0, 6 + (player.settings.enemy_level * 5 - kLevel * 5) * 1.2)) {
+  infinite_mana = player.settings.infinite_pet_mana;
+}
 
 void Pet::Initialize(Simulation* simulationPtr) {
   Entity::Initialize(simulationPtr);
@@ -238,10 +240,6 @@ void Pet::Setup() { CalculateStatsFromAuras(); }
 void Pet::Reset() {
   Entity::Reset();
   stats.mana = CalculateMaxMana();
-
-  for (auto& spell : spell_list) {
-    spell->Reset();
-  }
 }
 
 double Pet::GetMeleeCritChance() {
@@ -300,36 +298,8 @@ double Pet::GetAgility() { return stats.agility * stats.agility_modifier; }
 
 double Pet::GetStrength() { return stats.strength * stats.strength_modifier; }
 
-double Pet::FindTimeUntilNextAction() {
-  double time = Entity::FindTimeUntilNextAction();
-
-  if (five_second_rule_timer_remaining > 0 && five_second_rule_timer_remaining < time) {
-    time = five_second_rule_timer_remaining;
-  }
-
-  for (auto& pet_spell : spell_list) {
-    if (pet_spell->cooldown_remaining > 0 && pet_spell->cooldown_remaining < time) {
-      time = pet_spell->cooldown_remaining;
-    }
-  }
-
-  for (auto& pet_aura : aura_list) {
-    if (pet_aura->active && pet_aura->duration_remaining < time) {
-      time = pet_aura->duration_remaining;
-    }
-  }
-
-  return time;
-}
-
 void Pet::Tick(double t) {
   Entity::Tick(t);
-
-  for (auto& spell : spell_list) {
-    if (spell->cooldown_remaining > 0 || spell->casting) {
-      spell->Tick(t);
-    }
-  }
 
   // MP5
   if (mp5_timer_remaining <= 0) {

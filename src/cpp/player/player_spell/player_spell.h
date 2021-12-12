@@ -1,47 +1,26 @@
-#ifndef WARLOCK_SIMULATOR_TBC_SPELL
-#define WARLOCK_SIMULATOR_TBC_SPELL
+#ifndef WARLOCK_SIMULATOR_TBC_PLAYER_SPELL
+#define WARLOCK_SIMULATOR_TBC_PLAYER_SPELL
 
 struct Player;
 #include <cmath>
 #include <string>
 
 #include "../../enums.h"
+#include "../../spell.h"
 #include "damage_over_time.h"
 
-struct PlayerSpell : std::enable_shared_from_this<PlayerSpell> {
+struct PlayerSpell : Spell, std::enable_shared_from_this<PlayerSpell> {
   Player& player;
-  std::shared_ptr<Aura> aura_effect;
   std::shared_ptr<DamageOverTime> dot_effect;
   std::vector<std::string> shared_cooldown_spells;
-  SpellSchool school;
   SpellType type;
-  std::string name;
-  int amount_of_casts_per_fight;
-  int amount_of_casts_this_fight;
   int proc_chance;
-  int min_dmg;
-  int max_dmg;
-  double base_damage;
-  int min_mana_gain;
-  int max_mana_gain;
-  double mana_gain;
   int bonus_damage_from_immolate_min;
   int bonus_damage_from_immolate_max;
   double bonus_damage_from_immolate;
-  double cast_time;
-  double mana_cost;
-  double coefficient;
-  double cooldown;
-  double modifier;
   double bonus_crit_chance;
-  double cooldown_remaining;
   bool does_damage;
-  bool can_crit;
-  bool is_non_warlock_ability;
-  bool casting;
   bool is_item;
-  bool on_gcd;
-  bool is_proc;
   bool can_miss;
   bool is_finisher;
   bool gain_mana_on_cast;
@@ -55,25 +34,16 @@ struct PlayerSpell : std::enable_shared_from_this<PlayerSpell> {
   bool on_damage_procs_enabled;
   bool procs_on_resist;
   bool on_resist_procs_enabled;
-  bool limited_amount_of_casts;
 
   PlayerSpell(Player& player, std::shared_ptr<Aura> aura = nullptr, std::shared_ptr<DamageOverTime> dot = nullptr);
 
-  void Reset();
   void Setup();
-  virtual bool CanCast();
-  bool HasEnoughMana();
-  bool Ready();
-  virtual double GetCastTime();
-  virtual void StartCast(double predicted_damage = 0);
   virtual void Cast();
   virtual double GetModifier();
   virtual void Damage(bool is_crit = false);
   std::vector<double> GetConstantDamage();
   double GetCritMultiplier(double player_crit_multiplier);
   double PredictDamage();
-  double GetManaCost();
-  void Tick(double time);
   void OnCritProcs();
   void OnResistProcs();
   void OnDamageProcs();

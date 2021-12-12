@@ -7,23 +7,12 @@
 #include "../player.h"
 
 PlayerSpell::PlayerSpell(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
-    : player(player),
-      aura_effect(aura),
+    : Spell(player),
+      player(player),
       dot_effect(dot),
-      modifier(1),
-      coefficient(0),
-      cooldown(0),
-      is_non_warlock_ability(false),
       does_damage(false),
-      can_crit(false),
       is_item(false),
-      on_gcd(true),
-      is_proc(false),
       is_finisher(false),
-      cast_time(0),
-      limited_amount_of_casts(false),
-      amount_of_casts_this_fight(0),
-      amount_of_casts_per_fight(0),
       gain_mana_on_cast(false),
       procs_on_hit(false),
       on_hit_procs_enabled(true),
@@ -33,127 +22,21 @@ PlayerSpell::PlayerSpell(Player& player, std::shared_ptr<Aura> aura, std::shared
       procs_on_dot_ticks(false),
       on_dot_tick_procs_enabled(true),
       procs_on_resist(false),
-      on_resist_procs_enabled(true) {}
-
-void PlayerSpell::Reset() {
-  casting = false;
-  cooldown_remaining = 0;
-  amount_of_casts_this_fight = 0;
+      on_resist_procs_enabled(true) {
+  aura_effect = aura;
 }
 
 void PlayerSpell::Setup() {
-  if (min_dmg > 0 && max_dmg > 0) {
-    base_damage = (min_dmg + max_dmg) / 2.0;
-  }
-
-  if (min_mana_gain > 0 && max_mana_gain > 0) {
-    mana_gain = (min_mana_gain + max_mana_gain) / 2.0;
-  }
-
-  if (player.recording_combat_log_breakdown && player.combat_log_breakdown.count(name) == 0) {
-    player.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
-  }
+  Spell::Setup();
 
   if (type == SpellType::kDestruction) {
     mana_cost *= 1 - 0.01 * player.talents.cataclysm;
   }
-
-  player.spell_list.push_back(this);
-}
-
-double PlayerSpell::GetCastTime() { return cast_time / player.GetHastePercent(); }
-
-bool PlayerSpell::CanCast() {
-  return cooldown_remaining <= 0 &&
-         (is_non_warlock_ability ||
-          ((!on_gcd || player.gcd_remaining <= 0) && (is_proc || player.cast_time_remaining <= 0))) &&
-         (!limited_amount_of_casts || amount_of_casts_this_fight < amount_of_casts_per_fight);
-}
-
-bool PlayerSpell::HasEnoughMana() { return GetManaCost() <= player.stats.mana; }
-
-bool PlayerSpell::Ready() { return CanCast() && HasEnoughMana(); }
-
-void PlayerSpell::StartCast(double predicted_damage) {
-  if (on_gcd && !is_non_warlock_ability) {
-    // Error: Casting a spell while GCD is active
-    if (player.gcd_remaining > 0) {
-      player.ThrowError("Attempting to Cast " + name + " while player's GCD is at " +
-                        std::to_string(player.gcd_remaining) + " seconds remaining");
-    }
-
-    player.gcd_remaining = player.GetGcdValue(name);
-  }
-
-  // Error: Starting to Cast a spell while casting another spell
-  if (player.cast_time_remaining > 0 && !is_non_warlock_ability && !is_proc) {
-    player.ThrowError("Attempting to Cast " + name + " while player's Cast time remaining is at " +
-                      std::to_string(player.cast_time_remaining) + " sec");
-  }
-
-  // Error: Casting a spell while it's on cooldown
-  if (cooldown > 0 && cooldown_remaining > 0) {
-    player.ThrowError("Attempting to Cast " + name + " while it's still on cooldown (" +
-                      std::to_string(cooldown_remaining) + " seconds remaining)");
-  }
-
-  std::string combat_log_message = "";
-  if (cast_time > 0) {
-    casting = true;
-    player.cast_time_remaining = GetCastTime();
-
-    if (!is_proc && player.ShouldWriteToCombatLog()) {
-      combat_log_message.append("Started casting " + name +
-                                " - Cast time: " + DoubleToString(player.cast_time_remaining, 4) + " (" +
-                                DoubleToString((player.GetHastePercent() - 1) * 100, 4) +
-                                "% haste at a base Cast speed of " + DoubleToString(cast_time, 2) + ")");
-    }
-  } else {
-    if (!is_proc && player.ShouldWriteToCombatLog()) {
-      combat_log_message.append("Cast " + name);
-    }
-
-    Cast();
-  }
-
-  if (on_gcd && !is_non_warlock_ability && player.ShouldWriteToCombatLog()) {
-    combat_log_message.append(" - Global cooldown: " + DoubleToString(player.gcd_remaining, 4));
-  }
-
-  if (predicted_damage > 0 && player.ShouldWriteToCombatLog()) {
-    combat_log_message.append(" - Estimated Damage / Cast time: " + DoubleToString(round(predicted_damage)));
-  }
-
-  if (combat_log_message.length() > 0 && player.ShouldWriteToCombatLog()) {
-    player.CombatLog(combat_log_message);
-  }
-}
-
-double PlayerSpell::GetManaCost() { return mana_cost * player.stats.mana_cost_modifier; }
-
-void PlayerSpell::Tick(double t) {
-  if (cooldown_remaining > 0 && cooldown_remaining - t <= 0) {
-    if (name == SpellName::kPowerInfusion) {
-      player.power_infusions_ready++;
-    }
-
-    if (player.ShouldWriteToCombatLog()) {
-      player.CombatLog(name + " is off cooldown");
-    }
-  }
-
-  cooldown_remaining -= t;
-  if (casting && player.cast_time_remaining <= 0) {
-    Cast();
-  }
 }
 
 void PlayerSpell::Cast() {
-  const double kCurrentMana = player.stats.mana;
+  Spell::Cast();
   bool is_crit = false;
-  cooldown_remaining = cooldown;
-  casting = false;
-  amount_of_casts_this_fight++;
 
   for (auto& spell_name : shared_cooldown_spells) {
     for (auto& player_spell : player.spell_list) {
@@ -167,22 +50,9 @@ void PlayerSpell::Cast() {
     player.power_infusions_ready--;
   }
 
-  if (aura_effect == NULL && player.recording_combat_log_breakdown) {
-    player.combat_log_breakdown.at(name)->casts++;
-  }
-
-  if (mana_cost > 0 && !player.settings.infinite_player_mana) {
-    player.stats.mana -= GetManaCost();
-    player.five_second_rule_timer_remaining = 5;
-  }
-
-  if (cast_time > 0 && player.ShouldWriteToCombatLog()) {
-    player.CombatLog("Finished casting " + name + " - Mana: " + DoubleToString(kCurrentMana) + " -> " +
-                     DoubleToString(player.stats.mana) + " - Mana Cost: " + DoubleToString(round(GetManaCost())) +
-                     " - Mana Cost Modifier: " + DoubleToString(round(player.stats.mana_cost_modifier * 100)) + "%");
-  }
-
   if (gain_mana_on_cast) {
+    const double kCurrentMana = player.stats.mana;
+
     player.stats.mana = std::min(static_cast<double>(player.stats.max_mana), kCurrentMana + mana_gain);
     const double kManaGained = player.stats.mana - kCurrentMana;
 
@@ -389,7 +259,7 @@ double PlayerSpell::PredictDamage() {
     estimated_damage *= 1.15;  // using 75% uptime as the default for now
   }
 
-  return (estimated_damage * hit_chance) / std::max(player.GetGcdValue(name), GetCastTime());
+  return (estimated_damage * hit_chance) / std::max(player.GetGcdValue(), GetCastTime());
 }
 
 void PlayerSpell::OnCritProcs() {
@@ -557,6 +427,7 @@ Shadowfury::Shadowfury(Player& player) : PlayerSpell(player) {
   cooldown = 20;
   coefficient = 0.195;
   can_miss = true;
+  on_gcd = false;
   Setup();
 }
 

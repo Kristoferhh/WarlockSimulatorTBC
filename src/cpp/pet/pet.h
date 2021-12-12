@@ -18,7 +18,6 @@ struct Pet : public Entity, std::enable_shared_from_this<Pet> {
   PetAuras auras;
   PetName pet_name;
   PetType pet_type;
-  std::vector<PetSpell*> spell_list;
   double glancing_blow_multiplier;
   double glancing_blow_chance;
   double crit_suppression;
@@ -42,7 +41,6 @@ struct Pet : public Entity, std::enable_shared_from_this<Pet> {
   double GetSpellPower();
   double GetDebuffAttackPower();
   double CalculateMaxMana();
-  double FindTimeUntilNextAction();
   bool IsCrit(AttackType type);
   bool IsHit(AttackType type);
 };

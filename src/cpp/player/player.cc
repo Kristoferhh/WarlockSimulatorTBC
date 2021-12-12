@@ -20,6 +20,7 @@ Player::Player(PlayerSettings& player_settings)
       spells(PlayerSpells()),
       auras(PlayerAuras()) {
   name = "Player";
+  infinite_mana = player_settings.infinite_player_mana;
 
   // I don't know if this formula only works for bosses or not, so for the
   // moment I'm only using it for targets 3+ levels above.
@@ -500,10 +501,6 @@ void Player::Reset() {
   for (auto& trinket : trinkets) {
     trinket.Reset();
   }
-
-  for (auto& spell : spell_list) {
-    spell->Reset();
-  }
 }
 
 void Player::EndAuras() {
@@ -537,10 +534,6 @@ double Player::GetHastePercent() {
   }
 
   return haste_percent * (1 + stats.spell_haste_rating / StatConstant::kHasteRatingPerPercent / 100.0);
-}
-
-double Player::GetGcdValue(const std::string& spell_name) {
-  return spell_name == SpellName::kShadowfury ? 0 : std::max(kMinimumGcdValue, kGcdValue / GetHastePercent());
 }
 
 double Player::GetSpellPower(bool dealing_damage, SpellSchool school) {
@@ -698,7 +691,6 @@ void Player::SendCombatLogEntries() {
 double Player::FindTimeUntilNextAction() {
   double time = Entity::FindTimeUntilNextAction();
 
-  // Pet
   if (pet != NULL) {
     const double kTimeUntilNextPetAction = pet->FindTimeUntilNextAction();
 
@@ -707,28 +699,6 @@ double Player::FindTimeUntilNextAction() {
     }
   }
 
-  // Spells
-  for (auto& spell : spell_list) {
-    if (spell->cooldown_remaining < time && spell->cooldown_remaining > 0) {
-      time = spell->cooldown_remaining;
-    }
-  }
-
-  // Auras
-  for (auto& aura : aura_list) {
-    if (aura->active && aura->has_duration && aura->duration_remaining < time) {
-      time = aura->duration_remaining;
-    }
-  }
-
-  // Dots
-  for (auto& dot : dot_list) {
-    if (dot->active && dot->tick_timer_remaining < time) {
-      time = dot->tick_timer_remaining;
-    }
-  }
-
-  // Trinkets
   for (auto& trinket : trinkets) {
     if (trinket.active && trinket.duration_remaining < time) {
       time = trinket.duration_remaining;
@@ -743,18 +713,6 @@ double Player::FindTimeUntilNextAction() {
 
 void Player::Tick(double time) {
   Entity::Tick(time);
-
-  for (auto& dot : dot_list) {
-    if (dot->active && dot->tick_timer_remaining > 0) {
-      dot->Tick(time);
-    }
-  }
-
-  for (auto& spell : spell_list) {
-    if (spell->casting || spell->cooldown_remaining > 0) {
-      spell->Tick(time);
-    }
-  }
 
   for (auto& trinket : trinkets) {
     trinket.Tick(time);

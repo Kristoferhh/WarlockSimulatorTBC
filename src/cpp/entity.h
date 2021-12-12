@@ -28,12 +28,15 @@ struct Entity {
   std::string name;
   std::map<std::string, std::unique_ptr<CombatLogBreakdown>> combat_log_breakdown;
   std::vector<Aura*> aura_list;
+  std::vector<Spell*> spell_list;
+  std::vector<DamageOverTime*> dot_list;
   double cast_time_remaining;
   double gcd_remaining;
   double five_second_rule_timer_remaining;
   double mp5_timer_remaining;
   bool recording_combat_log_breakdown;
   bool equipped_item_simulation;
+  bool infinite_mana;
 
   Entity(Player* player, PlayerSettings& player_settings, EntityType entity_type);
   bool ShouldWriteToCombatLog();
@@ -48,6 +51,8 @@ struct Entity {
   virtual void EndAuras();
   virtual void Reset();
   virtual void Initialize(Simulation* simulation);
+  virtual double GetHastePercent() = 0;
+  double GetGcdValue();
 };
 
 #endif

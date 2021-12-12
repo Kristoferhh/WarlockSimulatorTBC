@@ -39,6 +39,10 @@ void Entity::Reset() {
   gcd_remaining = 0;
   mp5_timer_remaining = 5;
   five_second_rule_timer_remaining = 5;
+
+  for (auto& spell : spell_list) {
+    spell->Reset();
+  }
 }
 
 void Entity::Initialize(Simulation* simulationPtr) { simulation = simulationPtr; }
@@ -79,8 +83,33 @@ double Entity::FindTimeUntilNextAction() {
     time = mp5_timer_remaining;
   }
 
+  if (five_second_rule_timer_remaining > 0 && five_second_rule_timer_remaining < time) {
+    time = five_second_rule_timer_remaining;
+  }
+
+  for (auto& spell : spell_list) {
+    if (spell->cooldown_remaining < time && spell->cooldown_remaining > 0) {
+      time = spell->cooldown_remaining;
+    }
+  }
+
+  for (auto& aura : aura_list) {
+    if (aura->active && aura->has_duration && aura->duration_remaining < time) {
+      time = aura->duration_remaining;
+    }
+  }
+
+  // TODO make DamageOverTime inherit from Aura and combine dot_list and aura_list
+  for (auto& dot : dot_list) {
+    if (dot->active && dot->tick_timer_remaining < time) {
+      time = dot->tick_timer_remaining;
+    }
+  }
+
   return time;
 }
+
+double Entity::GetGcdValue() { return std::max(kMinimumGcdValue, kGcdValue / GetHastePercent()); }
 
 void Entity::Tick(double time) {
   cast_time_remaining -= time;
@@ -95,6 +124,18 @@ void Entity::Tick(double time) {
   for (auto& aura : aura_list) {
     if (aura->active && aura->duration_remaining > 0) {
       aura->Tick(time);
+    }
+  }
+
+  for (auto& dot : dot_list) {
+    if (dot->active && dot->tick_timer_remaining > 0) {
+      dot->Tick(time);
+    }
+  }
+
+  for (auto& spell : spell_list) {
+    if (spell->cooldown_remaining > 0 || spell->casting) {
+      spell->Tick(time);
     }
   }
 }

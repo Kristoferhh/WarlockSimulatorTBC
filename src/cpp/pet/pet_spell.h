@@ -5,31 +5,14 @@ struct Pet;
 #include <iostream>
 
 #include "../enums.h"
+#include "../spell.h"
 
-struct PetSpell {
+struct PetSpell : Spell {
   Pet& pet;
-  SpellSchool school;
   AttackType type;
-  std::string name;
-  double base_damage;
-  bool casting;
-  bool can_crit;
-  double coefficient;
-  double cooldown_remaining;
-  double cast_time;
-  int mana_cost;
-  double modifier;
-  int cooldown;
 
   PetSpell(Pet& pet);
-  bool Ready();
-  void Setup();
-  void Reset();
   virtual double GetBaseDamage();
-  double GetCastTime();
-  virtual double GetCooldown();
-  void Tick(double time);
-  void StartCast();
   void Cast();
   void Damage(bool is_crit, bool is_glancing);
 };
