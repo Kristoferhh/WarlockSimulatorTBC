@@ -193,8 +193,8 @@ Player::Player(PlayerSettings& player_settings)
 }
 
 void Player::Initialize(Simulation* simulationPtr) {
+  Entity::Initialize(simulationPtr);
   player = this;
-  simulation = simulationPtr;
 
   if (!settings.sacrificing_pet || talents.demonic_sacrifice == 0) {
     if (settings.selected_pet == EmbindConstant::kImp) {
@@ -492,12 +492,9 @@ void Player::Initialize(Simulation* simulationPtr) {
 }
 
 void Player::Reset() {
-  cast_time_remaining = 0;
-  gcd_remaining = 0;
-  mp5_timer_remaining = 5;
-  iteration_damage = 0;
-  five_second_rule_timer_remaining = 5;
+  Entity::Reset();
   stats.mana = stats.max_mana;
+  iteration_damage = 0;
   power_infusions_ready = settings.power_infusion_amount;
 
   for (auto& trinket : trinkets) {
@@ -510,15 +507,11 @@ void Player::Reset() {
 }
 
 void Player::EndAuras() {
+  Entity::EndAuras();
+
   for (auto& trinket : trinkets) {
     if (trinket.active) {
       trinket.Fade();
-    }
-  }
-
-  for (auto& aura : aura_list) {
-    if (aura->active) {
-      aura->Fade();
     }
   }
 

@@ -11,7 +11,7 @@ struct PetSpell {
   SpellSchool school;
   AttackType type;
   std::string name;
-  double dmg;
+  double base_damage;
   bool casting;
   bool can_crit;
   double coefficient;

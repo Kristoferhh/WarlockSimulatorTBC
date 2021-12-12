@@ -13,6 +13,7 @@ struct Player;
 #include "pet_spells.h"
 
 struct Pet : public Entity, std::enable_shared_from_this<Pet> {
+  const double kBaseMeleeSpeed = 2;
   PetSpells spells;
   PetAuras auras;
   PetName pet_name;
@@ -22,15 +23,12 @@ struct Pet : public Entity, std::enable_shared_from_this<Pet> {
   double glancing_blow_chance;
   double crit_suppression;
   double enemy_damage_reduction_from_armor;
-  double dmg;
-  double base_melee_speed;
 
   Pet(Player& player);
   void Initialize(Simulation* simulation);
   void CalculateStatsFromAuras();
   void Setup();
   void Reset();
-  void EndAuras();
   void Tick(double t);
   double GetAttackPower();
   double GetMeleeCritChance();

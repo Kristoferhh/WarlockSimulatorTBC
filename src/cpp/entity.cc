@@ -26,6 +26,23 @@ void Entity::PostIterationDamageAndMana(const std::string& spell_name) {
   combat_log_breakdown.at(spell_name)->iteration_mana_gain = 0;
 }
 
+void Entity::EndAuras() {
+  for (auto& aura : aura_list) {
+    if (aura->active) {
+      aura->Fade();
+    }
+  }
+}
+
+void Entity::Reset() {
+  cast_time_remaining = 0;
+  gcd_remaining = 0;
+  mp5_timer_remaining = 5;
+  five_second_rule_timer_remaining = 5;
+}
+
+void Entity::Initialize(Simulation* simulationPtr) { simulation = simulationPtr; }
+
 void Entity::SendCombatLogBreakdown() {
   for (auto& combat_log_breakdown : combat_log_breakdown) {
     if (combat_log_breakdown.second->iteration_damage > 0 || combat_log_breakdown.second->iteration_mana_gain > 0) {

@@ -25,7 +25,7 @@ bool PetSpell::Ready() {
   return cooldown_remaining <= 0 && pet.stats.mana >= mana_cost && pet.cast_time_remaining <= 0;
 }
 
-double PetSpell::GetBaseDamage() { return dmg; }
+double PetSpell::GetBaseDamage() { return base_damage; }
 
 double PetSpell::GetCastTime() { return cast_time / pet.GetHastePercent(); }
 
@@ -325,7 +325,7 @@ ImpFirebolt::ImpFirebolt(Pet& pet) : PetSpell(pet) {
   name = SpellName::kFirebolt;
   cast_time = 2 - (0.25 * pet.player->talents.improved_firebolt);
   mana_cost = 145;
-  dmg = 119.5 * (1 + 0.1 * pet.player->talents.improved_imp);
+  base_damage = 119.5 * (1 + 0.1 * pet.player->talents.improved_imp);
   coefficient = 2 / 3.5;
   school = SpellSchool::kFire;
   type = AttackType::kMagical;
@@ -334,12 +334,12 @@ ImpFirebolt::ImpFirebolt(Pet& pet) : PetSpell(pet) {
 
 Melee::Melee(Pet& pet) : PetSpell(pet) {
   name = SpellName::kMelee;
-  cooldown = 2;
   type = AttackType::kPhysical;
+  cooldown = 2;
   Setup();
 }
 
-double Melee::GetBaseDamage() { return (pet.GetAttackPower() / 14 + 51.7) * pet.base_melee_speed; }
+double Melee::GetBaseDamage() { return (pet.GetAttackPower() / 14 + 51.7) * pet.kBaseMeleeSpeed; }
 
 double Melee::GetCooldown() { return cooldown / pet.GetHastePercent(); }
 
@@ -357,7 +357,7 @@ SuccubusLashOfPain::SuccubusLashOfPain(Pet& pet) : PetSpell(pet) {
   name = SpellName::kLashOfPain;
   cooldown = 12 - 3 * pet.player->talents.improved_lash_of_pain;
   mana_cost = 190;
-  dmg = 123;
+  base_damage = 123;
   school = SpellSchool::kShadow;
   coefficient = 0.429;
   type = AttackType::kMagical;

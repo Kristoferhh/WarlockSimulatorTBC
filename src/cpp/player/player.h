@@ -63,6 +63,7 @@ struct Player : public Entity {
   void UseCooldowns(double fight_time_remaining);
   void SendCombatLogEntries();
   void SendPlayerInfoToCombatLog();
+  void Tick(double time);
   double GetGcdValue(const std::string& spell_name);
   double GetSpellPower(bool dealing_damage, SpellSchool school = SpellSchool::kNoSchool);
   double GetHastePercent();
@@ -70,10 +71,9 @@ struct Player : public Entity {
   double GetHitChance(SpellType spell_type);
   double GetPartialResistMultiplier(SpellSchool school);
   double GetBaseHitChance(int player_level, int enemy_level);
-  int GetRand();
   double GetCustomImprovedShadowBoltDamageModifier();
-  void Tick(double time);
   double FindTimeUntilNextAction();
+  int GetRand();
   bool IsCrit(SpellType spell_type, double extra_crit = 0);
   bool IsHit(SpellType spell_type);
   bool RollRng(double chance);

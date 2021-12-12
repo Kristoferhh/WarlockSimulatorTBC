@@ -9,11 +9,10 @@ Pet::Pet(Player& player)
       spells(PetSpells()),
       auras(PetAuras()),
       glancing_blow_multiplier(1 - (0.1 + (player.settings.enemy_level * 5 - kLevel * 5) / 100.0)),
-      glancing_blow_chance(std::max(0.0, 6 + (player.settings.enemy_level * 5 - kLevel * 5) * 1.2)),
-      base_melee_speed(2) {}
+      glancing_blow_chance(std::max(0.0, 6 + (player.settings.enemy_level * 5 - kLevel * 5) * 1.2)) {}
 
 void Pet::Initialize(Simulation* simulationPtr) {
-  simulation = simulationPtr;
+  Entity::Initialize(simulationPtr);
   Setup();
 
   if (pet_name == PetName::kImp) {
@@ -237,21 +236,11 @@ double Pet::CalculateMaxMana() {
 void Pet::Setup() { CalculateStatsFromAuras(); }
 
 void Pet::Reset() {
+  Entity::Reset();
   stats.mana = CalculateMaxMana();
-  five_second_rule_timer_remaining = 5;
-  mp5_timer_remaining = 2;
-  cast_time_remaining = 0;
 
   for (auto& spell : spell_list) {
     spell->Reset();
-  }
-}
-
-void Pet::EndAuras() {
-  for (auto& aura : aura_list) {
-    if (aura->active) {
-      aura->Fade();
-    }
   }
 }
 

@@ -45,6 +45,9 @@ struct Entity {
   virtual void Tick(double time);
   virtual double FindTimeUntilNextAction();
   void CombatLog(const std::string& entry);
+  virtual void EndAuras();
+  virtual void Reset();
+  virtual void Initialize(Simulation* simulation);
 };
 
 #endif
