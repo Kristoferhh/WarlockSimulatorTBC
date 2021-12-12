@@ -735,11 +735,6 @@ double Player::FindTimeUntilNextAction() {
     }
   }
 
-  // MP5
-  if (mp5_timer_remaining < time && mp5_timer_remaining > 0) {
-    time = mp5_timer_remaining;
-  }
-
   // Trinkets
   for (auto& trinket : trinkets) {
     if (trinket.active && trinket.duration_remaining < time) {

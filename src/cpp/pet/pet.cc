@@ -314,25 +314,19 @@ double Pet::GetStrength() { return stats.strength * stats.strength_modifier; }
 double Pet::FindTimeUntilNextAction() {
   double time = Entity::FindTimeUntilNextAction();
 
-  if (time <= 0) {
-    time = std::min(five_second_rule_timer_remaining, mp5_timer_remaining);
+  if (five_second_rule_timer_remaining > 0 && five_second_rule_timer_remaining < time) {
+    time = five_second_rule_timer_remaining;
   }
 
-  if ((player->talents.dark_pact > 0 || player->settings.pet_mode == EmbindConstant::kAggressive) &&
-      mp5_timer_remaining < time)
-    time = mp5_timer_remaining;
-
-  if (player->settings.pet_mode == EmbindConstant::kAggressive) {
-    for (auto& pet_spell : spell_list) {
-      if (pet_spell->cooldown_remaining > 0 && pet_spell->cooldown_remaining < time) {
-        time = pet_spell->cooldown_remaining;
-      }
+  for (auto& pet_spell : spell_list) {
+    if (pet_spell->cooldown_remaining > 0 && pet_spell->cooldown_remaining < time) {
+      time = pet_spell->cooldown_remaining;
     }
+  }
 
-    for (auto& pet_aura : aura_list) {
-      if (pet_aura->active && pet_aura->duration_remaining < time) {
-        time = pet_aura->duration_remaining;
-      }
+  for (auto& pet_aura : aura_list) {
+    if (pet_aura->active && pet_aura->duration_remaining < time) {
+      time = pet_aura->duration_remaining;
     }
   }
 

@@ -58,6 +58,10 @@ double Entity::FindTimeUntilNextAction() {
     time = gcd_remaining;
   }
 
+  if (time <= 0 || (mp5_timer_remaining < time && mp5_timer_remaining > 0)) {
+    time = mp5_timer_remaining;
+  }
+
   return time;
 }
 
