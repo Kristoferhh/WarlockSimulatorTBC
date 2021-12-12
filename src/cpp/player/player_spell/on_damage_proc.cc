@@ -1,6 +1,6 @@
 #include "on_damage_proc.h"
 
-#include "../player/player.h"
+#include "../player.h"
 
 OnDamageProc::OnDamageProc(Player& player, std::shared_ptr<Aura> aura) : SpellProc(player, aura) {
   procs_on_damage = true;

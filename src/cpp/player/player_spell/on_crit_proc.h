@@ -10,7 +10,7 @@ struct OnCritProc : public SpellProc {
 
 struct ImprovedShadowBolt : public OnCritProc {
   ImprovedShadowBolt(Player& player, std::shared_ptr<Aura> aura);
-  bool ShouldProc(Spell* spell);
+  bool ShouldProc(PlayerSpell* spell);
 };
 
 struct TheLightningCapacitor : public OnCritProc {

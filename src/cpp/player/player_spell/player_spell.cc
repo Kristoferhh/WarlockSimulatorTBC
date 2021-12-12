@@ -1,12 +1,12 @@
-#include "spell.h"
+#include "player_spell.h"
 
 #include <iomanip>
 
-#include "../bindings.h"
-#include "../common.h"
-#include "../player/player.h"
+#include "../../bindings.h"
+#include "../../common.h"
+#include "../player.h"
 
-Spell::Spell(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
+PlayerSpell::PlayerSpell(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
     : player(player),
       aura_effect(aura),
       dot_effect(dot),
@@ -35,15 +35,15 @@ Spell::Spell(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageO
       procs_on_resist(false),
       on_resist_procs_enabled(true) {}
 
-void Spell::Reset() {
+void PlayerSpell::Reset() {
   casting = false;
   cooldown_remaining = 0;
   amount_of_casts_this_fight = 0;
 }
 
-void Spell::Setup() {
+void PlayerSpell::Setup() {
   if (min_dmg > 0 && max_dmg > 0) {
-    dmg = (min_dmg + max_dmg) / 2.0;
+    base_damage = (min_dmg + max_dmg) / 2.0;
   }
 
   if (min_mana_gain > 0 && max_mana_gain > 0) {
@@ -61,20 +61,20 @@ void Spell::Setup() {
   player.spell_list.push_back(this);
 }
 
-double Spell::GetCastTime() { return cast_time / player.GetHastePercent(); }
+double PlayerSpell::GetCastTime() { return cast_time / player.GetHastePercent(); }
 
-bool Spell::CanCast() {
+bool PlayerSpell::CanCast() {
   return cooldown_remaining <= 0 &&
          (is_non_warlock_ability ||
           ((!on_gcd || player.gcd_remaining <= 0) && (is_proc || player.cast_time_remaining <= 0))) &&
          (!limited_amount_of_casts || amount_of_casts_this_fight < amount_of_casts_per_fight);
 }
 
-bool Spell::HasEnoughMana() { return GetManaCost() <= player.stats.mana; }
+bool PlayerSpell::HasEnoughMana() { return GetManaCost() <= player.stats.mana; }
 
-bool Spell::Ready() { return CanCast() && HasEnoughMana(); }
+bool PlayerSpell::Ready() { return CanCast() && HasEnoughMana(); }
 
-void Spell::StartCast(double predicted_damage) {
+void PlayerSpell::StartCast(double predicted_damage) {
   if (on_gcd && !is_non_warlock_ability) {
     // Error: Casting a spell while GCD is active
     if (player.gcd_remaining > 0) {
@@ -129,9 +129,9 @@ void Spell::StartCast(double predicted_damage) {
   }
 }
 
-double Spell::GetManaCost() { return mana_cost * player.stats.mana_cost_modifier; }
+double PlayerSpell::GetManaCost() { return mana_cost * player.stats.mana_cost_modifier; }
 
-void Spell::Tick(double t) {
+void PlayerSpell::Tick(double t) {
   if (cooldown_remaining > 0 && cooldown_remaining - t <= 0) {
     if (name == SpellName::kPowerInfusion) {
       player.power_infusions_ready++;
@@ -148,7 +148,7 @@ void Spell::Tick(double t) {
   }
 }
 
-void Spell::Cast() {
+void PlayerSpell::Cast() {
   const double kCurrentMana = player.stats.mana;
   bool is_crit = false;
   cooldown_remaining = cooldown;
@@ -237,7 +237,7 @@ void Spell::Cast() {
   }
 }
 
-double Spell::GetModifier() {
+double PlayerSpell::GetModifier() {
   double damage_modifier = modifier;
 
   if (school == SpellSchool::kShadow) {
@@ -254,7 +254,7 @@ double Spell::GetModifier() {
   return damage_modifier;
 }
 
-void Spell::Damage(bool isCrit) {
+void PlayerSpell::Damage(bool isCrit) {
   const std::vector<double> kConstantDamage = GetConstantDamage();
   const double kBaseDamage = kConstantDamage[0];
   double total_damage = kConstantDamage[1];
@@ -312,9 +312,9 @@ void Spell::Damage(bool isCrit) {
 
 // Returns the non-RNG Damage of the spell (basically just the base Damage +
 // spell power + Damage modifiers, no crit/miss etc.)
-std::vector<double> Spell::GetConstantDamage() {
+std::vector<double> PlayerSpell::GetConstantDamage() {
   double total_damage =
-      player.settings.randomize_values && min_dmg > 0 && max_dmg > 0 ? player.rng.range(min_dmg, max_dmg) : dmg;
+      player.settings.randomize_values && min_dmg > 0 && max_dmg > 0 ? player.rng.range(min_dmg, max_dmg) : base_damage;
   const double kBaseDamage = total_damage;
   const double kSpellPower = player.GetSpellPower(true, school);
   const double kDamageModifier = GetModifier();
@@ -337,7 +337,7 @@ std::vector<double> Spell::GetConstantDamage() {
   return std::vector<double>{kBaseDamage, total_damage, kDamageModifier, kPartialResistMultiplier, kSpellPower};
 }
 
-double Spell::GetCritMultiplier(double player_crit_multiplier) {
+double PlayerSpell::GetCritMultiplier(double player_crit_multiplier) {
   double crit_multiplier = player_crit_multiplier;
 
   // Chaotic Skyfire Diamond
@@ -358,7 +358,7 @@ double Spell::GetCritMultiplier(double player_crit_multiplier) {
   return crit_multiplier;
 }
 
-double Spell::PredictDamage() {
+double PlayerSpell::PredictDamage() {
   const std::vector<double> kConstantDamage = GetConstantDamage();
   const double kNormalDamage = kConstantDamage[1];
   double crit_damage = 0;
@@ -392,7 +392,7 @@ double Spell::PredictDamage() {
   return (estimated_damage * hit_chance) / std::max(player.GetGcdValue(name), GetCastTime());
 }
 
-void Spell::OnCritProcs() {
+void PlayerSpell::OnCritProcs() {
   for (auto& proc : player.on_crit_procs) {
     if (proc->Ready() && proc->ShouldProc(this) && player.RollRng(proc->proc_chance)) {
       proc->StartCast();
@@ -400,7 +400,7 @@ void Spell::OnCritProcs() {
   }
 }
 
-void Spell::OnResistProcs() {
+void PlayerSpell::OnResistProcs() {
   for (auto& proc : player.on_resist_procs) {
     if (proc->Ready() && proc->ShouldProc(this) && player.RollRng(proc->proc_chance)) {
       proc->StartCast();
@@ -408,7 +408,7 @@ void Spell::OnResistProcs() {
   }
 }
 
-void Spell::OnDamageProcs() {
+void PlayerSpell::OnDamageProcs() {
   for (auto& proc : player.on_damage_procs) {
     if (proc->Ready() && proc->ShouldProc(this) && player.RollRng(proc->proc_chance)) {
       proc->StartCast();
@@ -416,7 +416,7 @@ void Spell::OnDamageProcs() {
   }
 }
 
-void Spell::OnHitProcs() {
+void PlayerSpell::OnHitProcs() {
   for (auto& proc : player.on_hit_procs) {
     if (proc->Ready() && proc->ShouldProc(this) && player.RollRng(proc->proc_chance)) {
       proc->StartCast();
@@ -424,7 +424,7 @@ void Spell::OnHitProcs() {
   }
 }
 
-ShadowBolt::ShadowBolt(Player& player) : Spell(player) {
+ShadowBolt::ShadowBolt(Player& player) : PlayerSpell(player) {
   name = SpellName::kShadowBolt;
   cast_time = CalculateCastTime();
   mana_cost = 420;
@@ -451,7 +451,7 @@ void ShadowBolt::StartCast(double predicted_damage = 0) {
     cast_time = 0;
   }
 
-  Spell::StartCast();
+  PlayerSpell::StartCast();
 
   if (kHasShadowTrance && player.auras.shadow_trance->active) {
     cast_time = CalculateCastTime();
@@ -461,7 +461,7 @@ void ShadowBolt::StartCast(double predicted_damage = 0) {
 
 double ShadowBolt::CalculateCastTime() { return 3 - (0.1 * player.talents.bane); }
 
-Incinerate::Incinerate(Player& player) : Spell(player) {
+Incinerate::Incinerate(Player& player) : PlayerSpell(player) {
   name = SpellName::kIncinerate;
   cast_time = 2.5 * (1 - 0.02 * player.talents.emberstorm);
   mana_cost = 355;
@@ -483,7 +483,7 @@ Incinerate::Incinerate(Player& player) : Spell(player) {
   }
 }
 
-SearingPain::SearingPain(Player& player) : Spell(player) {
+SearingPain::SearingPain(Player& player) : PlayerSpell(player) {
   name = SpellName::kSearingPain;
   cast_time = 1.5;
   mana_cost = 205;
@@ -499,7 +499,7 @@ SearingPain::SearingPain(Player& player) : Spell(player) {
   Setup();
 };
 
-SoulFire::SoulFire(Player& player) : Spell(player) {
+SoulFire::SoulFire(Player& player) : PlayerSpell(player) {
   name = SpellName::kSoulFire;
   cast_time = 6 - (0.4 * player.talents.bane);
   mana_cost = 250;
@@ -514,7 +514,7 @@ SoulFire::SoulFire(Player& player) : Spell(player) {
   Setup();
 };
 
-Shadowburn::Shadowburn(Player& player) : Spell(player) {
+Shadowburn::Shadowburn(Player& player) : PlayerSpell(player) {
   name = SpellName::kShadowburn;
   cooldown = 15;
   mana_cost = 515;
@@ -530,12 +530,12 @@ Shadowburn::Shadowburn(Player& player) : Spell(player) {
   Setup();
 };
 
-DeathCoil::DeathCoil(Player& player) : Spell(player) {
+DeathCoil::DeathCoil(Player& player) : PlayerSpell(player) {
   name = SpellName::kDeathCoil;
   cooldown = 120;
   mana_cost = 600;
   coefficient = 0.4286;
-  dmg = 526;
+  base_damage = 526;
   does_damage = true;
   is_finisher = true;
   school = SpellSchool::kShadow;
@@ -544,7 +544,7 @@ DeathCoil::DeathCoil(Player& player) : Spell(player) {
   Setup();
 };
 
-Shadowfury::Shadowfury(Player& player) : Spell(player) {
+Shadowfury::Shadowfury(Player& player) : PlayerSpell(player) {
   name = SpellName::kShadowfury;
   cast_time = 0.5;
   mana_cost = 710;
@@ -560,7 +560,7 @@ Shadowfury::Shadowfury(Player& player) : Spell(player) {
   Setup();
 }
 
-SeedOfCorruption::SeedOfCorruption(Player& player) : Spell(player) {
+SeedOfCorruption::SeedOfCorruption(Player& player) : PlayerSpell(player) {
   name = SpellName::kSeedOfCorruption;
   min_dmg = 1110;
   max_dmg = 1290;
@@ -577,7 +577,7 @@ SeedOfCorruption::SeedOfCorruption(Player& player) : Spell(player) {
 
 void SeedOfCorruption::Damage(bool isCrit) {
   const double kBaseDamage =
-      player.settings.randomize_values && min_dmg > 0 && max_dmg > 0 ? player.rng.range(min_dmg, max_dmg) : dmg;
+      player.settings.randomize_values && min_dmg > 0 && max_dmg > 0 ? player.rng.range(min_dmg, max_dmg) : base_damage;
   const int kEnemyAmount = player.settings.enemy_amount - 1;  // Minus one because the enemy that Seed is being Cast
                                                               // on doesn't get hit
   int resist_amount = 0;
@@ -692,7 +692,7 @@ void SeedOfCorruption::Damage(bool isCrit) {
 }
 
 double SeedOfCorruption::GetModifier() {
-  double modifier = Spell::GetModifier();
+  double modifier = PlayerSpell::GetModifier();
   if (player.talents.shadow_mastery > 0 && player.talents.contagion > 0) {
     // Divide away the bonus from Shadow Mastery
     modifier /= (1 + (player.talents.shadow_mastery * 0.02));
@@ -703,7 +703,7 @@ double SeedOfCorruption::GetModifier() {
 }
 
 Corruption::Corruption(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
-    : Spell(player, aura, dot) {
+    : PlayerSpell(player, aura, dot) {
   name = SpellName::kCorruption;
   mana_cost = 370;
   cast_time = 2 - (0.4 * player.talents.improved_corruption);
@@ -714,7 +714,7 @@ Corruption::Corruption(Player& player, std::shared_ptr<Aura> aura, std::shared_p
 }
 
 UnstableAffliction::UnstableAffliction(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
-    : Spell(player, aura, dot) {
+    : PlayerSpell(player, aura, dot) {
   name = SpellName::kUnstableAffliction;
   mana_cost = 400;
   cast_time = 1.5;
@@ -725,7 +725,7 @@ UnstableAffliction::UnstableAffliction(Player& player, std::shared_ptr<Aura> aur
 }
 
 SiphonLife::SiphonLife(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
-    : Spell(player, aura, dot) {
+    : PlayerSpell(player, aura, dot) {
   name = SpellName::kSiphonLife;
   mana_cost = 410;
   school = SpellSchool::kShadow;
@@ -735,13 +735,13 @@ SiphonLife::SiphonLife(Player& player, std::shared_ptr<Aura> aura, std::shared_p
 }
 
 Immolate::Immolate(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
-    : Spell(player, aura, dot) {
+    : PlayerSpell(player, aura, dot) {
   name = SpellName::kImmolate;
   mana_cost = 445;
   cast_time = 2 - (0.1 * player.talents.bane);
   does_damage = true;
   can_crit = true;
-  dmg = 331;
+  base_damage = 331;
   coefficient = 0.2;
   school = SpellSchool::kFire;
   type = SpellType::kDestruction;
@@ -750,7 +750,7 @@ Immolate::Immolate(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<D
 }
 
 double Immolate::GetModifier() {
-  double modifier = Spell::GetModifier();
+  double modifier = PlayerSpell::GetModifier();
   if (player.talents.emberstorm > 0) {
     modifier /= (1 + 0.02 * player.talents.emberstorm);
   }
@@ -759,7 +759,7 @@ double Immolate::GetModifier() {
 }
 
 CurseOfAgony::CurseOfAgony(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
-    : Spell(player, aura, dot) {
+    : PlayerSpell(player, aura, dot) {
   name = SpellName::kCurseOfAgony;
   mana_cost = 265;
   school = SpellSchool::kShadow;
@@ -768,7 +768,7 @@ CurseOfAgony::CurseOfAgony(Player& player, std::shared_ptr<Aura> aura, std::shar
   Setup();
 }
 
-CurseOfTheElements::CurseOfTheElements(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+CurseOfTheElements::CurseOfTheElements(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kCurseOfTheElements;
   mana_cost = 260;
   type = SpellType::kAffliction;
@@ -776,7 +776,7 @@ CurseOfTheElements::CurseOfTheElements(Player& player, std::shared_ptr<Aura> aur
   Setup();
 }
 
-CurseOfRecklessness::CurseOfRecklessness(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+CurseOfRecklessness::CurseOfRecklessness(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kCurseOfRecklessness;
   mana_cost = 160;
   type = SpellType::kAffliction;
@@ -785,7 +785,7 @@ CurseOfRecklessness::CurseOfRecklessness(Player& player, std::shared_ptr<Aura> a
 }
 
 CurseOfDoom::CurseOfDoom(Player& player, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot)
-    : Spell(player, aura, dot) {
+    : PlayerSpell(player, aura, dot) {
   name = SpellName::kCurseOfDoom;
   mana_cost = 380;
   cooldown = 60;
@@ -795,7 +795,7 @@ CurseOfDoom::CurseOfDoom(Player& player, std::shared_ptr<Aura> aura, std::shared
   Setup();
 }
 
-Conflagrate::Conflagrate(Player& player) : Spell(player) {
+Conflagrate::Conflagrate(Player& player) : PlayerSpell(player) {
   name = SpellName::kConflagrate;
   mana_cost = 305;
   cooldown = 10;
@@ -812,15 +812,15 @@ Conflagrate::Conflagrate(Player& player) : Spell(player) {
 }
 
 bool Conflagrate::CanCast() {
-  return player.auras.immolate != NULL && player.auras.immolate->active && Spell::CanCast();
+  return player.auras.immolate != NULL && player.auras.immolate->active && PlayerSpell::CanCast();
 }
 
 void Conflagrate::Cast() {
-  Spell::Cast();
+  PlayerSpell::Cast();
   player.auras.immolate->Fade();
 }
 
-DestructionPotion::DestructionPotion(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+DestructionPotion::DestructionPotion(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kDestructionPotion;
   cooldown = 120;
   is_item = true;
@@ -828,7 +828,7 @@ DestructionPotion::DestructionPotion(Player& player, std::shared_ptr<Aura> aura)
   Setup();
 }
 
-FlameCap::FlameCap(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+FlameCap::FlameCap(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kFlameCap;
   cooldown = 180;
   is_item = true;
@@ -838,14 +838,14 @@ FlameCap::FlameCap(Player& player, std::shared_ptr<Aura> aura) : Spell(player, a
   Setup();
 }
 
-BloodFury::BloodFury(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+BloodFury::BloodFury(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kBloodFury;
   cooldown = 120;
   on_gcd = false;
   Setup();
 }
 
-Bloodlust::Bloodlust(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+Bloodlust::Bloodlust(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kBloodlust;
   cooldown = 600;
   is_item = true;
@@ -854,7 +854,7 @@ Bloodlust::Bloodlust(Player& player, std::shared_ptr<Aura> aura) : Spell(player,
   Setup();
 }
 
-DrumsOfBattle::DrumsOfBattle(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+DrumsOfBattle::DrumsOfBattle(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kDrumsOfBattle;
   cooldown = 120;
   on_gcd = false;
@@ -863,7 +863,7 @@ DrumsOfBattle::DrumsOfBattle(Player& player, std::shared_ptr<Aura> aura) : Spell
   Setup();
 }
 
-DrumsOfWar::DrumsOfWar(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+DrumsOfWar::DrumsOfWar(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kDrumsOfWar;
   cooldown = 120;
   on_gcd = false;
@@ -872,7 +872,7 @@ DrumsOfWar::DrumsOfWar(Player& player, std::shared_ptr<Aura> aura) : Spell(playe
   Setup();
 }
 
-DrumsOfRestoration::DrumsOfRestoration(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+DrumsOfRestoration::DrumsOfRestoration(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kDrumsOfRestoration;
   cooldown = 120;
   on_gcd = false;
@@ -881,14 +881,14 @@ DrumsOfRestoration::DrumsOfRestoration(Player& player, std::shared_ptr<Aura> aur
   Setup();
 }
 
-AmplifyCurse::AmplifyCurse(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+AmplifyCurse::AmplifyCurse(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kAmplifyCurse;
   cooldown = 180;
   on_gcd = false;
   Setup();
 }
 
-PowerInfusion::PowerInfusion(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+PowerInfusion::PowerInfusion(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kPowerInfusion;
   cooldown = 180;
   on_gcd = false;
@@ -896,7 +896,7 @@ PowerInfusion::PowerInfusion(Player& player, std::shared_ptr<Aura> aura) : Spell
   Setup();
 }
 
-Innervate::Innervate(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+Innervate::Innervate(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kInnervate;
   cooldown = 360;
   on_gcd = false;
@@ -904,7 +904,7 @@ Innervate::Innervate(Player& player, std::shared_ptr<Aura> aura) : Spell(player,
   Setup();
 }
 
-ChippedPowerCore::ChippedPowerCore(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+ChippedPowerCore::ChippedPowerCore(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kChippedPowerCore;
   cooldown = 120;
   on_gcd = false;
@@ -915,7 +915,7 @@ ChippedPowerCore::ChippedPowerCore(Player& player, std::shared_ptr<Aura> aura) :
   Setup();
 };
 
-CrackedPowerCore::CrackedPowerCore(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+CrackedPowerCore::CrackedPowerCore(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kCrackedPowerCore;
   cooldown = 120;
   on_gcd = false;
@@ -926,7 +926,7 @@ CrackedPowerCore::CrackedPowerCore(Player& player, std::shared_ptr<Aura> aura) :
   Setup();
 };
 
-ManaTideTotem::ManaTideTotem(Player& player, std::shared_ptr<Aura> aura) : Spell(player, aura) {
+ManaTideTotem::ManaTideTotem(Player& player, std::shared_ptr<Aura> aura) : PlayerSpell(player, aura) {
   name = SpellName::kManaTideTotem;
   cooldown = 300;
   is_non_warlock_ability = true;

@@ -1,6 +1,6 @@
 #include "on_dot_tick_proc.h"
 
-#include "../player/player.h"
+#include "../player.h"
 
 OnDotTickProc::OnDotTickProc(Player& player, std::shared_ptr<Aura> aura) : SpellProc(player, aura) {
   procs_on_dot_ticks = true;

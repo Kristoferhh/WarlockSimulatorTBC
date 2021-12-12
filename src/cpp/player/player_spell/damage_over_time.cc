@@ -1,7 +1,7 @@
 #include "damage_over_time.h"
 
-#include "../common.h"
-#include "../player/player.h"
+#include "../../common.h"
+#include "../player.h"
 
 DamageOverTime::DamageOverTime(Player& player)
     : player(player),
@@ -9,7 +9,7 @@ DamageOverTime::DamageOverTime(Player& player)
       tick_timer_total(3),
       tick_timer_remaining(0),
       ticks_remaining(0),
-      dmg(0),
+      base_damage(0),
       spell_power(0),
       modifier(1),
       active(false),
@@ -107,20 +107,20 @@ std::vector<double> DamageOverTime::GetConstantDamage() {
   }
   double modifier = GetModifier();
   double partial_resist_multiplier = player.GetPartialResistMultiplier(school);
-  double base_damage = dmg;
+  double dmg = base_damage;
 
   if (applied_with_amplify_curse) {
-    base_damage *= 1.5;
+    dmg *= 1.5;
   }
   // Add the t5 4pc bonus modifier to the base damage
   if ((name == SpellName::kCorruption || name == SpellName::kImmolate) && player.sets.t5 >= 4) {
-    base_damage *= t5_bonus_modifier;
+    dmg *= t5_bonus_modifier;
   }
-  double total_damage = base_damage;
+  double total_damage = dmg;
   total_damage += spell_power * coefficient;
   total_damage *= modifier * partial_resist_multiplier;
 
-  return std::vector<double>{base_damage, total_damage, spell_power, modifier, partial_resist_multiplier};
+  return std::vector<double>{dmg, total_damage, spell_power, modifier, partial_resist_multiplier};
 }
 
 double DamageOverTime::PredictDamage() {
@@ -194,7 +194,7 @@ CorruptionDot::CorruptionDot(Player& player) : DamageOverTime(player) {
   name = SpellName::kCorruption;
   duration = 18;
   tick_timer_total = 3;
-  dmg = 900;
+  base_damage = 900;
   school = SpellSchool::kShadow;
   coefficient = 0.936 + (0.12 * player.talents.empowered_corruption);
   t5_bonus_modifier = 1;
@@ -224,7 +224,7 @@ UnstableAfflictionDot::UnstableAfflictionDot(Player& player) : DamageOverTime(pl
   name = SpellName::kUnstableAffliction;
   duration = 18;
   tick_timer_total = 3;
-  dmg = 1050;
+  base_damage = 1050;
   school = SpellSchool::kShadow;
   coefficient = 1.2;
   Setup();
@@ -234,7 +234,7 @@ SiphonLifeDot::SiphonLifeDot(Player& player) : DamageOverTime(player) {
   name = SpellName::kSiphonLife;
   duration = 30;
   tick_timer_total = 3;
-  dmg = 630;
+  base_damage = 630;
   school = SpellSchool::kShadow;
   coefficient = 1;
   Setup();
@@ -244,7 +244,7 @@ ImmolateDot::ImmolateDot(Player& player) : DamageOverTime(player) {
   name = SpellName::kImmolate;
   duration = 15;
   tick_timer_total = 3;
-  dmg = 615;
+  base_damage = 615;
   school = SpellSchool::kFire;
   coefficient = 0.65;
   t5_bonus_modifier = 1;
@@ -260,7 +260,7 @@ CurseOfAgonyDot::CurseOfAgonyDot(Player& player) : DamageOverTime(player) {
   name = SpellName::kCurseOfAgony;
   duration = 24;
   tick_timer_total = 3;
-  dmg = 1356;
+  base_damage = 1356;
   school = SpellSchool::kShadow;
   coefficient = 1.2;
   Setup();
@@ -278,7 +278,7 @@ CurseOfDoomDot::CurseOfDoomDot(Player& player) : DamageOverTime(player) {
   name = SpellName::kCurseOfDoom;
   duration = 60;
   tick_timer_total = 60;
-  dmg = 4200;
+  base_damage = 4200;
   school = SpellSchool::kShadow;
   coefficient = 2;
   Setup();

@@ -1,6 +1,6 @@
 #include "on_resist_proc.h"
 
-#include "../player/player.h"
+#include "../player.h"
 
 OnResistProc::OnResistProc(Player& player, std::shared_ptr<Aura> aura) : SpellProc(player, aura) {
   procs_on_resist = true;

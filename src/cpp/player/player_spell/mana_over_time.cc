@@ -1,8 +1,8 @@
 #include "mana_over_time.h"
 
-#include "../common.h"
-#include "../entity.h"
-#include "../player/player.h"
+#include "../../common.h"
+#include "../../entity.h"
+#include "../player.h"
 
 ManaOverTime::ManaOverTime(Entity& entity) : Aura(entity) { tick_timer_total = 3; }
 

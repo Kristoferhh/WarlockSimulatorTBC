@@ -10,7 +10,7 @@
 #include "bindings.h"
 #include "common.h"
 #include "enums.h"
-#include "spell/spell.h"
+#include "player/player_spell/player_spell.h"
 
 Simulation::Simulation(Player& player, const SimulationSettings& simulation_settings)
     : player(player), settings(simulation_settings) {}
@@ -106,7 +106,7 @@ void Simulation::Start() {
 
             // Map of spells with their predicted Damage as the value. This is
             // used by the sim to determine what the best spell to Cast is.
-            std::map<std::shared_ptr<Spell>, double> predicted_damage_of_spells;
+            std::map<std::shared_ptr<PlayerSpell>, double> predicted_damage_of_spells;
 
             // If the sim is choosing the rotation for the user then predict the
             // Damage of the three filler spells if they're available (maybe
@@ -254,7 +254,7 @@ void Simulation::Start() {
             // which spell would be the best to Cast
             if (player.gcd_remaining <= 0 && player.cast_time_remaining <= 0 &&
                 predicted_damage_of_spells.size() != 0) {
-              std::shared_ptr<Spell> max_damage_spell;
+              std::shared_ptr<PlayerSpell> max_damage_spell;
               double max_damage_spell_value = 0;
 
               for (auto& spell : predicted_damage_of_spells) {
@@ -383,8 +383,8 @@ double Simulation::PassTime() {
   return time_until_next_action;
 }
 
-void Simulation::SelectedSpellHandler(const std::shared_ptr<Spell>& spell,
-                                      std::map<std::shared_ptr<Spell>, double>& predicted_damage_of_spells,
+void Simulation::SelectedSpellHandler(const std::shared_ptr<PlayerSpell>& spell,
+                                      std::map<std::shared_ptr<PlayerSpell>, double>& predicted_damage_of_spells,
                                       double fight_time_remaining) {
   if ((player.settings.rotation_option == EmbindConstant::kSimChooses || spell->is_finisher) &&
       predicted_damage_of_spells.count(spell) == 0) {
@@ -396,7 +396,7 @@ void Simulation::SelectedSpellHandler(const std::shared_ptr<Spell>& spell,
   }
 }
 
-void Simulation::CastSelectedSpell(const std::shared_ptr<Spell>& spell, double fight_time_remaining,
+void Simulation::CastSelectedSpell(const std::shared_ptr<PlayerSpell>& spell, double fight_time_remaining,
                                    double predicted_damage) {
   player.UseCooldowns(fight_time_remaining);
 

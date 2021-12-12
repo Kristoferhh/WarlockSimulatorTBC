@@ -15,13 +15,13 @@
 #include "../pet/pet_spell.h"
 #include "../rng.h"
 #include "../sets.h"
-#include "../spell/damage_over_time.h"
-#include "../spell/on_crit_proc.h"
-#include "../spell/on_damage_proc.h"
-#include "../spell/on_dot_tick_proc.h"
-#include "../spell/on_hit_proc.h"
-#include "../spell/on_resist_proc.h"
-#include "../spell/spell.h"
+#include "player_spell/damage_over_time.h"
+#include "player_spell/on_crit_proc.h"
+#include "player_spell/on_damage_proc.h"
+#include "player_spell/on_dot_tick_proc.h"
+#include "player_spell/on_hit_proc.h"
+#include "player_spell/on_resist_proc.h"
+#include "player_spell/player_spell.h"
 #include "../talents.h"
 #include "../trinket.h"
 #include "player_auras.h"
@@ -37,12 +37,12 @@ struct Player : public Entity {
   PlayerSpells spells;
   PlayerAuras auras;
   std::vector<Trinket> trinkets;
-  std::shared_ptr<Spell> filler;
-  std::shared_ptr<Spell> curse_spell;
+  std::shared_ptr<PlayerSpell> filler;
+  std::shared_ptr<PlayerSpell> curse_spell;
   std::shared_ptr<Aura> curse_aura;
   std::vector<std::string> combat_log_entries;
   std::string custom_stat;
-  std::vector<Spell*> spell_list;
+  std::vector<PlayerSpell*> spell_list;
   std::vector<DamageOverTime*> dot_list;
   std::vector<OnHitProc*> on_hit_procs;
   std::vector<OnCritProc*> on_crit_procs;

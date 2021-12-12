@@ -1,6 +1,6 @@
 #include "on_hit_proc.h"
 
-#include "../player/player.h"
+#include "../player.h"
 
 OnHitProc::OnHitProc(Player& player, std::shared_ptr<Aura> aura) : SpellProc(player, aura) { procs_on_hit = true; }
 
@@ -88,7 +88,7 @@ Flameshadow::Flameshadow(Player& player, std::shared_ptr<Aura> aura) : OnHitProc
   Setup();
 }
 
-bool Flameshadow::ShouldProc(Spell* spell) { return spell->school == SpellSchool::kShadow; }
+bool Flameshadow::ShouldProc(PlayerSpell* spell) { return spell->school == SpellSchool::kShadow; }
 
 Shadowflame::Shadowflame(Player& player, std::shared_ptr<Aura> aura) : OnHitProc(player, aura) {
   name = SpellName::kShadowflame;
@@ -97,7 +97,7 @@ Shadowflame::Shadowflame(Player& player, std::shared_ptr<Aura> aura) : OnHitProc
   Setup();
 }
 
-bool Shadowflame::ShouldProc(Spell* spell) { return spell->school == SpellSchool::kFire; }
+bool Shadowflame::ShouldProc(PlayerSpell* spell) { return spell->school == SpellSchool::kFire; }
 
 Spellstrike::Spellstrike(Player& player, std::shared_ptr<Aura> aura) : OnHitProc(player, aura) {
   name = SpellName::kSpellstrike;

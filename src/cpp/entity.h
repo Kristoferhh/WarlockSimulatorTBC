@@ -11,7 +11,7 @@ struct Simulation;
 #include "combat_log_breakdown.h"
 #include "enums.h"
 #include "player/player_settings.h"
-#include "spell/spell.h"
+#include "player/player_spell/player_spell.h"
 
 struct Entity {
   const int kFloatNumberMultiplier = 1000;  // Multiply doubles such as hit and crit chance with this since we need an

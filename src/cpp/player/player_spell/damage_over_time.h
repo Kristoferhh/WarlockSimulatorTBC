@@ -4,8 +4,8 @@
 struct Player;
 #include <iostream>
 
-#include "../aura.h"
-#include "../enums.h"
+#include "../../aura.h"
+#include "../../enums.h"
 
 struct DamageOverTime {
   Player& player;
@@ -20,7 +20,7 @@ struct DamageOverTime {
   int ticks_remaining;          // Amount of ticks remaining before the dot expires
   int ticks_total;
   double spell_power;  // Spell Power amount when dot was applied
-  double dmg;
+  double base_damage;
   double modifier;
   double coefficient;
   double t5_bonus_modifier;  // T5 4pc damage modifier

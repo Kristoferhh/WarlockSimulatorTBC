@@ -1,7 +1,7 @@
 #ifndef WARLOCK_SIMULATOR_TBC_MANA_OVER_TIME
 #define WARLOCK_SIMULATOR_TBC_MANA_OVER_TIME
 
-#include "../aura.h"
+#include "../../aura.h"
 
 struct ManaOverTime : public Aura {
   ManaOverTime(Entity& Entity);

@@ -4,11 +4,11 @@
 
 #include "../bindings.h"
 #include "../common.h"
-#include "../spell/damage_over_time.h"
-#include "../spell/life_tap.h"
-#include "../spell/mana_over_time.h"
-#include "../spell/mana_potion.h"
-#include "../spell/spell.h"
+#include "player_spell/damage_over_time.h"
+#include "player_spell/life_tap.h"
+#include "player_spell/mana_over_time.h"
+#include "player_spell/mana_potion.h"
+#include "player_spell/player_spell.h"
 
 Player::Player(PlayerSettings& player_settings)
     : Entity(nullptr, player_settings, EntityType::kPlayer),

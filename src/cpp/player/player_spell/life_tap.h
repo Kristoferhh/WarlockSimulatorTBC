@@ -1,9 +1,9 @@
 #ifndef WARLOCK_SIMULATOR_TBC_LIFE_TAP
 #define WARLOCK_SIMULATOR_TBC_LIFE_TAP
 
-#include "spell.h"
+#include "player_spell.h"
 
-struct LifeTap : public Spell {
+struct LifeTap : public PlayerSpell {
   Player& player;
   int mana_return;
 

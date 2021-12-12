@@ -1,6 +1,6 @@
 #include "on_crit_proc.h"
 
-#include "../player/player.h"
+#include "../player.h"
 
 OnCritProc::OnCritProc(Player& player, std::shared_ptr<Aura> aura) : SpellProc(player, aura) { procs_on_crit = true; }
 
@@ -19,7 +19,7 @@ ImprovedShadowBolt::ImprovedShadowBolt(Player& player, std::shared_ptr<Aura> aur
   Setup();
 }
 
-bool ImprovedShadowBolt::ShouldProc(Spell* spell) { return spell->name == SpellName::kShadowBolt; }
+bool ImprovedShadowBolt::ShouldProc(PlayerSpell* spell) { return spell->name == SpellName::kShadowBolt; }
 
 TheLightningCapacitor::TheLightningCapacitor(Player& player) : OnCritProc(player) {
   name = SpellName::kTheLightningCapacitor;
@@ -37,7 +37,7 @@ void TheLightningCapacitor::StartCast(double predicted_damage) {
   if (cooldown_remaining <= 0) {
     player.auras.the_lightning_capacitor->Apply();
     if (player.auras.the_lightning_capacitor->stacks == player.auras.the_lightning_capacitor->max_stacks) {
-      Spell::StartCast();
+      PlayerSpell::StartCast();
       cooldown_remaining = cooldown;
       player.auras.the_lightning_capacitor->Fade();
     }

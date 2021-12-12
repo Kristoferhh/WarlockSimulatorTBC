@@ -1,16 +1,16 @@
 #include "mana_potion.h"
 
-#include "../common.h"
-#include "../player/player.h"
+#include "../../common.h"
+#include "../player.h"
 
-ManaPotion::ManaPotion(Player& player) : Spell(player) {
+ManaPotion::ManaPotion(Player& player) : PlayerSpell(player) {
   cooldown = 120;
   is_item = true;
   on_gcd = false;
 }
 
 void ManaPotion::Cast() {
-  Spell::Cast();
+  PlayerSpell::Cast();
   const double kCurrentPlayerMana = player.stats.mana;
 
   player.stats.mana =

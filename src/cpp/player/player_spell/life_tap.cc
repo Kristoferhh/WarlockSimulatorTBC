@@ -1,9 +1,9 @@
 #include "life_tap.h"
 
-#include "../common.h"
-#include "../player/player.h"
+#include "../../common.h"
+#include "../player.h"
 
-LifeTap::LifeTap(Player& player) : Spell(player), player(player) {
+LifeTap::LifeTap(Player& player) : PlayerSpell(player), player(player) {
   name = SpellName::kLifeTap;
   mana_return = 582;
   coefficient = 0.8;
@@ -62,4 +62,4 @@ DarkPact::DarkPact(Player& player) : LifeTap(player) {
   Setup();
 }
 
-bool DarkPact::Ready() { return Spell::Ready() && player.pet->stats.mana >= ManaGain(); }
+bool DarkPact::Ready() { return PlayerSpell::Ready() && player.pet->stats.mana >= ManaGain(); }

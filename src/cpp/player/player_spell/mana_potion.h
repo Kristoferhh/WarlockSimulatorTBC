@@ -1,9 +1,9 @@
 #ifndef WARLOCK_SIMULATOR_TBC_MANA_POTION
 #define WARLOCK_SIMULATOR_TBC_MANA_POTION
 
-#include "spell.h"
+#include "player_spell.h"
 
-struct ManaPotion : public Spell {
+struct ManaPotion : public PlayerSpell {
   ManaPotion(Player& player);
   void Cast();
 };

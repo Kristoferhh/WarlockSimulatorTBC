@@ -42,12 +42,12 @@ struct JudgementOfWisdom : public OnHitProc {
 
 struct Flameshadow : public OnHitProc {
   Flameshadow(Player& player, std::shared_ptr<Aura> aura);
-  bool ShouldProc(Spell* spell);
+  bool ShouldProc(PlayerSpell* spell);
 };
 
 struct Shadowflame : public OnHitProc {
   Shadowflame(Player& player, std::shared_ptr<Aura> aura);
-  bool ShouldProc(Spell* spell);
+  bool ShouldProc(PlayerSpell* spell);
 };
 
 struct Spellstrike : public OnHitProc {
