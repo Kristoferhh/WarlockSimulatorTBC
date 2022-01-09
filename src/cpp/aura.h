@@ -1,7 +1,6 @@
-#ifndef WARLOCK_SIMULATOR_TBC_AURA
-#define WARLOCK_SIMULATOR_TBC_AURA
+#pragma once
 
-struct Player;
+struct Entity;
 #include <iostream>
 #include <optional>
 #include <vector>
@@ -9,7 +8,7 @@ struct Player;
 #include "stat.h"
 
 struct Aura {
-  Player& player;
+  Entity& entity;
   std::vector<Stat> stats;
   std::vector<Stat> stats_per_stack;
   std::string name;
@@ -31,7 +30,7 @@ struct Aura {
   // Bloodlust
   double haste_modifier;
 
-  Aura(Player& player);
+  Aura(Entity& entity);
   virtual void Setup();
   virtual void Tick(double time);
   virtual void Apply();
@@ -42,137 +41,147 @@ struct Aura {
 struct ImprovedShadowBoltAura : public Aura {
   double modifier;
 
-  ImprovedShadowBoltAura(Player& player);
+  ImprovedShadowBoltAura(Entity& entity);
   void Apply();
   void DecrementStacks();
 };
 
 struct CurseOfTheElementsAura : public Aura {
-  CurseOfTheElementsAura(Player& player);
+  CurseOfTheElementsAura(Entity& entity);
 };
 
 struct CurseOfRecklessnessAura : public Aura {
-  CurseOfRecklessnessAura(Player& player);
+  CurseOfRecklessnessAura(Entity& entity);
 };
 
 struct ShadowTranceAura : public Aura {
-  ShadowTranceAura(Player& player);
+  ShadowTranceAura(Entity& entity);
 };
 
 struct FlameshadowAura : public Aura {
-  FlameshadowAura(Player& player);
+  FlameshadowAura(Entity& entity);
 };
 
 struct ShadowflameAura : public Aura {
-  ShadowflameAura(Player& player);
+  ShadowflameAura(Entity& entity);
 };
 
 struct SpellstrikeAura : public Aura {
-  SpellstrikeAura(Player& player);
+  SpellstrikeAura(Entity& entity);
 };
 
 struct PowerInfusionAura : public Aura {
-  PowerInfusionAura(Player& player);
+  PowerInfusionAura(Entity& entity);
 };
 
 struct EyeOfMagtheridonAura : public Aura {
-  EyeOfMagtheridonAura(Player& player);
+  EyeOfMagtheridonAura(Entity& entity);
 };
 
 struct SextantOfUnstableCurrentsAura : public Aura {
-  SextantOfUnstableCurrentsAura(Player& player);
+  SextantOfUnstableCurrentsAura(Entity& entity);
 };
 
 struct QuagmirransEyeAura : public Aura {
-  QuagmirransEyeAura(Player& player);
+  QuagmirransEyeAura(Entity& entity);
 };
 
 struct ShiffarsNexusHornAura : public Aura {
-  ShiffarsNexusHornAura(Player& player);
+  ShiffarsNexusHornAura(Entity& entity);
 };
 
 struct ManaEtched4SetAura : public Aura {
-  ManaEtched4SetAura(Player& player);
+  ManaEtched4SetAura(Entity& entity);
 };
 
 struct DestructionPotionAura : public Aura {
-  DestructionPotionAura(Player& player);
+  DestructionPotionAura(Entity& entity);
 };
 
 struct FlameCapAura : public Aura {
-  FlameCapAura(Player& player);
+  FlameCapAura(Entity& entity);
 };
 
 struct BloodFuryAura : public Aura {
-  BloodFuryAura(Player& player);
+  BloodFuryAura(Entity& entity);
 };
 
 struct BloodlustAura : public Aura {
-  BloodlustAura(Player& player);
+  BloodlustAura(Entity& entity);
 };
 
 struct DrumsOfBattleAura : public Aura {
-  DrumsOfBattleAura(Player& player);
+  DrumsOfBattleAura(Entity& entity);
 };
 
 struct DrumsOfWarAura : public Aura {
-  DrumsOfWarAura(Player& player);
+  DrumsOfWarAura(Entity& entity);
 };
 
 struct AshtongueTalismanOfShadowsAura : public Aura {
-  AshtongueTalismanOfShadowsAura(Player& player);
+  AshtongueTalismanOfShadowsAura(Entity& entity);
 };
 
 struct DarkmoonCardCrusadeAura : public Aura {
-  DarkmoonCardCrusadeAura(Player& player);
+  DarkmoonCardCrusadeAura(Entity& entity);
 };
 
 struct TheLightningCapacitorAura : public Aura {
-  TheLightningCapacitorAura(Player& player);
+  TheLightningCapacitorAura(Entity& entity);
 };
 
 struct BandOfTheEternalSageAura : public Aura {
-  BandOfTheEternalSageAura(Player& player);
+  BandOfTheEternalSageAura(Entity& entity);
 };
 
 struct BladeOfWizardryAura : public Aura {
-  BladeOfWizardryAura(Player& player);
+  BladeOfWizardryAura(Entity& entity);
 };
 
 struct ShatteredSunPendantOfAcumenAldorAura : public Aura {
-  ShatteredSunPendantOfAcumenAldorAura(Player& player);
+  ShatteredSunPendantOfAcumenAldorAura(Entity& entity);
 };
 
 struct RobeOfTheElderScribesAura : public Aura {
-  RobeOfTheElderScribesAura(Player& player);
+  RobeOfTheElderScribesAura(Entity& entity);
 };
 
 struct MysticalSkyfireDiamondAura : public Aura {
-  MysticalSkyfireDiamondAura(Player& player);
+  MysticalSkyfireDiamondAura(Entity& entity);
 };
 
 struct AmplifyCurseAura : public Aura {
-  AmplifyCurseAura(Player& player);
+  AmplifyCurseAura(Entity& entity);
 };
 
 struct WrathOfCenariusAura : public Aura {
-  WrathOfCenariusAura(Player& player);
+  WrathOfCenariusAura(Entity& entity);
 };
 
 struct InnervateAura : public Aura {
-  InnervateAura(Player& player);
+  InnervateAura(Entity& entity);
 };
 
 struct ChippedPowerCoreAura : public Aura {
-  ChippedPowerCoreAura(Player& player);
+  ChippedPowerCoreAura(Entity& entity);
 };
 
 struct CrackedPowerCoreAura : public Aura {
-  CrackedPowerCoreAura(Player& player);
+  CrackedPowerCoreAura(Entity& entity);
 };
 
 struct AirmansRibbonOfGallantryAura : public Aura {
-  AirmansRibbonOfGallantryAura(Player& player);
+  AirmansRibbonOfGallantryAura(Entity& entity);
 };
 
-#endif
+struct DemonicFrenzyAura : public Aura {
+  DemonicFrenzyAura(Entity& entity);
+};
+
+struct BlackBookAura : public Aura {
+  BlackBookAura(Entity& entity);
+};
+
+struct BattleSquawkAura : public Aura {
+  BattleSquawkAura(Entity& entity);
+};

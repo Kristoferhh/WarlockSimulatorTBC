@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_SETS
-#define WARLOCK_SIMULATOR_TBC_SETS
+#pragma once
 
 struct Sets {
   int plagueheart;
@@ -12,5 +11,3 @@ struct Sets {
   int t5;
   int t6;
 };
-
-#endif

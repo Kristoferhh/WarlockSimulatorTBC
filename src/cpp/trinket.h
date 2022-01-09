@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_TRINKET
-#define WARLOCK_SIMULATOR_TBC_TRINKET
+#pragma once
 
 struct Player;
 #include <iostream>
@@ -91,5 +90,3 @@ struct DarkIronSmokingPipe : public Trinket {
 struct HazzarahsCharmOfDestruction : public Trinket {
   HazzarahsCharmOfDestruction(Player& player);
 };
-
-#endif

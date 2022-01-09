@@ -1,5 +1,6 @@
-#ifndef WARLOCK_SIMULATOR_TBC_ENUMS
-#define WARLOCK_SIMULATOR_TBC_ENUMS
+#pragma once
+
+#include <string>
 
 enum class SpellSchool { kNoSchool, kShadow, kFire };
 
@@ -18,6 +19,12 @@ enum class SimulationType { kNormal, kAllItems, kStatWeights };
 enum class CalculationType { kNoType, kAdditive, kMultiplicative };
 
 enum class EntityType { kNoType, kPlayer, kPet };
+
+namespace PetNameStr {
+const std::string kImp = "Imp";
+const std::string kSuccubus = "Succubus";
+const std::string kFelguard = "Felguard";
+}  // namespace PetNameStr
 
 namespace SpellName {
 const std::string kShadowBolt = "Shadow Bolt";
@@ -99,7 +106,21 @@ const std::string kManaCostModifier = "Mana Cost Modifier";
 const std::string kSpellCritChance = "Spell Crit Chance";
 const std::string kSpellCritRating = "Spell Crit Rating";
 const std::string kAttackPower = "Attack Power";
+const std::string kMp5 = "Mp5";
+const std::string kAttackPowerModifier = "Attack Power Modifier";
 }  // namespace StatName
+
+namespace StatConstant {
+const double kHitRatingPerPercent = 12.62;
+const double kCritRatingPerPercent = 22.08;
+const double kHasteRatingPerPercent = 15.77;
+const double kManaPerIntellect = 15;
+const double kHealthPerStamina = 10;
+const double kCritChancePerIntellect = 1 / 81.95;
+const double kBaseCritChancePercent = 1.701;
+const double kMeleeCritChanceSuppression = 4.73;  // Source: Fierywind from Warlock discord and maybe Fight Club discord
+const double kBaseEnemyDodgeChance = 6.5;
+}  // namespace StatConstant
 
 namespace ItemId {
 const int kDarkIronSmokingPipe = 38290;
@@ -136,5 +157,3 @@ const int kRestrainedEssenceOfSapphiron = 23046;
 const int kWrathOfCenarius = 21190;
 const int kHazzarahsCharmOfDestruction = 19957;
 }  // namespace ItemId
-
-#endif
