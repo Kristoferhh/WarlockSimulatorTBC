@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_STAT
-#define WARLOCK_SIMULATOR_TBC_STAT
+#pragma once
 
 struct Entity;
 
@@ -67,5 +66,3 @@ struct AttackPower : public Stat {
 struct AttackPowerModifier : public Stat {
   AttackPowerModifier(Entity& entity, double value);
 };
-
-#endif

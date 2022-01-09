@@ -37,7 +37,7 @@ void DamageOverTime::Apply() {
   if (active && player.ShouldWriteToCombatLog()) {
     std::string msg = name + " refreshed before letting it expire";
   } else if (!active && player.recording_combat_log_breakdown) {
-    player.combat_log_breakdown.at(name)->applied_at = player.simulation->fight_time;
+    player.combat_log_breakdown.at(name)->applied_at = player.simulation->current_fight_time;
   }
   const bool kIsAlreadyActive = active;
   spell_power = player.GetSpellPower(true, school);
@@ -50,8 +50,17 @@ void DamageOverTime::Apply() {
     player.combat_log_breakdown.at(name)->count++;
   }
   if (player.ShouldWriteToCombatLog()) {
-    player.CombatLog(name + " " + (kIsAlreadyActive ? "refreshed" : "applied") + " (" + DoubleToString(spell_power) +
-                     " Spell Power)");
+    std::string msg = name + " ";
+
+    if (kIsAlreadyActive) {
+      msg += "refreshed";
+    } else {
+      msg += "applied";
+    }
+
+    msg += " (" + DoubleToString(spell_power) + " Spell Power)";
+
+    player.CombatLog(msg);
   }
   // Siphon Life snapshots the presence of ISB. So if ISB isn't up when it's
   // Cast, it doesn't get the benefit even if it comes up later during the
@@ -77,7 +86,7 @@ void DamageOverTime::Fade() {
 
   if (player.recording_combat_log_breakdown) {
     player.combat_log_breakdown.at(name)->uptime +=
-        player.simulation->fight_time - player.combat_log_breakdown.at(name)->applied_at;
+        player.simulation->current_fight_time - player.combat_log_breakdown.at(name)->applied_at;
   }
 
   if (player.ShouldWriteToCombatLog()) {
@@ -86,15 +95,21 @@ void DamageOverTime::Fade() {
 }
 
 double DamageOverTime::GetModifier() {
-  double damage_modifier = modifier * (school == SpellSchool::kShadow ? player.stats.shadow_modifier
-                                       : school == SpellSchool::kFire ? player.stats.fire_modifier
-                                                                      : 1);
+  double damage_modifier = modifier * player.stats.damage_modifier;
+
+  if (school == SpellSchool::kShadow) {
+    damage_modifier *= player.stats.shadow_modifier;
+  } else if (school == SpellSchool::kFire) {
+    damage_modifier *= player.stats.fire_modifier;
+  }
+
   // Only add Improved Shadow Bolt if it's not Siphon Life or if ISB was active when the Siphon Life was cast.
   if ((school == SpellSchool::kShadow && player.auras.improved_shadow_bolt != NULL &&
        player.auras.improved_shadow_bolt->active && name != SpellName::kSiphonLife) ||
       (name == SpellName::kSiphonLife && isb_is_active)) {
     damage_modifier *= player.auras.improved_shadow_bolt->modifier;
   }
+
   return damage_modifier;
 }
 

@@ -1,14 +1,13 @@
-#ifndef WARLOCK_SIMULATOR_TBC_PLAYER_SETTINGS
-#define WARLOCK_SIMULATOR_TBC_PLAYER_SETTINGS
+#pragma once
 
-#include "../auras.h"
+#include "../aura_selection.h"
 #include "../embind_constant.h"
 #include "../items.h"
 #include "../sets.h"
 #include "../talents.h"
 
 struct PlayerSettings {
-  Auras& auras;
+  AuraSelection& auras;
   Talents& talents;
   Sets& sets;
   CharacterStats stats;
@@ -76,8 +75,6 @@ struct PlayerSettings {
   bool has_dark_pact;
   bool has_elemental_shaman_t4_bonus;
 
-  PlayerSettings(Auras& auras, Talents& talents, Sets& sets, CharacterStats& stats, Items& items)
+  PlayerSettings(AuraSelection& auras, Talents& talents, Sets& sets, CharacterStats& stats, Items& items)
       : auras(auras), talents(talents), sets(sets), stats(stats), items(items) {}
 };
-
-#endif

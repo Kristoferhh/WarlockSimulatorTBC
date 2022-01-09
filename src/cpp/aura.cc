@@ -39,7 +39,7 @@ void Aura::Apply() {
     entity.CombatLog(name + " refreshed");
   } else if (!active) {
     if (entity.recording_combat_log_breakdown) {
-      entity.combat_log_breakdown.at(name)->applied_at = entity.simulation->fight_time;
+      entity.combat_log_breakdown.at(name)->applied_at = entity.simulation->current_fight_time;
     }
 
     for (auto& stat : stats) {
@@ -87,7 +87,7 @@ void Aura::Fade() {
 
   if (entity.recording_combat_log_breakdown) {
     entity.combat_log_breakdown.at(name)->uptime +=
-        entity.simulation->fight_time - entity.combat_log_breakdown.at(name)->applied_at;
+        entity.simulation->current_fight_time - entity.combat_log_breakdown.at(name)->applied_at;
   }
 
   if (stacks > 0) {
@@ -354,14 +354,14 @@ AirmansRibbonOfGallantryAura::AirmansRibbonOfGallantryAura(Entity& entity) : Aur
   Setup();
 }
 
-DemonicFrenzy::DemonicFrenzy(Entity& entity) : Aura(entity) {
+DemonicFrenzyAura::DemonicFrenzyAura(Entity& entity) : Aura(entity) {
   name = SpellName::kDemonicFrenzy;
   duration = 10;
   max_stacks = 10;
   Setup();
 }
 
-BlackBook::BlackBook(Entity& entity) : Aura(entity) {
+BlackBookAura::BlackBookAura(Entity& entity) : Aura(entity) {
   name = SpellName::kBlackBook;
   duration = 30;
   stats.push_back(SpellPower(entity, 200));
@@ -369,7 +369,7 @@ BlackBook::BlackBook(Entity& entity) : Aura(entity) {
   Setup();
 }
 
-BattleSquawk::BattleSquawk(Entity& entity) : Aura(entity) {
+BattleSquawkAura::BattleSquawkAura(Entity& entity) : Aura(entity) {
   name = SpellName::kBattleSquawk;
   duration = 300;
   stats.push_back(MeleeHastePercent(entity, std::pow(1.05, entity.player->settings.battle_squawk_amount)));

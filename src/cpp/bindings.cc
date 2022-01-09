@@ -63,7 +63,7 @@ void SimulationUpdate(int iteration, int iteration_amount, double median_dps, in
 #endif
 }
 
-void SimulationEnd(double median_dps, double min_dps, double max_dps, int item_id, int iteration_amount,
+void SendSimulationResults(double median_dps, double min_dps, double max_dps, int item_id, int iteration_amount,
                    int total_fight_duration, const char* custom_stat) {
 #ifdef EMSCRIPTEN
   EM_ASM({postMessage({
@@ -98,7 +98,7 @@ std::vector<uint32_t> AllocRandomSeeds(int amount_of_seeds, uint32_t rand_seed) 
 
 Items AllocItems() { return Items(); }
 
-Auras AllocAuras() { return Auras(); }
+AuraSelection AllocAuras() { return AuraSelection(); }
 
 Talents AllocTalents() { return Talents(); }
 
@@ -106,7 +106,7 @@ Sets AllocSets() { return Sets(); }
 
 CharacterStats AllocStats() { return CharacterStats(); }
 
-PlayerSettings AllocPlayerSettings(Auras& auras, Talents& talents, Sets& sets, CharacterStats& stats, Items& items) {
+PlayerSettings AllocPlayerSettings(AuraSelection& auras, Talents& talents, Sets& sets, CharacterStats& stats, Items& items) {
   return PlayerSettings(auras, talents, sets, stats, items);
 }
 
@@ -150,73 +150,73 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("twohand", &Items::two_hand)
       .property("wand", &Items::wand);
 
-  emscripten::class_<Auras>("Auras")
+  emscripten::class_<AuraSelection>("Auras")
       .constructor<>()
-      .property("felArmor", &Auras::fel_armor)
-      .property("judgementOfWisdom", &Auras::judgement_of_wisdom)
-      .property("manaSpringTotem", &Auras::mana_spring_totem)
-      .property("wrathOfAirTotem", &Auras::wrath_of_air_totem)
-      .property("totemOfWrath", &Auras::totem_of_wrath)
-      .property("markOfTheWild", &Auras::mark_of_the_wild)
-      .property("prayerOfSpirit", &Auras::prayer_of_spirit)
-      .property("bloodPact", &Auras::blood_pact)
-      .property("inspiringPresence", &Auras::inspiring_presence)
-      .property("moonkinAura", &Auras::moonkin_aura)
-      .property("powerInfusion", &Auras::power_infusion)
-      .property("powerOfTheGuardianWarlock", &Auras::atiesh_warlock)
-      .property("powerOfTheGuardianMage", &Auras::atiesh_mage)
-      .property("eyeOfTheNight", &Auras::eye_of_the_night)
-      .property("chainOfTheTwilightOwl", &Auras::chain_of_the_twilight_owl)
-      .property("jadePendantOfBlasting", &Auras::jade_pendant_of_blasting)
-      .property("drumsOfBattle", &Auras::drums_of_battle)
-      .property("drumsOfWar", &Auras::drums_of_war)
-      .property("drumsOfRestoration", &Auras::drums_of_restoration)
-      .property("bloodlust", &Auras::bloodlust)
-      .property("ferociousInspiration", &Auras::ferocious_inspiration)
-      .property("innervate", &Auras::innervate)
-      .property("manaTideTotem", &Auras::mana_tide_totem)
-      .property("airmansRibbonOfGallantry", &Auras::airmans_ribbon_of_gallantry)
-      .property("curseOfTheElements", &Auras::curse_of_the_elements)
-      .property("shadowWeaving", &Auras::shadow_weaving)
-      .property("improvedScorch", &Auras::improved_scorch)
-      .property("misery", &Auras::misery)
-      .property("judgementOfTheCrusader", &Auras::judgement_of_the_crusader)
-      .property("vampiricTouch", &Auras::vampiric_touch)
-      .property("faerieFire", &Auras::faerie_fire)
-      .property("sunderArmor", &Auras::sunder_armor)
-      .property("exposeArmor", &Auras::expose_armor)
-      .property("curseOfRecklessness", &Auras::curse_of_recklessness)
-      .property("bloodFrenzy", &Auras::blood_frenzy)
-      .property("exposeWeakness", &Auras::expose_weakness)
-      .property("annihilator", &Auras::annihilator)
-      .property("improvedHuntersMark", &Auras::improved_hunters_mark)
-      .property("superManaPotion", &Auras::super_mana_potion)
-      .property("destructionPotion", &Auras::destruction_potion)
-      .property("demonicRune", &Auras::demonic_rune)
-      .property("flameCap", &Auras::flame_cap)
-      .property("chippedPowerCore", &Auras::chipped_power_core)
-      .property("crackedPowerCore", &Auras::cracked_power_core)
-      .property("petBlessingOfKings", &Auras::pet_blessing_of_kings)
-      .property("petBlessingOfWisdom", &Auras::pet_blessing_of_wisdom)
-      .property("petBlessingOfMight", &Auras::pet_blessing_of_might)
-      .property("petBattleSquawk", &Auras::pet_battle_squawk)
-      .property("petArcaneIntellect", &Auras::pet_arcane_intellect)
-      .property("petMarkOfTheWild", &Auras::pet_mark_of_the_wild)
-      .property("petPrayerOfFortitude", &Auras::pet_prayer_of_fortitude)
-      .property("petPrayerOfSpirit", &Auras::pet_prayer_of_spirit)
-      .property("petKiblersBits", &Auras::pet_kiblers_bits)
-      .property("petHeroicPresence", &Auras::pet_heroic_presence)
-      .property("petStrengthOfEarthTotem", &Auras::pet_strength_of_earth_totem)
-      .property("petGraceOfAirTotem", &Auras::pet_grace_of_air_totem)
-      .property("petBattleShout", &Auras::pet_battle_shout)
-      .property("petTrueshotAura", &Auras::pet_trueshot_aura)
-      .property("petLeaderOfThePack", &Auras::pet_leader_of_the_pack)
-      .property("petUnleashedRage", &Auras::pet_unleashed_rage)
-      .property("petStaminaScroll", &Auras::pet_stamina_scroll)
-      .property("petIntellectScroll", &Auras::pet_intellect_scroll)
-      .property("petStrengthScroll", &Auras::pet_strength_scroll)
-      .property("petAgilityScroll", &Auras::pet_agility_scroll)
-      .property("petSpiritScroll", &Auras::pet_spirit_scroll);
+      .property("felArmor", &AuraSelection::fel_armor)
+      .property("judgementOfWisdom", &AuraSelection::judgement_of_wisdom)
+      .property("manaSpringTotem", &AuraSelection::mana_spring_totem)
+      .property("wrathOfAirTotem", &AuraSelection::wrath_of_air_totem)
+      .property("totemOfWrath", &AuraSelection::totem_of_wrath)
+      .property("markOfTheWild", &AuraSelection::mark_of_the_wild)
+      .property("prayerOfSpirit", &AuraSelection::prayer_of_spirit)
+      .property("bloodPact", &AuraSelection::blood_pact)
+      .property("inspiringPresence", &AuraSelection::inspiring_presence)
+      .property("moonkinAura", &AuraSelection::moonkin_aura)
+      .property("powerInfusion", &AuraSelection::power_infusion)
+      .property("powerOfTheGuardianWarlock", &AuraSelection::atiesh_warlock)
+      .property("powerOfTheGuardianMage", &AuraSelection::atiesh_mage)
+      .property("eyeOfTheNight", &AuraSelection::eye_of_the_night)
+      .property("chainOfTheTwilightOwl", &AuraSelection::chain_of_the_twilight_owl)
+      .property("jadePendantOfBlasting", &AuraSelection::jade_pendant_of_blasting)
+      .property("drumsOfBattle", &AuraSelection::drums_of_battle)
+      .property("drumsOfWar", &AuraSelection::drums_of_war)
+      .property("drumsOfRestoration", &AuraSelection::drums_of_restoration)
+      .property("bloodlust", &AuraSelection::bloodlust)
+      .property("ferociousInspiration", &AuraSelection::ferocious_inspiration)
+      .property("innervate", &AuraSelection::innervate)
+      .property("manaTideTotem", &AuraSelection::mana_tide_totem)
+      .property("airmansRibbonOfGallantry", &AuraSelection::airmans_ribbon_of_gallantry)
+      .property("curseOfTheElements", &AuraSelection::curse_of_the_elements)
+      .property("shadowWeaving", &AuraSelection::shadow_weaving)
+      .property("improvedScorch", &AuraSelection::improved_scorch)
+      .property("misery", &AuraSelection::misery)
+      .property("judgementOfTheCrusader", &AuraSelection::judgement_of_the_crusader)
+      .property("vampiricTouch", &AuraSelection::vampiric_touch)
+      .property("faerieFire", &AuraSelection::faerie_fire)
+      .property("sunderArmor", &AuraSelection::sunder_armor)
+      .property("exposeArmor", &AuraSelection::expose_armor)
+      .property("curseOfRecklessness", &AuraSelection::curse_of_recklessness)
+      .property("bloodFrenzy", &AuraSelection::blood_frenzy)
+      .property("exposeWeakness", &AuraSelection::expose_weakness)
+      .property("annihilator", &AuraSelection::annihilator)
+      .property("improvedHuntersMark", &AuraSelection::improved_hunters_mark)
+      .property("superManaPotion", &AuraSelection::super_mana_potion)
+      .property("destructionPotion", &AuraSelection::destruction_potion)
+      .property("demonicRune", &AuraSelection::demonic_rune)
+      .property("flameCap", &AuraSelection::flame_cap)
+      .property("chippedPowerCore", &AuraSelection::chipped_power_core)
+      .property("crackedPowerCore", &AuraSelection::cracked_power_core)
+      .property("petBlessingOfKings", &AuraSelection::pet_blessing_of_kings)
+      .property("petBlessingOfWisdom", &AuraSelection::pet_blessing_of_wisdom)
+      .property("petBlessingOfMight", &AuraSelection::pet_blessing_of_might)
+      .property("petBattleSquawk", &AuraSelection::pet_battle_squawk)
+      .property("petArcaneIntellect", &AuraSelection::pet_arcane_intellect)
+      .property("petMarkOfTheWild", &AuraSelection::pet_mark_of_the_wild)
+      .property("petPrayerOfFortitude", &AuraSelection::pet_prayer_of_fortitude)
+      .property("petPrayerOfSpirit", &AuraSelection::pet_prayer_of_spirit)
+      .property("petKiblersBits", &AuraSelection::pet_kiblers_bits)
+      .property("petHeroicPresence", &AuraSelection::pet_heroic_presence)
+      .property("petStrengthOfEarthTotem", &AuraSelection::pet_strength_of_earth_totem)
+      .property("petGraceOfAirTotem", &AuraSelection::pet_grace_of_air_totem)
+      .property("petBattleShout", &AuraSelection::pet_battle_shout)
+      .property("petTrueshotAura", &AuraSelection::pet_trueshot_aura)
+      .property("petLeaderOfThePack", &AuraSelection::pet_leader_of_the_pack)
+      .property("petUnleashedRage", &AuraSelection::pet_unleashed_rage)
+      .property("petStaminaScroll", &AuraSelection::pet_stamina_scroll)
+      .property("petIntellectScroll", &AuraSelection::pet_intellect_scroll)
+      .property("petStrengthScroll", &AuraSelection::pet_strength_scroll)
+      .property("petAgilityScroll", &AuraSelection::pet_agility_scroll)
+      .property("petSpiritScroll", &AuraSelection::pet_spirit_scroll);
 
   emscripten::class_<CharacterStats>("CharacterStats")
       .constructor<>()
@@ -299,7 +299,7 @@ EMSCRIPTEN_BINDINGS(module) {
       .property("t6", &Sets::t6);
 
   emscripten::class_<PlayerSettings>("PlayerSettings")
-      .constructor<Auras&, Talents&, Sets&, CharacterStats&, Items&>()
+      .constructor<AuraSelection&, Talents&, Sets&, CharacterStats&, Items&>()
       .property("randomSeeds", &PlayerSettings::random_seeds)
       .property("itemId", &PlayerSettings::item_id)
       .property("metaGemId", &PlayerSettings::meta_gem_id)

@@ -2,17 +2,17 @@
 
 #include "../player.h"
 
-OnHitProc::OnHitProc(Player& player, std::shared_ptr<Aura> aura) : SpellProc(player, aura) { procs_on_hit = true; }
+OnHitProc::OnHitProc(Entity& entity, std::shared_ptr<Aura> aura) : SpellProc(entity, aura) { procs_on_hit = true; }
 
 void OnHitProc::Setup() {
   SpellProc::Setup();
 
   if (procs_on_hit && on_hit_procs_enabled) {
-    player.on_hit_procs.push_back(this);
+    entity.on_hit_procs.push_back(this);
   }
 }
 
-MarkOfDefiance::MarkOfDefiance(Player& player) : OnHitProc(player) {
+MarkOfDefiance::MarkOfDefiance(Entity& entity) : OnHitProc(entity) {
   name = SpellName::kMarkOfDefiance;
   cooldown = 17;
   proc_chance = 15;
@@ -23,7 +23,7 @@ MarkOfDefiance::MarkOfDefiance(Player& player) : OnHitProc(player) {
   Setup();
 }
 
-InsightfulEarthstormDiamond::InsightfulEarthstormDiamond(Player& player) : OnHitProc(player) {
+InsightfulEarthstormDiamond::InsightfulEarthstormDiamond(Entity& entity) : OnHitProc(entity) {
   name = SpellName::kInsightfulEarthstormDiamond;
   cooldown = 15;
   proc_chance = 5;
@@ -33,7 +33,7 @@ InsightfulEarthstormDiamond::InsightfulEarthstormDiamond(Player& player) : OnHit
   Setup();
 }
 
-BladeOfWizardry::BladeOfWizardry(Player& player, std::shared_ptr<Aura> aura) : OnHitProc(player, aura) {
+BladeOfWizardry::BladeOfWizardry(Entity& entity, std::shared_ptr<Aura> aura) : OnHitProc(entity, aura) {
   name = SpellName::kBladeOfWizardry;
   cooldown = 50;
   proc_chance = 15;
@@ -41,7 +41,7 @@ BladeOfWizardry::BladeOfWizardry(Player& player, std::shared_ptr<Aura> aura) : O
   Setup();
 }
 
-RobeOfTheElderScribes::RobeOfTheElderScribes(Player& player, std::shared_ptr<Aura> aura) : OnHitProc(player, aura) {
+RobeOfTheElderScribes::RobeOfTheElderScribes(Entity& entity, std::shared_ptr<Aura> aura) : OnHitProc(entity, aura) {
   name = SpellName::kRobeOfTheElderScribes;
   cooldown = 50;
   proc_chance = 20;
@@ -49,7 +49,7 @@ RobeOfTheElderScribes::RobeOfTheElderScribes(Player& player, std::shared_ptr<Aur
   Setup();
 }
 
-QuagmirransEye::QuagmirransEye(Player& player, std::shared_ptr<Aura> aura) : OnHitProc(player, aura) {
+QuagmirransEye::QuagmirransEye(Entity& entity, std::shared_ptr<Aura> aura) : OnHitProc(entity, aura) {
   name = SpellName::kQuagmirransEye;
   cooldown = 45;
   proc_chance = 10;
@@ -57,7 +57,7 @@ QuagmirransEye::QuagmirransEye(Player& player, std::shared_ptr<Aura> aura) : OnH
   Setup();
 }
 
-BandOfTheEternalSage::BandOfTheEternalSage(Player& player, std::shared_ptr<Aura> aura) : OnHitProc(player, aura) {
+BandOfTheEternalSage::BandOfTheEternalSage(Entity& entity, std::shared_ptr<Aura> aura) : OnHitProc(entity, aura) {
   name = SpellName::kBandOfTheEternalSage;
   cooldown = 60;
   proc_chance = 10;
@@ -65,7 +65,7 @@ BandOfTheEternalSage::BandOfTheEternalSage(Player& player, std::shared_ptr<Aura>
   Setup();
 }
 
-MysticalSkyfireDiamond::MysticalSkyfireDiamond(Player& player, std::shared_ptr<Aura> aura) : OnHitProc(player, aura) {
+MysticalSkyfireDiamond::MysticalSkyfireDiamond(Entity& entity, std::shared_ptr<Aura> aura) : OnHitProc(entity, aura) {
   name = SpellName::kMysticalSkyfireDiamond;
   cooldown = 35;
   proc_chance = 15;
@@ -73,7 +73,7 @@ MysticalSkyfireDiamond::MysticalSkyfireDiamond(Player& player, std::shared_ptr<A
   Setup();
 }
 
-JudgementOfWisdom::JudgementOfWisdom(Player& player) : OnHitProc(player) {
+JudgementOfWisdom::JudgementOfWisdom(Entity& entity) : OnHitProc(entity) {
   name = SpellName::kJudgementOfWisdom;
   mana_gain = 74;
   gain_mana_on_cast = true;
@@ -81,46 +81,52 @@ JudgementOfWisdom::JudgementOfWisdom(Player& player) : OnHitProc(player) {
   Setup();
 }
 
-Flameshadow::Flameshadow(Player& player, std::shared_ptr<Aura> aura) : OnHitProc(player, aura) {
+Flameshadow::Flameshadow(Entity& entity, std::shared_ptr<Aura> aura) : OnHitProc(entity, aura) {
   name = SpellName::kFlameshadow;
   proc_chance = 5;
-  on_hit_procs_enabled = player.sets.t4 >= 2;
+  on_hit_procs_enabled = entity.player->sets.t4 >= 2;
   Setup();
 }
 
-bool Flameshadow::ShouldProc(PlayerSpell* spell) { return spell->school == SpellSchool::kShadow; }
+bool Flameshadow::ShouldProc(Spell* spell) { return spell->spell_school == SpellSchool::kShadow; }
 
-Shadowflame::Shadowflame(Player& player, std::shared_ptr<Aura> aura) : OnHitProc(player, aura) {
+Shadowflame::Shadowflame(Entity& entity, std::shared_ptr<Aura> aura) : OnHitProc(entity, aura) {
   name = SpellName::kShadowflame;
   proc_chance = 5;
-  on_hit_procs_enabled = player.sets.t4 >= 2;
+  on_hit_procs_enabled = entity.player->sets.t4 >= 2;
   Setup();
 }
 
-bool Shadowflame::ShouldProc(PlayerSpell* spell) { return spell->school == SpellSchool::kFire; }
+bool Shadowflame::ShouldProc(Spell* spell) { return spell->spell_school == SpellSchool::kFire; }
 
-Spellstrike::Spellstrike(Player& player, std::shared_ptr<Aura> aura) : OnHitProc(player, aura) {
+Spellstrike::Spellstrike(Entity& entity, std::shared_ptr<Aura> aura) : OnHitProc(entity, aura) {
   name = SpellName::kSpellstrike;
   proc_chance = 5;
-  on_hit_procs_enabled = player.sets.spellstrike == 2;
+  on_hit_procs_enabled = entity.player->sets.spellstrike == 2;
   Setup();
 }
 
-ManaEtched4Set::ManaEtched4Set(Player& player, std::shared_ptr<Aura> aura) : OnHitProc(player, aura) {
+ManaEtched4Set::ManaEtched4Set(Entity& entity, std::shared_ptr<Aura> aura) : OnHitProc(entity, aura) {
   name = SpellName::kManaEtched4Set;
   proc_chance = 2;
-  on_hit_procs_enabled = player.sets.mana_etched >= 4;
+  on_hit_procs_enabled = entity.player->sets.mana_etched >= 4;
   Setup();
 }
 
-WrathOfCenarius::WrathOfCenarius(Player& player, std::shared_ptr<Aura> aura) : OnHitProc(player, aura) {
+WrathOfCenarius::WrathOfCenarius(Entity& entity, std::shared_ptr<Aura> aura) : OnHitProc(entity, aura) {
   name = SpellName::kWrathOfCenarius;
   proc_chance = 5;
   Setup();
 }
 
-DarkmoonCardCrusade::DarkmoonCardCrusade(Player& player, std::shared_ptr<Aura> aura) : OnHitProc(player, aura) {
+DarkmoonCardCrusade::DarkmoonCardCrusade(Entity& entity, std::shared_ptr<Aura> aura) : OnHitProc(entity, aura) {
   name = SpellName::kDarkmoonCardCrusade;
+  proc_chance = 100;
+  Setup();
+}
+
+DemonicFrenzy::DemonicFrenzy(Entity& entity, std::shared_ptr<Aura> aura) : OnHitProc(entity, aura) {
+  name = SpellName::kDemonicFrenzy;
   proc_chance = 100;
   Setup();
 }

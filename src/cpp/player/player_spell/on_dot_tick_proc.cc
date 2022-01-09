@@ -12,7 +12,7 @@ void OnDotTickProc::Setup() {
   SpellProc::Setup();
 
   if (procs_on_dot_ticks && on_dot_tick_procs_enabled) {
-    player.on_dot_tick_procs.push_back(this);
+    entity.on_dot_tick_procs.push_back(this);
   }
 }
 
@@ -32,7 +32,7 @@ TimbalsFocusingCrystal::TimbalsFocusingCrystal(Player& player) : OnDotTickProc(p
   min_dmg = 285;
   max_dmg = 475;
   does_damage = true;
-  school = SpellSchool::kShadow;
+  spell_school = SpellSchool::kShadow;
   can_crit = true;
   can_miss = true;
   Setup();

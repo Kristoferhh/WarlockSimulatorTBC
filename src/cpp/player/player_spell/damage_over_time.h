@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_DAMAGE_OVER_TIME
-#define WARLOCK_SIMULATOR_TBC_DAMAGE_OVER_TIME
+#pragma once
 
 struct Player;
 #include <iostream>
@@ -68,5 +67,3 @@ struct CurseOfDoomDot : public DamageOverTime {
   CurseOfDoomDot(Player& player);
   double GetModifier();
 };
-
-#endif

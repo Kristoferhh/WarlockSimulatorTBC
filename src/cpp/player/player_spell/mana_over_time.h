@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_MANA_OVER_TIME
-#define WARLOCK_SIMULATOR_TBC_MANA_OVER_TIME
+#pragma once
 
 #include "../../aura.h"
 
@@ -20,5 +19,3 @@ struct ManaTideTotemAura : public ManaOverTime {
   ManaTideTotemAura(Entity& Entity);
   double GetManaGain();
 };
-
-#endif

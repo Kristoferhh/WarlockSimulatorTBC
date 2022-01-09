@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_AURA
-#define WARLOCK_SIMULATOR_TBC_AURA
+#pragma once
 
 struct Entity;
 #include <iostream>
@@ -175,16 +174,14 @@ struct AirmansRibbonOfGallantryAura : public Aura {
   AirmansRibbonOfGallantryAura(Entity& entity);
 };
 
-struct DemonicFrenzy : public Aura {
-  DemonicFrenzy(Entity& entity);
+struct DemonicFrenzyAura : public Aura {
+  DemonicFrenzyAura(Entity& entity);
 };
 
-struct BlackBook : public Aura {
-  BlackBook(Entity& entity);
+struct BlackBookAura : public Aura {
+  BlackBookAura(Entity& entity);
 };
 
-struct BattleSquawk : public Aura {
-  BattleSquawk(Entity& entity);
+struct BattleSquawkAura : public Aura {
+  BattleSquawkAura(Entity& entity);
 };
-
-#endif

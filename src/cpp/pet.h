@@ -1,21 +1,16 @@
-#ifndef WARLOCK_SIMULATOR_TBC_PET
-#define WARLOCK_SIMULATOR_TBC_PET
+#pragma once
 
 struct Player;
 #include <iostream>
 #include <map>
 
-#include "../character_stats.h"
-#include "../entity.h"
-#include "../enums.h"
-#include "../simulation.h"
-#include "pet_auras.h"
-#include "pet_spells.h"
+#include "character_stats.h"
+#include "entity.h"
+#include "enums.h"
+#include "simulation.h"
 
 struct Pet : public Entity, std::enable_shared_from_this<Pet> {
   const double kBaseMeleeSpeed = 2;
-  PetSpells spells;
-  PetAuras auras;
   PetName pet_name;
   PetType pet_type;
   double glancing_blow_multiplier;
@@ -23,38 +18,23 @@ struct Pet : public Entity, std::enable_shared_from_this<Pet> {
   double crit_suppression;
   double enemy_damage_reduction_from_armor;
 
-  Pet(Player& player);
+  Pet(Player& player, EmbindConstant selected_pet);
   void Initialize(Simulation* simulation);
   void CalculateStatsFromAuras();
   void Setup();
   void Reset();
   void Tick(double t);
   double GetAttackPower();
-  double GetMeleeCritChance();
   double GetHastePercent();
-  double GetSpellCritChance();
+  double GetSpellCritChance(SpellType spell_type = SpellType::kNoSpellType);
   double GetStamina();
   double GetIntellect();
   double GetAgility();
   double GetStrength();
   double GetPlayerSpellPower();
-  double GetSpellPower();
+  double GetSpellPower(bool dealing_damage, SpellSchool spell_school);
   double GetDebuffAttackPower();
   double CalculateMaxMana();
-  bool IsCrit(AttackType type);
+  bool isMeleeCrit();
   bool IsHit(AttackType type);
 };
-
-struct Imp : public Pet {
-  Imp(Player& player);
-};
-
-struct Succubus : public Pet {
-  Succubus(Player& player);
-};
-
-struct Felguard : public Pet {
-  Felguard(Player& player);
-};
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_ON_DOT_TICK_PROC
-#define WARLOCK_SIMULATOR_TBC_ON_DOT_TICK_PROC
+#pragma once
 
 #include "spell_proc.h"
 
@@ -17,5 +16,3 @@ struct AshtongueTalismanOfShadows : public OnDotTickProc {
 struct TimbalsFocusingCrystal : public OnDotTickProc {
   TimbalsFocusingCrystal(Player& player);
 };
-
-#endif

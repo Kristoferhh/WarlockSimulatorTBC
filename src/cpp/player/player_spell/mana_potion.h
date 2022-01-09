@@ -1,9 +1,8 @@
-#ifndef WARLOCK_SIMULATOR_TBC_MANA_POTION
-#define WARLOCK_SIMULATOR_TBC_MANA_POTION
+#pragma once
 
-#include "player_spell.h"
+#include "../../spell.h"
 
-struct ManaPotion : public PlayerSpell {
+struct ManaPotion : public Spell {
   ManaPotion(Player& player);
   void Cast();
 };
@@ -16,5 +15,3 @@ struct DemonicRune : public ManaPotion {
   DemonicRune(Player& player);
   void Cast();
 };
-
-#endif

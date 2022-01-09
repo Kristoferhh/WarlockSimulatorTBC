@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_BINDINGS
-#define WARLOCK_SIMULATOR_TBC_BINDINGS
+#pragma once
 
 #include <chrono>
 
@@ -18,9 +17,10 @@
 #endif
 
 Player AllocPlayer(PlayerSettings& settings);
-PlayerSettings AllocPlayerSettings(Auras& auras, Talents& talents, Sets& sets, CharacterStats& stats, Items& items);
+PlayerSettings AllocPlayerSettings(AuraSelection& auras, Talents& talents, Sets& sets, CharacterStats& stats,
+                                   Items& items);
 Items AllocItems();
-Auras AllocAuras();
+AuraSelection AllocAuras();
 Talents AllocTalents();
 Sets AllocSets();
 CharacterStats AllocStats();
@@ -35,8 +35,6 @@ void PostCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, ui
                             double uptime, uint32_t dodges, uint32_t glancing_blows);
 void CombatLogUpdate(const char* combat_log_entry);
 void SimulationUpdate(int iteration, int iteration_amount, double median_dps, int item_id, const char* custom_stat);
-void SimulationEnd(double median_dps, double min_dps, double max_dps, int item_id, int iteration_amount,
-                   int total_fight_duration, const char* custom_stat);
+void SendSimulationResults(double median_dps, double min_dps, double max_dps, int item_id, int iteration_amount,
+                           int total_fight_duration, const char* custom_stat);
 std::string GetExceptionMessage(intptr_t exception_ptr);
-
-#endif

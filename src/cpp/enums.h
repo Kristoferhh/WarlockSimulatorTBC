@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_ENUMS
-#define WARLOCK_SIMULATOR_TBC_ENUMS
+#pragma once
 
 #include <string>
 
@@ -20,6 +19,12 @@ enum class SimulationType { kNormal, kAllItems, kStatWeights };
 enum class CalculationType { kNoType, kAdditive, kMultiplicative };
 
 enum class EntityType { kNoType, kPlayer, kPet };
+
+namespace PetNameStr {
+const std::string kImp = "Imp";
+const std::string kSuccubus = "Succubus";
+const std::string kFelguard = "Felguard";
+}  // namespace PetNameStr
 
 namespace SpellName {
 const std::string kShadowBolt = "Shadow Bolt";
@@ -152,5 +157,3 @@ const int kRestrainedEssenceOfSapphiron = 23046;
 const int kWrathOfCenarius = 21190;
 const int kHazzarahsCharmOfDestruction = 19957;
 }  // namespace ItemId
-
-#endif

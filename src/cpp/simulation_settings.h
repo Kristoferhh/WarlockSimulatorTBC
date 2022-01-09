@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_SIMULATION_SETTINGS
-#define WARLOCK_SIMULATOR_TBC_SIMULATION_SETTINGS
+#pragma once
 
 #include <iostream>
 
@@ -11,5 +10,3 @@ struct SimulationSettings {
   int max_time;
   SimulationType simulation_type;
 };
-
-#endif

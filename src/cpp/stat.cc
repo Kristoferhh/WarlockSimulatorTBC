@@ -27,15 +27,27 @@ void Stat::ModifyStat(std::string action, int stacks) {
   character_stat = new_stat_value;
 
   if (entity.ShouldWriteToCombatLog()) {
-    entity.CombatLog((entity.entity_type == EntityType::kPlayer ? "Player "
-                      : entity.entity_type == EntityType::kPet  ? "Pet "
-                                                                : "") +
-                     name + " " +
-                     (action == "add" ? (calculation_type == CalculationType::kAdditive ? "+" : "*")
-                                      : (calculation_type == CalculationType::kAdditive ? "-" : "/")) +
-                     " " + DoubleToString(value * stacks, combat_log_decimal_places) + " (" +
-                     DoubleToString(kCurrentStatValue, combat_log_decimal_places) + " -> " +
-                     DoubleToString(new_stat_value, combat_log_decimal_places) + ")");
+    std::string msg = entity.name + " " + name;
+
+    if (action == "add") {
+      if (calculation_type == CalculationType::kAdditive) {
+        msg += "+";
+      } else {
+        msg += "*";
+      }
+    } else {
+      if (calculation_type == CalculationType::kAdditive) {
+        msg += "-";
+      } else {
+        msg += "/";
+      }
+    }
+
+    msg += " " + DoubleToString(value * stacks, combat_log_decimal_places) + " (" +
+           DoubleToString(kCurrentStatValue, combat_log_decimal_places) + " -> " +
+           DoubleToString(new_stat_value, combat_log_decimal_places) + ")";
+
+    entity.CombatLog(msg);
   }
 }
 

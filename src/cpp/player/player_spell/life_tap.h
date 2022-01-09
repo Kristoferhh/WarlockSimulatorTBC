@@ -1,20 +1,16 @@
-#ifndef WARLOCK_SIMULATOR_TBC_LIFE_TAP
-#define WARLOCK_SIMULATOR_TBC_LIFE_TAP
+#pragma once
 
-#include "player_spell.h"
+#include "../../spell.h"
 
-struct LifeTap : public PlayerSpell {
-  Player& player;
+struct LifeTap : public Spell {
   int mana_return;
 
-  LifeTap(Player& player);
+  LifeTap(Entity& entity);
   double ManaGain();
   void Cast();
 };
 
 struct DarkPact : public LifeTap {
-  DarkPact(Player& player);
+  DarkPact(Entity& entity);
   bool Ready();
 };
-
-#endif

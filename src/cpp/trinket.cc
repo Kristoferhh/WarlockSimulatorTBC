@@ -28,7 +28,7 @@ void Trinket::Use() {
   }
 
   if (player.recording_combat_log_breakdown) {
-    player.combat_log_breakdown.at(name)->applied_at = player.simulation->fight_time;
+    player.combat_log_breakdown.at(name)->applied_at = player.simulation->current_fight_time;
     player.combat_log_breakdown.at(name)->count++;
   }
 
@@ -48,7 +48,7 @@ void Trinket::Fade() {
 
   if (player.recording_combat_log_breakdown) {
     player.combat_log_breakdown.at(name)->uptime +=
-        player.simulation->fight_time - player.combat_log_breakdown.at(name)->applied_at;
+        player.simulation->current_fight_time - player.combat_log_breakdown.at(name)->applied_at;
   }
 
   for (auto& stat : stats) {

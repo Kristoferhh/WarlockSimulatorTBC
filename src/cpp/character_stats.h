@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_CHARACTER_STATS
-#define WARLOCK_SIMULATOR_TBC_CHARACTER_STATS
+#pragma once
 
 struct CharacterStats {
   double health;
@@ -36,6 +35,7 @@ struct CharacterStats {
   double attack_power_modifier;
   double damage_modifier;
   double melee_haste_percent;
+  double physical_modifier;
 
   CharacterStats()
       : health(0),
@@ -71,7 +71,6 @@ struct CharacterStats {
         agility_modifier(1),
         attack_power_modifier(1),
         damage_modifier(1),
-        melee_haste_percent(1) {}
+        melee_haste_percent(1),
+        physical_modifier(1) {}
 };
-
-#endif

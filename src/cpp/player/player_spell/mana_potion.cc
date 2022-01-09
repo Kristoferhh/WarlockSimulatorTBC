@@ -3,30 +3,29 @@
 #include "../../common.h"
 #include "../player.h"
 
-ManaPotion::ManaPotion(Player& player) : PlayerSpell(player) {
+ManaPotion::ManaPotion(Player& player) : Spell(player) {
   cooldown = 120;
   is_item = true;
   on_gcd = false;
 }
 
 void ManaPotion::Cast() {
-  PlayerSpell::Cast();
-  const double kCurrentPlayerMana = player.stats.mana;
+  Spell::Cast();
+  const double kCurrentPlayerMana = entity.stats.mana;
+  const double kManaGain = entity.player->settings.randomize_values && min_mana_gain > 0 && max_mana_gain > 0
+                               ? entity.player->rng.range(min_mana_gain, max_mana_gain)
+                               : mana_gain;
 
-  player.stats.mana =
-      std::min(player.stats.max_mana,
-               kCurrentPlayerMana + (player.settings.randomize_values && min_mana_gain > 0 && max_mana_gain > 0
-                                         ? player.rng.range(min_mana_gain, max_mana_gain)
-                                         : mana_gain));
-  const double kManaGained = player.stats.mana - kCurrentPlayerMana;
+  entity.stats.mana = std::min(entity.stats.max_mana, kCurrentPlayerMana + kManaGain);
+  const double kManaGained = entity.stats.mana - kCurrentPlayerMana;
 
-  if (player.recording_combat_log_breakdown) {
-    player.combat_log_breakdown.at(name)->iteration_mana_gain += kManaGained;
+  if (entity.recording_combat_log_breakdown) {
+    entity.combat_log_breakdown.at(name)->iteration_mana_gain += kManaGained;
   }
 
-  if (player.ShouldWriteToCombatLog()) {
-    player.CombatLog("Player gains " + DoubleToString(kManaGained) + " mana from " + name + " (" +
-                     DoubleToString(round(kCurrentPlayerMana)) + " -> " + DoubleToString(round(player.stats.mana)) +
+  if (entity.ShouldWriteToCombatLog()) {
+    entity.CombatLog("Player gains " + DoubleToString(kManaGained) + " mana from " + name + " (" +
+                     DoubleToString(round(kCurrentPlayerMana)) + " -> " + DoubleToString(round(entity.stats.mana)) +
                      ")");
   }
 }
@@ -47,10 +46,10 @@ DemonicRune::DemonicRune(Player& player) : ManaPotion(player) {
 
 void DemonicRune::Cast() {
   ManaPotion::Cast();
-  if (player.spells.chipped_power_core != NULL) {
-    player.spells.chipped_power_core->cooldown_remaining = cooldown;
+  if (entity.player->spells.chipped_power_core != NULL) {
+    entity.player->spells.chipped_power_core->cooldown_remaining = cooldown;
   }
-  if (player.spells.cracked_power_core != NULL) {
-    player.spells.cracked_power_core->cooldown_remaining = cooldown;
+  if (entity.player->spells.cracked_power_core != NULL) {
+    entity.player->spells.cracked_power_core->cooldown_remaining = cooldown;
   }
 }

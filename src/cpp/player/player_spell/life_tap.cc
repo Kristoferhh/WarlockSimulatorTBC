@@ -3,63 +3,65 @@
 #include "../../common.h"
 #include "../player.h"
 
-LifeTap::LifeTap(Player& player) : PlayerSpell(player), player(player) {
+LifeTap::LifeTap(Entity& entity) : Spell(entity) {
   name = SpellName::kLifeTap;
   mana_return = 582;
   coefficient = 0.8;
-  modifier = 1 * (1 + 0.1 * player.talents.improved_life_tap);
-  school = SpellSchool::kShadow;
+  modifier = 1 * (1 + 0.1 * entity.player->talents.improved_life_tap);
+  spell_school = SpellSchool::kShadow;
   Setup();
 }
 
-double LifeTap::ManaGain() { return (mana_return + ((player.GetSpellPower(false, school)) * coefficient)) * modifier; }
+double LifeTap::ManaGain() {
+  return (mana_return + ((entity.GetSpellPower(false, spell_school)) * coefficient)) * modifier;
+}
 
 void LifeTap::Cast() {
-  const double kCurrentPlayerMana = player.stats.mana;
+  const double kCurrentPlayerMana = entity.stats.mana;
   const double kManaGain = this->ManaGain();
 
-  player.stats.mana = std::min(player.stats.max_mana, player.stats.mana + kManaGain);
-  const double kManaGained = player.stats.mana - kCurrentPlayerMana;
+  entity.stats.mana = std::min(entity.stats.max_mana, entity.stats.mana + kManaGain);
+  const double kManaGained = entity.stats.mana - kCurrentPlayerMana;
 
-  if (player.recording_combat_log_breakdown) {
-    player.combat_log_breakdown.at(name)->casts++;
-    player.combat_log_breakdown.at(name)->iteration_mana_gain += kManaGained;
+  if (entity.recording_combat_log_breakdown) {
+    entity.combat_log_breakdown.at(name)->casts++;
+    entity.combat_log_breakdown.at(name)->iteration_mana_gain += kManaGained;
   }
-  if (player.ShouldWriteToCombatLog()) {
-    player.CombatLog(name + " " + DoubleToString(kManaGained) + " (" +
-                     DoubleToString(player.GetSpellPower(false, school)) + " Spell Power - " +
+  if (entity.ShouldWriteToCombatLog()) {
+    entity.CombatLog(name + " " + DoubleToString(kManaGained) + " (" +
+                     DoubleToString(entity.GetSpellPower(false, spell_school)) + " Spell Power - " +
                      DoubleToString(coefficient, 3) + " Coefficient - " + DoubleToString(modifier * 100, 2) +
                      "% Modifier)");
 
-    if (kCurrentPlayerMana + kManaGain > player.stats.max_mana) {
-      player.CombatLog(name + " used at too high mana (mana wasted)");
+    if (kCurrentPlayerMana + kManaGain > entity.stats.max_mana) {
+      entity.CombatLog(name + " used at too high mana (mana wasted)");
     }
   }
 
-  if (player.talents.mana_feed > 0 && player.pet != NULL) {
-    const double kCurrentPetMana = player.pet->stats.mana;
+  if (entity.player->talents.mana_feed > 0 && entity.pet != NULL) {
+    const double kCurrentPetMana = entity.pet->stats.mana;
 
-    player.pet->stats.mana =
-        std::min(kCurrentPetMana + (kManaGain * (player.talents.mana_feed / 3.0)), player.pet->CalculateMaxMana());
+    entity.pet->stats.mana = std::min(kCurrentPetMana + (kManaGain * (entity.player->talents.mana_feed / 3.0)),
+                                      entity.pet->CalculateMaxMana());
 
-    if (player.ShouldWriteToCombatLog()) {
-      player.CombatLog(player.pet->name + " gains " + (DoubleToString(player.pet->stats.mana - kCurrentPetMana)) +
+    if (entity.ShouldWriteToCombatLog()) {
+      entity.CombatLog(entity.pet->name + " gains " + (DoubleToString(entity.pet->stats.mana - kCurrentPetMana)) +
                        " mana from Mana Feed");
     }
   }
 
   if (name == SpellName::kDarkPact) {
-    player.pet->stats.mana = std::max(0.0, player.pet->stats.mana - kManaGain);
+    entity.pet->stats.mana = std::max(0.0, entity.pet->stats.mana - kManaGain);
   }
 }
 
-DarkPact::DarkPact(Player& player) : LifeTap(player) {
+DarkPact::DarkPact(Entity& entity) : LifeTap(entity) {
   name = SpellName::kDarkPact;
   mana_return = 700;
   coefficient = 0.96;
   modifier = 1;
-  school = SpellSchool::kShadow;
+  spell_school = SpellSchool::kShadow;
   Setup();
 }
 
-bool DarkPact::Ready() { return PlayerSpell::Ready() && player.pet->stats.mana >= ManaGain(); }
+bool DarkPact::Ready() { return Spell::Ready() && entity.pet->stats.mana >= ManaGain(); }

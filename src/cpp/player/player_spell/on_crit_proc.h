@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_ON_CRIT_PROC
-#define WARLOCK_SIMULATOR_TBC_ON_CRIT_PROC
+#pragma once
 
 #include "spell_proc.h"
 
@@ -10,7 +9,7 @@ struct OnCritProc : public SpellProc {
 
 struct ImprovedShadowBolt : public OnCritProc {
   ImprovedShadowBolt(Player& player, std::shared_ptr<Aura> aura);
-  bool ShouldProc(PlayerSpell* spell);
+  bool ShouldProc(Spell* spell);
 };
 
 struct TheLightningCapacitor : public OnCritProc {
@@ -25,5 +24,3 @@ struct ShiffarsNexusHorn : public OnCritProc {
 struct SextantOfUnstableCurrents : public OnCritProc {
   SextantOfUnstableCurrents(Player& player, std::shared_ptr<Aura> aura);
 };
-
-#endif

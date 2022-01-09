@@ -1,75 +1,51 @@
-#ifndef WARLOCK_SIMULATOR_TBC_AURAS
-#define WARLOCK_SIMULATOR_TBC_AURAS
+#pragma once
+
+#include "aura.h"
+#include "player/player_spell/damage_over_time.h"
 
 struct Auras {
-  bool fel_armor;
-  bool judgement_of_wisdom;
-  bool mana_spring_totem;
-  bool wrath_of_air_totem;
-  bool totem_of_wrath;
-  bool mark_of_the_wild;
-  bool prayer_of_spirit;
-  bool blood_pact;
-  bool inspiring_presence;
-  bool moonkin_aura;
-  bool power_infusion;
-  bool atiesh_warlock;
-  bool atiesh_mage;
-  bool eye_of_the_night;
-  bool chain_of_the_twilight_owl;
-  bool jade_pendant_of_blasting;
-  bool drums_of_battle;
-  bool drums_of_war;
-  bool drums_of_restoration;
-  bool bloodlust;
-  bool ferocious_inspiration;
-  bool innervate;
-  bool mana_tide_totem;
-  bool airmans_ribbon_of_gallantry;
-
-  bool curse_of_the_elements;
-  bool shadow_weaving;
-  bool improved_scorch;
-  bool misery;
-  bool judgement_of_the_crusader;
-  bool vampiric_touch;
-  bool faerie_fire;
-  bool sunder_armor;
-  bool expose_armor;
-  bool curse_of_recklessness;
-  bool blood_frenzy;
-  bool expose_weakness;
-  bool annihilator;
-  bool improved_hunters_mark;
-
-  bool super_mana_potion;
-  bool destruction_potion;
-  bool demonic_rune;
-  bool flame_cap;
-  bool chipped_power_core;
-  bool cracked_power_core;
-
-  bool pet_blessing_of_kings;
-  bool pet_blessing_of_wisdom;
-  bool pet_blessing_of_might;
-  bool pet_battle_squawk;
-  bool pet_arcane_intellect;
-  bool pet_mark_of_the_wild;
-  bool pet_prayer_of_fortitude;
-  bool pet_prayer_of_spirit;
-  bool pet_kiblers_bits;
-  bool pet_heroic_presence;
-  bool pet_strength_of_earth_totem;
-  bool pet_grace_of_air_totem;
-  bool pet_battle_shout;
-  bool pet_trueshot_aura;
-  bool pet_leader_of_the_pack;
-  bool pet_unleashed_rage;
-  bool pet_stamina_scroll;
-  bool pet_intellect_scroll;
-  bool pet_strength_scroll;
-  bool pet_agility_scroll;
-  bool pet_spirit_scroll;
+  std::shared_ptr<DamageOverTime> corruption;
+  std::shared_ptr<DamageOverTime> unstable_affliction;
+  std::shared_ptr<DamageOverTime> siphon_life;
+  std::shared_ptr<DamageOverTime> immolate;
+  std::shared_ptr<DamageOverTime> curse_of_agony;
+  std::shared_ptr<DamageOverTime> curse_of_doom;
+  std::shared_ptr<Aura> improved_shadow_bolt;
+  std::shared_ptr<Aura> curse_of_the_elements;
+  std::shared_ptr<Aura> curse_of_recklessness;
+  std::shared_ptr<Aura> shadow_trance;
+  std::shared_ptr<Aura> amplify_curse;
+  std::shared_ptr<Aura> power_infusion;
+  std::shared_ptr<Aura> innervate;
+  std::shared_ptr<Aura> blood_fury;
+  std::shared_ptr<Aura> destruction_potion;
+  std::shared_ptr<Aura> flame_cap;
+  std::shared_ptr<Aura> bloodlust;
+  std::shared_ptr<Aura> drums_of_battle;
+  std::shared_ptr<Aura> drums_of_war;
+  std::shared_ptr<Aura> drums_of_restoration;
+  std::shared_ptr<Aura> band_of_the_eternal_sage;
+  std::shared_ptr<Aura> wrath_of_cenarius;
+  std::shared_ptr<Aura> blade_of_wizardry;
+  std::shared_ptr<Aura> shattered_sun_pendant_of_acumen_aldor;
+  std::shared_ptr<Aura> robe_of_the_elder_scribes;
+  std::shared_ptr<Aura> mystical_skyfire_diamond;
+  std::shared_ptr<Aura> eye_of_magtheridon;
+  std::shared_ptr<Aura> sextant_of_unstable_currents;
+  std::shared_ptr<Aura> quagmirrans_eye;
+  std::shared_ptr<Aura> shiffars_nexus_horn;
+  std::shared_ptr<Aura> ashtongue_talisman_of_shadows;
+  std::shared_ptr<Aura> darkmoon_card_crusade;
+  std::shared_ptr<Aura> the_lightning_capacitor;
+  std::shared_ptr<Aura> flameshadow;  // Shadowpower
+  std::shared_ptr<Aura> shadowflame;  // Firepower
+  std::shared_ptr<Aura> spellstrike;
+  std::shared_ptr<Aura> mana_etched_4_set;
+  std::shared_ptr<Aura> chipped_power_core;
+  std::shared_ptr<Aura> cracked_power_core;
+  std::shared_ptr<Aura> mana_tide_totem;
+  std::shared_ptr<Aura> airmans_ribbon_of_gallantry;
+  std::shared_ptr<Aura> demonic_frenzy;
+  std::unique_ptr<Aura> black_book;
+  std::unique_ptr<Aura> battle_squawk;
 };
-
-#endif

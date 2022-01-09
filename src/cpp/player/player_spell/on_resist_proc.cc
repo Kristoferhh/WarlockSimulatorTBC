@@ -10,7 +10,7 @@ void OnResistProc::Setup() {
   SpellProc::Setup();
 
   if (procs_on_resist && on_resist_procs_enabled) {
-    player.on_resist_procs.push_back(this);
+    entity.on_resist_procs.push_back(this);
   }
 }
 

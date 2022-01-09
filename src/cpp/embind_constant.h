@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_CONSTANT
-#define WARLOCK_SIMULATOR_TBC_CONSTANT
+#pragma once
 
 enum class EmbindConstant : int {
   kUnused,
@@ -33,5 +32,3 @@ enum class EmbindConstant : int {
   kPassive,
   kAggressive,
 };
-
-#endif

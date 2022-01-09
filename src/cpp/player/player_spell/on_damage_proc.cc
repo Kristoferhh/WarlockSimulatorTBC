@@ -10,7 +10,7 @@ void OnDamageProc::Setup() {
   SpellProc::Setup();
 
   if (procs_on_damage && on_damage_procs_enabled) {
-    player.on_damage_procs.push_back(this);
+    entity.on_damage_procs.push_back(this);
   }
 }
 

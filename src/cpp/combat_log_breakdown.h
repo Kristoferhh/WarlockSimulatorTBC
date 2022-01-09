@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_COMBAT_LOG_BREAKDOWN
-#define WARLOCK_SIMULATOR_TBC_COMBAT_LOG_BREAKDOWN
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -27,5 +26,3 @@ struct CombatLogBreakdown {
         dodge(0),
         glancing_blows(0) {}
 };
-
-#endif

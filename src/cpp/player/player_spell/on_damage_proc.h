@@ -1,5 +1,4 @@
-#ifndef WARLOCK_SIMULATOR_TBC_ON_DAMAGE_PROC
-#define WARLOCK_SIMULATOR_TBC_ON_DAMAGE_PROC
+#pragma once
 
 #include "spell_proc.h"
 
@@ -15,5 +14,3 @@ struct ShatteredSunPendantOfAcumenAldor : public OnDamageProc {
 struct ShatteredSunPendantOfAcumenScryers : public OnDamageProc {
   ShatteredSunPendantOfAcumenScryers(Player& player);
 };
-
-#endif

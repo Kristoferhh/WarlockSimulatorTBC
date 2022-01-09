@@ -8,7 +8,7 @@ void OnCritProc::Setup() {
   SpellProc::Setup();
 
   if (procs_on_crit && on_crit_procs_enabled) {
-    player.on_crit_procs.push_back(this);
+    entity.on_crit_procs.push_back(this);
   }
 }
 
@@ -19,7 +19,7 @@ ImprovedShadowBolt::ImprovedShadowBolt(Player& player, std::shared_ptr<Aura> aur
   Setup();
 }
 
-bool ImprovedShadowBolt::ShouldProc(PlayerSpell* spell) { return spell->name == SpellName::kShadowBolt; }
+bool ImprovedShadowBolt::ShouldProc(Spell* spell) { return spell->name == SpellName::kShadowBolt; }
 
 TheLightningCapacitor::TheLightningCapacitor(Player& player) : OnCritProc(player) {
   name = SpellName::kTheLightningCapacitor;
@@ -35,11 +35,12 @@ TheLightningCapacitor::TheLightningCapacitor(Player& player) : OnCritProc(player
 
 void TheLightningCapacitor::StartCast(double predicted_damage) {
   if (cooldown_remaining <= 0) {
-    player.auras.the_lightning_capacitor->Apply();
-    if (player.auras.the_lightning_capacitor->stacks == player.auras.the_lightning_capacitor->max_stacks) {
-      PlayerSpell::StartCast();
+    entity.player->auras.the_lightning_capacitor->Apply();
+    if (entity.player->auras.the_lightning_capacitor->stacks ==
+        entity.player->auras.the_lightning_capacitor->max_stacks) {
+      Spell::StartCast();
       cooldown_remaining = cooldown;
-      player.auras.the_lightning_capacitor->Fade();
+      entity.player->auras.the_lightning_capacitor->Fade();
     }
   }
 }
