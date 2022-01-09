@@ -627,7 +627,8 @@ export enum GemColor {
   Blue = 'blue',
   Orange = 'orange',
   Green = 'green',
-  Purple = 'purple'
+  Purple = 'purple',
+  Void = 'void',
 }
 
 export const Languages: { iso: string, name: string, wowheadPrefix: string }[] = [

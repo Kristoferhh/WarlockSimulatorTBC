@@ -76,4 +76,7 @@ export const Gems: Gem[] = [
   { phase: 3, id: 32203, color: GemColor.Blue, name: 'Stormy Empyrean Sapphire', iconName: 'inv_jewelcrafting_empyreansapphire_02', stats: { spellPenetration: 13 } },
   { phase: 1, id: 24039, color: GemColor.Blue, name: 'Stormy Star of Elune', iconName: 'inv_jewelcrafting_starofelune_03', stats: { spellPenetration: 10 } },
   { phase: 1, id: 23120, color: GemColor.Blue, name: 'Stormy Azure Moonstone', iconName: 'inv_misc_gem_azuredraenite_02', stats: { spellPenetration: 8 } },
+
+  // Void
+  { phase: 1, id: 22459, color: GemColor.Void, name: 'Void Sphere', iconName: 'inv_enchant_voidsphere', stats: { shadowResist: 4, fireResist: 4, natureResist: 4, frostResist: 4, arcaneResist: 4 } },
 ]
