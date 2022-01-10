@@ -39,7 +39,6 @@ void TheLightningCapacitor::StartCast(double predicted_damage) {
     if (entity.player->auras.the_lightning_capacitor->stacks ==
         entity.player->auras.the_lightning_capacitor->max_stacks) {
       Spell::StartCast();
-      cooldown_remaining = cooldown;
       entity.player->auras.the_lightning_capacitor->Fade();
     }
   }

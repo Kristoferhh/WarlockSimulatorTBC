@@ -292,8 +292,15 @@ void Entity::Tick(double time) {
     }
   }
 
+  // TLC needs to tick before other spells because otherwise a spell might proc TLC and then later in the same loop,
+  // during the same millisecond of the fight, tick down TLC's cooldown
+  // TODO find a better solution for this since this might occur for other spells as well.
+  if (spells.the_lightning_capacitor != NULL && spells.the_lightning_capacitor->cooldown_remaining > 0) {
+    spells.the_lightning_capacitor->Tick(time);
+  }
+
   for (auto& spell : spell_list) {
-    if (spell->cooldown_remaining > 0 || spell->casting) {
+    if (spell->name != SpellName::kTheLightningCapacitor && (spell->cooldown_remaining > 0 || spell->casting)) {
       spell->Tick(time);
     }
   }

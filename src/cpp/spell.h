@@ -66,7 +66,7 @@ struct Spell {
   virtual void Reset();
   virtual double GetCastTime();
   virtual bool Ready();
-  void StartCast(double predicted_damage = 0);
+  virtual void StartCast(double predicted_damage = 0);
   void OnCritProcs();
   void OnResistProcs();
   void OnDamageProcs();
