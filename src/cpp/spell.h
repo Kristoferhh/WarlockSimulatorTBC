@@ -123,7 +123,7 @@ struct Shadowfury : public Spell {
 struct SeedOfCorruption : public Spell {
   int aoe_cap;
   SeedOfCorruption(Entity& entity);
-  void Damage(bool is_crit = false);
+  void Damage(bool is_crit = false, bool is_glancing = false);
   double GetModifier();
 };
 

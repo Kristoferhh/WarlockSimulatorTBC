@@ -746,7 +746,7 @@ SeedOfCorruption::SeedOfCorruption(Entity& entity) : Spell(entity) {
   Setup();
 };
 
-void SeedOfCorruption::Damage(bool is_crit) {
+void SeedOfCorruption::Damage(bool is_crit, bool is_glancing) {
   const double kBaseDamage = entity.player->settings.randomize_values && min_dmg > 0 && max_dmg > 0
                                  ? entity.player->rng.range(min_dmg, max_dmg)
                                  : base_damage;
