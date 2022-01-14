@@ -58,6 +58,8 @@ export interface Item {
   critRating?: number,
   resilienceRating?: number,
   spellPenetration?: number,
+  shadowResist?: number,
+  fireResist?: number,
   mp5?: number,
   setId?: ItemSet,
   displayId?: number,
