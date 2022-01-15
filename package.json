@@ -4,7 +4,7 @@
   "version": "1.0.54",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.7.0",
+    "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@mui/material": "^5.2.3",
