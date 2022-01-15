@@ -25,7 +25,9 @@ const fakeItemIds = {
   elementalistBootsOfFireWrath: -20,
   illidariCloakOfShadowWrath: -21,
   illidariCloakOfFireWrath: -22,
-  ravagersCuffsOfShadowWrath: -23
+  ravagersCuffsOfShadowWrath: -23,
+  darkBandOfMagic: -24,
+  darkCloakOfMagic: -25,
 }
 
 export const Items: Item[] = [
@@ -71,6 +73,7 @@ export const Items: Item[] = [
   { phase: 4, id: 33466, itemSlot: ItemSlotKey.Neck, quality: Quality.Epic, name: 'Loop of Cursed Bones', varName: 'loopOfCursedBones', stamina: 19, intellect: 20, spellPower: 32, hasteRating: 27, source: ItemSource.ZulAman, iconName: 'inv_jewelry_necklace_04' },
   { phase: 4, id: 35319, itemSlot: ItemSlotKey.Neck, quality: Quality.Epic, name: "Vindicator's Pendant of Subjugation", varName: 'vindicatorsPendantOfSubjugation', stamina: 31, intellect: 15, sockets: [SocketColor.Yellow], socketBonus: { stamina: 3 }, hasteRating: 21, resilienceRating: 18, spellPower: 25, source: ItemSource.PVP, iconName: 'inv_jewelry_necklace_36' },
   { phase: 3, id: 33920, itemSlot: ItemSlotKey.Neck, quality: Quality.Epic, name: "Vindicator's Pendant of Conquest", varName: 'vindicatorsPendantOfSubjugation', stamina: 31, intellect: 15, sockets: [SocketColor.Yellow], socketBonus: { stamina: 3 }, critRating: 21, resilienceRating: 18, spellPower: 25, source: ItemSource.PVP, iconName: 'inv_jewelry_necklace_36' },
+  { phase: 3, id: 32757, itemSlot: ItemSlotKey.Neck, quality: Quality.Epic, name: 'Blessed Medallion of Karabor', varName: 'blessedMedallionOfKarabor', stamina: 49, shadowResist: 40, source: ItemSource.BlackTemple, iconName: 'inv_jewelry_amulet_04' },
   { phase: 3, id: 32589, itemSlot: ItemSlotKey.Neck, quality: Quality.Epic, name: 'Hellfire-Encased Pendant', varName: 'hellfireEncasedPendant', stamina: 16, intellect: 17, spirit: 12, firePower: 51, critRating: 24, source: ItemSource.BlackTempleAndMountHyjal, iconName: 'inv_jewelry_necklace_17' },
   { phase: 3, id: 32370, itemSlot: ItemSlotKey.Neck, quality: Quality.Epic, name: "Nadina's Pendant of Purity", varName: 'nadinasPendantOfPurity', stamina: 16, intellect: 14, critRating: 19, spellPower: 27, mp5: 8, source: ItemSource.BlackTemple, iconName: 'inv_jewelry_necklace_32' },
   { phase: 3, id: 32349, itemSlot: ItemSlotKey.Neck, quality: Quality.Epic, name: 'Translucent Spellthread Necklace', varName: 'translucentSpellthreadNecklace', spellPower: 46, critRating: 24, hitRating: 15, source: ItemSource.BlackTemple, iconName: 'inv_jewelry_necklace_30' },
@@ -139,6 +142,7 @@ export const Items: Item[] = [
   { phase: 3, id: 32420, itemSlot: ItemSlotKey.Back, name: "Night's End", varName: 'nightsEnd', stamina: 30, shadowResist: 40, quality: Quality.Epic, source: ItemSource.Tailoring, iconName: 'inv_misc_cape_20' },
   { phase: 3, id: 32331, itemSlot: ItemSlotKey.Back, name: 'Cloak of the Illidari Council', varName: 'cloakOfTheIllidariCouncil', stamina: 24, intellect: 16, spellPower: 42, critRating: 25, source: ItemSource.BlackTemple, quality: Quality.Epic, iconName: 'inv_misc_cape_20' },
   { phase: 2, id: 29992, itemSlot: ItemSlotKey.Back, name: 'Royal Cloak of the Sunstriders', varName: 'royalCloakOfTheSunstriders', stamina: 27, intellect: 22, spellPower: 44, source: ItemSource.TempestKeep, quality: Quality.Epic, iconName: 'inv_misc_cape_10' },
+  { phase: 1, displayId: 31939, itemSlot: ItemSlotKey.Back, name: 'Dark Cloak', varName: 'darkCloak', id: fakeItemIds.darkCloakOfMagic, stamina: 27, shadowResist: 18, quality: Quality.Rare, source: ItemSource.EthereumPrisoner, iconName: 'inv_misc_cape_21' },
   { phase: 1, displayId: 31201, itemSlot: ItemSlotKey.Back, name: 'Illidari Cloak of Shadow Wrath', varName: 'illidariCloakOfShadowWrath', shadowPower: 47, id: fakeItemIds.illidariCloakOfShadowWrath, source: ItemSource.NetherstormRareSpawn, quality: Quality.Rare, iconName: 'inv_misc_cape_20' },
   { phase: 1, displayId: 31201, itemSlot: ItemSlotKey.Back, name: 'Illidari Cloak of Fire Wrath', varName: 'illidariCloakOfFireWrath', firePower: 47, id: fakeItemIds.illidariCloakOfFireWrath, source: ItemSource.NetherstormRareSpawn, quality: Quality.Rare, iconName: 'inv_misc_cape_20' },
   { phase: 1, id: 31140, itemSlot: ItemSlotKey.Back, name: 'Cloak of Entropy', varName: 'cloakOfEntropy', intellect: 11, spellPower: 25, hitRating: 10, source: ItemSource.WorldDrop, quality: Quality.Rare, iconName: 'inv_misc_cape_16' },
@@ -407,6 +411,7 @@ export const Items: Item[] = [
   { phase: 2, id: 30109, itemSlot: ItemSlotKey.Ring, name: 'Ring of Endless Coils', varName: 'ringOfEndlessCoils', stamina: 31, spellPower: 37, critRating: 22, unique: true, source: ItemSource.SerpentshrineCavern, quality: Quality.Epic, iconName: 'inv_jewelry_ring_44' },
   { phase: 2, id: 29922, itemSlot: ItemSlotKey.Ring, name: "Band of Al'ar", varName: 'bandOfAlar', stamina: 24, intellect: 23, spellPower: 37, unique: true, source: ItemSource.TempestKeep, quality: Quality.Epic, iconName: 'inv_jewelry_ring_61' },
   { phase: 2, id: 29302, itemSlot: ItemSlotKey.Ring, name: 'Band of Eternity (Friendly)', varName: 'bandOfEternityFriendly', stamina: 24, intellect: 22, spellPower: 29, critRating: 21, unique: true, source: ItemSource.ScaleOfTheSandsFriendly, quality: Quality.Epic, iconName: 'inv_jewelry_ring_54' },
+  { phase: 1, displayId: 31928, itemSlot: ItemSlotKey.Ring, name: 'Dark Band', varName: 'darkBand', id: fakeItemIds.darkBandOfMagic, stamina: 27, shadowResist: 18, spellPower: 19, quality: Quality.Rare, source: ItemSource.EthereumPrisoner, iconName: 'inv_jewelry_ring_16' },
   { phase: 1, id: 31922, itemSlot: ItemSlotKey.Ring, name: 'Ring of Conflict Survival', varName: 'ringOfConflictSurvival', stamina: 28, spellPower: 23, critRating: 20, unique: true, source: ItemSource.HeroicManaTombs, quality: Quality.Epic, iconName: 'inv_jewelry_ring_49naxxramas' },
   { phase: 1, id: 31921, itemSlot: ItemSlotKey.Ring, name: "Yor's Collapsing Band", varName: 'yorsCollapsingBand', intellect: 20, spirit: 19, spellPower: 23, unique: true, source: ItemSource.HeroicManaTombs, quality: Quality.Epic, iconName: 'inv_jewelry_ring_48naxxramas' },
   { phase: 1, id: 31382, itemSlot: ItemSlotKey.Ring, name: "Mage's Mark of the Sha'tar", varName: 'magesMarkOfTheShatar', critRating: 29, spellPower: 14, unique: true, source: ItemSource.ShadowmoonValleyQuest, quality: Quality.Rare, iconName: 'inv_jewelry_ring_63' },

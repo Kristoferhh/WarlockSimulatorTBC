@@ -784,6 +784,7 @@ export enum ItemSource {
   ShatteredHallsQuest = "Shattered Halls Quest",
   NagrandQuestHordeOnly = 'Nagrand Quest (Horde)',
   OgrilaBoss = "Ogri'la Boss",
+  EthereumPrisoner = 'Ethereum Prisoner',
 }
 
 export interface Source {
