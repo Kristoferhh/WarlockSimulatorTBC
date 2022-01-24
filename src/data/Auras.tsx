@@ -8,7 +8,7 @@ export const Auras: Aura[] = [
   { name: 'Mana Spring Totem', varName: AuraName.manaSpringTotem, group: AuraGroup.Buffs, iconName: 'spell_nature_manaregentotem', id: 25570, stats: { mp5: 50, } },
   { name: 'Wrath of Air Totem', varName: AuraName.wrathOfAirTotem, group: AuraGroup.Buffs, iconName: 'spell_nature_slowingtotem', id: 3738, stats: { spellPower: 101, } },
   { name: 'Totem of Wrath', varName: AuraName.totemOfWrath, group: AuraGroup.Buffs, iconName: 'spell_fire_totemofwrath', id: 30706 },
-  { name: 'Mark of the Wild', varName: AuraName.markOfTheWild, group: AuraGroup.Buffs, iconName: 'spell_nature_regeneration', id: 26990, stats: { stamina: 14, intellect: 14, arcaneResist: 25, shadowResist: 25, frostResist: 25, fireResist: 25, natureResist: 25, } },
+  { name: 'Mark of the Wild', varName: AuraName.markOfTheWild, group: AuraGroup.Buffs, iconName: 'spell_nature_regeneration', id: 26990, stats: { stamina: 14, intellect: 14, spirit: 14, arcaneResist: 25, shadowResist: 25, frostResist: 25, fireResist: 25, natureResist: 25, } },
   { name: 'Arcane Intellect', varName: AuraName.arcaneIntellect, group: AuraGroup.Buffs, iconName: 'spell_holy_arcaneintellect', id: 27127, stats: { intellect: 40, } },
   { name: 'Prayer of Fortitude', varName: AuraName.prayerOfFortitude, group: AuraGroup.Buffs, iconName: 'spell_holy_prayeroffortitude', id: 25392, stats: { stamina: 79, } },
   { name: 'Prayer of Spirit', varName: AuraName.prayerOfSpirit, group: AuraGroup.Buffs, iconName: 'spell_holy_prayerofspirit', id: 32999, stats: { spirit: 50, } },

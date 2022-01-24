@@ -137,7 +137,7 @@ void Pet::CalculateStatsFromAuras() {
     stats.stamina += 79;
   }
   if (player->selected_auras.pet_prayer_of_spirit) {
-    stats.spirit += 50 * (1 + (0.1 * player->settings.improved_divine_spirit));
+    stats.spirit += 50;
   }
   if (player->selected_auras.eye_of_the_night) {
     stats.spell_power += 34;
