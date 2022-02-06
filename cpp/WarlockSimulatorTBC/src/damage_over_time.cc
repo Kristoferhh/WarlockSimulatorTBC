@@ -24,7 +24,7 @@ void DamageOverTime::Setup() {
 
 void DamageOverTime::Apply() {
   if (active && player.ShouldWriteToCombatLog()) {
-    std::string msg = name + " refreshed before letting it expire";
+    auto msg = name + " refreshed before letting it expire";
   } else if (!active && player.recording_combat_log_breakdown) {
     player.combat_log_breakdown.at(name)->applied_at = player.simulation->current_fight_time;
   }
@@ -39,7 +39,7 @@ void DamageOverTime::Apply() {
     player.combat_log_breakdown.at(name)->count++;
   }
   if (player.ShouldWriteToCombatLog()) {
-    std::string msg = name + " ";
+    auto msg = name + " ";
 
     if (kIsAlreadyActive) {
       msg += "refreshed";
@@ -146,11 +146,10 @@ void DamageOverTime::Tick(double t) {
     }
 
     if (player.ShouldWriteToCombatLog()) {
-      std::string msg = name + " Tick " + DoubleToString(round(kDamage)) + " (" + DoubleToString(kBaseDamage) +
-                        " Base Damage - " + DoubleToString(kSpellPower) + " Spell Power - " +
-                        DoubleToString(coefficient, 3) + " Coefficient - " +
-                        DoubleToString(round(kModifier * 10000) / 100, 3) + "% Damage Modifier - " +
-                        DoubleToString(round(kPartialResistMultiplier * 1000) / 10) + "% Partial Resist Multiplier";
+      auto msg = name + " Tick " + DoubleToString(round(kDamage)) + " (" + DoubleToString(kBaseDamage) +
+                 " Base Damage - " + DoubleToString(kSpellPower) + " Spell Power - " + DoubleToString(coefficient, 3) +
+                 " Coefficient - " + DoubleToString(round(kModifier * 10000) / 100, 3) + "% Damage Modifier - " +
+                 DoubleToString(round(kPartialResistMultiplier * 1000) / 10) + "% Partial Resist Multiplier";
       if (t5_bonus_modifier > 1) {
         msg += " - " + DoubleToString(round(t5_bonus_modifier * 10000) / 100, 3) + "% Base Dmg Modifier (T5 4pc bonus)";
       }

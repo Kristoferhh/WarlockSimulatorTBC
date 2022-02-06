@@ -240,7 +240,7 @@ double Pet::GetIntellect() { return (stats.intellect + 0.3 * player->GetIntellec
 double Pet::GetSpellPower(bool, SpellSchool) { return stats.spell_power + GetPlayerSpellPower() * 0.15; }
 
 double Pet::CalculateMaxMana() {
-  double max_mana = GetIntellect();
+  auto max_mana = GetIntellect();
 
   if (pet_type == PetType::kMelee) {
     max_mana *= 11.555;
@@ -292,8 +292,8 @@ double Pet::GetHastePercent() {
 double Pet::GetAttackPower() {
   // Remove AP from debuffs on the boss before multiplying by the AP multiplier
   // since it doesn't affect those debuffs
-  double attack_power_from_debuffs = GetDebuffAttackPower();
-  double attack_power =
+  auto attack_power_from_debuffs = GetDebuffAttackPower();
+  auto attack_power =
       ((GetStrength() * 2 - 20 + GetPlayerSpellPower() * 0.57) - attack_power_from_debuffs + stats.attack_power) *
       stats.attack_power_modifier;
 
@@ -305,7 +305,7 @@ double Pet::GetAttackPower() {
 }
 
 double Pet::GetDebuffAttackPower() {
-  double debuff_attack_power = 0;
+  auto debuff_attack_power = 0.0;
 
   if (player->selected_auras.expose_weakness) {
     debuff_attack_power +=
@@ -328,7 +328,7 @@ void Pet::Tick(double t) {
 
   // MP5
   if (mp5_timer_remaining <= 0) {
-    double mana_gain = stats.mp5;
+    auto mana_gain = stats.mp5;
     mp5_timer_remaining = 5;
 
     // Formulas from Max on the warlock discord

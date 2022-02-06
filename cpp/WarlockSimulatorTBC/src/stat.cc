@@ -12,7 +12,7 @@ void Stat::RemoveStat(int stacks) { ModifyStat("remove", stacks); }
 
 void Stat::ModifyStat(std::string action, int stacks) {
   const double kCurrentStatValue = character_stat;
-  double new_stat_value = kCurrentStatValue;
+  auto new_stat_value = kCurrentStatValue;
 
   if (calculation_type == CalculationType::kAdditive) {
     new_stat_value += (value * stacks) * (action == "remove" ? -1 : action == "add" ? 1 : 0);
@@ -27,7 +27,7 @@ void Stat::ModifyStat(std::string action, int stacks) {
   character_stat = new_stat_value;
 
   if (entity.ShouldWriteToCombatLog()) {
-    std::string msg = entity.name + " " + name + " ";
+    auto msg = entity.name + " " + name + " ";
 
     if (action == "add") {
       if (calculation_type == CalculationType::kAdditive) {

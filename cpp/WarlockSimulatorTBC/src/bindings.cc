@@ -4,7 +4,7 @@
 #include "../include/embind_constant.h"
 #include "../include/simulation.h"
 
-#pragma warning(disable:4100)
+#pragma warning(disable : 4100)
 void DpsUpdate(double dps) {
 #ifdef EMSCRIPTEN
   EM_ASM({postMessage({event : "dpsUpdate", data : {dps : $0}})}, dps);
@@ -86,8 +86,8 @@ void SendSimulationResults(double median_dps, double min_dps, double max_dps, in
 #else
   std::cout << "Median DPS: " << std::to_string(median_dps) << ". Min DPS: " << std::to_string(min_dps)
             << ". Max DPS: " << std::to_string(max_dps) << std::endl;
-  std::cout << std::to_string(iteration_amount) << " itereations in " << DoubleToString(round(simulation_duration / 1000) / 1000, 3) << " seconds"
-            << std::endl;
+  std::cout << std::to_string(iteration_amount) << " iterations in "
+            << DoubleToString(round(simulation_duration / 1000) / 1000, 3) << " seconds" << std::endl;
 #endif
 }
 
@@ -429,4 +429,4 @@ EMSCRIPTEN_BINDINGS(module) {
 }
 #endif
 
-#pragma warning(default:4100)
+#pragma warning(default : 4100)

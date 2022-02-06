@@ -97,7 +97,7 @@ void Spell::Cast() {
   }
 
   if (cast_time > 0 && entity.ShouldWriteToCombatLog()) {
-    std::string msg = entity.name + " finished casting " + name;
+    auto msg = entity.name + " finished casting " + name;
     msg += " - Mana: " + DoubleToString(kCurrentMana) + " -> " + DoubleToString(entity.stats.mana);
     msg += " - Mana Cost: " + DoubleToString(round(kManaCost));
 
@@ -124,11 +124,11 @@ void Spell::Cast() {
 void Spell::Damage(bool is_crit, bool is_glancing) {
   const std::vector<double> kConstantDamage = GetConstantDamage();
   const double kBaseDamage = kConstantDamage[0];
-  double total_damage = kConstantDamage[1];
+  auto total_damage = kConstantDamage[1];
   const double kDamageModifier = kConstantDamage[2];
   const double kPartialResistMultiplier = kConstantDamage[3];
   const double kSpellPower = kConstantDamage[4];
-  double crit_multiplier = entity.kCritDamageMultiplier;
+  auto crit_multiplier = entity.kCritDamageMultiplier;
 
   if (is_crit) {
     crit_multiplier = GetCritMultiplier(crit_multiplier);
@@ -171,7 +171,7 @@ void Spell::Damage(bool is_crit, bool is_glancing) {
 // Returns the non-RNG Damage of the spell (basically just the base Damage +
 // spell power + Damage modifiers, no crit/miss etc.)
 std::vector<double> Spell::GetConstantDamage() {
-  double total_damage = GetBaseDamage();
+  auto total_damage = GetBaseDamage();
   const double kBaseDamage = total_damage;
   const double kSpellPower = entity.GetSpellPower(true, spell_school);
   const double kDamageModifier = entity.GetDamageModifier(*this, false);
@@ -206,7 +206,7 @@ std::vector<double> Spell::GetConstantDamage() {
 }
 
 double Spell::GetCritMultiplier(double player_crit_multiplier) {
-  double crit_multiplier = player_crit_multiplier;
+  auto crit_multiplier = player_crit_multiplier;
 
   // Chaotic Skyfire Diamond
   if (entity.player->settings.meta_gem_id == 34220) {
@@ -237,19 +237,18 @@ double Spell::GetBaseDamage() {
 double Spell::PredictDamage() {
   const std::vector<double> kConstantDamage = GetConstantDamage();
   const double kNormalDamage = kConstantDamage[1];
-  double crit_damage = 0;
-  double crit_chance = 0;
-  double chance_to_not_crit = 0;
+  auto crit_damage = 0.0;
+  auto crit_chance = 0.0;
+  auto chance_to_not_crit = 0.0;
 
   if (can_crit) {
     crit_damage = kNormalDamage * GetCritMultiplier(entity.kCritDamageMultiplier);
-    crit_chance = entity.GetSpellCritChance(spell_type) / 100;
+    crit_chance = entity.GetSpellCritChance(spell_type) / 100.0;
     chance_to_not_crit = 1 - crit_chance;
   }
 
-  double hit_chance = entity.GetSpellHitChance(spell_type) / 100;
-  double estimated_damage =
-      can_crit ? (kNormalDamage * chance_to_not_crit) + (crit_damage * crit_chance) : kNormalDamage;
+  auto hit_chance = entity.GetSpellHitChance(spell_type) / 100.0;
+  auto estimated_damage = can_crit ? (kNormalDamage * chance_to_not_crit) + (crit_damage * crit_chance) : kNormalDamage;
 
   // Add the predicted Damage of the DoT over its full duration
   if (dot_effect != NULL) {
@@ -362,8 +361,8 @@ void Spell::StartCast(double predicted_damage) {
 }
 
 SpellCastResult Spell::MagicSpellCast() {
-  bool is_crit = false;
-  bool is_resist = can_miss && (attack_type == AttackType::kMagical && !entity.IsSpellHit(spell_type));
+  auto is_crit = false;
+  auto is_resist = can_miss && (attack_type == AttackType::kMagical && !entity.IsSpellHit(spell_type));
 
   if (can_crit) {
     is_crit = entity.IsSpellCrit(spell_type, bonus_crit_chance);
@@ -392,22 +391,24 @@ SpellCastResult Spell::MagicSpellCast() {
 }
 
 SpellCastResult Spell::PhysicalSpellCast() {
-  bool is_crit = false;
-  bool is_glancing = false;
-  bool is_miss = false;
-  bool is_dodge = false;
-  double crit_chance = can_crit ? (entity.GetMeleeCritChance() * entity.kFloatNumberMultiplier) : 0;
-  double dodge_chance = crit_chance + StatConstant::kBaseEnemyDodgeChance * entity.kFloatNumberMultiplier;
-  double miss_chance = dodge_chance + (100 - entity.stats.melee_hit_chance) * entity.kFloatNumberMultiplier;
-  double glancing_chance = miss_chance;
+  auto is_crit = false;
+  auto is_glancing = false;
+  auto is_miss = false;
+  auto is_dodge = false;
+  auto crit_chance = can_crit ? static_cast<int>((entity.GetMeleeCritChance() * entity.kFloatNumberMultiplier)) : 0;
+  auto dodge_chance =
+      crit_chance + static_cast<int>(StatConstant::kBaseEnemyDodgeChance * entity.kFloatNumberMultiplier);
+  auto miss_chance =
+      dodge_chance + static_cast<int>((100 - entity.stats.melee_hit_chance) * entity.kFloatNumberMultiplier);
+  auto glancing_chance = miss_chance;
 
   // Only check for a glancing if it's a normal melee attack
   if (name == SpellName::kMelee) {
-    glancing_chance += entity.pet->glancing_blow_chance * entity.kFloatNumberMultiplier;
+    glancing_chance += static_cast<int>(entity.pet->glancing_blow_chance * entity.kFloatNumberMultiplier);
   }
 
   // Check whether the roll is a crit, dodge, miss, glancing, or just a normal hit.
-  int attack_roll = entity.player->GetRand();
+  auto attack_roll = entity.player->GetRand();
 
   // Crit
   if (can_crit && attack_roll <= crit_chance) {
@@ -474,7 +475,7 @@ void Spell::OnSpellHit(SpellCastResult& spell_cast_result) {
 void Spell::CombatLogDamage(bool is_crit, bool is_glancing, double total_damage, double spell_base_damage,
                             double spell_power, double crit_multiplier, double damage_modifier,
                             double partial_resist_multiplier) {
-  std::string msg = name + " ";
+  auto msg = name + " ";
 
   if (is_crit) {
     msg += "*";
@@ -687,12 +688,12 @@ void SeedOfCorruption::Damage(bool, bool) {
                                  : base_damage;
   const int kEnemyAmount = entity.player->settings.enemy_amount - 1;  // Minus one because the enemy that Seed is
                                                                       // being Cast on doesn't get hit
-  int resist_amount = 0;
-  int crit_amount = 0;
   const double kSpellPower = entity.GetSpellPower(true, spell_school);
-  double crit_damage_multiplier = 0;
-  double internal_modifier = entity.GetDamageModifier(*this, false);
-  double external_modifier = 1;
+  auto resist_amount = 0;
+  auto crit_amount = 0;
+  auto crit_damage_multiplier = 0.0;
+  auto internal_modifier = entity.GetDamageModifier(*this, false);
+  auto external_modifier = 1.0;
 
   // If using a custom ISB uptime % then remove the damage bonus since ISB won't be up on the mobs
   if (entity.player->settings.using_custom_isb_uptime) {
@@ -732,7 +733,7 @@ void SeedOfCorruption::Damage(bool, bool) {
     }
   }
 
-  double individual_seed_damage = kBaseDamage + (kSpellPower * coefficient);
+  auto individual_seed_damage = kBaseDamage + (kSpellPower * coefficient);
   // Oblivion Raiment (dungeon set) 4pc bonus
   if (entity.player->sets.oblivion >= 4) {
     individual_seed_damage += 180;
@@ -740,7 +741,7 @@ void SeedOfCorruption::Damage(bool, bool) {
   individual_seed_damage *= internal_modifier;
 
   const int kEnemiesHit = kEnemyAmount - resist_amount;
-  double total_seed_damage = individual_seed_damage * kEnemiesHit;
+  auto total_seed_damage = individual_seed_damage * kEnemiesHit;
   // Because of the Seed bug explained below, we need to use this formula to
   // calculate the actual aoe cap for the amount of mobs that will be hit by the
   // spell. Explained by Tesram on the TBC Warlock discord
@@ -776,12 +777,11 @@ void SeedOfCorruption::Damage(bool, bool) {
   entity.player->iteration_damage += total_seed_damage;
 
   if (entity.ShouldWriteToCombatLog()) {
-    std::string msg = name + " " + DoubleToString(round(total_seed_damage)) + " (" + std::to_string(kEnemyAmount) +
-                      " Enemies (" + std::to_string(resist_amount) + " Resists & " + std::to_string(crit_amount) +
-                      " Crits) - " + DoubleToString(kBaseDamage, 1) + " Base Damage - " +
-                      DoubleToString(coefficient, 3) + " Coefficient - " + DoubleToString(kSpellPower) +
-                      " Spell Power - " + DoubleToString(round(internal_modifier * external_modifier * 1000) / 10, 1) +
-                      "% Modifier - ";
+    auto msg = name + " " + DoubleToString(round(total_seed_damage)) + " (" + std::to_string(kEnemyAmount) +
+               " Enemies (" + std::to_string(resist_amount) + " Resists & " + std::to_string(crit_amount) +
+               " Crits) - " + DoubleToString(kBaseDamage, 1) + " Base Damage - " + DoubleToString(coefficient, 3) +
+               " Coefficient - " + DoubleToString(kSpellPower) + " Spell Power - " +
+               DoubleToString(round(internal_modifier * external_modifier * 1000) / 10, 1) + "% Modifier - ";
     if (crit_amount > 0) {
       msg += DoubleToString(crit_damage_multiplier, 3) + "% Crit Multiplier";
     }

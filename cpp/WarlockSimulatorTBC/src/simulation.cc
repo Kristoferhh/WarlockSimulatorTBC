@@ -64,7 +64,7 @@ void Simulation::Start() {
 }
 
 double Simulation::PassTime() {
-  double time_until_next_action = player.FindTimeUntilNextAction();
+  auto time_until_next_action = player.FindTimeUntilNextAction();
 
   Tick(time_until_next_action);
 
@@ -327,7 +327,7 @@ void Simulation::CastGcdSpells(double fight_time_remaining) {
     // which spell would be the best to Cast
     if (player.gcd_remaining <= 0 && player.cast_time_remaining <= 0 && predicted_damage_of_spells.size() != 0) {
       std::shared_ptr<Spell> max_damage_spell;
-      double max_damage_spell_value = 0;
+      auto max_damage_spell_value = 0.0;
 
       for (auto& spell : predicted_damage_of_spells) {
         if (spell.second > max_damage_spell_value &&

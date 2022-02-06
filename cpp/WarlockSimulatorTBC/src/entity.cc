@@ -89,7 +89,7 @@ Entity::Entity(Player* player, PlayerSettings& player_settings, EntityType entit
       stats.stamina += 70;
     }
 
-    int improved_imp_points = settings.improved_imp;
+    auto improved_imp_points = settings.improved_imp;
 
     if (settings.selected_pet == EmbindConstant::kImp &&
         (!settings.sacrificing_pet || player_settings.talents.demonic_sacrifice == 0) &&
@@ -180,7 +180,7 @@ double Entity::GetMultiplicativeDamageModifier(Spell& spell, bool) {
 }
 
 double Entity::FindTimeUntilNextAction() {
-  double time = cast_time_remaining;
+  auto time = cast_time_remaining;
 
   if (time <= 0) {
     time = gcd_remaining;
@@ -217,7 +217,7 @@ double Entity::FindTimeUntilNextAction() {
 }
 
 double Entity::GetPartialResistMultiplier(SpellSchool school) {
-  int enemy_resist = 0;
+  auto enemy_resist = 0;
 
   if (school == SpellSchool::kShadow) {
     enemy_resist = settings.enemy_shadow_resist;
@@ -237,7 +237,7 @@ double Entity::GetPartialResistMultiplier(SpellSchool school) {
 double Entity::GetGcdValue() { return std::max(kMinimumGcdValue, kGcdValue / GetHastePercent()); }
 
 double Entity::GetSpellHitChance(SpellType spell_type) {
-  double spell_hit_chance = stats.spell_hit_chance + stats.extra_spell_hit_chance;
+  auto spell_hit_chance = stats.spell_hit_chance + stats.extra_spell_hit_chance;
 
   if (entity_type == EntityType::kPlayer && spell_type == SpellType::kAffliction) {
     spell_hit_chance += player->talents.suppression * 2;

@@ -58,7 +58,7 @@ Player::Player(PlayerSettings& player_settings)
     // todo add felhunter mana regen maybe
   } else {
     if (talents.master_demonologist > 0) {
-      double damage_modifier = 1;
+      auto damage_modifier = 1.0;
 
       if (settings.selected_pet == EmbindConstant::kSuccubus) {
         damage_modifier += 0.02 * talents.master_demonologist;
@@ -440,7 +440,7 @@ void Player::EndAuras() {
 }
 
 double Player::GetHastePercent() {
-  double haste_percent = stats.spell_haste_percent;
+  auto haste_percent = stats.spell_haste_percent;
 
   // If both Bloodlust and Power Infusion are active then remove the 20% PI
   // bonus since they don't stack
@@ -457,7 +457,7 @@ double Player::GetHastePercent() {
 }
 
 double Player::GetSpellPower(bool dealing_damage, SpellSchool school) {
-  double spell_power = stats.spell_power;
+  auto spell_power = stats.spell_power;
 
   if (pet != NULL && talents.demonic_knowledge > 0) {
     spell_power += (pet->GetStamina() + pet->GetIntellect()) * 0.04 * talents.demonic_knowledge;
@@ -489,8 +489,8 @@ double Player::GetSpellPower(bool dealing_damage, SpellSchool school) {
 }
 
 double Player::GetSpellCritChance(SpellType spell_type) {
-  double crit_chance = stats.spell_crit_chance + (GetIntellect() * StatConstant::kCritChancePerIntellect) +
-                       (stats.spell_crit_rating / StatConstant::kCritRatingPerPercent);
+  auto crit_chance = stats.spell_crit_chance + (GetIntellect() * StatConstant::kCritChancePerIntellect) +
+                     (stats.spell_crit_rating / StatConstant::kCritRatingPerPercent);
 
   if (spell_type != SpellType::kDestruction) {
     crit_chance -= talents.devastation;
