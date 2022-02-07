@@ -409,6 +409,7 @@ EMSCRIPTEN_BINDINGS(module) {
       .value("normal", EmbindConstant::kNormal)
       .value("imp", EmbindConstant::kImp)
       .value("succubus", EmbindConstant::kSuccubus)
+      .value("felhunter", EmbindConstant::kFelhunter)
       .value("felguard", EmbindConstant::kFelguard)
       .value("passive", EmbindConstant::kPassive)
       .value("aggressive", EmbindConstant::kAggressive);

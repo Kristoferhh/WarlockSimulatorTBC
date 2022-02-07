@@ -59,8 +59,9 @@ export default function StatsDisplay() {
   }
 
   function getMana(): number {
-    return (playerState.stats.base.mana! +
-      getIntellect() * StatConstant.manaPerIntellect) *
+    let mana = Object.values(playerState.stats)
+      .map(obj => obj.mana || 0).reduce((a, b) => a + b);
+    return (mana + getIntellect() * StatConstant.manaPerIntellect) *
       (1 + (0.01 * playerState.talents.felIntellect || 0));
   }
 

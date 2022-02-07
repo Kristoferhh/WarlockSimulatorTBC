@@ -19,3 +19,8 @@ struct ManaTideTotemAura : public ManaOverTime {
   ManaTideTotemAura(Entity& Entity);
   double GetManaGain();
 };
+
+struct FelEnergyAura : public ManaOverTime {
+  FelEnergyAura(Entity& entity);
+  double GetManaGain();
+};

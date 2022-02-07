@@ -194,6 +194,8 @@ onmessage = (event) => {
           playerSettings.selectedPet = module.EmbindConstant.imp;
         } else if (playerData.simSettings.petChoice === '2') {
           playerSettings.selectedPet = module.EmbindConstant.succubus;
+        } else if (playerData.simSettings.petChoice === '3') {
+          playerSettings.selectedPet = module.EmbindConstant.felhunter;
         } else if (playerData.simSettings.petChoice === '4') {
           playerSettings.selectedPet = module.EmbindConstant.felguard;
         }

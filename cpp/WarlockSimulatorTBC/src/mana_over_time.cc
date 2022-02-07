@@ -4,7 +4,7 @@
 #include "../include/entity.h"
 #include "../include/player.h"
 
-ManaOverTime::ManaOverTime(Entity& entity) : Aura(entity) { tick_timer_total = 3; }
+ManaOverTime::ManaOverTime(Entity& entity) : Aura(entity) {}
 
 void ManaOverTime::Setup() {
   ticks_total = duration / tick_timer_total;
@@ -49,17 +49,28 @@ void ManaOverTime::Tick(double t) {
 DrumsOfRestorationAura::DrumsOfRestorationAura(Entity& entity) : ManaOverTime(entity) {
   name = SpellName::kDrumsOfRestoration;
   duration = 15;
+  tick_timer_total = 3;
   group_wide = true;
   Setup();
 }
 
-double DrumsOfRestorationAura::GetManaGain() { return 600 / ticks_total; }
+double DrumsOfRestorationAura::GetManaGain() { return 600.0 / ticks_total; }
 
 ManaTideTotemAura::ManaTideTotemAura(Entity& entity) : ManaOverTime(entity) {
   name = SpellName::kManaTideTotem;
   duration = 12;
+  tick_timer_total = 3;
   group_wide = true;
   Setup();
 }
 
 double ManaTideTotemAura::GetManaGain() { return entity.stats.max_mana * 0.06; }
+
+FelEnergyAura::FelEnergyAura(Entity& entity) : ManaOverTime(entity) {
+  name = SpellName::kFelEnergy;
+  duration = 9999;
+  tick_timer_total = 4;
+  Setup();
+}
+
+double FelEnergyAura::GetManaGain() { return entity.stats.max_mana * 0.03; }

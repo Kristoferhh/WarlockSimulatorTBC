@@ -17,6 +17,7 @@ enum class EmbindConstant : int {
   kUserChooses,
   kImp,
   kSuccubus,
+  kFelhunter,
   kFelguard,
   kStamina,
   kIntellect,

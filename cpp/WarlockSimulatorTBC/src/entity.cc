@@ -201,8 +201,14 @@ double Entity::FindTimeUntilNextAction() {
   }
 
   for (auto& aura : aura_list) {
-    if (aura->active && aura->has_duration && aura->duration_remaining < time) {
-      time = aura->duration_remaining;
+    if (aura->active && aura->has_duration) {
+      if (aura->duration_remaining < time) {
+        time = aura->duration_remaining;
+      }
+
+      if (aura->tick_timer_remaining > 0 && aura->tick_timer_remaining < time) {
+        time = aura->tick_timer_remaining;
+      }
     }
   }
 

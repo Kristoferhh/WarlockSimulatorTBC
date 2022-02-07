@@ -108,4 +108,5 @@ export const Auras: Aura[] = [
   { name: 'Shattered Sun Pendant of Acumen (Aldor)', varName: AuraName.shatteredSunPendantOfAcumenAldor, iconName: 'inv_jewelry_necklace_32', id: 45479 },
   { name: 'Shattered Sun Pendant of Acumen (Scryers)', varName: AuraName.shatteredSunPendantOfAcumenScryers, iconName: 'inv_jewelry_necklace_32', id: 45429 },
   { name: 'Demonic Frenzy', varName: AuraName.demonicFrenzy, iconName: 'spell_shadow_deathpact', id: 32850 },
+  { name: 'Fel Energy', varName: AuraName.felEnergy, iconName: 'spell_shadow_psychicscream', id: 18792 },
 ]

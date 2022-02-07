@@ -120,6 +120,10 @@ void Simulation::IterationReset(double fight_length) {
     player.auras.airmans_ribbon_of_gallantry->Apply();
   }
 
+  if (player.auras.fel_energy != NULL) {
+    player.auras.fel_energy->Apply();
+  }
+
   if (player.pet != NULL) {
     if (player.pet->auras.battle_squawk != NULL) {
       player.pet->auras.battle_squawk->Apply();

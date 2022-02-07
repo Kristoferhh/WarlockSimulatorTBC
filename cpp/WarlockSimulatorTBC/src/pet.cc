@@ -48,25 +48,25 @@ void Pet::Initialize(Simulation* simulationPtr) {
   Setup();
 
   if (pet_name == PetName::kImp) {
-    spells.firebolt = std::make_unique<ImpFirebolt>(*this);
+    spells.firebolt = std::make_shared<ImpFirebolt>(*this);
   } else {
-    spells.melee = std::make_unique<PetMelee>(*this);
+    spells.melee = std::make_shared<PetMelee>(*this);
 
     if (pet_name == PetName::kSuccubus) {
-      spells.lash_of_pain = std::make_unique<SuccubusLashOfPain>(*this);
+      spells.lash_of_pain = std::make_shared<SuccubusLashOfPain>(*this);
     } else if (pet_name == PetName::kFelguard) {
-      spells.cleave = std::make_unique<FelguardCleave>(*this);
-      auras.demonic_frenzy = std::make_unique<DemonicFrenzyAura>(*this);
-      spells.demonic_frenzy = std::make_unique<DemonicFrenzy>(*this, auras.demonic_frenzy);
+      spells.cleave = std::make_shared<FelguardCleave>(*this);
+      auras.demonic_frenzy = std::make_shared<DemonicFrenzyAura>(*this);
+      spells.demonic_frenzy = std::make_shared<DemonicFrenzy>(*this, auras.demonic_frenzy);
     }
 
     if (player->selected_auras.pet_battle_squawk) {
-      auras.battle_squawk = std::make_unique<BattleSquawkAura>(*this);
+      auras.battle_squawk = std::make_shared<BattleSquawkAura>(*this);
     }
   }
 
   if (player->settings.prepop_black_book) {
-    auras.black_book = std::make_unique<BlackBookAura>(*this);
+    auras.black_book = std::make_shared<BlackBookAura>(*this);
   }
 }
 

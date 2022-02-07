@@ -79,6 +79,7 @@ export interface Enchant {
   source: ItemSource,
   phase: Phase,
   mp5?: number,
+  mana?: number,
   fireResist?: number,
   shadowResist?: number,
   arcaneResist?: number,
@@ -116,6 +117,7 @@ export interface Aura {
 export enum PetName {
   IMP = '0',
   SUCCUBUS = '2',
+  FELHUNTER = '3',
   FELGUARD = '4',
 }
 
@@ -974,4 +976,5 @@ export enum AuraName {
   mysticalSkyfireDiamond = 'mysticalSkyfireDiamond',
   demonicFrenzy = 'demonicFrenzy',
   blackBook = 'theBlackBook',
+  felEnergy = 'felEnergy',
 }

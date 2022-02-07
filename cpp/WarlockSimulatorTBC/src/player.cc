@@ -46,7 +46,7 @@ Player::Player(PlayerSettings& player_settings)
   else
     custom_stat = "normal";
 
-  // Add bonus damage % from Demonic Sacrifice
+  // Demonic Sacrifice
   if (talents.demonic_sacrifice == 1 && settings.sacrificing_pet) {
     if (settings.selected_pet == EmbindConstant::kImp) {
       stats.fire_modifier *= 1.15;
@@ -55,7 +55,6 @@ Player::Player(PlayerSettings& player_settings)
     } else if (settings.selected_pet == EmbindConstant::kFelguard) {
       stats.shadow_modifier *= 1.1;
     }
-    // todo add felhunter mana regen maybe
   } else {
     if (talents.master_demonologist > 0) {
       auto damage_modifier = 1.0;
@@ -114,6 +113,9 @@ void Player::Initialize(Simulation* simulationPtr) {
   if (!settings.sacrificing_pet || talents.demonic_sacrifice == 0) {
     pet = std::make_shared<Pet>(*this, settings.selected_pet);
     pet->Initialize(simulationPtr);
+  } else if (talents.demonic_sacrifice == 1 && settings.sacrificing_pet &&
+             settings.selected_pet == EmbindConstant::kFelhunter) {
+    auras.fel_energy = std::make_shared<FelEnergyAura>(*this);
   }
 
   std::vector<int> equipped_trinket_ids{items.trinket_1, items.trinket_2};
@@ -169,221 +171,221 @@ void Player::Initialize(Simulation* simulationPtr) {
 
   // Auras
   if (settings.fight_type == EmbindConstant::kSingleTarget) {
-    if (talents.improved_shadow_bolt > 0) auras.improved_shadow_bolt = std::make_unique<ImprovedShadowBoltAura>(*this);
+    if (talents.improved_shadow_bolt > 0) auras.improved_shadow_bolt = std::make_shared<ImprovedShadowBoltAura>(*this);
     if (settings.has_corruption || settings.rotation_option == EmbindConstant::kSimChooses)
-      auras.corruption = std::make_unique<CorruptionDot>(*this);
+      auras.corruption = std::make_shared<CorruptionDot>(*this);
     if (talents.unstable_affliction == 1 &&
         (settings.has_unstable_affliction || settings.rotation_option == EmbindConstant::kSimChooses))
-      auras.unstable_affliction = std::make_unique<UnstableAfflictionDot>(*this);
+      auras.unstable_affliction = std::make_shared<UnstableAfflictionDot>(*this);
     if (talents.siphon_life == 1 &&
         (settings.has_siphon_life || settings.rotation_option == EmbindConstant::kSimChooses))
-      auras.siphon_life = std::make_unique<SiphonLifeDot>(*this);
+      auras.siphon_life = std::make_shared<SiphonLifeDot>(*this);
     if (settings.has_immolate || settings.rotation_option == EmbindConstant::kSimChooses)
-      auras.immolate = std::make_unique<ImmolateDot>(*this);
+      auras.immolate = std::make_shared<ImmolateDot>(*this);
     if (settings.has_curse_of_agony || settings.has_curse_of_doom)
-      auras.curse_of_agony = std::make_unique<CurseOfAgonyDot>(*this);
+      auras.curse_of_agony = std::make_shared<CurseOfAgonyDot>(*this);
     if (settings.has_curse_of_the_elements)
-      auras.curse_of_the_elements = std::make_unique<CurseOfTheElementsAura>(*this);
+      auras.curse_of_the_elements = std::make_shared<CurseOfTheElementsAura>(*this);
     if (settings.has_curse_of_recklessness)
-      auras.curse_of_recklessness = std::make_unique<CurseOfRecklessnessAura>(*this);
-    if (settings.has_curse_of_doom) auras.curse_of_doom = std::make_unique<CurseOfDoomDot>(*this);
-    if (talents.nightfall > 0) auras.shadow_trance = std::make_unique<ShadowTranceAura>(*this);
+      auras.curse_of_recklessness = std::make_shared<CurseOfRecklessnessAura>(*this);
+    if (settings.has_curse_of_doom) auras.curse_of_doom = std::make_shared<CurseOfDoomDot>(*this);
+    if (talents.nightfall > 0) auras.shadow_trance = std::make_shared<ShadowTranceAura>(*this);
     if (talents.amplify_curse == 1 &&
         (settings.has_amplify_curse || settings.rotation_option == EmbindConstant::kSimChooses))
-      auras.amplify_curse = std::make_unique<AmplifyCurseAura>(*this);
+      auras.amplify_curse = std::make_shared<AmplifyCurseAura>(*this);
   }
   if (selected_auras.airmans_ribbon_of_gallantry)
-    auras.airmans_ribbon_of_gallantry = std::make_unique<AirmansRibbonOfGallantryAura>(*this);
-  if (selected_auras.mana_tide_totem) auras.mana_tide_totem = std::make_unique<ManaTideTotemAura>(*this);
-  if (selected_auras.chipped_power_core) auras.chipped_power_core = std::make_unique<ChippedPowerCoreAura>(*this);
-  if (selected_auras.cracked_power_core) auras.cracked_power_core = std::make_unique<CrackedPowerCoreAura>(*this);
-  if (selected_auras.power_infusion) auras.power_infusion = std::make_unique<PowerInfusionAura>(*this);
-  if (selected_auras.innervate) auras.innervate = std::make_unique<InnervateAura>(*this);
-  if (selected_auras.bloodlust) auras.bloodlust = std::make_unique<BloodlustAura>(*this);
-  if (selected_auras.destruction_potion) auras.destruction_potion = std::make_unique<DestructionPotionAura>(*this);
-  if (selected_auras.flame_cap) auras.flame_cap = std::make_unique<FlameCapAura>(*this);
-  if (settings.race == EmbindConstant::kOrc) auras.blood_fury = std::make_unique<BloodFuryAura>(*this);
+    auras.airmans_ribbon_of_gallantry = std::make_shared<AirmansRibbonOfGallantryAura>(*this);
+  if (selected_auras.mana_tide_totem) auras.mana_tide_totem = std::make_shared<ManaTideTotemAura>(*this);
+  if (selected_auras.chipped_power_core) auras.chipped_power_core = std::make_shared<ChippedPowerCoreAura>(*this);
+  if (selected_auras.cracked_power_core) auras.cracked_power_core = std::make_shared<CrackedPowerCoreAura>(*this);
+  if (selected_auras.power_infusion) auras.power_infusion = std::make_shared<PowerInfusionAura>(*this);
+  if (selected_auras.innervate) auras.innervate = std::make_shared<InnervateAura>(*this);
+  if (selected_auras.bloodlust) auras.bloodlust = std::make_shared<BloodlustAura>(*this);
+  if (selected_auras.destruction_potion) auras.destruction_potion = std::make_shared<DestructionPotionAura>(*this);
+  if (selected_auras.flame_cap) auras.flame_cap = std::make_shared<FlameCapAura>(*this);
+  if (settings.race == EmbindConstant::kOrc) auras.blood_fury = std::make_shared<BloodFuryAura>(*this);
   if (selected_auras.drums_of_battle)
-    auras.drums_of_battle = std::make_unique<DrumsOfBattleAura>(*this);
+    auras.drums_of_battle = std::make_shared<DrumsOfBattleAura>(*this);
   else if (selected_auras.drums_of_war)
-    auras.drums_of_war = std::make_unique<DrumsOfWarAura>(*this);
+    auras.drums_of_war = std::make_shared<DrumsOfWarAura>(*this);
   else if (selected_auras.drums_of_restoration)
-    auras.drums_of_restoration = std::make_unique<DrumsOfRestorationAura>(*this);
+    auras.drums_of_restoration = std::make_shared<DrumsOfRestorationAura>(*this);
   if (items.main_hand == ItemId::kBladeOfWizardry)
-    auras.blade_of_wizardry = std::make_unique<BladeOfWizardryAura>(*this);
+    auras.blade_of_wizardry = std::make_shared<BladeOfWizardryAura>(*this);
   if (items.neck == ItemId::kShatteredSunPendantOfAcumen && settings.exalted_with_shattrath_faction) {
     if (settings.shattrath_faction == EmbindConstant::kAldor)
-      auras.shattered_sun_pendant_of_acumen_aldor = std::make_unique<ShatteredSunPendantOfAcumenAldorAura>(*this);
+      auras.shattered_sun_pendant_of_acumen_aldor = std::make_shared<ShatteredSunPendantOfAcumenAldorAura>(*this);
     else if (settings.shattrath_faction == EmbindConstant::kScryers)
-      spells.shattered_sun_pendant_of_acumen_scryers = std::make_unique<ShatteredSunPendantOfAcumenScryers>(*this);
+      spells.shattered_sun_pendant_of_acumen_scryers = std::make_shared<ShatteredSunPendantOfAcumenScryers>(*this);
   }
   if (items.chest == ItemId::kRobeOfTheElderScribes)
-    auras.robe_of_the_elder_scribes = std::make_unique<RobeOfTheElderScribesAura>(*this);
+    auras.robe_of_the_elder_scribes = std::make_shared<RobeOfTheElderScribesAura>(*this);
   if (settings.meta_gem_id == ItemId::kMysticalSkyfireDiamond)
-    auras.mystical_skyfire_diamond = std::make_unique<MysticalSkyfireDiamondAura>(*this);
+    auras.mystical_skyfire_diamond = std::make_shared<MysticalSkyfireDiamondAura>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kEyeOfMagtheridon) !=
       equipped_trinket_ids.end()) {
-    auras.eye_of_magtheridon = std::make_unique<EyeOfMagtheridonAura>(*this);
-    spells.eye_of_magtheridon = std::make_unique<EyeOfMagtheridon>(*this, auras.eye_of_magtheridon);
+    auras.eye_of_magtheridon = std::make_shared<EyeOfMagtheridonAura>(*this);
+    spells.eye_of_magtheridon = std::make_shared<EyeOfMagtheridon>(*this, auras.eye_of_magtheridon);
   }
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kAshtongueTalismanOfShadows) !=
       equipped_trinket_ids.end())
-    auras.ashtongue_talisman_of_shadows = std::make_unique<AshtongueTalismanOfShadowsAura>(*this);
+    auras.ashtongue_talisman_of_shadows = std::make_shared<AshtongueTalismanOfShadowsAura>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kDarkmoonCardCrusade) !=
       equipped_trinket_ids.end())
-    auras.darkmoon_card_crusade = std::make_unique<DarkmoonCardCrusadeAura>(*this);
+    auras.darkmoon_card_crusade = std::make_shared<DarkmoonCardCrusadeAura>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kTheLightningCapacitor) !=
       equipped_trinket_ids.end())
-    auras.the_lightning_capacitor = std::make_unique<TheLightningCapacitorAura>(*this);
+    auras.the_lightning_capacitor = std::make_shared<TheLightningCapacitorAura>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kQuagmirransEye) !=
       equipped_trinket_ids.end())
-    auras.quagmirrans_eye = std::make_unique<QuagmirransEyeAura>(*this);
+    auras.quagmirrans_eye = std::make_shared<QuagmirransEyeAura>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kShiffarsNexusHorn) !=
       equipped_trinket_ids.end())
-    auras.shiffars_nexus_horn = std::make_unique<ShiffarsNexusHornAura>(*this);
+    auras.shiffars_nexus_horn = std::make_shared<ShiffarsNexusHornAura>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kSextantOfUnstableCurrents) !=
       equipped_trinket_ids.end())
-    auras.sextant_of_unstable_currents = std::make_unique<SextantOfUnstableCurrentsAura>(*this);
+    auras.sextant_of_unstable_currents = std::make_shared<SextantOfUnstableCurrentsAura>(*this);
   if (std::find(equipped_ring_ids.begin(), equipped_ring_ids.end(), ItemId::kBandOfTheEternalSage) !=
       equipped_ring_ids.end())
-    auras.band_of_the_eternal_sage = std::make_unique<BandOfTheEternalSageAura>(*this);
+    auras.band_of_the_eternal_sage = std::make_shared<BandOfTheEternalSageAura>(*this);
   if (std::find(equipped_ring_ids.begin(), equipped_ring_ids.end(), ItemId::kWrathOfCenarius) !=
       equipped_ring_ids.end())
-    auras.wrath_of_cenarius = std::make_unique<WrathOfCenariusAura>(*this);
+    auras.wrath_of_cenarius = std::make_shared<WrathOfCenariusAura>(*this);
   if (sets.t4 >= 2) {
-    auras.flameshadow = std::make_unique<FlameshadowAura>(*this);
-    auras.shadowflame = std::make_unique<ShadowflameAura>(*this);
+    auras.flameshadow = std::make_shared<FlameshadowAura>(*this);
+    auras.shadowflame = std::make_shared<ShadowflameAura>(*this);
   }
-  if (sets.spellstrike >= 2) auras.spellstrike = std::make_unique<SpellstrikeAura>(*this);
-  if (sets.mana_etched >= 4) auras.mana_etched_4_set = std::make_unique<ManaEtched4SetAura>(*this);
+  if (sets.spellstrike >= 2) auras.spellstrike = std::make_shared<SpellstrikeAura>(*this);
+  if (sets.mana_etched >= 4) auras.mana_etched_4_set = std::make_shared<ManaEtched4SetAura>(*this);
 
   // Spells
-  spells.life_tap = std::make_unique<LifeTap>(*this);
+  spells.life_tap = std::make_shared<LifeTap>(*this);
   if (settings.fight_type == EmbindConstant::kAoe) {
-    spells.seed_of_corruption = std::make_unique<SeedOfCorruption>(*this);
+    spells.seed_of_corruption = std::make_shared<SeedOfCorruption>(*this);
   } else {
     if (settings.has_shadow_bolt || talents.nightfall > 0 || settings.rotation_option == EmbindConstant::kSimChooses)
-      spells.shadow_bolt = std::make_unique<ShadowBolt>(*this);
+      spells.shadow_bolt = std::make_shared<ShadowBolt>(*this);
     if (settings.has_incinerate || settings.rotation_option == EmbindConstant::kSimChooses)
-      spells.incinerate = std::make_unique<Incinerate>(*this);
+      spells.incinerate = std::make_shared<Incinerate>(*this);
     if (settings.has_searing_pain || settings.rotation_option == EmbindConstant::kSimChooses)
-      spells.searing_pain = std::make_unique<SearingPain>(*this);
+      spells.searing_pain = std::make_shared<SearingPain>(*this);
     if (settings.has_death_coil || settings.rotation_option == EmbindConstant::kSimChooses)
-      spells.death_coil = std::make_unique<DeathCoil>(*this);
+      spells.death_coil = std::make_shared<DeathCoil>(*this);
     if (talents.conflagrate == 1 &&
         (settings.has_conflagrate || settings.rotation_option == EmbindConstant::kSimChooses))
-      spells.conflagrate = std::make_unique<Conflagrate>(*this);
+      spells.conflagrate = std::make_shared<Conflagrate>(*this);
     if (talents.shadowburn == 1 &&
         (settings.has_shadow_burn || settings.rotation_option == EmbindConstant::kSimChooses))
-      spells.shadowburn = std::make_unique<Shadowburn>(*this);
+      spells.shadowburn = std::make_shared<Shadowburn>(*this);
     if (talents.shadowfury == 1 && (settings.has_shadowfury || settings.rotation_option == EmbindConstant::kSimChooses))
-      spells.shadowfury = std::make_unique<Shadowfury>(*this);
+      spells.shadowfury = std::make_shared<Shadowfury>(*this);
     if (auras.corruption != NULL) {
-      spells.corruption = std::make_unique<Corruption>(*this, nullptr, auras.corruption);
+      spells.corruption = std::make_shared<Corruption>(*this, nullptr, auras.corruption);
       auras.corruption->parent_spell = spells.corruption;
     }
     if (auras.unstable_affliction != NULL) {
-      spells.unstable_affliction = std::make_unique<UnstableAffliction>(*this, nullptr, auras.unstable_affliction);
+      spells.unstable_affliction = std::make_shared<UnstableAffliction>(*this, nullptr, auras.unstable_affliction);
       auras.unstable_affliction->parent_spell = spells.unstable_affliction;
     }
     if (auras.siphon_life != NULL) {
-      spells.siphon_life = std::make_unique<SiphonLife>(*this, nullptr, auras.siphon_life);
+      spells.siphon_life = std::make_shared<SiphonLife>(*this, nullptr, auras.siphon_life);
       auras.siphon_life->parent_spell = spells.siphon_life;
     }
     if (auras.immolate != NULL) {
-      spells.immolate = std::make_unique<Immolate>(*this, nullptr, auras.immolate);
+      spells.immolate = std::make_shared<Immolate>(*this, nullptr, auras.immolate);
       auras.immolate->parent_spell = spells.immolate;
     }
     if (auras.curse_of_agony != NULL || auras.curse_of_doom != NULL) {
-      spells.curse_of_agony = std::make_unique<CurseOfAgony>(*this, nullptr, auras.curse_of_agony);
+      spells.curse_of_agony = std::make_shared<CurseOfAgony>(*this, nullptr, auras.curse_of_agony);
       auras.curse_of_agony->parent_spell = spells.curse_of_agony;
     }
     if (auras.curse_of_the_elements != NULL)
-      spells.curse_of_the_elements = std::make_unique<CurseOfTheElements>(*this, auras.curse_of_the_elements);
+      spells.curse_of_the_elements = std::make_shared<CurseOfTheElements>(*this, auras.curse_of_the_elements);
     if (auras.curse_of_recklessness != NULL)
-      spells.curse_of_recklessness = std::make_unique<CurseOfRecklessness>(*this, auras.curse_of_recklessness);
+      spells.curse_of_recklessness = std::make_shared<CurseOfRecklessness>(*this, auras.curse_of_recklessness);
     if (auras.curse_of_doom != NULL) {
-      spells.curse_of_doom = std::make_unique<CurseOfDoom>(*this, nullptr, auras.curse_of_doom);
+      spells.curse_of_doom = std::make_shared<CurseOfDoom>(*this, nullptr, auras.curse_of_doom);
       auras.curse_of_doom->parent_spell = spells.curse_of_doom;
     }
-    if (auras.amplify_curse != NULL) spells.amplify_curse = std::make_unique<AmplifyCurse>(*this, auras.amplify_curse);
+    if (auras.amplify_curse != NULL) spells.amplify_curse = std::make_shared<AmplifyCurse>(*this, auras.amplify_curse);
   }
   if (auras.improved_shadow_bolt != NULL)
-    spells.improved_shadow_bolt = std::make_unique<ImprovedShadowBolt>(*this, auras.improved_shadow_bolt);
+    spells.improved_shadow_bolt = std::make_shared<ImprovedShadowBolt>(*this, auras.improved_shadow_bolt);
   if (auras.mana_tide_totem != NULL)
-    spells.mana_tide_totem = std::make_unique<ManaTideTotem>(*this, auras.mana_tide_totem);
+    spells.mana_tide_totem = std::make_shared<ManaTideTotem>(*this, auras.mana_tide_totem);
   if (auras.chipped_power_core != NULL)
-    spells.chipped_power_core = std::make_unique<ChippedPowerCore>(*this, auras.chipped_power_core);
+    spells.chipped_power_core = std::make_shared<ChippedPowerCore>(*this, auras.chipped_power_core);
   if (auras.cracked_power_core != NULL)
-    spells.cracked_power_core = std::make_unique<CrackedPowerCore>(*this, auras.cracked_power_core);
-  if (selected_auras.super_mana_potion) spells.super_mana_potion = std::make_unique<SuperManaPotion>(*this);
-  if (selected_auras.demonic_rune) spells.demonic_rune = std::make_unique<DemonicRune>(*this);
+    spells.cracked_power_core = std::make_shared<CrackedPowerCore>(*this, auras.cracked_power_core);
+  if (selected_auras.super_mana_potion) spells.super_mana_potion = std::make_shared<SuperManaPotion>(*this);
+  if (selected_auras.demonic_rune) spells.demonic_rune = std::make_shared<DemonicRune>(*this);
   if (talents.dark_pact == 1 && (settings.has_dark_pact || settings.rotation_option == EmbindConstant::kSimChooses))
-    spells.dark_pact = std::make_unique<DarkPact>(*this);
+    spells.dark_pact = std::make_shared<DarkPact>(*this);
   if (auras.destruction_potion != NULL)
-    spells.destruction_potion = std::make_unique<DestructionPotion>(*this, auras.destruction_potion);
-  if (auras.flame_cap != NULL) spells.flame_cap = std::make_unique<FlameCap>(*this, auras.flame_cap);
-  if (auras.blood_fury != NULL) spells.blood_fury = std::make_unique<BloodFury>(*this, auras.blood_fury);
+    spells.destruction_potion = std::make_shared<DestructionPotion>(*this, auras.destruction_potion);
+  if (auras.flame_cap != NULL) spells.flame_cap = std::make_shared<FlameCap>(*this, auras.flame_cap);
+  if (auras.blood_fury != NULL) spells.blood_fury = std::make_shared<BloodFury>(*this, auras.blood_fury);
   if (auras.drums_of_battle != NULL)
-    spells.drums_of_battle = std::make_unique<DrumsOfBattle>(*this, auras.drums_of_battle);
+    spells.drums_of_battle = std::make_shared<DrumsOfBattle>(*this, auras.drums_of_battle);
   else if (auras.drums_of_war != NULL)
-    spells.drums_of_war = std::make_unique<DrumsOfWar>(*this, auras.drums_of_war);
+    spells.drums_of_war = std::make_shared<DrumsOfWar>(*this, auras.drums_of_war);
   else if (auras.drums_of_restoration != NULL)
-    spells.drums_of_restoration = std::make_unique<DrumsOfRestoration>(*this, auras.drums_of_restoration);
+    spells.drums_of_restoration = std::make_shared<DrumsOfRestoration>(*this, auras.drums_of_restoration);
   if (auras.blade_of_wizardry != NULL)
-    spells.blade_of_wizardry = std::make_unique<BladeOfWizardry>(*this, auras.blade_of_wizardry);
+    spells.blade_of_wizardry = std::make_shared<BladeOfWizardry>(*this, auras.blade_of_wizardry);
   if (auras.shattered_sun_pendant_of_acumen_aldor != NULL)
     spells.shattered_sun_pendant_of_acumen_aldor =
-        std::make_unique<ShatteredSunPendantOfAcumenAldor>(*this, auras.shattered_sun_pendant_of_acumen_aldor);
+        std::make_shared<ShatteredSunPendantOfAcumenAldor>(*this, auras.shattered_sun_pendant_of_acumen_aldor);
   if (auras.robe_of_the_elder_scribes != NULL)
-    spells.robe_of_the_elder_scribes = std::make_unique<RobeOfTheElderScribes>(*this, auras.robe_of_the_elder_scribes);
+    spells.robe_of_the_elder_scribes = std::make_shared<RobeOfTheElderScribes>(*this, auras.robe_of_the_elder_scribes);
   if (auras.mystical_skyfire_diamond != NULL)
-    spells.mystical_skyfire_diamond = std::make_unique<MysticalSkyfireDiamond>(*this, auras.mystical_skyfire_diamond);
+    spells.mystical_skyfire_diamond = std::make_shared<MysticalSkyfireDiamond>(*this, auras.mystical_skyfire_diamond);
   if (settings.meta_gem_id == ItemId::kInsightfulEarthstormDiamond)
-    spells.insightful_earthstorm_diamond = std::make_unique<InsightfulEarthstormDiamond>(*this);
+    spells.insightful_earthstorm_diamond = std::make_shared<InsightfulEarthstormDiamond>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kTimbalsFocusingCrystal) !=
       equipped_trinket_ids.end())
-    spells.timbals_focusing_crystal = std::make_unique<TimbalsFocusingCrystal>(*this);
+    spells.timbals_focusing_crystal = std::make_shared<TimbalsFocusingCrystal>(*this);
   if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kMarkOfDefiance) !=
       equipped_trinket_ids.end())
-    spells.mark_of_defiance = std::make_unique<MarkOfDefiance>(*this);
+    spells.mark_of_defiance = std::make_shared<MarkOfDefiance>(*this);
   if (auras.the_lightning_capacitor != NULL)
-    spells.the_lightning_capacitor = std::make_unique<TheLightningCapacitor>(*this);
+    spells.the_lightning_capacitor = std::make_shared<TheLightningCapacitor>(*this);
   if (auras.quagmirrans_eye != NULL)
-    spells.quagmirrans_eye = std::make_unique<QuagmirransEye>(*this, auras.quagmirrans_eye);
+    spells.quagmirrans_eye = std::make_shared<QuagmirransEye>(*this, auras.quagmirrans_eye);
   if (auras.shiffars_nexus_horn != NULL)
-    spells.shiffars_nexus_horn = std::make_unique<ShiffarsNexusHorn>(*this, auras.shiffars_nexus_horn);
+    spells.shiffars_nexus_horn = std::make_shared<ShiffarsNexusHorn>(*this, auras.shiffars_nexus_horn);
   if (auras.sextant_of_unstable_currents != NULL)
     spells.sextant_of_unstable_currents =
-        std::make_unique<SextantOfUnstableCurrents>(*this, auras.sextant_of_unstable_currents);
+        std::make_shared<SextantOfUnstableCurrents>(*this, auras.sextant_of_unstable_currents);
   if (auras.band_of_the_eternal_sage != NULL)
-    spells.band_of_the_eternal_sage = std::make_unique<BandOfTheEternalSage>(*this, auras.band_of_the_eternal_sage);
-  if (selected_auras.judgement_of_wisdom) spells.judgement_of_wisdom = std::make_unique<JudgementOfWisdom>(*this);
-  if (auras.flameshadow != NULL) spells.flameshadow = std::make_unique<Flameshadow>(*this, auras.flameshadow);
-  if (auras.shadowflame != NULL) spells.shadowflame = std::make_unique<Shadowflame>(*this, auras.shadowflame);
-  if (auras.spellstrike != NULL) spells.spellstrike = std::make_unique<Spellstrike>(*this, auras.spellstrike);
+    spells.band_of_the_eternal_sage = std::make_shared<BandOfTheEternalSage>(*this, auras.band_of_the_eternal_sage);
+  if (selected_auras.judgement_of_wisdom) spells.judgement_of_wisdom = std::make_shared<JudgementOfWisdom>(*this);
+  if (auras.flameshadow != NULL) spells.flameshadow = std::make_shared<Flameshadow>(*this, auras.flameshadow);
+  if (auras.shadowflame != NULL) spells.shadowflame = std::make_shared<Shadowflame>(*this, auras.shadowflame);
+  if (auras.spellstrike != NULL) spells.spellstrike = std::make_shared<Spellstrike>(*this, auras.spellstrike);
   if (auras.mana_etched_4_set != NULL)
-    spells.mana_etched_4_set = std::make_unique<ManaEtched4Set>(*this, auras.mana_etched_4_set);
+    spells.mana_etched_4_set = std::make_shared<ManaEtched4Set>(*this, auras.mana_etched_4_set);
   if (auras.ashtongue_talisman_of_shadows != NULL)
     spells.ashtongue_talisman_of_shadows =
-        std::make_unique<AshtongueTalismanOfShadows>(*this, auras.ashtongue_talisman_of_shadows);
+        std::make_shared<AshtongueTalismanOfShadows>(*this, auras.ashtongue_talisman_of_shadows);
   if (auras.wrath_of_cenarius != NULL)
-    spells.wrath_of_cenarius = std::make_unique<WrathOfCenarius>(*this, auras.wrath_of_cenarius);
+    spells.wrath_of_cenarius = std::make_shared<WrathOfCenarius>(*this, auras.wrath_of_cenarius);
   if (auras.darkmoon_card_crusade != NULL)
-    spells.darkmoon_card_crusade = std::make_unique<DarkmoonCardCrusade>(*this, auras.darkmoon_card_crusade);
+    spells.darkmoon_card_crusade = std::make_shared<DarkmoonCardCrusade>(*this, auras.darkmoon_card_crusade);
   if (auras.power_infusion != NULL) {
     for (int i = 0; i < settings.power_infusion_amount; i++) {
-      spells.power_infusion.push_back(std::make_unique<PowerInfusion>(*this, auras.power_infusion));
+      spells.power_infusion.push_back(std::make_shared<PowerInfusion>(*this, auras.power_infusion));
     }
   }
   if (auras.bloodlust != NULL) {
     for (int i = 0; i < settings.bloodlust_amount; i++) {
-      spells.bloodlust.push_back(std::make_unique<Bloodlust>(*this, auras.bloodlust));
+      spells.bloodlust.push_back(std::make_shared<Bloodlust>(*this, auras.bloodlust));
     }
   }
   if (auras.innervate != NULL) {
     for (int i = 0; i < settings.innervate_amount; i++) {
-      spells.innervate.push_back(std::make_unique<Innervate>(*this, auras.innervate));
+      spells.innervate.push_back(std::make_shared<Innervate>(*this, auras.innervate));
     }
   }
 

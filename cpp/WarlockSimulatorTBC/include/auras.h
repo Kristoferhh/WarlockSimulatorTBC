@@ -37,8 +37,8 @@ struct Auras {
   std::shared_ptr<Aura> ashtongue_talisman_of_shadows;
   std::shared_ptr<Aura> darkmoon_card_crusade;
   std::shared_ptr<Aura> the_lightning_capacitor;
-  std::shared_ptr<Aura> flameshadow;  // Shadowpower
-  std::shared_ptr<Aura> shadowflame;  // Firepower
+  std::shared_ptr<Aura> flameshadow;
+  std::shared_ptr<Aura> shadowflame;
   std::shared_ptr<Aura> spellstrike;
   std::shared_ptr<Aura> mana_etched_4_set;
   std::shared_ptr<Aura> chipped_power_core;
@@ -46,6 +46,7 @@ struct Auras {
   std::shared_ptr<Aura> mana_tide_totem;
   std::shared_ptr<Aura> airmans_ribbon_of_gallantry;
   std::shared_ptr<Aura> demonic_frenzy;
-  std::unique_ptr<Aura> black_book;
-  std::unique_ptr<Aura> battle_squawk;
+  std::shared_ptr<Aura> black_book;
+  std::shared_ptr<Aura> battle_squawk;
+  std::shared_ptr<Aura> fel_energy;
 };

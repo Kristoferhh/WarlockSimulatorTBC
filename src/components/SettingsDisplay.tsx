@@ -241,6 +241,7 @@ export default function SettingsDisplay() {
           >
             <option value={PetName.IMP}>{t('Imp')}</option>
             <option value={PetName.SUCCUBUS}>{t('Succubus')}</option>
+            <option value={PetName.FELHUNTER}>{t('Felhunter')}</option>
             <option value={PetName.FELGUARD}>{t('Felguard')}</option>
           </select>
         </li>

@@ -58,11 +58,11 @@ struct Spells {
   std::shared_ptr<Spell> darkmoon_card_crusade;
   std::shared_ptr<Spell> eye_of_magtheridon;
   std::shared_ptr<Spell> improved_shadow_bolt;
-  std::unique_ptr<Spell> melee;
-  std::unique_ptr<Spell> firebolt;
-  std::unique_ptr<Spell> lash_of_pain;
-  std::unique_ptr<Spell> cleave;
-  std::unique_ptr<Spell> demonic_frenzy;
+  std::shared_ptr<Spell> melee;
+  std::shared_ptr<Spell> firebolt;
+  std::shared_ptr<Spell> lash_of_pain;
+  std::shared_ptr<Spell> cleave;
+  std::shared_ptr<Spell> demonic_frenzy;
   std::vector<std::shared_ptr<Spell>> power_infusion;
   std::vector<std::shared_ptr<Spell>> bloodlust;
   std::vector<std::shared_ptr<Spell>> innervate;
