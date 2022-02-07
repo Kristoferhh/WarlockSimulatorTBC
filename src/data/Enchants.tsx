@@ -32,6 +32,7 @@ export const Enchants: Enchant[] = [
 
   // Chest
   { name: 'Exceptional Stats', varName: 'exceptionalStats', itemSlot: ItemSlotKey.Chest, stamina: 6, intellect: 6, spirit: 6, id: 27960, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
+  { id: 33991, name: 'Restore Mana Prime', varName: 'restoreManaPrime', itemSlot: ItemSlotKey.Chest, mp5: 6, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
   { name: 'Major Resilience', varName: 'majorResilience', itemSlot: ItemSlotKey.Chest, resilienceRating: 15, id: 33992, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
   { name: "Magister's Armor Kit", varName: 'magistersArmorKit', itemSlot: ItemSlotKey.Chest, mp5: 3, id: 32399, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Arcane Armor Kit', varName: 'arcaneArmorKit', itemSlot: ItemSlotKey.Chest, arcaneResist: 8, id: 35420, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
