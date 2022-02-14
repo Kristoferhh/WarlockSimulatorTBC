@@ -50,6 +50,7 @@ export const Auras: Aura[] = [
 
   // Consumables
   { name: 'Flask of Pure Death', varName: AuraName.flaskOfPureDeath, group: AuraGroup.Consumables, iconName: 'inv_potion_115', id: 22866, battleElixir: true, guardianElixir: true, stats: { shadowPower: 80, firePower: 80, frostPower: 80, } },
+  { name: 'Elixir of Empowerment', varName: AuraName.elixirOfEmpowerment, group: AuraGroup.Consumables, iconName: 'inv_potion_136', id: 22848, guardianElixir: true, stats: { spellPenetration: 30 } },
   { name: 'Elixir of Major Shadow Power', varName: AuraName.elixirOfMajorShadowPower, group: AuraGroup.Consumables, iconName: 'inv_potion_145', id: 22835, battleElixir: true, stats: { shadowPower: 55, } },
   { name: 'Elixir of Major Firepower', varName: AuraName.elixirOfMajorFirepower, group: AuraGroup.Consumables, iconName: 'inv_potion_146', id: 22833, battleElixir: true, stats: { firePower: 55, } },
   { name: 'Greater Arcane Elixir', varName: AuraName.greaterArcaneElixir, group: AuraGroup.Consumables, iconName: 'inv_potion_25', id: 13454, battleElixir: true, stats: { spellPower: 35, } },

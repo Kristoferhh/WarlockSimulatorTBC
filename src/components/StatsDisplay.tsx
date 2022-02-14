@@ -40,6 +40,11 @@ export default function StatsDisplay() {
         .map(obj => obj.intellectModifier || 1).reduce((a, b) => a * b);
   }
 
+  function getSpellPenetration(): number {
+    return Object.values(playerState.stats)
+      .map(obj => obj.spellPenetration || 0).reduce((a, b) => a + b);
+  }
+
   function getSpirit(): number {
     let spiritModifier = Object.values(playerState.stats)
       .map(obj => obj.spiritModifier || 1).reduce((a, b) => a * b);
@@ -259,6 +264,10 @@ export default function StatsDisplay() {
     { name: 'Shadow Dmg %', value: () => getShadowModifier() },
     { name: 'Fire Dmg %', value: () => getFireModifier() },
     { name: 'MP5', value: () => Math.round(getMp5()).toString() },
+    {
+      name: 'Spell Penetration', value: () => getSpellPenetration().toString(),
+      condition: () => getSpellPenetration() > 0
+    },
     {
       name: 'Enemy Armor', value: () => Math.round(getEnemyArmor()).toString(),
       condition: () => isPetActive(playerState.talents, playerState.settings, true, true)

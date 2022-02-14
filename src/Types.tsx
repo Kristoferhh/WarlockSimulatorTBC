@@ -920,6 +920,7 @@ export enum AuraName {
   annihilator = 'annihilator',
   improvedHuntersMark = 'improvedHuntersMark',
   flaskOfPureDeath = 'flaskOfPureDeath',
+  elixirOfEmpowerment = 'elixirOfEmpowerment',
   elixirOfMajorShadowPower = 'elixirOfMajorShadowPower',
   elixirOfMajorFirepower = 'elixirOfMajorFirepower',
   greaterArcaneElixir = 'greaterArcaneElixir',
