@@ -391,7 +391,7 @@ export const Items: Item[] = [
   { phase: 1, displayId: 24678, itemSlot: ItemSlotKey.Boots, name: 'Archmage Slippers of Shadow Wrath', varName: 'archmageSlippersOfShadowWrath', shadowPower: 58, id: fakeItemIds.archmageSlippersOfShadowWrath, source: ItemSource.WorldDrop, quality: Quality.Uncommon, iconName: 'inv_boots_09' },
   { phase: 1, displayId: 24678, itemSlot: ItemSlotKey.Boots, name: 'Archmage Slippers of Fire Wrath', varName: 'archmageSlippersOfFireWrath', firePower: 58, id: fakeItemIds.archmageSlippersOfFireWrath, source: ItemSource.WorldDrop, quality: Quality.Uncommon, iconName: 'inv_boots_09' },
   { phase: 1, id: 21870, itemSlot: ItemSlotKey.Boots, name: 'Frozen Shadoweave Boots', varName: 'frozenShadoweaveBoots', stamina: 15, intellect: 9, sockets: [SocketColor.Yellow, SocketColor.Blue], socketBonus: { hitRating: 3 }, shadowPower: 57, setId: ItemSet.FrozenShadoweave, source: ItemSource.Tailoring, quality: Quality.Epic, iconName: 'inv_boots_cloth_03' },
-  { phase: 1, id: 35581, itemSlot: ItemSlotKey.Boots, name: 'Rocket Boots Xtreme Lite', varName: 'rocketBootsXtremeLite', spellPower: 57, source: ItemSource.Engineering, quality: Quality.Rare, iconName: 'inv_gizmo_rocketboot_01' },
+  { phase: 1, id: 35581, itemSlot: ItemSlotKey.Boots, name: 'Rocket Boots Xtreme Lite', varName: 'rocketBootsXtremeLite', spellPower: 47, source: ItemSource.Engineering, quality: Quality.Rare, iconName: 'inv_gizmo_rocketboot_01' },
   { phase: 0, id: 22508, itemSlot: ItemSlotKey.Boots, name: 'Plagueheart Sandals', varName: 'plagueheartSandals', stamina: 20, intellect: 16, spellPower: 32, critRating: 14, setId: ItemSet.T3, source: ItemSource.Naxxramas, quality: Quality.Epic, iconName: 'inv_boots_fabric_01' },
 
   // Ring
