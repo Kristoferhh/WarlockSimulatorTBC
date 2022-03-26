@@ -25,7 +25,7 @@ export default function Main() {
       <div id='header'>
         <LanguageSelection />
         <p style={{ marginRight: 'auto' }}>
-          Please report bugs in the #tbc-sim-report channel on the Warlock TBC discord. <a target='_blank' rel='noreferrer' href='https://discord.gg/5MX6j7nk7s'>Click here to join</a>.
+          Please report bugs in the #sim-bug-report channel on the Warlock Classic discord. <a target='_blank' rel='noreferrer' href='https://discord.gg/5MX6j7nk7s'>Click here to join</a>.
         </p>
         <p id='sim-version-number'>v{packageJson.version}</p>
       </div>

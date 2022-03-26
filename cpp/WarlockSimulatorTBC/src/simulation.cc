@@ -47,10 +47,8 @@ void Simulation::Start() {
         std::cout << "Iteration " << std::to_string(iteration) << " fightTime: " << std::to_string(current_fight_time)
                   << "/" << std::to_string(kFightLength) << " PassTime() returned <= 0" << std::endl;
         player.ThrowError(
-            "The simulation got stuck in an endless loop. If you'd like to "
-            "help with fixing this bug then please "
-            "export your current settings and send it to Kristofer#8003 on "
-            "Discord.");
+            "The simulation got stuck in an endless loop. If you'd like to help with fixing this bug then please "
+            "export your current settings and post it in the #sim-bug-report channel on the Warlock Classic discord.");
       }
     }
 

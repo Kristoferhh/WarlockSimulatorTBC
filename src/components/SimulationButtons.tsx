@@ -410,7 +410,7 @@ export function SimulationButtons() {
   }
 
   function errorCallbackHandler(errorCallback: { errorMsg: string }): void {
-    alert("Error: " + errorCallback.errorMsg + "\nPost in #tbc-sim-report on the TBC Warlock Discord or contact Kristofer#8003 on Discord.");
+    alert("Error: " + errorCallback.errorMsg + "\nPost in the #sim-bug-report channel on the Classic Warlock discord.");
   }
 
   function setNewMedianDps(newMedianDps: string, savingLocalStorage: boolean) {
