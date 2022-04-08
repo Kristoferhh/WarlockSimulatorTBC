@@ -75,6 +75,7 @@ export const Enchants: Enchant[] = [
   // Boots
   { name: 'Fortitude', varName: 'fortitude', itemSlot: ItemSlotKey.Boots, stamina: 12, id: 46490, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
   { name: "Boar's Speed", varName: 'boarsSpeed', itemSlot: ItemSlotKey.Boots, stamina: 9, id: 34008, source: ItemSource.Enchanting, phase: 1, quality: Quality.Rare },
+  { name: 'Vitality', varName: 'vitality', itemSlot: ItemSlotKey.Boots, mp5: 4, id: 27948, source: ItemSource.Enchanting, phase: 1, quality: Quality.Uncommon },
   { name: "Magister's Armor Kit", varName: 'magistersArmorKit', itemSlot: ItemSlotKey.Boots, mp5: 3, id: 32399, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Arcane Armor Kit', varName: 'arcaneArmorKit', itemSlot: ItemSlotKey.Boots, arcaneResist: 8, id: 35420, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
   { name: 'Flame Armor Kit', varName: 'flameArmorKit', itemSlot: ItemSlotKey.Boots, fireResist: 8, id: 35416, source: ItemSource.Leatherworking, phase: 1, quality: Quality.Uncommon },
