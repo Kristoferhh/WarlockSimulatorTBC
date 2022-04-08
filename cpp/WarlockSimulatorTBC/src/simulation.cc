@@ -106,10 +106,12 @@ void Simulation::Tick(double time) {
 
 void Simulation::IterationReset(double fight_length) {
   current_fight_time = 0;
+
   player.Reset();
   if (player.pet != NULL) {
     player.pet->Reset();
   }
+
   player.rng.seed(player.settings.random_seeds[iteration]);
 
   if (player.ShouldWriteToCombatLog()) {
@@ -131,6 +133,14 @@ void Simulation::IterationReset(double fight_length) {
 
     if (player.settings.prepop_black_book && player.pet->auras.black_book != NULL) {
       player.pet->auras.black_book->Apply();
+
+      for (auto i = 0; i < player.trinkets.size(); i++) {
+        // If it's the first trinket (because I'm just gonna assume that Black Book was using the first trinket slot)
+        // or if the trinket shares cooldown with other trinkets then put it on cooldown
+        if (i == 0 || player.trinkets[i].shares_cooldown) {
+          player.trinkets[i].cooldown_remaining = player.pet->auras.black_book->duration;
+        }
+      }
     }
   }
 }
