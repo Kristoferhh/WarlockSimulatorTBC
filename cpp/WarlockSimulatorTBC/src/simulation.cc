@@ -43,7 +43,7 @@ void Simulation::Start() {
         CastPetSpells();
       }
 
-      if (PassTime() <= 0) {
+      if (PassTime(kFightTimeRemaining) <= 0) {
         std::cout << "Iteration " << std::to_string(iteration) << " fightTime: " << std::to_string(current_fight_time)
                   << "/" << std::to_string(kFightLength) << " PassTime() returned <= 0" << std::endl;
         player.ThrowError(
@@ -61,8 +61,10 @@ void Simulation::Start() {
   SimulationEnd(microseconds);
 }
 
-double Simulation::PassTime() {
+double Simulation::PassTime(double fight_time_remaining) {
   auto time_until_next_action = player.FindTimeUntilNextAction();
+
+  time_until_next_action = std::min(time_until_next_action, fight_time_remaining);
 
   Tick(time_until_next_action);
 
