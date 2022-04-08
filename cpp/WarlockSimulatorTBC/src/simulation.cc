@@ -132,15 +132,15 @@ void Simulation::IterationReset(double fight_length) {
     }
 
     if (player.settings.prepop_black_book && player.pet->auras.black_book != NULL) {
-      player.pet->auras.black_book->Apply();
+      // If the player only has one on-use trinket equipped or if the first trinket doesn't share cooldowns with other
+      // trinkets, then assume that Black Book is equipped in the second trinket slot, otherwise the first slot
+      auto black_book_trinket_slot = player.trinkets.size() == 1 || !player.trinkets[0].shares_cooldown ? 1 : 0;
 
-      for (auto i = 0; i < player.trinkets.size(); i++) {
-        // If it's the first trinket (because I'm just gonna assume that Black Book was using the first trinket slot)
-        // or if the trinket shares cooldown with other trinkets then put it on cooldown
-        if (i == 0 || player.trinkets[i].shares_cooldown) {
-          player.trinkets[i].cooldown_remaining = player.pet->auras.black_book->duration;
-        }
+      if (player.trinkets.size() > black_book_trinket_slot) {
+        player.trinkets[black_book_trinket_slot].cooldown_remaining = player.pet->auras.black_book->duration;
       }
+
+      player.pet->auras.black_book->Apply();
     }
   }
 }

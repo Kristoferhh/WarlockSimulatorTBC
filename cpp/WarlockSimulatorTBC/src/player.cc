@@ -107,6 +107,9 @@ Player::Player(PlayerSettings& player_settings)
 }
 
 void Player::Initialize(Simulation* simulationPtr) {
+  std::vector<int> equipped_trinket_ids{items.trinket_1, items.trinket_2};
+  std::vector<int> equipped_ring_ids{items.ring_1, items.ring_2};
+
   Entity::Initialize(simulationPtr);
   player = this;
 
@@ -118,56 +121,24 @@ void Player::Initialize(Simulation* simulationPtr) {
     auras.fel_energy = std::make_shared<FelEnergyAura>(*this);
   }
 
-  std::vector<int> equipped_trinket_ids{items.trinket_1, items.trinket_2};
-  std::vector<int> equipped_ring_ids{items.ring_1, items.ring_2};
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kSkullOfGuldan) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(SkullOfGuldan(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kShiftingNaaruSliver) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(ShiftingNaaruSliver(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kHexShrunkenHead) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(HexShrunkenHead(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kIconOfTheSilverCrescent) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(IconOfTheSilverCrescent(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kScryersBloodgem) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(ScryersBloodgem(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kRestrainedEssenceOfSapphiron) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(RestrainedEssenceOfSapphiron(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kXirisGift) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(XirisGift(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kAncientCrystalTalisman) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(AncientCrystalTalisman(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kArcanistsStone) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(ArcanistsStone(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kTerokkarTabletOfVim) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(TerokkarTabletOfVim(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kVengeanceOfTheIllidari) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(VengeanceOfTheIllidari(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kFigurineLivingRubySerpent) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(FigurineLivingRubySerpent(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kEssenceOfTheMartyr) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(EssenceOfTheMartyr(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kStarkillersBauble) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(StarkillersBauble(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kDarkIronSmokingPipe) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(DarkIronSmokingPipe(*this));
-  if (std::find(equipped_trinket_ids.begin(), equipped_trinket_ids.end(), ItemId::kHazzarahsCharmOfDestruction) !=
-      equipped_trinket_ids.end())
-    trinkets.push_back(HazzarahsCharmOfDestruction(*this));
+  for (auto& trinket_id : equipped_trinket_ids) {
+    if (trinket_id == ItemId::kSkullOfGuldan) trinkets.push_back(SkullOfGuldan(*this));
+    if (trinket_id == ItemId::kShiftingNaaruSliver) trinkets.push_back(ShiftingNaaruSliver(*this));
+    if (trinket_id == ItemId::kHexShrunkenHead) trinkets.push_back(HexShrunkenHead(*this));
+    if (trinket_id == ItemId::kIconOfTheSilverCrescent) trinkets.push_back(IconOfTheSilverCrescent(*this));
+    if (trinket_id == ItemId::kDarkIronSmokingPipe) trinkets.push_back(DarkIronSmokingPipe(*this));
+    if (trinket_id == ItemId::kScryersBloodgem) trinkets.push_back(ScryersBloodgem(*this));
+    if (trinket_id == ItemId::kRestrainedEssenceOfSapphiron) trinkets.push_back(RestrainedEssenceOfSapphiron(*this));
+    if (trinket_id == ItemId::kXirisGift) trinkets.push_back(XirisGift(*this));
+    if (trinket_id == ItemId::kAncientCrystalTalisman) trinkets.push_back(AncientCrystalTalisman(*this));
+    if (trinket_id == ItemId::kArcanistsStone) trinkets.push_back(ArcanistsStone(*this));
+    if (trinket_id == ItemId::kTerokkarTabletOfVim) trinkets.push_back(TerokkarTabletOfVim(*this));
+    if (trinket_id == ItemId::kVengeanceOfTheIllidari) trinkets.push_back(VengeanceOfTheIllidari(*this));
+    if (trinket_id == ItemId::kFigurineLivingRubySerpent) trinkets.push_back(FigurineLivingRubySerpent(*this));
+    if (trinket_id == ItemId::kEssenceOfTheMartyr) trinkets.push_back(EssenceOfTheMartyr(*this));
+    if (trinket_id == ItemId::kStarkillersBauble) trinkets.push_back(StarkillersBauble(*this));
+    if (trinket_id == ItemId::kHazzarahsCharmOfDestruction) trinkets.push_back(HazzarahsCharmOfDestruction(*this));
+  }
 
   // Auras
   if (settings.fight_type == EmbindConstant::kSingleTarget) {
