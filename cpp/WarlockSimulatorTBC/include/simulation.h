@@ -1,30 +1,35 @@
 #pragma once
+#include <map>
+#include <memory>
+#include <vector>
 
-#include "player.h"
-#include "simulation_settings.h"
+struct Spell;
+struct SimulationSettings;
+struct Player;
 
 struct Simulation {
   Player& player;
-  const SimulationSettings& settings;
+  const SimulationSettings& kSettings;
   std::vector<double> dps_vector;
   int iteration = 0;
   double current_fight_time = 0;
   double min_dps = 0;
   double max_dps = 0;
 
-  Simulation(Player& player, const SimulationSettings& sim_settings);
+  Simulation(Player& player, const SimulationSettings& kSimulationSettings);
   void Start();
-  void IterationReset(double fight_length);
-  void CastNonPlayerCooldowns(double fight_time_remaining);
-  void CastNonGcdSpells();
-  void CastGcdSpells(double fight_time_remaining);
-  void CastPetSpells();
-  void IterationEnd(double fight_length, double dps);
-  void SimulationEnd(long long simulation_duration);
-  double PassTime(double fight_time_remaining);
-  void Tick(double time);
-  void SelectedSpellHandler(const std::shared_ptr<Spell>& spell,
+  void IterationReset(double kFightLength);
+  void CastNonPlayerCooldowns(double kFightTimeRemaining) const;
+  void CastNonGcdSpells() const;
+  void CastGcdSpells(double kFightTimeRemaining) const;
+  void CastPetSpells() const;
+  void IterationEnd(double kFightLength, double kDps);
+  void SimulationEnd(long long kSimulationDuration) const;
+  double PassTime(double kFightTimeRemaining);
+  void Tick(double kTime);
+  void SelectedSpellHandler(const std::shared_ptr<Spell>& kSpell,
                             std::map<std::shared_ptr<Spell>, double>& predicted_damage_of_spells,
-                            double fight_time_remaining);
-  void CastSelectedSpell(const std::shared_ptr<Spell>& spell, double fight_time_remaining, double predicted_damage = 0);
+                            double kFightTimeRemaining) const;
+  void CastSelectedSpell(const std::shared_ptr<Spell>& kSpell, double kFightTimeRemaining,
+                         double kPredictedDamage = 0) const;
 };

@@ -1,26 +1,25 @@
 #pragma once
-
 #include "aura.h"
 
-struct ManaOverTime : public Aura {
-  ManaOverTime(Entity& Entity);
-  void Apply();
-  void Tick(double time);
-  void Setup();
+struct ManaOverTime : Aura {
+  explicit ManaOverTime(Entity& entity);
+  void Apply() override;
+  void Tick(double kTime) override;
+  void Setup() override;
   virtual double GetManaGain() = 0;
 };
 
-struct DrumsOfRestorationAura : public ManaOverTime {
-  DrumsOfRestorationAura(Entity& Entity);
-  double GetManaGain();
+struct DrumsOfRestorationAura final : ManaOverTime {
+  explicit DrumsOfRestorationAura(Entity& entity);
+  double GetManaGain() override;
 };
 
-struct ManaTideTotemAura : public ManaOverTime {
-  ManaTideTotemAura(Entity& Entity);
-  double GetManaGain();
+struct ManaTideTotemAura final : ManaOverTime {
+  explicit ManaTideTotemAura(Entity& entity);
+  double GetManaGain() override;
 };
 
-struct FelEnergyAura : public ManaOverTime {
-  FelEnergyAura(Entity& entity);
-  double GetManaGain();
+struct FelEnergyAura final : ManaOverTime {
+  explicit FelEnergyAura(Entity& entity);
+  double GetManaGain() override;
 };

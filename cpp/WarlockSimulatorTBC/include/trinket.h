@@ -1,11 +1,9 @@
 #pragma once
-
-struct Player;
-#include <iostream>
-#include <optional>
+#include <string>
 #include <vector>
 
-#include "stat.h"
+struct Stat;
+struct Player;
 
 struct Trinket {
   Player& player;
@@ -18,75 +16,75 @@ struct Trinket {
   bool shares_cooldown = true;
   std::string name;
 
-  Trinket(Player& player);
-  bool Ready();
+  explicit Trinket(Player& player);
+  [[nodiscard]] bool Ready() const;
   void Reset();
   void Setup();
   void Use();
   void Fade();
-  void Tick(double time);
+  void Tick(double kTime);
 };
 
-struct RestrainedEssenceOfSapphiron : public Trinket {
-  RestrainedEssenceOfSapphiron(Player& player);
+struct RestrainedEssenceOfSapphiron : Trinket {
+  explicit RestrainedEssenceOfSapphiron(Player& player);
 };
 
-struct ShiftingNaaruSliver : public Trinket {
-  ShiftingNaaruSliver(Player& player);
+struct ShiftingNaaruSliver : Trinket {
+  explicit ShiftingNaaruSliver(Player& player);
 };
 
-struct SkullOfGuldan : public Trinket {
-  SkullOfGuldan(Player& player);
+struct SkullOfGuldan : Trinket {
+  explicit SkullOfGuldan(Player& player);
 };
 
-struct HexShrunkenHead : public Trinket {
-  HexShrunkenHead(Player& player);
+struct HexShrunkenHead : Trinket {
+  explicit HexShrunkenHead(Player& player);
 };
 
-struct IconOfTheSilverCrescent : public Trinket {
-  IconOfTheSilverCrescent(Player& player);
+struct IconOfTheSilverCrescent : Trinket {
+  explicit IconOfTheSilverCrescent(Player& player);
 };
 
-struct ScryersBloodgem : public Trinket {
-  ScryersBloodgem(Player& player);
+struct ScryersBloodgem : Trinket {
+  explicit ScryersBloodgem(Player& player);
 };
 
-struct AncientCrystalTalisman : public Trinket {
-  AncientCrystalTalisman(Player& player);
+struct AncientCrystalTalisman : Trinket {
+  explicit AncientCrystalTalisman(Player& player);
 };
 
-struct ArcanistsStone : public Trinket {
-  ArcanistsStone(Player& player);
+struct ArcanistsStone : Trinket {
+  explicit ArcanistsStone(Player& player);
 };
 
-struct TerokkarTabletOfVim : public Trinket {
-  TerokkarTabletOfVim(Player& player);
+struct TerokkarTabletOfVim : Trinket {
+  explicit TerokkarTabletOfVim(Player& player);
 };
 
-struct XirisGift : public Trinket {
-  XirisGift(Player& player);
+struct XirisGift : Trinket {
+  explicit XirisGift(Player& player);
 };
 
-struct VengeanceOfTheIllidari : public Trinket {
-  VengeanceOfTheIllidari(Player& player);
+struct VengeanceOfTheIllidari : Trinket {
+  explicit VengeanceOfTheIllidari(Player& player);
 };
 
-struct FigurineLivingRubySerpent : public Trinket {
-  FigurineLivingRubySerpent(Player& player);
+struct FigurineLivingRubySerpent : Trinket {
+  explicit FigurineLivingRubySerpent(Player& player);
 };
 
-struct EssenceOfTheMartyr : public Trinket {
-  EssenceOfTheMartyr(Player& player);
+struct EssenceOfTheMartyr : Trinket {
+  explicit EssenceOfTheMartyr(Player& player);
 };
 
-struct StarkillersBauble : public Trinket {
-  StarkillersBauble(Player& player);
+struct StarkillersBauble : Trinket {
+  explicit StarkillersBauble(Player& player);
 };
 
-struct DarkIronSmokingPipe : public Trinket {
-  DarkIronSmokingPipe(Player& player);
+struct DarkIronSmokingPipe : Trinket {
+  explicit DarkIronSmokingPipe(Player& player);
 };
 
-struct HazzarahsCharmOfDestruction : public Trinket {
-  HazzarahsCharmOfDestruction(Player& player);
+struct HazzarahsCharmOfDestruction : Trinket {
+  explicit HazzarahsCharmOfDestruction(Player& player);
 };

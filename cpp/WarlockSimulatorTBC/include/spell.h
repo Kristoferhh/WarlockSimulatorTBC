@@ -1,20 +1,26 @@
 #pragma once
+#include <memory>
+#include <string>
+#include <vector>
 
-struct Entity;
-
-#include "aura.h"
-#include "damage_over_time.h"
-#include "enums.h"
 #include "spell_cast_result.h"
 
+enum class SpellType;
+enum class AttackType;
+enum class SpellSchool;
+struct DamageOverTime;
+struct Aura;
+struct Entity;
+
 struct Spell {
+  virtual ~Spell() = default;
   Entity& entity;
   std::shared_ptr<Aura> aura_effect;
   std::shared_ptr<DamageOverTime> dot_effect;
   std::vector<std::string> shared_cooldown_spells;
-  SpellSchool spell_school = SpellSchool::kNoSchool;
-  AttackType attack_type = AttackType::kNoAttackType;
-  SpellType spell_type = SpellType::kNoSpellType;
+  SpellSchool spell_school;
+  AttackType attack_type;
+  SpellType spell_type;
   std::string name;
   int min_dmg = 0;
   int max_dmg = 0;
@@ -56,7 +62,8 @@ struct Spell {
   bool procs_on_resist = false;
   bool on_resist_procs_enabled = true;
 
-  Spell(Entity& entity, std::shared_ptr<Aura> aura = nullptr, std::shared_ptr<DamageOverTime> dot = nullptr);
+  explicit Spell(Entity& entity_param, std::shared_ptr<Aura> aura = nullptr,
+                 std::shared_ptr<DamageOverTime> dot = nullptr);
   virtual void Setup();
   virtual void Cast();
   virtual bool CanCast();
@@ -64,171 +71,171 @@ struct Spell {
   virtual void Reset();
   virtual double GetCastTime();
   virtual bool Ready();
-  virtual void StartCast(double predicted_damage = 0);
+  virtual void StartCast(double kPredictedDamage = 0);
   void OnCritProcs();
   void OnResistProcs();
   void OnDamageProcs();
   void OnHitProcs();
-  void Tick(double time);
-  double GetCritMultiplier(double entity_crit_multiplier);
+  void Tick(double kTime);
+  [[nodiscard]] double GetCritMultiplier(double kEntityCritMultiplier) const;
   double PredictDamage();
-  bool HasEnoughMana();
+  [[nodiscard]] bool HasEnoughMana() const;
 
- private:
+private:
   virtual double GetCooldown();
-  virtual void Damage(bool is_crit = false, bool is_glancing = false);
-  double GetManaCost();
+  virtual void Damage(bool kIsCrit = false, bool kIsGlancing = false);
+  [[nodiscard]] double GetManaCost() const;
   std::vector<double> GetConstantDamage();
   SpellCastResult MagicSpellCast();
-  SpellCastResult PhysicalSpellCast();
-  void OnSpellHit(SpellCastResult& spell_cast_result);
-  void CombatLogDamage(bool is_crit, bool is_glancing, double total_damage, double spell_base_damage,
-                       double spell_power, double crit_multiplier, double damage_modifier,
-                       double partial_resist_multiplier);
-  void ManaGainOnCast();
+  [[nodiscard]] SpellCastResult PhysicalSpellCast() const;
+  void OnSpellHit(const SpellCastResult& kSpellCastResult);
+  void CombatLogDamage(bool kIsCrit, bool kIsGlancing, double kTotalDamage, double kSpellBaseDamage,
+                       double kSpellPower, double kCritMultiplier, double kDamageModifier,
+                       double kPartialResistMultiplier) const;
+  void ManaGainOnCast() const;
 };
 
-struct ShadowBolt : public Spell {
-  ShadowBolt(Entity& entity);
-  void StartCast(double predicted_damage);
-  double CalculateCastTime();
+struct ShadowBolt final : Spell {
+  explicit ShadowBolt(Entity& entity_param);
+  void StartCast(double predicted_damage) override;
+  [[nodiscard]] double CalculateCastTime() const;
 };
 
-struct Incinerate : public Spell {
-  Incinerate(Entity& entity);
+struct Incinerate final : Spell {
+  explicit Incinerate(Entity& entity_param);
 };
 
-struct SearingPain : public Spell {
-  SearingPain(Entity& entity);
+struct SearingPain final : Spell {
+  explicit SearingPain(Entity& entity_param);
 };
 
-struct SoulFire : public Spell {
-  SoulFire(Entity& entity);
+struct SoulFire final : Spell {
+  explicit SoulFire(Entity& entity_param);
 };
 
-struct Shadowburn : public Spell {
-  Shadowburn(Entity& entity);
+struct Shadowburn final : Spell {
+  explicit Shadowburn(Entity& entity_param);
 };
 
-struct DeathCoil : public Spell {
-  DeathCoil(Entity& entity);
+struct DeathCoil final : Spell {
+  explicit DeathCoil(Entity& entity_param);
 };
 
-struct Shadowfury : public Spell {
-  Shadowfury(Entity& entity);
+struct Shadowfury final : Spell {
+  explicit Shadowfury(Entity& entity_param);
 };
 
-struct SeedOfCorruption : public Spell {
+struct SeedOfCorruption final : Spell {
+  explicit SeedOfCorruption(Entity& entity_param);
   double aoe_cap;
-  SeedOfCorruption(Entity& entity);
-  void Damage(bool is_crit = false, bool is_glancing = false);
+  void Damage(bool is_crit = false, bool is_glancing = false) override;
 };
 
-struct Corruption : public Spell {
-  Corruption(Entity& entity, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
+struct Corruption final : Spell {
+  explicit Corruption(Entity& entity_param, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
 };
 
-struct UnstableAffliction : public Spell {
-  UnstableAffliction(Entity& entity, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
+struct UnstableAffliction final : Spell {
+  explicit UnstableAffliction(Entity& entity_param, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
 };
 
-struct SiphonLife : public Spell {
-  SiphonLife(Entity& entity, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
+struct SiphonLife final : Spell {
+  explicit SiphonLife(Entity& entity_param, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
 };
 
-struct Immolate : public Spell {
-  Immolate(Entity& entity, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
+struct Immolate final : Spell {
+  explicit Immolate(Entity& entity_param, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
 };
 
-struct CurseOfAgony : public Spell {
-  CurseOfAgony(Entity& entity, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
+struct CurseOfAgony final : Spell {
+  explicit CurseOfAgony(Entity& entity_param, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
 };
 
-struct CurseOfTheElements : public Spell {
-  CurseOfTheElements(Entity& entity, std::shared_ptr<Aura> aura);
+struct CurseOfTheElements final : Spell {
+  explicit CurseOfTheElements(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct CurseOfRecklessness : public Spell {
-  CurseOfRecklessness(Entity& entity, std::shared_ptr<Aura> aura);
+struct CurseOfRecklessness final : Spell {
+  explicit CurseOfRecklessness(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct CurseOfDoom : public Spell {
-  CurseOfDoom(Entity& entity, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
+struct CurseOfDoom final : Spell {
+  explicit CurseOfDoom(Entity& entity_param, std::shared_ptr<Aura> aura, std::shared_ptr<DamageOverTime> dot);
 };
 
-struct Conflagrate : public Spell {
-  Conflagrate(Entity& entity);
-  void Cast();
-  bool CanCast();
+struct Conflagrate final : Spell {
+  explicit Conflagrate(Entity& entity_param);
+  void Cast() override;
+  bool CanCast() override;
 };
 
-struct DestructionPotion : public Spell {
-  DestructionPotion(Entity& entity, std::shared_ptr<Aura> aura);
+struct DestructionPotion final : Spell {
+  explicit DestructionPotion(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct FlameCap : public Spell {
-  FlameCap(Entity& entity, std::shared_ptr<Aura> aura);
+struct FlameCap final : Spell {
+  explicit FlameCap(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct BloodFury : public Spell {
-  BloodFury(Entity& entity, std::shared_ptr<Aura> aura);
+struct BloodFury final : Spell {
+  explicit BloodFury(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct Bloodlust : public Spell {
-  Bloodlust(Entity& entity, std::shared_ptr<Aura> aura);
+struct Bloodlust final : Spell {
+  explicit Bloodlust(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct DrumsOfBattle : public Spell {
-  DrumsOfBattle(Entity& entity, std::shared_ptr<Aura> aura);
+struct DrumsOfBattle final : Spell {
+  explicit DrumsOfBattle(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct DrumsOfWar : public Spell {
-  DrumsOfWar(Entity& entity, std::shared_ptr<Aura> aura);
+struct DrumsOfWar final : Spell {
+  explicit DrumsOfWar(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct DrumsOfRestoration : public Spell {
-  DrumsOfRestoration(Entity& entity, std::shared_ptr<Aura> aura);
+struct DrumsOfRestoration final : Spell {
+  explicit DrumsOfRestoration(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct AmplifyCurse : public Spell {
-  AmplifyCurse(Entity& entity, std::shared_ptr<Aura> aura);
+struct AmplifyCurse final : Spell {
+  explicit AmplifyCurse(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct PowerInfusion : public Spell {
-  PowerInfusion(Entity& entity, std::shared_ptr<Aura> aura);
+struct PowerInfusion final : Spell {
+  explicit PowerInfusion(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct Innervate : public Spell {
-  Innervate(Entity& entity, std::shared_ptr<Aura> aura);
+struct Innervate final : Spell {
+  explicit Innervate(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct ChippedPowerCore : public Spell {
-  ChippedPowerCore(Entity& entity, std::shared_ptr<Aura> aura);
+struct ChippedPowerCore final : Spell {
+  explicit ChippedPowerCore(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct CrackedPowerCore : public Spell {
-  CrackedPowerCore(Entity& entity, std::shared_ptr<Aura> aura);
+struct CrackedPowerCore final : Spell {
+  explicit CrackedPowerCore(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct ManaTideTotem : public Spell {
-  ManaTideTotem(Entity& entity, std::shared_ptr<Aura> aura);
+struct ManaTideTotem final : Spell {
+  explicit ManaTideTotem(Entity& entity_param, std::shared_ptr<Aura> aura);
 };
 
-struct PetMelee : public Spell {
-  PetMelee(Entity& entity);
-  double GetBaseDamage();
-  double GetCooldown();
+struct PetMelee final : Spell {
+  explicit PetMelee(Entity& entity_param);
+  double GetBaseDamage() override;
+  double GetCooldown() override;
 };
 
-struct ImpFirebolt : public Spell {
-  ImpFirebolt(Entity& entity);
+struct ImpFirebolt final : Spell {
+  explicit ImpFirebolt(Entity& entity_param);
 };
 
-struct SuccubusLashOfPain : public Spell {
-  SuccubusLashOfPain(Entity& entity);
+struct SuccubusLashOfPain final : Spell {
+  explicit SuccubusLashOfPain(Entity& entity_param);
 };
 
-struct FelguardCleave : public Spell {
-  FelguardCleave(Entity& entity);
-  double GetBaseDamage();
+struct FelguardCleave final : Spell {
+  explicit FelguardCleave(Entity& entity_param);
+  double GetBaseDamage() override;
 };

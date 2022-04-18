@@ -1,12 +1,13 @@
 #pragma once
-
 #include "spell_proc.h"
 
-struct OnResistProc : public SpellProc {
-  OnResistProc(Player& player, std::shared_ptr<Aura> aura = nullptr);
-  void Setup();
+struct Player;
+
+struct OnResistProc : SpellProc {
+  explicit OnResistProc(Player& player, std::shared_ptr<Aura> aura = nullptr);
+  void Setup() override;
 };
 
-struct EyeOfMagtheridon : public OnResistProc {
-  EyeOfMagtheridon(Player& player, std::shared_ptr<Aura> aura);
+struct EyeOfMagtheridon : OnResistProc {
+  EyeOfMagtheridon(Player& player, const std::shared_ptr<Aura>& kAura);
 };

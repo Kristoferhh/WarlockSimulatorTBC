@@ -1,26 +1,29 @@
 #include "../include/stat.h"
 
 #include "../include/common.h"
-#include "../include/player.h"
+#include "../include/entity.h"
 
-Stat::Stat(Entity& entity, double& character_stat, double value)
-    : entity(entity), character_stat(character_stat), value(value) {}
+Stat::Stat(Entity& entity_param, double& character_stat, const double kValue)
+  : entity(entity_param),
+    character_stat(character_stat),
+    value(kValue) {
+}
 
-void Stat::AddStat() { ModifyStat("add"); }
+void Stat::AddStat() const { ModifyStat("add"); }
 
-void Stat::RemoveStat(int stacks) { ModifyStat("remove", stacks); }
+void Stat::RemoveStat(const int kStacks) const { ModifyStat("remove", kStacks); }
 
-void Stat::ModifyStat(std::string action, int stacks) {
+void Stat::ModifyStat(const std::string& kAction, const int kStacks) const {
   const double kCurrentStatValue = character_stat;
   auto new_stat_value = kCurrentStatValue;
 
   if (calculation_type == CalculationType::kAdditive) {
-    new_stat_value += (value * stacks) * (action == "remove" ? -1 : action == "add" ? 1 : 0);
+    new_stat_value += value * kStacks * (kAction == "remove" ? -1 : kAction == "add" ? 1 : 0);
   } else if (calculation_type == CalculationType::kMultiplicative) {
-    if (action == "add") {
-      new_stat_value *= (value * stacks);
-    } else if (action == "remove") {
-      new_stat_value /= (value * stacks);
+    if (kAction == "add") {
+      new_stat_value *= value * kStacks;
+    } else if (kAction == "remove") {
+      new_stat_value /= value * kStacks;
     }
   }
 
@@ -29,7 +32,7 @@ void Stat::ModifyStat(std::string action, int stacks) {
   if (entity.ShouldWriteToCombatLog()) {
     auto msg = entity.name + " " + name + " ";
 
-    if (action == "add") {
+    if (kAction == "add") {
       if (calculation_type == CalculationType::kAdditive) {
         msg += "+";
       } else {
@@ -43,74 +46,80 @@ void Stat::ModifyStat(std::string action, int stacks) {
       }
     }
 
-    msg += " " + DoubleToString(value * stacks, combat_log_decimal_places) + " (" +
-           DoubleToString(kCurrentStatValue, combat_log_decimal_places) + " -> " +
-           DoubleToString(new_stat_value, combat_log_decimal_places) + ")";
+    msg += " " + DoubleToString(value * kStacks, combat_log_decimal_places) + " (" +
+        DoubleToString(kCurrentStatValue, combat_log_decimal_places) + " -> " +
+        DoubleToString(new_stat_value, combat_log_decimal_places) + ")";
 
     entity.CombatLog(msg);
   }
 }
 
-SpellPower::SpellPower(Entity& entity, double value) : Stat(entity, entity.stats.spell_power, value) {
+SpellPower::SpellPower(Entity& entity_param, const double kValue)
+  : Stat(entity_param, entity_param.stats.spell_power, kValue) {
   name = StatName::kSpellPower;
   calculation_type = CalculationType::kAdditive;
 }
 
-ShadowPower::ShadowPower(Entity& entity, double value) : Stat(entity, entity.stats.shadow_power, value) {
+ShadowPower::ShadowPower(Entity& entity_param, const double kValue)
+  : Stat(entity_param, entity_param.stats.shadow_power, kValue) {
   name = StatName::kShadowPower;
   calculation_type = CalculationType::kAdditive;
 }
 
-FirePower::FirePower(Entity& entity, double value) : Stat(entity, entity.stats.fire_power, value) {
+FirePower::FirePower(Entity& entity_param, const double kValue)
+  : Stat(entity_param, entity_param.stats.fire_power, kValue) {
   name = StatName::kFirePower;
   calculation_type = CalculationType::kAdditive;
 }
 
-SpellHasteRating::SpellHasteRating(Entity& entity, double value)
-    : Stat(entity, entity.stats.spell_haste_rating, value) {
+SpellHasteRating::SpellHasteRating(Entity& entity_param, const double kValue)
+  : Stat(entity_param, entity_param.stats.spell_haste_rating, kValue) {
   name = StatName::kSpellHasteRating;
   calculation_type = CalculationType::kAdditive;
 }
 
-SpellHastePercent::SpellHastePercent(Entity& entity, double value)
-    : Stat(entity, entity.stats.spell_haste_percent, value) {
+SpellHastePercent::SpellHastePercent(Entity& entity_param, const double kValue)
+  : Stat(entity_param, entity_param.stats.spell_haste_percent, kValue) {
   name = StatName::kSpellHastePercent;
   calculation_type = CalculationType::kMultiplicative;
   combat_log_decimal_places = 4;
 }
 
-MeleeHastePercent::MeleeHastePercent(Entity& entity, double value)
-    : Stat(entity, entity.stats.melee_haste_percent, value) {
+MeleeHastePercent::MeleeHastePercent(Entity& entity_param, const double kValue)
+  : Stat(entity_param, entity_param.stats.melee_haste_percent, kValue) {
   name = StatName::kMeleeHastePercent;
   calculation_type = CalculationType::kMultiplicative;
   combat_log_decimal_places = 4;
 }
 
-ManaCostModifier::ManaCostModifier(Entity& entity, double value)
-    : Stat(entity, entity.stats.mana_cost_modifier, value) {
+ManaCostModifier::ManaCostModifier(Entity& entity_param, const double kValue)
+  : Stat(entity_param, entity_param.stats.mana_cost_modifier, kValue) {
   name = StatName::kManaCostModifier;
   calculation_type = CalculationType::kMultiplicative;
   combat_log_decimal_places = 2;
 }
 
-SpellCritChance::SpellCritChance(Entity& entity, double value) : Stat(entity, entity.stats.spell_crit_chance, value) {
+SpellCritChance::SpellCritChance(Entity& entity_param, const double kValue)
+  : Stat(entity_param, entity_param.stats.spell_crit_chance, kValue) {
   name = StatName::kSpellCritChance;
   calculation_type = CalculationType::kAdditive;
   combat_log_decimal_places = 2;
 }
 
-SpellCritRating::SpellCritRating(Entity& entity, double value) : Stat(entity, entity.stats.spell_crit_rating, value) {
+SpellCritRating::SpellCritRating(Entity& entity_param, const double kValue)
+  : Stat(entity_param, entity_param.stats.spell_crit_rating, kValue) {
   name = StatName::kSpellCritRating;
   calculation_type = CalculationType::kAdditive;
 }
 
-AttackPower::AttackPower(Entity& entity, double value) : Stat(entity, entity.stats.attack_power, value) {
+AttackPower::AttackPower(Entity& entity_param, const double kValue)
+  : Stat(entity_param, entity_param.stats.attack_power, kValue) {
   name = StatName::kAttackPower;
   calculation_type = CalculationType::kAdditive;
 }
 
-AttackPowerModifier::AttackPowerModifier(Entity& entity, double value)
-    : Stat(entity, entity.stats.attack_power_modifier, value) {
+AttackPowerModifier::AttackPowerModifier(Entity& entity_param, const double kValue)
+  : Stat(entity_param, entity_param.stats.attack_power_modifier, kValue) {
   name = StatName::kAttackPowerModifier;
   calculation_type = CalculationType::kMultiplicative;
 }

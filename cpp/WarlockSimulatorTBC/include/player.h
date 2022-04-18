@@ -1,29 +1,24 @@
 #pragma once
-
-#include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
-#include "aura.h"
-#include "aura_selection.h"
-#include "character_stats.h"
-#include "combat_log_breakdown.h"
-#include "damage_over_time.h"
 #include "entity.h"
-#include "items.h"
-#include "on_crit_proc.h"
-#include "on_damage_proc.h"
-#include "on_dot_tick_proc.h"
-#include "on_hit_proc.h"
-#include "on_resist_proc.h"
-#include "pet.h"
-#include "player_settings.h"
+#include "enums.h"
 #include "rng.h"
-#include "sets.h"
-#include "talents.h"
-#include "trinket.h"
 
-struct Player : public Entity {
+
+struct AuraSelection;
+struct Simulation;
+struct Aura;
+struct Spell;
+struct Trinket;
+struct PlayerSettings;
+struct Items;
+struct Sets;
+struct Talents;
+
+struct Player final : Entity {
   AuraSelection& selected_auras;
   Talents& talents;
   Sets& sets;
@@ -40,21 +35,21 @@ struct Player : public Entity {
   double iteration_damage;
   int power_infusions_ready;
 
-  Player(PlayerSettings& settings);
-  void Initialize(Simulation* simulation);
-  void Reset();
-  void EndAuras();
-  void ThrowError(const std::string& error);
-  void CastLifeTapOrDarkPact();
-  void UseCooldowns(double fight_time_remaining);
-  void SendCombatLogEntries();
+  explicit Player(PlayerSettings& settings);
+  void Initialize(Simulation* simulation_ptr) override;
+  void Reset() override;
+  void EndAuras() override;
+  void ThrowError(const std::string& kError) const;
+  void CastLifeTapOrDarkPact() const;
+  void UseCooldowns(double kFightTimeRemaining);
+  void SendCombatLogEntries() const;
   void SendPlayerInfoToCombatLog();
-  void Tick(double time);
-  double GetSpellPower(bool dealing_damage, SpellSchool school = SpellSchool::kNoSchool);
-  double GetHastePercent();
-  double GetSpellCritChance(SpellType spell_type);
-  double FindTimeUntilNextAction();
-  double GetDamageModifier(Spell& spell, bool is_dot);
+  void Tick(double kTime) override;
+  double GetSpellPower(bool kDealingDamage, SpellSchool kSchool = SpellSchool::kNoSchool) override;
+  double GetHastePercent() override;
+  double GetSpellCritChance(SpellType kSpellType) override;
+  double FindTimeUntilNextAction() override;
+  double GetDamageModifier(Spell& spell, bool kIsDot) override;
   int GetRand();
-  bool RollRng(double chance);
+  bool RollRng(double kChance);
 };

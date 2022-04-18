@@ -1,7 +1,9 @@
 #pragma once
 
-#include "aura.h"
-#include "damage_over_time.h"
+#include <memory>
+
+struct DamageOverTime;
+struct Aura;
 
 struct Auras {
   std::shared_ptr<DamageOverTime> corruption;

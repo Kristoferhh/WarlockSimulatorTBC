@@ -1,9 +1,9 @@
 #include "../include/rng.h"
 
-#include <math.h>
+#include <cmath>
 
-void Rng::seed(uint32_t s) { _random_engine.seed(s); }
+void Rng::Seed(const uint32_t kSeed) { _random_engine.seed(kSeed); }
 
-double Rng::next() { return _random(_random_engine); }
+double Rng::Next() { return _random(_random_engine); }
 
-int Rng::range(int min, int max) { return static_cast<int>(floor(next() * (max - min + 1) + min)); }
+int Rng::Range(const int kMin, const int kMax) { return static_cast<int>(floor(Next() * (kMax - kMin + 1) + kMin)); }

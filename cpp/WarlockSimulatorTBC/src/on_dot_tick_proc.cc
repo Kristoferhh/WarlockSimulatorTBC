@@ -1,8 +1,11 @@
 #include "../include/on_dot_tick_proc.h"
 
+#include "../include/entity.h"
+#include "../include/damage_over_time.h"
 #include "../include/player.h"
 
-OnDotTickProc::OnDotTickProc(Player& player, std::shared_ptr<Aura> aura) : SpellProc(player, aura) {
+OnDotTickProc::OnDotTickProc(Player& player, const std::shared_ptr<Aura>& kAura)
+  : SpellProc(player, kAura) {
   procs_on_dot_ticks = true;
 }
 
@@ -16,16 +19,17 @@ void OnDotTickProc::Setup() {
   }
 }
 
-AshtongueTalismanOfShadows::AshtongueTalismanOfShadows(Player& player, std::shared_ptr<Aura> aura)
-    : OnDotTickProc(player, aura) {
+AshtongueTalismanOfShadows::AshtongueTalismanOfShadows(Player& player, const std::shared_ptr<Aura>& kAura)
+  : OnDotTickProc(player, kAura) {
   name = SpellName::kAshtongueTalismanOfShadows;
   proc_chance = 20;
-  Setup();
+  OnDotTickProc::Setup();
 }
 
 bool AshtongueTalismanOfShadows::ShouldProc(DamageOverTime* spell) { return spell->name == SpellName::kCorruption; }
 
-TimbalsFocusingCrystal::TimbalsFocusingCrystal(Player& player) : OnDotTickProc(player) {
+TimbalsFocusingCrystal::TimbalsFocusingCrystal(Player& player)
+  : OnDotTickProc(player) {
   name = SpellName::kTimbalsFocusingCrystal;
   cooldown = 15;
   proc_chance = 10;
@@ -35,5 +39,5 @@ TimbalsFocusingCrystal::TimbalsFocusingCrystal(Player& player) : OnDotTickProc(p
   spell_school = SpellSchool::kShadow;
   can_crit = true;
   can_miss = true;
-  Setup();
+  OnDotTickProc::Setup();
 }

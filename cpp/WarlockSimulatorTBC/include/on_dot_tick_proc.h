@@ -1,18 +1,19 @@
 #pragma once
-
 #include "spell_proc.h"
 
-struct OnDotTickProc : public SpellProc {
-  OnDotTickProc(Player& player, std::shared_ptr<Aura> aura = nullptr);
-  void Setup();
+struct Player;
+
+struct OnDotTickProc : SpellProc {
+  explicit OnDotTickProc(Player& player, const std::shared_ptr<Aura>& kAura = nullptr);
+  void Setup() override;
   virtual bool ShouldProc(DamageOverTime* spell);
 };
 
-struct AshtongueTalismanOfShadows : public OnDotTickProc {
-  AshtongueTalismanOfShadows(Player& player, std::shared_ptr<Aura> aura);
-  bool ShouldProc(DamageOverTime* spell);
+struct AshtongueTalismanOfShadows final : OnDotTickProc {
+  AshtongueTalismanOfShadows(Player& player, const std::shared_ptr<Aura>& kAura);
+  bool ShouldProc(DamageOverTime* spell) override;
 };
 
-struct TimbalsFocusingCrystal : public OnDotTickProc {
-  TimbalsFocusingCrystal(Player& player);
+struct TimbalsFocusingCrystal final : OnDotTickProc {
+  explicit TimbalsFocusingCrystal(Player& player);
 };

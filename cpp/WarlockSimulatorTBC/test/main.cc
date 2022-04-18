@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "../include/aura_selection.h"
 #include "../include/bindings.h"
 #include "../include/character_stats.h"
@@ -10,6 +8,8 @@
 #include "../include/simulation.h"
 #include "../include/simulation_settings.h"
 #include "../include/talents.h"
+#include "../include/trinket.h"
+#include "../include/stat.h"
 
 int main() {
   auto auras = AuraSelection();

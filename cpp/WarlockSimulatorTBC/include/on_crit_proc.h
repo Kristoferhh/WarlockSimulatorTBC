@@ -1,26 +1,27 @@
 #pragma once
-
 #include "spell_proc.h"
 
-struct OnCritProc : public SpellProc {
-  OnCritProc(Player& player, std::shared_ptr<Aura> aura = nullptr);
-  void Setup();
+struct Player;
+
+struct OnCritProc : SpellProc {
+  explicit OnCritProc(Player& player, std::shared_ptr<Aura> aura = nullptr);
+  void Setup() override;
 };
 
-struct ImprovedShadowBolt : public OnCritProc {
+struct ImprovedShadowBolt final : OnCritProc {
   ImprovedShadowBolt(Player& player, std::shared_ptr<Aura> aura);
-  bool ShouldProc(Spell* spell);
+  bool ShouldProc(Spell* spell) override;
 };
 
-struct TheLightningCapacitor : public OnCritProc {
-  TheLightningCapacitor(Player& player);
-  void StartCast(double predicted_damage = 0);
+struct TheLightningCapacitor final : OnCritProc {
+  explicit TheLightningCapacitor(Player& player);
+  void StartCast(double predicted_damage = 0) override;
 };
 
-struct ShiffarsNexusHorn : public OnCritProc {
+struct ShiffarsNexusHorn final : OnCritProc {
   ShiffarsNexusHorn(Player& player, std::shared_ptr<Aura> aura);
 };
 
-struct SextantOfUnstableCurrents : public OnCritProc {
+struct SextantOfUnstableCurrents final : OnCritProc {
   SextantOfUnstableCurrents(Player& player, std::shared_ptr<Aura> aura);
 };

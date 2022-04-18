@@ -1,11 +1,7 @@
 #pragma once
+#include "enums.h"
 
 struct Entity;
-
-#include <map>
-#include <string>
-
-#include "enums.h"
 
 struct Stat {
   Entity& entity;
@@ -15,54 +11,54 @@ struct Stat {
   double value;
   int combat_log_decimal_places = 0;
 
-  Stat(Entity& entity, double& character_stat, double value);
-  void AddStat();
-  void RemoveStat(int stacks = 1);
+  Stat(Entity& entity_param, double& character_stat, double kValue);
+  void AddStat() const;
+  void RemoveStat(int kStacks = 1) const;
 
- private:
-  void ModifyStat(std::string action, int stacks = 1);
+private:
+  void ModifyStat(const std::string& kAction, int kStacks = 1) const;
 };
 
-struct SpellPower : public Stat {
-  SpellPower(Entity& entity, double value);
+struct SpellPower : Stat {
+  SpellPower(Entity& entity_param, double kValue);
 };
 
-struct ShadowPower : public Stat {
-  ShadowPower(Entity& entity, double value);
+struct ShadowPower : Stat {
+  ShadowPower(Entity& entity_param, double kValue);
 };
 
-struct FirePower : public Stat {
-  FirePower(Entity& entity, double value);
+struct FirePower : Stat {
+  FirePower(Entity& entity_param, double kValue);
 };
 
-struct SpellHasteRating : public Stat {
-  SpellHasteRating(Entity& entity, double value);
+struct SpellHasteRating : Stat {
+  SpellHasteRating(Entity& entity_param, double kValue);
 };
 
-struct SpellHastePercent : public Stat {
-  SpellHastePercent(Entity& entity, double value);
+struct SpellHastePercent : Stat {
+  SpellHastePercent(Entity& entity_param, double kValue);
 };
 
-struct MeleeHastePercent : public Stat {
-  MeleeHastePercent(Entity& entity, double value);
+struct MeleeHastePercent : Stat {
+  MeleeHastePercent(Entity& entity_param, double kValue);
 };
 
-struct ManaCostModifier : public Stat {
-  ManaCostModifier(Entity& entity, double value);
+struct ManaCostModifier : Stat {
+  ManaCostModifier(Entity& entity_param, double kValue);
 };
 
-struct SpellCritChance : public Stat {
-  SpellCritChance(Entity& entity, double value);
+struct SpellCritChance : Stat {
+  SpellCritChance(Entity& entity_param, double kValue);
 };
 
-struct SpellCritRating : public Stat {
-  SpellCritRating(Entity& entity, double value);
+struct SpellCritRating : Stat {
+  SpellCritRating(Entity& entity_param, double kValue);
 };
 
-struct AttackPower : public Stat {
-  AttackPower(Entity& entity, double value);
+struct AttackPower : Stat {
+  AttackPower(Entity& entity_param, double kValue);
 };
 
-struct AttackPowerModifier : public Stat {
-  AttackPowerModifier(Entity& entity, double value);
+struct AttackPowerModifier : Stat {
+  AttackPowerModifier(Entity& entity_param, double kValue);
 };

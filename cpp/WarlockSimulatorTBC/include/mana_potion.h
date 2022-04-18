@@ -1,17 +1,18 @@
 #pragma once
-
 #include "spell.h"
 
-struct ManaPotion : public Spell {
-  ManaPotion(Player& player);
-  void Cast();
+struct Player;
+
+struct ManaPotion : Spell {
+  explicit ManaPotion(Player& player);
+  void Cast() override;
 };
 
-struct SuperManaPotion : public ManaPotion {
-  SuperManaPotion(Player& player);
+struct SuperManaPotion final : ManaPotion {
+  explicit SuperManaPotion(Player& player);
 };
 
-struct DemonicRune : public ManaPotion {
-  DemonicRune(Player& player);
-  void Cast();
+struct DemonicRune final : ManaPotion {
+  explicit DemonicRune(Player& player);
+  void Cast() override;
 };

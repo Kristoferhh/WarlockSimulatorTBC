@@ -1,9 +1,19 @@
 #include "../include/damage_over_time.h"
 
-#include "../include/common.h"
 #include "../include/player.h"
+#include "../include/sets.h"
+#include "../include/combat_log_breakdown.h"
+#include "../include/simulation.h"
+#include "../include/common.h"
+#include "../include/player_settings.h"
+#include "../include/aura.h"
+#include "../include/talents.h"
+#include "../include/on_dot_tick_proc.h"
 
-DamageOverTime::DamageOverTime(Player& player) : player(player) {}
+DamageOverTime::DamageOverTime(Player& player_param)
+  : player(player_param),
+    school(SpellSchool::kNoSchool) {
+}
 
 void DamageOverTime::Setup() {
   original_duration = duration;
@@ -15,8 +25,8 @@ void DamageOverTime::Setup() {
 
   ticks_total = duration / tick_timer_total;
 
-  if (player.recording_combat_log_breakdown && player.combat_log_breakdown.count(name) == 0) {
-    player.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
+  if (player.recording_combat_log_breakdown && !player.combat_log_breakdown.contains(name)) {
+    player.combat_log_breakdown.insert({name, std::make_shared<CombatLogBreakdown>(name)});
   }
 
   player.dot_list.push_back(this);
@@ -24,7 +34,7 @@ void DamageOverTime::Setup() {
 
 void DamageOverTime::Apply() {
   if (active && player.ShouldWriteToCombatLog()) {
-    auto msg = name + " refreshed before letting it expire";
+    player.CombatLog(name + " refreshed before letting it expire");
   } else if (!active && player.recording_combat_log_breakdown) {
     player.combat_log_breakdown.at(name)->applied_at = player.simulation->current_fight_time;
   }
@@ -55,11 +65,11 @@ void DamageOverTime::Apply() {
   // Cast, it doesn't get the benefit even if it comes up later during the
   // duration.
   if (name == SpellName::kSiphonLife) {
-    isb_is_active = !player.settings.using_custom_isb_uptime && player.auras.improved_shadow_bolt != NULL &&
+    isb_is_active = !player.settings.using_custom_isb_uptime && player.auras.improved_shadow_bolt != nullptr &&
                     player.auras.improved_shadow_bolt->active;
   }
   // Amplify Curse
-  if ((name == SpellName::kCurseOfAgony || name == SpellName::kCurseOfDoom) && player.auras.amplify_curse != NULL &&
+  if ((name == SpellName::kCurseOfAgony || name == SpellName::kCurseOfDoom) && player.auras.amplify_curse != nullptr &&
       player.auras.amplify_curse->active) {
     applied_with_amplify_curse = true;
     player.auras.amplify_curse->Fade();
@@ -83,10 +93,10 @@ void DamageOverTime::Fade() {
   }
 }
 
-std::vector<double> DamageOverTime::GetConstantDamage() {
-  auto current_spell_power = active ? spell_power : player.GetSpellPower(true, school);
-  auto modifier = player.GetDamageModifier(*parent_spell, true);
-  auto partial_resist_multiplier = player.GetPartialResistMultiplier(school);
+std::vector<double> DamageOverTime::GetConstantDamage() const {
+  const auto kCurrentSpellPower = active ? spell_power : player.GetSpellPower(true, school);
+  const auto kModifier = player.GetDamageModifier(*parent_spell, true);
+  const auto kPartialResistMultiplier = player.GetPartialResistMultiplier(school);
   auto dmg = base_damage;
 
   if (applied_with_amplify_curse) {
@@ -98,13 +108,13 @@ std::vector<double> DamageOverTime::GetConstantDamage() {
   }
 
   auto total_damage = dmg;
-  total_damage += current_spell_power * coefficient;
-  total_damage *= modifier * partial_resist_multiplier;
+  total_damage += kCurrentSpellPower * coefficient;
+  total_damage *= kModifier * kPartialResistMultiplier;
 
-  return std::vector<double>{dmg, total_damage, current_spell_power, modifier, partial_resist_multiplier};
+  return std::vector{dmg, total_damage, kCurrentSpellPower, kModifier, kPartialResistMultiplier};
 }
 
-double DamageOverTime::PredictDamage() {
+double DamageOverTime::PredictDamage() const {
   auto damage = GetConstantDamage()[1];
   // If it's Corruption or Immolate then divide by the original duration (18s
   // and 15s) and multiply by the durationTotal property This is just for the t4
@@ -119,16 +129,16 @@ double DamageOverTime::PredictDamage() {
   return damage;
 }
 
-void DamageOverTime::Tick(double t) {
-  tick_timer_remaining -= t;
+void DamageOverTime::Tick(const double kTime) {
+  tick_timer_remaining -= kTime;
 
   if (tick_timer_remaining <= 0) {
-    std::vector<double> constant_damage = GetConstantDamage();
-    const double kBaseDamage = constant_damage[0];
-    const double kDamage = constant_damage[1] / (original_duration / tick_timer_total);
-    const double kSpellPower = constant_damage[2];
-    const double kModifier = constant_damage[3];
-    const double kPartialResistMultiplier = constant_damage[4];
+    const std::vector<double> kConstantDamage = GetConstantDamage();
+    const double kBaseDamage = kConstantDamage[0];
+    const double kDamage = kConstantDamage[1] / (static_cast<double>(original_duration) / tick_timer_total);
+    const double kSpellPower = kConstantDamage[2];
+    const double kModifier = kConstantDamage[3];
+    const double kPartialResistMultiplier = kConstantDamage[4];
 
     // Check for Nightfall proc
     if (name == SpellName::kCorruption && player.talents.nightfall > 0) {
@@ -158,9 +168,9 @@ void DamageOverTime::Tick(double t) {
       player.CombatLog(msg);
     }
 
-    for (auto& proc : player.on_dot_tick_procs) {
-      if (proc->Ready() && proc->ShouldProc(this) && player.RollRng(proc->proc_chance)) {
-        proc->StartCast();
+    for (const auto& kProc : player.on_dot_tick_procs) {
+      if (kProc->Ready() && kProc->ShouldProc(this) && player.RollRng(kProc->proc_chance)) {
+        kProc->StartCast();
       }
     }
 
@@ -170,13 +180,14 @@ void DamageOverTime::Tick(double t) {
   }
 }
 
-CorruptionDot::CorruptionDot(Player& player) : DamageOverTime(player) {
+CorruptionDot::CorruptionDot(Player& player_param)
+  : DamageOverTime(player_param) {
   name = SpellName::kCorruption;
   duration = 18;
   tick_timer_total = 3;
   base_damage = 900;
   school = SpellSchool::kShadow;
-  coefficient = 0.936 + (0.12 * player.talents.empowered_corruption);
+  coefficient = 0.936 + 0.12 * player_param.talents.empowered_corruption;
   t5_bonus_modifier = 1;
   Setup();
 }
@@ -186,7 +197,8 @@ void CorruptionDot::Apply() {
   DamageOverTime::Apply();
 }
 
-UnstableAfflictionDot::UnstableAfflictionDot(Player& player) : DamageOverTime(player) {
+UnstableAfflictionDot::UnstableAfflictionDot(Player& player_param)
+  : DamageOverTime(player_param) {
   name = SpellName::kUnstableAffliction;
   duration = 18;
   tick_timer_total = 3;
@@ -196,7 +208,8 @@ UnstableAfflictionDot::UnstableAfflictionDot(Player& player) : DamageOverTime(pl
   Setup();
 }
 
-SiphonLifeDot::SiphonLifeDot(Player& player) : DamageOverTime(player) {
+SiphonLifeDot::SiphonLifeDot(Player& player_param)
+  : DamageOverTime(player_param) {
   name = SpellName::kSiphonLife;
   duration = 30;
   tick_timer_total = 3;
@@ -206,7 +219,8 @@ SiphonLifeDot::SiphonLifeDot(Player& player) : DamageOverTime(player) {
   Setup();
 }
 
-ImmolateDot::ImmolateDot(Player& player) : DamageOverTime(player) {
+ImmolateDot::ImmolateDot(Player& player_param)
+  : DamageOverTime(player_param) {
   name = SpellName::kImmolate;
   duration = 15;
   tick_timer_total = 3;
@@ -222,7 +236,8 @@ void ImmolateDot::Apply() {
   DamageOverTime::Apply();
 }
 
-CurseOfAgonyDot::CurseOfAgonyDot(Player& player) : DamageOverTime(player) {
+CurseOfAgonyDot::CurseOfAgonyDot(Player& player_param)
+  : DamageOverTime(player_param) {
   name = SpellName::kCurseOfAgony;
   duration = 24;
   tick_timer_total = 3;
@@ -232,7 +247,8 @@ CurseOfAgonyDot::CurseOfAgonyDot(Player& player) : DamageOverTime(player) {
   Setup();
 }
 
-CurseOfDoomDot::CurseOfDoomDot(Player& player) : DamageOverTime(player) {
+CurseOfDoomDot::CurseOfDoomDot(Player& player_param)
+  : DamageOverTime(player_param) {
   name = SpellName::kCurseOfDoom;
   duration = 60;
   tick_timer_total = 60;

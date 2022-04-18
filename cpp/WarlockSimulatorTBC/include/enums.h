@@ -24,7 +24,7 @@ namespace PetNameStr {
 const std::string kImp = "Imp";
 const std::string kSuccubus = "Succubus";
 const std::string kFelguard = "Felguard";
-}  // namespace PetNameStr
+} // namespace PetNameStr
 
 namespace SpellName {
 const std::string kShadowBolt = "Shadow Bolt";
@@ -94,7 +94,7 @@ const std::string kImprovedShadowBolt = "Improved Shadow Bolt";
 const std::string kEyeOfMagtheridon = "Eye of Magtheridon";
 const std::string kAirmansRibbonOfGallantry = "Airman's Ribbon of Gallantry";
 const std::string kFelEnergy = "Fel Energy";
-}  // namespace SpellName
+} // namespace SpellName
 
 namespace StatName {
 const std::string kSpellPower = "Spell Power";
@@ -109,52 +109,53 @@ const std::string kSpellCritRating = "Spell Crit Rating";
 const std::string kAttackPower = "Attack Power";
 const std::string kMp5 = "Mp5";
 const std::string kAttackPowerModifier = "Attack Power Modifier";
-}  // namespace StatName
+} // namespace StatName
 
 namespace StatConstant {
-const double kHitRatingPerPercent = 12.62;
-const double kCritRatingPerPercent = 22.08;
-const double kHasteRatingPerPercent = 15.77;
-const double kManaPerIntellect = 15;
-const double kHealthPerStamina = 10;
-const double kCritChancePerIntellect = 1 / 81.95;
-const double kBaseCritChancePercent = 1.701;
-const double kMeleeCritChanceSuppression = 4.73;  // Source: Fierywind from Warlock discord and maybe Fight Club discord
-const double kBaseEnemyDodgeChance = 6.5;
-}  // namespace StatConstant
+constexpr double kHitRatingPerPercent = 12.62;
+constexpr double kCritRatingPerPercent = 22.08;
+constexpr double kHasteRatingPerPercent = 15.77;
+constexpr double kManaPerIntellect = 15;
+constexpr double kHealthPerStamina = 10;
+constexpr double kCritChancePerIntellect = 1 / 81.95;
+constexpr double kBaseCritChancePercent = 1.701;
+constexpr double kMeleeCritChanceSuppression = 4.73;
+// Source: Fierywind from Warlock discord and maybe Fight Club discord
+constexpr double kBaseEnemyDodgeChance = 6.5;
+} // namespace StatConstant
 
 namespace ItemId {
-const int kDarkIronSmokingPipe = 38290;
-const int kShatteredSunPendantOfAcumen = 34678;
-const int kTimbalsFocusingCrystal = 34470;
-const int kShiftingNaaruSliver = 34429;
-const int kHexShrunkenHead = 33829;
-const int kAshtongueTalismanOfShadows = 32493;
-const int kSkullOfGuldan = 32483;
-const int kDarkmoonCardCrusade = 31856;
-const int kBladeOfWizardry = 31336;
-const int kSextantOfUnstableCurrents = 30626;
-const int kStarkillersBauble = 30340;
-const int kEssenceOfTheMartyr = 29376;
-const int kIconOfTheSilverCrescent = 29370;
-const int kBandOfTheEternalSage = 29305;
-const int kXirisGift = 29179;
-const int kScryersBloodgem = 29132;
-const int kEyeOfMagtheridon = 28789;
-const int kRobeOfTheElderScribes = 28602;
-const int kShiffarsNexusHorn = 28418;
-const int kTheLightningCapacitor = 28785;
-const int kArcanistsStone = 28223;
-const int kVengeanceOfTheIllidari = 28040;
-const int kMarkOfDefiance = 27922;
-const int kQuagmirransEye = 27683;
-const int kTerokkarTabletOfVim = 25936;
-const int kInsightfulEarthstormDiamond = 25901;
-const int kMysticalSkyfireDiamond = 25893;
-const int kAncientCrystalTalisman = 25620;
-const int kFigurineLivingRubySerpent = 24126;
-const int kMarkOfTheChampion = 23207;
-const int kRestrainedEssenceOfSapphiron = 23046;
-const int kWrathOfCenarius = 21190;
-const int kHazzarahsCharmOfDestruction = 19957;
-}  // namespace ItemId
+constexpr int kDarkIronSmokingPipe = 38290;
+constexpr int kShatteredSunPendantOfAcumen = 34678;
+constexpr int kTimbalsFocusingCrystal = 34470;
+constexpr int kShiftingNaaruSliver = 34429;
+constexpr int kHexShrunkenHead = 33829;
+constexpr int kAshtongueTalismanOfShadows = 32493;
+constexpr int kSkullOfGuldan = 32483;
+constexpr int kDarkmoonCardCrusade = 31856;
+constexpr int kBladeOfWizardry = 31336;
+constexpr int kSextantOfUnstableCurrents = 30626;
+constexpr int kStarkillersBauble = 30340;
+constexpr int kEssenceOfTheMartyr = 29376;
+constexpr int kIconOfTheSilverCrescent = 29370;
+constexpr int kBandOfTheEternalSage = 29305;
+constexpr int kXirisGift = 29179;
+constexpr int kScryersBloodgem = 29132;
+constexpr int kEyeOfMagtheridon = 28789;
+constexpr int kRobeOfTheElderScribes = 28602;
+constexpr int kShiffarsNexusHorn = 28418;
+constexpr int kTheLightningCapacitor = 28785;
+constexpr int kArcanistsStone = 28223;
+constexpr int kVengeanceOfTheIllidari = 28040;
+constexpr int kMarkOfDefiance = 27922;
+constexpr int kQuagmirransEye = 27683;
+constexpr int kTerokkarTabletOfVim = 25936;
+constexpr int kInsightfulEarthstormDiamond = 25901;
+constexpr int kMysticalSkyfireDiamond = 25893;
+constexpr int kAncientCrystalTalisman = 25620;
+constexpr int kFigurineLivingRubySerpent = 24126;
+constexpr int kMarkOfTheChampion = 23207;
+constexpr int kRestrainedEssenceOfSapphiron = 23046;
+constexpr int kWrathOfCenarius = 21190;
+constexpr int kHazzarahsCharmOfDestruction = 19957;
+} // namespace ItemId

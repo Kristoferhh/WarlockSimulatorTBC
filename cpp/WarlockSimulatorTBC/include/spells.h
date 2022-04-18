@@ -1,8 +1,7 @@
 #pragma once
-
 #include <vector>
 
-#include "spell.h"
+struct Spell;
 
 struct Spells {
   std::shared_ptr<Spell> life_tap;

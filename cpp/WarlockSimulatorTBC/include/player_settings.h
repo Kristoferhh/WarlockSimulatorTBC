@@ -1,11 +1,11 @@
 #pragma once
-
-#include "aura_selection.h"
 #include "embind_constant.h"
-#include "items.h"
-#include "sets.h"
-#include "talents.h"
-#include <vector>
+
+struct AuraSelection;
+struct Talents;
+struct Sets;
+struct CharacterStats;
+struct Items;
 
 struct PlayerSettings {
   AuraSelection& auras;
@@ -76,6 +76,11 @@ struct PlayerSettings {
   bool has_dark_pact = false;
   bool has_elemental_shaman_t4_bonus = false;
 
-  PlayerSettings(AuraSelection& auras, Talents& talents, Sets& sets, CharacterStats& stats, Items& items)
-      : auras(auras), talents(talents), sets(sets), stats(stats), items(items) {}
+  PlayerSettings(AuraSelection& auras, Talents& talents, Sets& sets, const CharacterStats& kStats, Items& items)
+    : auras(auras),
+      talents(talents),
+      sets(sets),
+      stats(kStats),
+      items(items) {
+  }
 };

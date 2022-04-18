@@ -1,17 +1,23 @@
 #include "../include/trinket.h"
 
-#include "../include/common.h"
+#include <memory>
+
+#include "../include/combat_log_breakdown.h"
 #include "../include/player.h"
+#include "../include/simulation.h"
+#include "../include/stat.h"
 
-Trinket::Trinket(Player& player) : player(player) {}
+Trinket::Trinket(Player& player)
+  : player(player) {
+}
 
-bool Trinket::Ready() { return cooldown_remaining <= 0; }
+bool Trinket::Ready() const { return cooldown_remaining <= 0; }
 
 void Trinket::Reset() { cooldown_remaining = 0; }
 
 void Trinket::Setup() {
-  if (player.recording_combat_log_breakdown && player.combat_log_breakdown.count(name) == 0) {
-    player.combat_log_breakdown.insert({name, std::make_unique<CombatLogBreakdown>(name)});
+  if (player.recording_combat_log_breakdown && !player.combat_log_breakdown.contains(name)) {
+    player.combat_log_breakdown.insert({name, std::make_shared<CombatLogBreakdown>(name)});
   }
 }
 
@@ -51,18 +57,19 @@ void Trinket::Fade() {
   active = false;
 }
 
-void Trinket::Tick(double t) {
-  if (player.ShouldWriteToCombatLog() && cooldown_remaining > 0 && cooldown_remaining - t <= 0) {
+void Trinket::Tick(const double kTime) {
+  if (player.ShouldWriteToCombatLog() && cooldown_remaining > 0 && cooldown_remaining - kTime <= 0) {
     player.CombatLog(name + " off cooldown");
   }
-  cooldown_remaining -= t;
-  duration_remaining -= t;
+  cooldown_remaining -= kTime;
+  duration_remaining -= kTime;
   if (active && duration_remaining <= 0) {
     Fade();
   }
 }
 
-RestrainedEssenceOfSapphiron::RestrainedEssenceOfSapphiron(Player& player) : Trinket(player) {
+RestrainedEssenceOfSapphiron::RestrainedEssenceOfSapphiron(Player& player)
+  : Trinket(player) {
   name = "The Restrained Essence of Sapphiron";
   cooldown = 120;
   duration = 20;
@@ -70,7 +77,8 @@ RestrainedEssenceOfSapphiron::RestrainedEssenceOfSapphiron(Player& player) : Tri
   Setup();
 }
 
-ShiftingNaaruSliver::ShiftingNaaruSliver(Player& player) : Trinket(player) {
+ShiftingNaaruSliver::ShiftingNaaruSliver(Player& player)
+  : Trinket(player) {
   name = "Shifting Naaru Sliver";
   cooldown = 90;
   duration = 15;
@@ -78,7 +86,8 @@ ShiftingNaaruSliver::ShiftingNaaruSliver(Player& player) : Trinket(player) {
   Setup();
 }
 
-SkullOfGuldan::SkullOfGuldan(Player& player) : Trinket(player) {
+SkullOfGuldan::SkullOfGuldan(Player& player)
+  : Trinket(player) {
   name = "The Skull of Gul'dan";
   cooldown = 120;
   duration = 20;
@@ -86,7 +95,8 @@ SkullOfGuldan::SkullOfGuldan(Player& player) : Trinket(player) {
   Setup();
 }
 
-HexShrunkenHead::HexShrunkenHead(Player& player) : Trinket(player) {
+HexShrunkenHead::HexShrunkenHead(Player& player)
+  : Trinket(player) {
   name = "Hex Shrunken Head";
   cooldown = 120;
   duration = 20;
@@ -94,7 +104,8 @@ HexShrunkenHead::HexShrunkenHead(Player& player) : Trinket(player) {
   Setup();
 }
 
-IconOfTheSilverCrescent::IconOfTheSilverCrescent(Player& player) : Trinket(player) {
+IconOfTheSilverCrescent::IconOfTheSilverCrescent(Player& player)
+  : Trinket(player) {
   name = "Icon of the Silver Crescent";
   cooldown = 120;
   duration = 20;
@@ -102,7 +113,8 @@ IconOfTheSilverCrescent::IconOfTheSilverCrescent(Player& player) : Trinket(playe
   Setup();
 }
 
-ScryersBloodgem::ScryersBloodgem(Player& player) : Trinket(player) {
+ScryersBloodgem::ScryersBloodgem(Player& player)
+  : Trinket(player) {
   name = "Scryer's Bloodgem";
   cooldown = 90;
   duration = 15;
@@ -110,7 +122,8 @@ ScryersBloodgem::ScryersBloodgem(Player& player) : Trinket(player) {
   Setup();
 }
 
-AncientCrystalTalisman::AncientCrystalTalisman(Player& player) : Trinket(player) {
+AncientCrystalTalisman::AncientCrystalTalisman(Player& player)
+  : Trinket(player) {
   name = "Ancient Crystal Talisman";
   cooldown = 120;
   duration = 20;
@@ -118,7 +131,8 @@ AncientCrystalTalisman::AncientCrystalTalisman(Player& player) : Trinket(player)
   Setup();
 }
 
-ArcanistsStone::ArcanistsStone(Player& player) : Trinket(player) {
+ArcanistsStone::ArcanistsStone(Player& player)
+  : Trinket(player) {
   name = "Arcanist's Stone";
   cooldown = 120;
   duration = 20;
@@ -126,7 +140,8 @@ ArcanistsStone::ArcanistsStone(Player& player) : Trinket(player) {
   Setup();
 }
 
-TerokkarTabletOfVim::TerokkarTabletOfVim(Player& player) : Trinket(player) {
+TerokkarTabletOfVim::TerokkarTabletOfVim(Player& player)
+  : Trinket(player) {
   name = "Terokkar Table of Vim";
   cooldown = 90;
   duration = 15;
@@ -134,7 +149,8 @@ TerokkarTabletOfVim::TerokkarTabletOfVim(Player& player) : Trinket(player) {
   Setup();
 }
 
-XirisGift::XirisGift(Player& player) : Trinket(player) {
+XirisGift::XirisGift(Player& player)
+  : Trinket(player) {
   name = "Xi'ri's Gift";
   cooldown = 90;
   duration = 15;
@@ -142,7 +158,8 @@ XirisGift::XirisGift(Player& player) : Trinket(player) {
   Setup();
 }
 
-VengeanceOfTheIllidari::VengeanceOfTheIllidari(Player& player) : Trinket(player) {
+VengeanceOfTheIllidari::VengeanceOfTheIllidari(Player& player)
+  : Trinket(player) {
   name = "Vengeance of the Illidari";
   cooldown = 90;
   duration = 15;
@@ -150,7 +167,8 @@ VengeanceOfTheIllidari::VengeanceOfTheIllidari(Player& player) : Trinket(player)
   Setup();
 }
 
-FigurineLivingRubySerpent::FigurineLivingRubySerpent(Player& player) : Trinket(player) {
+FigurineLivingRubySerpent::FigurineLivingRubySerpent(Player& player)
+  : Trinket(player) {
   name = "Figurine: Living Ruby Serpent";
   cooldown = 300;
   duration = 20;
@@ -158,7 +176,8 @@ FigurineLivingRubySerpent::FigurineLivingRubySerpent(Player& player) : Trinket(p
   Setup();
 }
 
-EssenceOfTheMartyr::EssenceOfTheMartyr(Player& player) : Trinket(player) {
+EssenceOfTheMartyr::EssenceOfTheMartyr(Player& player)
+  : Trinket(player) {
   name = "Essence of the Martyr";
   cooldown = 120;
   duration = 20;
@@ -167,7 +186,8 @@ EssenceOfTheMartyr::EssenceOfTheMartyr(Player& player) : Trinket(player) {
   Setup();
 }
 
-StarkillersBauble::StarkillersBauble(Player& player) : Trinket(player) {
+StarkillersBauble::StarkillersBauble(Player& player)
+  : Trinket(player) {
   name = "Starkiller's Bauble";
   cooldown = 90;
   duration = 15;
@@ -175,7 +195,8 @@ StarkillersBauble::StarkillersBauble(Player& player) : Trinket(player) {
   Setup();
 }
 
-DarkIronSmokingPipe::DarkIronSmokingPipe(Player& player) : Trinket(player) {
+DarkIronSmokingPipe::DarkIronSmokingPipe(Player& player)
+  : Trinket(player) {
   name = "Dark Iron Smoking Pipe";
   cooldown = 120;
   duration = 20;
@@ -183,7 +204,8 @@ DarkIronSmokingPipe::DarkIronSmokingPipe(Player& player) : Trinket(player) {
   Setup();
 }
 
-HazzarahsCharmOfDestruction::HazzarahsCharmOfDestruction(Player& player) : Trinket(player) {
+HazzarahsCharmOfDestruction::HazzarahsCharmOfDestruction(Player& player)
+  : Trinket(player) {
   name = "Hazza'rah's Charm of Destruction";
   cooldown = 180;
   duration = 20;

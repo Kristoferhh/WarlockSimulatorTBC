@@ -1,16 +1,23 @@
 #include "../include/pet.h"
 
-#include "../include/bindings.h"
-#include "../include/common.h"
 #include "../include/player.h"
+#include "../include/player_settings.h"
+#include "../include/talents.h"
+#include "../include/spell.h"
+#include "../include/aura.h"
+#include "../include/on_hit_proc.h"
+#include "../include/aura_selection.h"
+#include "../include/items.h"
+#include "../include/common.h"
+#include "../include/stat.h"
 
-Pet::Pet(Player& player, EmbindConstant selected_pet)
-    : Entity(&player, player.settings, EntityType::kPet),
-      glancing_blow_multiplier(1 - (0.1 + (player.settings.enemy_level * 5 - kLevel * 5) / 100.0)),
-      glancing_blow_chance(std::max(0.0, 6 + (player.settings.enemy_level * 5 - kLevel * 5) * 1.2)) {
-  infinite_mana = player.settings.infinite_pet_mana;
+Pet::Pet(Player& player_param, const EmbindConstant kSelectedPet)
+  : Entity(&player_param, player_param.settings, EntityType::kPet),
+    glancing_blow_multiplier(1 - (0.1 + (player_param.settings.enemy_level * 5 - kLevel * 5) / 100.0)),
+    glancing_blow_chance(std::max(0.0, 6 + (player_param.settings.enemy_level * 5 - kLevel * 5) * 1.2)) {
+  infinite_mana = player_param.settings.infinite_pet_mana;
 
-  if (selected_pet == EmbindConstant::kImp) {
+  if (kSelectedPet == EmbindConstant::kImp) {
     name = PetNameStr::kImp;
     pet_name = PetName::kImp;
     pet_type = PetType::kRanged;
@@ -19,7 +26,7 @@ Pet::Pet(Player& player, EmbindConstant selected_pet)
     stats.spirit += 263;
     stats.strength += 145;
     stats.agility += 38;
-  } else if (selected_pet == EmbindConstant::kSuccubus) {
+  } else if (kSelectedPet == EmbindConstant::kSuccubus) {
     name = PetNameStr::kSuccubus;
     pet_name = PetName::kSuccubus;
     pet_type = PetType::kMelee;
@@ -28,8 +35,8 @@ Pet::Pet(Player& player, EmbindConstant selected_pet)
     stats.spirit += 122;
     stats.strength += 153;
     stats.agility += 109;
-    stats.damage_modifier *= 1 + (0.02 * player.talents.master_demonologist);
-  } else if (selected_pet == EmbindConstant::kFelguard) {
+    stats.damage_modifier *= 1 + 0.02 * player_param.talents.master_demonologist;
+  } else if (kSelectedPet == EmbindConstant::kFelguard) {
     name = PetNameStr::kFelguard;
     pet_type = PetType::kMelee;
     pet_name = PetName::kFelguard;
@@ -38,12 +45,12 @@ Pet::Pet(Player& player, EmbindConstant selected_pet)
     stats.agility += 108;
     stats.intellect += 133;
     stats.spirit += 122;
-    stats.damage_modifier *= 1 + (0.01 * player.talents.master_demonologist);
+    stats.damage_modifier *= 1 + 0.01 * player_param.talents.master_demonologist;
   }
 }
 
-void Pet::Initialize(Simulation* simulationPtr) {
-  Entity::Initialize(simulationPtr);
+void Pet::Initialize(Simulation* simulation_ptr) {
+  Entity::Initialize(simulation_ptr);
   pet = shared_from_this();
   Setup();
 
@@ -100,7 +107,7 @@ void Pet::CalculateStatsFromAuras() {
     stats.spell_power += 101;
   }
   if (player->selected_auras.misery) {
-    const double kDamageModifier = 1.05;
+    constexpr double kDamageModifier = 1.05;
 
     stats.shadow_modifier *= kDamageModifier;
     stats.fire_modifier *= kDamageModifier;
@@ -121,7 +128,7 @@ void Pet::CalculateStatsFromAuras() {
 
   // todo improved motw
   if (player->selected_auras.pet_mark_of_the_wild) {
-    const int kStatIncrease = 14;
+    constexpr int kStatIncrease = 14;
 
     stats.stamina += kStatIncrease;
     stats.intellect += kStatIncrease;
@@ -224,12 +231,12 @@ void Pet::CalculateStatsFromAuras() {
     enemy_damage_reduction_from_armor = std::max(0.25, enemy_damage_reduction_from_armor);
   }
 
-  stats.stamina_modifier *= 1 + (0.05 * player->talents.fel_stamina);
-  stats.intellect_modifier *= 1 + (0.05 * player->talents.fel_intellect);
+  stats.stamina_modifier *= 1 + 0.05 * player->talents.fel_stamina;
+  stats.intellect_modifier *= 1 + 0.05 * player->talents.fel_intellect;
   stats.max_mana = CalculateMaxMana();
 }
 
-double Pet::GetPlayerSpellPower() {
+double Pet::GetPlayerSpellPower() const {
   return player->GetSpellPower(false) + std::max(player->stats.shadow_power, player->stats.fire_power);
 }
 
@@ -266,9 +273,9 @@ void Pet::Reset() {
   stats.mana = CalculateMaxMana();
 }
 
-double Pet::GetDamageModifier(Spell& spell, bool is_dot) {
+double Pet::GetDamageModifier(Spell& spell, const bool kIsDot) {
   auto additive_modifier = 1.0;
-  auto multiplicative_modifier = Entity::GetMultiplicativeDamageModifier(spell, is_dot);
+  auto multiplicative_modifier = GetMultiplicativeDamageModifier(spell, kIsDot);
 
   additive_modifier += 0.04 * player->talents.unholy_power;
 
@@ -279,37 +286,37 @@ double Pet::GetDamageModifier(Spell& spell, bool is_dot) {
   return additive_modifier * multiplicative_modifier;
 }
 
-double Pet::GetSpellCritChance(SpellType) { return (0.0125 * GetIntellect()) + 0.91 + stats.spell_crit_chance; }
+double Pet::GetSpellCritChance(SpellType) { return 0.0125 * GetIntellect() + 0.91 + stats.spell_crit_chance; }
 
 double Pet::GetHastePercent() {
   if (pet_type == PetType::kMelee) {
     return stats.melee_haste_percent;
-  } else {
-    return stats.spell_haste_percent;
   }
+
+  return stats.spell_haste_percent;
 }
 
-double Pet::GetAttackPower() {
+double Pet::GetAttackPower() const {
   // Remove AP from debuffs on the boss before multiplying by the AP multiplier
   // since it doesn't affect those debuffs
-  auto attack_power_from_debuffs = GetDebuffAttackPower();
+  const auto kAttackPowerFromDebuffs = GetDebuffAttackPower();
   auto attack_power =
-      ((GetStrength() * 2 - 20 + GetPlayerSpellPower() * 0.57) - attack_power_from_debuffs + stats.attack_power) *
+      (GetStrength() * 2 - 20 + GetPlayerSpellPower() * 0.57 - kAttackPowerFromDebuffs + stats.attack_power) *
       stats.attack_power_modifier;
 
-  if (auras.demonic_frenzy != NULL) {
-    attack_power *= (1 + 0.05 * auras.demonic_frenzy->stacks);
+  if (auras.demonic_frenzy != nullptr) {
+    attack_power *= 1 + 0.05 * auras.demonic_frenzy->stacks;
   }
 
-  return attack_power + attack_power_from_debuffs;
+  return attack_power + kAttackPowerFromDebuffs;
 }
 
-double Pet::GetDebuffAttackPower() {
+double Pet::GetDebuffAttackPower() const {
   auto debuff_attack_power = 0.0;
 
   if (player->selected_auras.expose_weakness) {
     debuff_attack_power +=
-        (player->settings.survival_hunter_agility * 0.25 * (player->settings.expose_weakness_uptime / 100.0));
+        player->settings.survival_hunter_agility * 0.25 * (player->settings.expose_weakness_uptime / 100.0);
   }
 
   if (player->selected_auras.improved_hunters_mark) {
@@ -319,12 +326,12 @@ double Pet::GetDebuffAttackPower() {
   return debuff_attack_power;
 }
 
-double Pet::GetStrength() { return stats.strength * stats.strength_modifier; }
+double Pet::GetStrength() const { return stats.strength * stats.strength_modifier; }
 
-double Pet::GetAgility() { return stats.agility * stats.agility_modifier; }
+double Pet::GetAgility() const { return stats.agility * stats.agility_modifier; }
 
-void Pet::Tick(double t) {
-  Entity::Tick(t);
+void Pet::Tick(const double kTime) {
+  Entity::Tick(kTime);
 
   // MP5
   if (mp5_timer_remaining <= 0) {
@@ -353,7 +360,7 @@ void Pet::Tick(double t) {
       }
     }
 
-    auto current_mana = stats.mana;
+    const auto current_mana = stats.mana;
     stats.mana = std::min(CalculateMaxMana(), stats.mana + static_cast<int>(mana_gain));
     if (stats.mana > current_mana && ShouldWriteToCombatLog()) {
       CombatLog(name + " gains " + DoubleToString(round(mana_gain)) + " mana from Mp5/Spirit regeneration (" +

@@ -1,10 +1,12 @@
 #include "../include/mana_over_time.h"
 
-#include "../include/common.h"
 #include "../include/entity.h"
-#include "../include/player.h"
+#include "../include/common.h"
+#include "../include/combat_log_breakdown.h"
+#include "../include/stat.h"
 
-ManaOverTime::ManaOverTime(Entity& entity) : Aura(entity) {}
+ManaOverTime::ManaOverTime(Entity& entity)
+  : Aura(entity) {}
 
 void ManaOverTime::Setup() {
   ticks_total = duration / tick_timer_total;
@@ -17,8 +19,8 @@ void ManaOverTime::Apply() {
   ticks_remaining = ticks_total;
 }
 
-void ManaOverTime::Tick(double t) {
-  tick_timer_remaining -= t;
+void ManaOverTime::Tick(const double kTime) {
+  tick_timer_remaining -= kTime;
 
   if (tick_timer_remaining <= 0) {
     const double kCurrentMana = entity.stats.mana;
@@ -41,36 +43,39 @@ void ManaOverTime::Tick(double t) {
     tick_timer_remaining = tick_timer_total;
 
     if (ticks_remaining <= 0) {
-      Aura::Fade();
+      Fade();
     }
   }
 }
 
-DrumsOfRestorationAura::DrumsOfRestorationAura(Entity& entity) : ManaOverTime(entity) {
+DrumsOfRestorationAura::DrumsOfRestorationAura(Entity& entity)
+  : ManaOverTime(entity) {
   name = SpellName::kDrumsOfRestoration;
   duration = 15;
   tick_timer_total = 3;
   group_wide = true;
-  Setup();
+  ManaOverTime::Setup();
 }
 
 double DrumsOfRestorationAura::GetManaGain() { return 600.0 / ticks_total; }
 
-ManaTideTotemAura::ManaTideTotemAura(Entity& entity) : ManaOverTime(entity) {
+ManaTideTotemAura::ManaTideTotemAura(Entity& entity)
+  : ManaOverTime(entity) {
   name = SpellName::kManaTideTotem;
   duration = 12;
   tick_timer_total = 3;
   group_wide = true;
-  Setup();
+  ManaOverTime::Setup();
 }
 
 double ManaTideTotemAura::GetManaGain() { return entity.stats.max_mana * 0.06; }
 
-FelEnergyAura::FelEnergyAura(Entity& entity) : ManaOverTime(entity) {
+FelEnergyAura::FelEnergyAura(Entity& entity)
+  : ManaOverTime(entity) {
   name = SpellName::kFelEnergy;
   duration = 9999;
   tick_timer_total = 4;
-  Setup();
+  ManaOverTime::Setup();
 }
 
 double FelEnergyAura::GetManaGain() { return entity.stats.max_mana * 0.03; }

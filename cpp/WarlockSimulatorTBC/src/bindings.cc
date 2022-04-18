@@ -1,8 +1,16 @@
 #include "../include/bindings.h"
 
+#include <iostream>
+
 #include "../include/common.h"
-#include "../include/embind_constant.h"
+#include "../include/items.h"
+#include "../include/talents.h"
+#include "../include/player_settings.h"
 #include "../include/simulation.h"
+#include "../include/aura_selection.h"
+#include "../include/sets.h"
+#include "../include/trinket.h"
+#include "../include/stat.h"
 
 #pragma warning(disable : 4100)
 void DpsUpdate(double dps) {
@@ -85,48 +93,48 @@ void SendSimulationResults(double median_dps, double min_dps, double max_dps, in
          median_dps, min_dps, max_dps, item_id, iteration_amount, total_fight_duration, custom_stat);
 #else
   std::cout << "Median DPS: " << std::to_string(median_dps) << ". Min DPS: " << std::to_string(min_dps)
-            << ". Max DPS: " << std::to_string(max_dps) << std::endl;
+      << ". Max DPS: " << std::to_string(max_dps) << std::endl;
   std::cout << std::to_string(iteration_amount) << " iterations in "
-            << DoubleToString(round(simulation_duration / 1000) / 1000, 3) << " seconds" << std::endl;
+      << DoubleToString(round(simulation_duration / 1000) / 1000, 3) << " seconds" << std::endl;
 #endif
 }
 
-std::vector<uint32_t> AllocRandomSeeds(int amount_of_seeds, uint32_t rand_seed) {
-  srand(rand_seed);
-  std::vector<uint32_t> seeds(amount_of_seeds);
+std::vector<uint32_t> AllocRandomSeeds(const int kAmountOfSeeds, const uint32_t kRandSeed) {
+  srand(kRandSeed);
+  std::vector<uint32_t> seeds(kAmountOfSeeds);
 
-  for (int i = 0; i < amount_of_seeds; i++) {
+  for (int i = 0; i < kAmountOfSeeds; i++) {
     seeds[i] = rand();
   }
 
   return seeds;
 }
 
-Items AllocItems() { return Items(); }
+Items AllocItems() { return {}; }
 
-AuraSelection AllocAuras() { return AuraSelection(); }
+AuraSelection AllocAuras() { return {}; }
 
-Talents AllocTalents() { return Talents(); }
+Talents AllocTalents() { return {}; }
 
-Sets AllocSets() { return Sets(); }
+Sets AllocSets() { return {}; }
 
-CharacterStats AllocStats() { return CharacterStats(); }
+CharacterStats AllocStats() { return {}; }
 
 PlayerSettings AllocPlayerSettings(AuraSelection& auras, Talents& talents, Sets& sets, CharacterStats& stats,
                                    Items& items) {
-  return PlayerSettings(auras, talents, sets, stats, items);
+  return {auras, talents, sets, stats, items};
 }
 
 Player AllocPlayer(PlayerSettings& settings) { return Player(settings); }
 
-SimulationSettings AllocSimSettings() { return SimulationSettings(); }
+SimulationSettings AllocSimSettings() { return {}; }
 
 Simulation AllocSim(Player& player, SimulationSettings& simulation_settings) {
-  return Simulation(player, simulation_settings);
+  return {player, simulation_settings};
 }
 
-std::string GetExceptionMessage(intptr_t exception_ptr) {
-  return std::string(reinterpret_cast<std::exception*>(exception_ptr)->what());
+std::string GetExceptionMessage(const intptr_t kExceptionPtr) {
+  return {reinterpret_cast<std::exception*>(kExceptionPtr)->what()};
 }
 
 #ifdef EMSCRIPTEN

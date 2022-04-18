@@ -1,17 +1,16 @@
 #pragma once
-
 #include "spell.h"
 
-struct LifeTap : public Spell {
+struct LifeTap : Spell {
   int mana_return;
   double modifier;
 
-  LifeTap(Entity& entity);
-  double ManaGain();
-  void Cast();
+  explicit LifeTap(Entity& entity);
+  [[nodiscard]] double ManaGain() const;
+  void Cast() override;
 };
 
-struct DarkPact : public LifeTap {
-  DarkPact(Entity& entity);
-  bool Ready();
+struct DarkPact final : LifeTap {
+  explicit DarkPact(Entity& entity);
+  bool Ready() override;
 };

@@ -1,9 +1,5 @@
 #pragma once
 
-#include <iostream>
-
-#include "enums.h"
-
 struct SimulationSettings {
   int iterations;
   int min_time;

@@ -2,14 +2,8 @@
 
 #include <chrono>
 
-#include "aura.h"
-#include "auras.h"
-#include "combat_log_breakdown.h"
-#include "enums.h"
-#include "items.h"
-#include "sets.h"
-#include "simulation.h"
-#include "talents.h"
+#include "player.h"
+#include "simulation_settings.h"
 
 #ifdef EMSCRIPTEN
 #include "emscripten.h"
@@ -26,7 +20,7 @@ Sets AllocSets();
 CharacterStats AllocStats();
 SimulationSettings AllocSimSettings();
 Simulation AllocSim(Player& player, SimulationSettings& simulation_settings);
-std::vector<uint32_t> AllocRandomSeeds(int amount_of_seeds, uint32_t rand_seed = time(NULL));
+std::vector<uint32_t> AllocRandomSeeds(int kAmountOfSeeds, uint32_t kRandSeed = time(nullptr));
 
 void DpsUpdate(double dps);
 void ErrorCallback(const char* error_msg);
@@ -37,4 +31,4 @@ void CombatLogUpdate(const char* combat_log_entry);
 void SimulationUpdate(int iteration, int iteration_amount, double median_dps, int item_id, const char* custom_stat);
 void SendSimulationResults(double median_dps, double min_dps, double max_dps, int item_id, int iteration_amount,
                            int total_fight_duration, const char* custom_stat, long long simulation_duration);
-std::string GetExceptionMessage(intptr_t exception_ptr);
+std::string GetExceptionMessage(intptr_t kExceptionPtr);

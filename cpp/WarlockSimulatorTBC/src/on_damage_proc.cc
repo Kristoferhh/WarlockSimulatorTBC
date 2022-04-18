@@ -1,8 +1,10 @@
 #include "../include/on_damage_proc.h"
 
+#include "../include/entity.h"
 #include "../include/player.h"
+#include "../include/player_settings.h"
 
-OnDamageProc::OnDamageProc(Player& player, std::shared_ptr<Aura> aura) : SpellProc(player, aura) {
+OnDamageProc::OnDamageProc(Player& player, const std::shared_ptr<Aura>& kAura) : SpellProc(player, kAura) {
   procs_on_damage = true;
 }
 
@@ -15,16 +17,17 @@ void OnDamageProc::Setup() {
 }
 
 ShatteredSunPendantOfAcumenAldor::ShatteredSunPendantOfAcumenAldor(Player& player, std::shared_ptr<Aura> aura)
-    : OnDamageProc(player, aura) {
+  : OnDamageProc(player, aura) {
   name = SpellName::kShatteredSunPendantOfAcumenAldor;
   cooldown = 45;
   proc_chance = 15;
   is_item = true;
   on_damage_procs_enabled = player.settings.exalted_with_shattrath_faction;
-  Setup();
+  OnDamageProc::Setup();
 }
 
-ShatteredSunPendantOfAcumenScryers::ShatteredSunPendantOfAcumenScryers(Player& player) : OnDamageProc(player) {
+ShatteredSunPendantOfAcumenScryers::ShatteredSunPendantOfAcumenScryers(Player& player)
+  : OnDamageProc(player) {
   name = SpellName::kShatteredSunPendantOfAcumenScryers;
   cooldown = 45;
   proc_chance = 15;
@@ -35,5 +38,5 @@ ShatteredSunPendantOfAcumenScryers::ShatteredSunPendantOfAcumenScryers(Player& p
   can_crit = true;
   can_miss = true;
   on_damage_procs_enabled = player.settings.exalted_with_shattrath_faction;
-  Setup();
+  OnDamageProc::Setup();
 }

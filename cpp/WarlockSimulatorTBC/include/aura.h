@@ -1,13 +1,12 @@
 #pragma once
+#include <string>
 
+struct Stat;
 struct Entity;
-#include <iostream>
-#include <optional>
 #include <vector>
 
-#include "stat.h"
-
 struct Aura {
+  virtual ~Aura() = default;
   Entity& entity;
   std::vector<Stat> stats;
   std::vector<Stat> stats_per_stack;
@@ -16,8 +15,8 @@ struct Aura {
   double duration_remaining = 0;
   bool active = false;
   bool has_duration = true;
-  bool group_wide = false;  // true if it's an aura that applies to everyone in the group
-                            // (will apply to pets as well then)
+  bool group_wide = false; // true if it's an aura that applies to everyone in the group
+  // (will apply to pets as well then)
   // dots
   int tick_timer_total = 0;
   double tick_timer_remaining = 0;
@@ -30,158 +29,156 @@ struct Aura {
   // Bloodlust
   double haste_modifier = 0;
 
-  Aura(Entity& entity);
+  explicit Aura(Entity& entity_param);
   virtual void Setup();
-  virtual void Tick(double time);
+  virtual void Tick(double kTime);
   virtual void Apply();
   void Fade();
-  virtual void DecrementStacks();  // ISB
+  virtual void DecrementStacks(); // ISB
 };
 
-struct ImprovedShadowBoltAura : public Aura {
-  double modifier;
-
-  ImprovedShadowBoltAura(Entity& entity);
-  void Apply();
-  void DecrementStacks();
+struct ImprovedShadowBoltAura final : Aura {
+  explicit ImprovedShadowBoltAura(Entity& entity_param);
+  void Apply() override;
+  void DecrementStacks() override;
 };
 
-struct CurseOfTheElementsAura : public Aura {
-  CurseOfTheElementsAura(Entity& entity);
+struct CurseOfTheElementsAura final : Aura {
+  explicit CurseOfTheElementsAura(Entity& entity_param);
 };
 
-struct CurseOfRecklessnessAura : public Aura {
-  CurseOfRecklessnessAura(Entity& entity);
+struct CurseOfRecklessnessAura final : Aura {
+  explicit CurseOfRecklessnessAura(Entity& entity_param);
 };
 
-struct ShadowTranceAura : public Aura {
-  ShadowTranceAura(Entity& entity);
+struct ShadowTranceAura final : Aura {
+  explicit ShadowTranceAura(Entity& entity_param);
 };
 
-struct FlameshadowAura : public Aura {
-  FlameshadowAura(Entity& entity);
+struct FlameshadowAura final : Aura {
+  explicit FlameshadowAura(Entity& entity_param);
 };
 
-struct ShadowflameAura : public Aura {
-  ShadowflameAura(Entity& entity);
+struct ShadowflameAura final : Aura {
+  explicit ShadowflameAura(Entity& entity_param);
 };
 
-struct SpellstrikeAura : public Aura {
-  SpellstrikeAura(Entity& entity);
+struct SpellstrikeAura final : Aura {
+  explicit SpellstrikeAura(Entity& entity_param);
 };
 
-struct PowerInfusionAura : public Aura {
-  PowerInfusionAura(Entity& entity);
+struct PowerInfusionAura final : Aura {
+  explicit PowerInfusionAura(Entity& entity_param);
 };
 
-struct EyeOfMagtheridonAura : public Aura {
-  EyeOfMagtheridonAura(Entity& entity);
+struct EyeOfMagtheridonAura final : Aura {
+  explicit EyeOfMagtheridonAura(Entity& entity_param);
 };
 
-struct SextantOfUnstableCurrentsAura : public Aura {
-  SextantOfUnstableCurrentsAura(Entity& entity);
+struct SextantOfUnstableCurrentsAura final : Aura {
+  explicit SextantOfUnstableCurrentsAura(Entity& entity_param);
 };
 
-struct QuagmirransEyeAura : public Aura {
-  QuagmirransEyeAura(Entity& entity);
+struct QuagmirransEyeAura final : Aura {
+  explicit QuagmirransEyeAura(Entity& entity_param);
 };
 
-struct ShiffarsNexusHornAura : public Aura {
-  ShiffarsNexusHornAura(Entity& entity);
+struct ShiffarsNexusHornAura final : Aura {
+  explicit ShiffarsNexusHornAura(Entity& entity_param);
 };
 
-struct ManaEtched4SetAura : public Aura {
-  ManaEtched4SetAura(Entity& entity);
+struct ManaEtched4SetAura final : Aura {
+  explicit ManaEtched4SetAura(Entity& entity_param);
 };
 
-struct DestructionPotionAura : public Aura {
-  DestructionPotionAura(Entity& entity);
+struct DestructionPotionAura final : Aura {
+  explicit DestructionPotionAura(Entity& entity_param);
 };
 
-struct FlameCapAura : public Aura {
-  FlameCapAura(Entity& entity);
+struct FlameCapAura final : Aura {
+  explicit FlameCapAura(Entity& entity_param);
 };
 
-struct BloodFuryAura : public Aura {
-  BloodFuryAura(Entity& entity);
+struct BloodFuryAura final : Aura {
+  explicit BloodFuryAura(Entity& entity_param);
 };
 
-struct BloodlustAura : public Aura {
-  BloodlustAura(Entity& entity);
+struct BloodlustAura final : Aura {
+  explicit BloodlustAura(Entity& entity_param);
 };
 
-struct DrumsOfBattleAura : public Aura {
-  DrumsOfBattleAura(Entity& entity);
+struct DrumsOfBattleAura final : Aura {
+  explicit DrumsOfBattleAura(Entity& entity_param);
 };
 
-struct DrumsOfWarAura : public Aura {
-  DrumsOfWarAura(Entity& entity);
+struct DrumsOfWarAura final : Aura {
+  explicit DrumsOfWarAura(Entity& entity_param);
 };
 
-struct AshtongueTalismanOfShadowsAura : public Aura {
-  AshtongueTalismanOfShadowsAura(Entity& entity);
+struct AshtongueTalismanOfShadowsAura final : Aura {
+  explicit AshtongueTalismanOfShadowsAura(Entity& entity_param);
 };
 
-struct DarkmoonCardCrusadeAura : public Aura {
-  DarkmoonCardCrusadeAura(Entity& entity);
+struct DarkmoonCardCrusadeAura final : Aura {
+  explicit DarkmoonCardCrusadeAura(Entity& entity_param);
 };
 
-struct TheLightningCapacitorAura : public Aura {
-  TheLightningCapacitorAura(Entity& entity);
+struct TheLightningCapacitorAura final : Aura {
+  explicit TheLightningCapacitorAura(Entity& entity_param);
 };
 
-struct BandOfTheEternalSageAura : public Aura {
-  BandOfTheEternalSageAura(Entity& entity);
+struct BandOfTheEternalSageAura final : Aura {
+  explicit BandOfTheEternalSageAura(Entity& entity_param);
 };
 
-struct BladeOfWizardryAura : public Aura {
-  BladeOfWizardryAura(Entity& entity);
+struct BladeOfWizardryAura final : Aura {
+  explicit BladeOfWizardryAura(Entity& entity_param);
 };
 
-struct ShatteredSunPendantOfAcumenAldorAura : public Aura {
-  ShatteredSunPendantOfAcumenAldorAura(Entity& entity);
+struct ShatteredSunPendantOfAcumenAldorAura final : Aura {
+  explicit ShatteredSunPendantOfAcumenAldorAura(Entity& entity_param);
 };
 
-struct RobeOfTheElderScribesAura : public Aura {
-  RobeOfTheElderScribesAura(Entity& entity);
+struct RobeOfTheElderScribesAura final : Aura {
+  explicit RobeOfTheElderScribesAura(Entity& entity_param);
 };
 
-struct MysticalSkyfireDiamondAura : public Aura {
-  MysticalSkyfireDiamondAura(Entity& entity);
+struct MysticalSkyfireDiamondAura final : Aura {
+  explicit MysticalSkyfireDiamondAura(Entity& entity_param);
 };
 
-struct AmplifyCurseAura : public Aura {
-  AmplifyCurseAura(Entity& entity);
+struct AmplifyCurseAura final : Aura {
+  explicit AmplifyCurseAura(Entity& entity_param);
 };
 
-struct WrathOfCenariusAura : public Aura {
-  WrathOfCenariusAura(Entity& entity);
+struct WrathOfCenariusAura final : Aura {
+  explicit WrathOfCenariusAura(Entity& entity_param);
 };
 
-struct InnervateAura : public Aura {
-  InnervateAura(Entity& entity);
+struct InnervateAura final : Aura {
+  explicit InnervateAura(Entity& entity_param);
 };
 
-struct ChippedPowerCoreAura : public Aura {
-  ChippedPowerCoreAura(Entity& entity);
+struct ChippedPowerCoreAura final : Aura {
+  explicit ChippedPowerCoreAura(Entity& entity_param);
 };
 
-struct CrackedPowerCoreAura : public Aura {
-  CrackedPowerCoreAura(Entity& entity);
+struct CrackedPowerCoreAura final : Aura {
+  explicit CrackedPowerCoreAura(Entity& entity_param);
 };
 
-struct AirmansRibbonOfGallantryAura : public Aura {
-  AirmansRibbonOfGallantryAura(Entity& entity);
+struct AirmansRibbonOfGallantryAura final : Aura {
+  explicit AirmansRibbonOfGallantryAura(Entity& entity_param);
 };
 
-struct DemonicFrenzyAura : public Aura {
-  DemonicFrenzyAura(Entity& entity);
+struct DemonicFrenzyAura final : Aura {
+  explicit DemonicFrenzyAura(Entity& entity_param);
 };
 
-struct BlackBookAura : public Aura {
-  BlackBookAura(Entity& entity);
+struct BlackBookAura final : Aura {
+  explicit BlackBookAura(Entity& entity_param);
 };
 
-struct BattleSquawkAura : public Aura {
-  BattleSquawkAura(Entity& entity);
+struct BattleSquawkAura final : Aura {
+  explicit BattleSquawkAura(Entity& entity_param);
 };
