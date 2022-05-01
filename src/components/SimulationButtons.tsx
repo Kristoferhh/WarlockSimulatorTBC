@@ -401,7 +401,7 @@ export function SimulationButtons() {
                         data: combatLogBreakdownArr,
                       })
                     );
-                    jQuery(".breakdown-table").trigger("update");
+                    $(".breakdown-table").trigger("update");
                   }
                 }
               } else if (simulationParams.type === SimulationType.AllItems) {
@@ -446,7 +446,7 @@ export function SimulationButtons() {
                   domElement.innerHTML = (
                     Math.round(newMedianDps * 100) / 100
                   ).toString();
-                  jQuery("#item-selection-table").trigger("update");
+                  $("#item-selection-table").trigger("update");
                 }
               }
               if (

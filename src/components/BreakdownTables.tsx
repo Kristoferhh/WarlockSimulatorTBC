@@ -341,7 +341,7 @@ export default function BreakdownTables() {
                         <img
                           alt={spellObj.name}
                           className="breakdown-table-spell-icon"
-                          src={`${process.env.PUBLIC_URL}/img/${spellObj?.iconName}.jpg`}
+                          src={`${process.env.PUBLIC_URL}/img/${spellObj.iconName}.jpg`}
                         />
                       )}
                       <a

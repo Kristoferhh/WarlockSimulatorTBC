@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "lib": ["dom", "dom.iterable", "esnext", "WebWorker"],
-    "types": ["node", "jest"],
+    "types": ["node", "jquery"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
