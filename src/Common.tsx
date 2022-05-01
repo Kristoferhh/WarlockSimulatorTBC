@@ -1,10 +1,10 @@
-import { Auras } from "./data/Auras";
-import { Enchants } from "./data/Enchants";
-import { Gems } from "./data/Gems";
-import { Items } from "./data/Items";
-import { Races } from "./data/Races";
-import { Sockets } from "./data/Sockets";
-import { TalentTreeStruct } from "./data/Talents";
+import { Auras } from './data/Auras'
+import { Enchants } from './data/Enchants'
+import { Gems } from './data/Gems'
+import { Items } from './data/Items'
+import { Races } from './data/Races'
+import { Sockets } from './data/Sockets'
+import { TalentTreeStruct } from './data/Talents'
 import {
   AurasStruct,
   GemColor,
@@ -30,7 +30,7 @@ import {
   StatsCollection,
   SubSlotValue,
   TalentStore,
-} from "./Types";
+} from './Types'
 
 export function ItemSlotKeyToItemSlot(
   forEnchants: boolean,
@@ -39,37 +39,37 @@ export function ItemSlotKeyToItemSlot(
 ): ItemSlot {
   switch (itemSlot) {
     case ItemSlotKey.Head:
-      return ItemSlot.head;
+      return ItemSlot.head
     case ItemSlotKey.Neck:
-      return ItemSlot.neck;
+      return ItemSlot.neck
     case ItemSlotKey.Shoulders:
-      return ItemSlot.shoulders;
+      return ItemSlot.shoulders
     case ItemSlotKey.Back:
-      return ItemSlot.back;
+      return ItemSlot.back
     case ItemSlotKey.Chest:
-      return ItemSlot.chest;
+      return ItemSlot.chest
     case ItemSlotKey.Bracer:
-      return ItemSlot.bracer;
+      return ItemSlot.bracer
     case ItemSlotKey.Gloves:
-      return ItemSlot.gloves;
+      return ItemSlot.gloves
     case ItemSlotKey.Belt:
-      return ItemSlot.belt;
+      return ItemSlot.belt
     case ItemSlotKey.Legs:
-      return ItemSlot.legs;
+      return ItemSlot.legs
     case ItemSlotKey.Boots:
-      return ItemSlot.boots;
+      return ItemSlot.boots
     case ItemSlotKey.Ring:
-      return itemSubSlot === "1" ? ItemSlot.ring1 : ItemSlot.ring2;
+      return itemSubSlot === '1' ? ItemSlot.ring1 : ItemSlot.ring2
     case ItemSlotKey.Trinket:
-      return itemSubSlot === "1" ? ItemSlot.trinket1 : ItemSlot.trinket2;
+      return itemSubSlot === '1' ? ItemSlot.trinket1 : ItemSlot.trinket2
     case ItemSlotKey.Mainhand:
-      return ItemSlot.mainhand;
+      return ItemSlot.mainhand
     case ItemSlotKey.Offhand:
-      return ItemSlot.offhand;
+      return ItemSlot.offhand
     case ItemSlotKey.Twohand:
-      return forEnchants ? ItemSlot.mainhand : ItemSlot.twohand;
+      return forEnchants ? ItemSlot.mainhand : ItemSlot.twohand
     case ItemSlotKey.Wand:
-      return ItemSlot.wand;
+      return ItemSlot.wand
   }
 }
 
@@ -79,50 +79,50 @@ export function ItemSlotToItemSlotKey(
 ): ItemSlotKey {
   switch (itemSlot) {
     case ItemSlot.head:
-      return ItemSlotKey.Head;
+      return ItemSlotKey.Head
     case ItemSlot.neck:
-      return ItemSlotKey.Neck;
+      return ItemSlotKey.Neck
     case ItemSlot.shoulders:
-      return ItemSlotKey.Shoulders;
+      return ItemSlotKey.Shoulders
     case ItemSlot.back:
-      return ItemSlotKey.Back;
+      return ItemSlotKey.Back
     case ItemSlot.chest:
-      return ItemSlotKey.Chest;
+      return ItemSlotKey.Chest
     case ItemSlot.bracer:
-      return ItemSlotKey.Bracer;
+      return ItemSlotKey.Bracer
     case ItemSlot.gloves:
-      return ItemSlotKey.Gloves;
+      return ItemSlotKey.Gloves
     case ItemSlot.belt:
-      return ItemSlotKey.Belt;
+      return ItemSlotKey.Belt
     case ItemSlot.legs:
-      return ItemSlotKey.Legs;
+      return ItemSlotKey.Legs
     case ItemSlot.boots:
-      return ItemSlotKey.Boots;
+      return ItemSlotKey.Boots
     case ItemSlot.ring1:
-      return ItemSlotKey.Ring;
+      return ItemSlotKey.Ring
     case ItemSlot.ring2:
-      return ItemSlotKey.Ring;
+      return ItemSlotKey.Ring
     case ItemSlot.trinket1:
-      return ItemSlotKey.Trinket;
+      return ItemSlotKey.Trinket
     case ItemSlot.trinket2:
-      return ItemSlotKey.Trinket;
+      return ItemSlotKey.Trinket
     case ItemSlot.mainhand:
-      return ItemSlotKey.Mainhand;
+      return ItemSlotKey.Mainhand
     case ItemSlot.offhand:
-      return ItemSlotKey.Offhand;
+      return ItemSlotKey.Offhand
     case ItemSlot.twohand:
-      return forEnchants ? ItemSlotKey.Mainhand : ItemSlotKey.Twohand;
+      return forEnchants ? ItemSlotKey.Mainhand : ItemSlotKey.Twohand
     case ItemSlot.wand:
-      return ItemSlotKey.Wand;
+      return ItemSlotKey.Wand
   }
 }
 
 export function itemMeetsSocketRequirements(params: {
-  itemId: number;
-  selectedGems?: SelectedGemsStruct;
-  socketArray?: [string, number][];
+  itemId: number
+  selectedGems?: SelectedGemsStruct
+  socketArray?: [string, number][]
 }): boolean {
-  let socketArray = params.socketArray;
+  let socketArray = params.socketArray
 
   // If the socketArray parameter is undefined then find the array using the selectedGems parameter instead
   if (
@@ -131,12 +131,12 @@ export function itemMeetsSocketRequirements(params: {
     params.selectedGems
   ) {
     for (const itemSlotKey of Object.keys(params.selectedGems)) {
-      const itemSlot = ItemSlotToItemSlotKey(false, itemSlotKey as ItemSlot);
-      const itemGemArrays = params.selectedGems[itemSlot];
+      const itemSlot = ItemSlotToItemSlotKey(false, itemSlotKey as ItemSlot)
+      const itemGemArrays = params.selectedGems[itemSlot]
 
       if (itemGemArrays && itemGemArrays[params.itemId]) {
-        socketArray = itemGemArrays[params.itemId];
-        break;
+        socketArray = itemGemArrays[params.itemId]
+        break
       }
     }
   }
@@ -145,41 +145,41 @@ export function itemMeetsSocketRequirements(params: {
     // Loop through the gems in the item and if any of gems don't match the socket's color or if a gem isn't equipped then return false.
     for (const [key, value] of Object.entries(socketArray)) {
       if (value) {
-        const currentGemId = value[1];
+        const currentGemId = value[1]
 
         if (currentGemId === 0) {
-          return false;
+          return false
         }
 
         // Find the item object to get access to the item's socket array to get the socket color
-        const gem = Gems.find((e) => e.id === currentGemId);
+        const gem = Gems.find(e => e.id === currentGemId)
         if (gem) {
-          const gemColor = gem.color;
-          const item = Items.find((e) => e.id === params.itemId);
+          const gemColor = gem.color
+          const item = Items.find(e => e.id === params.itemId)
           // Check if the array of valid gem colors for this socket color does not include the equipped gem color.
           if (
             item &&
             item.sockets &&
             !Sockets.find(
-              (e) => e.color === item.sockets![parseInt(key)]
+              e => e.color === item.sockets![parseInt(key)]
             )?.validColors.includes(gemColor)
           ) {
-            return false;
+            return false
           }
         }
       } else {
-        return false;
+        return false
       }
     }
 
-    return true;
+    return true
   }
 
-  return false;
+  return false
 }
 
 export function getRemainingTalentPoints(talents: TalentStore): number {
-  return 61 - Object.values<number>(talents).reduce((a, b) => a + b, 0); // 61 available talent points at lvl 70
+  return 61 - Object.values<number>(talents).reduce((a, b) => a + b, 0) // 61 available talent points at lvl 70
 }
 
 export function isPetActive(
@@ -189,10 +189,10 @@ export function isPetActive(
   requiresPhysicalPet: boolean
 ): boolean {
   return (
-    (talents.demonicSacrifice === 0 || settings.sacrificePet === "no") &&
-    (!requiresAggressivePet || settings.petMode === "1") &&
+    (talents.demonicSacrifice === 0 || settings.sacrificePet === 'no') &&
+    (!requiresAggressivePet || settings.petMode === '1') &&
     (!requiresPhysicalPet || settings.petChoice !== PetName.IMP)
-  );
+  )
 }
 
 export function canGemColorBeInsertedIntoSocketColor(
@@ -202,7 +202,7 @@ export function canGemColorBeInsertedIntoSocketColor(
   return (
     (socketColor === SocketColor.Meta && gemColor === GemColor.Meta) ||
     (socketColor !== SocketColor.Meta && gemColor !== GemColor.Meta)
-  );
+  )
 }
 
 /**
@@ -220,20 +220,20 @@ export function getItemTableItems(
   savedItemDps: SavedItemDps,
   isMultiItemSimulation: boolean
 ): Item[] {
-  const itemSlot = ItemSlotKeyToItemSlot(false, itemSlotKey, itemSubSlot);
-  const savedItemSlotDpsExists = savedItemDps[itemSlot] != null;
+  const itemSlot = ItemSlotKeyToItemSlot(false, itemSlotKey, itemSubSlot)
+  const savedItemSlotDpsExists = savedItemDps[itemSlot] != null
   const secondRingOrTrinket =
     selectedItems[
-      ItemSlotKeyToItemSlot(false, itemSlotKey, itemSubSlot === "1" ? "2" : "1")
-    ];
+      ItemSlotKeyToItemSlot(false, itemSlotKey, itemSubSlot === '1' ? '2' : '1')
+    ]
 
-  return Items.filter((e) => {
+  return Items.filter(e => {
     return (
       e.itemSlot === itemSlotKey &&
       sources.phase[e.phase] === true &&
       (!hiddenItems.includes(e.id) || hidingItems) &&
       (!e.unique || secondRingOrTrinket !== e.id)
-    );
+    )
   }).sort((a, b) => {
     // If it's a multi-item simulation then sort by phase from highest to lowest, otherwise sort by the saved dps or by phase as backup
     if (
@@ -241,100 +241,96 @@ export function getItemTableItems(
       !savedItemSlotDpsExists ||
       (!savedItemDps[itemSlot][a.id] && !savedItemDps[itemSlot][b.id])
     ) {
-      return a.phase < b.phase ? 1 : -1;
+      return a.phase < b.phase ? 1 : -1
     } else if (!savedItemDps[itemSlot][b.id]) {
-      return -1;
+      return -1
     } else if (!savedItemDps[itemSlot][a.id]) {
-      return 1;
+      return 1
     } else {
       return savedItemDps[itemSlot][a.id] < savedItemDps[itemSlot][b.id]
         ? 1
-        : -1;
+        : -1
     }
-  });
+  })
 }
 
 export function random(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
+  return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 export function getStdev(array: number[]) {
   if (!array || array.length === 0) {
-    return 0;
+    return 0
   }
-  const n = array.length;
-  const mean = array.reduce((a, b) => a + b) / n;
+  const n = array.length
+  const mean = array.reduce((a, b) => a + b) / n
   return Math.sqrt(
-    array.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
-  );
+    array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
+  )
 }
 
 export function average(nums?: number[]) {
   if (nums === undefined || nums.length === 0) {
-    return 0;
+    return 0
   }
-  return nums.reduce((a, b) => a + b) / nums.length;
+  return nums.reduce((a, b) => a + b) / nums.length
 }
 
 export function getBaseStats(
   race: Race,
   statsObj?: StatsCollection
 ): StatsCollection {
-  let stats = JSON.parse(JSON.stringify(InitialPlayerStats));
+  let stats = JSON.parse(JSON.stringify(InitialPlayerStats))
 
-  const raceObj = Races.find((e) => e.varName === race);
+  const raceObj = Races.find(e => e.varName === race)
   if (raceObj && raceObj.stats) {
-    Object.entries(raceObj.stats).forEach((stat) => {
-      addOrMultiplyStat(statsObj || stats, stat[0] as Stat, stat[1]);
-    });
+    Object.entries(raceObj.stats).forEach(stat => {
+      addOrMultiplyStat(statsObj || stats, stat[0] as Stat, stat[1])
+    })
   }
 
-  return statsObj || stats;
+  return statsObj || stats
 }
 
 export function getAurasStats(
   auras: AurasStruct,
   statsObj?: StatsCollection
 ): StatsCollection {
-  let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats));
+  let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats))
 
-  Object.entries(auras).forEach((aura) => {
+  Object.entries(auras).forEach(aura => {
     // Check if the aura is selected
     if (aura[1] === true) {
-      const auraObj = Auras.find((e) => e.varName === aura[0]);
+      const auraObj = Auras.find(e => e.varName === aura[0])
       if (auraObj && auraObj.stats) {
-        Object.entries(auraObj.stats).forEach((auraStat) => {
-          addOrMultiplyStat(
-            statsObj || stats,
-            auraStat[0] as Stat,
-            auraStat[1]
-          );
-        });
+        Object.entries(auraObj.stats).forEach(auraStat => {
+          addOrMultiplyStat(statsObj || stats, auraStat[0] as Stat, auraStat[1])
+        })
       }
     }
-  });
+  })
 
-  return statsObj || stats;
+  return statsObj || stats
 }
 
 export function getItemsStats(
   items: ItemAndEnchantStruct,
   statsObj?: StatsCollection
 ): StatsCollection {
-  let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats));
+  let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats))
 
-  Object.values(items).forEach((itemId) => {
-    const itemObj = Items.find((e) => e.id === itemId);
+  Object.values(items).forEach(itemId => {
+    const itemObj = Items.find(e => e.id === itemId)
     if (itemObj) {
-      Object.entries(itemObj).forEach((item) => {
+      Object.entries(itemObj).forEach(item => {
         if (item[0] in Stat) {
-          addOrMultiplyStat(statsObj || stats, item[0] as Stat, item[1]);
+          addOrMultiplyStat(statsObj || stats, item[0] as Stat, item[1])
         }
-      });
+      })
     }
-  });
+  })
 
-  return statsObj || stats;
+  return statsObj || stats
 }
 
 export function getGemsStats(
@@ -342,25 +338,24 @@ export function getGemsStats(
   gems: SelectedGemsStruct,
   statsObj?: StatsCollection
 ): StatsCollection {
-  let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats));
+  let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats))
 
-  Object.entries(items).forEach((item) => {
-    const itemSlotGems =
-      gems[ItemSlotToItemSlotKey(false, item[0] as ItemSlot)];
+  Object.entries(items).forEach(item => {
+    const itemSlotGems = gems[ItemSlotToItemSlotKey(false, item[0] as ItemSlot)]
     if (itemSlotGems) {
-      const itemGemArrays = itemSlotGems[item[1]];
+      const itemGemArrays = itemSlotGems[item[1]]
       if (itemGemArrays) {
         for (const gemArray of Object.values(itemGemArrays)) {
           if (gemArray) {
-            const gem = Gems.find((e) => e.id === gemArray[1]);
+            const gem = Gems.find(e => e.id === gemArray[1])
             if (gem && gem.stats) {
-              Object.entries(gem.stats).forEach((gemStat) => {
+              Object.entries(gem.stats).forEach(gemStat => {
                 addOrMultiplyStat(
                   statsObj || stats,
                   gemStat[0] as Stat,
                   gemStat[1]
-                );
-              });
+                )
+              })
             }
           }
         }
@@ -371,18 +366,18 @@ export function getGemsStats(
             socketArray: itemGemArrays,
           })
         ) {
-          const itemObj = Items.find((e) => e.id === item[1]);
+          const itemObj = Items.find(e => e.id === item[1])
           if (itemObj && itemObj.socketBonus) {
-            Object.entries(itemObj.socketBonus).forEach((stat) => {
-              addOrMultiplyStat(statsObj || stats, stat[0] as Stat, stat[1]);
-            });
+            Object.entries(itemObj.socketBonus).forEach(stat => {
+              addOrMultiplyStat(statsObj || stats, stat[0] as Stat, stat[1])
+            })
           }
         }
       }
     }
-  });
+  })
 
-  return statsObj || stats;
+  return statsObj || stats
 }
 
 export function getEnchantsStats(
@@ -390,40 +385,40 @@ export function getEnchantsStats(
   enchants: ItemAndEnchantStruct,
   statsObj?: StatsCollection
 ): StatsCollection {
-  let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats));
+  let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats))
 
-  Object.entries(enchants).forEach((enchant) => {
+  Object.entries(enchants).forEach(enchant => {
     // Only add the enchant's stats if the user has an item equipped in that slot as well.
     if (
-      Items.find((e) => e.id === items[enchant[0] as ItemSlot]) ||
+      Items.find(e => e.id === items[enchant[0] as ItemSlot]) ||
       (enchant[0] === ItemSlot.mainhand &&
-        Items.find((e) => e.id === items[ItemSlot.twohand]))
+        Items.find(e => e.id === items[ItemSlot.twohand]))
     ) {
-      const enchantObj = Enchants.find((e) => e.id === enchant[1]);
+      const enchantObj = Enchants.find(e => e.id === enchant[1])
       if (enchantObj) {
-        Object.entries(enchantObj).forEach((prop) => {
+        Object.entries(enchantObj).forEach(prop => {
           if (prop[0] in Stat) {
-            addOrMultiplyStat(statsObj || stats, prop[0] as Stat, prop[1]);
+            addOrMultiplyStat(statsObj || stats, prop[0] as Stat, prop[1])
           }
-        });
+        })
       }
     }
-  });
+  })
 
-  return statsObj || stats;
+  return statsObj || stats
 }
 
 export function getItemSetCounts(items: ItemAndEnchantStruct): SetsStruct {
-  let sets = JSON.parse(JSON.stringify(InitialSetCounts));
+  let sets = JSON.parse(JSON.stringify(InitialSetCounts))
 
-  Object.values(items).forEach((itemId) => {
-    const itemObj = Items.find((e) => e.id === itemId);
+  Object.values(items).forEach(itemId => {
+    const itemObj = Items.find(e => e.id === itemId)
     if (itemObj && itemObj.setId) {
-      sets[itemObj.setId]++;
+      sets[itemObj.setId]++
     }
-  });
+  })
 
-  return sets;
+  return sets
 }
 
 export function addOrMultiplyStat(
@@ -431,10 +426,10 @@ export function addOrMultiplyStat(
   stat: Stat,
   value: number
 ): void {
-  if (stat.includes("Modifier")) {
-    statsCollection[stat]! *= value;
+  if (stat.includes('Modifier')) {
+    statsCollection[stat]! *= value
   } else {
-    statsCollection[stat]! += value;
+    statsCollection[stat]! += value
   }
 }
 
@@ -443,31 +438,31 @@ export function calculatePlayerStats(
 ): StatsCollection {
   let mainStatsObj: StatsCollection = JSON.parse(
     JSON.stringify(InitialPlayerStats)
-  );
+  )
 
-  getBaseStats(playerState.settings.race as Race, mainStatsObj);
-  getAurasStats(playerState.auras, mainStatsObj);
-  getItemsStats(playerState.selectedItems, mainStatsObj);
+  getBaseStats(playerState.settings.race as Race, mainStatsObj)
+  getAurasStats(playerState.auras, mainStatsObj)
+  getItemsStats(playerState.selectedItems, mainStatsObj)
   getGemsStats(
     playerState.selectedItems,
     playerState.selectedGems,
     mainStatsObj
-  );
+  )
   getEnchantsStats(
     playerState.selectedItems,
     playerState.selectedEnchants,
     mainStatsObj
-  );
+  )
 
-  return mainStatsObj;
+  return mainStatsObj
 }
 
 export function getPlayerHitRating(playerState: PlayerState): number {
   let hitRating = Object.values(playerState.stats)
-    .map((obj) => obj.hitRating || 0)
-    .reduce((a, b) => a + b);
-  if (playerState.sets[ItemSet.ManaEtchedRegalia] >= 2) hitRating += 35;
-  return hitRating;
+    .map(obj => obj.hitRating || 0)
+    .reduce((a, b) => a + b)
+  if (playerState.sets[ItemSet.ManaEtchedRegalia] >= 2) hitRating += 35
+  return hitRating
 }
 
 export function getPlayerHitPercent(
@@ -476,34 +471,34 @@ export function getPlayerHitPercent(
 ): number {
   let hitPercent =
     (hitRating || getPlayerHitRating(playerState)) /
-    StatConstant.hitRatingPerPercent;
-  if (playerState.auras.inspiringPresence) hitPercent++;
+    StatConstant.hitRatingPerPercent
+  if (playerState.auras.inspiringPresence) hitPercent++
   if (playerState.auras.totemOfWrath)
-    hitPercent += 3 * parseInt(playerState.settings.totemOfWrathAmount);
-  return hitPercent;
+    hitPercent += 3 * parseInt(playerState.settings.totemOfWrathAmount)
+  return hitPercent
 }
 
 export function getAllocatedTalentsPointsInTree(
   talentState: TalentStore,
   tree: TalentTreeStruct
 ): number {
-  let points = 0;
+  let points = 0
 
   for (const row in tree.rows) {
     for (const talent in tree.rows[row]) {
-      const talentKey = tree.rows[row][talent].varName;
+      const talentKey = tree.rows[row][talent].varName
 
       if (talentKey != null) {
-        points += talentState[talentKey];
+        points += talentState[talentKey]
       }
     }
   }
 
-  return points;
+  return points
 }
 
 export function getBaseWowheadUrl(language: string): string {
   return `https://${
-    Languages.find((e) => e.iso === language)?.wowheadPrefix || ""
-  }tbc.wowhead.com`;
+    Languages.find(e => e.iso === language)?.wowheadPrefix || ''
+  }tbc.wowhead.com`
 }

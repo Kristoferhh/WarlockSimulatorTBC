@@ -7,28 +7,28 @@ import {
   Button,
   Grow,
   Popper,
-} from "@mui/material";
-import { nanoid } from "@reduxjs/toolkit";
-import { useEffect, useRef, useState } from "react";
-import i18n from "../i18n/config";
-import { Languages } from "../Types";
+} from '@mui/material'
+import { nanoid } from '@reduxjs/toolkit'
+import { useEffect, useRef, useState } from 'react'
+import i18n from '../i18n/config'
+import { Languages } from '../Types'
 
 export default function LanguageSelection() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   const [currentLanguage, setCurrentLanguage] = useState(
-    Languages.find((e) => e.iso === i18n.language)?.name
-  );
-  const anchorRef = useRef<HTMLButtonElement>(null);
+    Languages.find(e => e.iso === i18n.language)?.name
+  )
+  const anchorRef = useRef<HTMLButtonElement>(null)
 
   const handleToggle = () => {
-    setOpen((currentState) => !currentState);
-  };
+    setOpen(currentState => !currentState)
+  }
 
   function languageClickHandler(languageIsoCode: string): void {
-    setCurrentLanguage(Languages.find((e) => e.iso === languageIsoCode)?.name);
-    i18n.changeLanguage(languageIsoCode);
-    localStorage.setItem("language", languageIsoCode);
-    setOpen(false);
+    setCurrentLanguage(Languages.find(e => e.iso === languageIsoCode)?.name)
+    i18n.changeLanguage(languageIsoCode)
+    localStorage.setItem('language', languageIsoCode)
+    setOpen(false)
   }
 
   const handleClose = (event: Event | React.SyntheticEvent) => {
@@ -36,45 +36,45 @@ export default function LanguageSelection() {
       anchorRef.current &&
       anchorRef.current.contains(event.target as HTMLElement)
     ) {
-      return;
+      return
     }
 
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   function handleListKeyDown(event: React.KeyboardEvent) {
-    if (event.key === "Tab") {
-      event.preventDefault();
-      setOpen(false);
-    } else if (event.key === "Escape") {
-      setOpen(false);
+    if (event.key === 'Tab') {
+      event.preventDefault()
+      setOpen(false)
+    } else if (event.key === 'Escape') {
+      setOpen(false)
     }
   }
 
   // return focus to the button when we transitioned from !open -> open
-  const prevOpen = useRef(open);
+  const prevOpen = useRef(open)
   useEffect(() => {
     if (prevOpen.current === true && open === false) {
-      anchorRef.current!.focus();
+      anchorRef.current!.focus()
     }
 
-    prevOpen.current = open;
-  }, [open]);
+    prevOpen.current = open
+  }, [open])
 
   return (
-    <Stack direction="row" spacing={2} id="language-menu">
+    <Stack direction='row' spacing={2} id='language-menu'>
       <div>
         <Button
           ref={anchorRef}
-          id="composition-button"
-          aria-controls={open ? "composition-menu" : undefined}
-          aria-expanded={open ? "true" : undefined}
-          aria-haspopup="true"
+          id='composition-button'
+          aria-controls={open ? 'composition-menu' : undefined}
+          aria-expanded={open ? 'true' : undefined}
+          aria-haspopup='true'
           onClick={handleToggle}
           style={{
-            color: "white",
-            marginLeft: "10px",
-            border: "1px solid white",
+            color: 'white',
+            marginLeft: '10px',
+            border: '1px solid white',
           }}
         >
           {currentLanguage}
@@ -83,7 +83,7 @@ export default function LanguageSelection() {
           open={open}
           anchorEl={anchorRef.current}
           role={undefined}
-          placement="bottom-start"
+          placement='bottom-start'
           transition
           disablePortal
         >
@@ -92,21 +92,21 @@ export default function LanguageSelection() {
               {...TransitionProps}
               style={{
                 transformOrigin:
-                  placement === "bottom-start" ? "left top" : "left bottom",
+                  placement === 'bottom-start' ? 'left top' : 'left bottom',
               }}
             >
               <Paper>
                 <ClickAwayListener onClickAway={handleClose}>
                   <MenuList
                     autoFocusItem={open}
-                    id="composition-menu"
-                    aria-labelledby="composition-button"
+                    id='composition-menu'
+                    aria-labelledby='composition-button'
                     onKeyDown={handleListKeyDown}
                   >
-                    {Languages.map((language) => (
+                    {Languages.map(language => (
                       <MenuItem
                         key={nanoid()}
-                        className="language-item"
+                        className='language-item'
                         onClick={() => languageClickHandler(language.iso)}
                       >
                         {language.name}
@@ -120,5 +120,5 @@ export default function LanguageSelection() {
         </Popper>
       </div>
     </Stack>
-  );
+  )
 }

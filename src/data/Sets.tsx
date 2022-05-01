@@ -1,10 +1,10 @@
-import { ItemSet, Quality } from "../Types";
+import { ItemSet, Quality } from '../Types'
 
 export const Sets: {
-  name: string;
-  setId: ItemSet;
-  quality: Quality;
-  bonuses: number[];
+  name: string
+  setId: ItemSet
+  quality: Quality
+  bonuses: number[]
 }[] = [
   // Season 3 Arena
   {
@@ -36,14 +36,14 @@ export const Sets: {
   },
   // T3
   {
-    name: "Plagueheart Raiment",
+    name: 'Plagueheart Raiment',
     setId: ItemSet.T3,
     quality: Quality.Epic,
     bonuses: [2, 4, 6, 8],
   },
   // Spellfire (Tailoring)
   {
-    name: "Wrath of Spellfire",
+    name: 'Wrath of Spellfire',
     setId: ItemSet.Spellfire,
     quality: Quality.Epic,
     bonuses: [3],
@@ -57,35 +57,35 @@ export const Sets: {
   },
   // Spellstrike (Tailoring)
   {
-    name: "Spellstrike Infusion",
+    name: 'Spellstrike Infusion',
     setId: ItemSet.Spellstrike,
     quality: Quality.Epic,
     bonuses: [2],
   },
   // Dungeon Set
   {
-    name: "Oblivion Raiment",
+    name: 'Oblivion Raiment',
     setId: ItemSet.Oblivion,
     quality: Quality.Rare,
     bonuses: [2, 4],
   },
   // T4
   {
-    name: "Voidheart Raiment",
+    name: 'Voidheart Raiment',
     setId: ItemSet.T4,
     quality: Quality.Epic,
     bonuses: [2, 4],
   },
   // T5
   {
-    name: "Corruptor Raiment",
+    name: 'Corruptor Raiment',
     setId: ItemSet.T5,
     quality: Quality.Epic,
     bonuses: [2, 4],
   },
   // Dungeon Set
   {
-    name: "Mana-Etched Regalia",
+    name: 'Mana-Etched Regalia',
     setId: ItemSet.ManaEtchedRegalia,
     quality: Quality.Rare,
     bonuses: [2, 4],
@@ -99,14 +99,14 @@ export const Sets: {
   },
   // The Twin Stars
   {
-    name: "The Twin Stars",
+    name: 'The Twin Stars',
     setId: ItemSet.TwinStars,
     quality: Quality.Epic,
     bonuses: [2],
   },
   // T6
   {
-    name: "Malefic Raiment",
+    name: 'Malefic Raiment',
     setId: ItemSet.T6,
     quality: Quality.Epic,
     bonuses: [2, 4],
@@ -132,4 +132,4 @@ export const Sets: {
     quality: Quality.Rare,
     bonuses: [2, 4],
   },
-];
+]

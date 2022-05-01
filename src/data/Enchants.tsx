@@ -1,10 +1,10 @@
-import { ItemSlotKey, Enchant, ItemSource, Quality } from "../Types";
+import { ItemSlotKey, Enchant, ItemSource, Quality } from '../Types'
 
 export const Enchants: Enchant[] = [
   // Head
   {
-    name: "Glyph of Power",
-    varName: "glyphOfPower",
+    name: 'Glyph of Power',
+    varName: 'glyphOfPower',
     itemSlot: ItemSlotKey.Head,
     spellPower: 22,
     hitRating: 14,
@@ -14,8 +14,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Glyph of Renewal",
-    varName: "glyphOfRenewal",
+    name: 'Glyph of Renewal',
+    varName: 'glyphOfRenewal',
     itemSlot: ItemSlotKey.Head,
     spellPower: 12,
     mp5: 7,
@@ -25,8 +25,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Glyph of Fire Warding",
-    varName: "glyphOfFireWarding",
+    name: 'Glyph of Fire Warding',
+    varName: 'glyphOfFireWarding',
     itemSlot: ItemSlotKey.Head,
     fireResist: 20,
     id: 35456,
@@ -35,8 +35,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Glyph of Shadow Warding",
-    varName: "glyphOfShadowWarding",
+    name: 'Glyph of Shadow Warding',
+    varName: 'glyphOfShadowWarding',
     itemSlot: ItemSlotKey.Head,
     shadowResist: 20,
     id: 35458,
@@ -45,8 +45,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Glyph of Arcane Warding",
-    varName: "glyphOfArcaneWarding",
+    name: 'Glyph of Arcane Warding',
+    varName: 'glyphOfArcaneWarding',
     itemSlot: ItemSlotKey.Head,
     arcaneResist: 20,
     id: 35455,
@@ -55,8 +55,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Glyph of Nature Warding",
-    varName: "glyphOfNatureWarding",
+    name: 'Glyph of Nature Warding',
+    varName: 'glyphOfNatureWarding',
     itemSlot: ItemSlotKey.Head,
     natureResist: 20,
     id: 35454,
@@ -65,8 +65,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Glyph of Frost Warding",
-    varName: "glyphOfFrostWarding",
+    name: 'Glyph of Frost Warding',
+    varName: 'glyphOfFrostWarding',
     itemSlot: ItemSlotKey.Head,
     frostResist: 20,
     id: 35457,
@@ -75,8 +75,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Glyph of Chromatic Warding",
-    varName: "glyphOfChromaticWarding",
+    name: 'Glyph of Chromatic Warding',
+    varName: 'glyphOfChromaticWarding',
     itemSlot: ItemSlotKey.Head,
     arcaneResist: 8,
     fireResist: 8,
@@ -89,8 +89,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Hoodoo Hex",
-    varName: "hoodooHex",
+    name: 'Hoodoo Hex',
+    varName: 'hoodooHex',
     itemSlot: ItemSlotKey.Head,
     stamina: 10,
     spellPower: 18,
@@ -102,8 +102,8 @@ export const Enchants: Enchant[] = [
 
   // Shoulders
   {
-    name: "Greater Inscription of Discipline",
-    varName: "greaterInscriptionOfDiscipline",
+    name: 'Greater Inscription of Discipline',
+    varName: 'greaterInscriptionOfDiscipline',
     itemSlot: ItemSlotKey.Shoulders,
     spellPower: 18,
     critRating: 10,
@@ -113,8 +113,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Rare,
   },
   {
-    name: "Greater Inscription of the Orb",
-    varName: "greaterInscriptionOfTheOrb",
+    name: 'Greater Inscription of the Orb',
+    varName: 'greaterInscriptionOfTheOrb',
     itemSlot: ItemSlotKey.Shoulders,
     spellPower: 12,
     critRating: 15,
@@ -124,8 +124,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Rare,
   },
   {
-    name: "Inscription of Discipline",
-    varName: "inscriptionOfDiscipline",
+    name: 'Inscription of Discipline',
+    varName: 'inscriptionOfDiscipline',
     itemSlot: ItemSlotKey.Shoulders,
     spellPower: 15,
     id: 35405,
@@ -134,8 +134,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Inscription of the Orb",
-    varName: "inscriptionOfTheOrb",
+    name: 'Inscription of the Orb',
+    varName: 'inscriptionOfTheOrb',
     itemSlot: ItemSlotKey.Shoulders,
     critRating: 13,
     id: 35436,
@@ -144,8 +144,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Inscription of Endurance",
-    varName: "inscriptionOfEndurance",
+    name: 'Inscription of Endurance',
+    varName: 'inscriptionOfEndurance',
     itemSlot: ItemSlotKey.Shoulders,
     fireResist: 7,
     shadowResist: 7,
@@ -158,8 +158,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Power of the Scourge",
-    varName: "powerOfTheScourge",
+    name: 'Power of the Scourge',
+    varName: 'powerOfTheScourge',
     itemSlot: ItemSlotKey.Shoulders,
     spellPower: 15,
     critRating: 14,
@@ -169,8 +169,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Epic,
   },
   {
-    name: "Zandalar Signet of Mojo",
-    varName: "zandalarSignetOfMojo",
+    name: 'Zandalar Signet of Mojo',
+    varName: 'zandalarSignetOfMojo',
     itemSlot: ItemSlotKey.Shoulders,
     spellPower: 18,
     id: 24421,
@@ -181,8 +181,8 @@ export const Enchants: Enchant[] = [
 
   // Back
   {
-    name: "Subtlety",
-    varName: "subtlety",
+    name: 'Subtlety',
+    varName: 'subtlety',
     itemSlot: ItemSlotKey.Back,
     threatReduction: 0.02,
     id: 25084,
@@ -191,8 +191,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Rare,
   },
   {
-    name: "Spell Penetration",
-    varName: "spellPenetration",
+    name: 'Spell Penetration',
+    varName: 'spellPenetration',
     itemSlot: ItemSlotKey.Back,
     spellPenetration: 20,
     id: 34003,
@@ -201,8 +201,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Major Resistance",
-    varName: "majorResistance",
+    name: 'Major Resistance',
+    varName: 'majorResistance',
     itemSlot: ItemSlotKey.Back,
     fireResist: 7,
     shadowResist: 7,
@@ -215,8 +215,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Greater Arcane Resistance",
-    varName: "greaterArcaneResistance",
+    name: 'Greater Arcane Resistance',
+    varName: 'greaterArcaneResistance',
     itemSlot: ItemSlotKey.Back,
     arcaneResist: 15,
     id: 34005,
@@ -225,8 +225,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Rare,
   },
   {
-    name: "Greater Fire Resistance",
-    varName: "greaterFireResistance",
+    name: 'Greater Fire Resistance',
+    varName: 'greaterFireResistance',
     itemSlot: ItemSlotKey.Back,
     fireResist: 15,
     id: 25081,
@@ -235,8 +235,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Greater Shadow Resistance",
-    varName: "greaterShadowResistance",
+    name: 'Greater Shadow Resistance',
+    varName: 'greaterShadowResistance',
     itemSlot: ItemSlotKey.Back,
     shadowResist: 15,
     id: 34006,
@@ -245,8 +245,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Rare,
   },
   {
-    name: "Greater Nature Resistance",
-    varName: "greaterNatureResistance",
+    name: 'Greater Nature Resistance',
+    varName: 'greaterNatureResistance',
     itemSlot: ItemSlotKey.Back,
     natureResist: 15,
     id: 25082,
@@ -257,8 +257,8 @@ export const Enchants: Enchant[] = [
 
   // Chest
   {
-    name: "Exceptional Stats",
-    varName: "exceptionalStats",
+    name: 'Exceptional Stats',
+    varName: 'exceptionalStats',
     itemSlot: ItemSlotKey.Chest,
     stamina: 6,
     intellect: 6,
@@ -270,8 +270,8 @@ export const Enchants: Enchant[] = [
   },
   {
     id: 33991,
-    name: "Restore Mana Prime",
-    varName: "restoreManaPrime",
+    name: 'Restore Mana Prime',
+    varName: 'restoreManaPrime',
     itemSlot: ItemSlotKey.Chest,
     mp5: 6,
     source: ItemSource.Enchanting,
@@ -280,8 +280,8 @@ export const Enchants: Enchant[] = [
   },
   {
     id: 27958,
-    name: "Exceptional Mana",
-    varName: "exceptionalMana",
+    name: 'Exceptional Mana',
+    varName: 'exceptionalMana',
     itemSlot: ItemSlotKey.Chest,
     mana: 150,
     source: ItemSource.Enchanting,
@@ -289,8 +289,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Major Resilience",
-    varName: "majorResilience",
+    name: 'Major Resilience',
+    varName: 'majorResilience',
     itemSlot: ItemSlotKey.Chest,
     resilienceRating: 15,
     id: 33992,
@@ -300,7 +300,7 @@ export const Enchants: Enchant[] = [
   },
   {
     name: "Magister's Armor Kit",
-    varName: "magistersArmorKit",
+    varName: 'magistersArmorKit',
     itemSlot: ItemSlotKey.Chest,
     mp5: 3,
     id: 32399,
@@ -309,8 +309,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Arcane Armor Kit",
-    varName: "arcaneArmorKit",
+    name: 'Arcane Armor Kit',
+    varName: 'arcaneArmorKit',
     itemSlot: ItemSlotKey.Chest,
     arcaneResist: 8,
     id: 35420,
@@ -319,8 +319,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Flame Armor Kit",
-    varName: "flameArmorKit",
+    name: 'Flame Armor Kit',
+    varName: 'flameArmorKit',
     itemSlot: ItemSlotKey.Chest,
     fireResist: 8,
     id: 35416,
@@ -329,8 +329,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Shadow Armor Kit",
-    varName: "shadowArmorKit",
+    name: 'Shadow Armor Kit',
+    varName: 'shadowArmorKit',
     itemSlot: ItemSlotKey.Chest,
     shadowResist: 8,
     id: 35415,
@@ -339,8 +339,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Nature Armor Kit",
-    varName: "natureArmorKit",
+    name: 'Nature Armor Kit',
+    varName: 'natureArmorKit',
     itemSlot: ItemSlotKey.Chest,
     natureResist: 8,
     id: 35419,
@@ -349,8 +349,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Frost Armor Kit",
-    varName: "frostArmorKit",
+    name: 'Frost Armor Kit',
+    varName: 'frostArmorKit',
     itemSlot: ItemSlotKey.Chest,
     frostResist: 8,
     id: 35418,
@@ -359,8 +359,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Greater Stats",
-    varName: "greaterStats",
+    name: 'Greater Stats',
+    varName: 'greaterStats',
     itemSlot: ItemSlotKey.Chest,
     stamina: 4,
     intellect: 4,
@@ -373,8 +373,8 @@ export const Enchants: Enchant[] = [
 
   // Bracer
   {
-    name: "Spellpower",
-    varName: "spellpower",
+    name: 'Spellpower',
+    varName: 'spellpower',
     itemSlot: ItemSlotKey.Bracer,
     spellPower: 15,
     id: 27917,
@@ -383,8 +383,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Superior Healing",
-    varName: "superiorHealing",
+    name: 'Superior Healing',
+    varName: 'superiorHealing',
     itemSlot: ItemSlotKey.Bracer,
     spellPower: 10,
     id: 27911,
@@ -393,8 +393,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Major Intellect",
-    varName: "majorIntellect",
+    name: 'Major Intellect',
+    varName: 'majorIntellect',
     itemSlot: ItemSlotKey.Bracer,
     intellect: 12,
     id: 34001,
@@ -403,8 +403,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Stats",
-    varName: "stats",
+    name: 'Stats',
+    varName: 'stats',
     itemSlot: ItemSlotKey.Bracer,
     stamina: 4,
     intellect: 4,
@@ -415,8 +415,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Healing Power",
-    varName: "healingPower",
+    name: 'Healing Power',
+    varName: 'healingPower',
     itemSlot: ItemSlotKey.Bracer,
     spellPower: 8,
     id: 23802,
@@ -427,8 +427,8 @@ export const Enchants: Enchant[] = [
 
   // Gloves
   {
-    name: "Major Spellpower",
-    varName: "majorSpellpower",
+    name: 'Major Spellpower',
+    varName: 'majorSpellpower',
     itemSlot: ItemSlotKey.Gloves,
     spellPower: 20,
     id: 33997,
@@ -437,8 +437,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Spell Strike",
-    varName: "spellStrike",
+    name: 'Spell Strike',
+    varName: 'spellStrike',
     itemSlot: ItemSlotKey.Gloves,
     hitRating: 15,
     id: 33994,
@@ -447,8 +447,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Blasting",
-    varName: "blasting",
+    name: 'Blasting',
+    varName: 'blasting',
     itemSlot: ItemSlotKey.Gloves,
     critRating: 10,
     id: 33993,
@@ -458,7 +458,7 @@ export const Enchants: Enchant[] = [
   },
   {
     name: "Magister's Armor Kit",
-    varName: "magistersArmorKit",
+    varName: 'magistersArmorKit',
     itemSlot: ItemSlotKey.Gloves,
     mp5: 3,
     id: 32399,
@@ -467,8 +467,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Arcane Armor Kit",
-    varName: "arcaneArmorKit",
+    name: 'Arcane Armor Kit',
+    varName: 'arcaneArmorKit',
     itemSlot: ItemSlotKey.Gloves,
     arcaneResist: 8,
     id: 35420,
@@ -477,8 +477,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Flame Armor Kit",
-    varName: "flameArmorKit",
+    name: 'Flame Armor Kit',
+    varName: 'flameArmorKit',
     itemSlot: ItemSlotKey.Gloves,
     fireResist: 8,
     id: 35416,
@@ -487,8 +487,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Shadow Armor Kit",
-    varName: "shadowArmorKit",
+    name: 'Shadow Armor Kit',
+    varName: 'shadowArmorKit',
     itemSlot: ItemSlotKey.Gloves,
     shadowResist: 8,
     id: 35415,
@@ -497,8 +497,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Nature Armor Kit",
-    varName: "natureArmorKit",
+    name: 'Nature Armor Kit',
+    varName: 'natureArmorKit',
     itemSlot: ItemSlotKey.Gloves,
     natureResist: 8,
     id: 35419,
@@ -507,8 +507,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Frost Armor Kit",
-    varName: "frostArmorKit",
+    name: 'Frost Armor Kit',
+    varName: 'frostArmorKit',
     itemSlot: ItemSlotKey.Gloves,
     frostResist: 8,
     id: 35418,
@@ -519,8 +519,8 @@ export const Enchants: Enchant[] = [
 
   // Legs
   {
-    name: "Runic Spellthread",
-    varName: "runicSpellthread",
+    name: 'Runic Spellthread',
+    varName: 'runicSpellthread',
     itemSlot: ItemSlotKey.Legs,
     stamina: 20,
     spellPower: 35,
@@ -530,8 +530,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Epic,
   },
   {
-    name: "Mystic Spellthread",
-    varName: "mysticSpellthread",
+    name: 'Mystic Spellthread',
+    varName: 'mysticSpellthread',
     itemSlot: ItemSlotKey.Legs,
     stamina: 15,
     spellPower: 25,
@@ -542,7 +542,7 @@ export const Enchants: Enchant[] = [
   },
   {
     name: "Magister's Armor Kit",
-    varName: "magistersArmorKit",
+    varName: 'magistersArmorKit',
     itemSlot: ItemSlotKey.Legs,
     mp5: 3,
     id: 32399,
@@ -551,8 +551,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Arcane Armor Kit",
-    varName: "arcaneArmorKit",
+    name: 'Arcane Armor Kit',
+    varName: 'arcaneArmorKit',
     itemSlot: ItemSlotKey.Legs,
     arcaneResist: 8,
     id: 35420,
@@ -561,8 +561,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Flame Armor Kit",
-    varName: "flameArmorKit",
+    name: 'Flame Armor Kit',
+    varName: 'flameArmorKit',
     itemSlot: ItemSlotKey.Legs,
     fireResist: 8,
     id: 35416,
@@ -571,8 +571,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Shadow Armor Kit",
-    varName: "shadowArmorKit",
+    name: 'Shadow Armor Kit',
+    varName: 'shadowArmorKit',
     itemSlot: ItemSlotKey.Legs,
     shadowResist: 8,
     id: 35415,
@@ -581,8 +581,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Nature Armor Kit",
-    varName: "natureArmorKit",
+    name: 'Nature Armor Kit',
+    varName: 'natureArmorKit',
     itemSlot: ItemSlotKey.Legs,
     natureResist: 8,
     id: 35419,
@@ -591,8 +591,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Frost Armor Kit",
-    varName: "frostArmorKit",
+    name: 'Frost Armor Kit',
+    varName: 'frostArmorKit',
     itemSlot: ItemSlotKey.Legs,
     frostResist: 8,
     id: 35418,
@@ -601,8 +601,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Hoodoo Hex",
-    varName: "hoodooHex",
+    name: 'Hoodoo Hex',
+    varName: 'hoodooHex',
     itemSlot: ItemSlotKey.Legs,
     stamina: 10,
     spellPower: 18,
@@ -614,8 +614,8 @@ export const Enchants: Enchant[] = [
 
   // Boots
   {
-    name: "Fortitude",
-    varName: "fortitude",
+    name: 'Fortitude',
+    varName: 'fortitude',
     itemSlot: ItemSlotKey.Boots,
     stamina: 12,
     id: 46490,
@@ -625,7 +625,7 @@ export const Enchants: Enchant[] = [
   },
   {
     name: "Boar's Speed",
-    varName: "boarsSpeed",
+    varName: 'boarsSpeed',
     itemSlot: ItemSlotKey.Boots,
     stamina: 9,
     id: 34008,
@@ -634,8 +634,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Rare,
   },
   {
-    name: "Vitality",
-    varName: "vitality",
+    name: 'Vitality',
+    varName: 'vitality',
     itemSlot: ItemSlotKey.Boots,
     mp5: 4,
     id: 27948,
@@ -645,7 +645,7 @@ export const Enchants: Enchant[] = [
   },
   {
     name: "Magister's Armor Kit",
-    varName: "magistersArmorKit",
+    varName: 'magistersArmorKit',
     itemSlot: ItemSlotKey.Boots,
     mp5: 3,
     id: 32399,
@@ -654,8 +654,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Arcane Armor Kit",
-    varName: "arcaneArmorKit",
+    name: 'Arcane Armor Kit',
+    varName: 'arcaneArmorKit',
     itemSlot: ItemSlotKey.Boots,
     arcaneResist: 8,
     id: 35420,
@@ -664,8 +664,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Flame Armor Kit",
-    varName: "flameArmorKit",
+    name: 'Flame Armor Kit',
+    varName: 'flameArmorKit',
     itemSlot: ItemSlotKey.Boots,
     fireResist: 8,
     id: 35416,
@@ -674,8 +674,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Shadow Armor Kit",
-    varName: "shadowArmorKit",
+    name: 'Shadow Armor Kit',
+    varName: 'shadowArmorKit',
     itemSlot: ItemSlotKey.Boots,
     shadowResist: 8,
     id: 35415,
@@ -684,8 +684,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Nature Armor Kit",
-    varName: "natureArmorKit",
+    name: 'Nature Armor Kit',
+    varName: 'natureArmorKit',
     itemSlot: ItemSlotKey.Boots,
     natureResist: 8,
     id: 35419,
@@ -694,8 +694,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Frost Armor Kit",
-    varName: "frostArmorKit",
+    name: 'Frost Armor Kit',
+    varName: 'frostArmorKit',
     itemSlot: ItemSlotKey.Boots,
     frostResist: 8,
     id: 35418,
@@ -706,8 +706,8 @@ export const Enchants: Enchant[] = [
 
   // Ring
   {
-    name: "Spellpower",
-    varName: "spellpower",
+    name: 'Spellpower',
+    varName: 'spellpower',
     itemSlot: ItemSlotKey.Ring,
     spellPower: 12,
     id: 27924,
@@ -716,8 +716,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Stats",
-    varName: "stats",
+    name: 'Stats',
+    varName: 'stats',
     itemSlot: ItemSlotKey.Ring,
     stamina: 4,
     intellect: 4,
@@ -730,8 +730,8 @@ export const Enchants: Enchant[] = [
 
   // Weapon
   {
-    name: "Soulfrost",
-    varName: "soulfrost",
+    name: 'Soulfrost',
+    varName: 'soulfrost',
     itemSlot: ItemSlotKey.Mainhand,
     shadowPower: 54,
     id: 27982,
@@ -740,8 +740,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Rare,
   },
   {
-    name: "Major Spellpower",
-    varName: "majorSpellpower",
+    name: 'Major Spellpower',
+    varName: 'majorSpellpower',
     itemSlot: ItemSlotKey.Mainhand,
     spellPower: 40,
     id: 27975,
@@ -750,8 +750,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Sunfire",
-    varName: "sunfire",
+    name: 'Sunfire',
+    varName: 'sunfire',
     itemSlot: ItemSlotKey.Mainhand,
     firePower: 50,
     id: 27981,
@@ -760,8 +760,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Rare,
   },
   {
-    name: "Major Intellect",
-    varName: "majorIntellect",
+    name: 'Major Intellect',
+    varName: 'majorIntellect',
     itemSlot: ItemSlotKey.Mainhand,
     intellect: 30,
     id: 27968,
@@ -770,8 +770,8 @@ export const Enchants: Enchant[] = [
     quality: Quality.Uncommon,
   },
   {
-    name: "Spell Power",
-    varName: "spellPower",
+    name: 'Spell Power',
+    varName: 'spellPower',
     itemSlot: ItemSlotKey.Mainhand,
     spellPower: 30,
     id: 22749,
@@ -779,4 +779,4 @@ export const Enchants: Enchant[] = [
     phase: 0,
     quality: Quality.Rare,
   },
-];
+]

@@ -1,66 +1,66 @@
-import { nanoid } from "@reduxjs/toolkit";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { getBaseWowheadUrl, ItemSlotToItemSlotKey } from "../Common";
-import { Enchants } from "../data/Enchants";
-import { Items } from "../data/Items";
-import i18n from "../i18n/config";
-import { RootState } from "../redux/Store";
-import { setEquippedItemsWindowVisibility } from "../redux/UiSlice";
-import { Enchant, Item, ItemSlot } from "../Types";
-import ItemSocketDisplay from "./ItemSocketDisplay";
+import { nanoid } from '@reduxjs/toolkit'
+import { useTranslation } from 'react-i18next'
+import { useDispatch, useSelector } from 'react-redux'
+import { getBaseWowheadUrl, ItemSlotToItemSlotKey } from '../Common'
+import { Enchants } from '../data/Enchants'
+import { Items } from '../data/Items'
+import i18n from '../i18n/config'
+import { RootState } from '../redux/Store'
+import { setEquippedItemsWindowVisibility } from '../redux/UiSlice'
+import { Enchant, Item, ItemSlot } from '../Types'
+import ItemSocketDisplay from './ItemSocketDisplay'
 
 function formatItemSlotName(itemSlot: ItemSlot): string {
-  let formattedItemSlot = itemSlot as string;
+  let formattedItemSlot = itemSlot as string
 
   // Check if the last char is '1' or '2', if so then it's an item slot
   // with sub-item slots so we put a space between the name and the sub-item slot value.
-  const subItemSlotIndex = formattedItemSlot.length - 1;
-  if (["1", "2"].includes(formattedItemSlot.charAt(subItemSlotIndex))) {
+  const subItemSlotIndex = formattedItemSlot.length - 1
+  if (['1', '2'].includes(formattedItemSlot.charAt(subItemSlotIndex))) {
     formattedItemSlot =
       formattedItemSlot.substring(0, subItemSlotIndex) +
-      " " +
-      formattedItemSlot.substring(subItemSlotIndex);
+      ' ' +
+      formattedItemSlot.substring(subItemSlotIndex)
   }
 
-  return formattedItemSlot.charAt(0).toUpperCase() + formattedItemSlot.slice(1);
+  return formattedItemSlot.charAt(0).toUpperCase() + formattedItemSlot.slice(1)
 }
 
 export default function EquippedItemsDisplay() {
-  const uiState = useSelector((state: RootState) => state.ui);
-  const playerState = useSelector((state: RootState) => state.player);
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const uiState = useSelector((state: RootState) => state.ui)
+  const playerState = useSelector((state: RootState) => state.player)
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
 
   function getEnchantInItemSlot(itemSlot: ItemSlot): Enchant | undefined {
-    let slot = itemSlot;
+    let slot = itemSlot
 
     if (slot === ItemSlot.twohand) {
-      slot = ItemSlot.mainhand;
+      slot = ItemSlot.mainhand
     }
 
-    return Enchants.find((e) => e.id === playerState.selectedEnchants[slot]);
+    return Enchants.find(e => e.id === playerState.selectedEnchants[slot])
   }
 
   function getItemInItemSlot(itemSlot: ItemSlot): Item | undefined {
-    return Items.find((e) => e.id === playerState.selectedItems[itemSlot]);
+    return Items.find(e => e.id === playerState.selectedItems[itemSlot])
   }
 
   return (
     <div
-      id="currently-equipped-items-container"
-      style={{ display: uiState.equippedItemsWindowVisible ? "" : "none" }}
+      id='currently-equipped-items-container'
+      style={{ display: uiState.equippedItemsWindowVisible ? '' : 'none' }}
     >
-      <div id="currently-equipped-items">
+      <div id='currently-equipped-items'>
         <div onClick={() => dispatch(setEquippedItemsWindowVisibility(false))}>
-          <p className="close" id="currently-equipped-items-close-button"></p>
+          <p className='close' id='currently-equipped-items-close-button'></p>
         </div>
         <table>
           <colgroup>
-            <col style={{ width: "13%" }} />
-            <col style={{ width: "45%" }} />
-            <col style={{ width: "10%" }} />
-            <col style={{ width: "32%" }} />
+            <col style={{ width: '13%' }} />
+            <col style={{ width: '45%' }} />
+            <col style={{ width: '10%' }} />
+            <col style={{ width: '32%' }} />
           </colgroup>
           <thead>
             <tr>
@@ -75,7 +75,7 @@ export default function EquippedItemsDisplay() {
               // Filter for choosing whether to display mainhand + offhand or twohand.
               // If a two hand is equipped then it shows two hand, otherwise it shows the mainhand + offhand
               .filter(
-                (slot) =>
+                slot =>
                   ![
                     ItemSlot.mainhand,
                     ItemSlot.offhand,
@@ -90,19 +90,19 @@ export default function EquippedItemsDisplay() {
                     (!playerState.selectedItems[ItemSlot.offhand] ||
                       playerState.selectedItems[ItemSlot.offhand] === 0))
               )
-              .map((slot) => {
-                const itemInItemSlot = getItemInItemSlot(slot);
-                const enchantInItemSlot = getEnchantInItemSlot(slot);
+              .map(slot => {
+                const itemInItemSlot = getItemInItemSlot(slot)
+                const enchantInItemSlot = getEnchantInItemSlot(slot)
 
                 return (
-                  <tr key={nanoid()} className="equipped-item-row">
+                  <tr key={nanoid()} className='equipped-item-row'>
                     <td>{t(formatItemSlotName(slot))}</td>
                     <td
                       className={
-                        "equipped-item-name " +
+                        'equipped-item-name ' +
                         (playerState.selectedItems[slot] != null
                           ? itemInItemSlot?.quality
-                          : "")
+                          : '')
                       }
                     >
                       {itemInItemSlot && (
@@ -111,8 +111,8 @@ export default function EquippedItemsDisplay() {
                             href={`${getBaseWowheadUrl(i18n.language)}/item=${
                               itemInItemSlot!.displayId || itemInItemSlot!.id
                             }`}
-                            onClick={(e) => e.preventDefault()}
-                            style={{ fontSize: "0px" }}
+                            onClick={e => e.preventDefault()}
+                            style={{ fontSize: '0px' }}
                           >
                             .
                           </a>
@@ -120,10 +120,10 @@ export default function EquippedItemsDisplay() {
                             <img
                               alt={itemInItemSlot.name}
                               src={`${process.env.PUBLIC_URL}/img/${itemInItemSlot?.iconName}.jpg`}
-                              className="item-icon"
+                              className='item-icon'
                             />
                           )}
-                          {itemInItemSlot ? t(itemInItemSlot!.name) : ""}
+                          {itemInItemSlot ? t(itemInItemSlot!.name) : ''}
                         </>
                       )}
                     </td>
@@ -135,15 +135,15 @@ export default function EquippedItemsDisplay() {
                           itemSlot={ItemSlotToItemSlotKey(false, slot)}
                         />
                       ) : (
-                        ""
+                        ''
                       )}
                     </td>
                     <td
                       className={
-                        "equipped-item-enchant-name " +
+                        'equipped-item-enchant-name ' +
                         (enchantInItemSlot !== undefined
                           ? enchantInItemSlot?.quality
-                          : "")
+                          : '')
                       }
                     >
                       {enchantInItemSlot !== undefined && (
@@ -152,8 +152,8 @@ export default function EquippedItemsDisplay() {
                             href={`${getBaseWowheadUrl(i18n.language)}/spell=${
                               enchantInItemSlot!.id
                             }`}
-                            onClick={(e) => e.preventDefault()}
-                            style={{ fontSize: "0px" }}
+                            onClick={e => e.preventDefault()}
+                            style={{ fontSize: '0px' }}
                           >
                             .
                           </a>
@@ -162,11 +162,11 @@ export default function EquippedItemsDisplay() {
                       )}
                     </td>
                   </tr>
-                );
+                )
               })}
           </tbody>
         </table>
       </div>
     </div>
-  );
+  )
 }

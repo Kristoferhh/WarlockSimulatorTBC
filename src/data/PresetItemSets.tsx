@@ -1,17 +1,17 @@
-import { ItemSlot } from "../Types";
+import { ItemSlot } from '../Types'
 
 export const PresetItemSets: {
-  name: string;
+  name: string
   items: {
     [key in ItemSlot]?: {
-      itemId: number;
-      gemIds?: number[];
-      enchantId?: number;
-    };
-  };
+      itemId: number
+      gemIds?: number[]
+      enchantId?: number
+    }
+  }
 }[] = [
   {
-    name: "Shadow Destruction Pre-BiS",
+    name: 'Shadow Destruction Pre-BiS',
     items: {
       head: { itemId: 28193, gemIds: [24030, 34220] },
       neck: { itemId: 28134 },
@@ -32,4 +32,4 @@ export const PresetItemSets: {
       wand: { itemId: 22821 },
     },
   },
-];
+]
