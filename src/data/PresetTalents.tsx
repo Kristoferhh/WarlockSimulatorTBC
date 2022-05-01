@@ -1,11 +1,11 @@
-import { TalentName } from "../Types";
+import { TalentName } from '../Types'
 
 export const PresetTalents: {
-  name: string;
-  talents: { [key in keyof typeof TalentName]?: number };
+  name: string
+  talents: { [key in keyof typeof TalentName]?: number }
 }[] = [
   {
-    name: "Affli/UA",
+    name: 'Affli/UA',
     talents: {
       suppression: 5,
       improvedCorruption: 5,
@@ -30,7 +30,7 @@ export const PresetTalents: {
     },
   },
   {
-    name: "Affli/Ruin",
+    name: 'Affli/Ruin',
     talents: {
       suppression: 5,
       improvedCorruption: 5,
@@ -55,7 +55,7 @@ export const PresetTalents: {
     },
   },
   {
-    name: "Destruction",
+    name: 'Destruction',
     talents: {
       improvedHealthstone: 2,
       demonicEmbrace: 5,
@@ -81,7 +81,7 @@ export const PresetTalents: {
     },
   },
   {
-    name: "Destro/Nightfall",
+    name: 'Destro/Nightfall',
     talents: {
       suppression: 1,
       improvedCorruption: 5,
@@ -108,7 +108,7 @@ export const PresetTalents: {
     },
   },
   {
-    name: "Demonology Felguard",
+    name: 'Demonology Felguard',
     talents: {
       improvedCorruption: 1,
       improvedHealthstone: 2,
@@ -135,7 +135,7 @@ export const PresetTalents: {
     },
   },
   {
-    name: "Demonology/Ruin",
+    name: 'Demonology/Ruin',
     talents: {
       improvedCorruption: 1,
       improvedHealthstone: 2,
@@ -161,4 +161,4 @@ export const PresetTalents: {
       ruin: 1,
     },
   },
-];
+]

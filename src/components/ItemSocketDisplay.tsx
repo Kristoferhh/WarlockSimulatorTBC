@@ -1,32 +1,32 @@
-import { nanoid } from "@reduxjs/toolkit";
-import { useSelector } from "react-redux";
-import { getBaseWowheadUrl } from "../Common";
-import { Gems } from "../data/Gems";
-import { Sockets } from "../data/Sockets";
-import i18n from "../i18n/config";
-import { RootState } from "../redux/Store";
-import { Item, ItemSlotKey, SocketColor } from "../Types";
+import { nanoid } from '@reduxjs/toolkit'
+import { useSelector } from 'react-redux'
+import { getBaseWowheadUrl } from '../Common'
+import { Gems } from '../data/Gems'
+import { Sockets } from '../data/Sockets'
+import i18n from '../i18n/config'
+import { RootState } from '../redux/Store'
+import { Item, ItemSlotKey, SocketColor } from '../Types'
 
 interface Props {
-  item: Item;
-  itemSlot: ItemSlotKey;
+  item: Item
+  itemSlot: ItemSlotKey
   itemSocketClickHandler?: (
     itemId: string,
     socketNumber: number,
     socketColor: SocketColor
-  ) => void;
-  removeGemFromSocket?: (itemId: string, socketNumber: number) => void;
+  ) => void
+  removeGemFromSocket?: (itemId: string, socketNumber: number) => void
 }
 
 export default function ItemSocketDisplay(props: Props) {
-  const playerState = useSelector((state: RootState) => state.player);
+  const playerState = useSelector((state: RootState) => state.player)
 
   return (
-    <div className="item-sockets-container">
+    <div className='item-sockets-container'>
       {props.item.sockets?.map((socket, j) => (
         <a
-          target="_blank"
-          rel="noreferrer"
+          target='_blank'
+          rel='noreferrer'
           href={
             playerState.selectedGems[props.itemSlot] &&
             playerState.selectedGems[props.itemSlot][props.item.id] &&
@@ -35,19 +35,19 @@ export default function ItemSocketDisplay(props: Props) {
               ? `${getBaseWowheadUrl(i18n.language)}/item=${
                   playerState.selectedGems[props.itemSlot][props.item.id][j][1]
                 }`
-              : ""
+              : ''
           }
           key={nanoid()}
-          onClick={(e) => {
+          onClick={e => {
             props.itemSocketClickHandler &&
-              props.itemSocketClickHandler(props.item.id.toString(), j, socket);
-            e.preventDefault();
-            e.stopPropagation();
+              props.itemSocketClickHandler(props.item.id.toString(), j, socket)
+            e.preventDefault()
+            e.stopPropagation()
           }}
-          onContextMenu={(e) => {
+          onContextMenu={e => {
             props.removeGemFromSocket &&
-              props.removeGemFromSocket(props.item.id.toString(), j);
-            e.preventDefault();
+              props.removeGemFromSocket(props.item.id.toString(), j)
+            e.preventDefault()
           }}
         >
           <img
@@ -63,7 +63,7 @@ export default function ItemSocketDisplay(props: Props) {
               )
                 ? `${process.env.PUBLIC_URL}/img/${
                     Gems.find(
-                      (e) =>
+                      e =>
                         e.id ===
                         playerState.selectedGems[props.itemSlot][props.item.id][
                           j
@@ -71,13 +71,13 @@ export default function ItemSocketDisplay(props: Props) {
                     )?.iconName
                   }.jpg`
                 : `${process.env.PUBLIC_URL}/img/${
-                    Sockets.find((s) => s.color === socket)!.iconName
+                    Sockets.find(s => s.color === socket)!.iconName
                   }.jpg`
             }
-            alt={socket + " socket"}
+            alt={socket + ' socket'}
           />
         </a>
       ))}
     </div>
-  );
+  )
 }

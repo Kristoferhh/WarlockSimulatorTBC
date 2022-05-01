@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getRemainingTalentPoints } from "../Common";
-import { Spells } from "../data/Spells";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { getRemainingTalentPoints } from '../Common'
+import { Spells } from '../data/Spells'
 import {
   RotationGroup,
   Spell,
@@ -22,27 +22,27 @@ import {
   RotationStruct,
   Settings,
   rotationGroups,
-} from "../Types";
+} from '../Types'
 
 const initialPlayerState: PlayerState = {
-  talents: JSON.parse(localStorage.getItem("talents") || "{}"),
+  talents: JSON.parse(localStorage.getItem('talents') || '{}'),
   talentPointsRemaining: getRemainingTalentPoints(
-    JSON.parse(localStorage.getItem("talents") || "{}")
+    JSON.parse(localStorage.getItem('talents') || '{}')
   ),
   selectedItems: JSON.parse(
-    localStorage.getItem("selectedItems") ||
+    localStorage.getItem('selectedItems') ||
       JSON.stringify(InitialSelectedItemsAndEnchants)
   ),
   selectedEnchants: JSON.parse(
-    localStorage.getItem("selectedEnchants") ||
+    localStorage.getItem('selectedEnchants') ||
       JSON.stringify(InitialSelectedItemsAndEnchants)
   ),
   selectedGems: JSON.parse(
-    localStorage.getItem("selectedGems") || JSON.stringify(InitialSelectedGems)
+    localStorage.getItem('selectedGems') || JSON.stringify(InitialSelectedGems)
   ),
-  auras: JSON.parse(localStorage.getItem("auras") || "{}"),
+  auras: JSON.parse(localStorage.getItem('auras') || '{}'),
   rotation: JSON.parse(
-    localStorage.getItem("rotation") ||
+    localStorage.getItem('rotation') ||
       JSON.stringify({ filler: { shadowBolt: true } })
   ),
   stats: {
@@ -53,58 +53,55 @@ const initialPlayerState: PlayerState = {
     enchants: InitialPlayerStats,
   },
   settings: JSON.parse(
-    localStorage.getItem("settings") || JSON.stringify(InitialSettings)
+    localStorage.getItem('settings') || JSON.stringify(InitialSettings)
   ),
-  profiles: JSON.parse(localStorage.getItem("profiles") || "{}"),
+  profiles: JSON.parse(localStorage.getItem('profiles') || '{}'),
   sets: InitialSetCounts,
-};
+}
 
 export const PlayerSlice = createSlice({
-  name: "player",
+  name: 'player',
   initialState: initialPlayerState,
   reducers: {
     setTalentPointValue: (
       state,
       talent: PayloadAction<{ name: TalentName; points: number }>
     ) => {
-      state.talents[talent.payload.name] = talent.payload.points;
-      state.talentPointsRemaining = getRemainingTalentPoints(state.talents);
-      localStorage.setItem("talents", JSON.stringify(state.talents));
+      state.talents[talent.payload.name] = talent.payload.points
+      state.talentPointsRemaining = getRemainingTalentPoints(state.talents)
+      localStorage.setItem('talents', JSON.stringify(state.talents))
     },
     setSelectedItems: (state, action: PayloadAction<ItemAndEnchantStruct>) => {
-      state.selectedItems = action.payload;
-      localStorage.setItem(
-        "selectedItems",
-        JSON.stringify(state.selectedItems)
-      );
+      state.selectedItems = action.payload
+      localStorage.setItem('selectedItems', JSON.stringify(state.selectedItems))
     },
     setSelectedEnchants: (
       state,
       action: PayloadAction<ItemAndEnchantStruct>
     ) => {
-      state.selectedEnchants = action.payload;
+      state.selectedEnchants = action.payload
       localStorage.setItem(
-        "selectedEnchants",
+        'selectedEnchants',
         JSON.stringify(state.selectedEnchants)
-      );
+      )
     },
     setSelectedAuras: (state, action: PayloadAction<AurasStruct>) => {
-      state.auras = action.payload;
-      localStorage.setItem("auras", JSON.stringify(state.auras));
+      state.auras = action.payload
+      localStorage.setItem('auras', JSON.stringify(state.auras))
     },
     toggleRotationSpellSelection: (state, action: PayloadAction<Spell>) => {
       const rotationGroup = rotationGroups.find(
-        (e) => e.header === action.payload.group
-      );
+        e => e.header === action.payload.group
+      )
       if (!rotationGroup) {
-        return;
+        return
       }
       if (state.rotation[rotationGroup.varName] == null) {
-        state.rotation[rotationGroup.varName] = {};
+        state.rotation[rotationGroup.varName] = {}
       }
       const spellState =
-        state.rotation[rotationGroup.varName][action.payload.varName];
-      const isSpellDisabled = spellState == null || spellState === false;
+        state.rotation[rotationGroup.varName][action.payload.varName]
+      const isSpellDisabled = spellState == null || spellState === false
       // If a filler/curse is being enabled then disable all other curses/fillers
       if (isSpellDisabled) {
         if (
@@ -112,60 +109,58 @@ export const PlayerSlice = createSlice({
             rotationGroup.header
           )
         ) {
-          Spells.filter((e) => e.group === action.payload.group).forEach(
-            (e) => {
-              state.rotation[rotationGroup.varName][e.varName] = false;
-            }
-          );
+          Spells.filter(e => e.group === action.payload.group).forEach(e => {
+            state.rotation[rotationGroup.varName][e.varName] = false
+          })
         }
       }
       state.rotation[rotationGroup.varName][action.payload.varName] =
         spellState === null
           ? true
-          : !state.rotation[rotationGroup.varName][action.payload.varName];
-      localStorage.setItem("rotation", JSON.stringify(state.rotation));
+          : !state.rotation[rotationGroup.varName][action.payload.varName]
+      localStorage.setItem('rotation', JSON.stringify(state.rotation))
     },
     setBaseStats: (state, action: PayloadAction<StatsCollection>) => {
-      state.stats.base = action.payload;
+      state.stats.base = action.payload
     },
     setAurasStats: (state, action: PayloadAction<StatsCollection>) => {
-      state.stats.auras = action.payload;
+      state.stats.auras = action.payload
     },
     setItemsStats: (state, action: PayloadAction<StatsCollection>) => {
-      state.stats.items = action.payload;
+      state.stats.items = action.payload
     },
     setGemsStats: (state, action: PayloadAction<StatsCollection>) => {
-      state.stats.gems = action.payload;
+      state.stats.gems = action.payload
     },
     setEnchantsStats: (state, action: PayloadAction<StatsCollection>) => {
-      state.stats.enchants = action.payload;
+      state.stats.enchants = action.payload
     },
     setItemSetCounts: (state, action: PayloadAction<SetsStruct>) => {
-      state.sets = action.payload;
+      state.sets = action.payload
     },
     modifySettingValue: (
       state,
       action: PayloadAction<{ setting: Setting; value: string }>
     ) => {
-      state.settings[action.payload.setting] = action.payload.value;
-      localStorage.setItem("settings", JSON.stringify(state.settings));
+      state.settings[action.payload.setting] = action.payload.value
+      localStorage.setItem('settings', JSON.stringify(state.settings))
     },
     setProfile: (
       state,
       action: PayloadAction<{ profile: Profile; name: string }>
     ) => {
-      state.profiles[action.payload.name] = action.payload.profile;
-      localStorage.setItem("profiles", JSON.stringify(state.profiles));
+      state.profiles[action.payload.name] = action.payload.profile
+      localStorage.setItem('profiles', JSON.stringify(state.profiles))
     },
     setSelectedGems: (state, action: PayloadAction<SelectedGemsStruct>) => {
-      state.selectedGems = action.payload;
-      localStorage.setItem("selectedGems", JSON.stringify(state.selectedGems));
+      state.selectedGems = action.payload
+      localStorage.setItem('selectedGems', JSON.stringify(state.selectedGems))
     },
     deleteProfile: (state, action: PayloadAction<string>) => {
       if (state.profiles[action.payload]) {
-        delete state.profiles[action.payload];
-        localStorage.setItem("profiles", JSON.stringify(state.profiles));
-        localStorage.removeItem("selectedProfile");
+        delete state.profiles[action.payload]
+        localStorage.setItem('profiles', JSON.stringify(state.profiles))
+        localStorage.removeItem('selectedProfile')
       }
     },
     renameProfile: (
@@ -175,26 +170,26 @@ export const PlayerSlice = createSlice({
       if (state.profiles[action.payload.oldName]) {
         // Create a copy of the old profile with the new name and delete the old profile.
         state.profiles[action.payload.newName] =
-          state.profiles[action.payload.oldName];
-        delete state.profiles[action.payload.oldName];
-        localStorage.setItem("profiles", JSON.stringify(state.profiles));
-        localStorage.setItem("selectedProfile", action.payload.newName);
+          state.profiles[action.payload.oldName]
+        delete state.profiles[action.payload.oldName]
+        localStorage.setItem('profiles', JSON.stringify(state.profiles))
+        localStorage.setItem('selectedProfile', action.payload.newName)
       }
     },
     setTalentsState: (state, action: PayloadAction<TalentStore>) => {
-      state.talents = action.payload;
-      localStorage.setItem("talents", JSON.stringify(action.payload));
+      state.talents = action.payload
+      localStorage.setItem('talents', JSON.stringify(action.payload))
     },
     setRotationState: (state, action: PayloadAction<RotationStruct>) => {
-      state.rotation = action.payload;
-      localStorage.setItem("rotation", JSON.stringify(action.payload));
+      state.rotation = action.payload
+      localStorage.setItem('rotation', JSON.stringify(action.payload))
     },
     setSettingsState: (state, action: PayloadAction<Settings>) => {
-      state.settings = action.payload;
-      localStorage.setItem("settings", JSON.stringify(action.payload));
+      state.settings = action.payload
+      localStorage.setItem('settings', JSON.stringify(action.payload))
     },
   },
-});
+})
 
 export const {
   setSettingsState,
@@ -216,5 +211,5 @@ export const {
   toggleRotationSpellSelection,
   modifySettingValue,
   setProfile,
-} = PlayerSlice.actions;
-export default PlayerSlice.reducer;
+} = PlayerSlice.actions
+export default PlayerSlice.reducer

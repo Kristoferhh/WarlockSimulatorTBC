@@ -1,9 +1,9 @@
-import { Race, StatsCollection } from "../Types";
+import { Race, StatsCollection } from '../Types'
 
 export const Races: { name: string; varName: Race; stats: StatsCollection }[] =
   [
     {
-      name: "Gnome",
+      name: 'Gnome',
       varName: Race.Gnome,
       stats: {
         health: 3310,
@@ -16,7 +16,7 @@ export const Races: { name: string; varName: Race; stats: StatsCollection }[] =
       },
     },
     {
-      name: "Human",
+      name: 'Human',
       varName: Race.Human,
       stats: {
         health: 3310,
@@ -28,7 +28,7 @@ export const Races: { name: string; varName: Race; stats: StatsCollection }[] =
       },
     },
     {
-      name: "Orc",
+      name: 'Orc',
       varName: Race.Orc,
       stats: {
         health: 3310,
@@ -40,7 +40,7 @@ export const Races: { name: string; varName: Race; stats: StatsCollection }[] =
       },
     },
     {
-      name: "Undead",
+      name: 'Undead',
       varName: Race.Undead,
       stats: {
         health: 3310,
@@ -52,7 +52,7 @@ export const Races: { name: string; varName: Race; stats: StatsCollection }[] =
       },
     },
     {
-      name: "Blood Elf",
+      name: 'Blood Elf',
       varName: Race.BloodElf,
       stats: {
         health: 3310,
@@ -67,4 +67,4 @@ export const Races: { name: string; varName: Race; stats: StatsCollection }[] =
         natureResist: 5,
       },
     },
-  ];
+  ]

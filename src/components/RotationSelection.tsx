@@ -1,35 +1,35 @@
-import { nanoid } from "nanoid";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { getBaseWowheadUrl } from "../Common";
-import { Spells } from "../data/Spells";
-import i18n from "../i18n/config";
-import { toggleRotationSpellSelection } from "../redux/PlayerSlice";
-import { RootState } from "../redux/Store";
-import { RotationGroup, rotationGroups } from "../Types";
+import { nanoid } from 'nanoid'
+import { useTranslation } from 'react-i18next'
+import { useDispatch, useSelector } from 'react-redux'
+import { getBaseWowheadUrl } from '../Common'
+import { Spells } from '../data/Spells'
+import i18n from '../i18n/config'
+import { toggleRotationSpellSelection } from '../redux/PlayerSlice'
+import { RootState } from '../redux/Store'
+import { RotationGroup, rotationGroups } from '../Types'
 
 export default function RotationSelection() {
-  const playerStore = useSelector((state: RootState) => state.player);
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const playerStore = useSelector((state: RootState) => state.player)
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
 
   return (
-    <section id="rotation-section">
-      <h3>{t("Rotation")}</h3>
-      <ul id="rotation-list">
-        {rotationGroups.map((group) => (
+    <section id='rotation-section'>
+      <h3>{t('Rotation')}</h3>
+      <ul id='rotation-list'>
+        {rotationGroups.map(group => (
           <li
             key={nanoid()}
             style={{
               display:
                 group.header !== RotationGroup.Curse &&
-                playerStore.settings.rotationOption === "simChooses"
-                  ? "none"
-                  : "",
+                playerStore.settings.rotationOption === 'simChooses'
+                  ? 'none'
+                  : '',
             }}
           >
             <h4>{t(group.header)}</h4>
-            {Spells.filter((s) => s.group === group.header).map((spell) => (
+            {Spells.filter(s => s.group === group.header).map(spell => (
               <div
                 key={nanoid()}
                 data-checked={
@@ -38,9 +38,9 @@ export default function RotationSelection() {
                       true) ||
                   false
                 }
-                onClick={(e) => {
-                  dispatch(toggleRotationSpellSelection(spell));
-                  e.preventDefault();
+                onClick={e => {
+                  dispatch(toggleRotationSpellSelection(spell))
+                  e.preventDefault()
                 }}
               >
                 <a
@@ -57,5 +57,5 @@ export default function RotationSelection() {
         ))}
       </ul>
     </section>
-  );
+  )
 }
