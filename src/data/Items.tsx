@@ -1104,7 +1104,7 @@ export const Items: Item[] = [
     stamina: 35,
     intellect: 18,
     sockets: [SocketColor.Yellow],
-    socketBonus: { stamina: 3},
+    socketBonus: { stamina: 3 },
     spellPower: 28,
     hasteRating: 24,
     resilienceRating: 18,
