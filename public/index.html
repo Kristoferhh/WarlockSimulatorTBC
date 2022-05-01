@@ -7,13 +7,13 @@
       src="https://www.googletagmanager.com/gtag/js?id=UA-180959244-1"
     ></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
+      window.dataLayer = window.dataLayer || []
       function gtag() {
-        dataLayer.push(arguments);
+        dataLayer.push(arguments)
       }
-      gtag("js", new Date());
+      gtag('js', new Date())
 
-      gtag("config", "UA-180959244-1");
+      gtag('config', 'UA-180959244-1')
     </script>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
@@ -31,24 +31,30 @@
         colorlinks: false,
         iconizelinks: false,
         renamelinks: false,
-      };
+      }
     </script>
     <script src="https://wow.zamimg.com/widgets/power.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      window.jQuery ||
+        document.write(
+          '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"><\/script>',
+        )
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
     <script type="text/javascript">
       window.onerror = function (msg, url, linenumber) {
         alert(
-          "Error: " +
+          'Error: ' +
             msg +
-            "\nURL: " +
+            '\nURL: ' +
             url +
-            "\nLine Number: " +
+            '\nLine Number: ' +
             linenumber +
-            "\nPlease report this to the #sim-bug-report channel on the Warlock Classic discord or create an issue at https://github.com/Kristoferhh/WarlockSimulatorTBC."
-        );
-        return true;
-      };
+            '\nPlease report this to the #sim-bug-report channel on the Warlock Classic discord or create an issue at https://github.com/Kristoferhh/WarlockSimulatorTBC.',
+        )
+        return true
+      }
     </script>
   </head>
 
