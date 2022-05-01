@@ -1,2 +1,9 @@
 BasedOnStyle:  Google
+
 ColumnLimit: 120
+AlignConsecutiveAssignments: true
+AlignArrayOfStructures: Left
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+BinPackArguments: true
+BinPackParameters: true
