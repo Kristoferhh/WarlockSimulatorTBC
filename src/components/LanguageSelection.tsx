@@ -1,14 +1,23 @@
-import { ClickAwayListener, MenuItem, MenuList, Paper, Stack, Button, Grow, Popper } from "@mui/material";
+import {
+  ClickAwayListener,
+  MenuItem,
+  MenuList,
+  Paper,
+  Stack,
+  Button,
+  Grow,
+  Popper,
+} from "@mui/material";
 import { nanoid } from "@reduxjs/toolkit";
 import { useEffect, useRef, useState } from "react";
 import i18n from "../i18n/config";
 import { Languages } from "../Types";
 
-
 export default function LanguageSelection() {
   const [open, setOpen] = useState(false);
-  const [currentLanguage, setCurrentLanguage] =
-    useState(Languages.find(e => e.iso === i18n.language)?.name);
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Languages.find((e) => e.iso === i18n.language)?.name
+  );
   const anchorRef = useRef<HTMLButtonElement>(null);
 
   const handleToggle = () => {
@@ -16,9 +25,9 @@ export default function LanguageSelection() {
   };
 
   function languageClickHandler(languageIsoCode: string): void {
-    setCurrentLanguage(Languages.find(e => e.iso === languageIsoCode)?.name);
+    setCurrentLanguage(Languages.find((e) => e.iso === languageIsoCode)?.name);
     i18n.changeLanguage(languageIsoCode);
-    localStorage.setItem('language', languageIsoCode);
+    localStorage.setItem("language", languageIsoCode);
     setOpen(false);
   }
 
@@ -34,10 +43,10 @@ export default function LanguageSelection() {
   };
 
   function handleListKeyDown(event: React.KeyboardEvent) {
-    if (event.key === 'Tab') {
+    if (event.key === "Tab") {
       event.preventDefault();
       setOpen(false);
-    } else if (event.key === 'Escape') {
+    } else if (event.key === "Escape") {
       setOpen(false);
     }
   }
@@ -53,16 +62,20 @@ export default function LanguageSelection() {
   }, [open]);
 
   return (
-    <Stack direction="row" spacing={2} id='language-menu'>
+    <Stack direction="row" spacing={2} id="language-menu">
       <div>
         <Button
           ref={anchorRef}
           id="composition-button"
-          aria-controls={open ? 'composition-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
+          aria-controls={open ? "composition-menu" : undefined}
+          aria-expanded={open ? "true" : undefined}
           aria-haspopup="true"
           onClick={handleToggle}
-          style={{ color: 'white', marginLeft: '10px', border: '1px solid white' }}
+          style={{
+            color: "white",
+            marginLeft: "10px",
+            border: "1px solid white",
+          }}
         >
           {currentLanguage}
         </Button>
@@ -79,7 +92,7 @@ export default function LanguageSelection() {
               {...TransitionProps}
               style={{
                 transformOrigin:
-                  placement === 'bottom-start' ? 'left top' : 'left bottom',
+                  placement === "bottom-start" ? "left top" : "left bottom",
               }}
             >
               <Paper>
@@ -90,15 +103,15 @@ export default function LanguageSelection() {
                     aria-labelledby="composition-button"
                     onKeyDown={handleListKeyDown}
                   >
-                    {
-                      Languages.map(language =>
-                        <MenuItem
-                          key={nanoid()}
-                          className='language-item'
-                          onClick={() => languageClickHandler(language.iso)}
-                        >{language.name}</MenuItem>
-                      )
-                    }
+                    {Languages.map((language) => (
+                      <MenuItem
+                        key={nanoid()}
+                        className="language-item"
+                        onClick={() => languageClickHandler(language.iso)}
+                      >
+                        {language.name}
+                      </MenuItem>
+                    ))}
                   </MenuList>
                 </ClickAwayListener>
               </Paper>

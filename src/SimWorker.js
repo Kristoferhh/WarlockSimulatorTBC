@@ -1,29 +1,38 @@
 class SimWorker {
-  constructor (dpsUpdate, combatLogVector, errorCallback, combatLogUpdate, combatLogBreakdown, simulationEnd, simulationUpdate, workerParams) {
+  constructor(
+    dpsUpdate,
+    combatLogVector,
+    errorCallback,
+    combatLogUpdate,
+    combatLogBreakdown,
+    simulationEnd,
+    simulationUpdate,
+    workerParams
+  ) {
     this.worker = new Worker(`${process.env.PUBLIC_URL}/web.worker.js`);
     this.workerParams = workerParams;
     this.worker.onmessage = function (event) {
       const data = event.data.data;
-      switch(event.data.event) {
-        case 'dpsUpdate':
+      switch (event.data.event) {
+        case "dpsUpdate":
           dpsUpdate(data);
           break;
-        case 'errorCallback':
+        case "errorCallback":
           errorCallback(data);
           break;
-        case 'combatLogUpdate':
+        case "combatLogUpdate":
           combatLogUpdate(data);
           break;
-        case 'end':
+        case "end":
           simulationEnd(data);
           break;
-        case 'update':
+        case "update":
           simulationUpdate(data);
           break;
-        case 'combatLogBreakdown':
+        case "combatLogBreakdown":
           combatLogBreakdown(data);
           break;
-        case 'combatLogVector':
+        case "combatLogVector":
           combatLogVector(data);
           break;
         default:
@@ -32,7 +41,7 @@ class SimWorker {
     };
   }
 
-  start () {
+  start() {
     this.worker.postMessage(this.workerParams);
   }
 }

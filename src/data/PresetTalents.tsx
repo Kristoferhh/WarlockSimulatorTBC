@@ -1,6 +1,9 @@
 import { TalentName } from "../Types";
 
-export const PresetTalents: {name: string, talents: {[key in keyof typeof TalentName]?: number}}[] = [
+export const PresetTalents: {
+  name: string;
+  talents: { [key in keyof typeof TalentName]?: number };
+}[] = [
   {
     name: "Affli/UA",
     talents: {
@@ -23,11 +26,11 @@ export const PresetTalents: {name: string, talents: {[key in keyof typeof Talent
       devastation: 5,
       shadowburn: 1,
       intensity: 2,
-      destructiveReach: 2
-    }
+      destructiveReach: 2,
+    },
   },
   {
-    name: 'Affli/Ruin',
+    name: "Affli/Ruin",
     talents: {
       suppression: 5,
       improvedCorruption: 5,
@@ -48,11 +51,11 @@ export const PresetTalents: {name: string, talents: {[key in keyof typeof Talent
       shadowburn: 1,
       intensity: 2,
       destructiveReach: 2,
-      ruin: 1
-    }
+      ruin: 1,
+    },
   },
   {
-    name: 'Destruction',
+    name: "Destruction",
     talents: {
       improvedHealthstone: 2,
       demonicEmbrace: 5,
@@ -74,11 +77,11 @@ export const PresetTalents: {name: string, talents: {[key in keyof typeof Talent
       emberstorm: 5,
       backlash: 3,
       conflagrate: 1,
-      shadowAndFlame: 5
-    }
+      shadowAndFlame: 5,
+    },
   },
   {
-    name: 'Destro/Nightfall',
+    name: "Destro/Nightfall",
     talents: {
       suppression: 1,
       improvedCorruption: 5,
@@ -101,11 +104,11 @@ export const PresetTalents: {name: string, talents: {[key in keyof typeof Talent
       backlash: 3,
       conflagrate: 1,
       shadowAndFlame: 5,
-      shadowfury: 1
-    }
+      shadowfury: 1,
+    },
   },
   {
-    name: 'Demonology Felguard',
+    name: "Demonology Felguard",
     talents: {
       improvedCorruption: 1,
       improvedHealthstone: 2,
@@ -128,11 +131,11 @@ export const PresetTalents: {name: string, talents: {[key in keyof typeof Talent
       devastation: 5,
       shadowburn: 1,
       intensity: 1,
-      destructiveReach: 2
-    }
+      destructiveReach: 2,
+    },
   },
   {
-    name: 'Demonology/Ruin',
+    name: "Demonology/Ruin",
     talents: {
       improvedCorruption: 1,
       improvedHealthstone: 2,
@@ -155,7 +158,7 @@ export const PresetTalents: {name: string, talents: {[key in keyof typeof Talent
       shadowburn: 1,
       intensity: 2,
       destructiveReach: 2,
-      ruin: 1
-    }
-  }
-]
+      ruin: 1,
+    },
+  },
+];

@@ -1,6 +1,15 @@
 import { ItemSlot } from "../Types";
 
-export const PresetItemSets: { name: string, items: { [key in ItemSlot]?: { itemId: number, gemIds?: number[], enchantId?: number } } }[] = [
+export const PresetItemSets: {
+  name: string;
+  items: {
+    [key in ItemSlot]?: {
+      itemId: number;
+      gemIds?: number[];
+      enchantId?: number;
+    };
+  };
+}[] = [
   {
     name: "Shadow Destruction Pre-BiS",
     items: {
@@ -20,7 +29,7 @@ export const PresetItemSets: { name: string, items: { [key in ItemSlot]?: { item
       trinket2: { itemId: 27683 },
       mainhand: { itemId: 29155, enchantId: 27982 },
       offhand: { itemId: 29273 },
-      wand: { itemId: 22821 }
-    }
-  }
-]
+      wand: { itemId: 22821 },
+    },
+  },
+];
