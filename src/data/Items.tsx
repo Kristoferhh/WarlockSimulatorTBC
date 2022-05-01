@@ -1109,7 +1109,7 @@ export const Items: Item[] = [
     hasteRating: 24,
     resilienceRating: 18,
     source: ItemSource.PVP,
-    iconName: "inv_jewelry_necklace_ahnqiraj_36",
+    iconName: "inv_jewelry_necklace_36",
   },
 
   // Shoulders
