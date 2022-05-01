@@ -29,7 +29,7 @@ export default function StatsDisplay() {
       ) {
         bloodPactModifier = Math.max(
           bloodPactModifier,
-          playerState.talents.improvedImp
+          playerState.talents.improvedImp,
         )
       }
 
@@ -144,7 +144,7 @@ export default function StatsDisplay() {
     let critRating = Math.round(
       Object.values(playerState.stats)
         .map(obj => obj.critRating || 0)
-        .reduce((a, b) => a + b)
+        .reduce((a, b) => a + b),
     )
     if (playerState.auras.powerOfTheGuardianMage) {
       critRating += 28 * parseInt(playerState.settings.mageAtieshAmount)
@@ -154,7 +154,7 @@ export default function StatsDisplay() {
       Math.round(
         (critRating / StatConstant.critRatingPerPercent +
           StatConstant.baseCritChancePercent) *
-          100
+          100,
       ) / 100
     critPercent += playerState.talents.devastation || 0
     critPercent += playerState.talents.backlash || 0
@@ -219,7 +219,7 @@ export default function StatsDisplay() {
     if (playerState.auras.ferociousInspiration) {
       modifier *= Math.pow(
         1.03,
-        parseInt(playerState.settings.ferociousInspirationAmount)
+        parseInt(playerState.settings.ferociousInspirationAmount),
       )
     }
 
@@ -351,7 +351,7 @@ export default function StatsDisplay() {
     <ul className='character-stats'>
       {stats
         .filter(
-          stat => stat.condition === undefined || stat.condition() === true
+          stat => stat.condition === undefined || stat.condition() === true,
         )
         .map(stat => (
           <li key={nanoid()}>

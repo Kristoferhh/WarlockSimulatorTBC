@@ -66,7 +66,7 @@ function findSpellByName(name: string):
 
 export default function BreakdownTables() {
   const breakdownObj = useSelector(
-    (state: RootState) => state.ui.combatLogBreakdown
+    (state: RootState) => state.ui.combatLogBreakdown,
   )
   const { t } = useTranslation()
 
@@ -115,7 +115,7 @@ export default function BreakdownTables() {
               .filter(
                 e =>
                   breakdownObj.spellDamageDict[e.name] &&
-                  breakdownObj.spellDamageDict[e.name] > 0
+                  breakdownObj.spellDamageDict[e.name] > 0,
               )
               .map(spell => {
                 const spellObj = findSpellByName(spell.name)
@@ -160,7 +160,7 @@ export default function BreakdownTables() {
                       {breakdownObj.spellDamageDict[spell.name]
                         ? formatPercentage(
                             breakdownObj.spellDamageDict[spell.name] /
-                              breakdownObj.totalDamageDone
+                              breakdownObj.totalDamageDone,
                           )
                         : 0}
                       %
@@ -169,17 +169,17 @@ export default function BreakdownTables() {
                       {spell.casts / breakdownObj.totalIterationAmount < 2
                         ? Math.round(
                             (spell.casts / breakdownObj.totalIterationAmount) *
-                              10
+                              10,
                           ) / 10
                         : Math.round(
-                            spell.casts / breakdownObj.totalIterationAmount
+                            spell.casts / breakdownObj.totalIterationAmount,
                           )}
                     </td>
                     <td className='number'>
                       {breakdownObj.spellDamageDict[spell.name]
                         ? Math.round(
                             breakdownObj.spellDamageDict[spell.name] /
-                              spell.casts
+                              spell.casts,
                           )
                         : 0}
                     </td>
@@ -204,7 +204,7 @@ export default function BreakdownTables() {
                         ? Math.round(
                             (breakdownObj.spellDamageDict[spell.name] /
                               breakdownObj.totalSimulationFightLength) *
-                              100
+                              100,
                           ) / 100
                         : 0}
                     </td>
@@ -237,7 +237,7 @@ export default function BreakdownTables() {
               .filter(
                 e =>
                   breakdownObj.spellManaGainDict[e.name] &&
-                  breakdownObj.spellManaGainDict[e.name] > 0
+                  breakdownObj.spellManaGainDict[e.name] > 0,
               )
               .map(spell => {
                 const spellObj = findSpellByName(spell.name)
@@ -282,7 +282,7 @@ export default function BreakdownTables() {
                       {breakdownObj.spellManaGainDict[spell.name]
                         ? formatPercentage(
                             breakdownObj.spellManaGainDict[spell.name] /
-                              breakdownObj.totalManaGained
+                              breakdownObj.totalManaGained,
                           )
                         : 0}
                       %
@@ -291,17 +291,17 @@ export default function BreakdownTables() {
                       {spell.casts / breakdownObj.totalIterationAmount < 2
                         ? Math.round(
                             (spell.casts / breakdownObj.totalIterationAmount) *
-                              10
+                              10,
                           ) / 10
                         : Math.round(
-                            spell.casts / breakdownObj.totalIterationAmount
+                            spell.casts / breakdownObj.totalIterationAmount,
                           )}
                     </td>
                     <td className='number'>
                       {breakdownObj.spellManaGainDict[spell.name]
                         ? Math.round(
                             breakdownObj.spellManaGainDict[spell.name] /
-                              spell.casts
+                              spell.casts,
                           )
                         : 0}
                     </td>
@@ -364,10 +364,10 @@ export default function BreakdownTables() {
                       {spell.count / breakdownObj.totalIterationAmount < 2
                         ? Math.round(
                             (spell.count / breakdownObj.totalIterationAmount) *
-                              10
+                              10,
                           ) / 10
                         : Math.round(
-                            spell.count / breakdownObj.totalIterationAmount
+                            spell.count / breakdownObj.totalIterationAmount,
                           )}
                     </td>
                     <td>
@@ -381,7 +381,7 @@ export default function BreakdownTables() {
                         max='100'
                       ></meter>{' '}
                       {formatPercentage(
-                        spell.uptime / breakdownObj.totalSimulationFightLength
+                        spell.uptime / breakdownObj.totalSimulationFightLength,
                       )}
                       %
                     </td>

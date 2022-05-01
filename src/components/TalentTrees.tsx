@@ -12,7 +12,7 @@ import i18n from '../i18n/config'
 export default function TalentTrees() {
   const talentState = useSelector((state: RootState) => state.player.talents)
   const talentPointsRemaining = useSelector(
-    (state: RootState) => state.player.talentPointsRemaining
+    (state: RootState) => state.player.talentPointsRemaining,
   )
   const dispatch = useDispatch()
   const { t } = useTranslation()
@@ -25,7 +25,7 @@ export default function TalentTrees() {
         setTalentPointValue({
           name: talentKey as TalentName,
           points: 0,
-        })
+        }),
       )
     }
     for (const [talentKey, points] of Object.entries(talentTemplate)) {
@@ -33,7 +33,7 @@ export default function TalentTrees() {
         setTalentPointValue({
           name: talentKey as TalentName,
           points: points,
-        })
+        }),
       )
     }
   }
@@ -51,14 +51,14 @@ export default function TalentTrees() {
         setTalentPointValue({
           name: talent.varName!!,
           points: currentTalentPointsValue + 1,
-        })
+        }),
       )
     } else if (mouseButton === 2 && currentTalentPointsValue > 0) {
       dispatch(
         setTalentPointValue({
           name: talent.varName!!,
           points: currentTalentPointsValue - 1,
-        })
+        }),
       )
     }
   }
@@ -70,7 +70,7 @@ export default function TalentTrees() {
           setTalentPointValue({
             name: talentTree.rows[row][talentKey].varName!!,
             points: 0,
-          })
+          }),
         )
       }
     }
@@ -123,12 +123,12 @@ export default function TalentTrees() {
                           >
                             <a
                               href={`${getBaseWowheadUrl(
-                                i18n.language
+                                i18n.language,
                               )}/spell=${
                                 talent.rankIDs[
                                   Math.max(
                                     talentState[talent.varName!] - 1,
-                                    0
+                                    0,
                                   ) || 0
                                 ]
                               }`}

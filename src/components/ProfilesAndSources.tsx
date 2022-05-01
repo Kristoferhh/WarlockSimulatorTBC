@@ -48,7 +48,7 @@ const phases: { title: string; phase: Phase }[] = [
 export default function ProfilesAndSources() {
   const playerStore = useSelector((state: RootState) => state.player)
   const selectedProfileState = useSelector(
-    (state: RootState) => state.ui.selectedProfile
+    (state: RootState) => state.ui.selectedProfile,
   )
   const sourcesState = useSelector((state: RootState) => state.ui.sources)
   const dispatch = useDispatch()
@@ -72,7 +72,7 @@ export default function ProfilesAndSources() {
           rotation: playerStore.rotation,
           simSettings: playerStore.settings,
         },
-      })
+      }),
     )
 
     if (newProfile) {
@@ -96,7 +96,7 @@ export default function ProfilesAndSources() {
     dispatch(setItemsStats(getItemsStats(params[1].items)))
     dispatch(setGemsStats(getGemsStats(params[1].items, params[1].gems)))
     dispatch(
-      setEnchantsStats(getEnchantsStats(params[1].items, params[1].enchants))
+      setEnchantsStats(getEnchantsStats(params[1].items, params[1].enchants)),
     )
     dispatch(setItemSetCounts(getItemSetCounts(params[1].items)))
   }
@@ -104,7 +104,7 @@ export default function ProfilesAndSources() {
   function deleteProfileHandler() {
     if (
       window.confirm(
-        `Are you sure you want to delete profile '${selectedProfileState}'?`
+        `Are you sure you want to delete profile '${selectedProfileState}'?`,
       )
     ) {
       dispatch(deleteProfile(selectedProfileState))
@@ -113,7 +113,7 @@ export default function ProfilesAndSources() {
 
   function renameProfileHandler() {
     const newName = prompt(
-      `Enter the new name for profile '${selectedProfileState}'`
+      `Enter the new name for profile '${selectedProfileState}'`,
     )?.replaceAll("'", '')
 
     if (
@@ -125,7 +125,7 @@ export default function ProfilesAndSources() {
         renameProfile({
           oldName: selectedProfileState,
           newName: newName,
-        })
+        }),
       )
       dispatch(setSelectedProfile(newName))
     }

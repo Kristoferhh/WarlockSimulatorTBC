@@ -15,7 +15,7 @@ export default function DpsHistogram() {
           {
             label: 'DPS Histogram',
             data: Object.keys(histogramState.data).map(
-              key => histogramState.data![key]
+              key => histogramState.data![key],
             ),
             borderWidth: 1,
             borderColor: '#9482C9',

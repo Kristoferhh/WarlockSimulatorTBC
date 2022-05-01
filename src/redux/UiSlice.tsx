@@ -17,19 +17,19 @@ const initialUiState: UiState = {
     localStorage.getItem('sources') ||
       JSON.stringify({
         phase: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true },
-      })
+      }),
   ),
   gemSelectionTable: InitialGemSelectionTableValue,
   gemPreferences: JSON.parse(
     localStorage.getItem('gemPreferences') ||
-      JSON.stringify({ hidden: [], favorites: [] })
+      JSON.stringify({ hidden: [], favorites: [] }),
   ),
   selectedProfile: localStorage.getItem('selectedProfile') || '',
   importExportWindowVisible: false,
   equippedItemsWindowVisible: false,
   fillItemSocketsWindowVisible: false,
   hiddenItems: JSON.parse(
-    localStorage.getItem('hiddenItems') || JSON.stringify([])
+    localStorage.getItem('hiddenItems') || JSON.stringify([]),
   ),
   selectedItemSlot:
     (localStorage.getItem('selectedItemSlot') as ItemSlotKey) ||
@@ -76,14 +76,14 @@ export const UiSlice = createSlice({
     },
     setGemSelectionTable: (
       state,
-      action: PayloadAction<GemSelectionTableStruct>
+      action: PayloadAction<GemSelectionTableStruct>,
     ) => {
       state.gemSelectionTable = action.payload
     },
     favoriteGem: (state, action: PayloadAction<number>) => {
       if (state.gemPreferences.favorites.includes(action.payload)) {
         state.gemPreferences.favorites = state.gemPreferences.favorites.filter(
-          e => e !== action.payload
+          e => e !== action.payload,
         )
       } else {
         state.gemPreferences.favorites.push(action.payload)
@@ -91,13 +91,13 @@ export const UiSlice = createSlice({
 
       localStorage.setItem(
         'gemPreferences',
-        JSON.stringify(state.gemPreferences)
+        JSON.stringify(state.gemPreferences),
       )
     },
     hideGem: (state, action: PayloadAction<number>) => {
       if (state.gemPreferences.hidden.includes(action.payload)) {
         state.gemPreferences.hidden = state.gemPreferences.hidden.filter(
-          e => e !== action.payload
+          e => e !== action.payload,
         )
       } else {
         state.gemPreferences.hidden.push(action.payload)
@@ -105,7 +105,7 @@ export const UiSlice = createSlice({
 
       localStorage.setItem(
         'gemPreferences',
-        JSON.stringify(state.gemPreferences)
+        JSON.stringify(state.gemPreferences),
       )
     },
     setSelectedProfile: (state, action: PayloadAction<string>) => {
@@ -114,19 +114,19 @@ export const UiSlice = createSlice({
     },
     setImportExportWindowVisibility: (
       state,
-      action: PayloadAction<boolean>
+      action: PayloadAction<boolean>,
     ) => {
       state.importExportWindowVisible = action.payload
     },
     setEquippedItemsWindowVisibility: (
       state,
-      action: PayloadAction<boolean>
+      action: PayloadAction<boolean>,
     ) => {
       state.equippedItemsWindowVisible = action.payload
     },
     setFillItemSocketsWindowVisibility: (
       state,
-      action: PayloadAction<boolean>
+      action: PayloadAction<boolean>,
     ) => {
       state.fillItemSocketsWindowVisible = action.payload
     },
@@ -154,7 +154,7 @@ export const UiSlice = createSlice({
         itemId: number
         dps: number
         saveLocalStorage: boolean
-      }>
+      }>,
     ) => {
       if (!state.savedItemDps[action.payload.itemSlot]) {
         state.savedItemDps[action.payload.itemSlot] = {}
@@ -174,7 +174,7 @@ export const UiSlice = createSlice({
     },
     setCombatLogBreakdownValue: (
       state,
-      action: PayloadAction<CombatLogBreakdown>
+      action: PayloadAction<CombatLogBreakdown>,
     ) => {
       state.combatLogBreakdown = action.payload
     },
@@ -186,7 +186,7 @@ export const UiSlice = createSlice({
     },
     setHistogramData: (
       state,
-      action: PayloadAction<{ [key: string]: number }>
+      action: PayloadAction<{ [key: string]: number }>,
     ) => {
       state.histogram.data = action.payload
     },
@@ -195,7 +195,7 @@ export const UiSlice = createSlice({
     },
     setStatWeightValue: (
       state,
-      action: PayloadAction<{ stat: [keyof StatWeightStats]; value: number }>
+      action: PayloadAction<{ stat: [keyof StatWeightStats]; value: number }>,
     ) => {
       state.statWeights.statValues[action.payload.stat as unknown as Stat] =
         action.payload.value

@@ -29,16 +29,16 @@ export default function Session() {
     dispatch(setItemsStats(getItemsStats(playerStore.selectedItems)))
     dispatch(
       setGemsStats(
-        getGemsStats(playerStore.selectedItems, playerStore.selectedGems)
-      )
+        getGemsStats(playerStore.selectedItems, playerStore.selectedGems),
+      ),
     )
     dispatch(
       setEnchantsStats(
         getEnchantsStats(
           playerStore.selectedItems,
-          playerStore.selectedEnchants
-        )
-      )
+          playerStore.selectedEnchants,
+        ),
+      ),
     )
     dispatch(setItemSetCounts(getItemSetCounts(playerStore.selectedItems)))
     ;($('.tablesorter') as any).tablesorter()

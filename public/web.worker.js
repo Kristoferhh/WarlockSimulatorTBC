@@ -208,11 +208,11 @@ onmessage = event => {
           talents,
           sets,
           stats,
-          items
+          items,
         )
         playerSettings.randomSeeds = module.allocRandomSeeds(
           simulationData.iterations,
-          event.data.randomSeed
+          event.data.randomSeed,
         )
         playerSettings.itemId = parseInt(event.data.itemId)
         playerSettings.metaGemId = parseInt(event.data.playerSettings.metaGemId)
@@ -226,25 +226,25 @@ onmessage = event => {
             ? module.EmbindConstant.aldor
             : module.EmbindConstant.scryers
         playerSettings.enemyLevel = parseInt(
-          playerData.simSettings['target-level']
+          playerData.simSettings['target-level'],
         )
         playerSettings.enemyShadowResist = parseInt(
-          playerData.simSettings['target-shadow-resistance']
+          playerData.simSettings['target-shadow-resistance'],
         )
         playerSettings.enemyFireResist = parseInt(
-          playerData.simSettings['target-fire-resistance']
+          playerData.simSettings['target-fire-resistance'],
         )
         playerSettings.mageAtieshAmount = parseInt(
-          playerData.simSettings.mageAtieshAmount
+          playerData.simSettings.mageAtieshAmount,
         )
         playerSettings.totemOfWrathAmount = parseInt(
-          playerData.simSettings.totemOfWrathAmount
+          playerData.simSettings.totemOfWrathAmount,
         )
         playerSettings.chippedPowerCoreAmount = parseInt(
-          playerData.simSettings.chippedPowerCoreAmount
+          playerData.simSettings.chippedPowerCoreAmount,
         )
         playerSettings.crackedPowerCoreAmount = parseInt(
-          playerData.simSettings.crackedPowerCoreAmount
+          playerData.simSettings.crackedPowerCoreAmount,
         )
         playerSettings.sacrificingPet =
           playerData.simSettings.sacrificePet === 'yes'
@@ -258,30 +258,30 @@ onmessage = event => {
           playerSettings.selectedPet = module.EmbindConstant.felguard
         }
         playerSettings.ferociousInspirationAmount = parseInt(
-          playerData.simSettings.ferociousInspirationAmount
+          playerData.simSettings.ferociousInspirationAmount,
         )
         playerSettings.improvedCurseOfTheElements = parseInt(
-          playerData.simSettings.improvedCurseOfTheElements
+          playerData.simSettings.improvedCurseOfTheElements,
         )
         playerSettings.usingCustomIsbUptime =
           playerData.simSettings.customIsbUptime === 'yes'
         playerSettings.customIsbUptimeValue = parseFloat(
-          playerData.simSettings.customIsbUptimeValue
+          playerData.simSettings.customIsbUptimeValue,
         )
         playerSettings.improvedDivineSpirit = parseInt(
-          playerData.simSettings.improvedDivineSpirit
+          playerData.simSettings.improvedDivineSpirit,
         )
         playerSettings.improvedImp = parseInt(
-          playerData.simSettings.improvedImpSetting
+          playerData.simSettings.improvedImpSetting,
         )
         playerSettings.shadowPriestDps = parseInt(
-          playerData.simSettings.shadowPriestDps
+          playerData.simSettings.shadowPriestDps,
         )
         playerSettings.warlockAtieshAmount = parseInt(
-          playerData.simSettings.warlockAtieshAmount
+          playerData.simSettings.warlockAtieshAmount,
         )
         playerSettings.improvedExposeArmor = parseInt(
-          playerData.simSettings.improvedExposeArmor
+          playerData.simSettings.improvedExposeArmor,
         )
         playerSettings.fightType =
           !playerData.simSettings.fightType ||
@@ -289,24 +289,24 @@ onmessage = event => {
             ? module.EmbindConstant.singleTarget
             : module.EmbindConstant.aoe
         playerSettings.enemyAmount = parseInt(
-          playerData.simSettings.enemyAmount
+          playerData.simSettings.enemyAmount,
         )
         playerSettings.race = module.EmbindConstant[playerData.simSettings.race]
         playerSettings.powerInfusionAmount = parseInt(
-          playerData.simSettings.powerInfusionAmount
+          playerData.simSettings.powerInfusionAmount,
         )
         playerSettings.bloodlustAmount = parseInt(
-          playerData.simSettings.bloodlustAmount
+          playerData.simSettings.bloodlustAmount,
         )
         playerSettings.innervateAmount = parseInt(
-          playerData.simSettings.innervateAmount
+          playerData.simSettings.innervateAmount,
         )
         playerSettings.battleSquawkAmount = parseInt(
-          playerData.simSettings.battleSquawkAmount
+          playerData.simSettings.battleSquawkAmount,
         )
         playerSettings.enemyArmor = parseInt(playerData.simSettings.enemyArmor)
         playerSettings.exposeWeaknessUptime = parseFloat(
-          playerData.simSettings.exposeWeaknessUptime
+          playerData.simSettings.exposeWeaknessUptime,
         )
         playerSettings.improvedFaerieFire =
           playerData.simSettings.improvedFaerieFire === 'yes'
@@ -333,7 +333,7 @@ onmessage = event => {
         playerSettings.exaltedWithShattrathFaction =
           playerData.simSettings.shattrathFactionReputation === 'yes'
         playerSettings.survivalHunterAgility = parseInt(
-          playerData.simSettings.survivalHunterAgility
+          playerData.simSettings.survivalHunterAgility,
         )
         playerSettings.hasImmolate =
           playerData.rotation.dot && playerData.rotation.dot.immolate

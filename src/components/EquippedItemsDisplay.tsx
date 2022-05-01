@@ -88,7 +88,7 @@ export default function EquippedItemsDisplay() {
                     (!playerState.selectedItems[ItemSlot.mainhand] ||
                       playerState.selectedItems[ItemSlot.mainhand] === 0) &&
                     (!playerState.selectedItems[ItemSlot.offhand] ||
-                      playerState.selectedItems[ItemSlot.offhand] === 0))
+                      playerState.selectedItems[ItemSlot.offhand] === 0)),
               )
               .map(slot => {
                 const itemInItemSlot = getItemInItemSlot(slot)

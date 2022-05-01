@@ -35,7 +35,7 @@ import {
 export function ItemSlotKeyToItemSlot(
   forEnchants: boolean,
   itemSlot: ItemSlotKey,
-  itemSubSlot?: string
+  itemSubSlot?: string,
 ): ItemSlot {
   switch (itemSlot) {
     case ItemSlotKey.Head:
@@ -75,7 +75,7 @@ export function ItemSlotKeyToItemSlot(
 
 export function ItemSlotToItemSlotKey(
   forEnchants: boolean,
-  itemSlot: ItemSlot
+  itemSlot: ItemSlot,
 ): ItemSlotKey {
   switch (itemSlot) {
     case ItemSlot.head:
@@ -161,7 +161,7 @@ export function itemMeetsSocketRequirements(params: {
             item &&
             item.sockets &&
             !Sockets.find(
-              e => e.color === item.sockets![parseInt(key)]
+              e => e.color === item.sockets![parseInt(key)],
             )?.validColors.includes(gemColor)
           ) {
             return false
@@ -186,7 +186,7 @@ export function isPetActive(
   talents: TalentStore,
   settings: Settings,
   requiresAggressivePet: boolean,
-  requiresPhysicalPet: boolean
+  requiresPhysicalPet: boolean,
 ): boolean {
   return (
     (talents.demonicSacrifice === 0 || settings.sacrificePet === 'no') &&
@@ -197,7 +197,7 @@ export function isPetActive(
 
 export function canGemColorBeInsertedIntoSocketColor(
   socketColor: SocketColor,
-  gemColor: GemColor
+  gemColor: GemColor,
 ): boolean {
   return (
     (socketColor === SocketColor.Meta && gemColor === GemColor.Meta) ||
@@ -218,7 +218,7 @@ export function getItemTableItems(
   hiddenItems: number[],
   hidingItems: boolean,
   savedItemDps: SavedItemDps,
-  isMultiItemSimulation: boolean
+  isMultiItemSimulation: boolean,
 ): Item[] {
   const itemSlot = ItemSlotKeyToItemSlot(false, itemSlotKey, itemSubSlot)
   const savedItemSlotDpsExists = savedItemDps[itemSlot] != null
@@ -265,7 +265,7 @@ export function getStdev(array: number[]) {
   const n = array.length
   const mean = array.reduce((a, b) => a + b) / n
   return Math.sqrt(
-    array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
+    array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n,
   )
 }
 
@@ -278,7 +278,7 @@ export function average(nums?: number[]) {
 
 export function getBaseStats(
   race: Race,
-  statsObj?: StatsCollection
+  statsObj?: StatsCollection,
 ): StatsCollection {
   let stats = JSON.parse(JSON.stringify(InitialPlayerStats))
 
@@ -294,7 +294,7 @@ export function getBaseStats(
 
 export function getAurasStats(
   auras: AurasStruct,
-  statsObj?: StatsCollection
+  statsObj?: StatsCollection,
 ): StatsCollection {
   let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats))
 
@@ -315,7 +315,7 @@ export function getAurasStats(
 
 export function getItemsStats(
   items: ItemAndEnchantStruct,
-  statsObj?: StatsCollection
+  statsObj?: StatsCollection,
 ): StatsCollection {
   let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats))
 
@@ -336,7 +336,7 @@ export function getItemsStats(
 export function getGemsStats(
   items: ItemAndEnchantStruct,
   gems: SelectedGemsStruct,
-  statsObj?: StatsCollection
+  statsObj?: StatsCollection,
 ): StatsCollection {
   let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats))
 
@@ -353,7 +353,7 @@ export function getGemsStats(
                 addOrMultiplyStat(
                   statsObj || stats,
                   gemStat[0] as Stat,
-                  gemStat[1]
+                  gemStat[1],
                 )
               })
             }
@@ -383,7 +383,7 @@ export function getGemsStats(
 export function getEnchantsStats(
   items: ItemAndEnchantStruct,
   enchants: ItemAndEnchantStruct,
-  statsObj?: StatsCollection
+  statsObj?: StatsCollection,
 ): StatsCollection {
   let stats: StatsCollection = JSON.parse(JSON.stringify(InitialPlayerStats))
 
@@ -424,7 +424,7 @@ export function getItemSetCounts(items: ItemAndEnchantStruct): SetsStruct {
 export function addOrMultiplyStat(
   statsCollection: StatsCollection,
   stat: Stat,
-  value: number
+  value: number,
 ): void {
   if (stat.includes('Modifier')) {
     statsCollection[stat]! *= value
@@ -434,10 +434,10 @@ export function addOrMultiplyStat(
 }
 
 export function calculatePlayerStats(
-  playerState: PlayerState
+  playerState: PlayerState,
 ): StatsCollection {
   let mainStatsObj: StatsCollection = JSON.parse(
-    JSON.stringify(InitialPlayerStats)
+    JSON.stringify(InitialPlayerStats),
   )
 
   getBaseStats(playerState.settings.race as Race, mainStatsObj)
@@ -446,12 +446,12 @@ export function calculatePlayerStats(
   getGemsStats(
     playerState.selectedItems,
     playerState.selectedGems,
-    mainStatsObj
+    mainStatsObj,
   )
   getEnchantsStats(
     playerState.selectedItems,
     playerState.selectedEnchants,
-    mainStatsObj
+    mainStatsObj,
   )
 
   return mainStatsObj
@@ -467,7 +467,7 @@ export function getPlayerHitRating(playerState: PlayerState): number {
 
 export function getPlayerHitPercent(
   playerState: PlayerState,
-  hitRating?: number
+  hitRating?: number,
 ): number {
   let hitPercent =
     (hitRating || getPlayerHitRating(playerState)) /
@@ -480,7 +480,7 @@ export function getPlayerHitPercent(
 
 export function getAllocatedTalentsPointsInTree(
   talentState: TalentStore,
-  tree: TalentTreeStruct
+  tree: TalentTreeStruct,
 ): number {
   let points = 0
 

@@ -96,12 +96,12 @@ export default function ItemSelection() {
     dispatch(setSelectedItems(newSelectedItems))
     dispatch(setItemsStats(getItemsStats(newSelectedItems)))
     dispatch(
-      setGemsStats(getGemsStats(newSelectedItems, playerStore.selectedGems))
+      setGemsStats(getGemsStats(newSelectedItems, playerStore.selectedGems)),
     )
     dispatch(
       setEnchantsStats(
-        getEnchantsStats(newSelectedItems, playerStore.selectedEnchants)
-      )
+        getEnchantsStats(newSelectedItems, playerStore.selectedEnchants),
+      ),
     )
     dispatch(setItemSetCounts(getItemSetCounts(newSelectedItems)))
   }
@@ -109,21 +109,21 @@ export default function ItemSelection() {
   function itemClickHandler(item: Item, itemSlot: ItemSlot) {
     changeEquippedItemId(
       itemSlot,
-      playerStore.selectedItems[itemSlot] === item.id ? 0 : item.id
+      playerStore.selectedItems[itemSlot] === item.id ? 0 : item.id,
     )
   }
 
   function enchantClickHandler(enchant: Enchant, itemSlot: ItemSlot) {
     let newSelectedEnchants = JSON.parse(
-      JSON.stringify(playerStore.selectedEnchants)
+      JSON.stringify(playerStore.selectedEnchants),
     )
     newSelectedEnchants[itemSlot] =
       newSelectedEnchants[itemSlot] === enchant.id ? 0 : enchant.id
     dispatch(setSelectedEnchants(newSelectedEnchants))
     dispatch(
       setEnchantsStats(
-        getEnchantsStats(playerStore.selectedItems, newSelectedEnchants)
-      )
+        getEnchantsStats(playerStore.selectedItems, newSelectedEnchants),
+      ),
     )
   }
 
@@ -139,7 +139,7 @@ export default function ItemSelection() {
   function itemSocketClickHandler(
     itemId: string,
     socketNumber: number,
-    socketColor: SocketColor
+    socketColor: SocketColor,
   ) {
     dispatch(
       setGemSelectionTable({
@@ -149,7 +149,7 @@ export default function ItemSelection() {
         socketNumber: socketNumber,
         socketColor: socketColor,
         itemSubSlot: uiStore.selectedItemSubSlot,
-      })
+      }),
     )
   }
 
@@ -162,7 +162,9 @@ export default function ItemSelection() {
         currentItemSocketsValue[socketNumber] = ['', 0]
         dispatch(setSelectedGems(newSelectedGems))
         dispatch(
-          setGemsStats(getGemsStats(playerStore.selectedItems, newSelectedGems))
+          setGemsStats(
+            getGemsStats(playerStore.selectedItems, newSelectedGems),
+          ),
         )
       }
     }
@@ -170,7 +172,7 @@ export default function ItemSelection() {
 
   function shouldDisplayMissingEnchantWarning(
     itemSlot: ItemSlotKey,
-    subSlot: SubSlotValue
+    subSlot: SubSlotValue,
   ): boolean {
     const equippedEnchantId =
       playerStore.selectedEnchants[
@@ -190,7 +192,7 @@ export default function ItemSelection() {
       [0, null].includes(
         playerStore.selectedItems[
           ItemSlotKeyToItemSlot(false, itemSlot, subSlot)
-        ]
+        ],
       ) === false
     )
   }
@@ -212,7 +214,7 @@ export default function ItemSelection() {
             </p>
             {shouldDisplayMissingEnchantWarning(
               slot.itemSlot,
-              slot.subSlot
+              slot.subSlot,
             ) && (
               <i
                 title='Missing enchant!'
@@ -234,8 +236,8 @@ export default function ItemSelection() {
         onClick={_e =>
           dispatch(
             setFillItemSocketsWindowVisibility(
-              !uiStore.fillItemSocketsWindowVisible
-            )
+              !uiStore.fillItemSocketsWindowVisible,
+            ),
           )
         }
       >
@@ -246,8 +248,8 @@ export default function ItemSelection() {
         onClick={_e =>
           dispatch(
             setEquippedItemsWindowVisibility(
-              !uiStore.equippedItemsWindowVisible
-            )
+              !uiStore.equippedItemsWindowVisible,
+            ),
           )
         }
       >
@@ -265,7 +267,7 @@ export default function ItemSelection() {
           Items.find(
             e =>
               e.itemSlot === uiStore.selectedItemSlot &&
-              uiStore.sources.phase[e.phase] === true
+              uiStore.sources.phase[e.phase] === true,
           ) != null ? (
             <>
               <colgroup id='item-selection-colgroup'>
@@ -324,7 +326,7 @@ export default function ItemSelection() {
             uiStore.hiddenItems,
             hidingItems,
             uiStore.savedItemDps,
-            false
+            false,
           ).map(item => (
             <tr
               key={item.id}
@@ -334,7 +336,7 @@ export default function ItemSelection() {
                   ItemSlotKeyToItemSlot(
                     false,
                     uiStore.selectedItemSlot,
-                    uiStore.selectedItemSubSlot
+                    uiStore.selectedItemSubSlot,
                   )
                 ] === item.id
               }
@@ -345,8 +347,8 @@ export default function ItemSelection() {
                   ItemSlotKeyToItemSlot(
                     false,
                     uiStore.selectedItemSlot,
-                    uiStore.selectedItemSubSlot
-                  )
+                    uiStore.selectedItemSubSlot,
+                  ),
                 )
               }
             >
@@ -406,14 +408,14 @@ export default function ItemSelection() {
                   ItemSlotKeyToItemSlot(
                     false,
                     uiStore.selectedItemSlot,
-                    uiStore.selectedItemSubSlot
+                    uiStore.selectedItemSubSlot,
                   )
                 ] &&
                 uiStore.savedItemDps[
                   ItemSlotKeyToItemSlot(
                     false,
                     uiStore.selectedItemSlot,
-                    uiStore.selectedItemSubSlot
+                    uiStore.selectedItemSubSlot,
                   )
                 ][item.id]
                   ? (
@@ -422,9 +424,9 @@ export default function ItemSelection() {
                           ItemSlotKeyToItemSlot(
                             false,
                             uiStore.selectedItemSlot,
-                            uiStore.selectedItemSubSlot
+                            uiStore.selectedItemSubSlot,
                           )
-                        ][item.id] * 100
+                        ][item.id] * 100,
                       ) / 100
                     ).toString()
                   : ''}
@@ -434,7 +436,7 @@ export default function ItemSelection() {
         </tbody>
       </table>
       {Enchants.filter(
-        e => e.itemSlot === getEnchantLookupKey(uiStore.selectedItemSlot)
+        e => e.itemSlot === getEnchantLookupKey(uiStore.selectedItemSlot),
       ).length > 0 && (
         <table id='enchant-selection-table' data-type='mainhand'>
           <colgroup id='enchant-selection-colgroup'>
@@ -467,7 +469,7 @@ export default function ItemSelection() {
           </thead>
           <tbody aria-live='polite'>
             {Enchants.filter(
-              e => e.itemSlot === getEnchantLookupKey(uiStore.selectedItemSlot)
+              e => e.itemSlot === getEnchantLookupKey(uiStore.selectedItemSlot),
             ).map(enchant => (
               <tr
                 key={enchant.id}
@@ -477,7 +479,7 @@ export default function ItemSelection() {
                     ItemSlotKeyToItemSlot(
                       true,
                       uiStore.selectedItemSlot,
-                      uiStore.selectedItemSubSlot
+                      uiStore.selectedItemSubSlot,
                     )
                   ] === enchant.id
                 }
@@ -487,8 +489,8 @@ export default function ItemSelection() {
                     ItemSlotKeyToItemSlot(
                       true,
                       uiStore.selectedItemSlot,
-                      uiStore.selectedItemSubSlot
-                    )
+                      uiStore.selectedItemSubSlot,
+                    ),
                   )
                 }
               >

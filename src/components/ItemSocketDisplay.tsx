@@ -13,7 +13,7 @@ interface Props {
   itemSocketClickHandler?: (
     itemId: string,
     socketNumber: number,
-    socketColor: SocketColor
+    socketColor: SocketColor,
   ) => void
   removeGemFromSocket?: (itemId: string, socketNumber: number) => void
 }
@@ -59,7 +59,7 @@ export default function ItemSocketDisplay(props: Props) {
               playerState.selectedGems[props.itemSlot][props.item.id] &&
               playerState.selectedGems[props.itemSlot][props.item.id][j] &&
               ![null, 0].includes(
-                playerState.selectedGems[props.itemSlot][props.item.id][j][1]
+                playerState.selectedGems[props.itemSlot][props.item.id][j][1],
               )
                 ? `${process.env.PUBLIC_URL}/img/${
                     Gems.find(
@@ -67,7 +67,7 @@ export default function ItemSocketDisplay(props: Props) {
                         e.id ===
                         playerState.selectedGems[props.itemSlot][props.item.id][
                           j
-                        ][1]
+                        ][1],
                     )?.iconName
                   }.jpg`
                 : `${process.env.PUBLIC_URL}/img/${

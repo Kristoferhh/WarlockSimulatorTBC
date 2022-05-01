@@ -17,10 +17,10 @@ import { Gem, InitialGemSelectionTableValue } from '../Types'
 export default function GemSelection() {
   const uiState = useSelector((state: RootState) => state.ui)
   const selectedGemsState = useSelector(
-    (state: RootState) => state.player.selectedGems
+    (state: RootState) => state.player.selectedGems,
   )
   const selectedItemsState = useSelector(
-    (state: RootState) => state.player.selectedItems
+    (state: RootState) => state.player.selectedItems,
   )
   const dispatch = useDispatch()
   const [showingHiddenGems, setShowingHiddenGems] = useState(false)
@@ -37,12 +37,12 @@ export default function GemSelection() {
       selectedGemsInItemSlot[uiState.gemSelectionTable.itemId]
     if (currentItemSocketArray == null) {
       const itemSocketAmount = Items.find(
-        i => i.id === parseInt(uiState.gemSelectionTable.itemId)
+        i => i.id === parseInt(uiState.gemSelectionTable.itemId),
       )?.sockets?.length
       currentItemSocketArray = Array(itemSocketAmount).fill(['', 0])
     } else {
       currentItemSocketArray = JSON.parse(
-        JSON.stringify(currentItemSocketArray)
+        JSON.stringify(currentItemSocketArray),
       )
 
       // Return if the clicked gem is the same as the already equipped gem
@@ -93,11 +93,11 @@ export default function GemSelection() {
           gem =>
             canGemColorBeInsertedIntoSocketColor(
               uiState.gemSelectionTable.socketColor,
-              gem.color
+              gem.color,
             ) &&
             Object.entries(uiState.sources.phase).some(
-              p => parseInt(p[0]) >= gem.phase && p[1] === true
-            )
+              p => parseInt(p[0]) >= gem.phase && p[1] === true,
+            ),
         )
           .sort(function (a, b) {
             return (
@@ -126,7 +126,7 @@ export default function GemSelection() {
                     : 'Add gem to favorites'
                 }
                 data-favorited={uiState.gemPreferences.favorites.includes(
-                  gem.id
+                  gem.id,
                 )}
                 onClick={_e => dispatch(favoriteGem(gem.id))}
               >

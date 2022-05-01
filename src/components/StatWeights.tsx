@@ -64,21 +64,21 @@ export default function StatWeights() {
                 name: TalentTree.Affliction,
                 points: getAllocatedTalentsPointsInTree(
                   playerState.talents,
-                  Talents.find(e => e.name === TalentTree.Affliction)!
+                  Talents.find(e => e.name === TalentTree.Affliction)!,
                 ),
               },
               {
                 name: TalentTree.Demonology,
                 points: getAllocatedTalentsPointsInTree(
                   playerState.talents,
-                  Talents.find(e => e.name === TalentTree.Demonology)!
+                  Talents.find(e => e.name === TalentTree.Demonology)!,
                 ),
               },
               {
                 name: TalentTree.Destruction,
                 points: getAllocatedTalentsPointsInTree(
                   playerState.talents,
-                  Talents.find(e => e.name === TalentTree.Destruction)!
+                  Talents.find(e => e.name === TalentTree.Destruction)!,
                 ),
               },
             ]
@@ -88,8 +88,8 @@ export default function StatWeights() {
                 e.points ===
                 Math.max.apply(
                   Math,
-                  talentTreePoints.map(a => a.points)
-                )
+                  talentTreePoints.map(a => a.points),
+                ),
             )?.name
 
             navigator.clipboard.writeText(
@@ -105,7 +105,7 @@ export default function StatWeights() {
                 `, ShadowSpellDamage=${uiState.statWeights.statValues.shadowPower}` +
                 `, SpellDamage=${uiState.statWeights.statValues.spellPower}` +
                 `, Mp5=${uiState.statWeights.statValues.mp5}` +
-                `, SpellHasteRating=${uiState.statWeights.statValues.hasteRating})`
+                `, SpellHasteRating=${uiState.statWeights.statValues.hasteRating})`,
             )
           }}
         >

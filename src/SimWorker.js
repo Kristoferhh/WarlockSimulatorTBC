@@ -7,7 +7,7 @@ class SimWorker {
     combatLogBreakdown,
     simulationEnd,
     simulationUpdate,
-    workerParams
+    workerParams,
   ) {
     this.worker = new Worker(`${process.env.PUBLIC_URL}/web.worker.js`)
     this.workerParams = workerParams

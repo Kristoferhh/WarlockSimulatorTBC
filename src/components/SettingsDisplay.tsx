@@ -55,9 +55,10 @@ export default function SettingsDisplay() {
               dispatch(
                 setBaseStats(
                   getBaseStats(
-                    Races.find(race => race.varName === e.target.value)!.varName
-                  )
-                )
+                    Races.find(race => race.varName === e.target.value)!
+                      .varName,
+                  ),
+                ),
               )
             }}
             name='race'
@@ -98,7 +99,7 @@ export default function SettingsDisplay() {
             onChange={e =>
               settingModifiedHandler(
                 Setting['min-fight-length'],
-                e.target.value
+                e.target.value,
               )
             }
             value={playerStore.settings['min-fight-length']}
@@ -116,7 +117,7 @@ export default function SettingsDisplay() {
             onChange={e =>
               settingModifiedHandler(
                 Setting['max-fight-length'],
-                e.target.value
+                e.target.value,
               )
             }
             value={playerStore.settings['max-fight-length']}
@@ -149,7 +150,7 @@ export default function SettingsDisplay() {
             onChange={e =>
               settingModifiedHandler(
                 Setting['target-shadow-resistance'],
-                e.target.value
+                e.target.value,
               )
             }
             value={playerStore.settings['target-shadow-resistance']}
@@ -167,7 +168,7 @@ export default function SettingsDisplay() {
             onChange={e =>
               settingModifiedHandler(
                 Setting['target-fire-resistance'],
-                e.target.value
+                e.target.value,
               )
             }
             value={playerStore.settings['target-fire-resistance']}
@@ -223,7 +224,7 @@ export default function SettingsDisplay() {
             onChange={e =>
               settingModifiedHandler(
                 Setting['automatically-open-sim-details'],
-                e.target.value
+                e.target.value,
               )
             }
             value={playerStore.settings['automatically-open-sim-details']}
@@ -235,7 +236,7 @@ export default function SettingsDisplay() {
         <li
           id='randomizeValues'
           title={t(
-            'Chooses a random value between a minimum and a maximum value instead of taking the average of the two.'
+            'Chooses a random value between a minimum and a maximum value instead of taking the average of the two.',
           )}
         >
           <label className='settings-left' htmlFor='randomizeValues'>
@@ -325,7 +326,7 @@ export default function SettingsDisplay() {
           playerStore.talents,
           playerStore.settings,
           false,
-          false
+          false,
         ) && (
           <li id='petMode'>
             <label className='settings-left' htmlFor='petMode'>
@@ -348,7 +349,7 @@ export default function SettingsDisplay() {
           playerStore.talents,
           playerStore.settings,
           true,
-          false
+          false,
         ) && (
           <li id='prepopBlackBook'>
             <label className='settings-left' htmlFor='prepopBlackBook'>
@@ -381,7 +382,7 @@ export default function SettingsDisplay() {
                   onChange={e =>
                     settingModifiedHandler(
                       Setting.shattrathFaction,
-                      e.target.value
+                      e.target.value,
                     )
                   }
                   value={playerStore.settings.shattrathFaction}
@@ -403,7 +404,7 @@ export default function SettingsDisplay() {
                   onChange={e =>
                     settingModifiedHandler(
                       Setting.shattrathFactionReputation,
-                      e.target.value
+                      e.target.value,
                     )
                   }
                   value={playerStore.settings.shattrathFactionReputation}
@@ -429,7 +430,7 @@ export default function SettingsDisplay() {
                   onChange={e =>
                     settingModifiedHandler(
                       Setting.lashOfPainUsage,
-                      e.target.value
+                      e.target.value,
                     )
                   }
                   value={playerStore.settings.lashOfPainUsage}
@@ -467,7 +468,7 @@ export default function SettingsDisplay() {
               onChange={e =>
                 settingModifiedHandler(
                   Setting.improvedCurseOfTheElements,
-                  e.target.value
+                  e.target.value,
                 )
               }
               value={playerStore.settings.improvedCurseOfTheElements}
@@ -490,7 +491,7 @@ export default function SettingsDisplay() {
               onChange={e =>
                 settingModifiedHandler(
                   Setting.powerInfusionAmount,
-                  e.target.value
+                  e.target.value,
                 )
               }
               value={playerStore.settings.powerInfusionAmount}
@@ -556,7 +557,7 @@ export default function SettingsDisplay() {
               onChange={e =>
                 settingModifiedHandler(
                   Setting.improvedDivineSpirit,
-                  e.target.value
+                  e.target.value,
                 )
               }
               value={playerStore.settings.improvedDivineSpirit}
@@ -598,13 +599,13 @@ export default function SettingsDisplay() {
               onChange={e =>
                 settingModifiedHandler(
                   Setting.warlockAtieshAmount,
-                  e.target.value
+                  e.target.value,
                 )
               }
               value={playerStore.settings.warlockAtieshAmount}
             >
               <option disabled={true} value='0'>{`>> ${t(
-                'Do not count your own Atiesh'
+                'Do not count your own Atiesh',
               )} <<`}</option>
               <option value='1'>1</option>
               <option value='2'>2</option>
@@ -624,7 +625,7 @@ export default function SettingsDisplay() {
               onChange={e =>
                 settingModifiedHandler(
                   Setting.totemOfWrathAmount,
-                  e.target.value
+                  e.target.value,
                 )
               }
               value={playerStore.settings.totemOfWrathAmount}
@@ -646,7 +647,7 @@ export default function SettingsDisplay() {
               onChange={e =>
                 settingModifiedHandler(
                   Setting.chippedPowerCoreAmount,
-                  e.target.value
+                  e.target.value,
                 )
               }
               value={playerStore.settings.chippedPowerCoreAmount}
@@ -666,7 +667,7 @@ export default function SettingsDisplay() {
               onChange={e =>
                 settingModifiedHandler(
                   Setting.crackedPowerCoreAmount,
-                  e.target.value
+                  e.target.value,
                 )
               }
               value={playerStore.settings.crackedPowerCoreAmount}
@@ -690,7 +691,7 @@ export default function SettingsDisplay() {
               onChange={e =>
                 settingModifiedHandler(
                   Setting.ferociousInspirationAmount,
-                  e.target.value
+                  e.target.value,
                 )
               }
               value={playerStore.settings.ferociousInspirationAmount}
@@ -713,7 +714,7 @@ export default function SettingsDisplay() {
               onChange={e =>
                 settingModifiedHandler(
                   Setting.improvedWrathOfAirTotem,
-                  e.target.value
+                  e.target.value,
                 )
               }
               value={playerStore.settings.improvedWrathOfAirTotem}
@@ -751,7 +752,7 @@ export default function SettingsDisplay() {
               onChange={e =>
                 settingModifiedHandler(
                   Setting.improvedImpSetting,
-                  e.target.value
+                  e.target.value,
                 )
               }
               value={playerStore.settings.improvedImpSetting}
@@ -768,7 +769,7 @@ export default function SettingsDisplay() {
             playerStore.talents,
             playerStore.settings,
             true,
-            true
+            true,
           ) && (
             <li>
               <label className='settings-left' htmlFor='battleSquawkAmount'>
@@ -780,7 +781,7 @@ export default function SettingsDisplay() {
                 onChange={e =>
                   settingModifiedHandler(
                     Setting.battleSquawkAmount,
-                    e.target.value
+                    e.target.value,
                   )
                 }
                 value={playerStore.settings.battleSquawkAmount}
@@ -798,7 +799,7 @@ export default function SettingsDisplay() {
             playerStore.talents,
             playerStore.settings,
             true,
-            true
+            true,
           ) && (
             <li id='improvedFaerieFire'>
               <label className='settings-left' htmlFor='improvedFaerieFire'>
@@ -810,7 +811,7 @@ export default function SettingsDisplay() {
                 onChange={e =>
                   settingModifiedHandler(
                     Setting.improvedFaerieFire,
-                    e.target.value
+                    e.target.value,
                   )
                 }
                 value={playerStore.settings.improvedFaerieFire}
@@ -825,7 +826,7 @@ export default function SettingsDisplay() {
             playerStore.talents,
             playerStore.settings,
             true,
-            true
+            true,
           ) && (
             <li id='improvedExposeArmor'>
               <label className='settings-left' htmlFor='improvedExposeArmor'>
@@ -837,7 +838,7 @@ export default function SettingsDisplay() {
                 onChange={e =>
                   settingModifiedHandler(
                     Setting.improvedExposeArmor,
-                    e.target.value
+                    e.target.value,
                   )
                 }
                 value={playerStore.settings.improvedExposeArmor}
@@ -853,7 +854,7 @@ export default function SettingsDisplay() {
             playerStore.talents,
             playerStore.settings,
             true,
-            true
+            true,
           ) && (
             <div>
               <li id='survivalHunterAgility'>
@@ -868,7 +869,7 @@ export default function SettingsDisplay() {
                   onChange={e =>
                     settingModifiedHandler(
                       Setting.survivalHunterAgility,
-                      e.target.value
+                      e.target.value,
                     )
                   }
                   value={playerStore.settings.survivalHunterAgility}
@@ -886,7 +887,7 @@ export default function SettingsDisplay() {
                   onChange={e =>
                     settingModifiedHandler(
                       Setting.exposeWeaknessUptime,
-                      e.target.value
+                      e.target.value,
                     )
                   }
                   value={playerStore.settings.exposeWeaknessUptime}
@@ -923,7 +924,7 @@ export default function SettingsDisplay() {
               onChange={e =>
                 settingModifiedHandler(
                   Setting.customIsbUptimeValue,
-                  e.target.value
+                  e.target.value,
                 )
               }
               value={playerStore.settings.customIsbUptimeValue}
@@ -936,7 +937,7 @@ export default function SettingsDisplay() {
         <li>
           <label className='settings-left'>
             {t(
-              'Concurrent item sims amount (set to 0 to use the default amount)'
+              'Concurrent item sims amount (set to 0 to use the default amount)',
             )}
           </label>
           <input

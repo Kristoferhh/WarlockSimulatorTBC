@@ -16,7 +16,7 @@ import { Languages } from '../Types'
 export default function LanguageSelection() {
   const [open, setOpen] = useState(false)
   const [currentLanguage, setCurrentLanguage] = useState(
-    Languages.find(e => e.iso === i18n.language)?.name
+    Languages.find(e => e.iso === i18n.language)?.name,
   )
   const anchorRef = useRef<HTMLButtonElement>(null)
 

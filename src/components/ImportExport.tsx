@@ -30,7 +30,7 @@ import { Race } from '../Types'
 export default function ImportExport() {
   const playerState = useSelector((state: RootState) => state.player)
   const windowIsVisible = useSelector(
-    (state: RootState) => state.ui.importExportWindowVisible
+    (state: RootState) => state.ui.importExportWindowVisible,
   )
   const dispatch = useDispatch()
   const [contentString, setContentString] = useState('')
@@ -45,7 +45,7 @@ export default function ImportExport() {
         rotation: playerState.rotation,
         selectedEnchants: playerState.selectedEnchants,
         settings: playerState.settings,
-      })
+      }),
     )
 
     setInterval(
@@ -53,7 +53,7 @@ export default function ImportExport() {
         (
           document.getElementById('import-export-textarea') as HTMLInputElement
         )?.select(),
-      100
+      100,
     )
   }
 
@@ -78,9 +78,9 @@ export default function ImportExport() {
               data.selectedItems
                 ? data.selectedItems
                 : playerState.selectedItems,
-              data.selectedEnchants
-            )
-          )
+              data.selectedEnchants,
+            ),
+          ),
         )
       }
       if (data.selectedGems) {
@@ -91,9 +91,9 @@ export default function ImportExport() {
               data.selectedItems
                 ? data.selectedItems
                 : playerState.selectedItems,
-              data.selectedGems
-            )
-          )
+              data.selectedGems,
+            ),
+          ),
         )
       }
       if (data.talents) {

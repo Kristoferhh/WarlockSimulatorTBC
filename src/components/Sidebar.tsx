@@ -36,7 +36,7 @@ export default function Sidebar() {
         <StatsDisplay />
         <ul id='sidebar-sets'>
           {Object.entries(playerState.sets).find(set =>
-            setHasActiveBonus(set)
+            setHasActiveBonus(set),
           ) && (
             <li>
               <h3>{t('Set Bonuses')}</h3>

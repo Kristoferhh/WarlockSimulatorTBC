@@ -44,21 +44,21 @@ export function FillItemSockets() {
       item =>
         (item.itemSlot === uiState.selectedItemSlot &&
           itemSlotToFill === 'currentSlot') ||
-        itemSlotToFill === 'allSlots'
+        itemSlotToFill === 'allSlots',
     ).forEach(item => {
       fillSocketsInItem(item, newSelectedGems)
     })
 
     dispatch(setSelectedGems(newSelectedGems))
     dispatch(
-      setGemsStats(getGemsStats(playerState.selectedItems, newSelectedGems))
+      setGemsStats(getGemsStats(playerState.selectedItems, newSelectedGems)),
     )
     dispatch(setFillItemSocketsWindowVisibility(false))
   }
 
   function fillSocketsInItem(
     item: Item,
-    selectedGemsObj: SelectedGemsStruct
+    selectedGemsObj: SelectedGemsStruct,
   ): void {
     if (!item.sockets) {
       return
@@ -72,7 +72,7 @@ export function FillItemSockets() {
       playerState.selectedGems[item.itemSlot][item.id]
     ) {
       itemGemArray = JSON.parse(
-        JSON.stringify(playerState.selectedGems[item.itemSlot][item.id])
+        JSON.stringify(playerState.selectedGems[item.itemSlot][item.id]),
       )
     }
 
@@ -160,7 +160,7 @@ export function FillItemSockets() {
       <div id='gem-options-gem-list'>
         <div id='gem-options-gem-list'>
           {Gems.filter(e =>
-            canGemColorBeInsertedIntoSocketColor(socketColor, e.color)
+            canGemColorBeInsertedIntoSocketColor(socketColor, e.color),
           ).map(gem => (
             <div
               className='gem-options-gem'

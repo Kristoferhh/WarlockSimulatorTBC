@@ -11,7 +11,7 @@ import i18n from '../i18n/config'
 
 function disableAurasWithUniqueProperties(
   aura: Aura,
-  auraObj: AurasStruct
+  auraObj: AurasStruct,
 ): void {
   if (aura.potion)
     Auras.filter(e => e.potion).forEach(e => (auraObj[e.varName] = false))
@@ -23,7 +23,7 @@ function disableAurasWithUniqueProperties(
     Auras.filter(e => e.battleElixir).forEach(e => (auraObj[e.varName] = false))
   if (aura.guardianElixir)
     Auras.filter(e => e.guardianElixir).forEach(
-      e => (auraObj[e.varName] = false)
+      e => (auraObj[e.varName] = false),
     )
   if (aura.alcohol)
     Auras.filter(e => e.alcohol).forEach(e => (auraObj[e.varName] = false))
@@ -62,7 +62,7 @@ export default function AuraSelection() {
         auraGroup =>
           auraGroup.heading !== AuraGroup.PetBuffs ||
           playerState.talents.demonicSacrifice === 0 ||
-          playerState.settings.sacrificePet === 'no'
+          playerState.settings.sacrificePet === 'no',
       ).map(auraGroup => (
         <div key={nanoid()}>
           <h3 className='buffs-heading'>{t(auraGroup.heading)}</h3>
@@ -75,8 +75,8 @@ export default function AuraSelection() {
                     playerState.talents,
                     playerState.settings,
                     true,
-                    true
-                  ))
+                    true,
+                  )),
             ).map(aura => (
               <li
                 key={nanoid()}
