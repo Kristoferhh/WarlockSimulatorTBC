@@ -3,7 +3,7 @@ name: C++ Lint
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - "cpp/**"
       - ".clang-format"
