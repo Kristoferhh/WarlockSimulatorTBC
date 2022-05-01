@@ -145,7 +145,7 @@ export default function ProfilesAndSources() {
         <button
           className="btn btn-primary btn-sm"
           id="save-new-profile-button"
-          onClick={(e) => callSetProfile(true)}
+          onClick={(_e) => callSetProfile(true)}
           disabled={profileName.replaceAll("'", "").length === 0}
         >
           {t("Save New Profile")}
@@ -160,7 +160,7 @@ export default function ProfilesAndSources() {
                   : "",
             }}
             id="save-profile-button"
-            onClick={(e) => callSetProfile(false)}
+            onClick={(_e) => callSetProfile(false)}
           >
             {t("Save")}
           </button>{" "}
@@ -173,7 +173,7 @@ export default function ProfilesAndSources() {
                   : "",
             }}
             id="delete-profile-button"
-            onClick={(e) => deleteProfileHandler()}
+            onClick={(_e) => deleteProfileHandler()}
           >
             {t("Delete")}
           </button>{" "}
@@ -186,14 +186,14 @@ export default function ProfilesAndSources() {
                   : "",
             }}
             id="rename-profile-button"
-            onClick={(e) => renameProfileHandler()}
+            onClick={(_e) => renameProfileHandler()}
           >
             {t("Rename")}
           </button>{" "}
           <button
             id="import-export-button"
             className="btn btn-primary btn-sm"
-            onClick={(e) => dispatch(setImportExportWindowVisibility(true))}
+            onClick={(_e) => dispatch(setImportExportWindowVisibility(true))}
           >
             {t("Import/Export")}
           </button>
@@ -212,7 +212,7 @@ export default function ProfilesAndSources() {
               key={nanoid()}
               className="saved-profile"
               data-checked={selectedProfileState === profile[0]}
-              onClick={(e) => profileClickHandler(profile)}
+              onClick={(_e) => profileClickHandler(profile)}
             >
               {profile[0]}
             </li>

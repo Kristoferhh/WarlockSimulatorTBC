@@ -361,7 +361,7 @@ export function SimulationButtons() {
               }
 
               if (simulationParams.type === SimulationType.StatWeights) {
-                updateStatWeightValue(params.customStat, newMedianDps, true);
+                updateStatWeightValue(params.customStat, newMedianDps);
               }
 
               if (simulationsFinished === simWorkerParameters.length) {
@@ -464,11 +464,7 @@ export function SimulationButtons() {
                   !lastStatWeightUpdateTime[params.customStat] ||
                   dateNow - lastStatWeightUpdateTime[params.customStat] > 5000
                 ) {
-                  updateStatWeightValue(
-                    params.customStat,
-                    params.medianDps,
-                    false
-                  );
+                  updateStatWeightValue(params.customStat, params.medianDps);
                   lastStatWeightUpdateTime[params.customStat] = dateNow;
                 }
               }
@@ -499,11 +495,7 @@ export function SimulationButtons() {
     }
   }
 
-  function updateStatWeightValue(
-    stat: string,
-    value: number,
-    finalStatWeightUpdate: boolean
-  ): void {
+  function updateStatWeightValue(stat: string, value: number): void {
     let dpsDifference = Math.abs(
       Math.round(
         ((value - Number(medianDps)) / statWeightStatIncrease) * 1000

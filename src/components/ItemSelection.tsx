@@ -227,13 +227,13 @@ export default function ItemSelection() {
       </ul>
       <button
         className="btn btn-primary btn-sm"
-        onClick={(e) => setHidingItems(!hidingItems)}
+        onClick={(_e) => setHidingItems(!hidingItems)}
       >
         {t("Hide / Show Items")}
       </button>{" "}
       <button
         className="btn btn-primary btn-sm"
-        onClick={(e) =>
+        onClick={(_e) =>
           dispatch(
             setFillItemSocketsWindowVisibility(
               !uiStore.fillItemSocketsWindowVisible
@@ -245,7 +245,7 @@ export default function ItemSelection() {
       </button>{" "}
       <button
         className="btn btn-primary btn-sm"
-        onClick={(e) =>
+        onClick={(_e) =>
           dispatch(
             setEquippedItemsWindowVisibility(
               !uiStore.equippedItemsWindowVisible

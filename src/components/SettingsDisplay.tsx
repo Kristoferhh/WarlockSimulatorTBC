@@ -496,7 +496,7 @@ export default function SettingsDisplay() {
               }
               value={playerStore.settings.powerInfusionAmount}
             >
-              {Array.from(Array(12), (e, i) => i + 1).map((number) => (
+              {Array.from(Array(12), (_e, i) => i + 1).map((number) => (
                 <option value={number} key={nanoid()}>
                   {number}
                 </option>
@@ -517,7 +517,7 @@ export default function SettingsDisplay() {
               }
               value={playerStore.settings.bloodlustAmount}
             >
-              {Array.from(Array(15), (e, i) => i + 1).map((number) => (
+              {Array.from(Array(15), (_e, i) => i + 1).map((number) => (
                 <option value={number} key={nanoid()}>
                   {number}
                 </option>
@@ -538,7 +538,7 @@ export default function SettingsDisplay() {
               }
               value={playerStore.settings.innervateAmount}
             >
-              {Array.from(Array(18), (e, i) => i + 1).map((number) => (
+              {Array.from(Array(18), (_e, i) => i + 1).map((number) => (
                 <option value={number} key={nanoid()}>
                   {number}
                 </option>
@@ -786,7 +786,7 @@ export default function SettingsDisplay() {
                 }
                 value={playerStore.settings.battleSquawkAmount}
               >
-                {Array.from(Array(5), (e, i) => i + 1).map((number) => (
+                {Array.from(Array(5), (_e, i) => i + 1).map((number) => (
                   <option value={number} key={nanoid()}>
                     {number}
                   </option>

@@ -23,7 +23,7 @@ export default function Main() {
   return (
     <div
       id="main"
-      onClick={(e) =>
+      onClick={() =>
         dispatch(setGemSelectionTable(InitialGemSelectionTableValue))
       }
     >

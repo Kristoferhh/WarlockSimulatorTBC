@@ -81,7 +81,7 @@ export default function GemSelection() {
           <td></td>
           <td
             id="show-hidden-gems-button"
-            onClick={(e) => setShowingHiddenGems(!showingHiddenGems)}
+            onClick={(_e) => setShowingHiddenGems(!showingHiddenGems)}
             style={{
               display: uiState.gemPreferences.hidden.length === 0 ? "none" : "",
             }}
@@ -128,7 +128,7 @@ export default function GemSelection() {
                 data-favorited={uiState.gemPreferences.favorites.includes(
                   gem.id
                 )}
-                onClick={(e) => dispatch(favoriteGem(gem.id))}
+                onClick={(_e) => dispatch(favoriteGem(gem.id))}
               >
                 ★
               </td>
@@ -158,7 +158,7 @@ export default function GemSelection() {
                     : "Hide Gem"
                 }
                 data-hidden={uiState.gemPreferences.hidden.includes(gem.id)}
-                onClick={(e) => dispatch(hideGem(gem.id))}
+                onClick={(_e) => dispatch(hideGem(gem.id))}
               >
                 ❌
               </td>

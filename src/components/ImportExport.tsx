@@ -127,21 +127,21 @@ export default function ImportExport() {
       <button
         className="btn btn-primary btn-sm"
         id="import-button"
-        onClick={(e) => importProfile()}
+        onClick={(_e) => importProfile()}
       >
         Import
       </button>{" "}
       <button
         className="btn btn-primary btn-sm"
         id="export-button"
-        onClick={(e) => exportProfile()}
+        onClick={(_e) => exportProfile()}
       >
         Export
       </button>{" "}
       <button
         className="btn btn-primary btn-sm"
         id="export-close-button"
-        onClick={(e) => {
+        onClick={(_e) => {
           dispatch(setImportExportWindowVisibility(false));
           setContentString("");
         }}

@@ -112,7 +112,7 @@ export function FillItemSockets() {
           type="radio"
           name="gem-replacement-option"
           id="emptySockets"
-          onChange={(e) => setReplacingExistingGems(false)}
+          onChange={(_e) => setReplacingExistingGems(false)}
           checked={replacingExistingGems === false}
         />
         <label htmlFor="allSockets">
@@ -122,7 +122,7 @@ export function FillItemSockets() {
           type="radio"
           name="gem-replacement-option"
           id="allSockets"
-          onChange={(e) => setReplacingExistingGems(true)}
+          onChange={(_e) => setReplacingExistingGems(true)}
           checked={replacingExistingGems === true}
         />
       </div>
@@ -132,7 +132,7 @@ export function FillItemSockets() {
           type="radio"
           name="item-slot"
           id="currentSlot"
-          onChange={(e) => setItemSlotToFill("currentSlot")}
+          onChange={(_e) => setItemSlotToFill("currentSlot")}
           checked={itemSlotToFill === "currentSlot"}
         />
         <label htmlFor="allSlots">All item slots</label>
@@ -140,7 +140,7 @@ export function FillItemSockets() {
           type="radio"
           name="item-slot"
           id="allSlots"
-          onChange={(e) => setItemSlotToFill("allSlots")}
+          onChange={(_e) => setItemSlotToFill("allSlots")}
           checked={itemSlotToFill === "allSlots"}
         />
       </div>
@@ -151,7 +151,7 @@ export function FillItemSockets() {
             <input
               type="radio"
               name="socket-selection"
-              onChange={(e) => socketColorClickHandler(socket.color)}
+              onChange={(_e) => socketColorClickHandler(socket.color)}
               checked={socketColor === socket.color}
             ></input>
           </label>
@@ -185,14 +185,14 @@ export function FillItemSockets() {
       <button
         className="btn btn-primary btn-sm"
         id="gem-options-apply-button"
-        onClick={(e) => fillSockets()}
+        onClick={(_e) => fillSockets()}
         disabled={selectedGemId === 0}
       >
         Apply
       </button>{" "}
       <button
         className="btn btn-primary btn-sm"
-        onClick={(e) => dispatch(setFillItemSocketsWindowVisibility(false))}
+        onClick={(_e) => dispatch(setFillItemSocketsWindowVisibility(false))}
       >
         Close
       </button>

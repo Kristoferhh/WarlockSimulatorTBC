@@ -42,6 +42,7 @@ export default function Session() {
     );
     dispatch(setItemSetCounts(getItemSetCounts(playerStore.selectedItems)));
     (jQuery(".tablesorter") as any).tablesorter();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <div></div>;

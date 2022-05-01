@@ -14,15 +14,21 @@ function formatPercentage(num: number) {
   return (Math.round(num * 10000) / 100).toFixed(2);
 }
 
-function findSpellByName(
-  name: string
-): { iconName: string; id: number; wowheadType: "spell" | "item" } | undefined {
+function findSpellByName(name: string):
+  | {
+      iconName: string;
+      id: number;
+      wowheadType: "spell" | "item";
+      name: string;
+    }
+  | undefined {
   const spellObj = Spells.find((e) => e.name === name);
   if (spellObj) {
     return {
       iconName: spellObj.iconName,
       id: spellObj.id,
       wowheadType: "spell",
+      name: spellObj.name,
     };
   }
 
@@ -33,17 +39,28 @@ function findSpellByName(
       id: auraObj.id,
       wowheadType:
         AuraGroups.find((e) => e.heading === auraObj.group)?.type || "spell",
+      name: auraObj.name,
     };
   }
 
   const itemObj = Items.find((e) => e.name === name);
   if (itemObj) {
-    return { iconName: itemObj.iconName, id: itemObj.id, wowheadType: "item" };
+    return {
+      iconName: itemObj.iconName,
+      id: itemObj.id,
+      wowheadType: "item",
+      name: itemObj.name,
+    };
   }
 
   const gemObj = Gems.find((e) => e.name === name);
   if (gemObj) {
-    return { iconName: gemObj.iconName, id: gemObj.id, wowheadType: "item" };
+    return {
+      iconName: gemObj.iconName,
+      id: gemObj.id,
+      wowheadType: "item",
+      name: gemObj.name,
+    };
   }
 }
 
@@ -108,6 +125,7 @@ export default function BreakdownTables() {
                     <td>
                       {spellObj?.iconName && spellObj.iconName.length > 0 && (
                         <img
+                          alt={spellObj.name}
                           className="breakdown-table-spell-icon"
                           src={`${process.env.PUBLIC_URL}/img/${spellObj?.iconName}.jpg`}
                         />
@@ -229,6 +247,7 @@ export default function BreakdownTables() {
                     <td>
                       {spellObj?.iconName && spellObj.iconName.length > 0 && (
                         <img
+                          alt={spellObj.name}
                           className="breakdown-table-spell-icon"
                           src={`${process.env.PUBLIC_URL}/img/${spellObj?.iconName}.jpg`}
                         />
@@ -320,6 +339,7 @@ export default function BreakdownTables() {
                     <td>
                       {spellObj?.iconName && spellObj.iconName.length > 0 && (
                         <img
+                          alt={spellObj.name}
                           className="breakdown-table-spell-icon"
                           src={`${process.env.PUBLIC_URL}/img/${spellObj?.iconName}.jpg`}
                         />

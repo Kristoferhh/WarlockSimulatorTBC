@@ -52,7 +52,7 @@ export default function EquippedItemsDisplay() {
       style={{ display: uiState.equippedItemsWindowVisible ? "" : "none" }}
     >
       <div id="currently-equipped-items">
-        <div onClick={(e) => dispatch(setEquippedItemsWindowVisibility(false))}>
+        <div onClick={() => dispatch(setEquippedItemsWindowVisibility(false))}>
           <p className="close" id="currently-equipped-items-close-button"></p>
         </div>
         <table>
@@ -90,79 +90,80 @@ export default function EquippedItemsDisplay() {
                     (!playerState.selectedItems[ItemSlot.offhand] ||
                       playerState.selectedItems[ItemSlot.offhand] === 0))
               )
-              .map((slot) => (
-                <tr key={nanoid()} className="equipped-item-row">
-                  <td>{t(formatItemSlotName(slot))}</td>
-                  <td
-                    className={
-                      "equipped-item-name " +
-                      (playerState.selectedItems[slot] != null
-                        ? getItemInItemSlot(slot)?.quality
-                        : "")
-                    }
-                  >
-                    {getItemInItemSlot(slot) && (
-                      <>
-                        <a
-                          href={`${getBaseWowheadUrl(i18n.language)}/item=${
-                            getItemInItemSlot(slot)!.displayId ||
-                            getItemInItemSlot(slot)!.id
-                          }`}
-                          onClick={(e) => e.preventDefault()}
-                          style={{ fontSize: "0px" }}
-                        >
-                          .
-                        </a>
-                        {getItemInItemSlot(slot) && (
-                          <img
-                            src={`${process.env.PUBLIC_URL}/img/${
-                              getItemInItemSlot(slot)?.iconName
-                            }.jpg`}
-                            className="item-icon"
-                          />
-                        )}
-                        {getItemInItemSlot(slot)
-                          ? t(getItemInItemSlot(slot)!.name)
-                          : ""}
-                      </>
-                    )}
-                  </td>
-                  <td>
-                    {playerState.selectedItems[slot] &&
-                    getItemInItemSlot(slot) !== undefined ? (
-                      <ItemSocketDisplay
-                        item={getItemInItemSlot(slot)!}
-                        itemSlot={ItemSlotToItemSlotKey(false, slot)}
-                      />
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                  <td
-                    className={
-                      "equipped-item-enchant-name " +
-                      (getEnchantInItemSlot(slot) !== undefined
-                        ? getEnchantInItemSlot(slot)?.quality
-                        : "")
-                    }
-                  >
-                    {getEnchantInItemSlot(slot) !== undefined && (
-                      <>
-                        <a
-                          href={`${getBaseWowheadUrl(i18n.language)}/spell=${
-                            getEnchantInItemSlot(slot)!.id
-                          }`}
-                          onClick={(e) => e.preventDefault()}
-                          style={{ fontSize: "0px" }}
-                        >
-                          .
-                        </a>
-                        {t(getEnchantInItemSlot(slot)!.name)}
-                      </>
-                    )}
-                  </td>
-                </tr>
-              ))}
+              .map((slot) => {
+                const itemInItemSlot = getItemInItemSlot(slot);
+                const enchantInItemSlot = getEnchantInItemSlot(slot);
+
+                return (
+                  <tr key={nanoid()} className="equipped-item-row">
+                    <td>{t(formatItemSlotName(slot))}</td>
+                    <td
+                      className={
+                        "equipped-item-name " +
+                        (playerState.selectedItems[slot] != null
+                          ? itemInItemSlot?.quality
+                          : "")
+                      }
+                    >
+                      {itemInItemSlot && (
+                        <>
+                          <a
+                            href={`${getBaseWowheadUrl(i18n.language)}/item=${
+                              itemInItemSlot!.displayId || itemInItemSlot!.id
+                            }`}
+                            onClick={(e) => e.preventDefault()}
+                            style={{ fontSize: "0px" }}
+                          >
+                            .
+                          </a>
+                          {itemInItemSlot && (
+                            <img
+                              alt={itemInItemSlot.name}
+                              src={`${process.env.PUBLIC_URL}/img/${itemInItemSlot?.iconName}.jpg`}
+                              className="item-icon"
+                            />
+                          )}
+                          {itemInItemSlot ? t(itemInItemSlot!.name) : ""}
+                        </>
+                      )}
+                    </td>
+                    <td>
+                      {playerState.selectedItems[slot] &&
+                      itemInItemSlot !== undefined ? (
+                        <ItemSocketDisplay
+                          item={itemInItemSlot!}
+                          itemSlot={ItemSlotToItemSlotKey(false, slot)}
+                        />
+                      ) : (
+                        ""
+                      )}
+                    </td>
+                    <td
+                      className={
+                        "equipped-item-enchant-name " +
+                        (enchantInItemSlot !== undefined
+                          ? enchantInItemSlot?.quality
+                          : "")
+                      }
+                    >
+                      {enchantInItemSlot !== undefined && (
+                        <>
+                          <a
+                            href={`${getBaseWowheadUrl(i18n.language)}/spell=${
+                              enchantInItemSlot!.id
+                            }`}
+                            onClick={(e) => e.preventDefault()}
+                            style={{ fontSize: "0px" }}
+                          >
+                            .
+                          </a>
+                          {t(enchantInItemSlot!.name)}
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>
