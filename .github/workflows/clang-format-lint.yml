@@ -1,0 +1,32 @@
+name: C++ Lint
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "cpp/**"
+      - ".clang-format"
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Clang-Format Lint
+        uses: DoozyX/clang-format-lint-action@v0.13
+        with:
+          clangFormatVersion: 13
+          inplace: True
+          style: file
+
+      - name: Commit Changes to Git
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Clang-Format Fixes"

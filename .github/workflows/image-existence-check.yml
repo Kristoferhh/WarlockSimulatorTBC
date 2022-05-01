@@ -1,0 +1,34 @@
+name: Image Existence Check
+
+on:
+  pull_request:
+    paths:
+      - "src/data/Auras.tsx"
+      - "src/data/Gems.tsx"
+      - "src/data/Items.tsx"
+      - "src/data/Sockets.tsx"
+      - "src/data/Spells.tsx"
+      - "src/data/Talents.tsx"
+      - "src/scripts/image_existence_check.py"
+
+jobs:
+  check_image_existence:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - if: ${{ env.ACT }}
+        name: Hack container for local development
+        run: |
+          curl -fsSL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+          sudo apt-get install -y nodejs
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.x"
+
+      - name: Check existence of icon names
+        run: python src/scripts/image_existence_check.py
