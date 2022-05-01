@@ -1094,6 +1094,23 @@ export const Items: Item[] = [
     source: ItemSource.AQ40,
     iconName: "inv_jewelry_necklace_ahnqiraj_01",
   },
+  {
+    phase: 5,
+    id: 37928,
+    itemSlot: ItemSlotKey.Neck,
+    quality: Quality.Epic,
+    name: "Guardian's Pendant of Subjugation",
+    varName: "guardiansPendantOfSubjugation",
+    stamina: 35,
+    intellect: 18,
+    sockets: [SocketColor.Yellow],
+    socketBonus: { stamina: 3},
+    spellPower: 28,
+    hasteRating: 24,
+    resilienceRating: 18,
+    source: ItemSource.PVP,
+    iconName: "inv_jewelry_necklace_36",
+  },
 
   // Shoulders
   {
