@@ -1,7 +1,7 @@
 {
   "homepage": "https://kristoferhh.github.io/WarlockSimulatorTBC",
   "name": "warlock-simulator-tbc",
-  "version": "1.0.66",
+  "version": "1.0.67",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
