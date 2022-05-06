@@ -6525,6 +6525,20 @@ export const Items: Item[] = [
   // Mainhand
   {
     phase: 5,
+    id: 35102,
+    itemSlot: ItemSlotKey.Mainhand,
+    name: `Brutal Gladiator's Spellblade`,
+    varName: 'brutalGladiatorsSpellblade',
+    stamina: 33,
+    intellect: 21,
+    spellPower: 266,
+    resilienceRating: 18,
+    source: ItemSource.PVP,
+    quality: Quality.Epic,
+    iconName: 'inv_weapon_shortblade_73',
+  },
+  {
+    phase: 5,
     id: 34895,
     itemSlot: ItemSlotKey.Mainhand,
     name: `Scryer's Blade of Focus`,
