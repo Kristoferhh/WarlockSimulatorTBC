@@ -6532,6 +6532,7 @@ export const Items: Item[] = [
     stamina: 33,
     intellect: 21,
     spellPower: 266,
+    hitRating: 19,
     resilienceRating: 18,
     source: ItemSource.PVP,
     quality: Quality.Epic,
