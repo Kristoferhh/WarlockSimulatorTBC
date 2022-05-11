@@ -5379,7 +5379,7 @@ export const Items: Item[] = [
     intellect: 14,
     sockets: [SocketColor.Red],
     socketBonus: {
-      stamina: 3
+      stamina: 3,
     },
     hasteRating: 14,
     spellPower: 16,
