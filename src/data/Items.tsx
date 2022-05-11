@@ -5371,6 +5371,25 @@ export const Items: Item[] = [
   },
   {
     phase: 5,
+    id: 34625,
+    itemSlot: ItemSlotKey.Ring,
+    name: `Kharmaa's Ring of Fate`,
+    varName: 'kharmaasRingOfFate',
+    stamina: 19,
+    intellect: 14,
+    sockets: [SocketColor.Red],
+    socketBonus: {
+      stamina: 3
+    },
+    hasteRating: 14,
+    spellPower: 16,
+    unique: true,
+    source: ItemSource.MagistersTerrace,
+    quality: Quality.Epic,
+    iconName: 'inv_jewelry_ring_42',
+  },
+  {
+    phase: 5,
     id: 34362,
     itemSlot: ItemSlotKey.Ring,
     name: 'Loop of Forged Power',
