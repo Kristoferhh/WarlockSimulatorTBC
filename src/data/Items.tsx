@@ -6530,7 +6530,7 @@ export const Items: Item[] = [
     name: `Scryer's Blade of Focus`,
     varName: 'scryersBladeOfFocus',
     stamina: 42,
-    intellect: 18,
+    intellect: 28,
     spellPower: 247,
     source: ItemSource.BadgeOfJustice,
     quality: Quality.Epic,
