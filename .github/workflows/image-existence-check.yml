@@ -3,13 +3,14 @@ name: Image Existence Check
 on:
   pull_request:
     paths:
-      - "src/data/Auras.tsx"
-      - "src/data/Gems.tsx"
-      - "src/data/Items.tsx"
-      - "src/data/Sockets.tsx"
-      - "src/data/Spells.tsx"
-      - "src/data/Talents.tsx"
-      - "src/scripts/image_existence_check.py"
+      - 'src/data/Auras.tsx'
+      - 'src/data/Gems.tsx'
+      - 'src/data/Items.tsx'
+      - 'src/data/Sockets.tsx'
+      - 'src/data/Spells.tsx'
+      - 'src/data/Talents.tsx'
+      - 'src/scripts/image_existence_check.py'
+      - 'public/img'
 
 jobs:
   check_image_existence:
@@ -28,7 +29,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v3
         with:
-          python-version: "3.x"
+          python-version: '3.x'
 
       - name: Check existence of icon names
         run: python src/scripts/image_existence_check.py

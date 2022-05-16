@@ -2,12 +2,14 @@ import os
 
 
 def get_icon_name_from_string(string: str):
-    return string[string.find('IconName') + len('IconName: "'):len(string) - 3]
+    start_index = string.find('iconName') + len('iconName: "')
+    end_index = string.find(',', start_index) - 1
+    return string[start_index:end_index]
 
 def assert_icon_image_existence_in_file(file_path: str):
     with open(file_path) as f:
         for line in f:
-            if 'IconName' in line and not 'IconName: string' in line:
+            if 'iconName' in line and not 'iconName: string' in line:
                 icon_name = get_icon_name_from_string(line)
                 assert os.path.isfile(f'./public/img/{icon_name}.jpg'), f'Image for icon `{icon_name}` not found in ./public/img/'
 
