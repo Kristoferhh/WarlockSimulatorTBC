@@ -6993,7 +6993,7 @@ export const Items: Item[] = [
     intellect: 17,
     hasteRating: 17,
     spellPower: 37,
-    source: ItemSource.ZulAman,
+    source: ItemSource.BadgeOfJustice,
     quality: Quality.Epic,
     iconName: 'inv_offhand_zulaman_d_02',
   },
@@ -7624,6 +7624,22 @@ export const Items: Item[] = [
   },
 
   // Wand
+  {
+    phase: 5,
+    id: 34348,
+    itemSlot: ItemSlotKey.Wand,
+    name: 'Wand of Cleansing Light',
+    varName: 'wandOfCleansingLight',
+    intellect: 8,
+    spirit: 18,
+    sockets: [SocketColor.Red],
+    socketBonus: { spirit: 2 },
+    spellPower: 14,
+    hasteRating: 8,
+    source: ItemSource.Sunwell,
+    quality: Quality.Epic,
+    iconName: 'inv_wand_24',
+  },
   {
     phase: 5,
     id: 34347,
