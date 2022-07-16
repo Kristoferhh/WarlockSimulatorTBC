@@ -2,26 +2,26 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { getRemainingTalentPoints } from '../Common'
 import { Spells } from '../data/Spells'
 import {
-  RotationGroup,
-  Spell,
-  PlayerState,
-  InitialPlayerStats,
-  InitialSelectedItemsAndEnchants,
-  InitialSettings,
-  Profile,
-  InitialSelectedGems,
-  TalentName,
-  Setting,
-  StatsCollection,
-  InitialSetCounts,
-  SetsStruct,
   AurasStruct,
+  InitialPlayerStats,
+  InitialSelectedGems,
+  InitialSelectedItemsAndEnchants,
+  InitialSetCounts,
+  InitialSettings,
   ItemAndEnchantStruct,
-  SelectedGemsStruct,
-  TalentStore,
-  RotationStruct,
-  Settings,
+  PlayerState,
+  Profile,
+  RotationGroup,
   rotationGroups,
+  RotationStruct,
+  SelectedGemsStruct,
+  SetsStruct,
+  Setting,
+  Settings,
+  Spell,
+  StatsCollection,
+  TalentName,
+  TalentStore,
 } from '../Types'
 
 const initialPlayerState: PlayerState = {
@@ -178,6 +178,7 @@ export const PlayerSlice = createSlice({
     },
     setTalentsState: (state, action: PayloadAction<TalentStore>) => {
       state.talents = action.payload
+      state.talentPointsRemaining = getRemainingTalentPoints(action.payload)
       localStorage.setItem('talents', JSON.stringify(action.payload))
     },
     setRotationState: (state, action: PayloadAction<RotationStruct>) => {
