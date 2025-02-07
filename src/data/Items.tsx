@@ -563,6 +563,20 @@ export const Items: Item[] = [
     source: ItemSource.Naxxramas,
     iconName: 'inv_crown_01',
   },
+  {
+    phase: 1,
+    id: 31766,
+    itemSlot: ItemSlotKey.Head,
+    quality: Quality.Uncommon,
+    name: 'Skywitch Hat',
+    varName: 'skywitchHat',
+    stamina: 30,
+    intellect: 20,
+    spellPower: 25,
+    hitRating: 20,
+    source: ItemSource.TerokkarForestQuest,
+    iconName: 'inv_helmet_65',
+  },
 
   // Neck
   {
