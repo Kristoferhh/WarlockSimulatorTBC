@@ -99,6 +99,16 @@ export const Enchants: Enchant[] = [
     phase: 0,
     quality: Quality.Rare,
   },
+  {
+    name: 'Glyph of the Outcast',
+    varName: 'glyphOfTheOutcast',
+    itemSlot: ItemSlotKey.Head,
+    intellect: 16,
+    id: 30846,
+    source: ItemSource.LowerCityRevered,
+    phase: 0,
+    quality: Quality.Uncommon,
+  },
 
   // Shoulders
   {
