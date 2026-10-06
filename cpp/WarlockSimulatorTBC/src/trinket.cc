@@ -200,7 +200,7 @@ DarkIronSmokingPipe::DarkIronSmokingPipe(Player& player)
   name = "Dark Iron Smoking Pipe";
   cooldown = 120;
   duration = 20;
-  stats.push_back(SpellPower(player, 155));
+  stats.push_back(SpellPower(player, 209));
   Setup();
 }
 

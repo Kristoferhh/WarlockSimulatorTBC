@@ -125,7 +125,7 @@ constexpr double kBaseEnemyDodgeChance = 6.5;
 } // namespace StatConstant
 
 namespace ItemId {
-constexpr int kDarkIronSmokingPipe = 38290;
+constexpr int kDarkIronSmokingPipe = 281735;
 constexpr int kShatteredSunPendantOfAcumen = 34678;
 constexpr int kTimbalsFocusingCrystal = 34470;
 constexpr int kShiftingNaaruSliver = 34429;
