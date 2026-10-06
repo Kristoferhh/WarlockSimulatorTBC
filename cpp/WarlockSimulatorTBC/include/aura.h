@@ -11,19 +11,19 @@ struct Aura {
   std::vector<Stat> stats;
   std::vector<Stat> stats_per_stack;
   std::string name;
-  int duration = 0;
+  int duration              = 0;
   double duration_remaining = 0;
-  bool active = false;
-  bool has_duration = true;
-  bool group_wide = false; // true if it's an aura that applies to everyone in the group
+  bool active               = false;
+  bool has_duration         = true;
+  bool group_wide           = false;  // true if it's an aura that applies to everyone in the group
   // (will apply to pets as well then)
   // dots
-  int tick_timer_total = 0;
+  int tick_timer_total        = 0;
   double tick_timer_remaining = 0;
-  int ticks_remaining = 0;
-  int ticks_total = 0;
-  int stacks = 0;
-  int max_stacks = 0;
+  int ticks_remaining         = 0;
+  int ticks_total             = 0;
+  int stacks                  = 0;
+  int max_stacks              = 0;
   // ISB
   double modifier = 1;
   // Bloodlust
@@ -34,7 +34,7 @@ struct Aura {
   virtual void Tick(double kTime);
   virtual void Apply();
   void Fade();
-  virtual void DecrementStacks(); // ISB
+  virtual void DecrementStacks();  // ISB
 };
 
 struct ImprovedShadowBoltAura final : Aura {

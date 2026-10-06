@@ -8,12 +8,12 @@ struct Player;
 struct Trinket {
   Player& player;
   std::vector<Stat> stats;
-  int duration = 0;
+  int duration              = 0;
   double duration_remaining = 0;
-  int cooldown = 0;
+  int cooldown              = 0;
   double cooldown_remaining = 0;
-  bool active = false;
-  bool shares_cooldown = true;
+  bool active               = false;
+  bool shares_cooldown      = true;
   std::string name;
 
   explicit Trinket(Player& player);

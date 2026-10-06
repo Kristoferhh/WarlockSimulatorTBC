@@ -7,7 +7,6 @@
 #include "enums.h"
 #include "rng.h"
 
-
 struct AuraSelection;
 struct Simulation;
 struct Aura;

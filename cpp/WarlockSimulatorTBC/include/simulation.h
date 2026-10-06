@@ -11,10 +11,10 @@ struct Simulation {
   Player& player;
   const SimulationSettings& kSettings;
   std::vector<double> dps_vector;
-  int iteration = 0;
+  int iteration             = 0;
   double current_fight_time = 0;
-  double min_dps = 0;
-  double max_dps = 0;
+  double min_dps            = 0;
+  double max_dps            = 0;
 
   Simulation(Player& player, const SimulationSettings& kSimulationSettings);
   void Start();

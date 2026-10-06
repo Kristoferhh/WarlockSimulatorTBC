@@ -2,15 +2,15 @@
 
 #include <iostream>
 
+#include "../include/aura_selection.h"
 #include "../include/common.h"
 #include "../include/items.h"
-#include "../include/talents.h"
 #include "../include/player_settings.h"
-#include "../include/simulation.h"
-#include "../include/aura_selection.h"
 #include "../include/sets.h"
-#include "../include/trinket.h"
+#include "../include/simulation.h"
 #include "../include/stat.h"
+#include "../include/talents.h"
+#include "../include/trinket.h"
 
 #pragma warning(disable : 4100)
 void DpsUpdate(double dps) {
@@ -27,30 +27,38 @@ void ErrorCallback(const char* error_msg) {
 
 void PostCombatLogBreakdownVector(const char* name, double mana_gain, double damage) {
 #ifdef EMSCRIPTEN
-  EM_ASM({postMessage({event : "combatLogVector", data : {name : UTF8ToString($0), manaGain : $1, damage : $2}})}, name,
-         mana_gain, damage);
+  EM_ASM(
+      {
+          postMessage({event : "combatLogVector", data : {name : UTF8ToString($0), manaGain : $1, damage : $2}}
+          )
+  },
+      name, mana_gain, damage);
 #endif
 }
 
 void PostCombatLogBreakdown(const char* name, uint32_t casts, uint32_t crits, uint32_t misses, uint32_t count,
                             double uptime, uint32_t dodges, uint32_t glancing_blows) {
 #ifdef EMSCRIPTEN
-  EM_ASM({postMessage({
-           event : "combatLogBreakdown",
-           data : {
-             name : UTF8ToString($0),
-             casts : $1,
-             crits : $2,
-             misses : $3,
-             count : $4,
-             uptime : $5,
-             dodges : $6,
-             glancingBlows : $7,
-             damage : 0,
-             manaGain : 0
-           }
-         })},
-         name, casts, crits, misses, count, uptime, dodges, glancing_blows);
+  EM_ASM(
+      {
+          postMessage({
+                       event : "combatLogBreakdown",
+                       data : {
+              name : UTF8ToString($0),
+              casts : $1,
+              crits : $2,
+              misses : $3,
+              count : $4,
+              uptime : $5,
+              dodges : $6,
+              glancingBlows : $7,
+              damage : 0,
+              manaGain : 0
+            }
+          }
+          )
+  },
+      name, casts, crits, misses, count, uptime, dodges, glancing_blows);
 #endif
 }
 
@@ -64,11 +72,15 @@ void CombatLogUpdate(const char* combat_log_entry) {
 
 void SimulationUpdate(int iteration, int iteration_amount, double median_dps, int item_id, const char* custom_stat) {
 #ifdef EMSCRIPTEN
-  EM_ASM({postMessage({
-           event : "update",
-           data : {medianDps : $0, iteration : $1, iterationAmount : $2, itemId : $3, customStat : UTF8ToString($4)}
-         })},
-         median_dps, iteration, iteration_amount, item_id, custom_stat);
+  EM_ASM(
+      {
+          postMessage({
+                       event : "update",
+                       data : {medianDps : $0, iteration : $1, iterationAmount : $2, itemId : $3, customStat : UTF8ToString($4)}
+          }
+          )
+  },
+      median_dps, iteration, iteration_amount, item_id, custom_stat);
 #else
   /*std::cout << "Iteration: " << std::to_string(iteration) << "/" << std::to_string(iteration_amount)
             << ". Median DPS: " << std::to_string(median_dps) << std::endl;*/
@@ -78,24 +90,28 @@ void SimulationUpdate(int iteration, int iteration_amount, double median_dps, in
 void SendSimulationResults(double median_dps, double min_dps, double max_dps, int item_id, int iteration_amount,
                            int total_fight_duration, const char* custom_stat, long long simulation_duration) {
 #ifdef EMSCRIPTEN
-  EM_ASM({postMessage({
-           event : "end",
-           data : {
-             medianDps : $0,
-             minDps : $1,
-             maxDps : $2,
-             itemId : $3,
-             iterationAmount : $4,
-             totalDuration : $5,
-             customStat : UTF8ToString($6)
-           }
-         })},
-         median_dps, min_dps, max_dps, item_id, iteration_amount, total_fight_duration, custom_stat);
+  EM_ASM(
+      {
+          postMessage({
+                       event : "end",
+                       data : {
+              medianDps : $0,
+              minDps : $1,
+              maxDps : $2,
+              itemId : $3,
+              iterationAmount : $4,
+              totalDuration : $5,
+              customStat : UTF8ToString($6)
+            }
+          }
+          )
+  },
+      median_dps, min_dps, max_dps, item_id, iteration_amount, total_fight_duration, custom_stat);
 #else
   std::cout << "Median DPS: " << std::to_string(median_dps) << ". Min DPS: " << std::to_string(min_dps)
-      << ". Max DPS: " << std::to_string(max_dps) << std::endl;
+            << ". Max DPS: " << std::to_string(max_dps) << std::endl;
   std::cout << std::to_string(iteration_amount) << " iterations in "
-      << DoubleToString(round(simulation_duration / 1000) / 1000, 3) << " seconds" << std::endl;
+            << DoubleToString(round(simulation_duration / 1000) / 1000, 3) << " seconds" << std::endl;
 #endif
 }
 
@@ -103,31 +119,43 @@ std::vector<uint32_t> AllocRandomSeeds(const int kAmountOfSeeds, const uint32_t 
   srand(kRandSeed);
   std::vector<uint32_t> seeds(kAmountOfSeeds);
 
-  for (int i = 0; i < kAmountOfSeeds; i++) {
-    seeds[i] = rand();
-  }
+  for (int i = 0; i < kAmountOfSeeds; i++) { seeds[i] = rand(); }
 
   return seeds;
 }
 
-Items AllocItems() { return {}; }
+Items AllocItems() {
+  return {};
+}
 
-AuraSelection AllocAuras() { return {}; }
+AuraSelection AllocAuras() {
+  return {};
+}
 
-Talents AllocTalents() { return {}; }
+Talents AllocTalents() {
+  return {};
+}
 
-Sets AllocSets() { return {}; }
+Sets AllocSets() {
+  return {};
+}
 
-CharacterStats AllocStats() { return {}; }
+CharacterStats AllocStats() {
+  return {};
+}
 
 PlayerSettings AllocPlayerSettings(AuraSelection& auras, Talents& talents, Sets& sets, CharacterStats& stats,
                                    Items& items) {
   return {auras, talents, sets, stats, items};
 }
 
-Player AllocPlayer(PlayerSettings& settings) { return Player(settings); }
+Player AllocPlayer(PlayerSettings& settings) {
+  return Player(settings);
+}
 
-SimulationSettings AllocSimSettings() { return {}; }
+SimulationSettings AllocSimSettings() {
+  return {};
+}
 
 Simulation AllocSim(Player& player, SimulationSettings& simulation_settings) {
   return {player, simulation_settings};

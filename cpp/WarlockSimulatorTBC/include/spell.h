@@ -22,45 +22,45 @@ struct Spell {
   AttackType attack_type;
   SpellType spell_type;
   std::string name;
-  int min_dmg = 0;
-  int max_dmg = 0;
-  double base_damage = 0;
-  bool casting = false;
-  bool can_crit = false;
-  bool on_gcd = true;
-  bool is_proc = false;
-  bool limited_amount_of_casts = false;
-  bool is_non_warlock_ability = false;
-  double coefficient = 0;
-  double cooldown_remaining = 0;
-  double cast_time = 0;
-  double cooldown = 0;
-  double mana_cost = 0;
-  int min_mana_gain = 0;
-  int max_mana_gain = 0;
-  double mana_gain = 0;
-  int amount_of_casts_per_fight = 0;
-  int amount_of_casts_this_fight = 0;
-  int proc_chance = 0;
+  int min_dmg                        = 0;
+  int max_dmg                        = 0;
+  double base_damage                 = 0;
+  bool casting                       = false;
+  bool can_crit                      = false;
+  bool on_gcd                        = true;
+  bool is_proc                       = false;
+  bool limited_amount_of_casts       = false;
+  bool is_non_warlock_ability        = false;
+  double coefficient                 = 0;
+  double cooldown_remaining          = 0;
+  double cast_time                   = 0;
+  double cooldown                    = 0;
+  double mana_cost                   = 0;
+  int min_mana_gain                  = 0;
+  int max_mana_gain                  = 0;
+  double mana_gain                   = 0;
+  int amount_of_casts_per_fight      = 0;
+  int amount_of_casts_this_fight     = 0;
+  int proc_chance                    = 0;
   int bonus_damage_from_immolate_min = 0;
   int bonus_damage_from_immolate_max = 0;
-  double bonus_damage_from_immolate = 0;
-  double bonus_crit_chance = 0;
-  bool does_damage = false;
-  bool is_item = false;
-  bool can_miss = false;
-  bool is_finisher = false;
-  bool gain_mana_on_cast = false;
-  bool procs_on_hit = false;
-  bool on_hit_procs_enabled = true;
-  bool procs_on_crit = false;
-  bool on_crit_procs_enabled = true;
-  bool procs_on_dot_ticks = false;
-  bool on_dot_tick_procs_enabled = true;
-  bool procs_on_damage = false;
-  bool on_damage_procs_enabled = true;
-  bool procs_on_resist = false;
-  bool on_resist_procs_enabled = true;
+  double bonus_damage_from_immolate  = 0;
+  double bonus_crit_chance           = 0;
+  bool does_damage                   = false;
+  bool is_item                       = false;
+  bool can_miss                      = false;
+  bool is_finisher                   = false;
+  bool gain_mana_on_cast             = false;
+  bool procs_on_hit                  = false;
+  bool on_hit_procs_enabled          = true;
+  bool procs_on_crit                 = false;
+  bool on_crit_procs_enabled         = true;
+  bool procs_on_dot_ticks            = false;
+  bool on_dot_tick_procs_enabled     = true;
+  bool procs_on_damage               = false;
+  bool on_damage_procs_enabled       = true;
+  bool procs_on_resist               = false;
+  bool on_resist_procs_enabled       = true;
 
   explicit Spell(Entity& entity_param, std::shared_ptr<Aura> aura = nullptr,
                  std::shared_ptr<DamageOverTime> dot = nullptr);
@@ -81,7 +81,7 @@ struct Spell {
   double PredictDamage();
   [[nodiscard]] bool HasEnoughMana() const;
 
-private:
+ private:
   virtual double GetCooldown();
   virtual void Damage(bool kIsCrit = false, bool kIsGlancing = false);
   [[nodiscard]] double GetManaCost() const;
@@ -89,9 +89,8 @@ private:
   SpellCastResult MagicSpellCast();
   [[nodiscard]] SpellCastResult PhysicalSpellCast() const;
   void OnSpellHit(const SpellCastResult& kSpellCastResult);
-  void CombatLogDamage(bool kIsCrit, bool kIsGlancing, double kTotalDamage, double kSpellBaseDamage,
-                       double kSpellPower, double kCritMultiplier, double kDamageModifier,
-                       double kPartialResistMultiplier) const;
+  void CombatLogDamage(bool kIsCrit, bool kIsGlancing, double kTotalDamage, double kSpellBaseDamage, double kSpellPower,
+                       double kCritMultiplier, double kDamageModifier, double kPartialResistMultiplier) const;
   void ManaGainOnCast() const;
 };
 

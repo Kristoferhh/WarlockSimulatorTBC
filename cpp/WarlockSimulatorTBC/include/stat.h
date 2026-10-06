@@ -15,7 +15,7 @@ struct Stat {
   void AddStat() const;
   void RemoveStat(int kStacks = 1) const;
 
-private:
+ private:
   void ModifyStat(const std::string& kAction, int kStacks = 1) const;
 };
 

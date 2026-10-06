@@ -6,7 +6,7 @@ struct Rng {
   double Next();
   int Range(int kMin, int kMax);
 
-private:
+ private:
   std::mt19937 _random_engine;
   std::uniform_real_distribution<double> _random{0, 1};
 };

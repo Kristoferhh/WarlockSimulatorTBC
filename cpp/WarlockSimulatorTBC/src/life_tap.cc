@@ -1,16 +1,14 @@
 #include "../include/life_tap.h"
 
+#include "../include/combat_log_breakdown.h"
+#include "../include/common.h"
 #include "../include/entity.h"
+#include "../include/pet.h"
 #include "../include/player.h"
 #include "../include/talents.h"
-#include "../include/common.h"
-#include "../include/combat_log_breakdown.h"
-#include "../include/pet.h"
 
 LifeTap::LifeTap(Entity& entity)
-  : Spell(entity),
-    mana_return(582),
-    modifier(1 * (1 + 0.1 * entity.player->talents.improved_life_tap)) {
+    : Spell(entity), mana_return(582), modifier(1 * (1 + 0.1 * entity.player->talents.improved_life_tap)) {
   name = SpellName::kLifeTap;
 
   coefficient = 0.8;
@@ -25,9 +23,9 @@ double LifeTap::ManaGain() const {
 
 void LifeTap::Cast() {
   const double kCurrentPlayerMana = entity.stats.mana;
-  const double kManaGain = this->ManaGain();
+  const double kManaGain          = this->ManaGain();
 
-  entity.stats.mana = std::min(entity.stats.max_mana, entity.stats.mana + kManaGain);
+  entity.stats.mana        = std::min(entity.stats.max_mana, entity.stats.mana + kManaGain);
   const double kManaGained = entity.stats.mana - kCurrentPlayerMana;
 
   if (entity.recording_combat_log_breakdown) {
@@ -57,19 +55,18 @@ void LifeTap::Cast() {
     }
   }
 
-  if (name == SpellName::kDarkPact) {
-    entity.pet->stats.mana = std::max(0.0, entity.pet->stats.mana - kManaGain);
-  }
+  if (name == SpellName::kDarkPact) { entity.pet->stats.mana = std::max(0.0, entity.pet->stats.mana - kManaGain); }
 }
 
-DarkPact::DarkPact(Entity& entity)
-  : LifeTap(entity) {
-  name = SpellName::kDarkPact;
-  mana_return = 700;
-  coefficient = 0.96;
-  modifier = 1;
+DarkPact::DarkPact(Entity& entity) : LifeTap(entity) {
+  name         = SpellName::kDarkPact;
+  mana_return  = 700;
+  coefficient  = 0.96;
+  modifier     = 1;
   spell_school = SpellSchool::kShadow;
   Spell::Setup();
 }
 
-bool DarkPact::Ready() { return Spell::Ready() && entity.pet->stats.mana >= ManaGain(); }
+bool DarkPact::Ready() {
+  return Spell::Ready() && entity.pet->stats.mana >= ManaGain();
+}

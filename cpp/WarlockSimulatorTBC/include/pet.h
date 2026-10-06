@@ -6,8 +6,8 @@ struct Player;
 
 struct Pet final : Entity, std::enable_shared_from_this<Pet> {
   const double kBaseMeleeSpeed = 2;
-  PetName pet_name = PetName::kNoName;
-  PetType pet_type = PetType::kNoPetType;
+  PetName pet_name             = PetName::kNoName;
+  PetType pet_type             = PetType::kNoPetType;
   double glancing_blow_multiplier;
   double glancing_blow_chance;
   double enemy_damage_reduction_from_armor = 0;
